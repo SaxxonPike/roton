@@ -69,7 +69,7 @@ namespace Roton.Emulation
                     ActIndex--;
                     if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
                     {
-                        SendLabel(-ActorIndex(target), @"SHOT", false);
+                        SendLabel(-ActorIndexAt(target), @"SHOT", false);
                         break;
                     }
                 }
@@ -192,7 +192,7 @@ namespace Roton.Emulation
             {
                 KeyVector.SetTo(0, 0);
                 KeyShift = false;
-                if (ActorIndex(new Location(0, 0)) == -1)
+                if (ActorIndexAt(new Location(0, 0)) == -1)
                 {
                     SetMessage(0x7D00, GameOverMessage);
                 }

@@ -509,25 +509,6 @@ namespace Roton.Emulation
             get;
         }
 
-        public string StoneText
-        {
-            get
-            {
-                if (StonesEnabled)
-                {
-                    for (int i = 0; i < Flags.Count; i++)
-                    {
-                        var flag = Flags[i].ToUpper();
-                        if (flag.Length > 0 && flag.StartsWith("Z"))
-                        {
-                            return flag.Substring(1);
-                        }
-                    }
-                }
-                return "";
-            }
-        }
-
         public ITerminal Terminal
         {
             get { return Display.Terminal; }

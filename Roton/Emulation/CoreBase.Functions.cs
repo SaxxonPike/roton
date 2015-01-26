@@ -9,7 +9,7 @@ namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        internal int ActorIndex(Location location)
+        virtual internal int ActorIndexAt(Location location)
         {
             int index = 0;
             foreach (Actor actor in Actors)
@@ -27,11 +27,6 @@ namespace Roton.Emulation
                 ((location.Y >= Tiles.Height || Tiles[location.Sum(Vector.South)].Id == id) ? 2 : 0) |
                 ((location.X <= 1 || Tiles[location.Sum(Vector.West)].Id == id) ? 4 : 0) |
                 ((location.X >= Tiles.Width || Tiles[location.Sum(Vector.East)].Id == id) ? 8 : 0);
-        }
-
-        virtual internal string AmmoMessage
-        {
-            get { return @"Ammunition - 5 shots per container."; }
         }
 
         internal void Attack(int index, Location location)
@@ -60,11 +55,6 @@ namespace Roton.Emulation
             {
                 PlaySound(2, Sounds.EnemySuicide);
             }
-        }
-
-        virtual internal string BombMessage
-        {
-            get { return @"Bomb activated!"; }
         }
 
         internal void ClearBoard()
@@ -163,11 +153,6 @@ namespace Roton.Emulation
         {
         }
 
-        virtual internal string DarkMessage
-        {
-            get { return @"Room is dark - you need to light a torch!"; }
-        }
-
         internal void Destroy(Location location)
         {
         }
@@ -175,16 +160,6 @@ namespace Roton.Emulation
         internal int Distance(Location a, Location b)
         {
             return ((a.Y - b.Y).Square() * 2) + ((a.X - b.X).Square());
-        }
-
-        virtual internal string DoorClosedMessage(int color)
-        {
-            return @"The " + Colors[color] + " door is locked!";
-        }
-        
-        virtual internal string DoorOpenMessage(int color)
-        {
-            return @"The " + Colors[color] + " door is now open.";
         }
 
         internal void DrawChar(Location location, AnsiChar ac)
@@ -212,11 +187,6 @@ namespace Roton.Emulation
             return ElementAt(new Location(x, y));
         }
 
-        virtual internal string EnergizerMessage
-        {
-            get { return @"Energizer - You are invincible"; }
-        }
-
         virtual internal void EnterBoard()
         {
             Enter.CopyFrom(Player.Location);
@@ -237,7 +207,7 @@ namespace Roton.Emulation
         {
             int searchColor = TileAt(location).Color;
             int oldBoard = Board;
-            int passageIndex = ActorIndex(location);
+            int passageIndex = ActorIndexAt(location);
             int passageTarget = Actors[passageIndex].P3;
             SetBoard(passageTarget);
             Location target = new Location();
@@ -286,11 +256,6 @@ namespace Roton.Emulation
             RedrawBoard();
         }
 
-        virtual internal string FakeMessage
-        {
-            get { return @"A fake wall - secret passage!"; }
-        }
-
         virtual internal void ForcePlayerColor()
         {
             if (TileAt(Player.Location).Color != Elements.PlayerElement.Color || Elements.PlayerElement.Character != 0x02)
@@ -299,21 +264,6 @@ namespace Roton.Emulation
                 TileAt(Player.Location).Color = Elements.PlayerElement.Color;
                 UpdateBoard(Player.Location);
             }
-        }
-
-        virtual internal string ForestMessage
-        {
-            get { return @"A path is cleared through the forest."; }
-        }
-
-        virtual internal string GameOverMessage
-        {
-            get { return @" Game over  -  Press ESCAPE"; }
-        }
-
-        virtual internal string GemMessage
-        {
-            get { return @"Gems give you Health!"; }
         }
 
         internal void Harm(int index)
@@ -535,21 +485,6 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal string InvisibleMessage
-        {
-            get { return @"You are blocked by an invisible wall."; }
-        }
-
-        virtual internal string KeyAlreadyMessage(int color)
-        {
-            return @"You already have a " + Colors[color] + @" key!";
-        }
-
-        virtual internal string KeyMessage(int color)
-        {
-            return @"You now have the " + Colors[color] + " key.";
-        }
-
         virtual internal void MoveThing(int index, Location target)
         {
             var actor = Actors[index];
@@ -664,23 +599,25 @@ namespace Roton.Emulation
 
         virtual internal void RemoveActor(int index)
         {
+            var actor = Actors[index];
+
         }
 
-        internal void ResetAlerts()
+        virtual internal void ResetAlerts()
         {
-            AlertAmmo = false;
-            AlertDark = false;
-            AlertEnergy = false;
-            AlertFake = false;
-            AlertForest = false;
-            AlertGem = false;
-            AlertNoAmmo = false;
-            AlertNoShoot = false;
-            AlertNotDark = false;
-            AlertNoTorch = false;
+            AlertAmmo = true;
+            AlertDark = true;
+            AlertEnergy = true;
+            AlertFake = true;
+            AlertForest = true;
+            AlertGem = true;
+            AlertNoAmmo = true;
+            AlertNoShoot = true;
+            AlertNotDark = true;
+            AlertNoTorch = true;
         }
 
-        internal void Seek(Location location, Vector result)
+        virtual internal void Seek(Location location, Vector result)
         {
             result.SetTo(0, 0);
             if (RandomNumberDeterministic(2) == 0 || Player.Y == location.Y)
@@ -701,7 +638,7 @@ namespace Roton.Emulation
         {
         }
 
-        internal void SetBoard(int boardIndex)
+        virtual internal void SetBoard(int boardIndex)
         {
             var element = Elements.PlayerElement;
             TileAt(Player.Location).SetTo(element.Index, element.Color);
@@ -709,12 +646,12 @@ namespace Roton.Emulation
             UnpackBoard(boardIndex);
         }
 
-        internal void SetMessage(int duration, string message)
+        virtual internal void SetMessage(int duration, string message)
         {
             // todo
         }
 
-        internal void ShowAbout()
+        virtual internal void ShowAbout()
         {
         }
 
@@ -805,18 +742,13 @@ namespace Roton.Emulation
             private set;
         }
 
-        virtual internal string TorchMessage
-        {
-            get { return @"Torch - used for lighting in the underground."; }
-        }
-
-        internal void UnpackBoard(int boardIndex)
+        virtual internal void UnpackBoard(int boardIndex)
         {
             Disk.UnpackBoard(Tiles, Boards[boardIndex].Data);
             Board = boardIndex;
         }
 
-        internal void UpdateBoard(Location location)
+        virtual internal void UpdateBoard(Location location)
         {
             AnsiChar ac;
             if (!Dark || ElementAt(location).Shown || (TorchCycles > 0 && Distance(Player.Location, location) < 50) || EditorMode)
@@ -830,16 +762,16 @@ namespace Roton.Emulation
             DrawTile(location, ac);
         }
 
-        internal void UpdateBorder()
+        virtual internal void UpdateBorder()
         {
             Display.UpdateBorder();
         }
 
-        internal void UpdateRadius(Location location, RadiusMode mode)
+        virtual internal void UpdateRadius(Location location, RadiusMode mode)
         {
         }
 
-        internal void UpdateStatus()
+        virtual internal void UpdateStatus()
         {
             Display.UpdateStatus();
         }
@@ -854,12 +786,7 @@ namespace Roton.Emulation
             TimerTick++;
         }
 
-        virtual internal string WaterMessage
-        {
-            get { return @"Your way is blocked by water."; }
-        }
-
-        internal int Width
+        virtual internal int Width
         {
             get { return Tiles.Width; }
         }

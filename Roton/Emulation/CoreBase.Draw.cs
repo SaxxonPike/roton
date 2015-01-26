@@ -7,7 +7,7 @@ namespace Roton.Emulation
 {
     abstract internal partial class CoreBase
     {
-        public AnsiChar Draw(Location location)
+        virtual public AnsiChar Draw(Location location)
         {
             Tile tile = Tiles[location];
             Element element = Elements[tile.Id];
@@ -45,7 +45,7 @@ namespace Roton.Emulation
 
         virtual public AnsiChar Draw_Bomb(Location location)
         {
-            int p1 = Actors[ActorIndex(location)].P1;
+            int p1 = Actors[ActorIndexAt(location)].P1;
             return new AnsiChar((p1 > 1) ? (0x30 + p1) : 0x0B, Tiles[location].Color);
         }
 
@@ -95,7 +95,7 @@ namespace Roton.Emulation
 
         virtual public AnsiChar Draw_Duplicator(Location location)
         {
-            switch (Actors[ActorIndex(location)].P1)
+            switch (Actors[ActorIndexAt(location)].P1)
             {
                 case 2:
                     return new AnsiChar(0xF9, Tiles[location].Color);
@@ -117,12 +117,12 @@ namespace Roton.Emulation
 
         virtual public AnsiChar Draw_Object(Location location)
         {
-            return new AnsiChar(Actors[ActorIndex(location)].P1, Tiles[location].Color);
+            return new AnsiChar(Actors[ActorIndexAt(location)].P1, Tiles[location].Color);
         }
 
         virtual public AnsiChar Draw_Pusher(Location location)
         {
-            var actor = Actors[ActorIndex(location)];
+            var actor = Actors[ActorIndexAt(location)];
             if (actor.Vector.X == 1)
                 return new AnsiChar(0x10, Tiles[location].Color);
             else if (actor.Vector.X == -1)
@@ -167,7 +167,7 @@ namespace Roton.Emulation
 
         virtual public AnsiChar Draw_Transporter(Location location)
         {
-            var actor = Actors[ActorIndex(location)];
+            var actor = Actors[ActorIndexAt(location)];
             int index;
 
             if (actor.Vector.X == 0)
