@@ -350,7 +350,32 @@ namespace Roton.Emulation
 
         virtual public void Act_Tiger(int index)
         {
-            // todo: shooting logic for tigers
+            var actor = Actors[index];
+            int firingElement = Elements.BulletId;
+            bool shot = false;
+
+            if (actor.P2 >= 0x80)
+            {
+                firingElement = Elements.StarId;
+            }
+
+            if ((actor.P2 & 0x7F) > (3 * RandomNumberDeterministic(10)))
+            {
+                if (actor.X.AbsDiff(Player.X) <= 2)
+                {
+                    shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
+                }
+                else
+                {
+                    shot = false;
+                }
+
+                if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
+                {
+                    shot = SpawnProjectile(firingElement, actor.Location, new Vector((Player.X - actor.X).Polarity(), 0), true);
+                }
+            }
+
             Act_Lion(index);
         }
 
