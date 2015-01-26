@@ -587,7 +587,71 @@ namespace Roton.Emulation
         virtual internal void RemoveActor(int index)
         {
             var actor = Actors[index];
+            if (actor.Pointer >= 0)
+            {
+                int refCount = 0;
+                for (int i = 1; i < ActorCount; i++)
+                {
+                    if (Actors[i].Pointer == actor.Pointer)
+                    {
+                        refCount++;
+                    }
+                }
+                if (refCount < 1)
+                {
+                    actor.Code = "";
+                }
+                actor.Pointer = -1;
+            }
 
+            if (index < ActIndex)
+            {
+                ActIndex--;
+            }
+
+            TileAt(actor.Location).CopyFrom(actor.UnderTile);
+            if (actor.Location.Y > 0)
+            {
+                UpdateBoard(actor.Location);
+            }
+
+            for (int i = 1; i < ActorCount; i++)
+            {
+                var a = Actors[i];
+                if (a.Follower >= index)
+                {
+                    if (a.Follower == index)
+                    {
+                        a.Follower = -1;
+                    }
+                    else
+                    {
+                        a.Follower--;
+                    }
+                }
+
+                if (a.Leader >= index)
+                {
+                    if (a.Leader == index)
+                    {
+                        a.Leader = -1;
+                    }
+                    else
+                    {
+                        a.Leader--;
+                    }
+                }
+            }
+
+            if (index < ActorCount)
+            {
+                for (int i = index; i < ActorCount; i++)
+                {
+                    Actors[i].CopyFrom(Actors[i + 1]);
+                }
+            }
+
+            ActorCount--;
         }
 
         virtual internal void ResetAlerts()
