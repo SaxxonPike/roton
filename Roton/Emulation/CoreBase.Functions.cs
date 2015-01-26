@@ -21,15 +21,7 @@ namespace Roton.Emulation
             return -1;
         }
 
-        internal int Adjacent(Location location, int id)
-        {
-            return ((location.Y <= 1 || Tiles[location.Sum(Vector.North)].Id == id) ? 1 : 0) |
-                ((location.Y >= Tiles.Height || Tiles[location.Sum(Vector.South)].Id == id) ? 2 : 0) |
-                ((location.X <= 1 || Tiles[location.Sum(Vector.West)].Id == id) ? 4 : 0) |
-                ((location.X >= Tiles.Width || Tiles[location.Sum(Vector.East)].Id == id) ? 8 : 0);
-        }
-
-        internal void Attack(int index, Location location)
+        virtual internal void Attack(int index, Location location)
         {
             if (index == 0 && EnergyCycles > 0)
             {
@@ -57,7 +49,7 @@ namespace Roton.Emulation
             }
         }
 
-        internal void ClearBoard()
+        virtual internal void ClearBoard()
         {
             int emptyId = Elements.EmptyId;
             int boardEdgeId = EdgeTile.Id;
@@ -120,11 +112,11 @@ namespace Roton.Emulation
             Player.Length = 0;
         }
 
-        internal void ClearSound()
+        virtual internal void ClearSound()
         {
         }
 
-        internal void ClearWorld()
+        virtual internal void ClearWorld()
         {
             BoardCount = 0;
             Boards.Clear();
@@ -153,36 +145,31 @@ namespace Roton.Emulation
         {
         }
 
-        internal void Destroy(Location location)
+        virtual internal void Destroy(Location location)
         {
         }
 
-        internal int Distance(Location a, Location b)
-        {
-            return ((a.Y - b.Y).Square() * 2) + ((a.X - b.X).Square());
-        }
-
-        internal void DrawChar(Location location, AnsiChar ac)
+        virtual internal void DrawChar(Location location, AnsiChar ac)
         {
             Display.DrawChar(location.X, location.Y, ac);
         }
 
-        internal void DrawString(Location location, string text, int color)
+        virtual internal void DrawString(Location location, string text, int color)
         {
             Display.DrawString(location.X, location.Y, text, color);
         }
 
-        internal void DrawTile(Location location, AnsiChar ac)
+        virtual internal void DrawTile(Location location, AnsiChar ac)
         {
             Display.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
-        internal Element ElementAt(Location location)
+        virtual internal Element ElementAt(Location location)
         {
             return Elements[TileAt(location).Id];
         }
 
-        internal Element ElementAt(int x, int y)
+        virtual internal Element ElementAt(int x, int y)
         {
             return ElementAt(new Location(x, y));
         }
@@ -239,18 +226,18 @@ namespace Roton.Emulation
             EnterBoard();
         }
 
-        internal void FadeBoard(AnsiChar ac)
+        virtual internal void FadeBoard(AnsiChar ac)
         {
             Display.FadeBoard(ac);
         }
 
-        internal void FadePurple()
+        virtual internal void FadePurple()
         {
             FadeBoard(new AnsiChar(0xDB, 0x05));
             RedrawBoard();
         }
 
-        internal void FadeRed()
+        virtual internal void FadeRed()
         {
             FadeBoard(new AnsiChar(0xDB, 0x04));
             RedrawBoard();
@@ -266,16 +253,16 @@ namespace Roton.Emulation
             }
         }
 
-        internal void Harm(int index)
+        virtual internal void Harm(int index)
         {
         }
 
-        internal int Height
+        virtual internal int Height
         {
             get { return Tiles.Height; }
         }
 
-        internal void InitializeElementDelegates()
+        virtual internal void InitializeElementDelegates()
         {
             foreach (var element in Elements)
             {
@@ -516,22 +503,22 @@ namespace Roton.Emulation
             }
         }
 
-        internal void PackBoard()
+        virtual internal void PackBoard()
         {
             PackedBoard board = new PackedBoard(Disk.PackBoard(Tiles));
             Boards[Board] = board;
         }
 
-        internal Actor Player
+        virtual internal Actor Player
         {
             get { return Actors[0]; }
         }
 
-        internal void PlaySound(int priority, byte[] sound)
+        virtual internal void PlaySound(int priority, byte[] sound)
         {
         }
 
-        internal void Rnd(Vector result)
+        virtual internal void Rnd(Vector result)
         {
             result.X = RandomNumberDeterministic(3) - 1;
             if (result.X == 0)
@@ -544,7 +531,7 @@ namespace Roton.Emulation
             }
         }
 
-        public void ReadInput()
+        virtual public void ReadInput()
         {
             KeyShift = false;
             KeyArrow = false;
@@ -578,7 +565,7 @@ namespace Roton.Emulation
             }
         }
 
-        public int ReadKey()
+        virtual public int ReadKey()
         {
             var key = Keyboard.GetKey();
             if (key > 0)
@@ -592,7 +579,7 @@ namespace Roton.Emulation
             return KeyPressed;
         }
 
-        internal void RedrawBoard()
+        virtual internal void RedrawBoard()
         {
             Display.RedrawBoard();
         }
@@ -695,37 +682,6 @@ namespace Roton.Emulation
             return false;
         }
 
-        internal void Start()
-        {
-            if (!ThreadActive)
-            {
-                ThreadActive = true;
-                Thread = new Thread(new ThreadStart(StartMain));
-                TimerTick = CoreTimer.Tick;
-                Thread.Start();
-            }
-        }
-
-        internal void Stop()
-        {
-            if (ThreadActive)
-            {
-                ThreadActive = false;
-            }
-        }
-
-        private Thread Thread
-        {
-            get;
-            set;
-        }
-
-        private bool ThreadActive
-        {
-            get;
-            set;
-        }
-
         internal Tile TileAt(Location l)
         {
             return Tiles[l];
@@ -776,7 +732,7 @@ namespace Roton.Emulation
             Display.UpdateStatus();
         }
 
-        public void WaitForTick()
+        virtual public void WaitForTick()
         {
             while (TimerTick == CoreTimer.Tick && ThreadActive)
             {

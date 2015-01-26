@@ -50,13 +50,14 @@
     <Compile Include="Display.Functions.cs" />
     <Compile Include="Emulation\CoreBase.Loops.cs" />
     <Compile Include="Emulation\CoreBase.Messages.cs" />
+    <Compile Include="Emulation\CoreBase.Utility.cs" />
     <Compile Include="Emulation\CoreTimer.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
     <Compile Include="IDisplayInfo.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Element.Functions.cs" />
     <Compile Include="Emulation\CoreBase.Behavior.cs" />
-    <Compile Include="Emulation\CoreBase.cs" />
+    <Compile Include="Emulation\CoreBase.Interface.cs" />
     <Compile Include="Emulation\CoreBase.Draw.cs" />
     <Compile Include="Emulation\CoreBase.Functions.cs" />
     <Compile Include="Emulation\MemoryFlagArrayBase.cs" />
