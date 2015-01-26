@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A93864EF-3C61-4654-8598-BC49D822187C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Roton</RootNamespace>
+    <AssemblyName>Roton</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="Actor.Functions.cs" />
+    <Compile Include="AnsiChar.cs" />
+    <Compile Include="Board.cs" />
+    <Compile Include="Board.Functions.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="Context.Functions.cs" />
+    <Compile Include="Display.cs" />
+    <Compile Include="Display.Functions.cs" />
+    <Compile Include="Emulation\CoreBase.Loops.cs" />
+    <Compile Include="Emulation\CoreTimer.cs" />
+    <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
+    <Compile Include="IDisplayInfo.cs" />
+    <Compile Include="Element.cs" />
+    <Compile Include="Element.Functions.cs" />
+    <Compile Include="Emulation\CoreBase.Behavior.cs" />
+    <Compile Include="Emulation\CoreBase.cs" />
+    <Compile Include="Emulation\CoreBase.Draw.cs" />
+    <Compile Include="Emulation\CoreBase.Functions.cs" />
+    <Compile Include="Emulation\MemoryFlagArrayBase.cs" />
+    <Compile Include="Emulation\MemoryInt16Collection.cs" />
+    <Compile Include="Emulation\MemoryKeyArray.cs" />
+    <Compile Include="Emulation\MemoryStateBase.cs" />
+    <Compile Include="Emulation\MemoryStringByteCollection.cs" />
+    <Compile Include="Emulation\SerializerBase.cs" />
+    <Compile Include="Emulation\FixedList.cs" />
+    <Compile Include="Emulation\LinearEnumerator.cs" />
+    <Compile Include="Emulation\MemoryElementBase.cs" />
+    <Compile Include="Emulation\MemoryElementCollectionBase.cs" />
+    <Compile Include="Emulation\SoundsBase.cs" />
+    <Compile Include="Emulation\SoundsCommon.cs" />
+    <Compile Include="Emulation\SuperZZT\Core.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryActorCollection.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryElementCollection.Ids.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryFlagArray.cs" />
+    <Compile Include="Emulation\SuperZZT\Serializer.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryElement.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryElementCollection.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryState.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryTileCollection.cs" />
+    <Compile Include="Emulation\SuperZZT\Sounds.cs" />
+    <Compile Include="Emulation\SuperZZT\TerminalDisplay.cs" />
+    <Compile Include="Emulation\ZZT\Core.cs" />
+    <Compile Include="Emulation\ZZT\MemoryElementCollection.Ids.cs" />
+    <Compile Include="Emulation\ZZT\MemoryFlagArray.cs" />
+    <Compile Include="Emulation\ZZT\Serializer.cs" />
+    <Compile Include="Emulation\ZZT\MemoryActorCollection.cs" />
+    <Compile Include="Emulation\ZZT\MemoryElement.cs" />
+    <Compile Include="ContextEngine.cs" />
+    <Compile Include="Emulation\Heap.cs" />
+    <Compile Include="Emulation\Memory.cs" />
+    <Compile Include="Emulation\MemoryActor.cs" />
+    <Compile Include="Emulation\MemoryActorCollectionBase.cs" />
+    <Compile Include="Emulation\MemoryWorldBase.cs" />
+    <Compile Include="Emulation\ZZT\MemoryElementCollection.cs" />
+    <Compile Include="Emulation\ZZT\MemoryState.cs" />
+    <Compile Include="Emulation\ZZT\MemoryTileCollection.cs" />
+    <Compile Include="Emulation\ZZT\Sounds.cs" />
+    <Compile Include="Emulation\ZZT\TerminalDisplay.cs" />
+    <Compile Include="IKeyboard.cs" />
+    <Compile Include="ISpeaker.cs" />
+    <Compile Include="ITerminal.cs" />
+    <Compile Include="PackedBoard.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Emulation\MemoryLocation.cs" />
+    <Compile Include="Emulation\MemoryLocation16.cs" />
+    <Compile Include="Emulation\MemoryBoardBase.cs" />
+    <Compile Include="Emulation\MemoryTile.cs" />
+    <Compile Include="Emulation\MemoryTileCollectionBase.cs" />
+    <Compile Include="Emulation\MemoryVector.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryBoard.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryWorld.cs" />
+    <Compile Include="Emulation\ZZT\MemoryBoard.cs" />
+    <Compile Include="Emulation\ZZT\MemoryWorld.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Location.cs" />
+    <Compile Include="Location.Functions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadiusMode.cs" />
+    <Compile Include="State.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="Tile.Functions.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="Vector.Functions.cs" />
+    <Compile Include="World.cs" />
+    <Compile Include="World.Functions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\szztelement.bin" />
+    <None Include="Resources\szztextra.bin" />
+    <None Include="Resources\vgapalette" />
+    <None Include="Resources\vgaromf08" />
+    <None Include="Resources\vgaromf14" />
+    <None Include="Resources\vgaromf16" />
+    <None Include="Resources\zztelement.bin" />
+    <None Include="Resources\zztextra.bin" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
