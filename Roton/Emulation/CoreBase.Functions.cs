@@ -697,6 +697,10 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal void SendLabel(int index, string label, bool force)
+        {
+        }
+
         internal void SetBoard(int boardIndex)
         {
             var element = Elements.PlayerElement;

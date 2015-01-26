@@ -22,6 +22,59 @@ namespace Roton.Emulation
         virtual public void Act_Bullet(int index)
         {
             var actor = Actors[index];
+            bool canRicochet = true;
+            while (true)
+            {
+                var target = actor.Location.Sum(actor.Vector);
+                var element = ElementAt(target);
+                if (element.Floor || element.Index == Elements.WaterId)
+                {
+                    MoveThing(index, target);
+                    break;
+                }
+                else if (canRicochet && element.Index == Elements.RicochetId)
+                {
+                    canRicochet = false;
+                    actor.Vector.SetOpposite();
+                    PlaySound(1, Sounds.Ricochet);
+                    continue;
+                }
+                else if (element.Index == Elements.BreakableId || (element.Destructible && (element.Index == Elements.PlayerId || actor.P1 == 0)))
+                {
+                    if (element.Points != 0)
+                    {
+                        Score += element.Points;
+                        UpdateStatus();
+                    }
+                    Attack(index, target);
+                    break;
+                }
+                else if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.Clockwise)).Id == Elements.RicochetId)
+                {
+                    canRicochet = false;
+                    actor.Vector.SetCounterClockwise();
+                    PlaySound(1, Sounds.Ricochet);
+                    continue;
+                }
+                else if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.CounterClockwise)).Id == Elements.RicochetId)
+                {
+                    canRicochet = false;
+                    actor.Vector.SetClockwise();
+                    PlaySound(1, Sounds.Ricochet);
+                    continue;
+                }
+                else
+                {
+                    RemoveActor(index);
+                    ActIndex--;
+                    if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
+                    {
+                        SendLabel(-ActorIndex(target), @"SHOT", false);
+                        break;
+                    }
+                }
+                break;
+            }
         }
 
         virtual public void Act_Clockwise(int index)

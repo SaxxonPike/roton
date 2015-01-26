@@ -19,6 +19,14 @@ namespace Roton
             this.Y = y;
         }
 
+        public Vector Clockwise
+        {
+            get
+            {
+                return new Vector(-this.Y, this.X);
+            }
+        }
+
         public Vector Clone() 
         {
             return new Vector(this.X, this.Y);
@@ -36,6 +44,14 @@ namespace Roton
             this.Y = vector.Y;
         }
 
+        public Vector CounterClockwise
+        {
+            get
+            {
+                return new Vector(this.Y, -this.X);
+            }
+        }
+
         virtual protected void Initialize()
         {
         }
@@ -45,15 +61,27 @@ namespace Roton
             get { return this.X == 0 && this.Y == 0; }
         }
 
-        public Vector Opposite()
+        public Vector Opposite
         {
-            return new Vector(-this.X, -this.Y);
+            get
+            {
+                return new Vector(-this.X, -this.Y);
+            }
+        }
+
+        public void SetClockwise()
+        {
+            CopyFrom(Clockwise);
+        }
+
+        public void SetCounterClockwise()
+        {
+            CopyFrom(CounterClockwise);
         }
 
         public void SetOpposite()
         {
-            this.X = -this.X;
-            this.Y = -this.Y;
+            CopyFrom(Opposite);
         }
 
         public void SetTo(int x, int y)
