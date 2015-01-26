@@ -472,7 +472,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void MoveThing(int index, Location target)
+        virtual internal void MoveActor(int index, Location target)
         {
             var actor = Actors[index];
             var sourceLocation = actor.Location.Clone();

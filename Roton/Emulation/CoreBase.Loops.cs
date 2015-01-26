@@ -117,7 +117,7 @@ namespace Roton.Emulation
                         {
                             if (ElementAt(Player.Location).Index == Elements.PlayerId)
                             {
-                                MoveThing(0, target);
+                                MoveActor(0, target);
                             }
                             else
                             {

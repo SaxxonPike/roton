@@ -29,7 +29,7 @@ namespace Roton.Emulation
                 var element = ElementAt(target);
                 if (element.Floor || element.Index == Elements.WaterId)
                 {
-                    MoveThing(index, target);
+                    MoveActor(index, target);
                     break;
                 }
                 else if (canRicochet && element.Index == Elements.RicochetId)
@@ -119,7 +119,7 @@ namespace Roton.Emulation
             var element = ElementAt(target);
             if (element.Floor)
             {
-                MoveThing(index, target);
+                MoveActor(index, target);
             }
             else if (element.Index == Elements.PlayerId)
             {
@@ -213,7 +213,7 @@ namespace Roton.Emulation
                         }
                         if (ElementAt(actor.Location.Sum(KeyVector)).Floor)
                         {
-                            MoveThing(0, actor.Location.Sum(KeyVector));
+                            MoveActor(0, actor.Location.Sum(KeyVector));
                         }
                     }
                 }
@@ -434,7 +434,7 @@ namespace Roton.Emulation
                 {
                     if (ElementAt(target).Index != Elements.PlayerId)
                     {
-                        MoveThing(0, target);
+                        MoveActor(0, target);
                     }
                     FadePurple();
                     vector.SetTo(0, 0);
