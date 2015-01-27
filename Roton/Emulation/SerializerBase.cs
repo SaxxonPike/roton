@@ -68,12 +68,12 @@ namespace Roton.Emulation
                 MemoryActor actor = new MemoryActor(mem, ActorDataOffset + (ActorDataLength * i));
 
                 // check to see if the code needs to be stored
-                if (actor.Pointer >= 0 && Heap.Contains(actor.Pointer))
+                if (actor.Pointer != 0 && Heap.Contains(actor.Pointer))
                 {
                     if (savedCode.ContainsKey(actor.Pointer))
                     {
                         actor.Length = -savedCode[actor.Pointer];
-                        actor.Pointer = -1;
+                        actor.Pointer = 0;
                     }
                     else
                     {
@@ -82,14 +82,14 @@ namespace Roton.Emulation
                 }
                 else
                 {
-                    actor.Pointer = -1;
+                    actor.Pointer = 0;
                 }
 
                 // write memory to stream
                 target.Write(Memory.Read(actor.Offset, ActorDataLength));
 
                 // write code if applicable
-                if (actor.Pointer >= 0)
+                if (actor.Pointer != 0)
                 {
                     target.Write(Heap[actor.Pointer]);
                 }
@@ -179,7 +179,7 @@ namespace Roton.Emulation
             {
                 MemoryActor actor = new MemoryActor(Memory, ActorDataOffset + (ActorDataLength * i));
                 Memory.Write(ActorDataOffset + (ActorDataLength * i), source.ReadBytes(ActorDataLength));
-                actor.Pointer = -1;
+                actor.Pointer = 0;
                 if (actor.Length > 0)
                 {
                     // load actor code into the heap

@@ -595,7 +595,7 @@ namespace Roton.Emulation
         virtual internal void RemoveActor(int index)
         {
             var actor = Actors[index];
-            if (actor.Pointer >= 0)
+            if (actor.Pointer != 0)
             {
                 int refCount = 0;
                 for (int i = 1; i < ActorCount; i++)
@@ -609,7 +609,7 @@ namespace Roton.Emulation
                 {
                     actor.Code = "";
                 }
-                actor.Pointer = -1;
+                actor.Pointer = 0;
             }
 
             if (index < ActIndex)

@@ -90,7 +90,7 @@ namespace Roton
         {
             CopyFrom(actor);
             var code = this.Code;
-            this.Pointer = -1;
+            this.Pointer = 0;
             this.Code = code;
         }
 
