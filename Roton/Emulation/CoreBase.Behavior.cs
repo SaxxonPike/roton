@@ -577,6 +577,8 @@ namespace Roton.Emulation
 
         virtual public void Interact_Pushable(Location location, int index, Vector vector)
         {
+            Push(location, vector);
+            PlaySound(2, Sounds.Push);
         }
 
         virtual public void Interact_Scroll(Location location, int index, Vector vector)
