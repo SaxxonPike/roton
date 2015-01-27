@@ -504,6 +504,20 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal void MoveTile(Location source, Location target)
+        {
+            int sourceIndex = ActorIndexAt(source);
+            if (sourceIndex >= 0)
+            {
+                MoveActor(sourceIndex, target);
+            }
+            else
+            {
+                TileAt(target).CopyFrom(TileAt(source));
+                TileAt(source).Id = Elements.EmptyId;
+            }
+        }
+
         virtual internal void PackBoard()
         {
             PackedBoard board = new PackedBoard(Disk.PackBoard(Tiles));
