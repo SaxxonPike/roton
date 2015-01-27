@@ -175,6 +175,23 @@ namespace Roton.Emulation
 
         virtual public void Act_Object(int index)
         {
+            var actor = Actors[index];
+            if (actor.Instruction >= 0)
+            {
+                ExecuteOOP(index, actor, @"Interaction");
+            }
+            if (!actor.Vector.IsZero)
+            {
+                var target = actor.Location.Sum(actor.Vector);
+                if (ElementAt(target).Floor)
+                {
+                    MoveActor(index, target);
+                }
+                else
+                {
+                    SendLabel(-index, @"THUD", false);
+                }
+            }
         }
 
         virtual public void Act_Pairer(int index)
