@@ -255,6 +255,7 @@ namespace Roton.Emulation
 
         virtual internal void Harm(int index)
         {
+            RemoveActor(index);
         }
 
         virtual internal int Height
@@ -750,6 +751,38 @@ namespace Roton.Emulation
 
         virtual internal bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned)
         {
+            var target = location.Sum(vector);
+            var element = ElementAt(target);
+
+            if (element.Floor || element.Index == Elements.WaterId)
+            {
+                SpawnActor(target, new Tile(id, Elements[id].Color), 1, DefaultActor);
+                var actor = Actors[ActorCount];
+                actor.P1 = (enemyOwned ? 1 : 0);
+                actor.Vector.CopyFrom(vector);
+                actor.P2 = 0x64;
+                return true;
+            }
+            else
+            {
+                if (element.Index != Elements.BreakableId)
+                {
+                    if (element.Destructible)
+                    {
+                        if (enemyOwned != (element.Index == Elements.PlayerId) || EnergyCycles > 0)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    Destroy(target);
+                    PlaySound(2, Sounds.BulletDie);
+                    return true;
+                }
+            }
             return false;
         }
 

@@ -15,8 +15,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.timerDaemon = new Roton.Windows.TimerDaemon();
+            this.components = new System.ComponentModel.Container();
+            this.timerDaemon = new Roton.Windows.TimerDaemon(this.components);
             this.SuspendLayout();
+            // 
+            // timerDaemon
+            // 
+            this.timerDaemon.Paused = false;
             // 
             // Terminal
             // 
@@ -25,7 +30,6 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.DoubleBuffered = true;
             this.Name = "Terminal";
             this.Size = new System.Drawing.Size(640, 360);
             this.ResumeLayout(false);

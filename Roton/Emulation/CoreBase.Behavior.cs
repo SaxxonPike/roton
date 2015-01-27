@@ -351,11 +351,11 @@ namespace Roton.Emulation
                 {
                     if (actor.X.AbsDiff(Player.X) <= 2)
                     {
-                        shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, actor.Y.AbsDiff(Player.Y)), true);
+                        shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
                     }
                     if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
                     {
-                        shot = SpawnProjectile(firingElement, actor.Location, new Vector(actor.X.AbsDiff(Player.X), 0), true);
+                        shot = SpawnProjectile(firingElement, actor.Location, new Vector((Player.X - actor.X).Polarity(), 0), true);
                     }
                 }
                 else

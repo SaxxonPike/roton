@@ -35,6 +35,10 @@ namespace Roton.Windows
             this.Load += OnLoad;
             ScaleX = 1;
             ScaleY = 1;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.Opaque, true);
         }
 
         public bool Alt
@@ -231,19 +235,23 @@ namespace Roton.Windows
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            base.OnPaint(e);
+            //e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            //e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            //e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            //base.OnPaint(e);
+            if (BackgroundImage != null)
+            {
+                e.Graphics.DrawImageUnscaled(BackgroundImage, 0, 0);
+                UpdateCursor();
+            }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            base.OnPaintBackground(e);
-            UpdateCursor();
+            //e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            //e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            //e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            //base.OnPaintBackground(e);
         }
 
         public Palette Palette
