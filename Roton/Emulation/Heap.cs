@@ -10,7 +10,7 @@ namespace Roton.Emulation
         public Heap()
         {
             Entries = new Dictionary<int, byte[]>();
-            NextEntry = 1;
+            SetNextEntry();
         }
 
         public byte[] this[int index]
@@ -40,8 +40,10 @@ namespace Roton.Emulation
         {
             byte[] dataCopy = new byte[data.Length];
             Array.Copy(data, dataCopy, dataCopy.Length);
-            Entries[NextEntry++] = dataCopy;
-            return NextEntry - 1;
+            int index = NextEntry;
+            Entries[index] = dataCopy;
+            SetNextEntry();
+            return index;
         }
 
         public bool Contains(int index)
@@ -69,6 +71,14 @@ namespace Roton.Emulation
         {
             get;
             set;
+        }
+
+        private void SetNextEntry()
+        {
+            while (NextEntry == 0 || Contains(NextEntry))
+            {
+                NextEntry++;
+            }
         }
     }
 }
