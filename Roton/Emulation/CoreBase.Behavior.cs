@@ -17,6 +17,31 @@ namespace Roton.Emulation
 
         virtual public void Act_Bomb(int index)
         {
+            var actor = Actors[index];
+            if (actor.P1 > 0)
+            {
+                actor.P1--;
+                UpdateBoard(actor.Location);
+                if (actor.P1 == 1)
+                {
+                    PlaySound(1, Sounds.BombExplode);
+                    UpdateRadius(actor.Location, RadiusMode.Explode);
+                }
+                else if (actor.P1 == 0)
+                {
+                    Location location = actor.Location.Clone();
+                    RemoveActor(index);
+                    UpdateRadius(location, RadiusMode.Clear);
+                }
+                else if ((actor.P1 & 0x01) == 0)
+                {
+                    PlaySound(1, Sounds.BombTock);
+                }
+                else
+                {
+                    PlaySound(1, Sounds.BombTick);
+                }
+            }
         }
 
         virtual public void Act_Bullet(int index)
