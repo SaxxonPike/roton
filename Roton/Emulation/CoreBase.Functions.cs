@@ -541,7 +541,7 @@ namespace Roton.Emulation
             }
 
             Tile tile = TileAt(location);
-            if (tile.Id == Elements.SliderEWId || tile.Id == Elements.SliderNSId || Elements[tile.Id].Pushable)
+            if ((tile.Id == Elements.SliderEWId && vector.Y == 0) || (tile.Id == Elements.SliderNSId && vector.X == 0) || Elements[tile.Id].Pushable)
             {
                 var furtherTile = TileAt(location.Sum(vector));
                 if (furtherTile.Id == Elements.TransporterId)
