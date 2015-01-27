@@ -581,6 +581,12 @@ namespace Roton.Emulation
 
         virtual public void Interact_Scroll(Location location, int index, Vector vector)
         {
+            var scrollIndex = ActorIndexAt(location);
+            var actor = Actors[scrollIndex];
+
+            PlaySound(2, PlayMusic(@"c-c+d-d+e-e+f-f+g-g"));
+            ExecuteOOP(scrollIndex, actor, @"Scroll");
+            RemoveActor(scrollIndex);
         }
 
         virtual public void Interact_Slime(Location location, int index, Vector vector)
