@@ -9,6 +9,9 @@ namespace Roton
     {
         private string _code;
 
+        /// <summary>
+        /// Create an actor.
+        /// </summary>
         public Actor()
         {
             if (Location == null)
@@ -25,6 +28,9 @@ namespace Roton
             }
         }
 
+        /// <summary>
+        /// Get or set this actor's code.
+        /// </summary>
         public string Code
         {
             get
@@ -65,6 +71,9 @@ namespace Roton
             }
         }
 
+        /// <summary>
+        /// Copy actor data. Code is not duplicated, but Pointer reference will be.
+        /// </summary>
         public void CopyFrom(Actor actor)
         {
             this.Cycle = actor.Cycle;
@@ -86,6 +95,9 @@ namespace Roton
             }
         }
 
+        /// <summary>
+        /// Duplicates the source actor's data, and creates a copy of the code also.
+        /// </summary>
         public void DuplicateFrom(Actor actor)
         {
             CopyFrom(actor);
@@ -94,6 +106,9 @@ namespace Roton
             this.Code = code;
         }
 
+        /// <summary>
+        /// If true, the actor is attached to a Context.
+        /// </summary>
         virtual public bool IsAttached {
             get 
             { 
@@ -101,6 +116,9 @@ namespace Roton
             } 
         }
 
+        /// <summary>
+        /// Retrieve the name of the actor from the code.
+        /// </summary>
         public override string ToString()
         {
             string name = "";
@@ -135,12 +153,18 @@ namespace Roton
             return name;
         }
 
+        /// <summary>
+        /// X location of the actor. Directly references Location.
+        /// </summary>
         public int X
         {
             get { return Location.X; }
             set { Location.X = value; }
         }
 
+        /// <summary>
+        /// Y location of the actor. Directly references Location.
+        /// </summary>
         public int Y
         {
             get { return Location.Y; }
