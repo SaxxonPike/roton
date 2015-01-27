@@ -28,6 +28,10 @@ namespace Roton
             "The board is currently packed; Unpack it to the context first before accessing it."
             );
 
+        static public Exception PushStackOverflow = new StackOverflowException(
+            "A push was initiated with a zero vector. If allowed to continue, this would cause a stack overflow."
+            );
+
         static public Exception TooManyActors = new InvalidOperationException(
             "A new actor cannot be added to the board because it is at the maximum number of actors."
             );

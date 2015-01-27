@@ -529,6 +529,46 @@ namespace Roton.Emulation
             get { return Actors[0]; }
         }
 
+        virtual internal void Push(Location location, Vector vector)
+        {
+            // this is here to prevent endless push loops
+            // but doesn't exist in the original code
+            if (vector.IsZero)
+            {
+                throw Exceptions.PushStackOverflow;
+            }
+
+            Tile tile = TileAt(location);
+            if (tile.Id == Elements.SliderEWId || tile.Id == Elements.SliderNSId || Elements[tile.Id].Pushable)
+            {
+                var furtherTile = TileAt(location.Sum(vector));
+                if (furtherTile.Id == Elements.TransporterId)
+                {
+                    PushThroughTransporter(location, vector);
+                }
+                else if (furtherTile.Id != Elements.EmptyId)
+                {
+                    Push(location.Sum(vector), vector);
+                }
+
+                var furtherElement = Elements[furtherTile.Id];
+                if (!furtherElement.Floor && furtherElement.Destructible && furtherTile.Id != Elements.PlayerId)
+                {
+                    Destroy(location.Sum(vector));
+                }
+
+                furtherElement = Elements[furtherTile.Id];
+                if (furtherElement.Floor)
+                {
+                    MoveTile(location, location.Sum(vector));
+                }
+            }
+        }
+
+        virtual internal void PushThroughTransporter(Location location, Vector vector)
+        {
+        }
+
         virtual internal Vector Rnd()
         {
             var result = new Vector();
