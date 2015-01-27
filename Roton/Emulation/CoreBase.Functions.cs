@@ -518,6 +518,13 @@ namespace Roton.Emulation
         {
         }
 
+        virtual internal Vector Rnd()
+        {
+            var result = new Vector();
+            Rnd(result);
+            return result;
+        }
+
         virtual internal void Rnd(Vector result)
         {
             result.X = RandomNumberDeterministic(3) - 1;

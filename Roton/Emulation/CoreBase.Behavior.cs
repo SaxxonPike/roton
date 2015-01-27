@@ -335,9 +335,34 @@ namespace Roton.Emulation
         virtual public void Act_SpinningGun(int index)
         {
             var actor = Actors[index];
+            int firingElement = Elements.BulletId;
+            bool shot = false;
+
             UpdateBoard(actor.Location);
 
-            // todo: the rest of spinning gun code
+            if (actor.P2 >= 0x80)
+            {
+                firingElement = Elements.StarId;
+            }
+
+            if ((actor.P2 & 0x7F) > RandomNumberDeterministic(9))
+            {
+                if (actor.P1 >= RandomNumberDeterministic(9))
+                {
+                    if (actor.X.AbsDiff(Player.X) <= 2)
+                    {
+                        shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, actor.Y.AbsDiff(Player.Y)), true);
+                    }
+                    if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
+                    {
+                        shot = SpawnProjectile(firingElement, actor.Location, new Vector(actor.X.AbsDiff(Player.X), 0), true);
+                    }
+                }
+                else
+                {
+                    shot = SpawnProjectile(firingElement, actor.Location, Rnd(), true);
+                }
+            }
         }
 
         virtual public void Act_Star(int index)
