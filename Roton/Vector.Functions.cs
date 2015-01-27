@@ -56,6 +56,11 @@ namespace Roton
         {
         }
 
+        public bool IsNonZero
+        {
+            get { return !IsZero; }
+        }
+
         public bool IsZero
         {
             get { return this.X == 0 && this.Y == 0; }
