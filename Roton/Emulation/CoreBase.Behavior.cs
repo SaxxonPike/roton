@@ -323,6 +323,31 @@ namespace Roton.Emulation
 
         virtual public void Act_Pusher(int index)
         {
+            var actor = Actors[index];
+            var source = actor.Location.Clone();
+
+            if (!ElementAt(actor.Location.Sum(actor.Vector)).Floor)
+            {
+                Push(actor.Location.Sum(actor.Vector), actor.Vector);
+            }
+
+            index = ActorIndexAt(source);
+            actor = Actors[index];
+            if (ElementAt(actor.Location.Sum(actor.Vector)).Floor)
+            {
+                MoveActor(index, actor.Location.Sum(actor.Vector));
+                PlaySound(2, Sounds.Push);
+                var behindLocation = actor.Location.Difference(actor.Vector);
+                if (TileAt(behindLocation).Id == Elements.PusherId)
+                {
+                    var behindIndex = ActorIndexAt(behindLocation);
+                    var behindActor = Actors[behindIndex];
+                    if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
+                    {
+                        Elements.PusherElement.Act(behindIndex);
+                    }
+                }
+            }
         }
 
         virtual public void Act_Roton(int index)
