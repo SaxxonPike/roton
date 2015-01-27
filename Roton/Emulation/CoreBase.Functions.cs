@@ -515,6 +515,8 @@ namespace Roton.Emulation
             {
                 TileAt(target).CopyFrom(TileAt(source));
                 TileAt(source).Id = Elements.EmptyId;
+                UpdateBoard(source);
+                UpdateBoard(target);
             }
         }
 
