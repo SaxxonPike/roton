@@ -10,7 +10,7 @@ namespace Roton.Emulation
         public Heap()
         {
             Entries = new Dictionary<int, byte[]>();
-            NextEntry = 0;
+            NextEntry = 1;
         }
 
         public byte[] this[int index]

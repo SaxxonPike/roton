@@ -730,7 +730,6 @@ namespace Roton.Emulation
                 actor.Location.CopyFrom(location);
                 actor.Cycle = cycle;
                 actor.UnderTile.CopyFrom(TileAt(location));
-                actor.Code = source.Code;
                 if (ElementAt(actor.Location).EditorFloor)
                 {
                     var newColor = TileAt(actor.Location).Color & 0x70;
