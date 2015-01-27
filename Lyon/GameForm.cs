@@ -85,6 +85,7 @@ namespace Lyon
         {
             exitMenuItem.Click += (object sender, EventArgs e) => { Close(); };
             openWorldMenuItem.Click += (object sender, EventArgs e) => { OpenWorld(); };
+            saveWorldToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorld(); };
             scale1xMenuItem.Click += (object sender, EventArgs e) => { SetScale(1); };
             scale2xMenuItem.Click += (object sender, EventArgs e) => { SetScale(2); };
             scale3xMenuItem.Click += (object sender, EventArgs e) => { SetScale(3); };
@@ -122,6 +123,20 @@ namespace Lyon
         void RestartZZT()
         {
             Initialize(new Context(ContextEngine.ZZT, false));
+        }
+
+        void SaveWorld()
+        {
+            if (Context != null)
+            {
+                var sfd = new SaveFileDialog();
+                sfd.Filter = FileFilters;
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    //Initialize(new Context(sfd.FileName, false));
+                    Context.Save(sfd.FileName);
+                }
+            }
         }
 
         void SetScale(int scale)

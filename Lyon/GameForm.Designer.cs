@@ -53,6 +53,7 @@
             this.speaker = new Roton.Windows.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
             this.terminal = new Roton.Windows.Terminal();
+            this.saveWorldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +75,7 @@
             // 
             this.toolStripDropDownButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWorldMenuItem,
+            this.saveWorldToolStripMenuItem,
             this.toolStripMenuItem2,
             this.restartCoreMenuItem,
             this.restartZZTMenuItem,
@@ -176,21 +178,30 @@
             // 
             // terminal
             // 
+            this.terminal.Alt = false;
             this.terminal.AutoSize = true;
             this.terminal.BackColor = System.Drawing.Color.Black;
             this.terminal.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("terminal.BackgroundImage")));
             this.terminal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.terminal.BlinkEnabled = true;
+            this.terminal.Control = false;
             this.terminal.CursorEnabled = false;
             this.terminal.CursorX = 0;
             this.terminal.CursorY = 0;
             this.terminal.Location = new System.Drawing.Point(0, 0);
             this.terminal.Margin = new System.Windows.Forms.Padding(0);
             this.terminal.Name = "terminal";
+            this.terminal.Shift = false;
             this.terminal.Size = new System.Drawing.Size(640, 350);
             this.terminal.TabIndex = 2;
             this.terminal.TerminalFont = font1;
             this.terminal.TerminalPalette = palette1;
+            // 
+            // saveWorldToolStripMenuItem
+            // 
+            this.saveWorldToolStripMenuItem.Name = "saveWorldToolStripMenuItem";
+            this.saveWorldToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.saveWorldToolStripMenuItem.Text = "&Save World...";
             // 
             // GameForm
             // 
@@ -232,6 +243,7 @@
         private System.Windows.Forms.Panel mainPanel;
         private Roton.Windows.Terminal terminal;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;
     }
 }
 
