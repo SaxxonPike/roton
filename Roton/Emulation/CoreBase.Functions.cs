@@ -515,10 +515,6 @@ namespace Roton.Emulation
             get { return Actors[0]; }
         }
 
-        virtual internal void PlaySound(int priority, byte[] sound)
-        {
-        }
-
         virtual internal Vector Rnd()
         {
             var result = new Vector();

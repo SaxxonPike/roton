@@ -51,6 +51,7 @@
     <Compile Include="Emulation\CoreBase.Loops.cs" />
     <Compile Include="Emulation\CoreBase.Messages.cs" />
     <Compile Include="Emulation\CoreBase.OOP.cs" />
+    <Compile Include="Emulation\CoreBase.Sound.cs" />
     <Compile Include="Emulation\CoreBase.Utility.cs" />
     <Compile Include="Emulation\CoreTimer.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
