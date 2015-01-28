@@ -541,6 +541,18 @@ namespace Roton.Emulation
 
         virtual public void Interact_Bomb(Location location, int index, Vector vector)
         {
+            var actor = ActorAt(location);
+            if (actor.P1 == 0)
+            {
+                actor.P1 = 9;
+                UpdateBoard(location);
+                SetMessage(0xC8, BombMessage);
+                PlaySound(4, Sounds.BombActivate);
+            }
+            else
+            {
+                Push(location, vector);
+            }
         }
 
         virtual public void Interact_Door(Location location, int index, Vector vector)

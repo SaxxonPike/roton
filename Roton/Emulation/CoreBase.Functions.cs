@@ -9,6 +9,11 @@ namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
+        virtual internal Actor ActorAt(Location location)
+        {
+            return Actors[ActorIndexAt(location)];
+        }
+
         virtual internal int ActorIndexAt(Location location)
         {
             int index = 0;
