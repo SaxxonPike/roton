@@ -652,6 +652,8 @@ namespace Roton.Emulation
 
         virtual public void Interact_Transporter(Location location, int index, Vector vector)
         {
+            PushThroughTransporter(location.Difference(vector), vector);
+            vector.SetTo(0, 0);
         }
 
         virtual public void Interact_Water(Location location, int index, Vector vector)
