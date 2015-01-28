@@ -272,7 +272,54 @@ namespace Roton.Emulation
 
         virtual internal void Harm(int index)
         {
-            RemoveActor(index);
+            var actor = Actors[index];
+            if (index == 0)
+            {
+                if (Health > 0)
+                {
+                    Health -= 10;
+                    UpdateStatus();
+                    SetMessage(0x64, @"Ouch!");
+                    int color = TileAt(actor.Location).Color;
+                    color &= 0x0F;
+                    color |= 0x70;
+                    TileAt(actor.Location).Color = color;
+                    if (Health > 0)
+                    {
+                        TimePassed = 0;
+                        if (RestartOnZap)
+                        {
+                            PlaySound(4, Sounds.TimeOut);
+                            TileAt(actor.Location).Id = Elements.EmptyId;
+                            UpdateBoard(actor.Location);
+                            Location oldLocation = actor.Location.Clone();
+                            actor.Location.CopyFrom(Enter);
+                            UpdateRadius(oldLocation, 0);
+                            UpdateRadius(actor.Location, 0);
+                            GamePaused = true;
+                        }
+                        PlaySound(4, Sounds.Ouch);
+                    }
+                    else
+                    {
+                        PlaySound(5, Sounds.GameOver);
+                    }
+                }
+            }
+            else
+            {
+                int element = TileAt(actor.Location).Id;
+                if (element == Elements.BulletId)
+                {
+                    PlaySound(3, Sounds.BulletDie);
+                }
+                else if (element != Elements.ObjectId)
+                {
+                    PlaySound(3, Sounds.EnemyDie);
+                }
+                RemoveActor(index);
+
+            }
         }
 
         virtual internal int Height
