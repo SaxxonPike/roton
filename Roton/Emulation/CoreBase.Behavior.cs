@@ -305,6 +305,10 @@ namespace Roton.Emulation
                 case 0x53: // S
                     break;
                 case 0x50: // P
+                    if (Health > 0)
+                    {
+                        GamePaused = true;
+                    }
                     break;
                 case 0x42: // B
                     break;
