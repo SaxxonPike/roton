@@ -648,6 +648,12 @@ namespace Roton.Emulation
 
         virtual public void Interact_Slime(Location location, int index, Vector vector)
         {
+            int color = TileAt(location).Color;
+            int slimeIndex = ActorIndexAt(location);
+            Harm(slimeIndex);
+            TileAt(location).SetTo(Elements.BreakableId, color);
+            UpdateBoard(location);
+            PlaySound(2, Sounds.SlimeDie);
         }
 
         virtual public void Interact_Stone(Location location, int index, Vector vector)
