@@ -50,6 +50,7 @@ namespace Roton.Emulation
             }
             else
             {
+                Destroy(location);
                 PlaySound(2, Sounds.EnemySuicide);
             }
         }
@@ -944,10 +945,11 @@ namespace Roton.Emulation
 
         virtual internal void UpdateRadius(Location location, RadiusMode mode)
         {
-            int left = location.X - 9;
-            int right = location.X + 9;
-            int top = location.Y - 6;
-            int bottom = location.Y + 6;
+            Location source = location.Clone();
+            int left = source.X - 9;
+            int right = source.X + 9;
+            int top = source.Y - 6;
+            int bottom = source.Y + 6;
             for (int x = left; x <= right; x++)
             {
                 for (int y = top; y <= bottom; y++)
@@ -957,7 +959,7 @@ namespace Roton.Emulation
                         Location target = new Location(x, y);
                         if (mode != RadiusMode.Update)
                         {
-                            if (Distance(location, target) < 50)
+                            if (Distance(source, target) < 50)
                             {
                                 var element = ElementAt(target);
                                 if (mode == RadiusMode.Explode)
