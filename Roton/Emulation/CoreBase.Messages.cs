@@ -72,6 +72,16 @@ namespace Roton.Emulation
             return @"You now have the " + Colors[color] + " key.";
         }
 
+        virtual internal string NotDarkMessage
+        {
+            get { return @"Don't need torch - room is not dark!"; }
+        }
+
+        virtual internal string NoTorchMessage
+        {
+            get { return @"You don't have any torches!"; }
+        }
+
         virtual public string StoneText
         {
             get

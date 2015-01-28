@@ -268,6 +268,35 @@ namespace Roton.Emulation
             switch (KeyPressed.ToUpperCase())
             {
                 case 0x54: // T
+                    if (TorchesEnabled)
+                    {
+                        if (TorchCycles <= 0)
+                        {
+                            if (Torches <= 0)
+                            {
+                                if (AlertNoTorch)
+                                {
+                                    SetMessage(0xC8, NoTorchMessage);
+                                    AlertNoTorch = false;
+                                }
+                            }
+                            else if (!Dark)
+                            {
+                                if (AlertNotDark)
+                                {
+                                    SetMessage(0xC8, NotDarkMessage);
+                                    AlertNotDark = false;
+                                }
+                            }
+                            else
+                            {
+                                Torches--;
+                                TorchCycles = 0xC8;
+                                UpdateRadius(actor.Location, RadiusMode.Update);
+                                UpdateStatus();
+                            }
+                        }
+                    }
                     break;
                 case 0x51: // Q
                 case 0x1B: // escape
