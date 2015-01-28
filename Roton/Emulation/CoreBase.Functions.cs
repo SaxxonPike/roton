@@ -563,9 +563,25 @@ namespace Roton.Emulation
             actor.Location.CopyFrom(target);
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
-            if (index == 0)
+            if (index == 0 && Dark)
             {
-                // todo: do some torch shit
+                int squareDistanceX = (target.X - sourceLocation.X).Square();
+                int squareDistanceY = (target.Y - sourceLocation.Y).Square();
+                if (squareDistanceX + squareDistanceY == 1)
+                {
+                    Location glowLocation = new Location();
+                    for (int x = target.X - 11; x <= target.X + 11; x++)
+                    {
+                        for (int y = target.Y - 8; y <= target.Y + 8; y++)
+                        {
+                            glowLocation.SetTo(x, y);
+                            if ((Distance(sourceLocation, glowLocation) < 50) ^ (Distance(target, glowLocation) < 50))
+                            {
+                                UpdateBoard(glowLocation);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -926,16 +942,7 @@ namespace Roton.Emulation
 
         virtual internal void UpdateBoard(Location location)
         {
-            AnsiChar ac;
-            if (!Dark || ElementAt(location).Shown || (TorchCycles > 0 && Distance(Player.Location, location) < 50) || EditorMode)
-            {
-                ac = Draw(location);
-            }
-            else
-            {
-                ac = new AnsiChar(0xB0, 0x07);
-            }
-            DrawTile(location, ac);
+            DrawTile(location, Draw(location));
         }
 
         virtual internal void UpdateBorder()

@@ -9,32 +9,39 @@ namespace Roton.Emulation
     {
         virtual public AnsiChar Draw(Location location)
         {
-            Tile tile = Tiles[location];
-            Element element = Elements[tile.Id];
-            int elementCount = Elements.Count;
+            if (!Dark || ElementAt(location).Shown || (TorchCycles > 0 && Distance(Player.Location, location) < 50) || EditorMode)
+            {
+                Tile tile = Tiles[location];
+                Element element = Elements[tile.Id];
+                int elementCount = Elements.Count;
 
-            if (tile.Id == Elements.EmptyId)
-            {
-                return new AnsiChar(0x20, 0x0F);
-            }
-            else if (element.DrawCodeEnable)
-            {
-                return element.Draw(location);
-            }
-            else if (tile.Id < elementCount - 7)
-            {
-                return new AnsiChar(element.Character, tile.Color);
-            }
-            else
-            {
-                if (tile.Id != elementCount - 1)
+                if (tile.Id == Elements.EmptyId)
                 {
-                    return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
+                    return new AnsiChar(0x20, 0x0F);
+                }
+                else if (element.DrawCodeEnable)
+                {
+                    return element.Draw(location);
+                }
+                else if (tile.Id < elementCount - 7)
+                {
+                    return new AnsiChar(element.Character, tile.Color);
                 }
                 else
                 {
-                    return new AnsiChar(tile.Color, 0x0F);
+                    if (tile.Id != elementCount - 1)
+                    {
+                        return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
+                    }
+                    else
+                    {
+                        return new AnsiChar(tile.Color, 0x0F);
+                    }
                 }
+            }
+            else
+            {
+                return new AnsiChar(0xB0, 0x07);
             }
         }
 
