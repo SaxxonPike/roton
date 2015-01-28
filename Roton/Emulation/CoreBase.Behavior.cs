@@ -562,6 +562,7 @@ namespace Roton.Emulation
 
         virtual public void Interact_Enemy(Location location, int index, Vector vector)
         {
+            Attack(index, location);
         }
 
         virtual public void Interact_Energizer(Location location, int index, Vector vector)
