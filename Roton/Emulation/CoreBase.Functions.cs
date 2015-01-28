@@ -897,6 +897,54 @@ namespace Roton.Emulation
 
         virtual internal void UpdateRadius(Location location, RadiusMode mode)
         {
+            int left = location.X - 9;
+            int right = location.X + 9;
+            int top = location.Y - 6;
+            int bottom = location.Y + 6;
+            for (int x = left; x <= right; x++)
+            {
+                for (int y = top; y <= bottom; y++)
+                {
+                    if (x >= 1 && x <= Width && y >= 1 && y <= Height)
+                    {
+                        Location target = new Location(x, y);
+                        if (mode != RadiusMode.Update)
+                        {
+                            if (Distance(location, target) < 50)
+                            {
+                                var element = ElementAt(target);
+                                if (mode == RadiusMode.Explode)
+                                {
+                                    if (element.Code.Length > 0)
+                                    {
+                                        int actorIndex = ActorIndexAt(target);
+                                        if (actorIndex > 0)
+                                        {
+                                            SendLabel(-actorIndex, @"BOMBED", false);
+                                        }
+                                    }
+                                    if (element.Destructible || element.Index == Elements.StarId)
+                                    {
+                                        Destroy(target);
+                                    }
+                                    if (element.Index == Elements.EmptyId || element.Index == Elements.BreakableId)
+                                    {
+                                        TileAt(target).SetTo(Elements.BreakableId, RandomNumberDeterministic(7) + 9);
+                                    }
+                                }
+                                else
+                                {
+                                    if (TileAt(target).Id == Elements.BreakableId)
+                                    {
+                                        TileAt(target).Id = Elements.EmptyId;
+                                    }
+                                }
+                            }
+                        }
+                        UpdateBoard(target);
+                    }
+                }
+            }
         }
 
         virtual internal void UpdateStatus()
