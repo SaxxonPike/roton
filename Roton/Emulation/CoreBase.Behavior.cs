@@ -615,6 +615,20 @@ namespace Roton.Emulation
 
         virtual public void Interact_Key(Location location, int index, Vector vector)
         {
+            int color = (TileAt(location).Color & 0x07);
+            int keyIndex = color - 1;
+            if (Keys[keyIndex])
+            {
+                SetMessage(0xC8, KeyAlreadyMessage(color));
+                PlaySound(2, Sounds.KeyAlready);
+            }
+            else
+            {
+                Keys[keyIndex] = true;
+                TileAt(location).Id = Elements.EmptyId;
+                SetMessage(0xC8, KeyMessage(color));
+                PlaySound(2, Sounds.Key);
+            }
         }
 
         virtual public void Interact_Object(Location location, int index, Vector vector)
