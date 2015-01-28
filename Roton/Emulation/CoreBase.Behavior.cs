@@ -605,6 +605,9 @@ namespace Roton.Emulation
 
         virtual public void Interact_Object(Location location, int index, Vector vector)
         {
+            var objectIndex = ActorIndexAt(location);
+            var actor = Actors[objectIndex];
+            SendLabel(-objectIndex, @"TOUCH", false);
         }
 
         virtual public void Interact_Passage(Location location, int index, Vector vector)
