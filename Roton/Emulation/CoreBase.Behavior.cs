@@ -581,6 +581,17 @@ namespace Roton.Emulation
 
         virtual public void Interact_Energizer(Location location, int index, Vector vector)
         {
+            PlaySound(9, Sounds.Energizer);
+            TileAt(location).Id = Elements.EmptyId;
+            EnergyCycles = 0x4B;
+            UpdateStatus();
+            UpdateBoard(location);
+            if (AlertEnergy)
+            {
+                AlertEnergy = false;
+                SetMessage(0xC8, EnergizerMessage);
+            }
+            SendLabel(0, @"ALL:ENERGIZE", false);
         }
 
         virtual public void Interact_Fake(Location location, int index, Vector vector)
