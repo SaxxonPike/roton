@@ -119,6 +119,10 @@ namespace Roton.Emulation
 
         virtual internal void ClearSound()
         {
+            SoundBuffer.Clear();
+            SoundBufferLength = 0;
+            SoundPlaying = false;
+            StopSound();
         }
 
         virtual internal void ClearWorld()

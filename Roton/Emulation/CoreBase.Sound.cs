@@ -15,5 +15,9 @@ namespace Roton.Emulation
         virtual internal void PlaySound(int priority, byte[] sound)
         {
         }
+
+        virtual internal void StopSound()
+        {
+        }
     }
 }

@@ -459,6 +459,12 @@ namespace Roton.Emulation
             get { return StateData.SoundBuffer; }
         }
 
+        public int SoundBufferLength
+        {
+            get { return StateData.SoundBufferLength; }
+            set { StateData.SoundBufferLength = value; }
+        }
+
         public bool SoundPlaying
         {
             get { return StateData.SoundPlaying; }
