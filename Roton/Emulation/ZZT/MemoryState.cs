@@ -8,6 +8,7 @@ namespace Roton.Emulation.ZZT
     sealed internal class MemoryState : MemoryStateBase
     {
         MemoryTile _borderTile;
+        MemoryColorArray _colors;
         MemoryActor _defaultActor;
         MemoryTile _edgeTile;
         MemoryVector _keyVector;
@@ -24,6 +25,7 @@ namespace Roton.Emulation.ZZT
         {
             memory.Write(0x0000, Properties.Resources.zztextra);
             _borderTile = new MemoryTile(Memory, 0x0072);
+            _colors = new MemoryColorArray(Memory);
             _defaultActor = new MemoryActor(Memory, 0x0076);
             _edgeTile = new MemoryTile(Memory, 0x0074);
             _keyVector = new MemoryVector(Memory, 0x7C68);
@@ -248,6 +250,17 @@ namespace Roton.Emulation.ZZT
             set
             {
                 Memory.WriteBool(0x7B66, value);
+            }
+        }
+
+        public override IList<string> Colors
+        {
+            get
+            {
+                return _colors;
+            }
+            protected set
+            {
             }
         }
 

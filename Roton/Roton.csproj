@@ -54,7 +54,9 @@
     <Compile Include="Emulation\CoreBase.Sound.cs" />
     <Compile Include="Emulation\CoreBase.Utility.cs" />
     <Compile Include="Emulation\CoreTimer.cs" />
+    <Compile Include="Emulation\MemoryColorArrayBase.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
+    <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="IDisplayInfo.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Element.Functions.cs" />
