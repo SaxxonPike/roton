@@ -558,6 +558,20 @@ namespace Roton.Emulation
 
         virtual public void Interact_Door(Location location, int index, Vector vector)
         {
+            int color = (TileAt(location).Color & 0x70) >> 4;
+            int keyIndex = color - 1;
+            if (!Keys[keyIndex])
+            {
+                SetMessage(0xC8, DoorClosedMessage(color));
+                PlaySound(3, Sounds.DoorLocked);
+            }
+            else
+            {
+                Keys[keyIndex] = false;
+                TileAt(location).Id = Elements.EmptyId;
+                SetMessage(0xC8, DoorOpenMessage(color));
+                PlaySound(3, Sounds.DoorOpen);
+            }
         }
 
         virtual public void Interact_Enemy(Location location, int index, Vector vector)
