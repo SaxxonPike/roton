@@ -570,10 +570,23 @@ namespace Roton.Emulation
 
         virtual public void Interact_Fake(Location location, int index, Vector vector)
         {
+            if (AlertFake)
+            {
+                AlertFake = false;
+                SetMessage(0xC8, FakeMessage);
+            }
         }
 
         virtual public void Interact_Forest(Location location, int index, Vector vector)
         {
+            TileAt(location).Id = Elements.EmptyId;
+            UpdateBoard(location);
+            PlaySound(3, Sounds.Forest);
+            if (AlertForest)
+            {
+                SetMessage(0xC8, ForestMessage);
+                AlertForest = false;
+            }
         }
 
         virtual public void Interact_Gem(Location location, int index, Vector vector)
