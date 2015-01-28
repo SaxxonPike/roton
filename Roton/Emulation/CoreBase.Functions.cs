@@ -156,6 +156,15 @@ namespace Roton.Emulation
 
         virtual internal void Destroy(Location location)
         {
+            int index = ActorIndexAt(location);
+            if (index == -1)
+            {
+                TileAt(location).Id = Elements.EmptyId;
+            }
+            else
+            {
+                Harm(index);
+            }
         }
 
         virtual internal void DrawChar(Location location, AnsiChar ac)
