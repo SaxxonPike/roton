@@ -311,6 +311,10 @@ namespace Roton.Emulation
                     }
                     break;
                 case 0x42: // B
+                    GameQuiet = !GameQuiet;
+                    ClearSound();
+                    UpdateStatus();
+                    KeyPressed = 0x20;
                     break;
                 case 0x48: // H
                     break;
