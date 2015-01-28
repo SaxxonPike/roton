@@ -473,6 +473,7 @@ namespace Roton.Emulation
 
         virtual public void Act_Transporter(int index)
         {
+            UpdateBoard(Actors[index].Location);
         }
 
         virtual public void Interact_Ammo(Location location, int index, Vector vector)
