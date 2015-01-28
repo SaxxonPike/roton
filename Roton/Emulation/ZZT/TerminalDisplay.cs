@@ -131,6 +131,12 @@ namespace Roton.Emulation.ZZT
             Terminal.Plot(x, y, ac);
         }
 
+        public override void DrawMessage(string message, int color)
+        {
+            int x = (60 - message.Length) / 2;
+            DrawString(x, 24, " " + message + " ", color);
+        }
+
         public override void DrawPausing()
         {
             DrawString(0x40, 0x05, @"Pausing...", 0x1F);
@@ -153,6 +159,11 @@ namespace Roton.Emulation.ZZT
         public override void DrawTile(int x, int y, AnsiChar ac)
         {
             DrawTileCommon(x, y, ac);
+        }
+
+        void DrawTileAt(Location location)
+        {
+            DrawTileCommon(location.X, location.Y, DisplayInfo.Draw(location.Sum(1, 1)));
         }
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -275,9 +286,15 @@ namespace Roton.Emulation.ZZT
 
         public override void UpdateBorder()
         {
-            for (int x = 1; x < ViewportWidth; x++)
+            for (int x = 0; x < ViewportWidth; x++)
             {
-                
+                DrawTileAt(new Location(x, 0));
+                DrawTileAt(new Location(x, ViewportHeight - 1));
+            }
+            for (int y = 0; y < ViewportHeight; y++)
+            {
+                DrawTileAt(new Location(0, y));
+                DrawTileAt(new Location(ViewportWidth - 1, y));
             }
         }
 

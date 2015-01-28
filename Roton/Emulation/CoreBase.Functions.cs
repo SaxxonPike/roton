@@ -840,7 +840,18 @@ namespace Roton.Emulation
 
         virtual internal void SetMessage(int duration, string message)
         {
-            // todo
+            int index = ActorIndexAt(new Location(0, 0));
+            if (index >= 0)
+            {
+                RemoveActor(index);
+                UpdateBorder();
+            }
+            if (message.Length > 0)
+            {
+                SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
+                Actors[ActorCount].P2 = duration / (GameWaitTime + 1);
+            }
+            this.Message = message;
         }
 
         virtual internal void ShowAbout()

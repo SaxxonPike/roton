@@ -157,7 +157,7 @@ namespace Roton.Emulation
             var actor = Actors[index];
             if (actor.X == 0)
             {
-                Display.DrawMessage(" " + Message + " ", (actor.P2 % 7) + 9);
+                Display.DrawMessage(Message, (actor.P2 % 7) + 9);
                 actor.P2--;
                 if (actor.P2 <= 0)
                 {

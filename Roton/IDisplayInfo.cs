@@ -17,6 +17,7 @@ namespace Roton
         int KeyPressed { get; }
         bool KeyShift { get; }
         IList<bool> Keys { get; }
+        string Message { get; }
         bool Quiet { get; }
         void ReadInput();
         int ReadKey();
