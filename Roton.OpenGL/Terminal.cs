@@ -105,13 +105,8 @@ namespace Roton.OpenGL {
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Color3(Color.IndianRed);
-            GL.Begin(BeginMode.Quads);
-            GL.Vertex2(8.0, 8.0);
-            GL.Vertex2(64.0, 9.0);
-            GL.Vertex2(65.0, 20.0);
-            GL.Vertex2(8.0, 21.0);
-            GL.End();
+            //GL.Begin(BeginMode.Quads);
+            //GL.End();
 
             glControl.SwapBuffers();
         }
@@ -184,7 +179,7 @@ namespace Roton.OpenGL {
             glControl.MakeCurrent();
 
             // Initialize OpenGL.
-            GL.ClearColor(Color.BlueViolet);
+            GL.ClearColor(Color.Black);
             GL.Disable(EnableCap.Lighting);  // unnecessary
             GL.Disable(EnableCap.DepthTest); // unnecessary
             GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
