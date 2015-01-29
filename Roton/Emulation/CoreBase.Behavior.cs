@@ -148,6 +148,7 @@ namespace Roton.Emulation
 
         virtual public void Act_DragonPup(int index)
         {
+            UpdateBoard(Actors[index].Location);
         }
 
         virtual public void Act_Duplicator(int index)
@@ -226,6 +227,7 @@ namespace Roton.Emulation
 
         virtual public void Act_Pairer(int index)
         {
+            // pairer code only reads the actor's tile...
         }
 
         virtual public void Act_Player(int index)
