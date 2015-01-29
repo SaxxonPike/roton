@@ -94,12 +94,7 @@ namespace Roton.OpenGL {
             _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
         }
 
-        public void Plot(int x, int y, AnsiChar ac)
-        {
-        }
-
-        private void Redraw()
-        {
+        private void GLRender() {
             if(!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -109,6 +104,10 @@ namespace Roton.OpenGL {
             //GL.End();
 
             glControl.SwapBuffers();
+        }
+        
+        public void Plot(int x, int y, AnsiChar ac)
+        {
         }
 
         public int ScaleX {
@@ -171,7 +170,7 @@ namespace Roton.OpenGL {
 
         private void displayTimer_Tick(object sender, EventArgs e)
         {
-            Redraw();
+            GLRender();
         }
 
         private void glControl_Load(object sender, EventArgs e) {
