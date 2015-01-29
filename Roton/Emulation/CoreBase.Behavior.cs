@@ -423,6 +423,50 @@ namespace Roton.Emulation
 
         virtual public void Act_Ruffian(int index)
         {
+            var actor = Actors[index];
+
+            if (actor.Vector.IsZero)
+            {
+                if (actor.P2 + 8 <= RandomNumberDeterministic(17))
+                {
+                    if (actor.P1 >= RandomNumberDeterministic(9))
+                    {
+                        Seek(actor.Location, actor.Vector);
+                    }
+                    else
+                    {
+                        Rnd(actor.Vector);
+                    }
+                }
+            }
+            else
+            {
+                if (actor.X == Player.X || actor.Y == Player.Y)
+                {
+                    if (actor.P1 >= RandomNumberDeterministic(9))
+                    {
+                        Seek(actor.Location, actor.Vector);
+                    }
+                }
+
+                var target = actor.Location.Sum(actor.Vector);
+                if (ElementAt(target).Index == Elements.PlayerId)
+                {
+                    Attack(index, target);
+                }
+                else if (ElementAt(target).Floor)
+                {
+                    MoveActor(index, target);
+                    if (actor.P2 + 8 <= RandomNumberDeterministic(17))
+                    {
+                        actor.Vector.SetTo(0, 0);
+                    }
+                }
+                else
+                {
+                    actor.Vector.SetTo(0, 0);
+                }
+            }
         }
 
         virtual public void Act_Scroll(int index)
