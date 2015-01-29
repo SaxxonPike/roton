@@ -48,6 +48,7 @@
     <Compile Include="Context.Functions.cs" />
     <Compile Include="Display.cs" />
     <Compile Include="Display.Functions.cs" />
+    <Compile Include="Emulation\CodeSearchInfo.cs" />
     <Compile Include="Emulation\CoreBase.Loops.cs" />
     <Compile Include="Emulation\CoreBase.Messages.cs" />
     <Compile Include="Emulation\CoreBase.OOP.cs" />
