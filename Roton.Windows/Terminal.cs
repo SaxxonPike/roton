@@ -171,7 +171,8 @@ namespace Roton.Windows
                 int newWidth = _terminalFont.Width;
                 int newX = x * newWidth;
                 int newY = y * newHeight;
-                Invalidate(new Rectangle(newX, newY, newWidth, newHeight));
+                var rect = new Rectangle(newX, newY, newWidth, newHeight);
+                Invalidate(rect);
             }
         }
 
@@ -236,19 +237,23 @@ namespace Roton.Windows
         protected override void OnPaint(PaintEventArgs e)
         {
 
-            //base.OnPaint(e);
-            if (BackgroundImage != null)
+            if (Bitmap != null)
             {
                 e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                e.Graphics.DrawImageUnscaled(BackgroundImage, 0, 0);
+                e.Graphics.DrawImageUnscaled(Bitmap, 0, 0);
                 UpdateCursor();
             }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
         }
 
         public Palette Palette
@@ -345,7 +350,6 @@ namespace Roton.Windows
 
             var oldBitmap = Bitmap;
             Bitmap = new FastBitmap(_terminalFont.Width * _terminalWidth * (_terminalWide ? 2 : 1), _terminalFont.Height * _terminalHeight);
-            BackgroundImage = Bitmap;
             if (oldBitmap != null)
             {
                 oldBitmap.Dispose();
