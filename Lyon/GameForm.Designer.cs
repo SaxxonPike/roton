@@ -34,11 +34,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
-            Roton.Windows.Font font1 = new Roton.Windows.Font();
-            Roton.Windows.Palette palette1 = new Roton.Windows.Palette();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openWorldMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveWorldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.restartCoreMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartZZTMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,8 +51,7 @@
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.speaker = new Roton.Windows.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.terminal = new Roton.Windows.Terminal();
-            this.saveWorldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.terminal = new Roton.OpenGL.Terminal();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
@@ -94,6 +92,12 @@
             this.openWorldMenuItem.Name = "openWorldMenuItem";
             this.openWorldMenuItem.Size = new System.Drawing.Size(214, 22);
             this.openWorldMenuItem.Text = "&Open World...";
+            // 
+            // saveWorldToolStripMenuItem
+            // 
+            this.saveWorldToolStripMenuItem.Name = "saveWorldToolStripMenuItem";
+            this.saveWorldToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.saveWorldToolStripMenuItem.Text = "&Save World...";
             // 
             // toolStripMenuItem2
             // 
@@ -178,30 +182,11 @@
             // 
             // terminal
             // 
-            this.terminal.Alt = false;
-            this.terminal.AutoSize = true;
             this.terminal.BackColor = System.Drawing.Color.Black;
-            this.terminal.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("terminal.BackgroundImage")));
-            this.terminal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.terminal.BlinkEnabled = true;
-            this.terminal.Control = false;
-            this.terminal.CursorEnabled = false;
-            this.terminal.CursorX = 0;
-            this.terminal.CursorY = 0;
             this.terminal.Location = new System.Drawing.Point(0, 0);
-            this.terminal.Margin = new System.Windows.Forms.Padding(0);
             this.terminal.Name = "terminal";
-            this.terminal.Shift = false;
             this.terminal.Size = new System.Drawing.Size(640, 350);
-            this.terminal.TabIndex = 2;
-            this.terminal.TerminalFont = font1;
-            this.terminal.TerminalPalette = palette1;
-            // 
-            // saveWorldToolStripMenuItem
-            // 
-            this.saveWorldToolStripMenuItem.Name = "saveWorldToolStripMenuItem";
-            this.saveWorldToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.saveWorldToolStripMenuItem.Text = "&Save World...";
+            this.terminal.TabIndex = 0;
             // 
             // GameForm
             // 
@@ -218,7 +203,6 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.mainPanel.ResumeLayout(false);
-            this.mainPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -241,9 +225,9 @@
         private System.Windows.Forms.ToolStripMenuItem scale3xMenuItem;
         private Roton.Windows.Speaker speaker;
         private System.Windows.Forms.Panel mainPanel;
-        private Roton.Windows.Terminal terminal;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;
+        private Roton.OpenGL.Terminal terminal;
     }
 }
 

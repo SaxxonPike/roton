@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using OpenTK.Graphics.OpenGL;
-using Roton;
-using System.Windows.Forms;
 using OpenTK;
-using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using System.Windows.Forms;
 
 namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
@@ -21,37 +19,50 @@ namespace Roton.OpenGL {
             glControl.Load += glControl_Load;
         }
 
-        void glControl_Load(object sender, EventArgs e)
-        {
-            _canDraw = true;
-        }
-
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if(disposing && (components != null))
-            {
+        protected override void Dispose(bool disposing) {
+            if(disposing && (components != null)) {
                 components.Dispose();
             }
             base.Dispose(disposing);
         }
 
+        private void glControl_Load(object sender, EventArgs e)
+        {
+            _canDraw = true;
+        }
+
+        public IKeyboard Keyboard
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Plot(int x, int y, AnsiChar ac)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public void SetScale(int xScale, int yScale)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetSize(int width, int height, bool wide)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Write(int x, int y, string value, int color)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
