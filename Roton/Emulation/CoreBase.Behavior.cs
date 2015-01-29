@@ -9,6 +9,36 @@ namespace Roton.Emulation
     {
         virtual public void Act_Bear(int index)
         {
+            var actor = Actors[index];
+            var vector = new Vector();
+
+            if (Player.X == actor.X || (8 - actor.P1 < Player.Y.AbsDiff(actor.Y)))
+            {
+                if (8 - actor.P1 < Player.X.AbsDiff(actor.X))
+                {
+                    vector.SetTo(0, 0);
+                }
+                else
+                {
+                    vector.SetTo(0, (Player.Y - actor.Y).Polarity());
+                }
+            }
+            else
+            {
+                vector.SetTo((Player.X - actor.X).Polarity(), 0);
+            }
+
+            var target = actor.Location.Sum(vector);
+            var targetElement = ElementAt(target);
+
+            if (targetElement.Floor)
+            {
+                MoveActor(index, target);
+            }
+            else if (targetElement.Index == Elements.PlayerId || targetElement.Index == Elements.BreakableId)
+            {
+                Attack(index, target);
+            }
         }
 
         virtual public void Act_BlinkWall(int index)
