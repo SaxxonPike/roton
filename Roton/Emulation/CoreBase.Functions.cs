@@ -839,7 +839,7 @@ namespace Roton.Emulation
             UnpackBoard(boardIndex);
         }
 
-        virtual internal void SetMessage(int duration, string message)
+        virtual internal void SetMessage(int duration, string message, string message2 = "")
         {
             int index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)
@@ -847,12 +847,13 @@ namespace Roton.Emulation
                 RemoveActor(index);
                 UpdateBorder();
             }
-            if (message.Length > 0)
+            if ((message != null && message.Length > 0) || (message2 != null && message2.Length > 0))
             {
                 SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
                 Actors[ActorCount].P2 = duration / (GameWaitTime + 1);
             }
             this.Message = message;
+            this.Message2 = message;
         }
 
         virtual internal void ShowAbout()

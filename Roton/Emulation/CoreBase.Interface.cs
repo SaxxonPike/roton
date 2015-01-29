@@ -378,6 +378,12 @@ namespace Roton.Emulation
             set { StateData.Message = value; }
         }
 
+        public string Message2
+        {
+            get { return StateData.Message2; }
+            set { StateData.Message2 = value; }
+        }
+
         public int OOPByte
         {
             get { return StateData.OOPByte; }

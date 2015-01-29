@@ -45,6 +45,7 @@ namespace Roton
         virtual public Vector KeyVector { get; set; }
         virtual public IList<int> LineChars { get; protected set; }
         virtual public string Message { get; set; }
+        virtual public string Message2 { get; set; }
         virtual public int OOPByte { get; set; }
         virtual public int OOPNumber { get; set; }
         virtual public string OOPWord { get; set; }
