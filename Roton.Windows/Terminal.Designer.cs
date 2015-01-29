@@ -17,11 +17,17 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timerDaemon = new Roton.Windows.TimerDaemon(this.components);
+            this.displayTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // timerDaemon
             // 
             this.timerDaemon.Paused = false;
+            // 
+            // displayTimer
+            // 
+            this.displayTimer.Interval = 1;
+            this.displayTimer.Tick += new System.EventHandler(this.displayTimer_Tick);
             // 
             // Terminal
             // 
@@ -39,5 +45,6 @@
         #endregion
 
         private TimerDaemon timerDaemon;
+        private System.Windows.Forms.Timer displayTimer;
     }
 }

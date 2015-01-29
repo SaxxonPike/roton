@@ -26,6 +26,7 @@ namespace Roton.Windows
         private Roton.Windows.Palette _terminalPalette;
         private bool _terminalWide;
         private int _terminalWidth;
+        private bool _updated;
 
         public Terminal()
         {
@@ -159,19 +160,7 @@ namespace Roton.Windows
                 int backColor = _terminalPalette.Colors[(ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF)];
                 int foreColor = (BlinkEnabled && Blinking && (ac.Color & 0x80) != 0) ? backColor : _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, newX, newY, ac.Char, foreColor, backColor);
-                Invalidate(x, y);
-            }
-        }
-
-        void Invalidate(int x, int y)
-        {
-            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
-            {
-                int newHeight = _terminalFont.Height;
-                int newWidth = _terminalFont.Width;
-                int newX = x * newWidth;
-                int newY = y * newHeight;
-                Invalidate(new Rectangle(newX, newY, newWidth, newHeight));
+                _updated = true;
             }
         }
 
@@ -209,6 +198,7 @@ namespace Roton.Windows
             SetSize(80, 25, false);
             BlinkEnabled = true;
             timerDaemon.Start(Blink, 1f / 0.2f);
+            displayTimer.Enabled = true;
         }
 
         void OnMouse(object sender, MouseEventArgs e)
@@ -236,19 +226,23 @@ namespace Roton.Windows
         protected override void OnPaint(PaintEventArgs e)
         {
 
-            //base.OnPaint(e);
-            if (BackgroundImage != null)
+            if (Bitmap != null)
             {
                 e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                e.Graphics.DrawImageUnscaled(BackgroundImage, 0, 0);
+                e.Graphics.DrawImageUnscaled(Bitmap, 0, 0);
                 UpdateCursor();
             }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
         }
 
         public Palette Palette
@@ -345,7 +339,6 @@ namespace Roton.Windows
 
             var oldBitmap = Bitmap;
             Bitmap = new FastBitmap(_terminalFont.Width * _terminalWidth * (_terminalWide ? 2 : 1), _terminalFont.Height * _terminalHeight);
-            BackgroundImage = Bitmap;
             if (oldBitmap != null)
             {
                 oldBitmap.Dispose();
@@ -411,21 +404,21 @@ namespace Roton.Windows
                     using (Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)), dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
                     {
                         Rectangle outerRect = new Rectangle(_cursorX * _terminalFont.Width, _cursorY * _terminalFont.Height, _terminalFont.Width - 1, _terminalFont.Height - 1);
-                        g.DrawLines(dark, new Point[] { 
-                        new Point(outerRect.Left, outerRect.Bottom), 
-                        new Point(outerRect.Right, outerRect.Bottom),
-                        new Point(outerRect.Right, outerRect.Top)
-                    });
-                        g.DrawLines(bright, new Point[] { 
-                        new Point(outerRect.Left, outerRect.Bottom), 
-                        new Point(outerRect.Left, outerRect.Top),
-                        new Point(outerRect.Right, outerRect.Top)
-                    });
+                        g.DrawLines(dark, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Top)
+                        });
+                        g.DrawLines(bright, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Left, outerRect.Top),
+                            new Point(outerRect.Right, outerRect.Top)
+                        });
                     }
                 }
             }
         }
-        
+
         void UpdateCursor(int newX, int newY)
         {
             if (Shift && !_shiftHoldX && !_shiftHoldY)
@@ -448,7 +441,7 @@ namespace Roton.Windows
 
             if (newX != _cursorX || newY != _cursorY)
             {
-                Invalidate(_cursorX, _cursorY);
+                _updated = true;
                 _cursorX = newX;
                 _cursorY = newY;
                 UpdateCursor();
@@ -470,6 +463,15 @@ namespace Roton.Windows
                 Plot(x, y, ac);
                 x++;
                 if (x >= _terminalWidth) { x -= _terminalWidth; y++; }
+            }
+        }
+
+        private void displayTimer_Tick(object sender, EventArgs e)
+        {
+            if (_updated)
+            {
+                _updated = false;
+                Invalidate();
             }
         }
     }
