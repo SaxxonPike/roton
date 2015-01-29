@@ -25,10 +25,13 @@ namespace Roton.Windows
 
         public void Clear()
         {
-            _queue.Clear();
-            Shift = false;
-            Control = false;
-            Alt = false;
+            lock (_queue)
+            {
+                _queue.Clear();
+                Shift = false;
+                Control = false;
+                Alt = false;
+            }
         }
 
         public bool Control
@@ -39,8 +42,11 @@ namespace Roton.Windows
 
         void Enqueue(int data)
         {
-            if (_queue.Count(i => i == data) < 2)
-                _queue.Enqueue(data);
+            lock (_queue)
+            {
+                if (_queue.Count(i => i == data) < 2)
+                    _queue.Enqueue(data);
+            }
         }
 
         private int GetCode(Keys data)
@@ -68,11 +74,14 @@ namespace Roton.Windows
 
         public int GetKey()
         {
-            if (_queue.Count > 0)
+            lock (_queue)
             {
-                return _queue.Dequeue();
+                if (_queue.Count > 0)
+                {
+                    return _queue.Dequeue();
+                }
+                return -1;
             }
-            return -1;
         }
 
         public bool NumLock
