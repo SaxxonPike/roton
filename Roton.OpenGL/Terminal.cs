@@ -8,7 +8,6 @@ using System.Windows.Forms;
 namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
     {
-        private bool _glReady = false;
         private KeysBuffer _keys;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
@@ -22,7 +21,6 @@ namespace Roton.OpenGL {
             // Initialize the GLControl late so that the WinForm designer
             // doesn't crash.
             var glControl = new GLControl {Dock = DockStyle.Fill};
-            glControl.Load += glControl_Load;
         }
 
         /// <summary> 
@@ -34,11 +32,6 @@ namespace Roton.OpenGL {
                 components.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private void glControl_Load(object sender, EventArgs e)
-        {
-            _glReady = true;
         }
 
         public bool Alt {

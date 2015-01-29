@@ -24,7 +24,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.Color.DimGray;
             this.Name = "Terminal";
             this.Size = new System.Drawing.Size(640, 350);
             this.ResumeLayout(false);
