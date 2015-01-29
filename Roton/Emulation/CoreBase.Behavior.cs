@@ -419,6 +419,31 @@ namespace Roton.Emulation
 
         virtual public void Act_Roton(int index)
         {
+            var actor = Actors[index];
+
+            actor.P3--;
+            if (actor.P3 < (-actor.P2 % 10))
+            {
+                actor.P3 = (actor.P2 * 10) + RandomNumberDeterministic(10);
+            }
+
+            Seek(actor.Location, actor.Vector);
+            if (actor.P1 <= RandomNumberDeterministic(10))
+            {
+                int temp = actor.Vector.X;
+                actor.Vector.X = -(actor.P2.Polarity()) * actor.Vector.Y;
+                actor.Vector.Y = actor.P2.Polarity() * temp;
+            }
+
+            var target = actor.Location.Sum(actor.Vector);
+            if (ElementAt(target).Floor)
+            {
+                MoveActor(index, target);
+            }
+            else if (TileAt(target).Id == Elements.PlayerId)
+            {
+                Attack(index, target);
+            }
         }
 
         virtual public void Act_Ruffian(int index)
