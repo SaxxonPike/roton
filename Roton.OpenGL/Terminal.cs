@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
     {
-        private bool _canDraw = false;
+        private bool _glReady = false;
 
         public Terminal()
         {
@@ -32,7 +32,7 @@ namespace Roton.OpenGL {
 
         private void glControl_Load(object sender, EventArgs e)
         {
-            _canDraw = true;
+            _glReady = true;
         }
 
         public IKeyboard Keyboard
