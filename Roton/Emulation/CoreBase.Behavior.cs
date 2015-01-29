@@ -835,6 +835,14 @@ namespace Roton.Emulation
 
         virtual public void Interact_Stone(Location location, int index, Vector vector)
         {
+            if (Stones < 0)
+            {
+                Stones = 0;
+            }
+            Stones++;
+            Destroy(location);
+            UpdateStatus();
+            SetMessage(0xC8, @"You have found a", @"Stone of Power!");
         }
 
         virtual public void Interact_Torch(Location location, int index, Vector vector)
