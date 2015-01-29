@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Roton.Windows;
+using System;
 using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -8,9 +9,14 @@ namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
     {
         private bool _glReady = false;
+        private KeysBuffer _keys;
+        private bool _shiftHoldX;
+        private bool _shiftHoldY;
 
         public Terminal()
         {
+            _keys = new KeysBuffer();
+
             InitializeComponent();
 
             // Initialize the GLControl late so that the WinForm designer
@@ -35,9 +41,49 @@ namespace Roton.OpenGL {
             _glReady = true;
         }
 
-        public IKeyboard Keyboard
-        {
-            get { throw new NotImplementedException(); }
+        public bool Alt {
+            get { return _keys.Alt; }
+            set { _keys.Alt = value; }
+        }
+
+        public void AttachKeyHandler(Form form) {
+            form.KeyDown += (object sender, KeyEventArgs e) => { OnKey(e); };
+            form.KeyUp += (object sender, KeyEventArgs e) => { OnKey(e); };
+        }
+
+        public void ClearKeys() {
+            _keys.Clear();
+        }
+
+        public IKeyboard Keyboard {
+            get { return _keys as IKeyboard; }
+        }
+
+        void OnKey(KeyEventArgs e) {
+            if(!e.Shift) {
+                Shift = false;
+                _shiftHoldX = false;
+                _shiftHoldY = false;
+            } else {
+                Shift = true;
+            }
+            Alt = e.Alt;
+            Control = e.Control;
+        }
+
+        protected override void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e) {
+            base.OnKeyPress(e);
+            _keys.Press(e.KeyChar);
+        }
+
+        public bool Shift {
+            get { return _keys.Shift; }
+            set { _keys.Shift = value; }
+        }
+
+        public bool Control {
+            get { return _keys.Control; }
+            set { _keys.Control = value; }
         }
 
         public void Clear()
