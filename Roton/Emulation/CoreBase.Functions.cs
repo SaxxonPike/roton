@@ -807,6 +807,7 @@ namespace Roton.Emulation
             AlertNoShoot = true;
             AlertNotDark = true;
             AlertNoTorch = true;
+            AlertTorch = true;
         }
 
         virtual internal void Seek(Location location, Vector result)
