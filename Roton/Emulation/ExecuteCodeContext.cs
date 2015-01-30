@@ -16,6 +16,30 @@ namespace Roton.Emulation
             this.Name = name;
         }
 
+        public Actor Actor
+        {
+            get;
+            set;
+        }
+
+        public int CommandsExecuted
+        {
+            get;
+            set;
+        }
+
+        public bool Died
+        {
+            get;
+            set;
+        }
+
+        public bool Finished
+        {
+            get;
+            set;
+        }
+
         public int Index
         {
             get;
@@ -28,7 +52,31 @@ namespace Roton.Emulation
             set { _instructionSource.Instruction = value; }
         }
 
+        public string Message
+        {
+            get;
+            set;
+        }
+
+        public bool Moved
+        {
+            get;
+            set;
+        }
+
         public string Name
+        {
+            get;
+            set;
+        }
+
+        public int PreviousInstruction
+        {
+            get;
+            set;
+        }
+
+        public bool Repeat
         {
             get;
             set;
