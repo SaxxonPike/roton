@@ -367,10 +367,12 @@ namespace Roton.Emulation
                 }
                 else if (element.Index == Elements.ClockwiseId)
                 {
+                    element.Act = Act_Clockwise;
                     element.Draw = Draw_Clockwise;
                 }
                 else if (element.Index == Elements.CounterId)
                 {
+                    element.Act = Act_Counter;
                     element.Draw = Draw_Counter;
                 }
                 else if (element.Index == Elements.DoorId)
