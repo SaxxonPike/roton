@@ -30,6 +30,10 @@ namespace Roton.Windows
 
         public Terminal()
         {
+            // Initialize a default font/palette in case one isn't defined.
+            _terminalFont = new Font();
+            _terminalPalette = new Palette();
+
             _keys = new KeysBuffer();
             _cursorEnabled = false;
             InitializeComponent();

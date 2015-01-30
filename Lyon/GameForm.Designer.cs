@@ -34,8 +34,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
-            Roton.Windows.Font font1 = new Roton.Windows.Font();
-            Roton.Windows.Palette palette1 = new Roton.Windows.Palette();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openWorldMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +51,6 @@
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.speaker = new Roton.Windows.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.terminal = new Roton.OpenGL.Terminal();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
@@ -175,23 +172,11 @@
             // 
             this.mainPanel.AutoSize = true;
             this.mainPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mainPanel.Controls.Add(this.terminal);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 25);
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(330, 275);
             this.mainPanel.TabIndex = 1;
-            // 
-            // terminal
-            // 
-            this.terminal.BackColor = System.Drawing.Color.Black;
-            this.terminal.Location = new System.Drawing.Point(0, 0);
-            this.terminal.Name = "terminal";
-            this.terminal.Size = new System.Drawing.Size(640, 350);
-            this.terminal.TabIndex = 0;
-            this.terminal.AutoSize = true;
-            this.terminal.TerminalFont = font1;
-            this.terminal.TerminalPalette = palette1;
             // 
             // GameForm
             // 
@@ -232,7 +217,6 @@
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;
-        private Roton.OpenGL.Terminal terminal;
     }
 }
 

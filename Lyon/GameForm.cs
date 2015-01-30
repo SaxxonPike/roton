@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,18 +15,57 @@ namespace Lyon
     public partial class GameForm : Form
     {
         bool initScaleDisplay = true;
+        private Roton.Windows.Terminal winTerminal;
+        private Roton.OpenGL.Terminal glTerminal;
+        private ITerminal terminal;
+        private bool openGL;
 
-        public GameForm()
+        private void CommonSetup()
         {
+            // Set up default font and palette.
+            Roton.Windows.Font font1 = new Roton.Windows.Font();
+            Roton.Windows.Palette palette1 = new Roton.Windows.Palette();
+
             InitializeComponent();
             InitializeEvents();
+
+            // Load the appropriate terminal.
+            // TODO: This is horribly ugly and inelegant. Kill it with fire ASAP.
+            if (!openGL)
+            {
+                winTerminal = new Roton.Windows.Terminal();
+                winTerminal.Location = new System.Drawing.Point(0, 0);
+                winTerminal.Size = new System.Drawing.Size(640, 350);
+                winTerminal.AutoSize = true;
+                winTerminal.TerminalFont = font1;
+                winTerminal.TerminalPalette = palette1;
+                terminal = winTerminal;
+                mainPanel.Controls.Add(winTerminal);
+            }
+            else
+            {
+                glTerminal = new Roton.OpenGL.Terminal();
+                glTerminal.Location = new System.Drawing.Point(0, 0);
+                glTerminal.Size = new System.Drawing.Size(640, 350);
+                glTerminal.AutoSize = true;
+                glTerminal.TerminalFont = font1;
+                glTerminal.TerminalPalette = palette1;
+                terminal = glTerminal;
+                mainPanel.Controls.Add(glTerminal);
+            }
+        }
+
+        public GameForm(bool openGL = false)
+        {
+            this.openGL = openGL;
+            CommonSetup();
             Initialize(new Context(ContextEngine.ZZT, false));
         }
 
-        public GameForm(Stream source)
+        public GameForm(Stream source, bool openGL = false)
         {
-            InitializeComponent();
-            InitializeEvents();
+            this.openGL = openGL;
+            CommonSetup();
             Initialize(new Context(source, false));
         }
 
