@@ -2,16 +2,17 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using OpenTK;
+using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
+using System.Text;
 using OpenTK.Graphics.OpenGL;
+using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
-using OpenTK.Graphics;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
     {
+        static private Encoding _encoding = Encoding.GetEncoding(437);
+
         private bool _glReady = false;
         private int _glLastTexture = -1;
         private KeysBuffer _keys;
@@ -79,7 +80,7 @@ namespace Roton.OpenGL {
             Control = e.Control;
         }
 
-        protected override void OnKeyPress(System.Windows.Forms.KeyPressEventArgs e) {
+        protected override void OnKeyPress(KeyPressEventArgs e) {
             base.OnKeyPress(e);
             _keys.Press(e.KeyChar);
         }
@@ -135,9 +136,9 @@ namespace Roton.OpenGL {
         {
             int glNewTexture = GL.GenTexture();
 
-            BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, WinPixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0, GLPixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
             Bitmap.UnlockBits(fbData);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
@@ -222,6 +223,19 @@ namespace Roton.OpenGL {
 
         public void Write(int x, int y, string value, int color)
         {
+            AnsiChar ac = new AnsiChar();
+            ac.Color = color;
+            var characters = _encoding.GetBytes(value);
+            var count = characters.Length;
+
+            while(x < 0) { x += _terminalWidth; y--; }
+
+            for(int index = 0; index < count; index++) {
+                ac.Char = characters[index];
+                Plot(x, y, ac);
+                x++;
+                if(x >= _terminalWidth) { x -= _terminalWidth; y++; }
+            }
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
