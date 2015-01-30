@@ -82,23 +82,6 @@ namespace Roton.OpenGL {
             get { return _keys as IKeyboard; }
         }
 
-        void OnKey(KeyEventArgs e) {
-            if(!e.Shift) {
-                Shift = false;
-                _shiftHoldX = false;
-                _shiftHoldY = false;
-            } else {
-                Shift = true;
-            }
-            Alt = e.Alt;
-            Control = e.Control;
-        }
-
-        protected override void OnKeyPress(KeyPressEventArgs e) {
-            base.OnKeyPress(e);
-            _keys.Press(e.KeyChar);
-        }
-
         public bool Shift {
             get { return _keys.Shift; }
             set { _keys.Shift = value; }
@@ -179,6 +162,33 @@ namespace Roton.OpenGL {
             if (_glLastTexture != -1)
                 GL.DeleteTexture(_glLastTexture);
             _glLastTexture = glNewTexture;
+        }
+
+        void OnKey(KeyEventArgs e) {
+            if(!e.Shift) {
+                Shift = false;
+                _shiftHoldX = false;
+                _shiftHoldY = false;
+            } else {
+                Shift = true;
+            }
+            Alt = e.Alt;
+            Control = e.Control;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            var keyAlt = (keyData & Keys.Alt) != 0;
+            var keyControl = (keyData & Keys.Control) != 0;
+            var keyRaw = (keyData & Keys.KeyCode);
+            _keys.NumLock = IsKeyLocked(Keys.NumLock);
+            _keys.CapsLock = IsKeyLocked(Keys.CapsLock);
+
+            bool result = base.ProcessCmdKey(ref msg, keyData);
+            if(!keyAlt && !keyControl && keyRaw != Keys.ShiftKey) {
+                OnKey(new KeyEventArgs(keyData));
+                return _keys.Press(keyData);
+            }
+            return result;
         }
         
         public void Plot(int x, int y, AnsiChar ac)
@@ -299,6 +309,9 @@ namespace Roton.OpenGL {
         }
 
         private void glControl_Load(object sender, EventArgs e) {
+            // Set up key events.
+            glControl.KeyPress += glControl_KeyPress;
+
             // Set GLControl to be the active GL context.
             glControl.MakeCurrent();
 
@@ -319,6 +332,11 @@ namespace Roton.OpenGL {
             // Finish setting up the control and start the rendering timer.
             SetSize(80, 25, false);
             displayTimer.Enabled = true;
+        }
+
+        void glControl_KeyPress(object sender, KeyPressEventArgs e) {
+            base.OnKeyPress(e);
+            _keys.Press(e.KeyChar);
         }
     }
 }
