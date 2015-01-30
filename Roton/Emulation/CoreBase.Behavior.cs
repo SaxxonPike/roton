@@ -252,6 +252,55 @@ namespace Roton.Emulation
 
         virtual public void Act_Duplicator(int index)
         {
+            Actor actor = Actors[index];
+            Location source = actor.Location.Sum(actor.Vector);
+            Location target = actor.Location.Difference(actor.Vector);
+
+            if (actor.P1 > 4)
+            {
+                if (TileAt(target).Id == Elements.PlayerId)
+                {
+                    ElementAt(source).Interact(source, 0, KeyVector);
+                }
+                else
+                {
+                    if (TileAt(target).Id != Elements.EmptyId)
+                    {
+                        Push(target, actor.Vector.Opposite);
+                    }
+                    if (TileAt(target).Id == Elements.EmptyId)
+                    {
+                        int sourceIndex = ActorIndexAt(source);
+                        if (sourceIndex > 0)
+                        {
+                            if (ActorCount < Actors.Count - 2)
+                            {
+                                Tile sourceTile = TileAt(source);
+                                SpawnActor(target, sourceTile, Elements[sourceTile.Id].Cycle, Actors[sourceIndex]);
+                                UpdateBoard(target);
+                            }
+                        }
+                        else if (sourceIndex != 0)
+                        {
+                            TileAt(target).CopyFrom(TileAt(source));
+                            UpdateBoard(target);
+                        }
+                        PlaySound(3, Sounds.Duplicate);
+                    }
+                    else
+                    {
+                        PlaySound(3, Sounds.DuplicateFail);
+                    }
+                }
+                actor.P1 = 0;
+            }
+            else
+            {
+                actor.P1++;
+            }
+
+            UpdateBoard(actor.Location);
+            actor.Cycle = (9 - actor.P2) * 3;
         }
 
         virtual public void Act_Head(int index)
