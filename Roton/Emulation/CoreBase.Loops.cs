@@ -77,7 +77,7 @@ namespace Roton.Emulation
                     if (Alternating)
                     {
                         var playerElement = Elements.PlayerElement;
-                        DrawChar(Player.Location.Difference(1, 1), new AnsiChar(playerElement.Character, playerElement.Color));
+                        DrawTile(Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                     }
                     else
                     {
