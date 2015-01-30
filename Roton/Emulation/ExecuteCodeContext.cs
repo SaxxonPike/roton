@@ -28,6 +28,12 @@ namespace Roton.Emulation
             set;
         }
 
+        public Tile DeathTile
+        {
+            get;
+            set;
+        }
+
         public bool Died
         {
             get;
