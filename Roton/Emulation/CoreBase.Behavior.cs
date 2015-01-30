@@ -528,6 +528,29 @@ namespace Roton.Emulation
 
         virtual public void Act_Shark(int index)
         {
+            var actor = Actors[index];
+            var vector = new Vector();
+
+            if (actor.P1 > RandomNumberDeterministic(10))
+            {
+                Seek(actor.Location, vector);
+            }
+            else
+            {
+                Rnd(vector);
+            }
+
+            var target = actor.Location.Sum(vector);
+            var targetElement = ElementAt(target);
+
+            if (targetElement.Index == Elements.WaterId)
+            {
+                MoveActor(index, target);
+            }
+            else if (targetElement.Index == Elements.PlayerId)
+            {
+                Attack(index, target);
+            }
         }
 
         virtual public void Act_Slime(int index)
