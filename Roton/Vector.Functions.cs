@@ -66,6 +66,11 @@ namespace Roton
             get { return this.X == 0 && this.Y == 0; }
         }
 
+        public Vector Multiply(int value)
+        {
+            return new Vector(this.X * value, this.Y * value);
+        }
+
         public Vector Opposite
         {
             get
@@ -93,6 +98,14 @@ namespace Roton
         {
             this.X = x;
             this.Y = y;
+        }
+
+        public Vector Swap
+        {
+            get
+            {
+                return new Vector(this.Y, this.X);
+            }
         }
 
         public override string ToString()

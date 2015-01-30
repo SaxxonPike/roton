@@ -562,6 +562,49 @@ namespace Roton.Emulation
 
         virtual public void Act_Spider(int index)
         {
+            var actor = Actors[index];
+            var vector = new Vector();
+
+            if (actor.P1 <= RandomNumberDeterministic(10))
+            {
+                Rnd(vector);
+            }
+            else
+            {
+                Seek(actor.Location, vector);
+            }
+
+            if (!Act_Spider_AttemptDirection(index, vector))
+            {
+                int i = (RandomNumberDeterministic(2) << 1) - 1;
+                if (!Act_Spider_AttemptDirection(index, vector.Multiply(i).Swap))
+                {
+                    if (!Act_Spider_AttemptDirection(index, vector.Multiply(i).Swap.Opposite))
+                    {
+                        Act_Spider_AttemptDirection(index, vector.Opposite);
+                    }
+                }
+            }
+        }
+
+        virtual internal bool Act_Spider_AttemptDirection(int index, Vector vector)
+        {
+            var actor = Actors[index];
+            var target = actor.Location.Sum(vector);
+            var targetElement = ElementAt(target).Index;
+
+            if (targetElement == Elements.WebId)
+            {
+                MoveActor(index, target);
+                return true;
+            }
+            else if (targetElement == Elements.PlayerId)
+            {
+                Attack(index, target);
+                return true;
+            }
+
+            return false;
         }
 
         virtual public void Act_SpinningGun(int index)
