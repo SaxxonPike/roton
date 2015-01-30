@@ -12,7 +12,7 @@ namespace Roton.Emulation.SuperZZT
             GameSpeed = 4;
             DefaultSaveName = "SAVED";
             DefaultBoardName = "TEMP";
-            DefaultWorldName = "TOWN";
+            DefaultWorldName = "MONSTER";
             Display.GenerateFadeMatrix();
             if (!WorldLoaded)
             {
