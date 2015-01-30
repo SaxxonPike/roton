@@ -21,7 +21,27 @@ namespace Roton.Emulation
         {
         }
 
+        virtual internal void ExecuteCode_Bind(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Change(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Char(ExecuteCodeContext context)
+        {
+        }
+
         virtual internal void ExecuteCode_Clear(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Cycle(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Die(ExecuteCodeContext context)
         {
         }
 
@@ -50,6 +70,14 @@ namespace Roton.Emulation
         }
 
         virtual internal void ExecuteCode_Lock(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Play(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Put(ExecuteCodeContext context)
         {
         }
 
