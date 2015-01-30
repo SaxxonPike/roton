@@ -986,7 +986,7 @@ namespace Roton.Emulation
                                         int actorIndex = ActorIndexAt(target);
                                         if (actorIndex > 0)
                                         {
-                                            SendLabel(-actorIndex, @"BOMBED", false);
+                                            BroadcastLabel(-actorIndex, @"BOMBED", false);
                                         }
                                     }
                                     if (element.Destructible || element.Index == Elements.StarId)

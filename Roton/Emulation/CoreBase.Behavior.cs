@@ -124,7 +124,7 @@ namespace Roton.Emulation
                     ActIndex--;
                     if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
                     {
-                        SendLabel(-ActorIndexAt(target), @"SHOT", false);
+                        BroadcastLabel(-ActorIndexAt(target), @"SHOT", false);
                         break;
                     }
                 }
@@ -220,7 +220,7 @@ namespace Roton.Emulation
                 }
                 else
                 {
-                    SendLabel(-index, @"THUD", false);
+                    BroadcastLabel(-index, @"THUD", false);
                 }
             }
         }
@@ -729,7 +729,7 @@ namespace Roton.Emulation
                 AlertEnergy = false;
                 SetMessage(0xC8, EnergizerMessage);
             }
-            SendLabel(0, @"ALL:ENERGIZE", false);
+            BroadcastLabel(0, @"ALL:ENERGIZE", false);
         }
 
         virtual public void Interact_Fake(Location location, int index, Vector vector)
@@ -798,7 +798,7 @@ namespace Roton.Emulation
         {
             var objectIndex = ActorIndexAt(location);
             var actor = Actors[objectIndex];
-            SendLabel(-objectIndex, @"TOUCH", false);
+            BroadcastLabel(-objectIndex, @"TOUCH", false);
         }
 
         virtual public void Interact_Passage(Location location, int index, Vector vector)

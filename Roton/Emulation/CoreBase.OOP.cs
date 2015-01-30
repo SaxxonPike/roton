@@ -12,6 +12,44 @@ namespace Roton.Emulation
             return Actors[index].P2 != 0;
         }
 
+        virtual internal bool BroadcastLabel(int sender, string label, bool force)
+        {
+            string target = label;
+            bool external = false;
+            bool success = false;
+            int index = 0;
+            int offset = 0;
+
+            if (sender < 0)
+            {
+                external = true;
+                sender = -sender;
+            }
+
+            var info = new CodeSearchInfoProxy(
+                () => { return index; },
+                (int value) => { index = value; },
+                () => { return target; },
+                (string value) => { target = value; },
+                () => { return offset; },
+                (int value) => { offset = value; }
+                );
+
+            while (SendSearch(sender, info, "\x000D:"))
+            {
+                if (!ActorIsLocked(index) || force || (sender == index && !external))
+                {
+                    if (sender == index)
+                    {
+                        success = true;
+                    }
+                    Actors[index].Instruction = offset;
+                }
+            }
+
+            return success;
+        }
+
         virtual internal void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
         {
             ExecuteCodeContext context = new ExecuteCodeContext(index, instructionSource, name);
@@ -54,6 +92,8 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Die(ExecuteCodeContext context)
         {
+            context.Died = true;
+            context.DeathTile.SetTo(Elements.EmptyId, 0x0F);
         }
 
         virtual internal void ExecuteCode_End(ExecuteCodeContext context)
@@ -331,44 +371,6 @@ namespace Roton.Emulation
             }
 
             return result;
-        }
-
-        virtual internal bool SendLabel(int sender, string label, bool force)
-        {
-            string target = label;
-            bool external = false;
-            bool success = false;
-            int index = 0;
-            int offset = 0;
-
-            if (sender < 0)
-            {
-                external = true;
-                sender = -sender;
-            }
-
-            var info = new CodeSearchInfoProxy(
-                () => { return index; },
-                (int value) => { index = value; },
-                () => { return target; },
-                (string value) => { target = value; },
-                () => { return offset; },
-                (int value) => { offset = value; }
-                );
-
-            while (SendSearch(sender, info, "\x000D:"))
-            {
-                if (!ActorIsLocked(index) || force || (sender == index && !external))
-                {
-                    if (sender == index)
-                    {
-                        success = true;
-                    }
-                    Actors[index].Instruction = offset;
-                }
-            }
-
-            return success;
         }
 
         virtual internal bool SendSearch(int sender, CodeSearchInfo search, string prefix)
