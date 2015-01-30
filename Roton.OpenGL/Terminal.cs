@@ -106,8 +106,8 @@ namespace Roton.OpenGL {
             {
                 var drawX = x * _terminalFont.Width;
                 var drawY = y * _terminalFont.Height;
-                var fgColor = _terminalPalette.Colors[(ac.Color >> 4)];
-                var bgColor = _terminalPalette.Colors[ac.Color & 0xF];
+                var bgColor = _terminalPalette.Colors[(ac.Color >> 4)];
+                var fgColor = _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
                 _updated = true;                
             }
