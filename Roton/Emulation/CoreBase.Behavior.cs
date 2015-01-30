@@ -795,7 +795,7 @@ namespace Roton.Emulation
         virtual public void Interact_Invisible(Location location, int index, Vector vector)
         {
             TileAt(location).Id = Elements.NormalId;
-            UpdateBoard(location.Sum(vector));
+            UpdateBoard(location);
             PlaySound(3, Sounds.Invisible);
             SetMessage(0x64, InvisibleMessage);
         }
