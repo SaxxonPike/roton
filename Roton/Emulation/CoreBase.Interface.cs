@@ -366,6 +366,12 @@ namespace Roton.Emulation
             set { WorldData.Locked = value; }
         }
 
+        public int MainTime
+        {
+            get { return StateData.MainTime; }
+            set { StateData.MainTime = value; }
+        }
+
         public Memory Memory
         {
             get;
@@ -406,6 +412,12 @@ namespace Roton.Emulation
         {
             get { return StateData.PlayerElement; }
             set { StateData.PlayerElement = value; }
+        }
+
+        public int PlayerTime
+        {
+            get { return StateData.PlayerTime; }
+            set { StateData.PlayerTime = value; }
         }
 
         public bool Quiet

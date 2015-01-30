@@ -70,7 +70,7 @@ namespace Roton.Emulation
                 {
                     ActIndex = ActorCount + 1;
                     element = Elements[PlayerElement];
-                    if (TimerTick % 25 == 0)
+                    if (GetMainTimeElapsed(25))
                     {
                         Alternating = !Alternating;
                     }
@@ -140,7 +140,7 @@ namespace Roton.Emulation
                 {
                     if (!BreakGameLoop)
                     {
-                        if (GameWaitTime <= 0 || TimerTick % GameWaitTime == 0)
+                        if (GameWaitTime <= 0 || GetMainTimeElapsed(GameWaitTime))
                         {
                             GameCycle++;
                             if (GameCycle > 420)

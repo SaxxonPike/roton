@@ -45,12 +45,14 @@ namespace Roton
         virtual public bool KeyShift { get; set; }
         virtual public Vector KeyVector { get; set; }
         virtual public IList<int> LineChars { get; protected set; }
+        virtual public int MainTime { get; set; }
         virtual public string Message { get; set; }
         virtual public string Message2 { get; set; }
         virtual public int OOPByte { get; set; }
         virtual public int OOPNumber { get; set; }
         virtual public string OOPWord { get; set; }
         virtual public int PlayerElement { get; set; }
+        virtual public int PlayerTime { get; set; }
         virtual public bool QuitZZT { get; set; }
         virtual public IList<int> SoundBuffer { get; protected set; }
         virtual public bool SoundPlaying { get; set; }

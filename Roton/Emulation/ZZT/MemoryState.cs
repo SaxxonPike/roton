@@ -477,6 +477,18 @@ namespace Roton.Emulation.ZZT
             }
         }
 
+        public override int MainTime
+        {
+            get
+            {
+                return Memory.Read16(0x740A);
+            }
+            set
+            {
+                Memory.Write16(0x740A, value);
+            }
+        }
+
         public override string Message
         {
             get
@@ -534,6 +546,18 @@ namespace Roton.Emulation.ZZT
             set
             {
                 Memory.Write16(0x4AC8, value);
+            }
+        }
+
+        public override int PlayerTime
+        {
+            get
+            {
+                return Memory.Read16(0x4920);
+            }
+            set
+            {
+                Memory.Write16(0x4920, value);
             }
         }
 

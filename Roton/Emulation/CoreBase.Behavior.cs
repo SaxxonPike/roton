@@ -536,9 +536,27 @@ namespace Roton.Emulation
                 }
             }
 
+            //SetBoard(21);
+
             if (TimeLimit > 0)
             {
-                // todo: time limit stuff
+                if (Health > 0)
+                {
+                    if (GetPlayerTimeElapsed(100))
+                    {
+                        TimePassed++;
+                        if (TimeLimit - 10 == TimePassed)
+                        {
+                            SetMessage(0xC8, TimeMessage);
+                            PlaySound(3, Sounds.TimeLow);
+                        }
+                        else if (TimePassed >= TimeLimit)
+                        {
+                            Harm(0);
+                        }
+                        UpdateStatus();
+                    }
+                }
             }
         }
 

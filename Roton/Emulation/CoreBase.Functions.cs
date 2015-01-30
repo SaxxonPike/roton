@@ -271,6 +271,39 @@ namespace Roton.Emulation
             }
         }
 
+        internal bool GetMainTimeElapsed(int interval)
+        {
+            bool result = false;
+            while (GetTimeDifference(TimerTick, MainTime) > 0)
+            {
+                result = true;
+                MainTime = (MainTime + interval) & 0x7FFF;
+            }
+            return result;
+        }
+
+        internal bool GetPlayerTimeElapsed(int interval)
+        {
+            bool result = false;
+            while (GetTimeDifference(TimerTick, PlayerTime) > 0)
+            {
+                result = true;
+                PlayerTime = (PlayerTime + interval) & 0x7FFF;
+            }
+            return result;
+        }
+
+        private int GetTimeDifference(int now, int then)
+        {
+            now &= 0x7FFF;
+            then &= 0x7FFF;
+            if (now < 0x4000 && then >= 0x4000)
+            {
+                now += 0x8000;
+            }
+            return now - then;
+        }
+
         virtual internal Vector GetVector4(int index)
         {
             return new Vector(Vector4[index], Vector4[index + 4]);
@@ -971,10 +1004,16 @@ namespace Roton.Emulation
             return Tiles[new Location(x, y)];
         }
 
+        internal int TimerBase
+        {
+            get { return CoreTimer.Tick & 0x7FFF; }
+        }
+
+        private int _timerTick;
         internal int TimerTick
         {
-            get;
-            private set;
+            get { return _timerTick; }
+            private set { _timerTick = value & 0x7FFF; }
         }
 
         virtual internal void UnpackBoard(int boardIndex)
@@ -1053,7 +1092,7 @@ namespace Roton.Emulation
 
         virtual public void WaitForTick()
         {
-            while (TimerTick == CoreTimer.Tick && ThreadActive)
+            while (TimerTick == TimerBase && ThreadActive)
             {
                 Thread.Sleep(1);
                 //Thread.Sleep(0);

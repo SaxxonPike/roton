@@ -101,6 +101,11 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal string TimeMessage
+        {
+            get { return @"Running out of time!"; }
+        }
+
         virtual internal string TorchMessage
         {
             get { return @"Torch - used for lighting in the underground."; }
