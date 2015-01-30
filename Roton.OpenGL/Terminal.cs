@@ -104,10 +104,10 @@ namespace Roton.OpenGL {
         {
             if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
             {
-                int drawX = x * _terminalFont.Width;
-                int drawY = y * _terminalFont.Height;
-                int fgColor = _terminalPalette.Colors[(ac.Color >> 4)];
-                int bgColor = _terminalPalette.Colors[ac.Color & 0xF];
+                var drawX = x * _terminalFont.Width;
+                var drawY = y * _terminalFont.Height;
+                var fgColor = _terminalPalette.Colors[(ac.Color >> 4)];
+                var bgColor = _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
                 _updated = true;                
             }
@@ -134,7 +134,7 @@ namespace Roton.OpenGL {
 
         private void GlGenerateTexture()
         {
-            int glNewTexture = GL.GenTexture();
+            var glNewTexture = GL.GenTexture();
 
             BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, WinPixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
@@ -153,7 +153,7 @@ namespace Roton.OpenGL {
         {
             if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
             {
-                int index = x + (y * _terminalWidth);
+                var index = x + (y * _terminalWidth);
                 _terminalBuffer[index] = ac;
                 Draw(x, y, ac);
             }
@@ -161,7 +161,7 @@ namespace Roton.OpenGL {
 
         private void Redraw()
         {
-            int index = 0;
+            var index = 0;
             for(var y = 0; y < _terminalHeight; y++)
                 for (var x = 0; x < _terminalWidth; x++)
                     Draw(x, y, _terminalBuffer[index++]);
@@ -223,8 +223,7 @@ namespace Roton.OpenGL {
 
         public void Write(int x, int y, string value, int color)
         {
-            AnsiChar ac = new AnsiChar();
-            ac.Color = color;
+            var ac = new AnsiChar {Color = color};
             var characters = _encoding.GetBytes(value);
             var count = characters.Length;
 
