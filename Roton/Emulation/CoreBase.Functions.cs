@@ -698,6 +698,7 @@ namespace Roton.Emulation
 
         virtual internal void PushThroughTransporter(Location location, Vector vector)
         {
+            // todo
         }
 
         virtual internal Vector Rnd()
