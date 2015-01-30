@@ -7,7 +7,7 @@ namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        private void MainLoop(bool gameIsActive)
+        virtual internal void MainLoop(bool gameIsActive)
         {
             Actor ActorData;
             bool Alternating = false;
@@ -176,7 +176,7 @@ namespace Roton.Emulation
             }
         }
 
-        private void StartMain()
+        virtual internal void StartMain()
         {
             GameSpeed = 4;
             DefaultSaveName = "SAVED";
@@ -191,7 +191,7 @@ namespace Roton.Emulation
             TitleScreenLoop();
         }
 
-        private void TitleScreenLoop()
+        virtual internal void TitleScreenLoop()
         {
             bool gameIsActive;
             bool gameEnded;

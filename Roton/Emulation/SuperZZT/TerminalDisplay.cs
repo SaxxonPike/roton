@@ -11,5 +11,15 @@ namespace Roton.Emulation.SuperZZT
             : base(infoSource)
         {
         }
+
+        public override void CreateStatusBar()
+        {
+            if (DisplayInfo.TitleScreen)
+            {
+            }
+            else
+            {
+            }
+        }
     }
 }
