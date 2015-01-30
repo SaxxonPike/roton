@@ -48,6 +48,7 @@
     <Compile Include="Context.Functions.cs" />
     <Compile Include="Display.cs" />
     <Compile Include="Display.Functions.cs" />
+    <Compile Include="Emulation\ByRefInstruction.cs" />
     <Compile Include="Emulation\CodeSearchInfo.cs" />
     <Compile Include="Emulation\CodeSearchInfoProxy.cs" />
     <Compile Include="Emulation\CoreBase.Loops.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="Emulation\CoreBase.Sound.cs" />
     <Compile Include="Emulation\CoreBase.Utility.cs" />
     <Compile Include="Emulation\CoreTimer.cs" />
+    <Compile Include="Emulation\ICode.cs" />
+    <Compile Include="Emulation\ICodeSeekable.cs" />
     <Compile Include="Emulation\MemoryColorArrayBase.cs" />
     <Compile Include="Emulation\MemoryString.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />

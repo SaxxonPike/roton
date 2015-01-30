@@ -720,6 +720,105 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal void ReadActorCodeByte(int index, ICodeSeekable instructionSource)
+        {
+            var actor = Actors[index];
+            if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
+            {
+                OOPByte = 0;
+            }
+            else
+            {
+                var heapCode = actor.Heap[actor.Pointer];
+                OOPByte = actor.Heap[actor.Pointer][instructionSource.Instruction];
+                instructionSource.Instruction++;
+            }
+        }
+
+        virtual internal string ReadActorCodeLine(int index, ICodeSeekable instructionSource)
+        {
+            StringBuilder result = new StringBuilder();
+            ReadActorCodeByte(index, instructionSource);
+            while (OOPByte != 0x00 && OOPByte != 0x0D)
+            {
+                result.Append(OOPByte.ToChar());
+                ReadActorCodeByte(index, instructionSource);
+            }
+            return result.ToString();
+        }
+
+        virtual internal void ReadActorCodeNumber(int index, ICodeSeekable instructionSource)
+        {
+            StringBuilder result = new StringBuilder();
+            var success = false;
+
+            while (true)
+            {
+                ReadActorCodeByte(index, instructionSource);
+                if (OOPByte != 0x20)
+                {
+                    break;
+                }
+            }
+
+            OOPByte = OOPByte.ToUpperCase();
+            while (OOPByte >= 0x30 && OOPByte <= 0x39)
+            {
+                success = true;
+                result.Append(OOPByte.ToChar());
+                ReadActorCodeByte(index, instructionSource);
+            }
+
+            if (instructionSource.Instruction > 0)
+            {
+                instructionSource.Instruction--;
+            }
+
+            if (!success)
+            {
+                OOPNumber = -1;
+            }
+            else
+            {
+                int resultInt = -1;
+                int.TryParse(result.ToString(), out resultInt);
+                OOPNumber = resultInt;
+            }
+        }
+
+        virtual internal void ReadActorCodeWord(int index, ICodeSeekable instructionSource)
+        {
+            StringBuilder result = new StringBuilder();
+
+            while (true)
+            {
+                ReadActorCodeByte(index, instructionSource);
+                if (OOPByte != 0x20)
+                {
+                    break;
+                }
+            }
+
+            OOPByte = OOPByte.ToUpperCase();
+
+            if (!(OOPByte >= 0x30 && OOPByte <= 0x39))
+            {
+                while ((OOPByte >= 0x41 && OOPByte <= 0x5A) || (OOPByte >= 0x30 && OOPByte <= 0x39) || (OOPByte == 0x3A) || (OOPByte == 0x5F))
+                {
+                    result.Append(OOPByte.ToChar());
+                    ReadActorCodeByte(index, instructionSource);
+                    OOPByte = OOPByte.ToUpperCase();
+                }
+            }
+
+            if (instructionSource.Instruction > 0)
+            {
+                instructionSource.Instruction--;
+            }
+
+            OOPWord = result.ToString();
+        }
+
         virtual public void ReadInput()
         {
             KeyShift = false;
@@ -860,8 +959,49 @@ namespace Roton.Emulation
 
         virtual internal int SearchActorCode(int index, string term)
         {
-            // todo: actually search code
-            return -1;
+            int result = -1;
+            var termBytes = term.ToBytes();
+            var actor = Actors[index];
+            ByRefInstruction offset = new ByRefInstruction(0);
+
+            while (offset.Instruction < actor.Length)
+            {
+                int oldOffset = offset.Instruction;
+                int termOffset = 0;
+                bool success = false;
+
+                while (true)
+                {
+                    ReadActorCodeByte(index, offset);
+                    if (termBytes[termOffset].ToUpperCase() != OOPByte.ToUpperCase())
+                    {
+                        success = false;
+                        break;
+                    }
+                    termOffset++;
+                    if (termOffset >= termBytes.Length)
+                    {
+                        success = true;
+                        break;
+                    }
+                }
+
+                if (success)
+                {
+                    ReadActorCodeByte(index, offset);
+                    OOPByte = OOPByte.ToUpperCase();
+                    if (!((OOPByte >= 0x41 && OOPByte <= 0x5A) || OOPByte == 0x5F))
+                    {
+                        result = oldOffset;
+                        break;
+                    }
+                }
+
+                oldOffset++;
+                offset.Instruction = oldOffset;
+            }
+
+            return result;
         }
 
         virtual internal void Seek(Location location, Vector result)
@@ -932,7 +1072,7 @@ namespace Roton.Emulation
                 label = label.Substring(split + 1);
                 success = IsActorTargeted(sender, search, target);
             }
-            else
+            else if (search.Index < sender)
             {
                 search.Index = sender;
                 split = 0;

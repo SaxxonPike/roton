@@ -7,7 +7,7 @@ namespace Roton.Emulation
 {
     abstract internal partial class CoreBase
     {
-        virtual internal void ExecuteOOP(int index, Actor instructionValueSource, string name)
+        virtual internal void ExecuteOOP(int index, ICodeSeekable instructionSource, string name)
         {
 
         }

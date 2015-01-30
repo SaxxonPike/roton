@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Roton
 {
-    public partial class Actor
+    public partial class Actor : ICode, ICodeSeekable
     {
         /// <summary>
         /// The frequency at which the actor will run its action code.

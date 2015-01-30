@@ -85,6 +85,14 @@ namespace Roton
         }
 
         /// <summary>
+        /// Convert an integer to a character using code page 437.
+        /// </summary>
+        static internal char ToChar(this int value)
+        {
+            return CodePage437.GetChars(new byte[] { (byte)(value & 0xFF) })[0];
+        }
+
+        /// <summary>
         /// Convert a value to a hex string.
         /// </summary>
         static private string ToHex(int value, int chars)
@@ -124,6 +132,18 @@ namespace Roton
         }
 
         /// <summary>
+        /// Get the lowercase representation of an ASCII char stored as a byte.
+        /// </summary>
+        static internal int ToLowerCase(this byte value)
+        {
+            if (value >= 0x41 && value <= 0x5A)
+            {
+                value -= 0x20;
+            }
+            return value;
+        }
+
+        /// <summary>
         /// Get the lowercase representation of a string using code page 437.
         /// </summary>
         static internal byte[] ToLowerCase(this byte[] value)
@@ -154,11 +174,31 @@ namespace Roton
         }
 
         /// <summary>
+        /// Convert an integer to a string using code page 437.
+        /// </summary>
+        static internal string ToStringValue(this int value)
+        {
+            return CodePage437.GetString(new byte[] { (byte)(value & 0xFF) });
+        }
+
+        /// <summary>
         /// Convert a byte array to a string using code page 437.
         /// </summary>
         static internal string ToStringValue(this byte[] value)
         {
             return CodePage437.GetString(value);
+        }
+
+        /// <summary>
+        /// Get the uppercase representation of an ASCII char stored as a byte.
+        /// </summary>
+        static internal int ToUpperCase(this byte value)
+        {
+            if (value >= 0x61 && value <= 0x7A)
+            {
+                value -= 0x20;
+            }
+            return value;
         }
 
         /// <summary>
