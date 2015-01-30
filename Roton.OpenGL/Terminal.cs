@@ -191,6 +191,8 @@ namespace Roton.OpenGL {
                 Width = (_terminalWidth * _terminalFont.Width) * xScale;
                 Height = (_terminalHeight * _terminalFont.Height) * yScale;
             }
+
+            SetViewport();
         }
 
         public void SetSize(int width, int height, bool wide)
