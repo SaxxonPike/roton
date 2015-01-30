@@ -209,7 +209,7 @@ namespace Roton.Emulation
             var actor = Actors[index];
             if (actor.Instruction >= 0)
             {
-                ExecuteOOP(index, actor, @"Interaction");
+                ExecuteCode(index, actor, @"Interaction");
             }
             if (!actor.Vector.IsZero)
             {
@@ -819,7 +819,7 @@ namespace Roton.Emulation
             var actor = Actors[scrollIndex];
 
             PlaySound(2, PlayMusic(@"c-c+d-d+e-e+f-f+g-g"));
-            ExecuteOOP(scrollIndex, actor, @"Scroll");
+            ExecuteCode(scrollIndex, actor, @"Scroll");
             RemoveActor(scrollIndex);
         }
 
