@@ -35,6 +35,10 @@ namespace Roton.OpenGL {
             // Initialize font and palette.
             _terminalFont = new Windows.Font();
             _terminalPalette = new Palette();
+
+            // Set default scale.
+            ScaleX = 1;
+            ScaleY = 1;
         }
 
         /// <summary> 
@@ -181,7 +185,12 @@ namespace Roton.OpenGL {
         {
             ScaleX = xScale;
             ScaleY = yScale;
-            SetSize(_terminalWidth, _terminalHeight, _wideMode);
+
+            if (AutoSize)
+            {
+                Width = (_terminalWidth * _terminalFont.Width) * xScale;
+                Height = (_terminalHeight * _terminalFont.Height) * yScale;
+            }
         }
 
         public void SetSize(int width, int height, bool wide)
@@ -219,6 +228,22 @@ namespace Roton.OpenGL {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
+        }
+
+        public Roton.Windows.Font TerminalFont {
+            get { return _terminalFont; }
+            set {
+                _terminalFont = value;
+                Redraw();
+            }
+        }
+
+        public Roton.Windows.Palette TerminalPalette {
+            get { return _terminalPalette; }
+            set {
+                _terminalPalette = value;
+                Redraw();
+            }
         }
 
         public void Write(int x, int y, string value, int color)

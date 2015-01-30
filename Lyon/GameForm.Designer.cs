@@ -34,6 +34,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
+            Roton.Windows.Font font1 = new Roton.Windows.Font();
+            Roton.Windows.Palette palette1 = new Roton.Windows.Palette();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openWorldMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -187,6 +189,9 @@
             this.terminal.Name = "terminal";
             this.terminal.Size = new System.Drawing.Size(640, 350);
             this.terminal.TabIndex = 0;
+            this.terminal.AutoSize = true;
+            this.terminal.TerminalFont = font1;
+            this.terminal.TerminalPalette = palette1;
             // 
             // GameForm
             // 
