@@ -26,6 +26,11 @@ namespace Roton.Emulation
             return -1;
         }
 
+        virtual internal bool ActorIsLocked(int index)
+        {
+            return Actors[index].P2 != 0;
+        }
+
         virtual internal void Attack(int index, Location location)
         {
             if (index == 0 && EnergyCycles > 0)
@@ -538,6 +543,49 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
+        {
+            var success = false;
+            switch (target.ToUpperInvariant())
+            {
+                case @"ALL":
+                    success = info.Index <= ActorCount;
+                    break;
+                case @"OTHERS":
+                    if (info.Index <= ActorCount)
+                    {
+                        if (info.Index != sender)
+                        {
+                            success = true;
+                        }
+                        else
+                        {
+                            info.Index++;
+                            success = info.Index <= ActorCount;
+                        }
+                    }
+                    break;
+                case @"SELF":
+                    if (info.Index > 0)
+                    {
+                        if (info.Index <= sender)
+                        {
+                            info.Index = sender;
+                            success = true;
+                        }
+                    }
+                    break;
+                default:
+                    while (true)
+                    {
+                        // todo: targeted labels
+                        break;
+                    }
+                    break;
+            }
+            return false;
+        }
+
         virtual internal void MoveActor(int index, Location target)
         {
             var actor = Actors[index];
@@ -810,6 +858,12 @@ namespace Roton.Emulation
             AlertTorch = true;
         }
 
+        virtual internal int SearchActorCode(int index, string term)
+        {
+            // todo: actually search code
+            return -1;
+        }
+
         virtual internal void Seek(Location location, Vector result)
         {
             result.SetTo(0, 0);
@@ -827,8 +881,88 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void SendLabel(int index, string label, bool force)
+        virtual internal bool SendLabel(int sender, string label, bool force)
         {
+            string target = label;
+            bool external = false;
+            bool success = false;
+            int index = 0;
+            int offset = 0;
+
+            if (sender < 0)
+            {
+                external = true;
+                sender = -sender;
+            }
+
+            var info = new CodeSearchInfoProxy(
+                () => { return index; },
+                (int value) => { index = value; },
+                () => { return target; },
+                (string value) => { target = value; },
+                () => { return offset; },
+                (int value) => { offset = value; }
+                );
+
+            while (SendSearch(sender, info, "\x000D:"))
+            {
+                if (!ActorIsLocked(index) || force || (sender == index && !external))
+                {
+                    if (sender == index)
+                    {
+                        success = true;
+                    }
+                    Actors[index].Instruction = offset;
+                }
+            }
+
+            return success;
+        }
+
+        virtual internal bool SendSearch(int sender, CodeSearchInfo search, string prefix)
+        {
+            string label = search.Label;
+            string target = @"";
+            var success = false;
+            int split = label.IndexOf(':');
+
+            if (split > 0)
+            {
+                target = label.Substring(0, split);
+                label = label.Substring(split + 1);
+                success = IsActorTargeted(sender, search, target);
+            }
+            else
+            {
+                search.Index = sender;
+                split = 0;
+                success = true;
+            }
+            while (true)
+            {
+                if (!success)
+                {
+                    break;
+                }
+
+                if (label.ToUpper() == @"RESTART")
+                {
+                    search.Offset = 0;
+                }
+                else
+                {
+                    search.Offset = SearchActorCode(search.Index, prefix + label);
+                    if (search.Offset < 0 && split > 0)
+                    {
+                        success = IsActorTargeted(sender, search, target);
+                        continue;
+                    }
+                }
+
+                success = (search.Offset >= 0);
+                break;
+            }
+            return success;
         }
 
         virtual internal void SetBoard(int boardIndex)
