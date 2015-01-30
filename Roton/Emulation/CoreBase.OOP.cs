@@ -75,6 +75,7 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Lock(ExecuteCodeContext context)
         {
+            context.Actor.P2 = 1;
         }
 
         virtual internal void ExecuteCode_Play(ExecuteCodeContext context)
@@ -87,6 +88,8 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Restart(ExecuteCodeContext context)
         {
+            context.NextLine = false;
+            context.Instruction = 0;
         }
 
         virtual internal void ExecuteCode_Restore(ExecuteCodeContext context)
@@ -119,6 +122,7 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Unlock(ExecuteCodeContext context)
         {
+            context.Actor.P2 = 0;
         }
 
         virtual internal void ExecuteCode_Walk(ExecuteCodeContext context)
