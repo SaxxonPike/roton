@@ -14,7 +14,87 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
         {
+            ExecuteCodeContext context = new ExecuteCodeContext(index, instructionSource, name);
+        }
 
+        virtual internal void ExecuteCode_Become(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Clear(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_End(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_EndGame(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Give(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Go(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Idle(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_If(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Lock(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Restart(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Restore(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Send(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Set(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Shoot(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Take(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_ThrowStar(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Try(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Unlock(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Walk(ExecuteCodeContext context)
+        {
+        }
+
+        virtual internal void ExecuteCode_Zap(ExecuteCodeContext context)
+        {
         }
 
         virtual internal bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
