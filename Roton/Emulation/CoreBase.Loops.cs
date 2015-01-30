@@ -83,7 +83,7 @@ namespace Roton.Emulation
                     {
                         if (TileAt(Player.Location).Id == Elements.PlayerId)
                         {
-                            DrawChar(Player.Location.Difference(1, 1), new AnsiChar(0x20, 0x0F));
+                            DrawTile(Player.Location, new AnsiChar(0x20, 0x0F));
                         }
                         else
                         {
