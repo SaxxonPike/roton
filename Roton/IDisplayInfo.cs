@@ -8,12 +8,14 @@ namespace Roton
     public interface IDisplayInfo
     {
         int Ammo { get; }
+        Location Camera { get; }
         AnsiChar Draw(Location location);
         IList<Element> Elements { get; }
         int EnergyCycles { get; }
         int GameSpeed { get; }
         int Gems { get; }
         int Health { get; set; }
+        int Height { get; }
         int KeyPressed { get; }
         bool KeyShift { get; }
         IList<bool> Keys { get; }
@@ -32,6 +34,7 @@ namespace Roton
         int TorchCycles { get; }
         int Torches { get; }
         void WaitForTick();
+        int Width { get; }
         string WorldName { get; }
     }
 }

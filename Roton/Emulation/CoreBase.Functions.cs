@@ -333,7 +333,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal int Height
+        virtual public int Height
         {
             get { return Tiles.Height; }
         }
@@ -1061,7 +1061,7 @@ namespace Roton.Emulation
             TimerTick++;
         }
 
-        virtual internal int Width
+        virtual public int Width
         {
             get { return Tiles.Width; }
         }
