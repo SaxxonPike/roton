@@ -62,6 +62,16 @@ namespace Roton.OpenGL {
             form.KeyUp += (object sender, KeyEventArgs e) => { OnKey(e); };
         }
 
+        public bool BlinkEnabled {
+            get;
+            set;
+        }
+
+        bool Blinking {
+            get;
+            set;
+        }
+
         public void ClearKeys() {
             _keys.Clear();
         }
@@ -99,6 +109,24 @@ namespace Roton.OpenGL {
             set { _keys.Control = value; }
         }
 
+        void Blink() {
+            SuspendLayout();
+            Blinking = !Blinking;
+            if(_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null)) {
+                int total = _terminalWidth * _terminalHeight;
+                int i = 0;
+                for(int y = 0; y < _terminalHeight; y++) {
+                    for(int x = 0; x < _terminalWidth; x++) {
+                        if((_terminalBuffer[i].Color & 0x80) != 0) {
+                            Draw(x, y, _terminalBuffer[i]);
+                        }
+                        i++;
+                    }
+                }
+            }
+            ResumeLayout();
+        }
+
         public void Clear()
         {
             _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
@@ -110,8 +138,8 @@ namespace Roton.OpenGL {
             {
                 var drawX = x * _terminalFont.Width;
                 var drawY = y * _terminalFont.Height;
-                var bgColor = _terminalPalette.Colors[(ac.Color >> 4)];
-                var fgColor = _terminalPalette.Colors[ac.Color & 0xF];
+                var bgColor = _terminalPalette.Colors[(ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF)];
+                var fgColor = (BlinkEnabled && Blinking && (ac.Color & 0x80) != 0) ? bgColor : _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
                 _updated = true;                
             }
@@ -283,6 +311,10 @@ namespace Roton.OpenGL {
 
             _glReady = true;
             SetViewport();
+
+            // Enable blinking by default; set timer for it.
+            BlinkEnabled = true;
+            timerDaemon.Start(Blink, 1f / 0.2f);
 
             // Finish setting up the control and start the rendering timer.
             SetSize(80, 25, false);
