@@ -62,9 +62,11 @@
     <Compile Include="Emulation\ICodeSeekable.cs" />
     <Compile Include="Emulation\MemoryColorArrayBase.cs" />
     <Compile Include="Emulation\MemoryString.cs" />
+    <Compile Include="Emulation\SuperZZT\Core.Behavior.cs" />
     <Compile Include="Emulation\SuperZZT\Core.cs" />
     <Compile Include="Emulation\SuperZZT\MemoryColorArray.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
+    <Compile Include="Emulation\ZZT\Core.cs" />
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="IDisplayInfo.cs" />
     <Compile Include="Element.cs" />
@@ -96,7 +98,7 @@
     <Compile Include="Emulation\SuperZZT\MemoryTileCollection.cs" />
     <Compile Include="Emulation\SuperZZT\Sounds.cs" />
     <Compile Include="Emulation\SuperZZT\TerminalDisplay.cs" />
-    <Compile Include="Emulation\ZZT\Core.cs" />
+    <Compile Include="Emulation\ZZT\Core.Interface.cs" />
     <Compile Include="Emulation\ZZT\MemoryElementCollection.Ids.cs" />
     <Compile Include="Emulation\ZZT\MemoryFlagArray.cs" />
     <Compile Include="Emulation\ZZT\Serializer.cs" />

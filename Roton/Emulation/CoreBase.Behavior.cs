@@ -202,7 +202,10 @@ namespace Roton.Emulation
 
         virtual public void Act_Monitor(int index)
         {
-            // differs quite a lot between zzt and super zzt
+            if (KeyPressed != 0)
+            {
+                BreakGameLoop = true;
+            }
         }
 
         virtual public void Act_Object(int index)
