@@ -32,6 +32,7 @@ namespace Roton
         virtual public string DefaultWorldName { get; set; }
         virtual public Tile EdgeTile { get; protected set; }
         virtual public bool EditorMode { get; set; }
+        virtual public int ForestIndex { get; set; }
         virtual public int GameCycle { get; set; }
         virtual public bool GameOver { get; set; }
         virtual public bool GamePaused { get; set; }

@@ -62,6 +62,7 @@
     <Compile Include="Emulation\ICodeSeekable.cs" />
     <Compile Include="Emulation\MemoryColorArrayBase.cs" />
     <Compile Include="Emulation\MemoryString.cs" />
+    <Compile Include="Emulation\SuperZZT\MemoryColorArray.cs" />
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="IDisplayInfo.cs" />
