@@ -271,6 +271,16 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal Vector GetVector4(int index)
+        {
+            return new Vector(Vector4[index], Vector4[index + 4]);
+        }
+
+        virtual internal Vector GetVector8(int index)
+        {
+            return new Vector(Vector8[index], Vector8[index + 8]);
+        }
+
         virtual internal void Harm(int index)
         {
             var actor = Actors[index];

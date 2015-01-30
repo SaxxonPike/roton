@@ -558,6 +558,48 @@ namespace Roton.Emulation
 
         virtual public void Act_Slime(int index)
         {
+            var actor = Actors[index];
+
+            if (actor.P1 >= actor.P2)
+            {
+                int spawnCount = 0;
+                int color = TileAt(actor.Location).Color;
+                var slimeElement = Elements.SlimeElement;
+                Tile slimeTrailTile = new Tile(Elements.BreakableId, color);
+                Location source = actor.Location.Clone();
+                actor.P1 = 0;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Location target = source.Sum(GetVector4(i));
+                    if (ElementAt(target).Floor)
+                    {
+                        if (spawnCount == 0)
+                        {
+                            MoveActor(index, target);
+                            TileAt(source).CopyFrom(slimeTrailTile);
+                            UpdateBoard(source);
+                        }
+                        else
+                        {
+                            SpawnActor(target, new Tile(Elements.SlimeId, color), slimeElement.Cycle, null);
+                            Actors[ActorCount].P2 = actor.P2;
+                        }
+                        spawnCount++;
+                    }
+                }
+
+                if (spawnCount == 0)
+                {
+                    RemoveActor(index);
+                    TileAt(source).CopyFrom(slimeTrailTile);
+                    UpdateBoard(source);
+                }
+            }
+            else
+            {
+                actor.P1++;
+            }
         }
 
         virtual public void Act_Spider(int index)
