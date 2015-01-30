@@ -70,6 +70,12 @@ namespace Roton.Emulation
             set;
         }
 
+        public bool NextLine
+        {
+            get;
+            set;
+        }
+
         public int PreviousInstruction
         {
             get;
