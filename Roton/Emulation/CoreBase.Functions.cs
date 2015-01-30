@@ -328,6 +328,15 @@ namespace Roton.Emulation
             get { return Tiles.Height; }
         }
 
+        virtual internal void InitializeElements(bool showInvisibles)
+        {
+            // this isn't all the initializations.
+            // todo: replace this with the ability to completely reinitialize engine default memory
+            Elements.InvisibleElement.Character = showInvisibles ? 0xB0 : 0x20;
+            Elements.InvisibleElement.Color = 0xFF;
+            Elements.PlayerElement.Character = 0x02;
+        }
+
         virtual internal void InitializeElementDelegates()
         {
             foreach (var element in Elements)
@@ -836,6 +845,18 @@ namespace Roton.Emulation
             TileAt(Player.Location).SetTo(element.Index, element.Color);
             PackBoard();
             UnpackBoard(boardIndex);
+        }
+
+        virtual internal void SetEditorMode()
+        {
+            InitializeElements(true);
+            EditorMode = true;
+        }
+
+        virtual internal void SetGameMode()
+        {
+            InitializeElements(false);
+            EditorMode = false;
         }
 
         virtual internal void SetMessage(int duration, string message, string message2 = "")
