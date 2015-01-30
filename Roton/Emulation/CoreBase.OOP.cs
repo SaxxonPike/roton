@@ -35,7 +35,7 @@ namespace Roton.Emulation
                 (int value) => { offset = value; }
                 );
 
-            while (SendSearch(sender, info, "\x000D:"))
+            while (ExecuteLabel(sender, info, "\x000D:"))
             {
                 if (!ActorIsLocked(index) || force || (sender == index && !external))
                 {
@@ -182,6 +182,52 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Zap(ExecuteCodeContext context)
         {
+        }
+
+        virtual internal bool ExecuteLabel(int sender, CodeSearchInfo search, string prefix)
+        {
+            string label = search.Label;
+            string target = @"";
+            var success = false;
+            int split = label.IndexOf(':');
+
+            if (split > 0)
+            {
+                target = label.Substring(0, split);
+                label = label.Substring(split + 1);
+                success = IsActorTargeted(sender, search, target);
+            }
+            else if (search.Index < sender)
+            {
+                search.Index = sender;
+                split = 0;
+                success = true;
+            }
+            while (true)
+            {
+                if (!success)
+                {
+                    break;
+                }
+
+                if (label.ToUpper() == @"RESTART")
+                {
+                    search.Offset = 0;
+                }
+                else
+                {
+                    search.Offset = SearchActorCode(search.Index, prefix + label);
+                    if (search.Offset < 0 && split > 0)
+                    {
+                        success = IsActorTargeted(sender, search, target);
+                        continue;
+                    }
+                }
+
+                success = (search.Offset >= 0);
+                break;
+            }
+            return success;
         }
 
         virtual internal bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
@@ -371,52 +417,6 @@ namespace Roton.Emulation
             }
 
             return result;
-        }
-
-        virtual internal bool SendSearch(int sender, CodeSearchInfo search, string prefix)
-        {
-            string label = search.Label;
-            string target = @"";
-            var success = false;
-            int split = label.IndexOf(':');
-
-            if (split > 0)
-            {
-                target = label.Substring(0, split);
-                label = label.Substring(split + 1);
-                success = IsActorTargeted(sender, search, target);
-            }
-            else if (search.Index < sender)
-            {
-                search.Index = sender;
-                split = 0;
-                success = true;
-            }
-            while (true)
-            {
-                if (!success)
-                {
-                    break;
-                }
-
-                if (label.ToUpper() == @"RESTART")
-                {
-                    search.Offset = 0;
-                }
-                else
-                {
-                    search.Offset = SearchActorCode(search.Index, prefix + label);
-                    if (search.Offset < 0 && split > 0)
-                    {
-                        success = IsActorTargeted(sender, search, target);
-                        continue;
-                    }
-                }
-
-                success = (search.Offset >= 0);
-                break;
-            }
-            return success;
         }
     }
 }
