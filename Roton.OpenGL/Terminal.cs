@@ -1,15 +1,19 @@
 ﻿using Roton.Windows;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Windows.Forms;
 using OpenTK.Graphics;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace Roton.OpenGL {
     public partial class Terminal : UserControl, ITerminal
     {
         private bool _glReady = false;
+        private int _glLastTexture = -1;
         private KeysBuffer _keys;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
@@ -18,6 +22,7 @@ namespace Roton.OpenGL {
         private int _terminalHeight;
         private Windows.Palette _terminalPalette;
         private int _terminalWidth;
+        private bool _updated;
         private bool _wideMode;
 
         public Terminal()
@@ -94,20 +99,71 @@ namespace Roton.OpenGL {
             _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
         }
 
-        private void GLRender() {
+        private void Draw(int x, int y, AnsiChar ac)
+        {
+            if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
+            {
+                int drawX = x * _terminalFont.Width;
+                int drawY = y * _terminalFont.Height;
+                int fgColor = _terminalPalette.Colors[(ac.Color >> 4)];
+                int bgColor = _terminalPalette.Colors[ac.Color & 0xF];
+                _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
+                _updated = true;                
+            }
+        }
+
+        private void GlRender() {
             if(!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            //GL.Begin(BeginMode.Quads);
-            //GL.End();
+
+            GlGenerateTexture();
+
+            GL.Begin(BeginMode.Quads);
+            GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth, 0.0f);
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth, _terminalHeight);
+            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
+            GL.End();
 
             glControl.SwapBuffers();
+        }
+
+        private void GlGenerateTexture()
+        {
+            int glNewTexture = GL.GenTexture();
+
+            BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
+            Bitmap.UnlockBits(fbData);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+
+            if (_glLastTexture != -1)
+                GL.DeleteTexture(_glLastTexture);
+            _glLastTexture = glNewTexture;
         }
         
         public void Plot(int x, int y, AnsiChar ac)
         {
+            if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
+            {
+                int index = x + (y * _terminalWidth);
+                _terminalBuffer[index] = ac;
+                Draw(x, y, ac);
+            }
+        }
+
+        private void Redraw()
+        {
+            int index = 0;
+            for(var y = 0; y < _terminalHeight; y++)
+                for (var x = 0; x < _terminalWidth; x++)
+                    Draw(x, y, _terminalBuffer[index++]);
         }
 
         public int ScaleX {
@@ -170,7 +226,8 @@ namespace Roton.OpenGL {
 
         private void displayTimer_Tick(object sender, EventArgs e)
         {
-            GLRender();
+            Redraw();
+            GlRender();
         }
 
         private void glControl_Load(object sender, EventArgs e) {
