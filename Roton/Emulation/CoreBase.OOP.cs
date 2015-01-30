@@ -31,6 +31,12 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Char(ExecuteCodeContext context)
         {
+            ReadActorCodeNumber(context.Index, context);
+            if (OOPNumber > 0x00 && OOPNumber <= 0xFF)
+            {
+                context.Actor.P1 = OOPNumber;
+                UpdateBoard(context.Actor.Location);
+            }
         }
 
         virtual internal void ExecuteCode_Clear(ExecuteCodeContext context)
@@ -39,6 +45,11 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Cycle(ExecuteCodeContext context)
         {
+            ReadActorCodeNumber(context.Index, context);
+            if (OOPNumber > 0)
+            {
+                context.Actor.Cycle = OOPNumber;
+            }
         }
 
         virtual internal void ExecuteCode_Die(ExecuteCodeContext context)
