@@ -47,10 +47,13 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_End(ExecuteCodeContext context)
         {
+            context.Finished = true;
+            context.Instruction = -1;
         }
 
         virtual internal void ExecuteCode_EndGame(ExecuteCodeContext context)
         {
+            Health = 0;
         }
 
         virtual internal void ExecuteCode_Give(ExecuteCodeContext context)
@@ -63,6 +66,7 @@ namespace Roton.Emulation
 
         virtual internal void ExecuteCode_Idle(ExecuteCodeContext context)
         {
+            context.Moved = true;
         }
 
         virtual internal void ExecuteCode_If(ExecuteCodeContext context)
