@@ -28,6 +28,16 @@ namespace Roton
             this.Color = tile.Color;
         }
 
+        public bool Matches(Tile other)
+        {
+            return this.Id == other.Id && this.Color == other.Color;
+        }
+
+        public bool Matches(int id, int color)
+        {
+            return this.Id == id && this.Color == color;
+        }
+
         public void SetTo(int id, int color)
         {
             this.Id = id;

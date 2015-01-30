@@ -43,6 +43,105 @@ namespace Roton.Emulation
 
         virtual public void Act_BlinkWall(int index)
         {
+            Actor actor = Actors[index];
+            int color;
+
+            if (actor.P3 == 0)
+                actor.P3 = actor.P1 + 1;
+
+            if (actor.P3 == 1)
+            {
+                actor.P3 = (actor.P2 * 2) + 1;
+
+                bool erasedRay = false;
+                Location target = actor.Location.Sum(actor.Vector);
+                int emptyElement = Elements.EmptyId;
+                int rayElement;
+                Tile rayTile;
+
+                if (actor.Vector.X == 0)
+                    rayElement = Elements.BlinkRayVId;
+                else
+                    rayElement = Elements.BlinkRayHId;
+
+                color = TileAt(actor.Location).Color;
+                rayTile = new Tile(rayElement, color);
+
+                while (TileAt(target).Matches(rayTile))
+                {
+                    TileAt(target).Id = emptyElement;
+                    UpdateBoard(target);
+                    target.Add(actor.Vector);
+                    erasedRay = true;
+                }
+
+                if (!erasedRay)
+                {
+                    bool blocked = false;
+
+                    do
+                    {
+                        if (ElementAt(target).Destructible)
+                        {
+                            Destroy(target);
+                        }
+
+                        if (TileAt(target).Id == Elements.PlayerId)
+                        {
+                            int playerIndex = ActorIndexAt(target);
+                            Vector testVector;
+
+                            if (actor.Vector.Y == 0)
+                            {
+                                testVector = new Vector(0, 1);
+                                if (TileAt(target.Difference(testVector)).Id == emptyElement)
+                                {
+                                    MoveActor(playerIndex, target.Difference(testVector));
+                                }
+                                else if (TileAt(target.Sum(testVector)).Id == emptyElement)
+                                {
+                                    MoveActor(playerIndex, target.Sum(testVector));
+                                }
+                            }
+                            else
+                            {
+                                testVector = new Vector(1, 0);
+                                if (TileAt(target.Sum(testVector)).Id == emptyElement)
+                                {
+                                    MoveActor(playerIndex, target.Sum(testVector));
+                                }
+                                else if (TileAt(target.Difference(testVector)).Id == emptyElement)
+                                {
+                                    // "sum" is not a mistake; this is an original engine bug
+                                    MoveActor(playerIndex, target.Sum(testVector));
+                                }
+                            }
+                            if (TileAt(target).Id == Elements.PlayerId)
+                            {
+                                while (Health > 0)
+                                {
+                                    Harm(0);
+                                }
+                                blocked = true;
+                            }
+                        }
+                        if (TileAt(target).Id == emptyElement)
+                        {
+                            TileAt(target).CopyFrom(rayTile);
+                            UpdateBoard(target);
+                        }
+                        else
+                        {
+                            blocked = true;
+                        }
+                        target.Add(actor.Vector);
+                    } while (!blocked);
+                }
+            }
+            else
+            {
+                actor.P3--;
+            }
         }
 
         virtual public void Act_Bomb(int index)
