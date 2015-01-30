@@ -187,6 +187,7 @@ namespace Roton.Emulation
             {
                 ClearWorld();
             }
+            SetGameMode();
             TitleScreenLoop();
         }
 
