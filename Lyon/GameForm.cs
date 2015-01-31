@@ -23,8 +23,8 @@ namespace Lyon
         private void CommonSetup()
         {
             // Set up default font and palette.
-            Roton.Windows.Font font1 = new Roton.Windows.Font();
-            Roton.Windows.Palette palette1 = new Roton.Windows.Palette();
+            var font1 = new Roton.Windows.Font();
+            var palette1 = new Roton.Windows.Palette();
 
             InitializeComponent();
             InitializeEvents();
@@ -55,6 +55,11 @@ namespace Lyon
                 mainPanel.Controls.Add(glTerminal);
                 toolStrip1.Items.Add("OpenGL");
             }
+
+			// Used to help Mono's WinForm implementation set the correct window size
+			// before it tries to scale the window.
+			this.Width = terminal.Width;
+			this.Height = terminal.Height;
         }
 
         public GameForm(bool openGL = false)
