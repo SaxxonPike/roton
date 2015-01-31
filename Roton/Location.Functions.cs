@@ -73,6 +73,16 @@ namespace Roton
         {
         }
 
+        public bool Matches(Location other)
+        {
+            return this.X == other.X && this.Y == other.Y;
+        }
+
+        public bool Matches(int x, int y)
+        {
+            return this.X == x && this.Y == y;
+        }
+
         public void SetTo(int x, int y)
         {
             this.X = x;
