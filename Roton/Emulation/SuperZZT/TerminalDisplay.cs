@@ -10,6 +10,7 @@ namespace Roton.Emulation.SuperZZT
         public TerminalDisplay(IDisplayInfo infoSource)
             : base(infoSource)
         {
+            OldCamera = new Location(int.MinValue, int.MinValue);
         }
 
         public override void CreateStatusBar()
@@ -116,6 +117,10 @@ namespace Roton.Emulation.SuperZZT
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
+            x += 0x0E + 1;
+            y += 0x02 + 1;
+            x -= DisplayInfo.Camera.X;
+            y -= DisplayInfo.Camera.Y;
             if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
             {
                 Terminal.Plot(x, y, ac);
@@ -170,6 +175,7 @@ namespace Roton.Emulation.SuperZZT
                 // Super ZZT does a smart redraw
                 // todo: implement that instead of redrawing everything
                 OldCamera.CopyFrom(camera);
+                DisplayInfo.Camera.CopyFrom(camera);
                 RedrawBoard();
             }
         }
