@@ -637,6 +637,10 @@ namespace Roton.Emulation
                     }
                 }
             }
+            if (index == 0)
+            {
+                UpdateCamera();
+            }
         }
 
         virtual internal void MoveTile(Location source, Location target)
@@ -1030,6 +1034,11 @@ namespace Roton.Emulation
         virtual internal void UpdateBorder()
         {
             Display.UpdateBorder();
+        }
+
+        virtual internal void UpdateCamera()
+        {
+            Display.UpdateCamera();
         }
 
         virtual internal void UpdateRadius(Location location, RadiusMode mode)

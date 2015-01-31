@@ -127,6 +127,12 @@ namespace Roton.Emulation.SuperZZT
             return new Vector(0x0F + (-DisplayInfo.Camera.X), 0x03 + (-DisplayInfo.Camera.Y));
         }
 
+        Location OldCamera
+        {
+            get;
+            set;
+        }
+
         public override void RedrawBoard()
         {
             for (int x = 0; x < DisplayInfo.Width; x++)
@@ -135,6 +141,36 @@ namespace Roton.Emulation.SuperZZT
                 {
                     DrawTile(x, y, DisplayInfo.Draw(new Location(x + 1, y + 1)));
                 }
+            }
+        }
+
+        public override void UpdateCamera()
+        {
+            var camera = DisplayInfo.Player.Location.Clone();
+            camera.Subtract(12, 10);
+
+            if (camera.X < 1)
+            {
+                camera.X = 1;
+            }
+            if (camera.X > 73)
+            {
+                camera.X = 73;
+            }
+            if (camera.Y < 1)
+            {
+                camera.Y = 1;
+            }
+            if (camera.Y > 61)
+            {
+                camera.Y = 61;
+            }
+            if (!OldCamera.Matches(camera))
+            {
+                // Super ZZT does a smart redraw
+                // todo: implement that instead of redrawing everything
+                OldCamera.CopyFrom(camera);
+                RedrawBoard();
             }
         }
 
