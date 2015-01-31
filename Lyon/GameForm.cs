@@ -41,6 +41,7 @@ namespace Lyon
                 winTerminal.TerminalPalette = palette1;
                 terminal = winTerminal;
                 mainPanel.Controls.Add(winTerminal);
+                toolStrip1.Items.Add("WinForm");
             }
             else
             {
@@ -52,6 +53,7 @@ namespace Lyon
                 glTerminal.TerminalPalette = palette1;
                 terminal = glTerminal;
                 mainPanel.Controls.Add(glTerminal);
+                toolStrip1.Items.Add("OpenGL");
             }
         }
 
