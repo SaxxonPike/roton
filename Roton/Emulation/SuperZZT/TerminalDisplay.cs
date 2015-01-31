@@ -198,7 +198,7 @@ namespace Roton.Emulation.SuperZZT
                     }
                     else if (healthRemaining >= 10)
                     {
-                        DrawChar(x, 0x0F, new AnsiChar(0xDE, 0x6E));
+                        DrawChar(x, 0x0F, new AnsiChar(0xDD, 0x6E));
                     }
                     else
                     {
