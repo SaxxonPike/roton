@@ -661,7 +661,7 @@ namespace Roton.Emulation
             Boards[Board] = board;
         }
 
-        virtual internal Actor Player
+        virtual public Actor Player
         {
             get { return Actors[0]; }
         }
