@@ -536,8 +536,6 @@ namespace Roton.Emulation
                 }
             }
 
-            //SetBoard(21);
-
             if (TimeLimit > 0)
             {
                 if (Health > 0)

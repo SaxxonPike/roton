@@ -32,6 +32,7 @@ namespace Roton
         virtual public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue) { return currentValue; }
         virtual public ITerminal Terminal { get; set; }
         virtual public void UpdateBorder() { }
+        virtual public void UpdateCamera() { }
         virtual public void UpdateStatus() { }
     }
 }
