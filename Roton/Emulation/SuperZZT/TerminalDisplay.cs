@@ -91,6 +91,14 @@ namespace Roton.Emulation.SuperZZT
             Terminal.Plot(x, y, ac);
         }
 
+        void DrawNumber(int y, int value)
+        {
+            string s = value.ToString();
+            int x = 11 - s.Length;
+            DrawString(0x07, y, @"   ", 0x6E);
+            DrawString(x, y, s, 0x6E);
+        }
+
         public override void DrawString(int x, int y, string text, int color)
         {
             Terminal.Write(x, y, text, color);
@@ -126,6 +134,67 @@ namespace Roton.Emulation.SuperZZT
                 for (int y = 0; y < DisplayInfo.Height; y++)
                 {
                     DrawTile(x, y, DisplayInfo.Draw(new Location(x + 1, y + 1)));
+                }
+            }
+        }
+
+        public override void UpdateStatus()
+        {
+            if (!DisplayInfo.TitleScreen)
+            {
+                if (DisplayInfo.Health < 0)
+                {
+                    DisplayInfo.Health = 0;
+                }
+
+                int healthRemaining = DisplayInfo.Health;
+                for (int x = 7; x < 12; x++)
+                {
+                    if (healthRemaining >= 20)
+                    {
+                        DrawChar(x, 0x0F, new AnsiChar(0xDB, 0x6E));
+                    }
+                    else if (healthRemaining >= 10)
+                    {
+                        DrawChar(x, 0x0F, new AnsiChar(0xDE, 0x6E));
+                    }
+                    else
+                    {
+                        DrawChar(x, 0x0F, new AnsiChar(0x20, 0x6E));
+                    }
+                    healthRemaining -= 20;
+                }
+
+                DrawNumber(0x11, DisplayInfo.Gems);
+                DrawNumber(0x12, DisplayInfo.Ammo);
+                DrawNumber(0x15, DisplayInfo.Score);
+                DrawString(0x00, 0x16, @"            ", 0x6F);
+
+                if (!string.IsNullOrWhiteSpace(DisplayInfo.StoneText))
+                {
+                    DrawString(0x01, 0x16, DisplayInfo.StoneText, 0x6F);
+                }
+
+                if (DisplayInfo.Stones >= 0)
+                {
+                    DrawNumber(0x16, DisplayInfo.Stones);
+                }
+
+                for (int i = 0; i < 7; i++)
+                {
+                    int keyChar = DisplayInfo.Keys[i] ? DisplayInfo.Elements[0x08].Character : 0x20;
+                    int x = i & 0x3;
+                    int y = x >> 2;
+                    DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
+                }
+
+                if (DisplayInfo.Quiet)
+                {
+                    DrawString(0x03, 0x0A, @"Be Noisy ", 0x6E);
+                }
+                else
+                {
+                    DrawString(0x03, 0x0A, @"Be Quiet ", 0x6E);
                 }
             }
         }
