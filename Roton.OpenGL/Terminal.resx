@@ -117,29 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="timerDaemon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="toolStripDropDownButton3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADbSURBVDhPjVIxDsIwDOxTeEv3/KIrFWN5SlE3+gm68Iks
-        wAqshSHt6HJRIiJjN1g6yXLuztcmhVbOud00TSOAPozzNc/z5iM4W2upqioP9JjhLNDkilu7riNjDA2n
-        wQM9ZmoavrVp9vS4P+k1vj3QY6am4VujkIOnCXJvQGVZUtseRGEKcMCFJsi/Bv2x91Gvl9uPEDOcgaMa
-        cGIUc+NVAy7iZsBfBgC+V/ovqkF6dYBkAI5kIF4jN1CvUXtI0SD7kGLhmaZp6m3tkW4FJ9Dl4mmyW7WK
-        ada3FsUClkZMZc8Ew9EAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="toolStripDropDownButton2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABfSURBVDhPvc7RCoAgDIXhPdvefk9T3ew2mXYgMWMbmfAp
-        iPuRsFT1zLjGW4CZQ74J2AZ2uW+HSxe4Vz3WBHCJL878E7DziTvwZn0gYgh42FsRqdKBOoiFQMQQyGjT
-        RAWYNMpnzq94qAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="speaker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>231, 17</value>
+  <metadata name="displayTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>143, 17</value>
   </metadata>
 </root>

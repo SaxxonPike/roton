@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,18 +15,62 @@ namespace Lyon
     public partial class GameForm : Form
     {
         bool initScaleDisplay = true;
+        private Roton.Windows.Terminal winTerminal;
+        private Roton.OpenGL.Terminal glTerminal;
+        private ITerminal terminal;
+        private bool openGL;
 
-        public GameForm()
+        private void CommonSetup()
         {
+            // Set up default font and palette.
+            var font1 = new Roton.Windows.Font();
+            var palette1 = new Roton.Windows.Palette();
+
             InitializeComponent();
             InitializeEvents();
+
+            // Load the appropriate terminal.
+            // TODO: This is horribly ugly and inelegant. Kill it with fire ASAP.
+            if (!openGL)
+            {
+                winTerminal = new Roton.Windows.Terminal();
+                winTerminal.Location = new System.Drawing.Point(0, 0);
+                winTerminal.Size = new System.Drawing.Size(640, 350);
+                winTerminal.AutoSize = true;
+                winTerminal.TerminalFont = font1;
+                winTerminal.TerminalPalette = palette1;
+                terminal = winTerminal;
+                mainPanel.Controls.Add(winTerminal);
+            }
+            else
+            {
+                glTerminal = new Roton.OpenGL.Terminal();
+                glTerminal.Location = new System.Drawing.Point(0, 0);
+                glTerminal.Size = new System.Drawing.Size(640, 350);
+                glTerminal.AutoSize = true;
+                glTerminal.TerminalFont = font1;
+                glTerminal.TerminalPalette = palette1;
+                terminal = glTerminal;
+                mainPanel.Controls.Add(glTerminal);
+            }
+
+			// Used to help Mono's WinForm implementation set the correct window size
+			// before it tries to scale the window.
+			this.Width = terminal.Width;
+			this.Height = terminal.Height;
+        }
+
+        public GameForm(bool openGL = false)
+        {
+            this.openGL = openGL;
+            CommonSetup();
             Initialize(new Context(ContextEngine.ZZT, false));
         }
 
-        public GameForm(Stream source)
+        public GameForm(Stream source, bool openGL = false)
         {
-            InitializeComponent();
-            InitializeEvents();
+            this.openGL = openGL;
+            CommonSetup();
             Initialize(new Context(source, false));
         }
 
@@ -89,7 +134,6 @@ namespace Lyon
             scale1xMenuItem.Click += (object sender, EventArgs e) => { SetScale(1); };
             scale2xMenuItem.Click += (object sender, EventArgs e) => { SetScale(2); };
             scale3xMenuItem.Click += (object sender, EventArgs e) => { SetScale(3); };
-            mainPanel.Resize += (object sender, EventArgs e) => { UpdateTerminalLocation(); };
             dumpRAMToolStripMenuItem.Click += (object sender, EventArgs e) => { DumpRam(); };
         }
 
@@ -142,13 +186,6 @@ namespace Lyon
         void SetScale(int scale)
         {
             terminal.SetScale(scale, scale);
-            UpdateTerminalLocation();
-        }
-
-        void UpdateTerminalLocation()
-        {
-            terminal.Top = (mainPanel.Height - terminal.Height) / 2;
-            terminal.Left = (mainPanel.Width - terminal.Width) / 2;
         }
 
         void UpdateTitle()
