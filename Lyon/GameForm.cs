@@ -136,7 +136,6 @@ namespace Lyon
             scale1xMenuItem.Click += (object sender, EventArgs e) => { SetScale(1); };
             scale2xMenuItem.Click += (object sender, EventArgs e) => { SetScale(2); };
             scale3xMenuItem.Click += (object sender, EventArgs e) => { SetScale(3); };
-            mainPanel.Resize += (object sender, EventArgs e) => { UpdateTerminalLocation(); };
             dumpRAMToolStripMenuItem.Click += (object sender, EventArgs e) => { DumpRam(); };
         }
 
@@ -189,13 +188,6 @@ namespace Lyon
         void SetScale(int scale)
         {
             terminal.SetScale(scale, scale);
-            UpdateTerminalLocation();
-        }
-
-        void UpdateTerminalLocation()
-        {
-            terminal.Top = (mainPanel.Height - terminal.Height) / 2;
-            terminal.Left = (mainPanel.Width - terminal.Width) / 2;
         }
 
         void UpdateTitle()

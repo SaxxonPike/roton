@@ -67,6 +67,7 @@
             this.toolStrip1.Size = new System.Drawing.Size(330, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Top;
             // 
             // toolStripDropDownButton3
             // 

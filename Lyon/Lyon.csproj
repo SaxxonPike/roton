@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -76,15 +76,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roton.OpenGL\Roton.OpenGL.csproj">
-      <Project>{7bf0d5a0-a20d-4cd3-9674-cbe6f2f92ddd}</Project>
+      <Project>{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}</Project>
       <Name>Roton.OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roton.Windows\Roton.Windows.csproj">
-      <Project>{7911261b-025e-4ca0-b82c-32bba1426ee2}</Project>
+      <Project>{7911261B-025E-4CA0-B82C-32BBA1426EE2}</Project>
       <Name>Roton.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roton\Roton.csproj">
-      <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
+      <Project>{A93864EF-3C61-4654-8598-BC49D822187C}</Project>
       <Name>Roton</Name>
     </ProjectReference>
   </ItemGroup>
