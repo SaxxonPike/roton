@@ -3,7 +3,6 @@ using Roton.Windows;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Security.AccessControl;
 using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
