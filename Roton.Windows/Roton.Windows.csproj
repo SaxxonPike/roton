@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlUtility.cs" />
+    <Compile Include="IEditorTerminal.cs" />
     <Compile Include="Keyboard.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -10,7 +10,7 @@ using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
 
 namespace Roton.OpenGL {
-    public partial class Terminal : UserControl, ITerminal
+    public partial class Terminal : UserControl, IEditorTerminal
     {
         static private Encoding _encoding = Encoding.GetEncoding(437);
 
@@ -338,6 +338,28 @@ namespace Roton.OpenGL {
         void glControl_KeyPress(object sender, KeyPressEventArgs e) {
             base.OnKeyPress(e);
             _keys.Press(e.KeyChar);
+        }
+
+        public bool CursorEnabled
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public int CursorX
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public int CursorY
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public Bitmap RenderSingle(int character, int color) {
+            throw new NotImplementedException();
         }
     }
 }

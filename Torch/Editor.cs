@@ -1,4 +1,5 @@
 ﻿using Roton;
+using Roton.Windows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace Torch
         Actor _actor;
         int _color;
         Context _context;
-        ITerminal _terminal;
+        IEditorTerminal _terminal;
         private bool _openGL;
 
         public Editor(bool openGL = false)
@@ -925,8 +926,16 @@ namespace Torch
 
         void UpdateColor()
         {
-            UpdateColorButton(foregroundColorButton, _terminal.Palette[Color & 0x0F]);
-            UpdateColorButton(backgroundColorButton, _terminal.Palette[(Color >> 4) & 0x0F]);
+            if (!_openGL)
+            {
+                UpdateColorButton(foregroundColorButton, ((Roton.Windows.Terminal)_terminal).TerminalPalette[Color & 0x0F]);
+                UpdateColorButton(backgroundColorButton, ((Roton.Windows.Terminal)_terminal).TerminalPalette[(Color >> 4) & 0x0F]);
+            }
+            else
+            {
+                UpdateColorButton(foregroundColorButton, ((Roton.OpenGL.Terminal)_terminal).TerminalPalette[Color & 0x0F]);
+                UpdateColorButton(backgroundColorButton, ((Roton.OpenGL.Terminal)_terminal).TerminalPalette[(Color >> 4) & 0x0F]);
+            }
         }
 
         void UpdateColorButton(ToolStripButton button, Color backgroundColor)

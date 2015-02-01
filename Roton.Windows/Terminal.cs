@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Roton.Windows
 {
-    public partial class Terminal : UserControl, ITerminal
+    public partial class Terminal : UserControl, IEditorTerminal
     {
         static private System.Text.Encoding _encoding = System.Text.Encoding.GetEncoding(437);
 
@@ -248,11 +248,6 @@ namespace Roton.Windows
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-        }
-
-        public Palette Palette
-        {
-            get { return _terminalPalette; }
         }
 
         public void Plot(int x, int y, AnsiChar ac)
