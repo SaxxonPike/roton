@@ -17,11 +17,12 @@ There are no special instructions, nor is there anything additional you need to 
 ##### Windows (Visual Studio)
 As long as you have a development environment that supports .NET Framework 4.0, you should be good to go. The project has been built and tested in the free Visual Studio 2013 Community Edition.
 
-##### Mac OS
-Needs documentation.
+##### Mac OS X and Linux
+As long as you have a version of MonoDevelop or Xamarin Studio that supports Visual Studio 2013 projects, NuGet packages, and the .NET Framework 4.0, the process is almost automatic.
 
-##### Linux
-Needs documentation.
+The only bit of manual work that will be done in order to run Lyon is to copy the OpenTK.dll file from Roton.OpenGL/bin/Debug (or Release) into the appropriate subdirectory inside of Lyon/bin, as MonoDevelop/Xamarin doesn't appear to properly resolve nested assembly dependencies. This will need to be done every time that the OpenTK library is updated.
+
+The project has been tested in MonoDevelop 5.7.0 under Gentoo Linux (using the dotnet overlay) and Linux Mint 17.1 (using Xamarin's package repository), as well as Xamarin Studio 5.7.0 for Mac OS X. Older versions may work as well.
 
 ### Where can I get more information about ZZT?
 Visit http://zzt.org - the original game engines are available for download, as are some games to play on it.
