@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Roton.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -21,9 +22,9 @@ namespace Roton.Windows
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
-        private Roton.Windows.Font _terminalFont;
+        private Common.Font _terminalFont;
         private int _terminalHeight;
-        private Roton.Windows.Palette _terminalPalette;
+        private Common.Palette _terminalPalette;
         private bool _terminalWide;
         private int _terminalWidth;
         private bool _updated;
@@ -31,8 +32,8 @@ namespace Roton.Windows
         public Terminal()
         {
             // Initialize a default font/palette in case one isn't defined.
-            _terminalFont = new Font();
-            _terminalPalette = new Palette();
+            _terminalFont = new Common.Font();
+            _terminalPalette = new Common.Palette();
 
             _keys = new KeysBuffer();
             _cursorEnabled = false;
@@ -197,8 +198,8 @@ namespace Roton.Windows
 
         void OnLoad(object sender, EventArgs e)
         {
-            _terminalFont = new Font();
-            _terminalPalette = new Palette();
+            _terminalFont = new Common.Font();
+            _terminalPalette = new Common.Palette();
             SetSize(80, 25, false);
             BlinkEnabled = true;
             timerDaemon.Start(Blink, 1f / 0.2f);
@@ -369,7 +370,7 @@ namespace Roton.Windows
             set { _keys.Shift = value; }
         }
 
-        public Font TerminalFont
+        public Common.Font TerminalFont
         {
             get { return _terminalFont; }
             set
@@ -379,7 +380,7 @@ namespace Roton.Windows
             }
         }
 
-        public Palette TerminalPalette
+        public Common.Palette TerminalPalette
         {
             get { return _terminalPalette; }
             set

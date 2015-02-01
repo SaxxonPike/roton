@@ -23,8 +23,8 @@ namespace Lyon
         private void CommonSetup()
         {
             // Set up default font and palette.
-            var font1 = new Roton.Windows.Font();
-            var palette1 = new Roton.Windows.Palette();
+            var font1 = new Roton.Common.Font();
+            var palette1 = new Roton.Common.Palette();
 
             InitializeComponent();
             InitializeEvents();

@@ -57,6 +57,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
+      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
+      <Name>Roton.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roton.Windows\Roton.Windows.csproj">
       <Project>{7911261b-025e-4ca0-b82c-32bba1426ee2}</Project>
       <Name>Roton.Windows</Name>

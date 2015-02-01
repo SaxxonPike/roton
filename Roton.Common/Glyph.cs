@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace Roton.Windows
+namespace Roton.Common
 {
     sealed public class Glyph : Roton.Emulation.FixedList<int>
     {
@@ -106,7 +103,7 @@ namespace Roton.Windows
         /// </summary>
         public Bitmap Render(Color foreColor, Color backColor)
         {
-            Bitmap result = new Bitmap(Width, Height, PixelFormat.Format32bppPArgb);
+            var result = new Bitmap(Width, Height, PixelFormat.Format32bppPArgb);
             var bits = result.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
             Marshal.Copy(Render(foreColor.ToArgb(), backColor.ToArgb()), 0, bits.Scan0, PixelCount);
             result.UnlockBits(bits);

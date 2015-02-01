@@ -75,6 +75,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
+      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
+      <Name>Roton.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roton.OpenGL\Roton.OpenGL.csproj">
       <Project>{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}</Project>
       <Name>Roton.OpenGL</Name>

@@ -16,6 +16,7 @@ namespace Torch
         Actor _actor;
         int _color;
         Context _context;
+        ITerminal terminal;
 
         public Editor()
         {

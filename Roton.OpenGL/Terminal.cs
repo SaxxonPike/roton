@@ -1,7 +1,9 @@
-﻿using Roton.Windows;
+﻿using Roton.Common;
+using Roton.Windows;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Security.AccessControl;
 using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
@@ -19,9 +21,9 @@ namespace Roton.OpenGL {
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
-        private Windows.Font _terminalFont;
+        private Common.Font _terminalFont;
         private int _terminalHeight;
-        private Windows.Palette _terminalPalette;
+        private Common.Palette _terminalPalette;
         private int _terminalWidth;
         private bool _updated;
         private bool _wideMode;
@@ -33,8 +35,8 @@ namespace Roton.OpenGL {
             InitializeComponent();
 
             // Initialize font and palette.
-            _terminalFont = new Windows.Font();
-            _terminalPalette = new Palette();
+            _terminalFont = new Common.Font();
+            _terminalPalette = new Common.Palette();
 
             // Set default scale.
             ScaleX = 1;
@@ -270,7 +272,7 @@ namespace Roton.OpenGL {
             GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
-        public Roton.Windows.Font TerminalFont {
+        public Common.Font TerminalFont {
             get { return _terminalFont; }
             set {
                 _terminalFont = value;
@@ -278,7 +280,7 @@ namespace Roton.OpenGL {
             }
         }
 
-        public Roton.Windows.Palette TerminalPalette {
+        public Common.Palette TerminalPalette {
             get { return _terminalPalette; }
             set {
                 _terminalPalette = value;
