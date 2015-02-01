@@ -16,14 +16,36 @@ namespace Torch
         Actor _actor;
         int _color;
         Context _context;
-        ITerminal terminal;
+        ITerminal _terminal;
+        private bool _openGL;
 
-        public Editor()
+        public Editor(bool openGL = false)
         {
+            var font1 = new Roton.Common.Font();
+            var palette1 = new Roton.Common.Palette();
+
             InitializeComponent();
             this.Load += (object sender, EventArgs e) => { OnLoad(); };
 
             toolStrip3.Items.Add(new TileBufferToolStripItem());
+
+            // Select and initialize the appropriate terminal.
+            if(!openGL) {
+                _terminal = new Roton.Windows.Terminal();
+                ((Roton.Windows.Terminal)_terminal).TerminalFont = font1;
+                ((Roton.Windows.Terminal)_terminal).TerminalPalette = palette1;
+            } else {
+                _terminal = new Roton.OpenGL.Terminal();
+                ((Roton.OpenGL.Terminal)_terminal).TerminalFont = font1;
+                ((Roton.OpenGL.Terminal)_terminal).TerminalPalette = palette1;
+            }
+
+            _terminal.Top = 0;
+            _terminal.Left = 0;
+            _terminal.Width = 640;
+            _terminal.Height = 350;
+            _terminal.AutoSize = true;
+            mainPanel.Controls.Add((UserControl)_terminal);
         }
 
         Actor Actor
@@ -91,7 +113,7 @@ namespace Torch
             {
                 ToolStripMenuItem item = new ToolStripMenuItem();
                 item.Text = "Char #" + i.ToString() + " / " + i.ToHex8() + "h";
-                item.Image = terminal.RenderSingle(i, Color);
+                item.Image = _terminal.RenderSingle(i, Color);
                 item.ImageScaling = ToolStripItemImageScaling.None;
                 item.Tag = i;
                 item.Click += (object sender, EventArgs e) => { SetParameter(parameterIndex, (int)(sender as ToolStripMenuItem).Tag); };
@@ -135,7 +157,7 @@ namespace Torch
                     ToolStripMenuItem item = new ToolStripMenuItem();
                     item.Text = "(&" + char.ConvertFromUtf32(element.Key) + ") " + element.Name;
                     item.Tag = index;
-                    item.Image = terminal.RenderSingle(element.Character, GetDefaultColor(element));
+                    item.Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element));
                     item.ImageScaling = ToolStripItemImageScaling.None;
                     item.Click += (object sender, EventArgs e) => { SelectElement((int)(sender as ToolStripMenuItem).Tag); };
                     result.Items.Add(item);
@@ -357,14 +379,14 @@ namespace Torch
 
         void CopyCursorColor()
         {
-            var tile = Context.TileAt(terminal.CursorX + 1, terminal.CursorY + 1);
+            var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
             Color = tile.Color;
             UpdateColor();
         }
 
         void CopyCursorElement()
         {
-            var tile = Context.TileAt(terminal.CursorX + 1, terminal.CursorY + 1);
+            var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
             {
                 SelectElement(tile.Id);
             }
@@ -427,8 +449,8 @@ namespace Torch
         {
             Actor = Context.CreateActor();
 
-            int x = terminal.CursorX + 1;
-            int y = terminal.CursorY + 1;
+            int x = _terminal.CursorX + 1;
+            int y = _terminal.CursorY + 1;
             foreach (var actor in Context.Actors)
             {
                 if (actor.Location.X == x && actor.Location.Y == y)
@@ -479,13 +501,13 @@ namespace Torch
         void LoadContext()
         {
             timerDaemon.Pause();
-            terminal.Visible = true;
+            _terminal.Visible = true;
             Color = 0x0F;
             UpdateColor();
             SelectElement(0);
             UpdateElement();
             Actor = Context.CreateActor();
-            Context.Terminal = terminal;
+            Context.Terminal = _terminal;
             Context.Keyboard = keyboard;
             Context.Speaker = speaker;
             BuildElementList();
@@ -511,7 +533,7 @@ namespace Torch
             this.openToolStripMenuItem.Click += (object sender, EventArgs e) => { ShowOpenWorld(); };
             this.saveToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorld(); };
             this.saveAsToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorldAs(); };
-            this.scale2xButton.Click += (object sender, EventArgs e) => { int scale = this.scale2xButton.Checked ? 2 : 1; terminal.SetScale(scale, scale); };
+            this.scale2xButton.Click += (object sender, EventArgs e) => { int scale = this.scale2xButton.Checked ? 2 : 1; _terminal.SetScale(scale, scale); };
             this.showUndefinedElementsButton.CheckedChanged += (object sender, EventArgs e) => { BuildElementList(); };
             this.statsEnabledButton.CheckedChanged += (object sender, EventArgs e) => { UpdateElement(); };
             this.testMenuButton.Click += (object sender, EventArgs e) => { TestWorld(); };
@@ -523,12 +545,12 @@ namespace Torch
             }
 
             // terminal events
-            terminal.MouseDown += TerminalMouseDown;
+            _terminal.MouseDown += TerminalMouseDown;
 
             // other settings
-            terminal.Visible = false;
-            terminal.CursorEnabled = true;
-            terminal.AttachKeyHandler(this);
+            _terminal.Visible = false;
+            _terminal.CursorEnabled = true;
+            _terminal.AttachKeyHandler(this);
             mainPanel.HorizontalScroll.Visible = true;
             mainPanel.VerticalScroll.Visible = true;
             codeEditor.Dock = DockStyle.Fill;
@@ -862,7 +884,7 @@ namespace Torch
                 GetCursorActor();
                 CopyCursorElement();
                 CopyCursorColor();
-                var menu = BuildTileContextMenu(terminal.CursorX, terminal.CursorY);
+                var menu = BuildTileContextMenu(_terminal.CursorX, _terminal.CursorY);
                 if (menu != null)
                 {
                     menu.Show(sender as Control, e.Location);
@@ -903,8 +925,8 @@ namespace Torch
 
         void UpdateColor()
         {
-            UpdateColorButton(foregroundColorButton, terminal.Palette[Color & 0x0F]);
-            UpdateColorButton(backgroundColorButton, terminal.Palette[(Color >> 4) & 0x0F]);
+            UpdateColorButton(foregroundColorButton, _terminal.Palette[Color & 0x0F]);
+            UpdateColorButton(backgroundColorButton, _terminal.Palette[(Color >> 4) & 0x0F]);
         }
 
         void UpdateColorButton(ToolStripButton button, Color backgroundColor)

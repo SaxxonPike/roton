@@ -133,6 +133,14 @@
       <Project>{39ac7cc9-5a64-441e-bff8-5bb501957fc6}</Project>
       <Name>Lyon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
+      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
+      <Name>Roton.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roton.OpenGL\Roton.OpenGL.csproj">
+      <Project>{7bf0d5a0-a20d-4cd3-9674-cbe6f2f92ddd}</Project>
+      <Name>Roton.OpenGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roton.Windows\Roton.Windows.csproj">
       <Project>{7911261B-025E-4CA0-B82C-32BBA1426EE2}</Project>
       <Name>Roton.Windows</Name>
