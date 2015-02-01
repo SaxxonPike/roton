@@ -15,8 +15,6 @@ namespace Lyon
     public partial class GameForm : Form
     {
         bool initScaleDisplay = true;
-        private Roton.Windows.Terminal winTerminal;
-        private Roton.OpenGL.Terminal glTerminal;
         private ITerminal terminal;
         private bool openGL;
 
@@ -30,29 +28,25 @@ namespace Lyon
             InitializeEvents();
 
             // Load the appropriate terminal.
-            // TODO: This is horribly ugly and inelegant. Kill it with fire ASAP.
             if (!openGL)
             {
-                winTerminal = new Roton.Windows.Terminal();
-                winTerminal.Location = new System.Drawing.Point(0, 0);
-                winTerminal.Size = new System.Drawing.Size(640, 350);
-                winTerminal.AutoSize = true;
-                winTerminal.TerminalFont = font1;
-                winTerminal.TerminalPalette = palette1;
-                terminal = winTerminal;
-                mainPanel.Controls.Add(winTerminal);
+                terminal = new Roton.Windows.Terminal();
+                ((Roton.Windows.Terminal)terminal).TerminalFont = font1;
+                ((Roton.Windows.Terminal)terminal).TerminalPalette = palette1;
             }
             else
             {
-                glTerminal = new Roton.OpenGL.Terminal();
-                glTerminal.Location = new System.Drawing.Point(0, 0);
-                glTerminal.Size = new System.Drawing.Size(640, 350);
-                glTerminal.AutoSize = true;
-                glTerminal.TerminalFont = font1;
-                glTerminal.TerminalPalette = palette1;
-                terminal = glTerminal;
-                mainPanel.Controls.Add(glTerminal);
+                terminal = new Roton.OpenGL.Terminal();
+                ((Roton.OpenGL.Terminal)terminal).TerminalFont = font1;
+                ((Roton.OpenGL.Terminal)terminal).TerminalPalette = palette1;
             }
+
+            terminal.Top = 0;
+            terminal.Left = 0;
+            terminal.Width = 640;
+            terminal.Height = 350;
+            terminal.AutoSize = true;
+            mainPanel.Controls.Add((UserControl)terminal);
 
 			// Used to help Mono's WinForm implementation set the correct window size
 			// before it tries to scale the window.
