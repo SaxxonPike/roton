@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Lyon
@@ -35,10 +36,12 @@ namespace Lyon
             {
                 switch (Environment.OSVersion.Platform)
                 {
-                    case PlatformID.MacOSX:
-                    case PlatformID.Unix:
-                        useOpenGl = true;
-                        useWinForm = false;
+					case PlatformID.MacOSX:
+					case PlatformID.Unix:
+						if (IsMac())
+							useOpenGl = false;
+						else
+							useOpenGl = true;
                         break;
                     default:
                         useOpenGl = false;
@@ -51,5 +54,33 @@ namespace Lyon
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new GameForm(useOpenGl));
         }
+			
+		// HACK: I hate this. I really, really hate this. Mono doesn't really
+		// leave me any other options (OS X returns PlatformID.Unix instead of
+		// PlatformID.MacOSX).
+		[DllImport ("libc")]
+		static extern int uname(IntPtr buffer);
+		static bool IsMac()
+		{
+			bool isMac = false;
+			IntPtr buffer = IntPtr.Zero;
+
+			try
+			{
+				buffer = Marshal.AllocHGlobal(8192);
+				if(uname(buffer) == 0) {
+					string osDesc = Marshal.PtrToStringAnsi(buffer);
+					if(osDesc == "Darwin")
+						isMac = true;
+				}
+			}
+			catch {}
+			finally
+			{
+				if (buffer != IntPtr.Zero)
+					Marshal.FreeHGlobal(buffer);
+			}
+			return isMac;
+		}
     }
 }
