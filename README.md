@@ -24,6 +24,12 @@ The only bit of manual work that will be done in order to run Lyon is to copy th
 
 The project has been tested in MonoDevelop 5.7.0 under Gentoo Linux (using the dotnet overlay) and Linux Mint 17.1 (using Xamarin's package repository), as well as Xamarin Studio 5.7.0 for Mac OS X. Older versions may work as well.
 
+### Command line arguments
+The Lyon frontend currently supports two command line parameters:
+
+- **-opengl**: Forces Lyon to use the OpenGL renderer. This option is the default on Linux and OS X.
+- **-winform**: Forces Lyon to use the GDI+ Windows Forms renderer. This option is the default on Windows. Please note that this is not Windows-specific; it will work properly in Mono as well.
+
 ### Where can I get more information about ZZT?
 Visit http://zzt.org - the original game engines are available for download, as are some games to play on it.
 
