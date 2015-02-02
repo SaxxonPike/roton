@@ -14,7 +14,6 @@ namespace Torch
         int _color;
         Context _context;
         IEditorTerminal _terminal;
-        private bool _openGL;
 
         public Editor(bool openGL = false)
         {
