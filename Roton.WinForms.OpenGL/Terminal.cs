@@ -151,7 +151,6 @@ namespace Roton.WinForms.OpenGL {
             GL.Disable(EnableCap.Lighting);  // unnecessary
             GL.Disable(EnableCap.DepthTest); // unnecessary
             GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
-            GL.Ortho(0.0, _terminalWidth * (_wideMode ? 2 : 1), _terminalHeight, 0.0, -1.0, 1.0);
 
             _glReady = true;
             SetViewport();
@@ -185,15 +184,15 @@ namespace Roton.WinForms.OpenGL {
             if(!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.MatrixMode(MatrixMode.Projection);
+            GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
             GlGenerateTexture();
 
             GL.Begin(BeginMode.Quads);
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), 0.0f);
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), _terminalHeight);
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth, 0.0f);
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth, _terminalHeight);
             GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
             GL.End();
 
@@ -305,8 +304,10 @@ namespace Roton.WinForms.OpenGL {
             if (!_glReady) return;
 
             GL.Viewport(0, 0, Width, Height);
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
+            GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
         public Common.Font TerminalFont {
