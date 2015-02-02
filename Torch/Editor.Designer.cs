@@ -17,8 +17,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
-            Roton.Windows.Font font2 = new Roton.Windows.Font();
-            Roton.Windows.Palette palette2 = new Roton.Windows.Palette();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +90,6 @@
             this.timerDaemon = new Roton.Windows.TimerDaemon(this.components);
             this.codeEditor = new Torch.CodeEditor();
             this.mainPanel = new Torch.ScrollPanel();
-            this.terminal = new Roton.Windows.Terminal();
             this.actorEditor = new Torch.ActorEditor();
             this.boardEditor = new Torch.BoardEditor();
             this.worldEditor = new Torch.WorldEditor();
@@ -881,30 +878,11 @@
             this.mainPanel.AutoScroll = true;
             this.mainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.mainPanel.Controls.Add(this.terminal);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(3, 28);
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(673, 454);
             this.mainPanel.TabIndex = 0;
-            // 
-            // terminal
-            // 
-            this.terminal.AutoSize = true;
-            this.terminal.BackColor = System.Drawing.Color.Black;
-            this.terminal.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("terminal.BackgroundImage")));
-            this.terminal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.terminal.BlinkEnabled = true;
-            this.terminal.CursorEnabled = true;
-            this.terminal.CursorX = 0;
-            this.terminal.CursorY = 0;
-            this.terminal.Location = new System.Drawing.Point(0, 0);
-            this.terminal.Name = "terminal";
-            this.terminal.Size = new System.Drawing.Size(640, 350);
-            this.terminal.TabIndex = 0;
-            this.terminal.TabStop = false;
-            this.terminal.TerminalFont = font2;
-            this.terminal.TerminalPalette = palette2;
             // 
             // actorEditor
             // 
@@ -1002,7 +980,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private Torch.ScrollPanel mainPanel;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private Roton.Windows.Terminal terminal;
         private System.Windows.Forms.ToolStripMenuItem zZTWorldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem superZZTWorldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

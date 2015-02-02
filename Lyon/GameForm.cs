@@ -1,4 +1,5 @@
 ﻿using Roton;
+using Roton.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,44 +16,32 @@ namespace Lyon
     public partial class GameForm : Form
     {
         bool initScaleDisplay = true;
-        private Roton.Windows.Terminal winTerminal;
-        private Roton.OpenGL.Terminal glTerminal;
-        private ITerminal terminal;
+        private IGameTerminal terminal;
         private bool openGL;
 
         private void CommonSetup()
         {
             // Set up default font and palette.
-            var font1 = new Roton.Windows.Font();
-            var palette1 = new Roton.Windows.Palette();
+            var font1 = new Roton.Common.Font();
+            var palette1 = new Roton.Common.Palette();
 
             InitializeComponent();
             InitializeEvents();
 
             // Load the appropriate terminal.
-            // TODO: This is horribly ugly and inelegant. Kill it with fire ASAP.
             if (!openGL)
-            {
-                winTerminal = new Roton.Windows.Terminal();
-                winTerminal.Location = new System.Drawing.Point(0, 0);
-                winTerminal.Size = new System.Drawing.Size(640, 350);
-                winTerminal.AutoSize = true;
-                winTerminal.TerminalFont = font1;
-                winTerminal.TerminalPalette = palette1;
-                terminal = winTerminal;
-                mainPanel.Controls.Add(winTerminal);
-            }
+                terminal = new Roton.Windows.Terminal();
             else
-            {
-                glTerminal = new Roton.OpenGL.Terminal();
-                glTerminal.Location = new System.Drawing.Point(0, 0);
-                glTerminal.Size = new System.Drawing.Size(640, 350);
-                glTerminal.AutoSize = true;
-                glTerminal.TerminalFont = font1;
-                glTerminal.TerminalPalette = palette1;
-                terminal = glTerminal;
-                mainPanel.Controls.Add(glTerminal);
-            }
+                terminal = new Roton.OpenGL.Terminal();
+
+            terminal.Top = 0;
+            terminal.Left = 0;
+            terminal.Width = 640;
+            terminal.Height = 350;
+            terminal.AutoSize = true;
+            terminal.TerminalFont = font1;
+            terminal.TerminalPalette = palette1;
+            mainPanel.Controls.Add((UserControl)terminal);
 
 			// Used to help Mono's WinForm implementation set the correct window size
 			// before it tries to scale the window.

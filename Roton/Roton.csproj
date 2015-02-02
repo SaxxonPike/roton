@@ -157,10 +157,6 @@
   <ItemGroup>
     <None Include="Resources\szztelement.bin" />
     <None Include="Resources\szztextra.bin" />
-    <None Include="Resources\vgapalette" />
-    <None Include="Resources\vgaromf08" />
-    <None Include="Resources\vgaromf14" />
-    <None Include="Resources\vgaromf16" />
     <None Include="Resources\zztelement.bin" />
     <None Include="Resources\zztextra.bin" />
   </ItemGroup>

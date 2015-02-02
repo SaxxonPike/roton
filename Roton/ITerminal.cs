@@ -14,6 +14,7 @@ namespace Roton
         int Width { get; set; }
         int Height { get; set; }
         bool AutoSize { get; set; }
+        bool Visible { get; set; }
 
         IKeyboard Keyboard { get; }
 

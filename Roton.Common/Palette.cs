@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace Roton.Windows
+namespace Roton.Common
 {
     sealed public class Palette : Roton.Emulation.FixedList<Color>
     {

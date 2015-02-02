@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7911261B-025E-4CA0-B82C-32BBA1426EE2}</ProjectGuid>
+    <ProjectGuid>{AF3DE1E8-0883-4429-9E23-182A95693C18}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roton.Windows</RootNamespace>
-    <AssemblyName>Roton.Windows</AssemblyName>
+    <RootNamespace>Roton.Common</RootNamespace>
+    <AssemblyName>Roton.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,57 +33,39 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlUtility.cs" />
-    <Compile Include="IEditorTerminal.cs" />
-    <Compile Include="Keyboard.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Keyboard.Designer.cs">
-      <DependentUpon>Keyboard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="KeysBuffer.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="FastBitmap.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="FontDefault.cs" />
+    <Compile Include="Glyph.cs" />
+    <Compile Include="IGameTerminal.cs" />
+    <Compile Include="Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Speaker.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Speaker.Designer.cs">
-      <DependentUpon>Speaker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Terminal.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Terminal.Designer.cs">
-      <DependentUpon>Terminal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TimerDaemon.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TimerDaemon.Designer.cs">
-      <DependentUpon>TimerDaemon.cs</DependentUpon>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Terminal.resx">
-      <DependentUpon>Terminal.cs</DependentUpon>
-    </EmbeddedResource>
+    <None Include="Resources\vgapalette" />
+    <None Include="Resources\vgaromf08" />
+    <None Include="Resources\vgaromf14" />
+    <None Include="Resources\vgaromf16" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
-      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
-      <Name>Roton.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roton\Roton.csproj">
       <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
       <Name>Roton</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

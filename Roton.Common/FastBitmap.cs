@@ -2,17 +2,13 @@
 // created by saxxonpike@gmail.com 2014-10-17
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
-using System.Runtime.Serialization;
-using System.Text;
 
-namespace Roton.Windows
+namespace Roton.Common
 {
     /// <summary>
     /// A replacement for the .NET Bitmap class that allows fast direct bit access.
