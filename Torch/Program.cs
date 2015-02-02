@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Torch
@@ -11,7 +12,8 @@ namespace Torch
         [STAThread]
         static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
+            if(!Debugger.IsAttached)
+                AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Editor());
