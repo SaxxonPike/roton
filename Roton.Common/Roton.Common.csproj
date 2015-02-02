@@ -64,7 +64,6 @@
     <None Include="Resources\vgaromf08" />
     <None Include="Resources\vgaromf14" />
     <None Include="Resources\vgaromf16" />
-    <None Include="Resources\ZZT.DAT" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roton\Roton.csproj">
