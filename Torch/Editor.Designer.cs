@@ -85,9 +85,9 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.actorSourceLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.keyboard = new Roton.Windows.Keyboard(this.components);
-            this.speaker = new Roton.Windows.Speaker(this.components);
-            this.timerDaemon = new Roton.Windows.TimerDaemon(this.components);
+            this.keyboard = new Roton.WinForms.Keyboard(this.components);
+            this.speaker = new Roton.WinForms.Speaker(this.components);
+            this.timerDaemon = new Roton.WinForms.TimerDaemon(this.components);
             this.codeEditor = new Torch.CodeEditor();
             this.mainPanel = new Torch.ScrollPanel();
             this.actorEditor = new Torch.ActorEditor();
@@ -1018,8 +1018,8 @@
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStripButton refreshInfoButton;
         private System.Windows.Forms.ToolStripComboBox elementComboBox;
-        private Roton.Windows.Keyboard keyboard;
-        private Roton.Windows.Speaker speaker;
+        private Roton.WinForms.Keyboard keyboard;
+        private Roton.WinForms.Speaker speaker;
         private System.Windows.Forms.ToolStripButton showUndefinedElementsButton;
         private System.Windows.Forms.ToolStripButton statsEnabledButton;
         private System.Windows.Forms.ToolStripButton defaultElementPropertiesButton;
@@ -1039,7 +1039,7 @@
         private System.Windows.Forms.ToolStripButton eraseToolButton;
         private System.Windows.Forms.ToolStripButton randomToolButton;
         private System.Windows.Forms.ToolStripButton testMenuButton;
-        private Roton.Windows.TimerDaemon timerDaemon;
+        private Roton.WinForms.TimerDaemon timerDaemon;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Label actorSourceLabel;
         private System.Windows.Forms.Panel panel4;

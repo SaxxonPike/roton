@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Roton.Windows
+namespace Roton.WinForms
 {
     public partial class Keyboard : Component, IKeyboard
     {

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Roton.Windows
+namespace Roton.WinForms
 {
     public partial class Speaker : Component, ISpeaker
     {

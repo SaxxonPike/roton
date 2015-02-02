@@ -1,4 +1,4 @@
-﻿namespace Roton.Windows
+﻿namespace Roton.WinForms
 {
     partial class Speaker
     {

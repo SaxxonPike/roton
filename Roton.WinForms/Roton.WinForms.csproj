@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}</ProjectGuid>
+    <ProjectGuid>{7911261B-025E-4CA0-B82C-32BBA1426EE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roton.OpenGL</RootNamespace>
-    <AssemblyName>Roton.OpenGL</AssemblyName>
+    <RootNamespace>Roton.WinForms</RootNamespace>
+    <AssemblyName>Roton.WinForms</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,27 +41,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlUtility.cs" />
+    <Compile Include="IEditorTerminal.cs" />
+    <Compile Include="Keyboard.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Keyboard.Designer.cs">
+      <DependentUpon>Keyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeysBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Speaker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Speaker.Designer.cs">
+      <DependentUpon>Speaker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Terminal.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Terminal.Designer.cs">
       <DependentUpon>Terminal.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
-      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
-      <Name>Roton.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roton.Windows\Roton.Windows.csproj">
-      <Project>{7911261b-025e-4ca0-b82c-32bba1426ee2}</Project>
-      <Name>Roton.Windows</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roton\Roton.csproj">
-      <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
-      <Name>Roton</Name>
-    </ProjectReference>
+    <Compile Include="TimerDaemon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TimerDaemon.Designer.cs">
+      <DependentUpon>TimerDaemon.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Terminal.resx">
@@ -76,7 +76,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
+      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
+      <Name>Roton.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roton\Roton.csproj">
+      <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
+      <Name>Roton</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

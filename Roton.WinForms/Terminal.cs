@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Roton.Windows
+namespace Roton.WinForms
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {
