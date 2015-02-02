@@ -926,16 +926,8 @@ namespace Torch
 
         void UpdateColor()
         {
-            if (!_openGL)
-            {
-                UpdateColorButton(foregroundColorButton, ((Roton.Windows.Terminal)_terminal).TerminalPalette[Color & 0x0F]);
-                UpdateColorButton(backgroundColorButton, ((Roton.Windows.Terminal)_terminal).TerminalPalette[(Color >> 4) & 0x0F]);
-            }
-            else
-            {
-                UpdateColorButton(foregroundColorButton, ((Roton.OpenGL.Terminal)_terminal).TerminalPalette[Color & 0x0F]);
-                UpdateColorButton(backgroundColorButton, ((Roton.OpenGL.Terminal)_terminal).TerminalPalette[(Color >> 4) & 0x0F]);
-            }
+            UpdateColorButton(foregroundColorButton, _terminal.TerminalPalette[Color & 0x0F]);
+            UpdateColorButton(backgroundColorButton, _terminal.TerminalPalette[(Color >> 4) & 0x0F]);
         }
 
         void UpdateColorButton(ToolStripButton button, Color backgroundColor)

@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+﻿using Roton.Common;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Roton.Windows {
-    public interface IEditorTerminal : ITerminal {
+    public interface IEditorTerminal : IGameTerminal {
         bool CursorEnabled { get; set; }
         int CursorX { get; set; }
         int CursorY { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Roton;
+using Roton.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ namespace Lyon
     public partial class GameForm : Form
     {
         bool initScaleDisplay = true;
-        private ITerminal terminal;
+        private IGameTerminal terminal;
         private bool openGL;
 
         private void CommonSetup()
@@ -29,23 +30,17 @@ namespace Lyon
 
             // Load the appropriate terminal.
             if (!openGL)
-            {
                 terminal = new Roton.Windows.Terminal();
-                ((Roton.Windows.Terminal)terminal).TerminalFont = font1;
-                ((Roton.Windows.Terminal)terminal).TerminalPalette = palette1;
-            }
             else
-            {
                 terminal = new Roton.OpenGL.Terminal();
-                ((Roton.OpenGL.Terminal)terminal).TerminalFont = font1;
-                ((Roton.OpenGL.Terminal)terminal).TerminalPalette = palette1;
-            }
 
             terminal.Top = 0;
             terminal.Left = 0;
             terminal.Width = 640;
             terminal.Height = 350;
             terminal.AutoSize = true;
+            terminal.TerminalFont = font1;
+            terminal.TerminalPalette = palette1;
             mainPanel.Controls.Add((UserControl)terminal);
 
 			// Used to help Mono's WinForm implementation set the correct window size
