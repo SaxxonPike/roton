@@ -163,7 +163,10 @@ namespace Roton.WinForms.OpenGL {
             displayTimer.Enabled = true;
         }
 
-        private void GlGenerateTexture() {
+        private void GlGenerateTexture()
+        {
+            if (Bitmap == null) return;
+
             var glNewTexture = GL.GenTexture();
 
             BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, WinPixelFormat.Format32bppArgb);
@@ -183,10 +186,14 @@ namespace Roton.WinForms.OpenGL {
             if(!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+
+            // Don't draw anything if the Bitmap is null.
+            if(Bitmap == null) return;
 
             GlGenerateTexture();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
 
             GL.Begin(BeginMode.Quads);
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
