@@ -246,7 +246,7 @@ namespace Roton.WinForms.OpenGL {
 
         void OnMouse(object sender, MouseEventArgs e) {
             if(CursorEnabled) {
-                int newX = e.X / _terminalFont.Width;
+                int newX = (int)(e.X / _terminalFont.Width * (_wideMode ? 0.5 : 1));
                 int newY = e.Y / _terminalFont.Height;
                 UpdateCursor(newX, newY);
             }
