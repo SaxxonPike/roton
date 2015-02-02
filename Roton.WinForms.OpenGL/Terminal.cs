@@ -159,8 +159,7 @@ namespace Roton.WinForms.OpenGL {
             BlinkEnabled = true;
             timerDaemon.Start(Blink, 1f / 0.2f);
 
-            // Finish setting up the control and start the rendering timer.
-            SetSize(80, 25, false);
+            // Start the rendering timer.
             displayTimer.Enabled = true;
         }
 
