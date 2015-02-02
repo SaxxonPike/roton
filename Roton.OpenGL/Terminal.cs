@@ -140,8 +140,8 @@ namespace Roton.OpenGL {
 
             GL.Begin(BeginMode.Quads);
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth, 0.0f);
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth, _terminalHeight);
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), 0.0f);
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), _terminalHeight);
             GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
             GL.End();
 
@@ -227,7 +227,7 @@ namespace Roton.OpenGL {
 
             if (AutoSize)
             {
-                Width = (_terminalWidth * _terminalFont.Width) * xScale;
+                Width = (_terminalWidth * _terminalFont.Width) * xScale * (_wideMode ? 2 : 1);
                 Height = (_terminalHeight * _terminalFont.Height) * yScale;
             }
 
@@ -253,7 +253,7 @@ namespace Roton.OpenGL {
 
             if (AutoSize)
             {
-                Width = _terminalWidth * _terminalFont.Width * ScaleX;
+                Width = _terminalWidth * _terminalFont.Width * ScaleX * (wide ? 2 : 1);
                 Height = _terminalHeight * _terminalFont.Height * ScaleY;
             }
 
@@ -268,7 +268,6 @@ namespace Roton.OpenGL {
             GL.Viewport(0, 0, Width, Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
         public Common.Font TerminalFont {
@@ -321,7 +320,7 @@ namespace Roton.OpenGL {
             GL.Disable(EnableCap.Lighting);  // unnecessary
             GL.Disable(EnableCap.DepthTest); // unnecessary
             GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
-            GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
+            GL.Ortho(0.0, _terminalWidth * (_wideMode ? 2 : 1), _terminalHeight, 0.0, -1.0, 1.0);
 
             _glReady = true;
             SetViewport();
