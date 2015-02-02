@@ -14,7 +14,6 @@ namespace Torch
         int _color;
         Context _context;
         IEditorTerminal _terminal;
-        private bool _openGL;
 
         public Editor(bool openGL = false)
         {
@@ -27,11 +26,10 @@ namespace Torch
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            if(!openGL) {
+            if (!openGL)
                 _terminal = new Roton.WinForms.Terminal();
-            } else {
+            else
                 _terminal = new Roton.WinForms.OpenGL.Terminal();
-            }
 
             _terminal.Top = 0;
             _terminal.Left = 0;

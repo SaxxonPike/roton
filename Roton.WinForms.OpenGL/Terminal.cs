@@ -26,6 +26,17 @@ namespace Roton.WinForms.OpenGL {
         private bool _updated;
         private bool _wideMode;
 
+        // Auto-properties.
+        public bool BlinkEnabled { get; set; }
+        private bool Blinking { get; set; }
+        public int ScaleX { get; private set; }
+        public int ScaleY { get; private set; }
+
+        // Editor-specific properties.
+        public bool CursorEnabled { get; set; }
+        public int CursorX { get; set; }
+        public int CursorY { get; set; }
+
         public Terminal()
         {
             _keys = new KeysBuffer();
@@ -45,55 +56,53 @@ namespace Roton.WinForms.OpenGL {
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
+        protected override void Dispose(bool disposing)
+        {
             if(disposing && (components != null)) {
                 components.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        public bool Alt {
+        public bool Alt
+        {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
         }
 
-        public void AttachKeyHandler(Form form) {
+        public void AttachKeyHandler(Form form)
+        {
             form.KeyDown += (object sender, KeyEventArgs e) => { OnKey(e); };
             form.KeyUp += (object sender, KeyEventArgs e) => { OnKey(e); };
         }
 
-        public bool BlinkEnabled {
-            get;
-            set;
-        }
-
-        bool Blinking {
-            get;
-            set;
-        }
-
-        public void ClearKeys() {
+        public void ClearKeys()
+        {
             _keys.Clear();
         }
 
         private FastBitmap Bitmap { get; set; }
 
-        public IKeyboard Keyboard {
+        public IKeyboard Keyboard
+        {
             get { return _keys as IKeyboard; }
         }
 
-        public bool Shift {
+        public bool Shift
+        {
             get { return _keys.Shift; }
             set { _keys.Shift = value; }
         }
 
-        public bool Control {
+        public bool Control
+        {
             get { return _keys.Control; }
             set { _keys.Control = value; }
         }
 
-        void Blink() {
-            SuspendLayout();
+        void Blink()
+        {
+            //SuspendLayout();
             Blinking = !Blinking;
             if(_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null)) {
                 int total = _terminalWidth * _terminalHeight;
@@ -107,7 +116,7 @@ namespace Roton.WinForms.OpenGL {
                     }
                 }
             }
-            ResumeLayout();
+            //ResumeLayout();
         }
 
         public void Clear()
@@ -115,6 +124,12 @@ namespace Roton.WinForms.OpenGL {
             _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
         }
 
+        private void displayTimer_Tick(object sender, EventArgs e)
+        {
+            Redraw();
+            GlRender();
+        }
+        
         private void Draw(int x, int y, AnsiChar ac)
         {
             if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
@@ -128,27 +143,55 @@ namespace Roton.WinForms.OpenGL {
             }
         }
 
-        private void GlRender() {
-            if(!_glReady) return;
+        void glControl_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+            _keys.Press(e.KeyChar);
+        }
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
+        private void glControl_Load(object sender, EventArgs e)
+        {
+            // Set up key and mouse events.
+            glControl.KeyPress += glControl_KeyPress;
+            glControl.MouseMove += glControl_MouseMove;
+            glControl.MouseDown += glControl_MouseDown;
 
-            GlGenerateTexture();
+            // Set GLControl to be the active GL context.
+            glControl.MakeCurrent();
 
-            GL.Begin(BeginMode.Quads);
-            GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), 0.0f);
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth * (_wideMode ? 2 : 1), _terminalHeight);
-            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
-            GL.End();
+            // Initialize OpenGL.
+            GL.ClearColor(Color.Black);
+            GL.Disable(EnableCap.Lighting);  // unnecessary
+            GL.Disable(EnableCap.DepthTest); // unnecessary
+            GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
 
-            glControl.SwapBuffers();
+            _glReady = true;
+            SetViewport();
+
+            // Enable blinking by default; set timer for it.
+            BlinkEnabled = true;
+            timerDaemon.Start(Blink, 1f / 0.2f);
+
+            // Start the rendering timer.
+            displayTimer.Enabled = true;
+        }
+
+        void glControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            OnMouse(this, e);
+            base.OnMouseDown(e);
+        }
+
+        private void glControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            OnMouse(this, e);
+            base.OnMouseMove(e);
         }
 
         private void GlGenerateTexture()
         {
+            if (Bitmap == null) return;
+
             var glNewTexture = GL.GenTexture();
 
             BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, WinPixelFormat.Format32bppArgb);
@@ -159,12 +202,37 @@ namespace Roton.WinForms.OpenGL {
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
-            if (_glLastTexture != -1)
+            if(_glLastTexture != -1)
                 GL.DeleteTexture(_glLastTexture);
             _glLastTexture = glNewTexture;
         }
+        
+        private void GlRender()
+        {
+            if(!_glReady) return;
 
-        void OnKey(KeyEventArgs e) {
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            // Don't draw anything if the Bitmap is null.
+            if(Bitmap == null) return;
+
+            GlGenerateTexture();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.Begin(BeginMode.Quads);
+            GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth, 0.0f);
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth, _terminalHeight);
+            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
+            GL.End();
+
+            glControl.SwapBuffers();
+        }
+
+        void OnKey(KeyEventArgs e)
+        {
             if(!e.Shift) {
                 Shift = false;
                 _shiftHoldX = false;
@@ -176,7 +244,25 @@ namespace Roton.WinForms.OpenGL {
             Control = e.Control;
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+        void OnMouse(object sender, MouseEventArgs e) {
+            if(CursorEnabled) {
+                int newX = (int)(e.X / _terminalFont.Width * (_wideMode ? 0.5 : 1));
+                int newY = e.Y / _terminalFont.Height;
+                UpdateCursor(newX, newY);
+            }
+        }
+
+        public void Plot(int x, int y, AnsiChar ac)
+        {
+            if((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight)) {
+                var index = x + (y * _terminalWidth);
+                _terminalBuffer[index] = ac;
+                Draw(x, y, ac);
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
             var keyAlt = (keyData & Keys.Alt) != 0;
             var keyControl = (keyData & Keys.Control) != 0;
             var keyRaw = (keyData & Keys.KeyCode);
@@ -191,32 +277,49 @@ namespace Roton.WinForms.OpenGL {
             return result;
         }
         
-        public void Plot(int x, int y, AnsiChar ac)
-        {
-            if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
-            {
-                var index = x + (y * _terminalWidth);
-                _terminalBuffer[index] = ac;
-                Draw(x, y, ac);
-            }
-        }
-
         private void Redraw()
         {
             var index = 0;
             for(var y = 0; y < _terminalHeight; y++)
                 for (var x = 0; x < _terminalWidth; x++)
                     Draw(x, y, _terminalBuffer[index++]);
+
+            // Update the cursor if it's enabled and the bitmap is valid.
+            if (!CursorEnabled || Bitmap == null) return;
+            using (Graphics g = Graphics.FromImage(Bitmap))
+            {
+                using (Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)), dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
+                {
+                    Rectangle outerRect = new Rectangle(CursorX * _terminalFont.Width, CursorY * _terminalFont.Height, _terminalFont.Width - 1, _terminalFont.Height - 1);
+                    g.DrawLines(dark, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Top)
+                    });
+                    g.DrawLines(bright, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Left, outerRect.Top),
+                            new Point(outerRect.Right, outerRect.Top)
+                    });
+                }
+            }
         }
 
-        public int ScaleX {
-            get;
-            private set;
-        }
-
-        public int ScaleY {
-            get;
-            private set;
+        public Bitmap RenderSingle(int character, int color)
+        {
+            color = TranslateColorIndex(color);
+            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF], _terminalPalette[(color >> 4) & 0xF]);
+            if(_wideMode) {
+                var wideResult = new Bitmap(result.Width * 2, result.Height, result.PixelFormat);
+                using(Graphics g = Graphics.FromImage(wideResult)) {
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
+                }
+                result.Dispose();
+                return wideResult;
+            }
+            return result;
         }
 
         public void SetScale(int xScale, int yScale)
@@ -265,26 +368,63 @@ namespace Roton.WinForms.OpenGL {
             if (!_glReady) return;
 
             GL.Viewport(0, 0, Width, Height);
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
+            GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
-        public Common.Font TerminalFont {
+        public Common.Font TerminalFont
+        {
             get { return _terminalFont; }
-            set {
+            set
+            {
                 _terminalFont = value;
                 Redraw();
             }
         }
 
-        public Common.Palette TerminalPalette {
+        public Common.Palette TerminalPalette
+        {
             get { return _terminalPalette; }
-            set {
+            set
+            {
                 _terminalPalette = value;
                 Redraw();
             }
         }
 
+        internal int TranslateColorIndex(int color) {
+            // if blinking is enabled, we only get the first 8 colors for background
+            if(BlinkEnabled) {
+                color &= 0x7F;
+            }
+            return color;
+        }
+
+        void UpdateCursor(int newX, int newY) {
+            if(Shift && !_shiftHoldX && !_shiftHoldY) {
+                if(CursorX == newX && CursorY != newY)
+                    _shiftHoldX = true;
+                else if(CursorX != newX && CursorY == newY)
+                    _shiftHoldY = true;
+            }
+
+            if(_shiftHoldX) {
+                newX = CursorX;
+            }
+
+            if(_shiftHoldY) {
+                newY = CursorY;
+            }
+
+            if(newX != CursorX || newY != CursorY) {
+                _updated = true;
+                CursorX = newX;
+                CursorY = newY;
+            }
+        }
+        
         public void Write(int x, int y, string value, int color)
         {
             var ac = new AnsiChar {Color = color};
@@ -299,65 +439,6 @@ namespace Roton.WinForms.OpenGL {
                 x++;
                 if(x >= _terminalWidth) { x -= _terminalWidth; y++; }
             }
-        }
-
-        private void displayTimer_Tick(object sender, EventArgs e)
-        {
-            Redraw();
-            GlRender();
-        }
-
-        private void glControl_Load(object sender, EventArgs e) {
-            // Set up key events.
-            glControl.KeyPress += glControl_KeyPress;
-
-            // Set GLControl to be the active GL context.
-            glControl.MakeCurrent();
-
-            // Initialize OpenGL.
-            GL.ClearColor(Color.Black);
-            GL.Disable(EnableCap.Lighting);  // unnecessary
-            GL.Disable(EnableCap.DepthTest); // unnecessary
-            GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
-            GL.Ortho(0.0, _terminalWidth * (_wideMode ? 2 : 1), _terminalHeight, 0.0, -1.0, 1.0);
-
-            _glReady = true;
-            SetViewport();
-
-            // Enable blinking by default; set timer for it.
-            BlinkEnabled = true;
-            timerDaemon.Start(Blink, 1f / 0.2f);
-
-            // Finish setting up the control and start the rendering timer.
-            SetSize(80, 25, false);
-            displayTimer.Enabled = true;
-        }
-
-        void glControl_KeyPress(object sender, KeyPressEventArgs e) {
-            base.OnKeyPress(e);
-            _keys.Press(e.KeyChar);
-        }
-
-        public bool CursorEnabled
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public int CursorX
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public int CursorY
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public Bitmap RenderSingle(int character, int color) {
-            throw new NotImplementedException();
         }
     }
 }
