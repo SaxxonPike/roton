@@ -151,8 +151,10 @@ namespace Roton.WinForms.OpenGL {
 
         private void glControl_Load(object sender, EventArgs e)
         {
-            // Set up key events.
+            // Set up key and mouse events.
             glControl.KeyPress += glControl_KeyPress;
+            glControl.MouseMove += glControl_MouseMove;
+            glControl.MouseDown += glControl_MouseDown;
 
             // Set GLControl to be the active GL context.
             glControl.MakeCurrent();
@@ -172,6 +174,18 @@ namespace Roton.WinForms.OpenGL {
 
             // Start the rendering timer.
             displayTimer.Enabled = true;
+        }
+
+        void glControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            OnMouse(this, e);
+            base.OnMouseDown(e);
+        }
+
+        private void glControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            OnMouse(this, e);
+            base.OnMouseMove(e);
         }
 
         private void GlGenerateTexture()
@@ -230,6 +244,14 @@ namespace Roton.WinForms.OpenGL {
             Control = e.Control;
         }
 
+        void OnMouse(object sender, MouseEventArgs e) {
+            if(CursorEnabled) {
+                int newX = e.X / _terminalFont.Width;
+                int newY = e.Y / _terminalFont.Height;
+                UpdateCursor(newX, newY);
+            }
+        }
+
         public void Plot(int x, int y, AnsiChar ac)
         {
             if((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight)) {
@@ -261,6 +283,26 @@ namespace Roton.WinForms.OpenGL {
             for(var y = 0; y < _terminalHeight; y++)
                 for (var x = 0; x < _terminalWidth; x++)
                     Draw(x, y, _terminalBuffer[index++]);
+
+            // Update the cursor if it's enabled and the bitmap is valid.
+            if (!CursorEnabled || Bitmap == null) return;
+            using (Graphics g = Graphics.FromImage(Bitmap))
+            {
+                using (Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)), dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
+                {
+                    Rectangle outerRect = new Rectangle(CursorX * _terminalFont.Width, CursorY * _terminalFont.Height, _terminalFont.Width - 1, _terminalFont.Height - 1);
+                    g.DrawLines(dark, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Bottom),
+                            new Point(outerRect.Right, outerRect.Top)
+                    });
+                    g.DrawLines(bright, new Point[] {
+                            new Point(outerRect.Left, outerRect.Bottom),
+                            new Point(outerRect.Left, outerRect.Top),
+                            new Point(outerRect.Right, outerRect.Top)
+                    });
+                }
+            }
         }
 
         public Bitmap RenderSingle(int character, int color)
@@ -360,6 +402,29 @@ namespace Roton.WinForms.OpenGL {
             return color;
         }
 
+        void UpdateCursor(int newX, int newY) {
+            if(Shift && !_shiftHoldX && !_shiftHoldY) {
+                if(CursorX == newX && CursorY != newY)
+                    _shiftHoldX = true;
+                else if(CursorX != newX && CursorY == newY)
+                    _shiftHoldY = true;
+            }
+
+            if(_shiftHoldX) {
+                newX = CursorX;
+            }
+
+            if(_shiftHoldY) {
+                newY = CursorY;
+            }
+
+            if(newX != CursorX || newY != CursorY) {
+                _updated = true;
+                CursorX = newX;
+                CursorY = newY;
+            }
+        }
+        
         public void Write(int x, int y, string value, int color)
         {
             var ac = new AnsiChar {Color = color};
