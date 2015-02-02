@@ -1,5 +1,5 @@
 ﻿using Roton;
-using Roton.Windows;
+using Roton.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,9 +32,9 @@ namespace Torch
 
             // Select and initialize the appropriate terminal.
             if(!openGL) {
-                _terminal = new Roton.Windows.Terminal();
-                ((Roton.Windows.Terminal)_terminal).TerminalFont = font1;
-                ((Roton.Windows.Terminal)_terminal).TerminalPalette = palette1;
+                _terminal = new Roton.WinForms.Terminal();
+                ((Roton.WinForms.Terminal)_terminal).TerminalFont = font1;
+                ((Roton.WinForms.Terminal)_terminal).TerminalPalette = palette1;
             } else {
                 _terminal = new Roton.OpenGL.Terminal();
                 ((Roton.OpenGL.Terminal)_terminal).TerminalFont = font1;

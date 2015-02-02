@@ -5,13 +5,13 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton", "Roton\Roton.csproj", "{A93864EF-3C61-4654-8598-BC49D822187C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Windows", "Roton.Windows\Roton.Windows.csproj", "{7911261B-025E-4CA0-B82C-32BBA1426EE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.WinForms", "Roton.WinForms\Roton.WinForms.csproj", "{7911261B-025E-4CA0-B82C-32BBA1426EE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torch", "Torch\Torch.csproj", "{FA475288-00BC-4414-879F-45EC0CB15E71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyon", "Lyon\Lyon.csproj", "{39AC7CC9-5A64-441E-BFF8-5BB501957FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.OpenGL", "Roton.OpenGL\Roton.OpenGL.csproj", "{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.WinForms.OpenGL", "Roton.WinForms.OpenGL\Roton.WinForms.OpenGL.csproj", "{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Common", "Roton.Common\Roton.Common.csproj", "{AF3DE1E8-0883-4429-9E23-182A95693C18}"
 EndProject

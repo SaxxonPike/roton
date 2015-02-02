@@ -49,7 +49,7 @@
             this.scale1xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale2xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.speaker = new Roton.Windows.Speaker(this.components);
+            this.speaker = new Roton.WinForms.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.mainPanel.SuspendLayout();
@@ -214,7 +214,7 @@
         private System.Windows.Forms.ToolStripMenuItem scale1xMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale2xMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale3xMenuItem;
-        private Roton.Windows.Speaker speaker;
+        private Roton.WinForms.Speaker speaker;
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;

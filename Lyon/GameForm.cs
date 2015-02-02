@@ -30,9 +30,9 @@ namespace Lyon
 
             // Load the appropriate terminal.
             if (!openGL)
-                terminal = new Roton.Windows.Terminal();
+                terminal = new Roton.WinForms.Terminal();
             else
-                terminal = new Roton.OpenGL.Terminal();
+                terminal = new Roton.WinForms.OpenGL.Terminal();
 
             terminal.Top = 0;
             terminal.Left = 0;

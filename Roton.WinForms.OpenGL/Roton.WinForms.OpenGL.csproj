@@ -7,8 +7,8 @@
     <ProjectGuid>{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roton.OpenGL</RootNamespace>
-    <AssemblyName>Roton.OpenGL</AssemblyName>
+    <RootNamespace>Roton.WinForms.OpenGL</RootNamespace>
+    <AssemblyName>Roton.WinForms.OpenGL</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -61,9 +61,9 @@
       <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
       <Name>Roton.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Roton.Windows\Roton.Windows.csproj">
+    <ProjectReference Include="..\Roton.WinForms\Roton.WinForms.csproj">
       <Project>{7911261b-025e-4ca0-b82c-32bba1426ee2}</Project>
-      <Name>Roton.Windows</Name>
+      <Name>Roton.WinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roton\Roton.csproj">
       <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>

@@ -1,5 +1,4 @@
 ﻿using Roton.Common;
-using Roton.Windows;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
 
-namespace Roton.OpenGL {
+namespace Roton.WinForms.OpenGL {
     public partial class Terminal : UserControl, IEditorTerminal
     {
         static private Encoding _encoding = Encoding.GetEncoding(437);

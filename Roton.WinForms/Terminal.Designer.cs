@@ -1,4 +1,4 @@
-﻿namespace Roton.Windows
+﻿namespace Roton.WinForms
 {
     partial class Terminal
     {
@@ -16,7 +16,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timerDaemon = new Roton.Windows.TimerDaemon(this.components);
+            this.timerDaemon = new Roton.WinForms.TimerDaemon(this.components);
             this.displayTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 

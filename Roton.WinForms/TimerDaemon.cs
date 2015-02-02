@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Roton.Windows
+namespace Roton.WinForms
 {
     public partial class TimerDaemon : Component
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{7911261B-025E-4CA0-B82C-32BBA1426EE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roton.Windows</RootNamespace>
-    <AssemblyName>Roton.Windows</AssemblyName>
+    <RootNamespace>Roton.WinForms</RootNamespace>
+    <AssemblyName>Roton.WinForms</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
