@@ -118,6 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="drum0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum0;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum5;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum7;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum8;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="drum9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\drum9;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="playerstep" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\playerstep;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="vgapalette" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\vgapalette;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
