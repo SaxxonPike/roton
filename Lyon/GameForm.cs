@@ -82,7 +82,7 @@ namespace Lyon
 
         string FileFilters
         {
-            get { return "Game Worlds|*.zzt;*.szt|ZZT Worlds|*.zzt|Super ZZT Worlds|*.szt|Saved Games|*.sav|All Openable Files|*.zzt;*.szt;*.sav|All Files|*.*"; }
+            get { return "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"; }
         }
 
         void Initialize(Context context)
