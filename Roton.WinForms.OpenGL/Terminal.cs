@@ -56,44 +56,52 @@ namespace Roton.WinForms.OpenGL {
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
+        protected override void Dispose(bool disposing)
+        {
             if(disposing && (components != null)) {
                 components.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        public bool Alt {
+        public bool Alt
+        {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
         }
 
-        public void AttachKeyHandler(Form form) {
+        public void AttachKeyHandler(Form form)
+        {
             form.KeyDown += (object sender, KeyEventArgs e) => { OnKey(e); };
             form.KeyUp += (object sender, KeyEventArgs e) => { OnKey(e); };
         }
 
-        public void ClearKeys() {
+        public void ClearKeys()
+        {
             _keys.Clear();
         }
 
         private FastBitmap Bitmap { get; set; }
 
-        public IKeyboard Keyboard {
+        public IKeyboard Keyboard
+        {
             get { return _keys as IKeyboard; }
         }
 
-        public bool Shift {
+        public bool Shift
+        {
             get { return _keys.Shift; }
             set { _keys.Shift = value; }
         }
 
-        public bool Control {
+        public bool Control
+        {
             get { return _keys.Control; }
             set { _keys.Control = value; }
         }
 
-        void Blink() {
+        void Blink()
+        {
             //SuspendLayout();
             Blinking = !Blinking;
             if(_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null)) {
@@ -116,7 +124,8 @@ namespace Roton.WinForms.OpenGL {
             _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
         }
 
-        private void displayTimer_Tick(object sender, EventArgs e) {
+        private void displayTimer_Tick(object sender, EventArgs e)
+        {
             Redraw();
             GlRender();
         }
@@ -134,12 +143,14 @@ namespace Roton.WinForms.OpenGL {
             }
         }
 
-        void glControl_KeyPress(object sender, KeyPressEventArgs e) {
+        void glControl_KeyPress(object sender, KeyPressEventArgs e)
+        {
             base.OnKeyPress(e);
             _keys.Press(e.KeyChar);
         }
 
-        private void glControl_Load(object sender, EventArgs e) {
+        private void glControl_Load(object sender, EventArgs e)
+        {
             // Set up key events.
             glControl.KeyPress += glControl_KeyPress;
 
@@ -182,7 +193,8 @@ namespace Roton.WinForms.OpenGL {
             _glLastTexture = glNewTexture;
         }
         
-        private void GlRender() {
+        private void GlRender()
+        {
             if(!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -205,7 +217,8 @@ namespace Roton.WinForms.OpenGL {
             glControl.SwapBuffers();
         }
 
-        void OnKey(KeyEventArgs e) {
+        void OnKey(KeyEventArgs e)
+        {
             if(!e.Shift) {
                 Shift = false;
                 _shiftHoldX = false;
@@ -217,7 +230,8 @@ namespace Roton.WinForms.OpenGL {
             Control = e.Control;
         }
 
-        public void Plot(int x, int y, AnsiChar ac) {
+        public void Plot(int x, int y, AnsiChar ac)
+        {
             if((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight)) {
                 var index = x + (y * _terminalWidth);
                 _terminalBuffer[index] = ac;
@@ -225,7 +239,8 @@ namespace Roton.WinForms.OpenGL {
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
             var keyAlt = (keyData & Keys.Alt) != 0;
             var keyControl = (keyData & Keys.Control) != 0;
             var keyRaw = (keyData & Keys.KeyCode);
@@ -248,7 +263,8 @@ namespace Roton.WinForms.OpenGL {
                     Draw(x, y, _terminalBuffer[index++]);
         }
 
-        public Bitmap RenderSingle(int character, int color) {
+        public Bitmap RenderSingle(int character, int color)
+        {
             color = TranslateColorIndex(color);
             var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF], _terminalPalette[(color >> 4) & 0xF]);
             if(_wideMode) {
@@ -316,17 +332,21 @@ namespace Roton.WinForms.OpenGL {
             GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
-        public Common.Font TerminalFont {
+        public Common.Font TerminalFont
+        {
             get { return _terminalFont; }
-            set {
+            set
+            {
                 _terminalFont = value;
                 Redraw();
             }
         }
 
-        public Common.Palette TerminalPalette {
+        public Common.Palette TerminalPalette
+        {
             get { return _terminalPalette; }
-            set {
+            set
+            {
                 _terminalPalette = value;
                 Redraw();
             }
