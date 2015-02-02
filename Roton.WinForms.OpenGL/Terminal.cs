@@ -50,6 +50,9 @@ namespace Roton.WinForms.OpenGL {
             // Set default scale.
             ScaleX = 1;
             ScaleY = 1;
+
+            // Initialize terminal with the default size.
+            SetSize(80, 25, false);
         }
 
         /// <summary> 
@@ -160,8 +163,7 @@ namespace Roton.WinForms.OpenGL {
             BlinkEnabled = true;
             timerDaemon.Start(Blink, 1f / 0.2f);
 
-            // Finish setting up the control and start the rendering timer.
-            SetSize(80, 25, false);
+            // Start the rendering timer.
             displayTimer.Enabled = true;
         }
 
