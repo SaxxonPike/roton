@@ -33,12 +33,8 @@ namespace Torch
             // Select and initialize the appropriate terminal.
             if(!openGL) {
                 _terminal = new Roton.WinForms.Terminal();
-                ((Roton.WinForms.Terminal)_terminal).TerminalFont = font1;
-                ((Roton.WinForms.Terminal)_terminal).TerminalPalette = palette1;
             } else {
-                _terminal = new Roton.OpenGL.Terminal();
-                ((Roton.OpenGL.Terminal)_terminal).TerminalFont = font1;
-                ((Roton.OpenGL.Terminal)_terminal).TerminalPalette = palette1;
+                _terminal = new Roton.WinForms.OpenGL.Terminal();
             }
 
             _terminal.Top = 0;
@@ -46,6 +42,8 @@ namespace Torch
             _terminal.Width = 640;
             _terminal.Height = 350;
             _terminal.AutoSize = true;
+            _terminal.TerminalFont = font1;
+            _terminal.TerminalPalette = palette1;
             mainPanel.Controls.Add((UserControl)_terminal);
         }
 
