@@ -124,6 +124,9 @@
   <data name="szztextra" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\szztextra.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="zztdat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ZZT.DAT;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="zztelement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zztelement.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

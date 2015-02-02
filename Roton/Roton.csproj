@@ -152,6 +152,7 @@
   <ItemGroup>
     <None Include="Resources\szztelement.bin" />
     <None Include="Resources\szztextra.bin" />
+    <None Include="Resources\ZZT.DAT" />
     <None Include="Resources\zztelement.bin" />
     <None Include="Resources\zztextra.bin" />
   </ItemGroup>
