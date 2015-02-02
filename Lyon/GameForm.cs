@@ -1,12 +1,7 @@
 ﻿using Roton;
 using Roton.Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
-using System.Security.AccessControl;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Lyon
