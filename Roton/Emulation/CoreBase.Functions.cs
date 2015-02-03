@@ -131,7 +131,7 @@ namespace Roton.Emulation
             Boards.Clear();
             ResetAlerts();
             ClearBoard();
-            Boards.Add(new PackedBoard(Disk.PackBoard(Tiles)));
+            Boards.Add(new PackedBoard(Serializer.PackBoard(Tiles)));
             Board = 0;
             Ammo = 0;
             Gems = 0;
@@ -592,6 +592,18 @@ namespace Roton.Emulation
             }
         }
 
+        virtual internal byte[] LoadFile(string filename)
+        {
+            try
+            {
+                return Disk.ReadFile(filename);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         virtual internal void MoveActor(int index, Location target)
         {
             var actor = Actors[index];
@@ -661,7 +673,7 @@ namespace Roton.Emulation
 
         virtual internal void PackBoard()
         {
-            PackedBoard board = new PackedBoard(Disk.PackBoard(Tiles));
+            PackedBoard board = new PackedBoard(Serializer.PackBoard(Tiles));
             Boards[Board] = board;
         }
 
@@ -1022,7 +1034,7 @@ namespace Roton.Emulation
 
         virtual internal void UnpackBoard(int boardIndex)
         {
-            Disk.UnpackBoard(Tiles, Boards[boardIndex].Data);
+            Serializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             Board = boardIndex;
         }
 

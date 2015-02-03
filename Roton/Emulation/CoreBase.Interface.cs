@@ -190,7 +190,11 @@ namespace Roton.Emulation
             set { StateData.DefaultWorldName = value; }
         }
 
-        abstract public SerializerBase Disk { get; }
+        public IFileSystem Disk
+        {
+            get;
+            set;
+        }
 
         abstract public Display Display { get; }
 
@@ -465,6 +469,8 @@ namespace Roton.Emulation
             get { return WorldData.Score; }
             set { WorldData.Score = value; }
         }
+
+        abstract public SerializerBase Serializer { get; }
 
         public int Shots
         {

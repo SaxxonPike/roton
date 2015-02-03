@@ -29,6 +29,7 @@ namespace Roton.Emulation.ZZT
             _tiles = new MemoryTileCollection(Memory);
             _world = new MemoryWorld(Memory);
             InitializeElementDelegates();
+            InitializeDatArchive();
         }
 
         public override MemoryActorCollectionBase Actors
@@ -41,11 +42,6 @@ namespace Roton.Emulation.ZZT
             get { return _board; }
         }
 
-        public override SerializerBase Disk
-        {
-            get { return _disk; }
-        }
-
         public override Display Display
         {
             get { return _display; }
@@ -54,6 +50,11 @@ namespace Roton.Emulation.ZZT
         public override MemoryElementCollectionBase Elements
         {
             get { return _elements; }
+        }
+
+        public override SerializerBase Serializer
+        {
+            get { return _disk; }
         }
 
         public override SoundsBase Sounds

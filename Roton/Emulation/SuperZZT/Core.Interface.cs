@@ -41,11 +41,6 @@ namespace Roton.Emulation.SuperZZT
             get { return _board; }
         }
 
-        public override SerializerBase Disk
-        {
-            get { return _disk; }
-        }
-
         public override Display Display
         {
             get { return _display; }
@@ -54,6 +49,11 @@ namespace Roton.Emulation.SuperZZT
         public override MemoryElementCollectionBase Elements
         {
             get { return _elements; }
+        }
+
+        public override SerializerBase Serializer
+        {
+            get { return _disk; }
         }
 
         public override SoundsBase Sounds

@@ -66,9 +66,10 @@ namespace Roton
             return result;
         }
 
-        internal SerializerBase Disk
+        public IFileSystem Disk
         {
             get { return Core.Disk; }
+            set { Core.Disk = value; }
         }
 
         public IDisplayInfo DisplayInfo
@@ -116,6 +117,11 @@ namespace Roton
         {
             get;
             private set;
+        }
+
+        internal SerializerBase Serializer
+        {
+            get { return Core.Serializer; }
         }
 
         public ISpeaker Speaker
@@ -169,7 +175,7 @@ namespace Roton
         {
             get
             {
-                int total = Disk.WorldDataCapacity;
+                int total = Serializer.WorldDataCapacity;
                 foreach (var board in Boards)
                 {
                     total += board.Data.Length + 2;

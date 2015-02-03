@@ -99,6 +99,7 @@ namespace Roton
 
             Core.ClearWorld();
             Core.EditorMode = editor;
+            Core.Disk = new FileSystem();
         }
 
         private void Initialize(Stream stream, bool editor)
@@ -137,13 +138,13 @@ namespace Roton
         {
             BinaryReader reader = new BinaryReader(stream);
             int boardCount = reader.ReadInt16();
-            Disk.LoadWorld(stream);
+            Serializer.LoadWorld(stream);
             Boards.Clear();
             for (int i = 0; i <= boardCount; i++)
             {
-                Boards.Add(new PackedBoard(Disk.LoadBoardData(stream)));
+                Boards.Add(new PackedBoard(Serializer.LoadBoardData(stream)));
             }
-            Disk.UnpackBoard(Core.Tiles, Core.Boards[Core.Board].Data);
+            Serializer.UnpackBoard(Core.Tiles, Core.Boards[Core.Board].Data);
             Core.WorldLoaded = true;
         }
 
@@ -166,10 +167,10 @@ namespace Roton
                 writer.Write((Int16)WorldData.WorldType);
                 writer.Write((Int16)(Boards.Count - 1));
                 writer.Flush();
-                Disk.SaveWorld(mem);
+                Serializer.SaveWorld(mem);
                 foreach (var board in Boards)
                 {
-                    Disk.SaveBoardData(mem, board.Data);
+                    Serializer.SaveBoardData(mem, board.Data);
                 }
                 mem.Flush();
                 return mem.ToArray();

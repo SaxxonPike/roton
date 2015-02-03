@@ -52,6 +52,7 @@
     <Compile Include="Emulation\CoreBase.Sound.cs" />
     <Compile Include="Emulation\CoreBase.Utility.cs" />
     <Compile Include="Emulation\CoreTimer.cs" />
+    <Compile Include="Emulation\DatArchive.cs" />
     <Compile Include="Emulation\ExecuteCodeContext.cs" />
     <Compile Include="Emulation\ICode.cs" />
     <Compile Include="Emulation\ICodeSeekable.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Emulation\ZZT\Core.Behavior.cs" />
     <Compile Include="Emulation\ZZT\Core.cs" />
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="IDisplayInfo.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Element.Functions.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="Emulation\ZZT\MemoryTileCollection.cs" />
     <Compile Include="Emulation\ZZT\Sounds.cs" />
     <Compile Include="Emulation\ZZT\TerminalDisplay.cs" />
+    <Compile Include="IFileSystem.cs" />
     <Compile Include="IKeyboard.cs" />
     <Compile Include="ISpeaker.cs" />
     <Compile Include="ITerminal.cs" />
