@@ -145,6 +145,9 @@
     <Compile Include="Vector.Functions.cs" />
     <Compile Include="World.cs" />
     <Compile Include="World.Functions.cs" />
+    <Compile Include="Zip\ZipArchive.cs" />
+    <Compile Include="Zip\ZipArchiveFile.cs" />
+    <Compile Include="Zip\ZipCompressionMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
