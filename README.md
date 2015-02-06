@@ -11,11 +11,8 @@ There's nothing wrong with using DosBox to emulate ZZT. That is still, in fact, 
 
 ### Build instructions
 
-##### All platforms
-There are no special instructions, nor is there anything additional you need to install. No external libraries are currently used; all functionality is based off whatever is available from the .NET framework. This may change in the future, especially for non-Windows platforms.
-
 ##### Windows (Visual Studio)
-As long as you have a development environment that supports .NET Framework 4.0, you should be good to go. The project has been built and tested in the free Visual Studio 2013 Community Edition.
+As long as you have a development environment that supports .NET Framework 4.0 and NuGet (which is required to get OpenTK), you should be good to go. The project has been built and tested in the free Visual Studio 2013 Community Edition.
 
 ##### Mac OS X and Linux
 As long as you have a version of MonoDevelop or Xamarin Studio that supports Visual Studio 2013 projects, NuGet packages, and the .NET Framework 4.0, the process is almost automatic.
