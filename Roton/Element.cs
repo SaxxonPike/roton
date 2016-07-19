@@ -12,12 +12,12 @@ namespace Roton
         public virtual int Color { get; internal set; }
         public virtual int Cycle { get; internal set; }
         public virtual bool Destructible { get; internal set; }
-        internal virtual Func<Location, AnsiChar> Draw { get; set; }
+        internal virtual Func<IXyPair, AnsiChar> Draw { get; set; }
         public virtual bool DrawCodeEnable { get; internal set; }
         public virtual bool EditorFloor { get; internal set; }
         public virtual bool Floor { get; internal set; }
         public virtual int Index { get; internal set; }
-        internal virtual Action<Location, int, Vector> Interact { get; set; }
+        internal virtual Action<IXyPair, int, IXyPair> Interact { get; set; }
         public virtual int Key { get; internal set; }
         internal virtual string KnownName { get; set; }
         public virtual int Menu { get; internal set; }

@@ -7,7 +7,7 @@
         {
         }
 
-        public override Location Camera
+        public override IXyPair Camera
         {
             get { return new MemoryLocation16(Memory, 0x776F); }
             set { new MemoryLocation16(Memory, 0x776F).CopyFrom(value); }
@@ -19,7 +19,7 @@
             set { }
         }
 
-        public override Location Enter
+        public override IXyPair Enter
         {
             get { return new MemoryLocation(Memory, 0x776D); }
             set { new MemoryLocation(Memory, 0x776D).CopyFrom(value); }

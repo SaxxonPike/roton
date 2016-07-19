@@ -2,7 +2,7 @@
 {
     internal abstract partial class CoreBase
     {
-        public virtual AnsiChar Draw(Location location)
+        public virtual AnsiChar Draw(IXyPair location)
         {
             if (Dark && !ElementAt(location).Shown && (TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !EditorMode)
             {
@@ -32,18 +32,18 @@
             return new AnsiChar(tile.Color, 0x0F);
         }
 
-        public virtual AnsiChar Draw_BlinkWall(Location location)
+        public virtual AnsiChar Draw_BlinkWall(IXyPair location)
         {
             return new AnsiChar(0xCE, Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Bomb(Location location)
+        public virtual AnsiChar Draw_Bomb(IXyPair location)
         {
             var p1 = Actors[ActorIndexAt(location)].P1;
             return new AnsiChar(p1 > 1 ? 0x30 + p1 : 0x0B, Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Clockwise(Location location)
+        public virtual AnsiChar Draw_Clockwise(IXyPair location)
         {
             switch ((GameCycle/Elements[Elements.ClockwiseId].Cycle) & 0x3)
             {
@@ -58,7 +58,7 @@
             }
         }
 
-        public virtual AnsiChar Draw_Counter(Location location)
+        public virtual AnsiChar Draw_Counter(IXyPair location)
         {
             switch ((GameCycle/Elements[Elements.CounterId].Cycle) & 0x3)
             {
@@ -73,7 +73,7 @@
             }
         }
 
-        public virtual AnsiChar Draw_DragonPup(Location location)
+        public virtual AnsiChar Draw_DragonPup(IXyPair location)
         {
             switch (GameCycle & 0x3)
             {
@@ -87,7 +87,7 @@
             }
         }
 
-        public virtual AnsiChar Draw_Duplicator(Location location)
+        public virtual AnsiChar Draw_Duplicator(IXyPair location)
         {
             switch (Actors[ActorIndexAt(location)].P1)
             {
@@ -104,17 +104,17 @@
             }
         }
 
-        public virtual AnsiChar Draw_Line(Location location)
+        public virtual AnsiChar Draw_Line(IXyPair location)
         {
             return new AnsiChar(LineChars[Adjacent(location, Elements.LineId)], Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Object(Location location)
+        public virtual AnsiChar Draw_Object(IXyPair location)
         {
             return new AnsiChar(Actors[ActorIndexAt(location)].P1, Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Pusher(Location location)
+        public virtual AnsiChar Draw_Pusher(IXyPair location)
         {
             var actor = Actors[ActorIndexAt(location)];
             switch (actor.Vector.X)
@@ -130,7 +130,7 @@
             }
         }
 
-        public virtual AnsiChar Draw_SpinningGun(Location location)
+        public virtual AnsiChar Draw_SpinningGun(IXyPair location)
         {
             switch (GameCycle & 0x7)
             {
@@ -148,7 +148,7 @@
             }
         }
 
-        public virtual AnsiChar Draw_Star(Location location)
+        public virtual AnsiChar Draw_Star(IXyPair location)
         {
             var tile = Tiles[location];
             tile.Color++;
@@ -157,12 +157,12 @@
             return new AnsiChar(StarChars[GameCycle & 0x3], tile.Color);
         }
 
-        public virtual AnsiChar Draw_Stone(Location location)
+        public virtual AnsiChar Draw_Stone(IXyPair location)
         {
             return new AnsiChar(0x41 + RandomNumber(0x1A), Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Transporter(Location location)
+        public virtual AnsiChar Draw_Transporter(IXyPair location)
         {
             var actor = Actors[ActorIndexAt(location)];
             int index;
@@ -184,7 +184,7 @@
             return new AnsiChar(TransporterHChars[index], Tiles[location].Color);
         }
 
-        public virtual AnsiChar Draw_Web(Location location)
+        public virtual AnsiChar Draw_Web(IXyPair location)
         {
             return new AnsiChar(WebChars[Adjacent(location, Elements.WebId)], Tiles[location].Color);
         }

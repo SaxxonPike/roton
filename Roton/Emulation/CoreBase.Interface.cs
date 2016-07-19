@@ -135,7 +135,7 @@ namespace Roton.Emulation
             set { StateData.BreakGameLoop = value; }
         }
 
-        public Location Camera
+        public IXyPair Camera
         {
             get { return BoardData.Camera; }
             set { BoardData.Camera = value; }
@@ -191,7 +191,7 @@ namespace Roton.Emulation
 
         IList<Element> IDisplayInfo.Elements => Elements;
 
-        public Location Enter
+        public IXyPair Enter
         {
             get { return BoardData.Enter; }
             set { BoardData.Enter = value; }

@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
@@ -98,12 +100,12 @@
                         }
                         KeyPressed = 0;
                     }
-                    if (!KeyVector.IsZero)
+                    if (!KeyVector.IsZero())
                     {
                         var target = Player.Location.Sum(KeyVector);
                         ElementAt(target).Interact(target, 0, KeyVector);
                     }
-                    if (!KeyVector.IsZero)
+                    if (!KeyVector.IsZero())
                     {
                         var target = Player.Location.Sum(KeyVector);
                         if (ElementAt(target).Floor)

@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation
 {
     internal abstract partial class CoreBase
     {
@@ -188,7 +190,7 @@
                     Attack(index, target);
                     break;
                 }
-                if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.Clockwise)).Id == Elements.RicochetId)
+                if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.Clockwise())).Id == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetCounterClockwise();
@@ -196,7 +198,7 @@
                     continue;
                 }
                 if (canRicochet &&
-                    TileAt(actor.Location.Sum(actor.Vector.CounterClockwise)).Id == Elements.RicochetId)
+                    TileAt(actor.Location.Sum(actor.Vector.CounterClockwise())).Id == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetClockwise();
@@ -249,7 +251,7 @@
                 {
                     if (TileAt(target).Id != Elements.EmptyId)
                     {
-                        Push(target, actor.Vector.Opposite);
+                        Push(target, actor.Vector.Opposite());
                     }
                     if (TileAt(target).Id == Elements.EmptyId)
                     {
@@ -345,7 +347,7 @@
             {
                 ExecuteCode(index, actor, @"Interaction");
             }
-            if (actor.Vector.IsZero) return;
+            if (actor.Vector.IsZero()) return;
 
             var target = actor.Location.Sum(actor.Vector);
             if (ElementAt(target).Floor)
@@ -402,10 +404,10 @@
 
             if (!KeyShift)
             {
-                if (!KeyVector.IsZero)
+                if (!KeyVector.IsZero())
                 {
                     ElementAt(actor.Location.Sum(KeyVector)).Interact(actor.Location.Sum(KeyVector), 0, KeyVector);
-                    if (!KeyVector.IsZero)
+                    if (!KeyVector.IsZero())
                     {
                         if (!SoundPlaying)
                         {
@@ -588,7 +590,7 @@
         {
             var actor = Actors[index];
 
-            if (actor.Vector.IsZero)
+            if (actor.Vector.IsZero())
             {
                 if (actor.P2 + 8 <= RandomNumberDeterministic(17))
                 {
@@ -751,17 +753,17 @@
             if (!Act_Spider_AttemptDirection(index, vector))
             {
                 var i = (RandomNumberDeterministic(2) << 1) - 1;
-                if (!Act_Spider_AttemptDirection(index, vector.Multiply(i).Swap))
+                if (!Act_Spider_AttemptDirection(index, vector.Product(i).Swap()))
                 {
-                    if (!Act_Spider_AttemptDirection(index, vector.Multiply(i).Swap.Opposite))
+                    if (!Act_Spider_AttemptDirection(index, vector.Product(i).Swap().Opposite()))
                     {
-                        Act_Spider_AttemptDirection(index, vector.Opposite);
+                        Act_Spider_AttemptDirection(index, vector.Opposite());
                     }
                 }
             }
         }
 
-        internal virtual bool Act_Spider_AttemptDirection(int index, Vector vector)
+        internal virtual bool Act_Spider_AttemptDirection(int index, IXyPair vector)
         {
             var actor = Actors[index];
             var target = actor.Location.Sum(vector);
@@ -853,7 +855,7 @@
             UpdateBoard(Actors[index].Location);
         }
 
-        public virtual void Interact_Ammo(Location location, int index, Vector vector)
+        public virtual void Interact_Ammo(IXyPair location, int index, IXyPair vector)
         {
             Ammo += 5;
             TileAt(location).Id = Elements.EmptyId;
@@ -866,7 +868,7 @@
             }
         }
 
-        public virtual void Interact_BoardEdge(Location location, int index, Vector vector)
+        public virtual void Interact_BoardEdge(IXyPair location, int index, IXyPair vector)
         {
             var target = location.Clone();
             var targetBoard = 0;
@@ -920,7 +922,7 @@
             }
         }
 
-        public virtual void Interact_Bomb(Location location, int index, Vector vector)
+        public virtual void Interact_Bomb(IXyPair location, int index, IXyPair vector)
         {
             var actor = ActorAt(location);
             if (actor.P1 == 0)
@@ -936,7 +938,7 @@
             }
         }
 
-        public virtual void Interact_Door(Location location, int index, Vector vector)
+        public virtual void Interact_Door(IXyPair location, int index, IXyPair vector)
         {
             var color = (TileAt(location).Color & 0x70) >> 4;
             var keyIndex = color - 1;
@@ -954,12 +956,12 @@
             }
         }
 
-        public virtual void Interact_Enemy(Location location, int index, Vector vector)
+        public virtual void Interact_Enemy(IXyPair location, int index, IXyPair vector)
         {
             Attack(index, location);
         }
 
-        public virtual void Interact_Energizer(Location location, int index, Vector vector)
+        public virtual void Interact_Energizer(IXyPair location, int index, IXyPair vector)
         {
             PlaySound(9, Sounds.Energizer);
             TileAt(location).Id = Elements.EmptyId;
@@ -974,7 +976,7 @@
             BroadcastLabel(0, @"ALL:ENERGIZE", false);
         }
 
-        public virtual void Interact_Fake(Location location, int index, Vector vector)
+        public virtual void Interact_Fake(IXyPair location, int index, IXyPair vector)
         {
             if (!AlertFake) return;
 
@@ -982,7 +984,7 @@
             SetMessage(0xC8, FakeMessage);
         }
 
-        public virtual void Interact_Forest(Location location, int index, Vector vector)
+        public virtual void Interact_Forest(IXyPair location, int index, IXyPair vector)
         {
             TileAt(location).Id = Elements.EmptyId;
             UpdateBoard(location);
@@ -994,7 +996,7 @@
             }
         }
 
-        public virtual void Interact_Gem(Location location, int index, Vector vector)
+        public virtual void Interact_Gem(IXyPair location, int index, IXyPair vector)
         {
             Gems += 1;
             Health += 1;
@@ -1009,7 +1011,7 @@
             }
         }
 
-        public virtual void Interact_Invisible(Location location, int index, Vector vector)
+        public virtual void Interact_Invisible(IXyPair location, int index, IXyPair vector)
         {
             TileAt(location).Id = Elements.NormalId;
             UpdateBoard(location);
@@ -1017,7 +1019,7 @@
             SetMessage(0x64, InvisibleMessage);
         }
 
-        public virtual void Interact_Key(Location location, int index, Vector vector)
+        public virtual void Interact_Key(IXyPair location, int index, IXyPair vector)
         {
             var color = TileAt(location).Color & 0x07;
             var keyIndex = color - 1;
@@ -1035,25 +1037,25 @@
             }
         }
 
-        public virtual void Interact_Object(Location location, int index, Vector vector)
+        public virtual void Interact_Object(IXyPair location, int index, IXyPair vector)
         {
             var objectIndex = ActorIndexAt(location);
             BroadcastLabel(-objectIndex, @"TOUCH", false);
         }
 
-        public virtual void Interact_Passage(Location location, int index, Vector vector)
+        public virtual void Interact_Passage(IXyPair location, int index, IXyPair vector)
         {
             ExecutePassage(location);
             vector.SetTo(0, 0);
         }
 
-        public virtual void Interact_Pushable(Location location, int index, Vector vector)
+        public virtual void Interact_Pushable(IXyPair location, int index, IXyPair vector)
         {
             Push(location, vector);
             PlaySound(2, Sounds.Push);
         }
 
-        public virtual void Interact_Scroll(Location location, int index, Vector vector)
+        public virtual void Interact_Scroll(IXyPair location, int index, IXyPair vector)
         {
             var scrollIndex = ActorIndexAt(location);
             var actor = Actors[scrollIndex];
@@ -1063,7 +1065,7 @@
             RemoveActor(scrollIndex);
         }
 
-        public virtual void Interact_Slime(Location location, int index, Vector vector)
+        public virtual void Interact_Slime(IXyPair location, int index, IXyPair vector)
         {
             var color = TileAt(location).Color;
             var slimeIndex = ActorIndexAt(location);
@@ -1073,7 +1075,7 @@
             PlaySound(2, Sounds.SlimeDie);
         }
 
-        public virtual void Interact_Stone(Location location, int index, Vector vector)
+        public virtual void Interact_Stone(IXyPair location, int index, IXyPair vector)
         {
             if (Stones < 0)
             {
@@ -1085,7 +1087,7 @@
             SetMessage(0xC8, @"You have found a", @"Stone of Power!");
         }
 
-        public virtual void Interact_Torch(Location location, int index, Vector vector)
+        public virtual void Interact_Torch(IXyPair location, int index, IXyPair vector)
         {
             Torches++;
             TileAt(location).Id = Elements.EmptyId;
@@ -1098,13 +1100,13 @@
             PlaySound(3, Sounds.Torch);
         }
 
-        public virtual void Interact_Transporter(Location location, int index, Vector vector)
+        public virtual void Interact_Transporter(IXyPair location, int index, IXyPair vector)
         {
             PushThroughTransporter(location.Difference(vector), vector);
             vector.SetTo(0, 0);
         }
 
-        public virtual void Interact_Water(Location location, int index, Vector vector)
+        public virtual void Interact_Water(IXyPair location, int index, IXyPair vector)
         {
             PlaySound(3, Sounds.Water);
             SetMessage(0x64, WaterMessage);

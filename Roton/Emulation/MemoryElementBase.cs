@@ -17,12 +17,12 @@
         {
         }
 
-        public static AnsiChar DefaultDraw(Location location)
+        public static AnsiChar DefaultDraw(IXyPair location)
         {
             return new AnsiChar(0x3F, 0x40);
         }
 
-        public static void DefaultInteract(Location location, int index, Vector vector)
+        public static void DefaultInteract(IXyPair location, int index, IXyPair vector)
         {
         }
 

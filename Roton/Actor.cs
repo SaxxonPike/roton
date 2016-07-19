@@ -2,7 +2,7 @@
 
 namespace Roton
 {
-    public partial class Actor : ICode, ICodeSeekable, IActor
+    public partial class Actor : IActor
     {
         /// <summary>
         /// The frequency at which the actor will run its action code.
@@ -32,7 +32,7 @@ namespace Roton
         /// <summary>
         /// Location in board coordinates of this actor. The upper left visible corner is (1, 1).
         /// </summary>
-        public virtual Location Location { get; }
+        public virtual IXyPair Location { get; }
 
         /// <summary>
         /// Parameter data. The use of this field will vary depending on the element.
@@ -62,6 +62,6 @@ namespace Roton
         /// <summary>
         /// Actor's vector, when applicable.
         /// </summary>
-        public virtual Vector Vector { get; }
+        public virtual IXyPair Vector { get; }
     }
 }

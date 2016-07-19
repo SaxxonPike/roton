@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.SuperZZT
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class Core
     {
@@ -30,7 +32,7 @@
                 ElementAt(actor.Location.Sum(vector)).Interact(actor.Location.Sum(vector), 0, vector);
             }
 
-            if (vector.IsNonZero)
+            if (vector.IsNonZero())
             {
                 var target = actor.Location.Sum(vector);
                 if (ElementAt(target).Floor)

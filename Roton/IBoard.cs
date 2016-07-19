@@ -2,9 +2,9 @@
 {
     public interface IBoard
     {
-        Location Camera { get; }
+        IXyPair Camera { get; }
         bool Dark { get; set; }
-        Location Enter { get; }
+        IXyPair Enter { get; }
         int ExitEast { get; set; }
         int ExitNorth { get; set; }
         int ExitSouth { get; set; }

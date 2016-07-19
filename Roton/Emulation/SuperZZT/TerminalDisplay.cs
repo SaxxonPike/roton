@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.SuperZZT
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation.SuperZZT
 {
     internal sealed class TerminalDisplay : Display
     {

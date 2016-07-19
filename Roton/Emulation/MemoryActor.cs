@@ -46,7 +46,7 @@
             set { Memory.Write16(Offset + 0x17, value); }
         }
 
-        public override Location Location => new MemoryLocation(Memory, Offset + 0x00);
+        public override IXyPair Location => new MemoryLocation(Memory, Offset + 0x00);
 
         public Memory Memory { get; }
 
@@ -78,6 +78,6 @@
 
         public override Tile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
 
-        public override Vector Vector => new MemoryVector(Memory, Offset + 0x02);
+        public override IXyPair Vector => new MemoryVector(Memory, Offset + 0x02);
     }
 }

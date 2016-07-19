@@ -14,7 +14,7 @@
             set { Memory.WriteBool(0x4568, value); }
         }
 
-        public override Location Enter
+        public override IXyPair Enter
         {
             get { return new MemoryLocation(Memory, 0x45A9); }
             set { new MemoryLocation(Memory, 0x45A9).CopyFrom(value); }

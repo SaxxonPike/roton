@@ -5,8 +5,8 @@ namespace Roton
     public interface IDisplayInfo
     {
         int Ammo { get; }
-        Location Camera { get; }
-        AnsiChar Draw(Location location);
+        IXyPair Camera { get; }
+        AnsiChar Draw(IXyPair location);
         IList<Element> Elements { get; }
         int EnergyCycles { get; }
         int GameSpeed { get; }

@@ -2,9 +2,9 @@
 {
     public abstract partial class Board : IBoard
     {
-        public virtual Location Camera { get; set; }
+        public virtual IXyPair Camera { get; set; }
         public virtual bool Dark { get; set; }
-        public virtual Location Enter { get; set; }
+        public virtual IXyPair Enter { get; set; }
         public virtual int ExitEast { get; set; }
         public virtual int ExitNorth { get; set; }
         public virtual int ExitSouth { get; set; }

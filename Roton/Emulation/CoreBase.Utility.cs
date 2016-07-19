@@ -1,10 +1,11 @@
 ﻿using System.Threading;
+using Roton.Extensions;
 
 namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        internal virtual int Adjacent(Location location, int id)
+        internal virtual int Adjacent(IXyPair location, int id)
         {
             return (location.Y <= 1 || Tiles[location.Sum(Vector.North)].Id == id ? 1 : 0) |
                    (location.Y >= Tiles.Height || Tiles[location.Sum(Vector.South)].Id == id ? 2 : 0) |
@@ -12,7 +13,7 @@ namespace Roton.Emulation
                    (location.X >= Tiles.Width || Tiles[location.Sum(Vector.East)].Id == id ? 8 : 0);
         }
 
-        internal virtual int Distance(Location a, Location b)
+        internal virtual int Distance(IXyPair a, IXyPair b)
         {
             return (a.Y - b.Y).Square()*2 + (a.X - b.X).Square();
         }

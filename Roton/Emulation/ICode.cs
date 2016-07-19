@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation
 {
-    internal interface ICode
+    public interface ICode
     {
         char[] Code { get; set; }
     }

@@ -20,7 +20,7 @@
             throw Exceptions.InvalidSet;
         }
 
-        public Tile this[Location location] => this[location.X*TotalHeight + location.Y];
+        public Tile this[IXyPair location] => this[location.X*TotalHeight + location.Y];
 
         public override int Count => TotalWidth*TotalHeight;
 
