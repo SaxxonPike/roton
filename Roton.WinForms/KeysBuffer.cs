@@ -8,7 +8,7 @@ namespace Roton.WinForms
 {
     public class KeysBuffer : IKeyboard
     {
-        private static readonly Encoding _enc = Encoding.GetEncoding(437);
+        private static readonly Encoding Enc = Encoding.GetEncoding(437);
         private readonly Queue<int> _queue = new Queue<int>();
         private readonly object _syncObject = new object();
 
@@ -90,7 +90,7 @@ namespace Roton.WinForms
         {
             try
             {
-                int code = _enc.GetBytes(new[] {data})[0];
+                int code = Enc.GetBytes(new[] {data})[0];
                 if (code >= 0x20 && code <= 0xFF)
                 {
                     Enqueue(code);

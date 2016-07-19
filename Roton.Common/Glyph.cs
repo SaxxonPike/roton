@@ -44,10 +44,14 @@ namespace Roton.Common
             Height *= yScale;
         }
 
-        public override int this[int index]
+        protected override int GetItem(int index)
         {
-            get { return Data[index]; }
-            set { Data[index] = Black | (value & ColorMask); }
+            return Data[index];
+        }
+
+        protected override void SetItem(int index, int value)
+        {
+            Data[index] = Black | (value & ColorMask);
         }
 
         public override int Count => PixelCount;
@@ -98,20 +102,17 @@ namespace Roton.Common
             var data = Data;
             var bitsWidth = bitmap.Width;
             var bitsOffset = y*bitmap.Width + x;
-            int bitsRowOffset;
             var dataOffset = 0;
-            int mask;
             var height = Height;
             var width = Width;
             var i = 0;
-            var j = 0;
             while (i < height)
             {
-                j = 0;
-                bitsRowOffset = bitsOffset;
+                var j = 0;
+                var bitsRowOffset = bitsOffset;
                 while (j < width)
                 {
-                    mask = data[dataOffset++];
+                    var mask = data[dataOffset++];
                     bits[bitsOffset++] = Black | (mask & foreColor) | ((mask ^ ColorMask) & backColor);
                     j++;
                 }

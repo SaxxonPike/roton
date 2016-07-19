@@ -2,6 +2,6 @@
 {
     internal interface ICode
     {
-        string Code { get; set; }
+        char[] Code { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Roton
 {
-    public abstract partial class Board
+    public abstract partial class Board : IBoard
     {
         public virtual Location Camera { get; set; }
         public virtual bool Dark { get; set; }

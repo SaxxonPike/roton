@@ -69,6 +69,8 @@
     <Compile Include="Emulation\ZZT\Core.cs" />
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="IActor.cs" />
+    <Compile Include="IBoard.cs" />
     <Compile Include="IDisplayInfo.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Element.Functions.cs" />
@@ -106,7 +108,6 @@
     <Compile Include="Emulation\ZZT\MemoryActorCollection.cs" />
     <Compile Include="Emulation\ZZT\MemoryElement.cs" />
     <Compile Include="ContextEngine.cs" />
-    <Compile Include="Emulation\Heap.cs" />
     <Compile Include="Emulation\Memory.cs" />
     <Compile Include="Emulation\MemoryActor.cs" />
     <Compile Include="Emulation\MemoryActorCollectionBase.cs" />

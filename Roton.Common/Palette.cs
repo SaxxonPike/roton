@@ -41,13 +41,14 @@ namespace Roton.Common
             Initialize(data);
         }
 
-        /// <summary>
-        /// Get or set palette colors.
-        /// </summary>
-        public override Color this[int index]
+        protected override Color GetItem(int index)
         {
-            get { return Color.FromArgb(Colors[index & 0xF]); }
-            set { Colors[index & 0xF] = value.ToArgb(); }
+            return Color.FromArgb(Colors[index & 0xF]);
+        }
+
+        protected override void SetItem(int index, Color value)
+        {
+            Colors[index & 0xF] = value.ToArgb();
         }
 
         public int[] Colors { get; private set; }

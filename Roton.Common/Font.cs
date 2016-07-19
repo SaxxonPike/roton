@@ -49,15 +49,6 @@ namespace Roton.Common
             Initialize(font);
         }
 
-        /// <summary>
-        /// Get or set font glyphs.
-        /// </summary>
-        public override Glyph this[int index]
-        {
-            get { return Glyphs[index & 0xFF]; }
-            set { value.CopyTo(Glyphs[index & 0xFF].Data, 0); }
-        }
-
         public override int Count => 256;
 
         private byte[] Data { get; set; }

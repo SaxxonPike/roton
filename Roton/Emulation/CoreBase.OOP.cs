@@ -279,8 +279,7 @@ namespace Roton.Emulation
             }
             else
             {
-                var heapCode = actor.Heap[actor.Pointer];
-                OopByte = actor.Heap[actor.Pointer][instructionSource.Instruction];
+                OopByte = actor.Code[instructionSource.Instruction];
                 instructionSource.Instruction++;
             }
         }

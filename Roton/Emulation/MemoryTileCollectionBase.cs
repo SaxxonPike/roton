@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation
 {
-    internal abstract partial class MemoryTileCollectionBase : FixedList<Tile>
+    internal abstract class MemoryTileCollectionBase : FixedList<Tile>
     {
         public MemoryTileCollectionBase(Memory memory, int offset, int width, int height)
         {
@@ -10,17 +10,17 @@
             Width = width;
         }
 
-        public override Tile this[int index]
+        protected override Tile GetItem(int index)
         {
-            get { return new MemoryTile(Memory, Offset + index*2); }
-            set { this[index].CopyFrom(value); }
+            return new MemoryTile(Memory, Offset + index*2);
         }
 
-        public Tile this[Location location]
+        protected override void SetItem(int index, Tile value)
         {
-            get { return this[location.X*TotalHeight + location.Y]; }
-            set { this[location].CopyFrom(value); }
+            throw Exceptions.InvalidSet;
         }
+
+        public Tile this[Location location] => this[location.X*TotalHeight + location.Y];
 
         public override int Count => TotalWidth*TotalHeight;
 

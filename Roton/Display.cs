@@ -2,7 +2,7 @@
 {
     public abstract partial class Display
     {
-        public Display(IDisplayInfo infoSource)
+        protected Display(IDisplayInfo infoSource)
         {
             DisplayInfo = infoSource;
         }

@@ -6,15 +6,11 @@ namespace Roton
     {
         private const int MaxGameCycle = 420;
 
-        public Context(string filename, bool editor)
+        public Context(string filename, bool editor) : this(File.ReadAllBytes(filename), editor)
         {
-            using (var mem = new MemoryStream(File.ReadAllBytes(filename)))
-            {
-                Initialize(mem, editor);
-            }
         }
 
-        public Context(byte[] data, bool editor)
+        private Context(byte[] data, bool editor)
         {
             using (var mem = new MemoryStream(data))
             {
@@ -56,10 +52,6 @@ namespace Roton
         }
 
         public int Height => Core.Height;
-
-        internal void InitBoard(int board)
-        {
-        }
 
         private void Initialize(ContextEngine engine, bool editor)
         {
@@ -168,12 +160,6 @@ namespace Roton
         public void Save(string filename)
         {
             File.WriteAllBytes(filename, Save());
-        }
-
-        public void Save(Stream output)
-        {
-            var data = Save();
-            output.Write(data, 0, data.Length);
         }
 
         public void SetBoard(int boardIndex)

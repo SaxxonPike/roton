@@ -2,9 +2,9 @@
 
 namespace Roton.Emulation
 {
-    internal abstract partial class MemoryActorCollectionBase : FixedList<Actor>
+    internal abstract class MemoryActorCollectionBase : FixedList<IActor>
     {
-        public MemoryActorCollectionBase(Memory memory)
+        protected MemoryActorCollectionBase(Memory memory)
         {
             Memory = memory;
             Cache = new MemoryActor[Capacity];
@@ -14,15 +14,16 @@ namespace Roton.Emulation
             }
         }
 
-        public override Actor this[int index]
+        protected override IActor GetItem(int index)
         {
-            get
-            {
-                if (index >= 0 && index < Capacity)
-                    return Cache[index];
-                return GetActor(index);
-            }
-            set { throw new NotImplementedException(); }
+            if (index >= 0 && index < Capacity)
+                return Cache[index];
+            return GetActor(index);
+        }
+
+        protected override void SetItem(int index, IActor value)
+        {
+            throw Exceptions.InvalidSet;
         }
 
         private MemoryActor[] Cache { get; }

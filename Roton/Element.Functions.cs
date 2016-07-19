@@ -9,7 +9,7 @@
 
         public override string ToString()
         {
-            return KnownName ?? "";
+            return KnownName ?? string.Empty;
         }
     }
 }

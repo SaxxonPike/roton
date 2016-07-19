@@ -43,9 +43,9 @@ namespace Roton.WinForms
         protected override void Dispose(bool disposing)
         {
             StopAll();
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
             }
             _disposed = true;
             base.Dispose(disposing);
@@ -112,21 +112,19 @@ namespace Roton.WinForms
 
         private void TimerThreadMethod(object timerDaemonInfo)
         {
-            var info = timerDaemonInfo as TimerDaemonInfo;
+            var info = (TimerDaemonInfo) timerDaemonInfo;
             var method = info.Method;
             var sw = new Stopwatch();
-            var freq = (long) ((double) Stopwatch.Frequency/(double) info.Frequency);
+            var freq = (long) (Stopwatch.Frequency/info.Frequency);
             long next = 0;
-            long now = 0;
-            var repetitions = 0;
             sw.Start();
 
             info.Running = true;
             while (info.Running && !_disposed)
             {
                 Thread.Sleep(1);
-                now = sw.ElapsedTicks;
-                repetitions = 0;
+                var now = sw.ElapsedTicks;
+                var repetitions = 0;
                 while (next < now && repetitions < 5)
                 {
                     if (!_paused)

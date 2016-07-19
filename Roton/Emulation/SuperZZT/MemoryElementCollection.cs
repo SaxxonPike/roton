@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.SuperZZT
 {
-    internal sealed partial class MemoryElementCollection : MemoryElementCollectionBase
+    internal sealed partial class MemoryElementCollection
     {
         public MemoryElementCollection(Memory memory)
             : base(memory)

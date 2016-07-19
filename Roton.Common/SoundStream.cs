@@ -18,7 +18,7 @@ namespace Roton.Common
             Buffer = buffer;
         }
 
-        protected byte[] _buffer;
+        private byte[] _buffer;
 
         public byte[] Buffer
         {
@@ -54,13 +54,14 @@ namespace Roton.Common
             // do nothing
         }
 
-        protected int _frequency;
+        private int _frequency;
 
         public int Frequency
         {
-            get { return Frequency; }
+            get { return _frequency; }
             set
             {
+                _frequency = value;
                 var rate = value << 1;
                 Data[0x18] = (byte) (value & 0xFF);
                 Data[0x19] = (byte) ((value >> 8) & 0xFF);

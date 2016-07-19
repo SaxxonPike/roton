@@ -1,15 +1,14 @@
 ﻿using Roton.Emulation;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Roton
 {
     public sealed partial class Context
     {
-        internal MemoryActorCollectionBase ActorMemory { get; private set; }
-
         public int ActorCapacity => Core.Actors.Capacity;
 
-        public IList<Actor> Actors => Core.Actors;
+        public IList<IActor> Actors => Core.Actors;
 
         public int Board
         {
@@ -23,22 +22,13 @@ namespace Roton
 
         public ContextEngine ContextEngine { get; private set; }
 
-        internal CoreBase Core { get; private set; }
+        private CoreBase Core { get; set; }
 
         public Actor CreateActor()
         {
             var result = new Actor();
-            result.Heap = Core.Heap;
             return result;
         }
-
-        public IFileSystem Disk
-        {
-            get { return Core.Disk; }
-            set { Core.Disk = value; }
-        }
-
-        public IDisplayInfo DisplayInfo => Core;
 
         public IList<Element> Elements => Core.Elements;
 
@@ -49,8 +39,6 @@ namespace Roton
         }
 
         public byte[] Memory => Core.Memory.Dump();
-
-        public bool Quiet => Core.Quiet;
 
         public int ScreenHeight { get; private set; }
 
@@ -97,23 +85,14 @@ namespace Roton
             return Core.Tiles[new Location(x, y)];
         }
 
-        public IList<Tile> Tiles => Core.Tiles;
-
         public World WorldData => Core.WorldData;
 
         public int WorldSize
         {
             get
             {
-                var total = Serializer.WorldDataCapacity;
-                foreach (var board in Boards)
-                {
-                    total += board.Data.Length + 2;
-                }
-                return total;
+                return Serializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2);
             }
         }
-
-        internal int WorldType => WorldData.WorldType;
     }
 }

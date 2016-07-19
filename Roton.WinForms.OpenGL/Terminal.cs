@@ -58,9 +58,9 @@ namespace Roton.WinForms.OpenGL
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -104,7 +104,6 @@ namespace Roton.WinForms.OpenGL
             Blinking = !Blinking;
             if (_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null))
             {
-                var total = _terminalWidth*_terminalHeight;
                 var i = 0;
                 for (var y = 0; y < _terminalHeight; y++)
                 {

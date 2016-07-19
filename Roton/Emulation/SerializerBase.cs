@@ -27,8 +27,6 @@ namespace Roton.Emulation
 
         public abstract int BoardNameOffset { get; }
 
-        public Heap Heap => Memory.Heap;
-
         public byte[] LoadBoardData(Stream source)
         {
             var reader = new BinaryReader(source);
@@ -48,7 +46,7 @@ namespace Roton.Emulation
         private void PackActors(BinaryWriter target, int count)
         {
             // list of actors and saved code
-            var savedCode = new Dictionary<int, int>();
+            var savedCode = new Dictionary<char[], int>();
 
             // backed up memory (so we don't modify the working version)
             var mem = new Memory();
@@ -56,19 +54,20 @@ namespace Roton.Emulation
 
             for (var i = 0; i <= count; i++)
             {
+                var writeCode = false;
                 var actor = new MemoryActor(mem, ActorDataOffset + ActorDataLength*i);
 
                 // check to see if the code needs to be stored
-                if (actor.Pointer != 0 && Heap.Contains(actor.Pointer))
+                if (actor.Code != null)
                 {
-                    if (savedCode.ContainsKey(actor.Pointer))
+                    if (savedCode.ContainsKey(actor.Code))
                     {
-                        actor.Length = -savedCode[actor.Pointer];
-                        actor.Pointer = 0;
+                        actor.Length = -savedCode[actor.Code];
+                        writeCode = true;
                     }
                     else
                     {
-                        savedCode[actor.Pointer] = i;
+                        savedCode[actor.Code] = i;
                     }
                 }
                 else
@@ -80,9 +79,9 @@ namespace Roton.Emulation
                 target.Write(Memory.Read(actor.Offset, ActorDataLength));
 
                 // write code if applicable
-                if (actor.Pointer != 0)
+                if (writeCode)
                 {
-                    target.Write(Heap[actor.Pointer]);
+                    target.Write(actor.Code);
                 }
             }
         }
@@ -165,7 +164,7 @@ namespace Roton.Emulation
             }
 
             // load all actors
-            var actorList = new List<Actor>();
+            var actorList = new List<IActor>();
             for (var i = 0; i <= count; i++)
             {
                 var actor = new MemoryActor(Memory, ActorDataOffset + ActorDataLength*i);
@@ -173,9 +172,8 @@ namespace Roton.Emulation
                 actor.Pointer = 0;
                 if (actor.Length > 0)
                 {
-                    // load actor code into the heap
                     var code = source.ReadBytes(actor.Length);
-                    actor.Pointer = Heap.Allocate(code);
+                    actor.Code = code.ToChars();
                 }
                 actorList.Add(actor);
             }

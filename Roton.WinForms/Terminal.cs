@@ -130,9 +130,9 @@ namespace Roton.WinForms
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
             }
             timerDaemon.Dispose();
             base.Dispose(disposing);
@@ -315,11 +315,7 @@ namespace Roton.WinForms
             var oldBitmap = Bitmap;
             Bitmap = new FastBitmap(_terminalFont.Width*_terminalWidth*(_terminalWide ? 2 : 1),
                 _terminalFont.Height*_terminalHeight);
-            if (oldBitmap != null)
-            {
-                oldBitmap.Dispose();
-                oldBitmap = null;
-            }
+            oldBitmap?.Dispose();
 
             if (width != oldWidth || height != oldHeight)
             {
@@ -431,8 +427,7 @@ namespace Roton.WinForms
 
         public void Write(int x, int y, string value, int color)
         {
-            var ac = new AnsiChar();
-            ac.Color = color;
+            var ac = new AnsiChar {Color = color};
             var characters = _encoding.GetBytes(value);
             var count = characters.Length;
 

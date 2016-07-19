@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 
 namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        internal virtual Actor ActorAt(Location location)
+        internal virtual IActor ActorAt(Location location)
         {
             return Actors[ActorIndexAt(location)];
         }
@@ -207,7 +208,6 @@ namespace Roton.Emulation
         internal virtual void ExecutePassage(Location location)
         {
             var searchColor = TileAt(location).Color;
-            var oldBoard = Board;
             var passageIndex = ActorIndexAt(location);
             var passageTarget = Actors[passageIndex].P3;
             SetBoard(passageTarget);
@@ -270,13 +270,15 @@ namespace Roton.Emulation
 
         internal bool GetMainTimeElapsed(int interval)
         {
-            var result = false;
-            while (GetTimeDifference(TimerTick, MainTime) > 0)
-            {
-                result = true;
-                MainTime = (MainTime + interval) & 0x7FFF;
-            }
-            return result;
+            return TimerTick%interval == 0;
+            // TODO: Fix this for real.
+            //var result = false;
+            //while (GetTimeDifference(TimerTick, MainTime) > 0)
+            //{
+            //    result = true;
+            //    MainTime = (MainTime + interval) & 0x7FFF;
+            //}
+            //return result;
         }
 
         internal bool GetPlayerTimeElapsed(int interval)
@@ -593,6 +595,7 @@ namespace Roton.Emulation
             }
             catch (Exception)
             {
+                // TODO: This kind of error handling is bad.
                 return null;
             }
         }
@@ -670,7 +673,7 @@ namespace Roton.Emulation
             Boards[Board] = board;
         }
 
-        public virtual Actor Player => Actors[0];
+        public virtual IActor Player => Actors[0];
 
         internal virtual void Push(Location location, Vector vector)
         {
@@ -771,14 +774,7 @@ namespace Roton.Emulation
         public virtual int ReadKey()
         {
             var key = Keyboard.GetKey();
-            if (key > 0)
-            {
-                KeyPressed = key;
-            }
-            else
-            {
-                KeyPressed = 0;
-            }
+            KeyPressed = key > 0 ? key : 0;
             return KeyPressed;
         }
 
@@ -790,23 +786,6 @@ namespace Roton.Emulation
         internal virtual void RemoveActor(int index)
         {
             var actor = Actors[index];
-            if (actor.Pointer != 0)
-            {
-                var refCount = 0;
-                for (var i = 1; i < ActorCount; i++)
-                {
-                    if (Actors[i].Pointer == actor.Pointer)
-                    {
-                        refCount++;
-                    }
-                }
-                if (refCount < 1)
-                {
-                    actor.Code = "";
-                }
-                actor.Pointer = 0;
-            }
-
             if (index < ActIndex)
             {
                 ActIndex--;
@@ -917,7 +896,7 @@ namespace Roton.Emulation
                 RemoveActor(index);
                 UpdateBorder();
             }
-            if ((message != null && message.Length > 0) || (message2 != null && message2.Length > 0))
+            if (!string.IsNullOrEmpty(message) || !string.IsNullOrEmpty(message2))
             {
                 SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
                 Actors[ActorCount].P2 = duration/(GameWaitTime + 1);
@@ -930,7 +909,7 @@ namespace Roton.Emulation
         {
         }
 
-        internal virtual void SpawnActor(Location location, Tile tile, int cycle, Actor source)
+        internal virtual void SpawnActor(Location location, Tile tile, int cycle, IActor source)
         {
             // must reserve one actor for player, and one for messenger
             if (ActorCount < Actors.Capacity - 2)
@@ -938,7 +917,7 @@ namespace Roton.Emulation
                 ActorCount++;
                 var actor = Actors[ActorCount];
 
-                if (source as Actor == null)
+                if (source == null)
                 {
                     source = DefaultActor;
                 }

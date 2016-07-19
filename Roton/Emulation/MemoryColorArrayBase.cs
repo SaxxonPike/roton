@@ -8,10 +8,14 @@
             Offset = offset;
         }
 
-        public override string this[int index]
+        protected override string GetItem(int index)
         {
-            get { return Memory.ReadString(Offset + index*9); }
-            set { Memory.WriteString(Offset + index*9, value); }
+            return Memory.ReadString(Offset + index * 9);
+        }
+
+        protected override void SetItem(int index, string value)
+        {
+            Memory.WriteString(Offset + index * 9, value);
         }
 
         public override void Clear()

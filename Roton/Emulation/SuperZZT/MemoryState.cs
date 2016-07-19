@@ -140,7 +140,7 @@ namespace Roton.Emulation.SuperZZT
             protected set { }
         }
 
-        public override Actor DefaultActor
+        public override IActor DefaultActor
         {
             get { return _defaultActor; }
             protected set { }

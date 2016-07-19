@@ -155,7 +155,7 @@ namespace Roton.Emulation
             set { BoardData.Dark = value; }
         }
 
-        public Actor DefaultActor => StateData.DefaultActor;
+        public IActor DefaultActor => StateData.DefaultActor;
 
         public string DefaultBoardName
         {
@@ -276,8 +276,6 @@ namespace Roton.Emulation
             get { return WorldData.Health; }
             set { WorldData.Health = value; }
         }
-
-        public Heap Heap => Memory.Heap;
 
         public bool Init
         {

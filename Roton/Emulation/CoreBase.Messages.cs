@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using System.Linq;
+
+namespace Roton.Emulation
 {
     internal abstract partial class CoreBase
     {
@@ -48,18 +50,17 @@
         {
             get
             {
-                if (StonesEnabled)
+                if (!StonesEnabled)
+                    return string.Empty;
+
+                foreach (var flag in Flags.Select(f => f.ToUpperInvariant()))
                 {
-                    for (var i = 0; i < Flags.Count; i++)
+                    if (flag.Length > 0 && flag.StartsWith("Z"))
                     {
-                        var flag = Flags[i].ToUpper();
-                        if (flag.Length > 0 && flag.StartsWith("Z"))
-                        {
-                            return flag.Substring(1);
-                        }
+                        return flag.Substring(1);
                     }
                 }
-                return "";
+                return string.Empty;
             }
         }
 

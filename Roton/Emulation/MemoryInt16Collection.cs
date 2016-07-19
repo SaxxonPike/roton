@@ -9,10 +9,14 @@
             Count = count;
         }
 
-        public override int this[int index]
+        protected override int GetItem(int index)
         {
-            get { return Memory.Read16(Offset + (index << 1)); }
-            set { Memory.Write16(Offset + (index << 1), value); }
+            return Memory.Read16(Offset + (index << 1));
+        }
+
+        protected override void SetItem(int index, int value)
+        {
+            Memory.Write16(Offset + (index << 1), value);
         }
 
         public override int Count { get; }

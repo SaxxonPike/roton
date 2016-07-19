@@ -50,12 +50,10 @@
                 var erasedRay = false;
                 var target = actor.Location.Sum(actor.Vector);
                 var emptyElement = Elements.EmptyId;
-                int rayElement;
 
-                if (actor.Vector.X == 0)
-                    rayElement = Elements.BlinkRayVId;
-                else
-                    rayElement = Elements.BlinkRayHId;
+                var rayElement = actor.Vector.X == 0
+                    ? Elements.BlinkRayVId
+                    : Elements.BlinkRayHId;
 
                 var color = TileAt(actor.Location).Color;
                 var rayTile = new Tile(rayElement, color);
@@ -838,15 +836,8 @@
 
             if ((actor.P2 & 0x7F) > 3*RandomNumberDeterministic(10))
             {
-                bool shot;
-                if (actor.X.AbsDiff(Player.X) <= 2)
-                {
-                    shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
-                }
-                else
-                {
-                    shot = false;
-                }
+                var shot = actor.X.AbsDiff(Player.X) <= 2 &&
+                    SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
 
                 if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
                 {

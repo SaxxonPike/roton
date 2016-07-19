@@ -2,7 +2,7 @@
 {
     public abstract partial class Board
     {
-        public Board()
+        protected Board()
         {
             Initialize();
 

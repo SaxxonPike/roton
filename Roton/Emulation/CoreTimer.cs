@@ -43,20 +43,18 @@ namespace Roton.Emulation
             var timer = new Stopwatch();
             var frequency = Stopwatch.Frequency*10L/718L;
             var lastTime = timer.ElapsedTicks;
-            var currentTime = lastTime;
-            var timesRun = 0;
             ResetShutdown();
             timer.Start();
             while (TicksUntilShutdown > 0)
             {
-                currentTime = timer.ElapsedTicks;
+                var currentTime = timer.ElapsedTicks;
                 if (lastTime > currentTime)
                 {
                     // this will prevent Int64 wrap-around bugs at the expense of ~1 missed tick
                     lastTime = currentTime;
                 }
 
-                timesRun = 0;
+                var timesRun = 0;
                 while (timesRun < MaxLaggedTicks && currentTime - lastTime > frequency)
                 {
                     lastTime += frequency;

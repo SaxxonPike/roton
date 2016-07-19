@@ -222,14 +222,7 @@
                     DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
                 }
 
-                if (DisplayInfo.Quiet)
-                {
-                    DrawString(0x03, 0x0A, @"Be Noisy ", 0x6E);
-                }
-                else
-                {
-                    DrawString(0x03, 0x0A, @"Be Quiet ", 0x6E);
-                }
+                DrawString(0x03, 0x0A, DisplayInfo.Quiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             }
         }
 

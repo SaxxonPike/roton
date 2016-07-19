@@ -7,7 +7,6 @@ namespace Roton.Emulation
         public Memory()
         {
             Bytes = new byte[Length];
-            Heap = new Heap();
             Reset();
         }
 
@@ -19,8 +18,6 @@ namespace Roton.Emulation
             Array.Copy(Bytes, result, Length);
             return result;
         }
-
-        public Heap Heap { get; private set; }
 
         public int Length => 0x1 << 16;
 

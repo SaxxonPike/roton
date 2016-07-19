@@ -6,7 +6,7 @@ namespace Torch
 {
     public partial class CodeEditor : UserControl
     {
-        private Actor _actor;
+        private IActor _actor;
 
         public event EventHandler Closed;
 
@@ -23,7 +23,7 @@ namespace Torch
             Actor = actor;
         }
 
-        public Actor Actor
+        public IActor Actor
         {
             get { return _actor; }
             set
@@ -31,17 +31,14 @@ namespace Torch
                 if (value != null)
                 {
                     _actor = value;
-                    codeTextBox.Text = _actor.Code ?? "";
+                    codeTextBox.Text = new string(_actor.Code ?? new char[0]);
                 }
             }
         }
 
         private void Close()
         {
-            if (Closed != null)
-            {
-                Closed(this, EventArgs.Empty);
-            }
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Initialize()
@@ -54,7 +51,7 @@ namespace Torch
         {
             if (_actor != null)
             {
-                _actor.Code = codeTextBox.Text;
+                _actor.Code = codeTextBox.Text.ToCharArray();
             }
             Close();
         }

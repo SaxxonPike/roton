@@ -20,7 +20,7 @@ namespace Roton.Emulation
             throw new InvalidOperationException();
         }
 
-        public abstract T this[int index] { get; set; }
+        public T this[int index] { get { return GetItem(index); } set { SetItem(index, value); } }
 
         public virtual void Add(T item)
         {
@@ -61,14 +61,13 @@ namespace Roton.Emulation
             return new LinearEnumerator<T>(GetItem, Count);
         }
 
-        private T GetItem(int index)
+        protected virtual T GetItem(int index)
         {
             return this[index];
         }
 
-        public IList<T> AsList()
+        protected virtual void SetItem(int index, T value)
         {
-            return (IList<T>) this;
         }
     }
 }

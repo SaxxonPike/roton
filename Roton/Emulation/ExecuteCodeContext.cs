@@ -11,7 +11,7 @@
             Name = name;
         }
 
-        public Actor Actor { get; set; }
+        public IActor Actor { get; set; }
 
         public int CommandsExecuted { get; set; }
 

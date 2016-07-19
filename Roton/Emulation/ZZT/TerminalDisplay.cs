@@ -61,14 +61,7 @@ namespace Roton.Emulation.ZZT
                 DrawString(0x3E, 0x15, @" S ", 0x70);
                 DrawString(0x3E, 0x07, @" W ", 0x30);
                 DrawString(0x41, 0x07, @" World:", 0x1E);
-                if (DisplayInfo.WorldName.Length <= 0)
-                {
-                    DrawString(0x45, 0x08, @"Untitled", 0x1F);
-                }
-                else
-                {
-                    DrawString(0x45, 0x08, DisplayInfo.WorldName, 0x1F);
-                }
+                DrawString(0x45, 0x08, DisplayInfo.WorldName.Length <= 0 ? @"Untitled" : DisplayInfo.WorldName, 0x1F);
                 DrawString(0x3E, 0x0B, @" P ", 0x70);
                 DrawString(0x41, 0x0B, @" Play", 0x1F);
                 DrawString(0x3E, 0x0C, @" R ", 0x30);
@@ -318,14 +311,8 @@ namespace Roton.Emulation.ZZT
                 {
                     for (var i = 2; i <= 5; i++)
                     {
-                        if (DisplayInfo.TorchCycles/40 < i)
-                        {
-                            DrawChar(0x49 + i, 0x09, new AnsiChar(0xB0, 0x16));
-                        }
-                        else
-                        {
-                            DrawChar(0x49 + i, 0x09, new AnsiChar(0xB1, 0x16));
-                        }
+                        DrawChar(0x49 + i, 0x09,
+                            DisplayInfo.TorchCycles/40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
                     }
                 }
                 else
@@ -335,24 +322,13 @@ namespace Roton.Emulation.ZZT
 
                 for (var i = 1; i <= 7; i++)
                 {
-                    if (DisplayInfo.Keys[i - 1])
-                    {
-                        DrawChar(0x47 + i, 0x0C, new AnsiChar(DisplayInfo.Elements[0x08].Character, 0x18 + i));
-                    }
-                    else
-                    {
-                        DrawChar(0x47 + i, 0x0C, new AnsiChar(0x20, 0x1F));
-                    }
+                    DrawChar(0x47 + i, 0x0C,
+                        DisplayInfo.Keys[i - 1]
+                            ? new AnsiChar(DisplayInfo.Elements[0x08].Character, 0x18 + i)
+                            : new AnsiChar(0x20, 0x1F));
                 }
 
-                if (DisplayInfo.Quiet)
-                {
-                    DrawString(0x41, 0x0F, @" Be noisy", 0x1F);
-                }
-                else
-                {
-                    DrawString(0x41, 0x0F, @" Be quiet", 0x1F);
-                }
+                DrawString(0x41, 0x0F, DisplayInfo.Quiet ? @" Be noisy" : @" Be quiet", 0x1F);
 
                 // normally the code would check if debug mode is enabled here
                 // and put the m000000 number ZZT generates

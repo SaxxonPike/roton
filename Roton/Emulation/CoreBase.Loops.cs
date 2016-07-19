@@ -63,7 +63,6 @@
                 else
                 {
                     ActIndex = ActorCount + 1;
-                    element = Elements[PlayerElement];
                     if (GetMainTimeElapsed(25))
                     {
                         alternating = !alternating;

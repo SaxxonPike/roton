@@ -10,10 +10,9 @@ namespace Torch
 {
     public partial class Editor : Form
     {
-        private Actor _actor;
-        private int _color;
+        private IActor _actor;
         private Context _context;
-        private IEditorTerminal _terminal;
+        private readonly IEditorTerminal _terminal;
 
         public Editor(bool openGl = false)
         {
@@ -41,21 +40,16 @@ namespace Torch
             mainPanel.Controls.Add((UserControl) _terminal);
         }
 
-        private Actor Actor
+        private IActor Actor
         {
             get { return _actor; }
             set
             {
                 _actor = value;
                 actorEditor.Actor = value;
-                if (_actor.IsAttached)
-                {
-                    actorSourceLabel.Text = "Editing on-board actor";
-                }
-                else
-                {
-                    actorSourceLabel.Text = "Editing in-buffer actor";
-                }
+                actorSourceLabel.Text = _actor.IsAttached
+                    ? "Editing on-board actor"
+                    : "Editing in-buffer actor";
             }
         }
 
@@ -67,9 +61,11 @@ namespace Torch
 
             foreach (var board in Context.Boards)
             {
-                var item = new ToolStripMenuItem();
-                item.Text = board.Name;
-                item.Tag = index;
+                var item = new ToolStripMenuItem
+                {
+                    Text = board.Name,
+                    Tag = index
+                };
                 item.Click +=
                     (sender, e) =>
                     {
@@ -105,11 +101,13 @@ namespace Torch
 
             for (var i = 0; i < 256; i++)
             {
-                var item = new ToolStripMenuItem();
-                item.Text = $"Char #{i} / {i:x2}h";
-                item.Image = _terminal.RenderSingle(i, Color);
-                item.ImageScaling = ToolStripItemImageScaling.None;
-                item.Tag = i;
+                var item = new ToolStripMenuItem
+                {
+                    Text = $"Char #{i} / {i:x2}h",
+                    Image = _terminal.RenderSingle(i, Color),
+                    ImageScaling = ToolStripItemImageScaling.None,
+                    Tag = i
+                };
                 item.Click +=
                     (sender, e) =>
                     {
@@ -123,7 +121,7 @@ namespace Torch
             return result;
         }
 
-        private ToolStripItem BuildContextMenuItem(string text, Action click = null)
+        private static ToolStripItem BuildContextMenuItem(string text, Action click = null)
         {
             if (text == "-")
             {
@@ -146,20 +144,24 @@ namespace Torch
                 {
                     if (element.Category.Length > 0)
                     {
-                        var categoryItem = new ToolStripMenuItem();
-                        categoryItem.Text = element.Category;
-                        categoryItem.Enabled = false;
+                        var categoryItem = new ToolStripMenuItem
+                        {
+                            Text = element.Category,
+                            Enabled = false
+                        };
                         if (result.Items.Count > 0)
                         {
                             result.Items.Add(new ToolStripSeparator());
                         }
                         result.Items.Add(categoryItem);
                     }
-                    var item = new ToolStripMenuItem();
-                    item.Text = "(&" + char.ConvertFromUtf32(element.Key) + ") " + element.Name;
-                    item.Tag = index;
-                    item.Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element));
-                    item.ImageScaling = ToolStripItemImageScaling.None;
+                    var item = new ToolStripMenuItem
+                    {
+                        Text = "(&" + char.ConvertFromUtf32(element.Key) + ") " + element.Name,
+                        Tag = index,
+                        Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element)),
+                        ImageScaling = ToolStripItemImageScaling.None
+                    };
                     item.Click +=
                         (sender, e) => { SelectElement((int) (sender as ToolStripMenuItem).Tag); };
                     result.Items.Add(item);
@@ -307,40 +309,35 @@ namespace Torch
                 if (!string.IsNullOrWhiteSpace(element.P1))
                 {
                     var submenu = GetParameterMenu(1);
-                    var item = new ToolStripMenuItem();
-                    item.Text = element.P1;
+                    var item = new ToolStripMenuItem {Text = element.P1};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
                 if (!string.IsNullOrWhiteSpace(element.P2))
                 {
                     var submenu = GetParameterMenu(2);
-                    var item = new ToolStripMenuItem();
-                    item.Text = element.P2;
+                    var item = new ToolStripMenuItem {Text = element.P2};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
                 if (!string.IsNullOrWhiteSpace(element.P3))
                 {
                     var submenu = GetParameterMenu(3);
-                    var item = new ToolStripMenuItem();
-                    item.Text = element.P3;
+                    var item = new ToolStripMenuItem {Text = element.P3};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
                 if (!string.IsNullOrWhiteSpace(element.Board))
                 {
                     var submenu = BuildBoardContextMenu(3);
-                    var item = new ToolStripMenuItem();
-                    item.Text = element.Board;
+                    var item = new ToolStripMenuItem {Text = element.Board};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
                 if (!string.IsNullOrWhiteSpace(element.Step))
                 {
                     var submenu = BuildStepContextMenu(false);
-                    var item = new ToolStripMenuItem();
-                    item.Text = element.Step;
+                    var item = new ToolStripMenuItem {Text = element.Step};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
@@ -358,11 +355,7 @@ namespace Torch
             return result.Items.Count > 0 ? result : null;
         }
 
-        private int Color
-        {
-            get { return _color; }
-            set { _color = value; }
-        }
+        private int Color { get; set; }
 
         private Context Context
         {
@@ -387,15 +380,6 @@ namespace Torch
             {
                 SelectElement(tile.Id);
             }
-        }
-
-        private void CopyCursorTile()
-        {
-            CopyCursorElement();
-            CopyCursorColor();
-            var actor = Context.CreateActor();
-            actor.DuplicateFrom(Actor);
-            Actor = actor;
         }
 
         private void CycleAdvance()
@@ -423,9 +407,9 @@ namespace Torch
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
             }
             timerDaemon.Dispose();
             base.Dispose(disposing);
@@ -437,10 +421,14 @@ namespace Torch
             codeEditor.Actor = Actor;
         }
 
-        private string FileFilters
-            =>
-                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.szt)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
-            ;
+        private static readonly string FileFilters = string.Join("|",
+            "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
+            "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
+            "Super ZZT Worlds (*.szt)", "*.szt;*.SZT",
+            "Saved Games (*.sav)", "*.sav;*.SAV",
+            "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
+            "All Files (*.*)", "*.*"
+            );
 
         private void GetCursorActor()
         {
@@ -477,7 +465,7 @@ namespace Torch
 
         private ContextMenuStrip GetParameterMenu(int index)
         {
-            string selectedParameter = null;
+            string selectedParameter;
             switch (index)
             {
                 case 1:
@@ -676,7 +664,7 @@ namespace Torch
         {
             var element = SelectedElement;
 
-            if (element != null && !string.IsNullOrWhiteSpace(element.Board))
+            if (!string.IsNullOrWhiteSpace(element?.Board))
             {
                 var menu = BuildBoardContextMenu(parameterIndex);
                 ShowParameterDropdown(parameterIndex, menu);
@@ -690,16 +678,6 @@ namespace Torch
                 if (elementComboBox.SelectedIndex < 0)
                     return null;
                 return (elementComboBox.SelectedItem as ElementItem).Element;
-            }
-        }
-
-        private int SelectedElementIndex
-        {
-            get
-            {
-                if (elementComboBox.SelectedIndex < 0)
-                    return -1;
-                return (elementComboBox.SelectedItem as ElementItem).Index;
             }
         }
 
@@ -772,11 +750,6 @@ namespace Torch
             }
         }
 
-        private void SetBoardParameter(int value)
-        {
-            Actor.P3 = value;
-        }
-
         private void SetParameter(int index, int value)
         {
             if (index == 1)
@@ -809,86 +782,77 @@ namespace Torch
         private void ShowElementContextMenu(int index)
         {
             var menu = BuildElementContextMenu(index);
-            if (menu != null)
-            {
-                menu.Show(tabControl, new Point(0, 0));
-            }
+            menu?.Show(tabControl, new Point(0, 0));
         }
 
         private void ShowOpenWorld()
         {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = FileFilters;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                Context = new Context(ofd.FileName, true);
-                WorldFileName = ofd.FileName;
-            }
+            var ofd = new OpenFileDialog {Filter = FileFilters};
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+            Context = new Context(ofd.FileName, true);
+            WorldFileName = ofd.FileName;
         }
 
-        private void ShowParameterDropdown(int index, ContextMenuStrip menu)
+        private void ShowParameterDropdown(int index, ToolStripDropDown menu)
         {
-            if (menu != null)
+            if (menu == null)
+                return;
+
+            switch (index)
             {
-                if (index == 1)
-                {
+                case 1:
                     menu.Show(editP1Button, new Point(0, 0));
-                }
-                else if (index == 2)
-                {
+                    break;
+                case 2:
                     menu.Show(editP2Button, new Point(0, 0));
-                }
-                else if (index == 3)
-                {
+                    break;
+                case 3:
                     menu.Show(editP3Button, new Point(0, 0));
-                }
+                    break;
             }
         }
 
         private DialogResult ShowSaveWorld()
         {
-            if (Context != null)
+            if (Context == null)
+                return DialogResult.Cancel;
+
+            var sfd = new SaveFileDialog
             {
-                var sfd = new SaveFileDialog();
-                sfd.AddExtension = true;
-                sfd.Filter = FileFilters;
-                if (Context.WorldData.Locked)
-                {
-                    sfd.FilterIndex = 4; // saved game
-                }
-                else
-                {
-                    switch (Context.WorldData.WorldType)
-                    {
-                        case -1: // ZZT
-                            sfd.FilterIndex = 2;
-                            break;
-                        case -2: // Super ZZT
-                            sfd.FilterIndex = 3;
-                            break;
-                    }
-                }
-                var result = sfd.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    WorldFileName = sfd.FileName;
-                }
-                return result;
+                AddExtension = true,
+                Filter = FileFilters
+            };
+
+            if (Context.WorldData.Locked)
+            {
+                sfd.FilterIndex = 4; // saved game
             }
-            return DialogResult.Cancel;
+            else
+            {
+                switch (Context.WorldData.WorldType)
+                {
+                    case -1: // ZZT
+                        sfd.FilterIndex = 2;
+                        break;
+                    case -2: // Super ZZT
+                        sfd.FilterIndex = 3;
+                        break;
+                }
+            }
+
+            var result = sfd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                WorldFileName = sfd.FileName;
+            }
+            return result;
         }
 
         private void ShowTileCode()
         {
             GetCursorActor();
             EditCode();
-        }
-
-        private void ShowTileProperties()
-        {
-            GetCursorActor();
-            CopyCursorElement();
-            tabControl.SelectTab(editTab);
         }
 
         private void TerminalMouseDown(object sender, MouseEventArgs e)
@@ -899,10 +863,7 @@ namespace Torch
                 CopyCursorElement();
                 CopyCursorColor();
                 var menu = BuildTileContextMenu(_terminal.CursorX, _terminal.CursorY);
-                if (menu != null)
-                {
-                    menu.Show(sender as Control, e.Location);
-                }
+                menu?.Show(sender as Control, e.Location);
             }
         }
 
@@ -929,7 +890,7 @@ namespace Torch
         private void UpdateActors()
         {
             // we subtract 1 from the capacity because there must always be room for the messenger object
-            actorInfoLabel.Text = Context.Actors.Count + "/" + (Context.ActorCapacity - 1);
+            actorInfoLabel.Text = $"{Context.Actors.Count}/{Context.ActorCapacity - 1}";
         }
 
         private void UpdateColor()
@@ -943,21 +904,16 @@ namespace Torch
             button.BackColor = backgroundColor;
 
             // ensure foreground text is always visible by contrast
-            if ((backgroundColor.R + backgroundColor.G + backgroundColor.B)/3 >= 0x80)
-            {
-                button.ForeColor = System.Drawing.Color.Black;
-            }
-            else
-            {
-                button.ForeColor = System.Drawing.Color.White;
-            }
+            button.ForeColor = (backgroundColor.R + backgroundColor.G + backgroundColor.B)/3 >= 0x80
+                ? System.Drawing.Color.Black
+                : System.Drawing.Color.White;
         }
 
         private void UpdateElement()
         {
             if (elementComboBox.SelectedIndex >= 0)
             {
-                var element = Context.Elements[(elementComboBox.SelectedItem as ElementItem).Index];
+                var element = Context.Elements[((ElementItem) elementComboBox.SelectedItem).Index];
                 var editBoard = element.Board;
                 var editCode = element.Code;
                 var editP1 = element.P1;
@@ -1005,8 +961,8 @@ namespace Torch
         private void UpdateInfo()
         {
             Context.PackBoard();
-            boardInfoLabel.Text = (Context.Boards[Context.Board].Data.Length + 2) + "/20000";
-            worldInfoLabel.Text = Context.WorldSize + "/360000";
+            boardInfoLabel.Text = $"{Context.Boards[Context.Board].Data.Length + 2}/20000";
+            worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
         }
 

@@ -43,7 +43,7 @@ namespace Roton.Common
         /// </summary>
         public static implicit operator Image(FastBitmap fb)
         {
-            return fb.Bitmap as Image;
+            return fb.Bitmap;
         }
 
         /// <summary>

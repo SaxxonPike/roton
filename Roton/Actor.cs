@@ -2,7 +2,7 @@
 
 namespace Roton
 {
-    public partial class Actor : ICode, ICodeSeekable
+    public partial class Actor : ICode, ICodeSeekable, IActor
     {
         /// <summary>
         /// The frequency at which the actor will run its action code.
@@ -13,11 +13,6 @@ namespace Roton
         /// The index of the actor this actor has following it, when applicable (ex. centipede segments and heads)
         /// </summary>
         public virtual int Follower { get; set; }
-
-        /// <summary>
-        /// The Heap in which the code is contained.
-        /// </summary>
-        internal virtual Heap Heap { get; set; }
 
         /// <summary>
         /// The offset where this actor's code will be executed from next.
@@ -37,7 +32,7 @@ namespace Roton
         /// <summary>
         /// Location in board coordinates of this actor. The upper left visible corner is (1, 1).
         /// </summary>
-        public virtual Location Location { get; set; }
+        public virtual Location Location { get; }
 
         /// <summary>
         /// Parameter data. The use of this field will vary depending on the element.
@@ -62,11 +57,11 @@ namespace Roton
         /// <summary>
         /// Tile underneath the actor.
         /// </summary>
-        public virtual Tile UnderTile { get; protected set; }
+        public virtual Tile UnderTile { get; }
 
         /// <summary>
         /// Actor's vector, when applicable.
         /// </summary>
-        public virtual Vector Vector { get; protected set; }
+        public virtual Vector Vector { get; }
     }
 }

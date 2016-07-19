@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation
 {
-    internal interface ICodeSeekable
+    public interface ICodeSeekable
     {
         int Instruction { get; set; }
     }

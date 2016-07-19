@@ -79,10 +79,7 @@ namespace Lyon
             speaker.Stop();
             _terminal.Keyboard.Clear();
             _terminal.Clear();
-            if (Context is Context)
-            {
-                Context.Stop();
-            }
+            Context?.Stop();
 
             Context = context;
             context.Keyboard = _terminal.Keyboard;
@@ -117,42 +114,18 @@ namespace Lyon
 
         private void OpenWorld()
         {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = FileFilters;
+            var ofd = new OpenFileDialog {Filter = FileFilters};
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Initialize(new Context(ofd.FileName, false));
             }
         }
 
-        private void RestartCore()
-        {
-            if (Context != null)
-            {
-                Initialize(new Context(Context.ContextEngine, false));
-            }
-            else
-            {
-                RestartZzt();
-            }
-        }
-
-        private void RestartSuperZzt()
-        {
-            Initialize(new Context(ContextEngine.SuperZzt, false));
-        }
-
-        private void RestartZzt()
-        {
-            Initialize(new Context(ContextEngine.Zzt, false));
-        }
-
         private void SaveWorld()
         {
             if (Context != null)
             {
-                var sfd = new SaveFileDialog();
-                sfd.Filter = FileFilters;
+                var sfd = new SaveFileDialog {Filter = FileFilters};
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     //Initialize(new Context(sfd.FileName, false));

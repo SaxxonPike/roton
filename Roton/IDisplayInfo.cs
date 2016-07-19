@@ -18,7 +18,7 @@ namespace Roton
         IList<bool> Keys { get; }
         string Message { get; }
         string Message2 { get; }
-        Actor Player { get; }
+        IActor Player { get; }
         bool Quiet { get; }
         void ReadInput();
         int ReadKey();

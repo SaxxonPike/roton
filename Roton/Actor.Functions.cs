@@ -4,8 +4,6 @@ namespace Roton
 {
     public partial class Actor
     {
-        private string _code;
-
         /// <summary>
         /// Create an actor.
         /// </summary>
@@ -28,40 +26,12 @@ namespace Roton
         /// <summary>
         /// Get or set this actor's code.
         /// </summary>
-        public string Code
-        {
-            get
-            {
-                if (Heap != null)
-                {
-                    return Heap.Contains(Pointer) ? Heap[Pointer].ToStringValue() : null;
-                }
-                return _code;
-            }
-            set
-            {
-                if (Heap != null)
-                {
-                    if (Pointer < 0 || !Heap.Contains(Pointer))
-                    {
-                        Pointer = Heap.Allocate(value.ToBytes());
-                    }
-                    else
-                    {
-                        Heap[Pointer] = value.ToBytes();
-                    }
-                }
-                else
-                {
-                    _code = value;
-                }
-            }
-        }
+        public char[] Code { get; set; }
 
         /// <summary>
         /// Copy actor data. Code is not duplicated, but Pointer reference will be.
         /// </summary>
-        public void CopyFrom(Actor actor)
+        public void CopyFrom(IActor actor)
         {
             Cycle = actor.Cycle;
             Follower = actor.Follower;
@@ -75,22 +45,7 @@ namespace Roton
             Pointer = actor.Pointer;
             UnderTile.CopyFrom(actor.UnderTile);
             Vector.CopyFrom(actor.Vector);
-
-            if (Heap != actor.Heap)
-            {
-                Code = actor.Code;
-            }
-        }
-
-        /// <summary>
-        /// Duplicates the source actor's data, and creates a copy of the code also.
-        /// </summary>
-        public void DuplicateFrom(Actor actor)
-        {
-            CopyFrom(actor);
-            var code = Code;
-            Pointer = 0;
-            Code = code;
+            Code = actor.Code;
         }
 
         /// <summary>
@@ -104,10 +59,10 @@ namespace Roton
         public override string ToString()
         {
             var name = "";
-            if (Heap != null && Pointer >= 0)
+            if (Code != null)
             {
                 // walk the code to get the name
-                var data = Heap[Pointer];
+                var data = Code;
                 if (data[0] == 0x40)
                 {
                     var length = data.Length;
@@ -122,14 +77,7 @@ namespace Roton
                         }
                     }
                 }
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    name = "";
-                }
-                else
-                {
-                    name = " " + name;
-                }
+                name = string.IsNullOrWhiteSpace(name) ? string.Empty : $" {name}";
             }
             name = Location + name;
             return name;

@@ -23,7 +23,7 @@ namespace Roton
         public virtual bool BreakGameLoop { get; set; }
         public virtual bool CancelScroll { get; set; }
         public virtual IList<string> Colors { get; protected set; }
-        public virtual Actor DefaultActor { get; protected set; }
+        public virtual IActor DefaultActor { get; protected set; }
         public virtual string DefaultBoardName { get; set; }
         public virtual string DefaultSaveName { get; set; }
         public virtual string DefaultWorldName { get; set; }

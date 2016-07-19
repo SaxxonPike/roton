@@ -20,12 +20,6 @@
             set { Memory.Write16(Offset + 0x0B, value); }
         }
 
-        internal override Heap Heap
-        {
-            get { return Memory.Heap; }
-            set { }
-        }
-
         public override int Instruction
         {
             get { return Memory.Read16(Offset + 0x15); }
@@ -46,11 +40,7 @@
             set { Memory.Write16(Offset + 0x17, value); }
         }
 
-        public override Location Location
-        {
-            get { return new MemoryLocation(Memory, Offset + 0x00); }
-            set { new MemoryLocation(Memory, Offset + 0x00).CopyFrom(value); }
-        }
+        public override Location Location => new MemoryLocation(Memory, Offset + 0x00);
 
         public Memory Memory { get; }
 
@@ -80,16 +70,8 @@
             set { Memory.Write32(Offset + 0x11, value); }
         }
 
-        public override Tile UnderTile
-        {
-            get { return new MemoryTile(Memory, Offset + 0x0F); }
-            protected set { new MemoryTile(Memory, Offset + 0x0F).CopyFrom(value); }
-        }
+        public override Tile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
 
-        public override Vector Vector
-        {
-            get { return new MemoryVector(Memory, Offset + 0x02); }
-            protected set { new MemoryVector(Memory, Offset + 0x02).CopyFrom(value); }
-        }
+        public override Vector Vector => new MemoryVector(Memory, Offset + 0x02);
     }
 }

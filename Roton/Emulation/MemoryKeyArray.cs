@@ -8,10 +8,14 @@
             Offset = offset;
         }
 
-        public override bool this[int index]
+        protected override bool GetItem(int index)
         {
-            get { return Memory.ReadBool(Offset + index); }
-            set { Memory.WriteBool(Offset + index, value); }
+            return Memory.ReadBool(Offset + index);
+        }
+
+        protected override void SetItem(int index, bool value)
+        {
+            Memory.WriteBool(Offset + index, value);
         }
 
         public override void Clear()

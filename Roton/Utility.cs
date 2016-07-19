@@ -6,7 +6,7 @@ namespace Roton
 {
     public static class Utility
     {
-        private static readonly Encoding _codePage437 = Encoding.GetEncoding(437);
+        private static readonly Encoding CodePage437 = Encoding.GetEncoding(437);
         private static readonly string _hexAlphabet = "0123456789ABCDEF";
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Roton
         {
             int length = reader.ReadByte();
             var data = reader.ReadBytes(length);
-            return _codePage437.GetString(data);
+            return CodePage437.GetString(data);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Roton
             int length = data[0];
             var result = new byte[length];
             Array.Copy(data, 1, result, 0, length);
-            return _codePage437.GetString(result);
+            return CodePage437.GetString(result);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Roton
         /// </summary>
         internal static string ToAscii(this int value)
         {
-            return _codePage437.GetString(new[] {(byte) (value & 0xFF)});
+            return CodePage437.GetString(new[] {(byte) (value & 0xFF)});
         }
 
         /// <summary>
@@ -79,7 +79,19 @@ namespace Roton
             {
                 return new byte[0];
             }
-            return _codePage437.GetBytes(value);
+            return CodePage437.GetBytes(value);
+        }
+
+        /// <summary>
+        /// Convert a char array to a byte array using code page 437.
+        /// </summary>
+        internal static byte[] ToBytes(this char[] value)
+        {
+            if (value == null)
+            {
+                return new byte[0];
+            }
+            return CodePage437.GetBytes(value);
         }
 
         /// <summary>
@@ -87,7 +99,15 @@ namespace Roton
         /// </summary>
         internal static char ToChar(this int value)
         {
-            return _codePage437.GetChars(new[] {(byte) (value & 0xFF)})[0];
+            return CodePage437.GetChars(new[] {(byte) (value & 0xFF)})[0];
+        }
+
+        /// <summary>
+        /// Convert a byte array to a char array using code page 437.
+        /// </summary>
+        internal static char[] ToChars(this byte[] value)
+        {
+            return CodePage437.GetChars(value);
         }
 
         /// <summary>
@@ -176,7 +196,7 @@ namespace Roton
         /// </summary>
         internal static string ToStringValue(this int value)
         {
-            return _codePage437.GetString(new[] {(byte) (value & 0xFF)});
+            return CodePage437.GetString(new[] {(byte) (value & 0xFF)});
         }
 
         /// <summary>
@@ -184,7 +204,7 @@ namespace Roton
         /// </summary>
         internal static string ToStringValue(this byte[] value)
         {
-            return _codePage437.GetString(value);
+            return CodePage437.GetString(value);
         }
 
         /// <summary>

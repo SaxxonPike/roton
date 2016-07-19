@@ -2,9 +2,9 @@
 
 namespace Roton.Emulation
 {
-    internal abstract partial class MemoryElementCollectionBase : FixedList<Element>
+    internal abstract class MemoryElementCollectionBase : FixedList<Element>
     {
-        public MemoryElementCollectionBase(Memory memory)
+        protected MemoryElementCollectionBase(Memory memory)
         {
             Memory = memory;
             Cache = new MemoryElementBase[Count];
@@ -394,21 +394,16 @@ namespace Roton.Emulation
         public Element WaterElement => this[WaterId];
         public Element WebElement => this[WebId];
 
-        public override Element this[int index]
+        protected override Element GetItem(int index)
         {
-            get
-            {
-                if (index >= 0 && index < Count)
-                    return Cache[index];
-                return GetElement(index);
-            }
-            set
-            {
-                if (value is MemoryElementBase)
-                {
-                    GetElement(index).CopyFrom(value as MemoryElementBase);
-                }
-            }
+            if (index >= 0 && index < Count)
+                return Cache[index];
+            return GetElement(index);
+        }
+
+        protected override void SetItem(int index, Element value)
+        {
+            throw Exceptions.InvalidSet;
         }
 
         private MemoryElementBase[] Cache { get; }
