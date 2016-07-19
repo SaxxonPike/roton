@@ -20,15 +20,12 @@ namespace Torch
         {
             InitializeComponent();
             Initialize();
-            this.Actor = actor;
+            Actor = actor;
         }
 
         public Actor Actor
         {
-            get
-            {
-                return _actor;
-            }
+            get { return _actor; }
             set
             {
                 if (value != null)
@@ -49,8 +46,8 @@ namespace Torch
 
         void Initialize()
         {
-            this.cancelButton.Click += (object sender, EventArgs e) => { Close(); };
-            this.okButton.Click += (object sender, EventArgs e) => { SaveAndClose(); };
+            cancelButton.Click += (sender, e) => { Close(); };
+            okButton.Click += (sender, e) => { SaveAndClose(); };
         }
 
         void SaveAndClose()

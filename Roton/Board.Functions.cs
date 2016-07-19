@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
-    abstract public partial class Board
+    public abstract partial class Board
     {
         public Board()
         {
             Initialize();
 
-            if (this.Camera == null)
+            if (Camera == null)
             {
-                this.Camera = new Location();
+                Camera = new Location();
             }
 
-            if (this.Enter == null)
+            if (Enter == null)
             {
-                this.Enter = new Location();
+                Enter = new Location();
             }
         }
 
-        virtual protected void Initialize()
+        protected virtual void Initialize()
         {
         }
 

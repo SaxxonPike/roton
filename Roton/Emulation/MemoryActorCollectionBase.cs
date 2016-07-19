@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation
 {
-    abstract internal partial class MemoryActorCollectionBase : FixedList<Actor>
+    internal abstract partial class MemoryActorCollectionBase : FixedList<Actor>
     {
         public MemoryActorCollectionBase(Memory memory)
         {
-            this.Memory = memory;
-            this.Cache = new MemoryActor[Capacity];
-            for (int i = 0; i < Capacity; i++)
+            Memory = memory;
+            Cache = new MemoryActor[Capacity];
+            for (var i = 0; i < Capacity; i++)
             {
-                this.Cache[i] = GetActor(i);
+                Cache[i] = GetActor(i);
             }
         }
 
@@ -25,26 +22,15 @@ namespace Roton.Emulation
                     return Cache[index];
                 return GetActor(index);
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            set { throw new NotImplementedException(); }
         }
 
-        private MemoryActor[] Cache
-        {
-            get;
-            set;
-        }
+        private MemoryActor[] Cache { get; }
 
-        abstract public int Capacity { get; }
+        public abstract int Capacity { get; }
 
-        abstract protected MemoryActor GetActor(int index);
+        protected abstract MemoryActor GetActor(int index);
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; private set; }
     }
 }

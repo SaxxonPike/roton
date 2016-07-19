@@ -10,11 +10,7 @@ namespace Torch
             InnerList = new List<Tile>();
         }
 
-        private List<Tile> InnerList
-        {
-            get;
-            set;
-        }
+        private List<Tile> InnerList { get; }
 
         public int IndexOf(Tile item)
         {
@@ -33,14 +29,8 @@ namespace Torch
 
         public Tile this[int index]
         {
-            get
-            {
-                return InnerList[index];
-            }
-            set
-            {
-                InnerList[index] = value;
-            }
+            get { return InnerList[index]; }
+            set { InnerList[index] = value; }
         }
 
         public void Add(Tile item)
@@ -63,15 +53,9 @@ namespace Torch
             InnerList.CopyTo(array, arrayIndex);
         }
 
-        public int Count
-        {
-            get { return InnerList.Count; }
-        }
+        public int Count => InnerList.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public bool Remove(Tile item)
         {

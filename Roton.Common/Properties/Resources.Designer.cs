@@ -39,7 +39,7 @@ namespace Roton.Common.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Roton.Common.Properties.Resources", typeof(Resources).Assembly);
+                    var temp = new global::System.Resources.ResourceManager("Roton.Common.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,7 +65,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum0 {
             get {
-                object obj = ResourceManager.GetObject("drum0", resourceCulture);
+                var obj = ResourceManager.GetObject("drum0", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum1 {
             get {
-                object obj = ResourceManager.GetObject("drum1", resourceCulture);
+                var obj = ResourceManager.GetObject("drum1", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -85,7 +85,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum2 {
             get {
-                object obj = ResourceManager.GetObject("drum2", resourceCulture);
+                var obj = ResourceManager.GetObject("drum2", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -95,7 +95,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum4 {
             get {
-                object obj = ResourceManager.GetObject("drum4", resourceCulture);
+                var obj = ResourceManager.GetObject("drum4", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -105,7 +105,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum5 {
             get {
-                object obj = ResourceManager.GetObject("drum5", resourceCulture);
+                var obj = ResourceManager.GetObject("drum5", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -115,7 +115,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum6 {
             get {
-                object obj = ResourceManager.GetObject("drum6", resourceCulture);
+                var obj = ResourceManager.GetObject("drum6", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -125,7 +125,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum7 {
             get {
-                object obj = ResourceManager.GetObject("drum7", resourceCulture);
+                var obj = ResourceManager.GetObject("drum7", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -135,7 +135,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum8 {
             get {
-                object obj = ResourceManager.GetObject("drum8", resourceCulture);
+                var obj = ResourceManager.GetObject("drum8", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -145,7 +145,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] drum9 {
             get {
-                object obj = ResourceManager.GetObject("drum9", resourceCulture);
+                var obj = ResourceManager.GetObject("drum9", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -155,7 +155,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] playerstep {
             get {
-                object obj = ResourceManager.GetObject("playerstep", resourceCulture);
+                var obj = ResourceManager.GetObject("playerstep", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -165,7 +165,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] vgapalette {
             get {
-                object obj = ResourceManager.GetObject("vgapalette", resourceCulture);
+                var obj = ResourceManager.GetObject("vgapalette", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -175,7 +175,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] vgaromf08 {
             get {
-                object obj = ResourceManager.GetObject("vgaromf08", resourceCulture);
+                var obj = ResourceManager.GetObject("vgaromf08", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -185,7 +185,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] vgaromf14 {
             get {
-                object obj = ResourceManager.GetObject("vgaromf14", resourceCulture);
+                var obj = ResourceManager.GetObject("vgaromf14", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -195,7 +195,7 @@ namespace Roton.Common.Properties {
         /// </summary>
         internal static byte[] vgaromf16 {
             get {
-                object obj = ResourceManager.GetObject("vgaromf16", resourceCulture);
+                var obj = ResourceManager.GetObject("vgaromf16", resourceCulture);
                 return ((byte[])(obj));
             }
         }

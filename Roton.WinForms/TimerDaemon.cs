@@ -13,8 +13,8 @@ namespace Roton.WinForms
 
         private class TimerDaemonInfo
         {
-            public double Frequency { get; set; }
-            public Action Method { get; set; }
+            public double Frequency { get; }
+            public Action Method { get; }
             public bool Running { get; set; }
             public Thread Thread { get; set; }
 
@@ -63,10 +63,7 @@ namespace Roton.WinForms
 
         public bool Paused
         {
-            get
-            {
-                return _paused;
-            }
+            get { return _paused; }
             set
             {
                 if (value)
@@ -87,7 +84,7 @@ namespace Roton.WinForms
 
         public int Start(Action executionMethod, double frequency)
         {
-            var thread = new Thread(new ParameterizedThreadStart(TimerThreadMethod));
+            var thread = new Thread(TimerThreadMethod);
             var info = new TimerDaemonInfo(executionMethod, frequency, thread);
             TimerThreads[TimerThreadIndex++] = info;
             thread.Start(info);
@@ -115,13 +112,13 @@ namespace Roton.WinForms
 
         void TimerThreadMethod(object timerDaemonInfo)
         {
-            TimerDaemonInfo info = timerDaemonInfo as TimerDaemonInfo;
-            Action method = info.Method;
-            Stopwatch sw = new Stopwatch();
-            long freq = (long)((double)Stopwatch.Frequency / (double)info.Frequency);
+            var info = timerDaemonInfo as TimerDaemonInfo;
+            var method = info.Method;
+            var sw = new Stopwatch();
+            var freq = (long) ((double) Stopwatch.Frequency/(double) info.Frequency);
             long next = 0;
             long now = 0;
-            int repetitions = 0;
+            var repetitions = 0;
             sw.Start();
 
             info.Running = true;
@@ -147,17 +144,8 @@ namespace Roton.WinForms
             info.Thread = null;
         }
 
-        private int TimerThreadIndex
-        {
-            get;
-            set;
-        }
+        private int TimerThreadIndex { get; set; }
 
-        private Dictionary<int, TimerDaemonInfo> TimerThreads
-        {
-            get;
-            set;
-        }
-
+        private Dictionary<int, TimerDaemonInfo> TimerThreads { get; set; }
     }
 }

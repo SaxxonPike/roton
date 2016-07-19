@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation.SuperZZT
 {
-    sealed internal class TerminalDisplay : Display
+    internal sealed class TerminalDisplay : Display
     {
         public TerminalDisplay(IDisplayInfo infoSource)
             : base(infoSource)
@@ -15,9 +12,9 @@ namespace Roton.Emulation.SuperZZT
 
         public override void CreateStatusBar()
         {
-            for (int y = 0; y < ViewportHeight; y++)
+            for (var y = 0; y < ViewportHeight; y++)
             {
-                DrawString(0, y, new String(' ', ViewportWidth), 0x1F);
+                DrawString(0, y, new string(' ', ViewportWidth), 0x1F);
             }
         }
 
@@ -32,15 +29,16 @@ namespace Roton.Emulation.SuperZZT
             }
             else
             {
-                var arrows = new string(new char[] {
-                    (0x18).ToChar(),
-                    (0x19).ToChar(),
-                    (0x1A).ToChar(),
-                    (0x1B).ToChar(),
+                var arrows = new string(new char[]
+                {
+                    0x18.ToChar(),
+                    0x19.ToChar(),
+                    0x1A.ToChar(),
+                    0x1B.ToChar(),
                 });
-                DrawString(0x00, 0x00, new string((0xDC).ToChar(), 12), 0x1D);
+                DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
                 DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
-                DrawString(0x00, 0x02, new string((0xDF).ToChar(), 12), 0x6D);
+                DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
                 DrawString(0x00, 0x03, @" " + arrows + @"       ", 0x6F);
                 DrawString(0x00, 0x04, @"   Move     ", 0x6E);
                 DrawString(0x00, 0x05, @" Shift+" + arrows + @" ", 0x6F);
@@ -55,9 +53,9 @@ namespace Roton.Emulation.SuperZZT
                 DrawString(0x01, 0x0A, @"B", 0x6F);
                 DrawString(0x00, 0x0B, @"   Quit     ", 0x6E);
                 DrawString(0x01, 0x0B, @"B", 0x6F);
-                DrawString(0x00, 0x0C, new string((0xDC).ToChar(), 12), 0x1D);
+                DrawString(0x00, 0x0C, new string(0xDC.ToChar(), 12), 0x1D);
                 DrawString(0x00, 0x0D, @"   Status   ", 0x6F);
-                DrawString(0x00, 0x0E, new string((0xDF).ToChar(), 12), 0x6D);
+                DrawString(0x00, 0x0E, new string(0xDF.ToChar(), 12), 0x6D);
                 DrawString(0x00, 0x0F, @"Health      ", 0x6F);
                 DrawString(0x00, 0x10, @"            ", 0x6F);
                 DrawString(0x00, 0x11, @" Gems       ", 0x6F);
@@ -75,12 +73,12 @@ namespace Roton.Emulation.SuperZZT
 
         void CreateStatusWindow()
         {
-            DrawString(0x0D, 0x01, new String((0xDC).ToChar(), 26), 0x1F);
-            DrawString(0x0D, 0x16, new String((0xDF).ToChar(), 1), 0x1F);
-            DrawString(0x0E, 0x16, new String((0xDF).ToChar(), 25), 0x7F);
+            DrawString(0x0D, 0x01, new string(0xDC.ToChar(), 26), 0x1F);
+            DrawString(0x0D, 0x16, new string(0xDF.ToChar(), 1), 0x1F);
+            DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
 
-            string column = (0xDB).ToChar().ToString() + new String(' ', 24) + (0xDB).ToChar().ToString();
-            for (int y = 0x02; y <= 0x15; y++)
+            var column = 0xDB.ToChar().ToString() + new string(' ', 24) + 0xDB.ToChar().ToString();
+            for (var y = 0x02; y <= 0x15; y++)
             {
                 DrawString(0x0D, y, column, 0x0F);
                 DrawChar(0x27, y + 1, new AnsiChar(0xDE, 0x71));
@@ -94,8 +92,8 @@ namespace Roton.Emulation.SuperZZT
 
         void DrawNumber(int y, int value)
         {
-            string s = value.ToString();
-            int x = 11 - s.Length;
+            var s = value.ToString();
+            var x = 11 - s.Length;
             DrawString(0x07, y, @"   ", 0x6E);
             DrawString(x, y, s, 0x6E);
         }
@@ -129,20 +127,16 @@ namespace Roton.Emulation.SuperZZT
 
         Vector GetTranslation()
         {
-            return new Vector(0x0F + (-DisplayInfo.Camera.X), 0x03 + (-DisplayInfo.Camera.Y));
+            return new Vector(0x0F + -DisplayInfo.Camera.X, 0x03 + -DisplayInfo.Camera.Y);
         }
 
-        Location OldCamera
-        {
-            get;
-            set;
-        }
+        Location OldCamera { get; }
 
         public override void RedrawBoard()
         {
-            for (int x = 0; x < DisplayInfo.Width; x++)
+            for (var x = 0; x < DisplayInfo.Width; x++)
             {
-                for (int y = 0; y < DisplayInfo.Height; y++)
+                for (var y = 0; y < DisplayInfo.Height; y++)
                 {
                     DrawTile(x, y, DisplayInfo.Draw(new Location(x + 1, y + 1)));
                 }
@@ -189,8 +183,8 @@ namespace Roton.Emulation.SuperZZT
                     DisplayInfo.Health = 0;
                 }
 
-                int healthRemaining = DisplayInfo.Health;
-                for (int x = 7; x < 12; x++)
+                var healthRemaining = DisplayInfo.Health;
+                for (var x = 7; x < 12; x++)
                 {
                     if (healthRemaining >= 20)
                     {
@@ -222,11 +216,11 @@ namespace Roton.Emulation.SuperZZT
                     DrawNumber(0x16, DisplayInfo.Stones);
                 }
 
-                for (int i = 0; i < 7; i++)
+                for (var i = 0; i < 7; i++)
                 {
-                    int keyChar = DisplayInfo.Keys[i] ? DisplayInfo.Elements[0x08].Character : 0x20;
-                    int x = i & 0x3;
-                    int y = x >> 2;
+                    var keyChar = DisplayInfo.Keys[i] ? DisplayInfo.Elements[0x08].Character : 0x20;
+                    var x = i & 0x3;
+                    var y = x >> 2;
                     DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
                 }
 
@@ -241,14 +235,8 @@ namespace Roton.Emulation.SuperZZT
             }
         }
 
-        int ViewportHeight
-        {
-            get { return 25; }
-        }
+        int ViewportHeight => 25;
 
-        int ViewportWidth
-        {
-            get { return 40; }
-        }
+        int ViewportWidth => 40;
     }
 }

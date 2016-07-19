@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
-    abstract public partial class World
+    public abstract partial class World
     {
         public override string ToString()
         {

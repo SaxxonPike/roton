@@ -1,48 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
-    sealed internal class MemoryInt16Collection : FixedList<int>
+    internal sealed class MemoryInt16Collection : FixedList<int>
     {
-        int _count;
-
         public MemoryInt16Collection(Memory memory, int offset, int count)
         {
-            this.Memory = memory;
-            this.Offset = offset;
-            _count = count;
+            Memory = memory;
+            Offset = offset;
+            Count = count;
         }
 
         public override int this[int index]
         {
-            get
-            {
-                return Memory.Read16(Offset + (index << 1));
-            }
-            set
-            {
-                Memory.Write16(Offset + (index << 1), value);
-            }
+            get { return Memory.Read16(Offset + (index << 1)); }
+            set { Memory.Write16(Offset + (index << 1), value); }
         }
 
-        public override int Count
-        {
-            get { return _count; }
-        }
+        public override int Count { get; }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; }
 
-        public int Offset
-        {
-            get;
-            private set;
-        }
+        public int Offset { get; }
     }
 }

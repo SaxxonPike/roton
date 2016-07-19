@@ -1,37 +1,33 @@
-﻿using Roton.Emulation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 
 namespace Roton
 {
     public partial class Element
     {
-        virtual internal Action<int> Act { get; set; }
-        virtual public string Board { get; internal set; }
-        virtual public string Category { get; internal set; }
-        virtual public int Character { get; internal set; }
-        virtual public string Code { get; internal set; }
-        virtual public int Color { get; internal set; }
-        virtual public int Cycle { get; internal set; }
-        virtual public bool Destructible { get; internal set; }
-        virtual internal Func<Location, AnsiChar> Draw { get; set; }
-        virtual public bool DrawCodeEnable { get; internal set; }
-        virtual public bool EditorFloor { get; internal set; }
-        virtual public bool Floor { get; internal set; }
-        virtual public int Index { get; internal set; }
-        virtual internal Action<Location, int, Vector> Interact { get; set; }
-        virtual public int Key { get; internal set; }
-        virtual internal string KnownName { get; set; }
-        virtual public int Menu { get; internal set; }
-        virtual public string Name { get; internal set; }
-        virtual public string P1 { get; internal set; }
-        virtual public string P2 { get; internal set; }
-        virtual public string P3 { get; internal set; }
-        virtual public int Points { get; internal set; }
-        virtual public bool Pushable { get; internal set; }
-        virtual public bool Shown { get; set; }
-        virtual public string Step { get; internal set; }
+        internal virtual Action<int> Act { get; set; }
+        public virtual string Board { get; internal set; }
+        public virtual string Category { get; internal set; }
+        public virtual int Character { get; internal set; }
+        public virtual string Code { get; internal set; }
+        public virtual int Color { get; internal set; }
+        public virtual int Cycle { get; internal set; }
+        public virtual bool Destructible { get; internal set; }
+        internal virtual Func<Location, AnsiChar> Draw { get; set; }
+        public virtual bool DrawCodeEnable { get; internal set; }
+        public virtual bool EditorFloor { get; internal set; }
+        public virtual bool Floor { get; internal set; }
+        public virtual int Index { get; internal set; }
+        internal virtual Action<Location, int, Vector> Interact { get; set; }
+        public virtual int Key { get; internal set; }
+        internal virtual string KnownName { get; set; }
+        public virtual int Menu { get; internal set; }
+        public virtual string Name { get; internal set; }
+        public virtual string P1 { get; internal set; }
+        public virtual string P2 { get; internal set; }
+        public virtual string P3 { get; internal set; }
+        public virtual int Points { get; internal set; }
+        public virtual bool Pushable { get; internal set; }
+        public virtual bool Shown { get; set; }
+        public virtual string Step { get; internal set; }
     }
 }

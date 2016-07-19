@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
-    sealed internal class MemoryString
+    internal sealed class MemoryString
     {
         public static implicit operator string(MemoryString source)
         {
@@ -14,21 +9,13 @@ namespace Roton.Emulation
 
         public MemoryString(Memory memory, int offset)
         {
-            this.Memory = memory;
-            this.Offset = offset;
+            Memory = memory;
+            Offset = offset;
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; }
 
-        public int Offset
-        {
-            get;
-            private set;
-        }
+        public int Offset { get; }
 
         public override string ToString()
         {

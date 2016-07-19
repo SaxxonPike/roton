@@ -1,557 +1,335 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
     internal class SoundsCommon : SoundsBase
     {
-        public override byte[] Ammo
+        public override byte[] Ammo => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x31, 0x01,
-                    0x32, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x31, 0x01,
+            0x32, 0x01
+        };
 
-        public override byte[] BombActivate
+        public override byte[] BombActivate => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x35, 0x01,
-                    0x40, 0x01,
-                    0x45, 0x01,
-                    0x50, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x35, 0x01,
+            0x40, 0x01,
+            0x45, 0x01,
+            0x50, 0x01
+        };
 
-        public override byte[] BombExplode
+        public override byte[] BombExplode => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x60, 0x01,
-                    0x50, 0x01,
-                    0x40, 0x01,
-                    0x30, 0x01,
-                    0x20, 0x01
-                };
-            }
-        }
+            0x60, 0x01,
+            0x50, 0x01,
+            0x40, 0x01,
+            0x30, 0x01,
+            0x20, 0x01
+        };
 
-        public override byte[] BombTick
+        public override byte[] BombTick => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0xF8, 0x01
-                };
-            }
-        }
+            0xF8, 0x01
+        };
 
-        public override byte[] BombTock
+        public override byte[] BombTock => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0xF5, 0x01
-                };
-            }
-        }
+            0xF5, 0x01
+        };
 
-        public override byte[] BulletDie
+        public override byte[] BulletDie => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x01
-                };
-            }
-        }
+            0x20, 0x01
+        };
 
-        public override byte[] Cheat
+        public override byte[] Cheat => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x27, 0x04
-                };
-            }
-        }
+            0x27, 0x04
+        };
 
-        public override byte[] DoorLocked
+        public override byte[] DoorLocked => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x17, 0x01,
-                    0x10, 0x01
-                };
-            }
-        }
+            0x17, 0x01,
+            0x10, 0x01
+        };
 
-        public override byte[] DoorOpen
+        public override byte[] DoorOpen => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x37, 0x01,
-                    0x3B, 0x01,
-                    0x30, 0x01,
-                    0x37, 0x01,
-                    0x3B, 0x01,
-                    0x40, 0x04
-                };
-            }
-        }
+            0x30, 0x01,
+            0x37, 0x01,
+            0x3B, 0x01,
+            0x30, 0x01,
+            0x37, 0x01,
+            0x3B, 0x01,
+            0x40, 0x04
+        };
 
-        public override byte[] Duplicate
+        public override byte[] Duplicate => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x02,
-                    0x32, 0x02,
-                    0x34, 0x02,
-                    0x35, 0x02,
-                    0x37, 0x02
-                };
-            }
-        }
+            0x30, 0x02,
+            0x32, 0x02,
+            0x34, 0x02,
+            0x35, 0x02,
+            0x37, 0x02
+        };
 
-        public override byte[] DuplicateFail
+        public override byte[] DuplicateFail => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x18, 0x01,
-                    0x16, 0x01
-                };
-            }
-        }
+            0x18, 0x01,
+            0x16, 0x01
+        };
 
-        public override byte[] EnemyDie
+        public override byte[] EnemyDie => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x01,
-                    0x10, 0x01,
-                    0x50, 0x01,
-                    0x30, 0x01
-                };
-            }
-        }
+            0x40, 0x01,
+            0x10, 0x01,
+            0x50, 0x01,
+            0x30, 0x01
+        };
 
-        public override byte[] EnemyShoot
+        public override byte[] EnemyShoot => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x26, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x26, 0x01
+        };
 
-        public override byte[] EnemySuicide
+        public override byte[] EnemySuicide => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x10, 0x01
-                };
-            }
-        }
+            0x10, 0x01
+        };
 
-        public override byte[] Energizer
+        public override byte[] Energizer => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x03,
+            0x20, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03,
+            0x30, 0x03,
+            0x23, 0x03,
+            0x24, 0x03,
+            0x25, 0x03,
+            0x35, 0x03,
+            0x25, 0x03,
+            0x23, 0x03,
+            0x20, 0x03
+        };
 
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03,
-                    0x30, 0x03,
-
-                    0x23, 0x03,
-                    0x24, 0x03,
-                    0x25, 0x03,
-                    0x35, 0x03,
-                    0x25, 0x03,
-                    0x23, 0x03,
-                    0x20, 0x03
-                };
-            }
-        }
-
-        public override byte[] EnergyOut
+        public override byte[] EnergyOut => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x03,
-                    0x1A, 0x03,
-                    0x17, 0x03,
-                    0x16, 0x03,
-                    0x15, 0x03,
-                    0x13, 0x03,
-                    0x10, 0x03
-                };
-            }
-        }
+            0x20, 0x03,
+            0x1A, 0x03,
+            0x17, 0x03,
+            0x16, 0x03,
+            0x15, 0x03,
+            0x13, 0x03,
+            0x10, 0x03
+        };
 
-        public override byte[] Error
+        public override byte[] Error => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x50, 0x0A
-                };
-            }
-        }
+            0x50, 0x0A
+        };
 
-        public override byte[] Forest
+        public override byte[] Forest => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x39, 0x01
-                };
-            }
-        }
+            0x39, 0x01
+        };
 
-        public override byte[] GameOver
+        public override byte[] GameOver => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x03,
-                    0x23, 0x03,
-                    0x27, 0x03,
-                    0x30, 0x03,
-                    0x27, 0x03,
-                    0x2A, 0x03,
-                    0x32, 0x03,
-                    0x37, 0x03,
-                    0x35, 0x03,
-                    0x38, 0x03,
-                    0x40, 0x03,
-                    0x45, 0x03,
-                    0x10, 0x0A
-                };
-            }
-        }
+            0x20, 0x03,
+            0x23, 0x03,
+            0x27, 0x03,
+            0x30, 0x03,
+            0x27, 0x03,
+            0x2A, 0x03,
+            0x32, 0x03,
+            0x37, 0x03,
+            0x35, 0x03,
+            0x38, 0x03,
+            0x40, 0x03,
+            0x45, 0x03,
+            0x10, 0x0A
+        };
 
-        public override byte[] Gem
+        public override byte[] Gem => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x01,
-                    0x37, 0x01,
-                    0x34, 0x01,
-                    0x30, 0x01
-                };
-            }
-        }
+            0x40, 0x01,
+            0x37, 0x01,
+            0x34, 0x01,
+            0x30, 0x01
+        };
 
-        public override byte[] Invisible
+        public override byte[] Invisible => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x12, 0x01,
-                    0x10, 0x01
-                };
-            }
-        }
+            0x12, 0x01,
+            0x10, 0x01
+        };
 
-        public override byte[] Key
+        public override byte[] Key => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x01,
-                    0x44, 0x01,
-                    0x47, 0x01,
-                    0x40, 0x01,
-                    0x44, 0x01,
-                    0x47, 0x01,
-                    0x40, 0x01,
-                    0x44, 0x01,
-                    0x47, 0x01,
-                    0x50, 0x02
-                };
-            }
-        }
+            0x40, 0x01,
+            0x44, 0x01,
+            0x47, 0x01,
+            0x40, 0x01,
+            0x44, 0x01,
+            0x47, 0x01,
+            0x40, 0x01,
+            0x44, 0x01,
+            0x47, 0x01,
+            0x50, 0x02
+        };
 
-        public override byte[] KeyAlready
+        public override byte[] KeyAlready => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x02,
-                    0x20, 0x02
-                };
-            }
-        }
+            0x30, 0x02,
+            0x20, 0x02
+        };
 
-        public override byte[] Ouch
+        public override byte[] Ouch => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x10, 0x01,
-                    0x20, 0x01,
-                    0x13, 0x01,
-                    0x23, 0x01
-                };
-            }
-        }
+            0x10, 0x01,
+            0x20, 0x01,
+            0x13, 0x01,
+            0x23, 0x01
+        };
 
-        public override byte[] Passage
+        public override byte[] Passage => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x34, 0x01,
-                    0x37, 0x01,
-                    0x31, 0x01,
-                    0x35, 0x01,
-                    0x38, 0x01,
-                    0x32, 0x01,
-                    0x36, 0x01,
-                    0x39, 0x01,
-                    0x33, 0x01,
-                    0x37, 0x01,
-                    0x3A, 0x01,
-                    0x34, 0x01,
-                    0x38, 0x01,
-                    0x40, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x34, 0x01,
+            0x37, 0x01,
+            0x31, 0x01,
+            0x35, 0x01,
+            0x38, 0x01,
+            0x32, 0x01,
+            0x36, 0x01,
+            0x39, 0x01,
+            0x33, 0x01,
+            0x37, 0x01,
+            0x3A, 0x01,
+            0x34, 0x01,
+            0x38, 0x01,
+            0x40, 0x01
+        };
 
-        public override byte[] Push
+        public override byte[] Push => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x15, 0x01
-                };
-            }
-        }
+            0x15, 0x01
+        };
 
-        public override byte[] Ricochet
+        public override byte[] Ricochet => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0xF9, 0x01
-                };
-            }
-        }
+            0xF9, 0x01
+        };
 
-        public override byte[] Shoot
+        public override byte[] Shoot => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x01,
-                    0x30, 0x01,
-                    0x20, 0x01
-                };
-            }
-        }
+            0x40, 0x01,
+            0x30, 0x01,
+            0x20, 0x01
+        };
 
-        public override byte[] SlimeDie
+        public override byte[] SlimeDie => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x01,
-                    0x23, 0x01
-                };
-            }
-        }
+            0x20, 0x01,
+            0x23, 0x01
+        };
 
-        public override byte[] TimeLow
+        public override byte[] TimeLow => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x06,
-                    0x45, 0x06,
-                    0x40, 0x06,
-                    0x35, 0x06,
-                    0x40, 0x06,
-                    0x45, 0x06,
-                    0x40, 0x0A
-                };
-            }
-        }
+            0x40, 0x06,
+            0x45, 0x06,
+            0x40, 0x06,
+            0x35, 0x06,
+            0x40, 0x06,
+            0x45, 0x06,
+            0x40, 0x0A
+        };
 
-        public override byte[] TimeOut
+        public override byte[] TimeOut => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x20, 0x01,
-                    0x23, 0x01,
-                    0x27, 0x01,
-                    0x30, 0x01,
-                    0x10, 0x01
-                };
-            }
-        }
+            0x20, 0x01,
+            0x23, 0x01,
+            0x27, 0x01,
+            0x30, 0x01,
+            0x10, 0x01
+        };
 
-        public override byte[] Torch
+        public override byte[] Torch => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x39, 0x01,
-                    0x34, 0x02
-                };
-            }
-        }
+            0x30, 0x01,
+            0x39, 0x01,
+            0x34, 0x02
+        };
 
-        public override byte[] TorchOut
+        public override byte[] TorchOut => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x20, 0x01,
-                    0x10, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x20, 0x01,
+            0x10, 0x01
+        };
 
-        public override byte[] Transporter
+        public override byte[] Transporter => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x30, 0x01,
-                    0x42, 0x01,
-                    0x34, 0x01,
-                    0x46, 0x01,
-                    0x38, 0x01,
-                    0x4A, 0x01,
-                    0x40, 0x01,
-                    0x52, 0x01
-                };
-            }
-        }
+            0x30, 0x01,
+            0x42, 0x01,
+            0x34, 0x01,
+            0x46, 0x01,
+            0x38, 0x01,
+            0x4A, 0x01,
+            0x40, 0x01,
+            0x52, 0x01
+        };
 
-        public override byte[] Water
+        public override byte[] Water => new byte[]
         {
-            get
-            {
-                return new byte[]
-                {
-                    0x40, 0x01,
-                    0x50, 0x01
-                };
-            }
-        }
+            0x40, 0x01,
+            0x50, 0x01
+        };
     }
 }

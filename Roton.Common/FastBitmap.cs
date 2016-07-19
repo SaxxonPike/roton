@@ -13,7 +13,7 @@ namespace Roton.Common
     /// <summary>
     /// A replacement for the .NET Bitmap class that allows fast direct bit access.
     /// </summary>
-    sealed public partial class FastBitmap : MarshalByRefObject, IDisposable
+    public sealed partial class FastBitmap : MarshalByRefObject, IDisposable
     {
         /* 1) Implementation copied from http://msdn.microsoft.com/en-us/library/system.drawing.bitmap%28v=vs.110%29.aspx
               because we can't subclass Image for some reason... but we want a decent drop-in replacement.
@@ -68,7 +68,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(Stream stream)
         {
-            using (Bitmap temp = new Bitmap(stream))
+            using (var temp = new Bitmap(stream))
             {
                 Initialize(temp);
             }
@@ -79,7 +79,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(string filename)
         {
-            using (Bitmap temp = new Bitmap(filename))
+            using (var temp = new Bitmap(filename))
             {
                 Initialize(temp);
             }
@@ -90,7 +90,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(Image original, Size newSize)
         {
-            using (Bitmap temp = new Bitmap(original, newSize))
+            using (var temp = new Bitmap(original, newSize))
             {
                 Initialize(temp);
             }
@@ -109,7 +109,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(Stream stream, bool useIcm)
         {
-            using (Bitmap temp = new Bitmap(stream, useIcm))
+            using (var temp = new Bitmap(stream, useIcm))
             {
                 Initialize(temp);
             }
@@ -120,7 +120,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(string filename, bool useIcm)
         {
-            using (Bitmap temp = new Bitmap(filename, useIcm))
+            using (var temp = new Bitmap(filename, useIcm))
             {
                 Initialize(temp);
             }
@@ -131,7 +131,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(Type type, string resource)
         {
-            using (Bitmap temp = new Bitmap(type, resource))
+            using (var temp = new Bitmap(type, resource))
             {
                 Initialize(temp);
             }
@@ -140,7 +140,7 @@ namespace Roton.Common
         /// <summary>
         /// Create a FastBitmap from the specified raw data.
         /// </summary>
-        private FastBitmap(int width, int height, Int32[] data)
+        private FastBitmap(int width, int height, int[] data)
         {
             Initialize(width, height);
             Array.Copy(data, Bits, PixelCount);
@@ -151,7 +151,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(Image original, int width, int height)
         {
-            using (Bitmap temp = new Bitmap(original, width, height))
+            using (var temp = new Bitmap(original, width, height))
             {
                 Initialize(temp);
             }
@@ -162,7 +162,7 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(int width, int height, Graphics g)
         {
-            using (Bitmap temp = new Bitmap(width, height, g))
+            using (var temp = new Bitmap(width, height, g))
             {
                 Initialize(temp);
             }
@@ -173,8 +173,9 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(int width, int height, PixelFormat format)
         {
-            if (format != System.Drawing.Imaging.PixelFormat.Format32bppPArgb)
-                throw new NotImplementedException("FastBitmap does not yet support pixel formats other than Format32bppPArgb.");
+            if (format != PixelFormat.Format32bppPArgb)
+                throw new NotImplementedException(
+                    "FastBitmap does not yet support pixel formats other than Format32bppPArgb.");
             Initialize(width, height);
         }
 
@@ -183,8 +184,9 @@ namespace Roton.Common
         /// </summary>
         public FastBitmap(int width, int height, int stride, PixelFormat format, IntPtr scan0)
         {
-            if (format != System.Drawing.Imaging.PixelFormat.Format32bppPArgb)
-                throw new NotImplementedException("FastBitmap does not yet support pixel formats other than Format32bppPArgb.");
+            if (format != PixelFormat.Format32bppPArgb)
+                throw new NotImplementedException(
+                    "FastBitmap does not yet support pixel formats other than Format32bppPArgb.");
             Initialize(width, height);
         }
 
@@ -202,20 +204,12 @@ namespace Roton.Common
         /// <summary>
         /// Internal Bitmap object.
         /// </summary>
-        private Bitmap Bitmap
-        {
-            get;
-            set;
-        }
+        private Bitmap Bitmap { get; set; }
 
         /// <summary>
         /// Raw bitmap data.
         /// </summary>
-        public Int32[] Bits
-        {
-            get;
-            private set;
-        }
+        public int[] Bits { get; private set; }
 
         /// <summary>
         /// Creates an exact copy of this Image.
@@ -270,27 +264,17 @@ namespace Roton.Common
         /// <summary>
         /// If true, Dispose() was called already.
         /// </summary>
-        private bool Disposed
-        {
-            get;
-            set;
-        }
+        private bool Disposed { get; set; }
 
         /// <summary>
         /// Gets attribute flags for the pixel data of this Image.
         /// </summary>
-        public int Flags
-        {
-            get { return Bitmap.Flags; }
-        }
+        public int Flags => Bitmap.Flags;
 
         /// <summary>
         /// Gets an array of GUIDs that represent the dimensions of frames within this Image.
         /// </summary>
-        public Guid[] FrameDimensionsList
-        {
-            get { return Bitmap.FrameDimensionsList; }
-        }
+        public Guid[] FrameDimensionsList => Bitmap.FrameDimensionsList;
 
         /// <summary>
         /// Gets the bounds of the image in the specified unit.
@@ -345,7 +329,7 @@ namespace Roton.Common
         /// </summary>
         public Color GetPixel(int x, int y)
         {
-            return Color.FromArgb(Bits[x + (y * Height)]);
+            return Color.FromArgb(Bits[x + y*Height]);
         }
 
         /// <summary>
@@ -359,7 +343,8 @@ namespace Roton.Common
         /// <summary>
         /// Returns a thumbnail for this Image.
         /// </summary>
-        public Image GetThumbnailImage(int thumbWidth, int thumbHeight, Image.GetThumbnailImageAbort callback, IntPtr callbackData)
+        public Image GetThumbnailImage(int thumbWidth, int thumbHeight, Image.GetThumbnailImageAbort callback,
+            IntPtr callbackData)
         {
             return Bitmap.GetThumbnailImage(thumbWidth, thumbHeight, callback, callbackData);
         }
@@ -367,47 +352,36 @@ namespace Roton.Common
         /// <summary>
         /// Garbage collector handle for pinning purposes.
         /// </summary>
-        private GCHandle Handle
-        {
-            get;
-            set;
-        }
+        private GCHandle Handle { get; set; }
 
         /// <summary>
         /// Gets the height, in pixels, of this Image.
         /// </summary>
-        public int Height
-        {
-            get;
-            private set;
-        }
+        public int Height { get; private set; }
 
         /// <summary>
         /// Gets the horizontal resolution, in pixels per inch, of this Image.
         /// </summary>
-        public float HorizontalResolution
-        {
-            get { return Bitmap.HorizontalResolution; }
-        }
+        public float HorizontalResolution => Bitmap.HorizontalResolution;
 
         /// <summary>
         /// Initialize the FastBitmap.
         /// </summary>
         void Initialize(int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
-            this.PixelCount = width * height;
-            this.Bits = new Int32[this.PixelCount];
-            if (this.Handle.IsAllocated)
+            Width = width;
+            Height = height;
+            PixelCount = width*height;
+            Bits = new int[PixelCount];
+            if (Handle.IsAllocated)
             {
                 // this method should only ever be called once, but this exists to prevent memory leaks
-                this.Handle.Free();
-                this.Bitmap.Dispose();
-                this.Bitmap = null;
+                Handle.Free();
+                Bitmap.Dispose();
+                Bitmap = null;
             }
-            this.Handle = GCHandle.Alloc(this.Bits, GCHandleType.Pinned);
-            this.Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, this.Handle.AddrOfPinnedObject());
+            Handle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
+            Bitmap = new Bitmap(width, height, width*4, PixelFormat.Format32bppPArgb, Handle.AddrOfPinnedObject());
         }
 
         /// <summary>
@@ -416,11 +390,12 @@ namespace Roton.Common
         void Initialize(Image image)
         {
             // convert to a bitmap so we can manipulate it
-            Bitmap tempBitmap = new Bitmap(image);
+            var tempBitmap = new Bitmap(image);
             Initialize(tempBitmap.Width, tempBitmap.Height);
 
             // gain access to the image's raw bits
-            var bits = tempBitmap.LockBits(new Rectangle(0, 0, tempBitmap.Width, tempBitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            var bits = tempBitmap.LockBits(new Rectangle(0, 0, tempBitmap.Width, tempBitmap.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
             Marshal.Copy(bits.Scan0, Bits, 0, PixelCount);
             tempBitmap.UnlockBits(bits);
 
@@ -480,51 +455,32 @@ namespace Roton.Common
         /// <summary>
         /// Gets the width and height of this image.
         /// </summary>
-        public SizeF PhysicalDimension
-        {
-            get { return Bitmap.PhysicalDimension; }
-        }
+        public SizeF PhysicalDimension => Bitmap.PhysicalDimension;
 
         /// <summary>
         /// Number of pixels in the bitmap.
         /// </summary>
-        public int PixelCount
-        {
-            get;
-            private set;
-        }
+        public int PixelCount { get; private set; }
 
         /// <summary>
         /// Gets the pixel format for this Image.
         /// </summary>
-        public PixelFormat PixelFormat
-        {
-            get { return System.Drawing.Imaging.PixelFormat.Format32bppPArgb; }
-        }
+        public PixelFormat PixelFormat => PixelFormat.Format32bppPArgb;
 
         /// <summary>
         /// Gets IDs of the property items stored in this Image.
         /// </summary>
-        public int[] PropertyIdList
-        {
-            get { return Bitmap.PropertyIdList; }
-        }
+        public int[] PropertyIdList => Bitmap.PropertyIdList;
 
         /// <summary>
         /// Gets all the property items (pieces of metadata)
         /// </summary>
-        public PropertyItem[] PropertyItems
-        {
-            get { return Bitmap.PropertyItems; }
-        }
+        public PropertyItem[] PropertyItems => Bitmap.PropertyItems;
 
         /// <summary>
         /// Gets the file format of this Image.
         /// </summary>
-        public ImageFormat RawFormat
-        {
-            get { return Bitmap.RawFormat; }
-        }
+        public ImageFormat RawFormat => Bitmap.RawFormat;
 
         /// <summary>
         /// Removes the specified property item from this Image.
@@ -611,7 +567,7 @@ namespace Roton.Common
         /// </summary>
         public void SetPixel(int x, int y, Color color)
         {
-            Bits[x + (y * Width)] = color.ToArgb();
+            Bits[x + y*Width] = color.ToArgb();
         }
 
         /// <summary>
@@ -633,19 +589,12 @@ namespace Roton.Common
         /// <summary>
         /// Gets the width and height, in pixels, of this image.
         /// </summary>
-        public Size Size
-        {
-            get { return new Size(Width, Height); }
-        }
+        public Size Size => new Size(Width, Height);
 
         /// <summary>
         /// Gets or sets an object that provides additional data about the image.
         /// </summary>
-        public object Tag
-        {
-            get;
-            set;
-        }
+        public object Tag { get; set; }
 
         /// <summary>
         /// Unlocks this Bitmap from system memory.
@@ -658,18 +607,11 @@ namespace Roton.Common
         /// <summary>
         /// Gets the vertical resolution, in pixels per inch, of this Image.
         /// </summary>
-        public float VerticalResolution
-        {
-            get { return Bitmap.VerticalResolution; }
-        }
+        public float VerticalResolution => Bitmap.VerticalResolution;
 
         /// <summary>
         /// Gets the width, in pixels, of this Image.
         /// </summary>
-        public int Width
-        {
-            get;
-            private set;
-        }
+        public int Width { get; private set; }
     }
 }

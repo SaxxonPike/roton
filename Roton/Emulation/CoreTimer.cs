@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Threading;
 
 namespace Roton.Emulation
 {
     // this is the master core timer, it'll automatically start and stop when it is queried regularly
-    static internal class CoreTimer
+    internal static class CoreTimer
     {
-        static private void Initialize()
+        private static void Initialize()
         {
             if (!Initialized)
             {
                 Initialized = true;
-                var thread = new Thread(new ThreadStart(ThreadLoop));
+                var thread = new Thread(ThreadLoop);
                 thread.Start();
             }
         }
 
-        static public bool Initialized
-        {
-            get;
-            private set;
-        }
+        public static bool Initialized { get; private set; }
 
-        static private int _maxLaggedTicks;
-        static public int MaxLaggedTicks
+        private static int _maxLaggedTicks;
+
+        public static int MaxLaggedTicks
         {
             get
             {
@@ -37,24 +30,21 @@ namespace Roton.Emulation
                 }
                 return _maxLaggedTicks;
             }
-            set
-            {
-                _maxLaggedTicks = value;
-            }
+            set { _maxLaggedTicks = value; }
         }
 
-        static private void ResetShutdown()
+        private static void ResetShutdown()
         {
             TicksUntilShutdown = 50;
         }
 
-        static private void ThreadLoop()
+        private static void ThreadLoop()
         {
-            Stopwatch timer = new Stopwatch();
-            long frequency = Stopwatch.Frequency * 10L / 718L;
-            long lastTime = timer.ElapsedTicks;
-            long currentTime = lastTime;
-            int timesRun = 0;
+            var timer = new Stopwatch();
+            var frequency = Stopwatch.Frequency*10L/718L;
+            var lastTime = timer.ElapsedTicks;
+            var currentTime = lastTime;
+            var timesRun = 0;
             ResetShutdown();
             timer.Start();
             while (TicksUntilShutdown > 0)
@@ -79,8 +69,9 @@ namespace Roton.Emulation
             UnInitialize();
         }
 
-        static private int _tick;
-        static public int Tick
+        private static int _tick;
+
+        public static int Tick
         {
             get
             {
@@ -91,19 +82,12 @@ namespace Roton.Emulation
                 ResetShutdown();
                 return _tick;
             }
-            set
-            {
-                _tick = value;
-            }
+            set { _tick = value; }
         }
 
-        static private int TicksUntilShutdown
-        {
-            get;
-            set;
-        }
+        private static int TicksUntilShutdown { get; set; }
 
-        static private void UnInitialize()
+        private static void UnInitialize()
         {
             Initialized = false;
         }

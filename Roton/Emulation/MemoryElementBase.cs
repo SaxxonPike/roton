@@ -1,46 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
-    abstract internal class MemoryElementBase : Element
+    internal abstract class MemoryElementBase : Element
     {
         public MemoryElementBase(Memory memory, int offset)
         {
-            this.Memory = memory;
-            this.Offset = offset;
-            this.Act = DefaultAct;
-            this.Draw = DefaultDraw;
-            this.Interact = DefaultInteract;
+            Memory = memory;
+            Offset = offset;
+            Act = DefaultAct;
+            Draw = DefaultDraw;
+            Interact = DefaultInteract;
         }
 
-        abstract internal void CopyFrom(MemoryElementBase other);
+        internal abstract void CopyFrom(MemoryElementBase other);
 
-        static public void DefaultAct(int index)
+        public static void DefaultAct(int index)
         {
         }
 
-        static public AnsiChar DefaultDraw(Location location)
+        public static AnsiChar DefaultDraw(Location location)
         {
             return new AnsiChar(0x3F, 0x40);
         }
 
-        static public void DefaultInteract(Location location, int index, Vector vector)
+        public static void DefaultInteract(Location location, int index, Vector vector)
         {
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; private set; }
 
-        public int Offset
-        {
-            get;
-            private set;
-        }
+        public int Offset { get; private set; }
     }
 }

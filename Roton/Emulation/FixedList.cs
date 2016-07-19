@@ -1,64 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation
 {
-    abstract public class FixedList<T> : IList<T>
+    public abstract class FixedList<T> : IList<T>
     {
-        virtual public int IndexOf(T item)
+        public virtual int IndexOf(T item)
         {
             return -1;
         }
 
-        virtual public void Insert(int index, T item)
+        public virtual void Insert(int index, T item)
         {
             throw new InvalidOperationException();
         }
 
-        virtual public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             throw new InvalidOperationException();
         }
 
-        abstract public T this[int index]
-        {
-            get;
-            set;
-        }
+        public abstract T this[int index] { get; set; }
 
-        virtual public void Add(T item)
+        public virtual void Add(T item)
         {
             throw new InvalidOperationException();
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             throw new InvalidOperationException();
         }
 
-        virtual public bool Contains(T item)
+        public virtual bool Contains(T item)
         {
             return IndexOf(item) >= 0;
         }
 
-        virtual public void CopyTo(T[] array, int arrayIndex)
+        public virtual void CopyTo(T[] array, int arrayIndex)
         {
             throw new InvalidOperationException();
         }
 
-        abstract public int Count
-        {
-            get;
-        }
+        public abstract int Count { get; }
 
-        virtual public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public virtual bool IsReadOnly => false;
 
-        virtual public bool Remove(T item)
+        public virtual bool Remove(T item)
         {
             throw new InvalidOperationException();
         }
@@ -80,7 +68,7 @@ namespace Roton.Emulation
 
         public IList<T> AsList()
         {
-            return (IList<T>)this;
+            return (IList<T>) this;
         }
     }
 }

@@ -16,10 +16,7 @@ namespace Torch
 
         public Actor Actor
         {
-            get
-            {
-                return _actor;
-            }
+            get { return _actor; }
             set
             {
                 _actor = value;
@@ -33,10 +30,13 @@ namespace Torch
 
             // textboxes
             //this.cameraXTextBox.TextChanged += (object sender, EventArgs e) => { if (!SuppressUpdate) _context.BoardData.Camera.X = int.Parse((sender as TextBox).Text); };
-            this.cycleTextBox.TextChanged += (object sender, EventArgs e) => { if (!SuppressUpdate) _actor.Cycle = int.Parse((sender as TextBox).Text); };
+            cycleTextBox.TextChanged += (sender, e) =>
+            {
+                if (!SuppressUpdate) _actor.Cycle = int.Parse((sender as TextBox).Text);
+            };
 
             // checkboxes
-            this.advancedEditingCheckBox.CheckStateChanged += (object sender, EventArgs e) => { UpdateAdvancedEdit(); };
+            advancedEditingCheckBox.CheckStateChanged += (sender, e) => { UpdateAdvancedEdit(); };
             //this.zapRestartCheckBox.CheckStateChanged += (object sender, EventArgs e) => { if (!SuppressUpdate) _context.BoardData.RestartOnZap = (sender as CheckBox).Checked; };
 
             // comboboxes
@@ -48,10 +48,7 @@ namespace Torch
 
         bool SuppressUpdate
         {
-            get
-            {
-                return _suppressUpdateCount > 0 || _actor == null;
-            }
+            get { return _suppressUpdateCount > 0 || _actor == null; }
             set
             {
                 _suppressUpdateCount += value ? 1 : -1;
@@ -62,7 +59,7 @@ namespace Torch
 
         void UpdateAdvancedEdit()
         {
-            bool enabled = this.advancedEditingCheckBox.Checked;
+            var enabled = advancedEditingCheckBox.Checked;
         }
 
         public void UpdateData()

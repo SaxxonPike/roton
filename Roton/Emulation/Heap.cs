@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation
 {
-    sealed internal class Heap
+    internal sealed class Heap
     {
         public Heap()
         {
@@ -38,9 +36,9 @@ namespace Roton.Emulation
 
         public int Allocate(byte[] data)
         {
-            byte[] dataCopy = new byte[data.Length];
+            var dataCopy = new byte[data.Length];
             Array.Copy(data, dataCopy, dataCopy.Length);
-            int index = NextEntry;
+            var index = NextEntry;
             Entries[index] = dataCopy;
             SetNextEntry();
             return index;
@@ -51,11 +49,7 @@ namespace Roton.Emulation
             return Entries.ContainsKey(index);
         }
 
-        private Dictionary<int, byte[]> Entries
-        {
-            get;
-            set;
-        }
+        private Dictionary<int, byte[]> Entries { get; }
 
         public bool Free(int index)
         {
@@ -67,11 +61,7 @@ namespace Roton.Emulation
             return false;
         }
 
-        private int NextEntry
-        {
-            get;
-            set;
-        }
+        private int NextEntry { get; set; }
 
         private void SetNextEntry()
         {

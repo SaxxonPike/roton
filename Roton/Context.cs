@@ -1,67 +1,33 @@
 ﻿using Roton.Emulation;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Roton
 {
-    sealed public partial class Context
+    public sealed partial class Context
     {
-        internal MemoryActorCollectionBase ActorMemory
-        {
-            get;
-            private set;
-        }
+        internal MemoryActorCollectionBase ActorMemory { get; private set; }
 
-        public int ActorCapacity
-        {
-            get { return Core.Actors.Capacity; }
-        }
+        public int ActorCapacity => Core.Actors.Capacity;
 
-        public IList<Actor> Actors
-        {
-            get { return Core.Actors; }
-        }
+        public IList<Actor> Actors => Core.Actors;
 
         public int Board
         {
-            get
-            {
-                return Core.Board;
-            }
-            set
-            {
-                Core.SetBoard(value);
-            }
+            get { return Core.Board; }
+            set { Core.SetBoard(value); }
         }
 
-        public Board BoardData
-        {
-            get { return Core.BoardData; }
-        }
+        public Board BoardData => Core.BoardData;
 
-        public IList<PackedBoard> Boards
-        {
-            get { return Core.Boards; }
-        }
+        public IList<PackedBoard> Boards => Core.Boards;
 
-        public ContextEngine ContextEngine
-        {
-            get;
-            private set;
-        }
+        public ContextEngine ContextEngine { get; private set; }
 
-        internal CoreBase Core
-        {
-            get;
-            private set;
-        }
+        internal CoreBase Core { get; private set; }
 
         public Actor CreateActor()
         {
-            Actor result = new Actor();
+            var result = new Actor();
             result.Heap = Core.Heap;
             return result;
         }
@@ -72,15 +38,9 @@ namespace Roton
             set { Core.Disk = value; }
         }
 
-        public IDisplayInfo DisplayInfo
-        {
-            get { return (IDisplayInfo)Core; }
-        }
+        public IDisplayInfo DisplayInfo => (IDisplayInfo) Core;
 
-        public IList<Element> Elements
-        {
-            get { return Core.Elements; }
-        }
+        public IList<Element> Elements => Core.Elements;
 
         public IKeyboard Keyboard
         {
@@ -88,41 +48,17 @@ namespace Roton
             set { Core.Keyboard = value; }
         }
 
-        public byte[] Memory
-        {
-            get
-            {
-                return Core.Memory.Dump();
-            }
-        }
+        public byte[] Memory => Core.Memory.Dump();
 
-        public bool Quiet
-        {
-            get { return Core.Quiet; }
-        }
+        public bool Quiet => Core.Quiet;
 
-        public int ScreenHeight
-        {
-            get;
-            private set;
-        }
+        public int ScreenHeight { get; private set; }
 
-        public bool ScreenWide
-        {
-            get;
-            private set;
-        }
+        public bool ScreenWide { get; private set; }
 
-        public int ScreenWidth
-        {
-            get;
-            private set;
-        }
+        public int ScreenWidth { get; private set; }
 
-        internal SerializerBase Serializer
-        {
-            get { return Core.Serializer; }
-        }
+        internal SerializerBase Serializer => Core.Serializer;
 
         public ISpeaker Speaker
         {
@@ -161,21 +97,15 @@ namespace Roton
             return Core.Tiles[new Location(x, y)];
         }
 
-        public IList<Tile> Tiles
-        {
-            get { return Core.Tiles; }
-        }
+        public IList<Tile> Tiles => Core.Tiles;
 
-        public World WorldData
-        {
-            get { return Core.WorldData; }
-        }
+        public World WorldData => Core.WorldData;
 
         public int WorldSize
         {
             get
             {
-                int total = Serializer.WorldDataCapacity;
+                var total = Serializer.WorldDataCapacity;
                 foreach (var board in Boards)
                 {
                     total += board.Data.Length + 2;
@@ -184,9 +114,6 @@ namespace Roton
             }
         }
 
-        internal int WorldType
-        {
-            get { return WorldData.WorldType; }
-        }
+        internal int WorldType => WorldData.WorldType;
     }
 }

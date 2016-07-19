@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        virtual internal void MainLoop(bool gameIsActive)
+        internal virtual void MainLoop(bool gameIsActive)
         {
-            Actor ActorData;
-            bool Alternating = false;
+            Actor actorData;
+            var alternating = false;
 
             Display.CreateStatusText();
             Display.UpdateStatus();
-            
+
             if (Init)
             {
                 if (!AboutShown)
@@ -38,12 +33,12 @@ namespace Roton.Emulation
                 SetMessage(0, @"");
                 Display.DrawTitleStatus();
             }
-            
+
             if (gameIsActive)
             {
                 FadePurple();
             }
-            
+
             GameWaitTime = GameSpeed << 1;
             BreakGameLoop = false;
             GameCycle = RandomNumberDeterministic(0x64);
@@ -55,12 +50,12 @@ namespace Roton.Emulation
                 {
                     if (ActIndex <= ActorCount)
                     {
-                        ActorData = Actors[ActIndex];
-                        if (ActorData.Cycle != 0)
+                        actorData = Actors[ActIndex];
+                        if (actorData.Cycle != 0)
                         {
-                            if (ActIndex % ActorData.Cycle == GameCycle % ActorData.Cycle)
+                            if (ActIndex%actorData.Cycle == GameCycle%actorData.Cycle)
                             {
-                                Elements[TileAt(ActorData.Location).Id].Act(ActIndex);
+                                Elements[TileAt(actorData.Location).Id].Act(ActIndex);
                             }
                         }
                         ActIndex++;
@@ -72,9 +67,9 @@ namespace Roton.Emulation
                     element = Elements[PlayerElement];
                     if (GetMainTimeElapsed(25))
                     {
-                        Alternating = !Alternating;
+                        alternating = !alternating;
                     }
-                    if (Alternating)
+                    if (alternating)
                     {
                         var playerElement = Elements.PlayerElement;
                         DrawTile(Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
@@ -176,7 +171,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void StartMain()
+        internal virtual void StartMain()
         {
             GameSpeed = 4;
             DefaultSaveName = "SAVED";
@@ -191,12 +186,12 @@ namespace Roton.Emulation
             TitleScreenLoop();
         }
 
-        virtual internal void TitleScreenLoop()
+        internal virtual void TitleScreenLoop()
         {
             bool gameIsActive;
             bool gameEnded;
 
-            QuitZZT = false;
+            QuitZzt = false;
             Init = true;
             StartBoard = 0;
             gameEnded = true;
@@ -217,7 +212,7 @@ namespace Roton.Emulation
                         // escape if the thread is supposed to shut down
                         break;
                     }
-                    
+
                     switch (KeyPressed.ToUpperCase())
                     {
                         case 0x57: // W
@@ -264,12 +259,12 @@ namespace Roton.Emulation
                         gameEnded = true;
                     }
 
-                    if (gameEnded || QuitZZT)
+                    if (gameEnded || QuitZzt)
                     {
                         break;
                     }
                 }
-                if (QuitZZT)
+                if (QuitZzt)
                 {
                     break;
                 }

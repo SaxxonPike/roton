@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Zip
+﻿namespace Roton.Zip
 {
     internal enum ZipCompressionMethod
     {
@@ -17,17 +12,17 @@ namespace Roton.Zip
         Tokenized = 7,
         Deflated = 8,
         EnhancedDeflate = 9,
-        IBMTerseOld = 10,
+        IbmTerseOld = 10,
         Reserved11 = 11,
         BZip2 = 12,
         Reserved13 = 13,
-        LZMA = 14,
+        Lzma = 14,
         Reserved15 = 15,
         Reserved16 = 16,
         Reserved17 = 17,
-        IBMTerseNew = 18,
-        IBMLZ77 = 19,
+        IbmTerseNew = 18,
+        Ibmlz77 = 19,
         WavPack = 97,
-        PPMd = 98
+        PpMd = 98
     }
 }

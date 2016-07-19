@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton
 {
@@ -76,22 +73,22 @@ namespace Roton
         /// </summary>
         public void CopyFrom(Actor actor)
         {
-            this.Cycle = actor.Cycle;
-            this.Follower = actor.Follower;
-            this.Instruction = actor.Instruction;
-            this.Leader = actor.Leader;
-            this.Length = actor.Length;
-            this.Location.CopyFrom(actor.Location);
-            this.P1 = actor.P1;
-            this.P2 = actor.P2;
-            this.P3 = actor.P3;
-            this.Pointer = actor.Pointer;
-            this.UnderTile.CopyFrom(actor.UnderTile);
-            this.Vector.CopyFrom(actor.Vector);
+            Cycle = actor.Cycle;
+            Follower = actor.Follower;
+            Instruction = actor.Instruction;
+            Leader = actor.Leader;
+            Length = actor.Length;
+            Location.CopyFrom(actor.Location);
+            P1 = actor.P1;
+            P2 = actor.P2;
+            P3 = actor.P3;
+            Pointer = actor.Pointer;
+            UnderTile.CopyFrom(actor.UnderTile);
+            Vector.CopyFrom(actor.Vector);
 
-            if (this.Heap != actor.Heap)
+            if (Heap != actor.Heap)
             {
-                this.Code = actor.Code;
+                Code = actor.Code;
             }
         }
 
@@ -101,39 +98,34 @@ namespace Roton
         public void DuplicateFrom(Actor actor)
         {
             CopyFrom(actor);
-            var code = this.Code;
-            this.Pointer = 0;
-            this.Code = code;
+            var code = Code;
+            Pointer = 0;
+            Code = code;
         }
 
         /// <summary>
         /// If true, the actor is attached to a Context.
         /// </summary>
-        virtual public bool IsAttached {
-            get 
-            { 
-                return false;
-            } 
-        }
+        public virtual bool IsAttached => false;
 
         /// <summary>
         /// Retrieve the name of the actor from the code.
         /// </summary>
         public override string ToString()
         {
-            string name = "";
+            var name = "";
             if (Heap != null && Pointer >= 0)
             {
                 // walk the code to get the name
-                byte[] data = Heap[Pointer];
+                var data = Heap[Pointer];
                 if (data[0] == 0x40)
                 {
-                    int length = data.Length;
-                    for (int i = 1; i < length; i++)
+                    var length = data.Length;
+                    for (var i = 1; i < length; i++)
                     {
                         if (data[i] == 0x0D)
                         {
-                            byte[] nameData = new byte[i - 1];
+                            var nameData = new byte[i - 1];
                             Array.Copy(data, 1, nameData, 0, nameData.Length);
                             name = nameData.ToStringValue();
                             break;

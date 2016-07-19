@@ -1,35 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Roton
 {
     public partial class Display
     {
-        protected int Ammo
-        {
-            get { return DisplayInfo.Ammo; }
-        }
+        protected int Ammo => DisplayInfo.Ammo;
 
-        protected int Gems
-        {
-            get { return DisplayInfo.Gems; }
-        }
+        protected int Gems => DisplayInfo.Gems;
 
-        protected IList<bool> Keys
-        {
-            get { return DisplayInfo.Keys; }
-        }
+        protected IList<bool> Keys => DisplayInfo.Keys;
 
-        protected int TorchCycles
-        {
-            get { return DisplayInfo.TorchCycles; }
-        }
+        protected int TorchCycles => DisplayInfo.TorchCycles;
 
-        protected int Torches
-        {
-            get { return DisplayInfo.Torches; }
-        }
+        protected int Torches => DisplayInfo.Torches;
     }
 }

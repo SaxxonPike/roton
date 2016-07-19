@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Roton.Common
 {
-    sealed public class Palette : Roton.Emulation.FixedList<Color>
+    public sealed class Palette : Emulation.FixedList<Color>
     {
         /// <summary>
         /// Create a new palette with the default colors.
@@ -35,7 +35,7 @@ namespace Roton.Common
         /// </summary>
         public Palette(Stream source)
         {
-            byte[] data = new byte[16 * 3];
+            var data = new byte[16*3];
             source.Read(data, 0, data.Length);
             Initialize(data);
         }
@@ -45,38 +45,25 @@ namespace Roton.Common
         /// </summary>
         public override Color this[int index]
         {
-            get
-            {
-                return Color.FromArgb(Colors[index & 0xF]);
-            }
-            set
-            {
-                Colors[index & 0xF] = value.ToArgb();
-            }
+            get { return Color.FromArgb(Colors[index & 0xF]); }
+            set { Colors[index & 0xF] = value.ToArgb(); }
         }
 
-        public Int32[] Colors
-        {
-            get;
-            private set;
-        }
+        public int[] Colors { get; private set; }
 
         /// <summary>
         /// Number of colors in the palette.
         /// </summary>
-        public override int Count
-        {
-            get { return 16; }
-        }
+        public override int Count => 16;
 
         private byte ImportColorValue(int source)
         {
-            int result = (source * 255) / 63;
+            var result = source*255/63;
             if (result > 255)
                 result = 255;
             if (result < 0)
                 result = 0;
-            return (byte)(result & 0xFF);
+            return (byte) (result & 0xFF);
         }
 
         private void Initialize(byte[] palette)
@@ -85,16 +72,16 @@ namespace Roton.Common
             {
                 throw Exceptions.InvalidPalette;
             }
-            int offset = 0;
+            var offset = 0;
             byte red, green, blue;
-            this.Colors = new Int32[16];
+            Colors = new int[16];
 
-            for (int i = 0; i < 16; i++)
+            for (var i = 0; i < 16; i++)
             {
                 red = ImportColorValue(palette[offset++]);
                 green = ImportColorValue(palette[offset++]);
                 blue = ImportColorValue(palette[offset++]);
-                this.Colors[i] = Color.FromArgb(0xFF, red, green, blue).ToArgb();
+                Colors[i] = Color.FromArgb(0xFF, red, green, blue).ToArgb();
             }
         }
     }

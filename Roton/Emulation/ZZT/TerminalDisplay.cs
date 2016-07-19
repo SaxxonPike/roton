@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation.ZZT
 {
-    sealed internal class TerminalDisplay : Display
+    internal sealed class TerminalDisplay : Display
     {
         public TerminalDisplay(IDisplayInfo infoSource)
             : base(infoSource)
@@ -30,20 +27,20 @@ namespace Roton.Emulation.ZZT
             DrawStatusLine(5);
             DrawString(0x3F, 0x05, message, 0x1F);
             DrawChar(0x3F + message.Length, 0x05, new AnsiChar(0x5F, 0x9E));
-            int key = 0;
+            var key = 0;
             while (key == 0)
             {
                 DisplayInfo.WaitForTick();
                 key = DisplayInfo.ReadKey().ToUpperCase();
             }
-            bool result = (key.ToAscii() == @"Y");
+            var result = key.ToAscii() == @"Y";
             DrawStatusLine(5);
             return result;
         }
 
         public override void CreateStatusBar()
         {
-            for (int y = 0; y < ViewportHeight; y++)
+            for (var y = 0; y < ViewportHeight; y++)
             {
                 DrawStatusLine(y);
             }
@@ -133,7 +130,7 @@ namespace Roton.Emulation.ZZT
 
         public override void DrawMessage(string message, int color)
         {
-            int x = (60 - message.Length) / 2;
+            var x = (60 - message.Length)/2;
             DrawString(x, 24, " " + message + " ", color);
         }
 
@@ -145,7 +142,7 @@ namespace Roton.Emulation.ZZT
         public override void DrawStatusLine(int y)
         {
             var blankChar = new AnsiChar(0x20, 0x11);
-            for (int x = 60; x < 80; x++)
+            for (var x = 60; x < 80; x++)
             {
                 Terminal.Plot(x, y, blankChar);
             }
@@ -178,7 +175,7 @@ namespace Roton.Emulation.ZZT
 
         public override bool EndGameConfirmation()
         {
-            bool result = Confirm(@"End this game? ");
+            var result = Confirm(@"End this game? ");
             if (DisplayInfo.KeyPressed == 0x1B)
             {
                 result = false;
@@ -188,7 +185,7 @@ namespace Roton.Emulation.ZZT
 
         public override void FadeBoard(AnsiChar ac)
         {
-            for (int i = 0; i < ViewportTileCount; i++)
+            for (var i = 0; i < ViewportTileCount; i++)
             {
                 var location = FadeMatrix[i];
                 DrawTileCommon(location.X, location.Y, ac);
@@ -196,11 +193,7 @@ namespace Roton.Emulation.ZZT
             }
         }
 
-        private Location[] FadeMatrix
-        {
-            get;
-            set;
-        }
+        private Location[] FadeMatrix { get; }
 
         private void FadeWait(int i)
         {
@@ -213,20 +206,20 @@ namespace Roton.Emulation.ZZT
         public override void GenerateFadeMatrix()
         {
             // use deterministic randomization here - just as a precaution
-            Random rnd = new Random(0);
-            int index = 0;
-            for (int x = 0; x < ViewportWidth; x++)
+            var rnd = new Random(0);
+            var index = 0;
+            for (var x = 0; x < ViewportWidth; x++)
             {
-                for (int y = 0; y < ViewportHeight; y++)
+                for (var y = 0; y < ViewportHeight; y++)
                 {
                     FadeMatrix[index++] = new Location(x, y);
                 }
             }
-            for (int i = 0; i < ViewportTileCount; i++)
+            for (var i = 0; i < ViewportTileCount; i++)
             {
-                int sourceIndex = i;
-                int targetIndex = rnd.Next(FadeMatrix.Length);
-                Location temp = FadeMatrix[sourceIndex].Clone();
+                var sourceIndex = i;
+                var targetIndex = rnd.Next(FadeMatrix.Length);
+                var temp = FadeMatrix[sourceIndex].Clone();
                 FadeMatrix[sourceIndex].CopyFrom(FadeMatrix[targetIndex]);
                 FadeMatrix[targetIndex].CopyFrom(temp);
             }
@@ -239,7 +232,7 @@ namespace Roton.Emulation.ZZT
 
         public override void RedrawBoard()
         {
-            for (int i = 0; i < ViewportTileCount; i++)
+            for (var i = 0; i < ViewportTileCount; i++)
             {
                 var location = FadeMatrix[i];
                 DrawTileCommon(location.X, location.Y, DisplayInfo.Draw(location.Sum(1, 1)));
@@ -275,7 +268,8 @@ namespace Roton.Emulation.ZZT
                     // cancel it for now
                     performSelection = false;
                 }
-                if (!performSelection || DisplayInfo.KeyShift || DisplayInfo.KeyPressed == 0x0D || DisplayInfo.KeyPressed == 0x1B)
+                if (!performSelection || DisplayInfo.KeyShift || DisplayInfo.KeyPressed == 0x0D ||
+                    DisplayInfo.KeyPressed == 0x1B)
                 {
                     break;
                 }
@@ -286,12 +280,12 @@ namespace Roton.Emulation.ZZT
 
         public override void UpdateBorder()
         {
-            for (int x = 0; x < ViewportWidth; x++)
+            for (var x = 0; x < ViewportWidth; x++)
             {
                 DrawTileAt(new Location(x, 0));
                 DrawTileAt(new Location(x, ViewportHeight - 1));
             }
-            for (int y = 0; y < ViewportHeight; y++)
+            for (var y = 0; y < ViewportHeight; y++)
             {
                 DrawTileAt(new Location(0, y));
                 DrawTileAt(new Location(ViewportWidth - 1, y));
@@ -322,9 +316,9 @@ namespace Roton.Emulation.ZZT
                 DrawString(0x48, 0x0B, IntToString(DisplayInfo.Score), 0x1E);
                 if (DisplayInfo.TorchCycles > 0)
                 {
-                    for (int i = 2; i <= 5; i++)
+                    for (var i = 2; i <= 5; i++)
                     {
-                        if (DisplayInfo.TorchCycles / 40 < i)
+                        if (DisplayInfo.TorchCycles/40 < i)
                         {
                             DrawChar(0x49 + i, 0x09, new AnsiChar(0xB0, 0x16));
                         }
@@ -339,7 +333,7 @@ namespace Roton.Emulation.ZZT
                     DrawString(0x4B, 0x09, @"    ", 0x16);
                 }
 
-                for (int i = 1; i <= 7; i++)
+                for (var i = 1; i <= 7; i++)
                 {
                     if (DisplayInfo.Keys[i - 1])
                     {
@@ -366,19 +360,10 @@ namespace Roton.Emulation.ZZT
             }
         }
 
-        private int ViewportHeight
-        {
-            get { return 25; }
-        }
+        private int ViewportHeight => 25;
 
-        private int ViewportTileCount
-        {
-            get { return ViewportWidth * ViewportHeight; }
-        }
+        private int ViewportTileCount => ViewportWidth*ViewportHeight;
 
-        private int ViewportWidth
-        {
-            get { return 60; }
-        }
+        private int ViewportWidth => 60;
     }
 }

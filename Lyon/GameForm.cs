@@ -8,101 +8,97 @@ namespace Lyon
 {
     public partial class GameForm : Form
     {
-        bool initScaleDisplay = true;
-        private IGameTerminal terminal;
-        private bool openGL;
+        bool _initScaleDisplay = true;
+        private IGameTerminal _terminal;
+        private bool _openGl;
 
         private void CommonSetup()
         {
             // Set up default font and palette.
-            var font1 = new Roton.Common.Font();
-            var palette1 = new Roton.Common.Palette();
+            var font1 = new Font();
+            var palette1 = new Palette();
 
             InitializeComponent();
             InitializeEvents();
 
             // Load the appropriate terminal.
-            if (!openGL)
-                terminal = new Roton.WinForms.Terminal();
+            if (!_openGl)
+                _terminal = new Roton.WinForms.Terminal();
             else
-                terminal = new Roton.WinForms.OpenGL.Terminal();
+                _terminal = new Roton.WinForms.OpenGL.Terminal();
 
-            terminal.Top = 0;
-            terminal.Left = 0;
-            terminal.Width = 640;
-            terminal.Height = 350;
-            terminal.AutoSize = true;
-            terminal.TerminalFont = font1;
-            terminal.TerminalPalette = palette1;
-            mainPanel.Controls.Add((UserControl)terminal);
+            _terminal.Top = 0;
+            _terminal.Left = 0;
+            _terminal.Width = 640;
+            _terminal.Height = 350;
+            _terminal.AutoSize = true;
+            _terminal.TerminalFont = font1;
+            _terminal.TerminalPalette = palette1;
+            mainPanel.Controls.Add((UserControl) _terminal);
 
-			// Used to help Mono's WinForm implementation set the correct window size
-			// before it tries to scale the window.
-			this.Width = terminal.Width;
-			this.Height = terminal.Height;
+            // Used to help Mono's WinForm implementation set the correct window size
+            // before it tries to scale the window.
+            Width = _terminal.Width;
+            Height = _terminal.Height;
         }
 
-        public GameForm(bool openGL = false)
+        public GameForm(bool openGl = false)
         {
-            this.openGL = openGL;
+            _openGl = openGl;
             CommonSetup();
-            Initialize(new Context(ContextEngine.ZZT, false));
+            Initialize(new Context(ContextEngine.Zzt, false));
         }
 
-        public GameForm(Stream source, bool openGL = false)
+        public GameForm(Stream source, bool openGl = false)
         {
-            this.openGL = openGL;
+            _openGl = openGl;
             CommonSetup();
             Initialize(new Context(source, false));
         }
 
-        public Context Context
-        {
-            get;
-            private set;
-        }
+        public Context Context { get; private set; }
 
         void DumpRam()
         {
-            using (SaveFileDialog sfd = new SaveFileDialog())
+            using (var sfd = new SaveFileDialog())
             {
-                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, this.Context.Memory);
+                    File.WriteAllBytes(sfd.FileName, Context.Memory);
                 }
             }
         }
 
         string FileFilters
-        {
-            get { return "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"; }
-        }
+            =>
+                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
+            ;
 
         void Initialize(Context context)
         {
             speaker.Stop();
-            terminal.Keyboard.Clear();
-            terminal.Clear();
-            if (this.Context is Context)
+            _terminal.Keyboard.Clear();
+            _terminal.Clear();
+            if (Context is Context)
             {
-                this.Context.Stop();
+                Context.Stop();
             }
 
-            this.Context = context;
-            context.Keyboard = this.terminal.Keyboard;
-            context.Speaker = this.speaker;
-            context.Terminal = this.terminal;
+            Context = context;
+            context.Keyboard = _terminal.Keyboard;
+            context.Speaker = speaker;
+            context.Terminal = _terminal;
             UpdateTitle();
 
-            if (initScaleDisplay)
+            if (_initScaleDisplay)
             {
                 var workingArea = Screen.FromControl(this).WorkingArea;
-                initScaleDisplay = false;
-                int idealXScale = (workingArea.Width / this.Width);
-                int idealYScale = (workingArea.Height / this.Height);
-                int idealScale = Math.Min(idealXScale, idealYScale);
+                _initScaleDisplay = false;
+                int idealXScale = workingArea.Width/Width;
+                int idealYScale = workingArea.Height/Height;
+                var idealScale = Math.Min(idealXScale, idealYScale);
                 SetScale(idealScale);
-                initScaleDisplay = false;
+                _initScaleDisplay = false;
             }
 
             context.Start();
@@ -110,20 +106,20 @@ namespace Lyon
 
         void InitializeEvents()
         {
-            exitMenuItem.Click += (object sender, EventArgs e) => { Close(); };
-            openWorldMenuItem.Click += (object sender, EventArgs e) => { OpenWorld(); };
-            saveWorldToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorld(); };
-            scale1xMenuItem.Click += (object sender, EventArgs e) => { SetScale(1); };
-            scale2xMenuItem.Click += (object sender, EventArgs e) => { SetScale(2); };
-            scale3xMenuItem.Click += (object sender, EventArgs e) => { SetScale(3); };
-            dumpRAMToolStripMenuItem.Click += (object sender, EventArgs e) => { DumpRam(); };
+            exitMenuItem.Click += (sender, e) => { Close(); };
+            openWorldMenuItem.Click += (sender, e) => { OpenWorld(); };
+            saveWorldToolStripMenuItem.Click += (sender, e) => { SaveWorld(); };
+            scale1xMenuItem.Click += (sender, e) => { SetScale(1); };
+            scale2xMenuItem.Click += (sender, e) => { SetScale(2); };
+            scale3xMenuItem.Click += (sender, e) => { SetScale(3); };
+            dumpRAMToolStripMenuItem.Click += (sender, e) => { DumpRam(); };
         }
 
         void OpenWorld()
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = FileFilters;
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Initialize(new Context(ofd.FileName, false));
             }
@@ -133,22 +129,22 @@ namespace Lyon
         {
             if (Context != null)
             {
-                Initialize(new Context(this.Context.ContextEngine, false));
+                Initialize(new Context(Context.ContextEngine, false));
             }
             else
             {
-                RestartZZT();
+                RestartZzt();
             }
         }
 
-        void RestartSuperZZT()
+        void RestartSuperZzt()
         {
-            Initialize(new Context(ContextEngine.SuperZZT, false));
+            Initialize(new Context(ContextEngine.SuperZzt, false));
         }
 
-        void RestartZZT()
+        void RestartZzt()
         {
-            Initialize(new Context(ContextEngine.ZZT, false));
+            Initialize(new Context(ContextEngine.Zzt, false));
         }
 
         void SaveWorld()
@@ -157,7 +153,7 @@ namespace Lyon
             {
                 var sfd = new SaveFileDialog();
                 sfd.Filter = FileFilters;
-                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     //Initialize(new Context(sfd.FileName, false));
                     Context.Save(sfd.FileName);
@@ -167,12 +163,13 @@ namespace Lyon
 
         void SetScale(int scale)
         {
-            terminal.SetScale(scale, scale);
+            _terminal.SetScale(scale, scale);
         }
 
         void UpdateTitle()
         {
-            this.Text = "Lyon" + (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? "" : " [" + Context.WorldData.Name + "]");
+            Text = "Lyon" +
+                   (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? "" : " [" + Context.WorldData.Name + "]");
         }
     }
 }

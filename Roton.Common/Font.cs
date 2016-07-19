@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Roton.Common
 {
-    sealed public class Font : Roton.Emulation.FixedList<Glyph>
+    public sealed class Font : Emulation.FixedList<Glyph>
     {
         /// <summary>
         /// Create a font with the default glyphs.
@@ -43,7 +43,7 @@ namespace Roton.Common
         /// </summary>
         public Font(Stream source, int length)
         {
-            byte[] font = new byte[length];
+            var font = new byte[length];
             source.Read(font, 0, length);
             Initialize(font);
         }
@@ -53,44 +53,19 @@ namespace Roton.Common
         /// </summary>
         public override Glyph this[int index]
         {
-            get
-            {
-                return Glyphs[index & 0xFF];
-            }
-            set
-            {
-                value.CopyTo(Glyphs[index & 0xFF].Data, 0);
-            }
+            get { return Glyphs[index & 0xFF]; }
+            set { value.CopyTo(Glyphs[index & 0xFF].Data, 0); }
         }
 
-        public override int Count
-        {
-            get { return 256; }
-        }
+        public override int Count => 256;
 
-        private byte[] Data
-        {
-            get;
-            set;
-        }
+        private byte[] Data { get; set; }
 
-        private Glyph[] Glyphs
-        {
-            get;
-            set;
-        }
+        private Glyph[] Glyphs { get; set; }
 
-        private Glyph[] GlyphsUnscaled
-        {
-            get;
-            set;
-        }
+        private Glyph[] GlyphsUnscaled { get; set; }
 
-        public int Height
-        {
-            get;
-            private set;
-        }
+        public int Height { get; private set; }
 
         private void Initialize(FontDefault fd)
         {
@@ -145,14 +120,14 @@ namespace Roton.Common
                         int fontOffset = font[3];
                         fontOffset <<= 8;
                         fontOffset |= font[2];
-                        rawFont = new byte[fontHeight * 256];
+                        rawFont = new byte[fontHeight*256];
                         Array.Copy(font, fontOffset, rawFont, 0, rawFont.Length);
                     }
                     else if (font[0] == 0xB8 && font[1] == 0x63 && ((font.Length - 139) & 0xFF) == 0)
                     {
                         // fonted 2.0 (lesser known but still needs support)
-                        int fontLength = (font.Length - 139);
-                        int fontOffset = 139;
+                        var fontLength = font.Length - 139;
+                        var fontOffset = 139;
                         rawFont = new byte[fontLength];
                         Array.Copy(font, fontOffset, rawFont, 0, rawFont.Length);
                     }
@@ -172,42 +147,34 @@ namespace Roton.Common
 
             // convert the font to a faster format (int+mask)
             Glyphs = new Glyph[256];
-            OriginalHeight = rawFont.Length / 256;
+            OriginalHeight = rawFont.Length/256;
             OriginalWidth = 8;
             Data = rawFont;
             Rasterize(1, 1);
             GlyphsUnscaled = new Glyph[256];
-            for (int i = 0; i < 256; i++)
+            for (var i = 0; i < 256; i++)
             {
                 GlyphsUnscaled[i] = new Glyph(new byte[OriginalHeight], 1, 1);
                 Glyphs[i].Data.CopyTo(GlyphsUnscaled[i].Data, 0);
             }
         }
 
-        public int OriginalHeight
-        {
-            get;
-            private set;
-        }
+        public int OriginalHeight { get; private set; }
 
-        public int OriginalWidth
-        {
-            get;
-            private set;
-        }
+        public int OriginalWidth { get; private set; }
 
         void Rasterize(int xScale, int yScale)
         {
-            byte[] glyphData = new byte[OriginalHeight];
-            int glyphDataOffset = 0;
-            for (int i = 0; i < 256; i++)
+            var glyphData = new byte[OriginalHeight];
+            var glyphDataOffset = 0;
+            for (var i = 0; i < 256; i++)
             {
                 Array.Copy(Data, glyphDataOffset, glyphData, 0, OriginalHeight);
                 glyphDataOffset += OriginalHeight;
                 Glyphs[i] = new Glyph(glyphData, xScale, yScale);
             }
-            Width = OriginalWidth * xScale;
-            Height = OriginalHeight * yScale;
+            Width = OriginalWidth*xScale;
+            Height = OriginalHeight*yScale;
         }
 
         public Bitmap Render(int character, Color foreground, Color background)
@@ -230,10 +197,6 @@ namespace Roton.Common
             Rasterize(xScale, yScale);
         }
 
-        public int Width
-        {
-            get;
-            private set;
-        }
+        public int Width { get; private set; }
     }
 }

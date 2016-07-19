@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation.ZZT
+﻿namespace Roton.Emulation.ZZT
 {
-    sealed internal partial class Core : CoreBase
+    internal sealed partial class Core : CoreBase
     {
         MemoryActorCollection _actors;
         MemoryBoard _board;
@@ -32,59 +27,26 @@ namespace Roton.Emulation.ZZT
             InitializeDatArchive();
         }
 
-        public override MemoryActorCollectionBase Actors
-        {
-            get { return _actors; }
-        }
+        public override MemoryActorCollectionBase Actors => _actors;
 
-        public override MemoryBoardBase BoardData
-        {
-            get { return _board; }
-        }
+        public override MemoryBoardBase BoardData => _board;
 
-        public override Display Display
-        {
-            get { return _display; }
-        }
+        public override Display Display => _display;
 
-        public override MemoryElementCollectionBase Elements
-        {
-            get { return _elements; }
-        }
+        public override MemoryElementCollectionBase Elements => _elements;
 
-        public override SerializerBase Serializer
-        {
-            get { return _disk; }
-        }
+        public override SerializerBase Serializer => _disk;
 
-        public override SoundsBase Sounds
-        {
-            get { return _sounds; }
-        }
+        public override SoundsBase Sounds => _sounds;
 
-        public override MemoryStateBase StateData
-        {
-            get { return _state; }
-        }
+        public override MemoryStateBase StateData => _state;
 
-        public override bool StonesEnabled
-        {
-            get { return false; }
-        }
+        public override bool StonesEnabled => false;
 
-        public override MemoryTileCollectionBase Tiles
-        {
-            get { return _tiles; }
-        }
+        public override MemoryTileCollectionBase Tiles => _tiles;
 
-        public override bool TorchesEnabled
-        {
-            get { return true; }
-        }
+        public override bool TorchesEnabled => true;
 
-        public override MemoryWorldBase WorldData
-        {
-            get { return _world; }
-        }
+        public override MemoryWorldBase WorldData => _world;
     }
 }

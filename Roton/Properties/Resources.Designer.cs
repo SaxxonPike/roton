@@ -39,7 +39,7 @@ namespace Roton.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Roton.Properties.Resources", typeof(Resources).Assembly);
+                    var temp = new global::System.Resources.ResourceManager("Roton.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,7 +65,7 @@ namespace Roton.Properties {
         /// </summary>
         internal static byte[] szztelement {
             get {
-                object obj = ResourceManager.GetObject("szztelement", resourceCulture);
+                var obj = ResourceManager.GetObject("szztelement", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace Roton.Properties {
         /// </summary>
         internal static byte[] szztextra {
             get {
-                object obj = ResourceManager.GetObject("szztextra", resourceCulture);
+                var obj = ResourceManager.GetObject("szztextra", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -85,7 +85,7 @@ namespace Roton.Properties {
         /// </summary>
         internal static byte[] zztdat {
             get {
-                object obj = ResourceManager.GetObject("zztdat", resourceCulture);
+                var obj = ResourceManager.GetObject("zztdat", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -95,7 +95,7 @@ namespace Roton.Properties {
         /// </summary>
         internal static byte[] zztelement {
             get {
-                object obj = ResourceManager.GetObject("zztelement", resourceCulture);
+                var obj = ResourceManager.GetObject("zztelement", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -105,7 +105,7 @@ namespace Roton.Properties {
         /// </summary>
         internal static byte[] zztextra {
             get {
-                object obj = ResourceManager.GetObject("zztextra", resourceCulture);
+                var obj = ResourceManager.GetObject("zztextra", resourceCulture);
                 return ((byte[])(obj));
             }
         }

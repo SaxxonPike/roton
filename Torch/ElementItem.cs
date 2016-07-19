@@ -6,23 +6,16 @@ namespace Torch
     {
         public ElementItem(Element element)
         {
-            this.Element = element;
+            Element = element;
         }
 
-        public Element Element
-        {
-            get;
-            private set;
-        }
+        public Element Element { get; }
 
-        public int Index
-        {
-            get { return Element.Index; }
-        }
+        public int Index => Element.Index;
 
         public override string ToString()
         {
-            string name = Element.ToString();
+            var name = Element.ToString();
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = "(Element " + Element.Index.ToString() + ")";

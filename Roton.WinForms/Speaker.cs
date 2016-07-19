@@ -18,17 +18,14 @@ namespace Roton.WinForms
 
         public void PlayDrum(int drum)
         {
-            
         }
 
         public void PlayNote(int note)
         {
-            
         }
 
         public void Stop()
         {
-            
         }
     }
 }

@@ -1,48 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Roton.Emulation
 {
     internal abstract class MemoryWorldBase : World
     {
         public MemoryWorldBase(Memory memory, int worldType)
-            : base()
         {
-            this.Memory = memory;
+            Memory = memory;
         }
 
-        abstract public MemoryFlagArrayBase FlagMemory { get; }
+        public abstract MemoryFlagArrayBase FlagMemory { get; }
 
         public override IList<string> Flags
         {
-            get
-            {
-                return FlagMemory;
-            }
-            protected set
-            {
-            }
+            get { return FlagMemory; }
+            protected set { }
         }
 
-        abstract public MemoryKeyArray KeyMemory { get; }
+        public abstract MemoryKeyArray KeyMemory { get; }
 
         public override IList<bool> Keys
         {
-            get
-            {
-                return KeyMemory;
-            }
-            protected set
-            {
-            }
+            get { return KeyMemory; }
+            protected set { }
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; private set; }
     }
 }

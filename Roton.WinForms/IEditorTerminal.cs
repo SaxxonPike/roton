@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Roton.WinForms {
-    public interface IEditorTerminal : IGameTerminal {
+namespace Roton.WinForms
+{
+    public interface IEditorTerminal : IGameTerminal
+    {
         bool CursorEnabled { get; set; }
         int CursorX { get; set; }
         int CursorY { get; set; }

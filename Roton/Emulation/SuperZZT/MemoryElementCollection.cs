@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation.SuperZZT
+﻿namespace Roton.Emulation.SuperZZT
 {
-    sealed internal partial class MemoryElementCollection : MemoryElementCollectionBase
+    internal sealed partial class MemoryElementCollection : MemoryElementCollectionBase
     {
         public MemoryElementCollection(Memory memory)
             : base(memory)
@@ -18,9 +13,6 @@ namespace Roton.Emulation.SuperZZT
             return new MemoryElement(Memory, index);
         }
 
-        public override int Count
-        {
-            get { return 80; }
-        }
+        public override int Count => 80;
     }
 }

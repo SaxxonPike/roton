@@ -1,17 +1,13 @@
-﻿using Roton.Emulation;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Roton
 {
-    sealed public partial class Context
+    public sealed partial class Context
     {
         public Context(string filename, bool editor)
         {
-            using (MemoryStream mem = new MemoryStream(File.ReadAllBytes(filename)))
+            using (var mem = new MemoryStream(File.ReadAllBytes(filename)))
             {
                 Initialize(mem, editor);
             }
@@ -19,7 +15,7 @@ namespace Roton
 
         public Context(byte[] data, bool editor)
         {
-            using (MemoryStream mem = new MemoryStream(data))
+            using (var mem = new MemoryStream(data))
             {
                 Initialize(mem, editor);
             }
@@ -48,7 +44,7 @@ namespace Roton
                 }
                 foreach (var actor in Actors)
                 {
-                    if (actor.Cycle > 0 && Core.ActIndex % actor.Cycle == Core.GameCycle % actor.Cycle)
+                    if (actor.Cycle > 0 && Core.ActIndex%actor.Cycle == Core.GameCycle%actor.Cycle)
                     {
                         Core.UpdateBoard(actor.Location);
                     }
@@ -60,10 +56,7 @@ namespace Roton
             }
         }
 
-        public int Height
-        {
-            get { return Core.Height; }
-        }
+        public int Height => Core.Height;
 
         internal void InitBoard(int board)
         {
@@ -74,13 +67,13 @@ namespace Roton
             ContextEngine = engine;
             switch (engine)
             {
-                case ContextEngine.ZZT:
+                case ContextEngine.Zzt:
                     Core = new Emulation.ZZT.Core();
                     ScreenWidth = 80;
                     ScreenHeight = 25;
                     ScreenWide = false;
                     break;
-                case ContextEngine.SuperZZT:
+                case ContextEngine.SuperZzt:
                     Core = new Emulation.SuperZZT.Core();
                     ScreenWidth = 40;
                     ScreenHeight = 25;
@@ -105,14 +98,14 @@ namespace Roton
         private void Initialize(Stream stream, bool editor)
         {
             ContextEngine engine;
-            BinaryReader reader = new BinaryReader(stream);
+            var reader = new BinaryReader(stream);
             switch (reader.ReadInt16())
             {
                 case -1:
-                    engine = ContextEngine.ZZT;
+                    engine = ContextEngine.Zzt;
                     break;
                 case -2:
-                    engine = ContextEngine.SuperZZT;
+                    engine = ContextEngine.SuperZzt;
                     break;
                 default:
                     throw Exceptions.UnknownFormat;
@@ -123,7 +116,7 @@ namespace Roton
 
         internal void Load(Stream stream)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            var reader = new BinaryReader(stream);
             if (reader.ReadInt16() != WorldData.WorldType)
             {
                 throw Exceptions.InvalidFormat;
@@ -136,11 +129,11 @@ namespace Roton
 
         private void LoadAfterType(Stream stream)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            var reader = new BinaryReader(stream);
             int boardCount = reader.ReadInt16();
             Serializer.LoadWorld(stream);
             Boards.Clear();
-            for (int i = 0; i <= boardCount; i++)
+            for (var i = 0; i <= boardCount; i++)
             {
                 Boards.Add(new PackedBoard(Serializer.LoadBoardData(stream)));
             }
@@ -155,17 +148,16 @@ namespace Roton
 
         public void Refresh()
         {
-            
         }
 
         public byte[] Save()
         {
-            using (MemoryStream mem = new MemoryStream())
+            using (var mem = new MemoryStream())
             {
-                BinaryWriter writer = new BinaryWriter(mem);
+                var writer = new BinaryWriter(mem);
                 Core.PackBoard();
-                writer.Write((Int16)WorldData.WorldType);
-                writer.Write((Int16)(Boards.Count - 1));
+                writer.Write((short) WorldData.WorldType);
+                writer.Write((short) (Boards.Count - 1));
                 writer.Flush();
                 Serializer.SaveWorld(mem);
                 foreach (var board in Boards)
@@ -179,12 +171,12 @@ namespace Roton
 
         public void Save(string filename)
         {
-            File.WriteAllBytes(filename, this.Save());
+            File.WriteAllBytes(filename, Save());
         }
 
         public void Save(Stream output)
         {
-            byte[] data = this.Save();
+            var data = Save();
             output.Write(data, 0, data.Length);
         }
 
@@ -198,9 +190,6 @@ namespace Roton
             Core.UnpackBoard(Core.Board);
         }
 
-        public int Width
-        {
-            get { return Core.Width; }
-        }
+        public int Width => Core.Width;
     }
 }

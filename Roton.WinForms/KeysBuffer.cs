@@ -8,20 +8,12 @@ namespace Roton.WinForms
 {
     public class KeysBuffer : IKeyboard
     {
-        static private Encoding _enc = Encoding.GetEncoding(437);
+        private static Encoding _enc = Encoding.GetEncoding(437);
         private Queue<int> _queue = new Queue<int>();
 
-        public bool Alt
-        {
-            get;
-            set;
-        }
+        public bool Alt { get; set; }
 
-        public bool CapsLock
-        {
-            get;
-            set;
-        }
+        public bool CapsLock { get; set; }
 
         public void Clear()
         {
@@ -34,11 +26,7 @@ namespace Roton.WinForms
             }
         }
 
-        public bool Control
-        {
-            get;
-            set;
-        }
+        public bool Control { get; set; }
 
         void Enqueue(int data)
         {
@@ -51,23 +39,34 @@ namespace Roton.WinForms
 
         private int GetCode(Keys data)
         {
-            var code = (data & Keys.KeyCode);
+            var code = data & Keys.KeyCode;
             var shift = ((data & Keys.Shift) != 0) ^ CapsLock;
             var alt = (data & Keys.Alt) != 0;
             var ctrl = (data & Keys.Control) != 0;
             switch (code)
             {
-                case Keys.Back: return 0x08;
-                case Keys.Down: return 0xD0;
-                case Keys.Enter: return 0x0D;
-                case Keys.Escape: return 0x1B;
-                case Keys.Left: return 0xCB;
-                case Keys.PageDown: return 0xD1;
-                case Keys.PageUp: return 0xC9;
-                case Keys.Right: return 0xCD;
-                case Keys.Space: return 0x20;
-                case Keys.Tab: return 0x09;
-                case Keys.Up: return 0xC8;
+                case Keys.Back:
+                    return 0x08;
+                case Keys.Down:
+                    return 0xD0;
+                case Keys.Enter:
+                    return 0x0D;
+                case Keys.Escape:
+                    return 0x1B;
+                case Keys.Left:
+                    return 0xCB;
+                case Keys.PageDown:
+                    return 0xD1;
+                case Keys.PageUp:
+                    return 0xC9;
+                case Keys.Right:
+                    return 0xCD;
+                case Keys.Space:
+                    return 0x20;
+                case Keys.Tab:
+                    return 0x09;
+                case Keys.Up:
+                    return 0xC8;
             }
             return -1;
         }
@@ -84,17 +83,13 @@ namespace Roton.WinForms
             }
         }
 
-        public bool NumLock
-        {
-            get;
-            set;
-        }
+        public bool NumLock { get; set; }
 
         public bool Press(char data)
         {
             try
             {
-                int code = _enc.GetBytes(new char[] { data })[0];
+                int code = _enc.GetBytes(new char[] {data})[0];
                 if (code >= 0x20 && code <= 0xFF)
                 {
                     Enqueue(code);
@@ -103,7 +98,7 @@ namespace Roton.WinForms
                 {
                     code = -1;
                 }
-                return (code >= 0);
+                return code >= 0;
             }
             catch (Exception)
             {
@@ -113,16 +108,12 @@ namespace Roton.WinForms
 
         public bool Press(Keys data)
         {
-            int code = GetCode(data);
+            var code = GetCode(data);
             if (code >= 0)
                 Enqueue(code);
-            return (code >= 0);
+            return code >= 0;
         }
 
-        public bool Shift
-        {
-            get;
-            set;
-        }
+        public bool Shift { get; set; }
     }
 }

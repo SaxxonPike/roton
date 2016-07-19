@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
-    internal enum RadiusMode : int
+    internal enum RadiusMode
     {
         Update = 0,
         Explode = 1,

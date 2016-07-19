@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Zip
 {
@@ -79,7 +75,7 @@ namespace Roton.Zip
 
         void SetFlagBit(int index, bool value)
         {
-            int bit = (value ? 1 : 0) << index;
+            var bit = (value ? 1 : 0) << index;
             Flags &= ~bit;
             Flags |= bit;
         }

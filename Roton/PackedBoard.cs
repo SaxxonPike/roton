@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton
 {
-    sealed public class PackedBoard
+    public sealed class PackedBoard
     {
         public PackedBoard()
         {
@@ -18,11 +15,7 @@ namespace Roton
             data.CopyTo(Data, 0);
         }
 
-        public byte[] Data
-        {
-            get;
-            set;
-        }
+        public byte[] Data { get; set; }
 
         public string Name
         {
@@ -31,7 +24,7 @@ namespace Roton
                 if (Data.Length >= 260)
                 {
                     int nameLength = Data[0];
-                    byte[] nameData = new byte[nameLength];
+                    var nameData = new byte[nameLength];
                     Array.Copy(Data, 1, nameData, 0, nameLength);
                     return nameData.ToStringValue();
                 }
@@ -41,8 +34,8 @@ namespace Roton
             {
                 if (Data.Length >= 260)
                 {
-                    byte[] nameData = value.ToBytes();
-                    byte nameLength = (byte)(nameData.Length & 0xFF);
+                    var nameData = value.ToBytes();
+                    var nameLength = (byte) (nameData.Length & 0xFF);
                     Data[0] = nameLength;
                     Array.Copy(nameData, 0, Data, 1, nameLength);
                 }

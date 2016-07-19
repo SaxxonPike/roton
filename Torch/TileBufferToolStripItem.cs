@@ -11,13 +11,13 @@ namespace Torch
         public TileBufferToolStripItem()
         {
             InitializeComponent();
-            this.Buffer = new List<Tile>();
-            this.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            this.ImageScaling = ToolStripItemImageScaling.None;
-            this.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.Text = "Buffer";
-            this.AutoSize = true;
+            Buffer = new List<Tile>();
+            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            ImageScaling = ToolStripItemImageScaling.None;
+            TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            TextImageRelation = TextImageRelation.TextBeforeImage;
+            Text = "Buffer";
+            AutoSize = true;
         }
 
         public TileBufferToolStripItem(IContainer container)
@@ -27,16 +27,8 @@ namespace Torch
             InitializeComponent();
         }
 
-        public IList<Tile> Buffer
-        {
-            get;
-            private set;
-        }
+        public IList<Tile> Buffer { get; private set; }
 
-        public Terminal Terminal
-        {
-            get;
-            set;
-        }
+        public Terminal Terminal { get; set; }
     }
 }

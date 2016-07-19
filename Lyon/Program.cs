@@ -17,7 +17,7 @@ namespace Lyon
 
             foreach (var arg in Environment.GetCommandLineArgs())
             {
-                switch(arg.ToLower())
+                switch (arg.ToLower())
                 {
                     case "-opengl":
                         useOpenGl = true;
@@ -33,10 +33,10 @@ namespace Lyon
             {
                 switch (Environment.OSVersion.Platform)
                 {
-					case PlatformID.MacOSX:
-					case PlatformID.Unix:
-						useOpenGl = true;
-						useWinForm = false;
+                    case PlatformID.MacOSX:
+                    case PlatformID.Unix:
+                        useOpenGl = true;
+                        useWinForm = false;
                         break;
                     default:
                         useOpenGl = false;

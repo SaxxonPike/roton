@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
     public partial class Tile
     {
@@ -13,46 +8,46 @@ namespace Roton
 
         public Tile(int id, int color)
         {
-            this.Id = id;
-            this.Color = color;
+            Id = id;
+            Color = color;
         }
 
         public Tile Clone()
         {
-            return new Tile(this.Id, this.Color);
+            return new Tile(Id, Color);
         }
 
         public void CopyFrom(Tile tile)
         {
-            this.Id = tile.Id;
-            this.Color = tile.Color;
+            Id = tile.Id;
+            Color = tile.Color;
         }
 
         public bool Matches(Tile other)
         {
-            return this.Id == other.Id && this.Color == other.Color;
+            return Id == other.Id && Color == other.Color;
         }
 
         public bool Matches(int id, int color)
         {
-            return this.Id == id && this.Color == color;
+            return Id == id && Color == color;
         }
 
         public void SetTo(int id, int color)
         {
-            this.Id = id;
-            this.Color = color;
+            Id = id;
+            Color = color;
         }
 
         public void SetTo(Element element)
         {
-            this.Id = element.Index;
+            Id = element.Index;
         }
 
         public void SetTo(Element element, int color)
         {
             SetTo(element);
-            this.Color = color;
+            Color = color;
         }
 
         public override string ToString()

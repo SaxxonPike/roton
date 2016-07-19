@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
-    abstract public partial class Board
+    public abstract partial class Board
     {
-        virtual public Location Camera { get; set; }
-        virtual public bool Dark { get; set; }
-        virtual public Location Enter { get; set; }
-        virtual public int ExitEast { get; set; }
-        virtual public int ExitNorth { get; set; }
-        virtual public int ExitSouth { get; set; }
-        virtual public int ExitWest { get; set; }
-        virtual public string Name { get; set; }
-        virtual public bool RestartOnZap { get; set; }
-        virtual public int Shots { get; set; }
-        virtual public int TimeLimit { get; set; }
+        public virtual Location Camera { get; set; }
+        public virtual bool Dark { get; set; }
+        public virtual Location Enter { get; set; }
+        public virtual int ExitEast { get; set; }
+        public virtual int ExitNorth { get; set; }
+        public virtual int ExitSouth { get; set; }
+        public virtual int ExitWest { get; set; }
+        public virtual string Name { get; set; }
+        public virtual bool RestartOnZap { get; set; }
+        public virtual int Shots { get; set; }
+        public virtual int TimeLimit { get; set; }
     }
 }

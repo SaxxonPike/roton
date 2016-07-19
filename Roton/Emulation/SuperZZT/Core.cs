@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation.SuperZZT
+﻿namespace Roton.Emulation.SuperZZT
 {
-    sealed internal partial class Core
+    internal sealed partial class Core
     {
         internal void MoveActorOnRiver(int index)
         {
             var actor = Actors[index];
             var vector = new Vector();
-            int underId = actor.UnderTile.Id;
+            var underId = actor.UnderTile.Id;
 
             if (underId == Elements.RiverNId)
             {

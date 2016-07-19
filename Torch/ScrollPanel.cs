@@ -11,13 +11,13 @@ namespace Torch
         public ScrollPanel()
         {
             InitializeComponent();
-            this.HScroll = true;
-            this.VScroll = true;
+            HScroll = true;
+            VScroll = true;
         }
 
         protected override Point ScrollToControl(Control activeControl)
         {
-            return this.AutoScrollPosition;
+            return AutoScrollPosition;
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Roton.Common
 {
-    static internal class Exceptions
+    internal static class Exceptions
     {
-        static public Exception InvalidFont = new FormatException(
+        public static Exception InvalidFont = new FormatException(
             "The font format is invalid."
             );
 
-        static public Exception InvalidPalette = new FormatException(
+        public static Exception InvalidPalette = new FormatException(
             "The palette format is invalid."
             );
     }

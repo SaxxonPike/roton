@@ -8,10 +8,11 @@ using OpenTK.Graphics.OpenGL;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
 
-namespace Roton.WinForms.OpenGL {
+namespace Roton.WinForms.OpenGL
+{
     public partial class Terminal : UserControl, IEditorTerminal
     {
-        static private Encoding _encoding = Encoding.GetEncoding(437);
+        private static Encoding _encoding = Encoding.GetEncoding(437);
 
         private bool _glReady = false;
         private int _glLastTexture = -1;
@@ -21,7 +22,7 @@ namespace Roton.WinForms.OpenGL {
         private AnsiChar[] _terminalBuffer;
         private Common.Font _terminalFont;
         private int _terminalHeight;
-        private Common.Palette _terminalPalette;
+        private Palette _terminalPalette;
         private int _terminalWidth;
         private bool _updated;
         private bool _wideMode;
@@ -45,7 +46,7 @@ namespace Roton.WinForms.OpenGL {
 
             // Initialize font and palette.
             _terminalFont = new Common.Font();
-            _terminalPalette = new Common.Palette();
+            _terminalPalette = new Palette();
 
             // Set default scale.
             ScaleX = 1;
@@ -58,7 +59,8 @@ namespace Roton.WinForms.OpenGL {
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if(disposing && (components != null)) {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -72,8 +74,8 @@ namespace Roton.WinForms.OpenGL {
 
         public void AttachKeyHandler(Form form)
         {
-            form.KeyDown += (object sender, KeyEventArgs e) => { OnKey(e); };
-            form.KeyUp += (object sender, KeyEventArgs e) => { OnKey(e); };
+            form.KeyDown += (sender, e) => { OnKey(e); };
+            form.KeyUp += (sender, e) => { OnKey(e); };
         }
 
         public void ClearKeys()
@@ -83,10 +85,7 @@ namespace Roton.WinForms.OpenGL {
 
         private FastBitmap Bitmap { get; set; }
 
-        public IKeyboard Keyboard
-        {
-            get { return _keys as IKeyboard; }
-        }
+        public IKeyboard Keyboard => _keys as IKeyboard;
 
         public bool Shift
         {
@@ -104,12 +103,16 @@ namespace Roton.WinForms.OpenGL {
         {
             //SuspendLayout();
             Blinking = !Blinking;
-            if(_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null)) {
-                int total = _terminalWidth * _terminalHeight;
-                int i = 0;
-                for(int y = 0; y < _terminalHeight; y++) {
-                    for(int x = 0; x < _terminalWidth; x++) {
-                        if((_terminalBuffer[i].Color & 0x80) != 0) {
+            if (_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null))
+            {
+                var total = _terminalWidth*_terminalHeight;
+                var i = 0;
+                for (var y = 0; y < _terminalHeight; y++)
+                {
+                    for (var x = 0; x < _terminalWidth; x++)
+                    {
+                        if ((_terminalBuffer[i].Color & 0x80) != 0)
+                        {
                             Draw(x, y, _terminalBuffer[i]);
                         }
                         i++;
@@ -121,7 +124,7 @@ namespace Roton.WinForms.OpenGL {
 
         public void Clear()
         {
-            _terminalBuffer = new AnsiChar[_terminalWidth * _terminalHeight];
+            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -129,23 +132,25 @@ namespace Roton.WinForms.OpenGL {
             Redraw();
             GlRender();
         }
-        
+
         private void Draw(int x, int y, AnsiChar ac)
         {
-            if ((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight))
+            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
             {
-                var drawX = x * _terminalFont.Width;
-                var drawY = y * _terminalFont.Height;
+                var drawX = x*_terminalFont.Width;
+                var drawY = y*_terminalFont.Height;
                 var bgColor = _terminalPalette.Colors[(ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF)];
-                var fgColor = (BlinkEnabled && Blinking && (ac.Color & 0x80) != 0) ? bgColor : _terminalPalette.Colors[ac.Color & 0xF];
+                var fgColor = BlinkEnabled && Blinking && (ac.Color & 0x80) != 0
+                    ? bgColor
+                    : _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
-                _updated = true;                
+                _updated = true;
             }
         }
 
         void glControl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            base.OnKeyPress(e);
+            OnKeyPress(e);
             _keys.Press(e.KeyChar);
         }
 
@@ -161,16 +166,16 @@ namespace Roton.WinForms.OpenGL {
 
             // Initialize OpenGL.
             GL.ClearColor(Color.Black);
-            GL.Disable(EnableCap.Lighting);  // unnecessary
+            GL.Disable(EnableCap.Lighting); // unnecessary
             GL.Disable(EnableCap.DepthTest); // unnecessary
-            GL.Enable(EnableCap.Texture2D);  // required for FBOs to work
+            GL.Enable(EnableCap.Texture2D); // required for FBOs to work
 
             _glReady = true;
             SetViewport();
 
             // Enable blinking by default; set timer for it.
             BlinkEnabled = true;
-            timerDaemon.Start(Blink, 1f / 0.2f);
+            timerDaemon.Start(Blink, 1f/0.2f);
 
             // Start the rendering timer.
             displayTimer.Enabled = true;
@@ -179,13 +184,13 @@ namespace Roton.WinForms.OpenGL {
         void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             OnMouse(this, e);
-            base.OnMouseDown(e);
+            OnMouseDown(e);
         }
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
             OnMouse(this, e);
-            base.OnMouseMove(e);
+            OnMouseMove(e);
         }
 
         private void GlGenerateTexture()
@@ -194,27 +199,31 @@ namespace Roton.WinForms.OpenGL {
 
             var glNewTexture = GL.GenTexture();
 
-            BitmapData fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, WinPixelFormat.Format32bppArgb);
+            var fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly,
+                WinPixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0, GLPixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0,
+                GLPixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
             Bitmap.UnlockBits(fbData);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                (int) TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                (int) TextureMagFilter.Nearest);
 
-            if(_glLastTexture != -1)
+            if (_glLastTexture != -1)
                 GL.DeleteTexture(_glLastTexture);
             _glLastTexture = glNewTexture;
         }
-        
+
         private void GlRender()
         {
-            if(!_glReady) return;
+            if (!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             // Don't draw anything if the Bitmap is null.
-            if(Bitmap == null) return;
+            if (Bitmap == null) return;
 
             GlGenerateTexture();
 
@@ -222,10 +231,14 @@ namespace Roton.WinForms.OpenGL {
             GL.LoadIdentity();
 
             GL.Begin(BeginMode.Quads);
-            GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(_terminalWidth, 0.0f);
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(_terminalWidth, _terminalHeight);
-            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0.0f, _terminalHeight);
+            GL.TexCoord2(0.0f, 0.0f);
+            GL.Vertex2(0.0f, 0.0f);
+            GL.TexCoord2(1.0f, 0.0f);
+            GL.Vertex2(_terminalWidth, 0.0f);
+            GL.TexCoord2(1.0f, 1.0f);
+            GL.Vertex2(_terminalWidth, _terminalHeight);
+            GL.TexCoord2(0.0f, 1.0f);
+            GL.Vertex2(0.0f, _terminalHeight);
             GL.End();
 
             glControl.SwapBuffers();
@@ -233,29 +246,35 @@ namespace Roton.WinForms.OpenGL {
 
         void OnKey(KeyEventArgs e)
         {
-            if(!e.Shift) {
+            if (!e.Shift)
+            {
                 Shift = false;
                 _shiftHoldX = false;
                 _shiftHoldY = false;
-            } else {
+            }
+            else
+            {
                 Shift = true;
             }
             Alt = e.Alt;
             Control = e.Control;
         }
 
-        void OnMouse(object sender, MouseEventArgs e) {
-            if(CursorEnabled) {
-                int newX = (int)(e.X / _terminalFont.Width * (_wideMode ? 0.5 : 1));
-                int newY = e.Y / _terminalFont.Height;
+        void OnMouse(object sender, MouseEventArgs e)
+        {
+            if (CursorEnabled)
+            {
+                var newX = (int) (e.X/_terminalFont.Width*(_wideMode ? 0.5 : 1));
+                var newY = e.Y/_terminalFont.Height;
                 UpdateCursor(newX, newY);
             }
         }
 
         public void Plot(int x, int y, AnsiChar ac)
         {
-            if((x >= 0 && x < _terminalWidth) && (y >= 0 && y < _terminalHeight)) {
-                var index = x + (y * _terminalWidth);
+            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
+            {
+                var index = x + y*_terminalWidth;
                 _terminalBuffer[index] = ac;
                 Draw(x, y, ac);
             }
@@ -265,22 +284,23 @@ namespace Roton.WinForms.OpenGL {
         {
             var keyAlt = (keyData & Keys.Alt) != 0;
             var keyControl = (keyData & Keys.Control) != 0;
-            var keyRaw = (keyData & Keys.KeyCode);
+            var keyRaw = keyData & Keys.KeyCode;
             _keys.NumLock = IsKeyLocked(Keys.NumLock);
             _keys.CapsLock = IsKeyLocked(Keys.CapsLock);
 
             bool result = base.ProcessCmdKey(ref msg, keyData);
-            if(!keyAlt && !keyControl && keyRaw != Keys.ShiftKey) {
+            if (!keyAlt && !keyControl && keyRaw != Keys.ShiftKey)
+            {
                 OnKey(new KeyEventArgs(keyData));
                 return _keys.Press(keyData);
             }
             return result;
         }
-        
+
         private void Redraw()
         {
             var index = 0;
-            for(var y = 0; y < _terminalHeight; y++)
+            for (var y = 0; y < _terminalHeight; y++)
                 for (var x = 0; x < _terminalWidth; x++)
                     Draw(x, y, _terminalBuffer[index++]);
 
@@ -288,18 +308,23 @@ namespace Roton.WinForms.OpenGL {
             if (!CursorEnabled || Bitmap == null) return;
             using (Graphics g = Graphics.FromImage(Bitmap))
             {
-                using (Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)), dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
+                using (
+                    Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
+                        dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
                 {
-                    Rectangle outerRect = new Rectangle(CursorX * _terminalFont.Width, CursorY * _terminalFont.Height, _terminalFont.Width - 1, _terminalFont.Height - 1);
-                    g.DrawLines(dark, new Point[] {
-                            new Point(outerRect.Left, outerRect.Bottom),
-                            new Point(outerRect.Right, outerRect.Bottom),
-                            new Point(outerRect.Right, outerRect.Top)
+                    var outerRect = new Rectangle(CursorX*_terminalFont.Width, CursorY*_terminalFont.Height,
+                        _terminalFont.Width - 1, _terminalFont.Height - 1);
+                    g.DrawLines(dark, new Point[]
+                    {
+                        new Point(outerRect.Left, outerRect.Bottom),
+                        new Point(outerRect.Right, outerRect.Bottom),
+                        new Point(outerRect.Right, outerRect.Top)
                     });
-                    g.DrawLines(bright, new Point[] {
-                            new Point(outerRect.Left, outerRect.Bottom),
-                            new Point(outerRect.Left, outerRect.Top),
-                            new Point(outerRect.Right, outerRect.Top)
+                    g.DrawLines(bright, new Point[]
+                    {
+                        new Point(outerRect.Left, outerRect.Bottom),
+                        new Point(outerRect.Left, outerRect.Top),
+                        new Point(outerRect.Right, outerRect.Top)
                     });
                 }
             }
@@ -308,10 +333,13 @@ namespace Roton.WinForms.OpenGL {
         public Bitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
-            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF], _terminalPalette[(color >> 4) & 0xF]);
-            if(_wideMode) {
-                var wideResult = new Bitmap(result.Width * 2, result.Height, result.PixelFormat);
-                using(Graphics g = Graphics.FromImage(wideResult)) {
+            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
+                _terminalPalette[(color >> 4) & 0xF]);
+            if (_wideMode)
+            {
+                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
+                using (Graphics g = Graphics.FromImage(wideResult))
+                {
                     g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                     g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                     g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
@@ -329,8 +357,8 @@ namespace Roton.WinForms.OpenGL {
 
             if (AutoSize)
             {
-                Width = (_terminalWidth * _terminalFont.Width) * xScale * (_wideMode ? 2 : 1);
-                Height = (_terminalHeight * _terminalFont.Height) * yScale;
+                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
+                Height = _terminalHeight*_terminalFont.Height*yScale;
             }
 
             SetViewport();
@@ -346,7 +374,7 @@ namespace Roton.WinForms.OpenGL {
 
             // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
             var oldBitmap = Bitmap;
-            Bitmap = new FastBitmap(_terminalWidth * _terminalFont.Width, _terminalHeight * _terminalFont.Height);
+            Bitmap = new FastBitmap(_terminalWidth*_terminalFont.Width, _terminalHeight*_terminalFont.Height);
             if (oldBitmap != null)
                 oldBitmap.Dispose();
 
@@ -355,8 +383,8 @@ namespace Roton.WinForms.OpenGL {
 
             if (AutoSize)
             {
-                Width = _terminalWidth * _terminalFont.Width * ScaleX * (wide ? 2 : 1);
-                Height = _terminalHeight * _terminalFont.Height * ScaleY;
+                Width = _terminalWidth*_terminalFont.Width*ScaleX*(wide ? 2 : 1);
+                Height = _terminalHeight*_terminalFont.Height*ScaleY;
             }
 
             // Reconfigure OpenGL viewport.
@@ -384,7 +412,7 @@ namespace Roton.WinForms.OpenGL {
             }
         }
 
-        public Common.Palette TerminalPalette
+        public Palette TerminalPalette
         {
             get { return _terminalPalette; }
             set
@@ -394,50 +422,66 @@ namespace Roton.WinForms.OpenGL {
             }
         }
 
-        internal int TranslateColorIndex(int color) {
+        internal int TranslateColorIndex(int color)
+        {
             // if blinking is enabled, we only get the first 8 colors for background
-            if(BlinkEnabled) {
+            if (BlinkEnabled)
+            {
                 color &= 0x7F;
             }
             return color;
         }
 
-        void UpdateCursor(int newX, int newY) {
-            if(Shift && !_shiftHoldX && !_shiftHoldY) {
-                if(CursorX == newX && CursorY != newY)
+        void UpdateCursor(int newX, int newY)
+        {
+            if (Shift && !_shiftHoldX && !_shiftHoldY)
+            {
+                if (CursorX == newX && CursorY != newY)
                     _shiftHoldX = true;
-                else if(CursorX != newX && CursorY == newY)
+                else if (CursorX != newX && CursorY == newY)
                     _shiftHoldY = true;
             }
 
-            if(_shiftHoldX) {
+            if (_shiftHoldX)
+            {
                 newX = CursorX;
             }
 
-            if(_shiftHoldY) {
+            if (_shiftHoldY)
+            {
                 newY = CursorY;
             }
 
-            if(newX != CursorX || newY != CursorY) {
+            if (newX != CursorX || newY != CursorY)
+            {
                 _updated = true;
                 CursorX = newX;
                 CursorY = newY;
             }
         }
-        
+
         public void Write(int x, int y, string value, int color)
         {
             var ac = new AnsiChar {Color = color};
             var characters = _encoding.GetBytes(value);
             var count = characters.Length;
 
-            while(x < 0) { x += _terminalWidth; y--; }
+            while (x < 0)
+            {
+                x += _terminalWidth;
+                y--;
+            }
 
-            for(int index = 0; index < count; index++) {
+            for (var index = 0; index < count; index++)
+            {
                 ac.Char = characters[index];
                 Plot(x, y, ac);
                 x++;
-                if(x >= _terminalWidth) { x -= _terminalWidth; y++; }
+                if (x >= _terminalWidth)
+                {
+                    x -= _terminalWidth;
+                    y++;
+                }
             }
         }
     }

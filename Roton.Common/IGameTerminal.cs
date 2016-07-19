@@ -1,4 +1,5 @@
-﻿namespace Roton.Common {
+﻿namespace Roton.Common
+{
     public interface IGameTerminal : ITerminal
     {
         Font TerminalFont { get; set; }

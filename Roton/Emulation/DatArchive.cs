@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Roton.Emulation
 {
     internal class DatArchive : IFileSystem
     {
-        private const int DAT_ARCHIVE_ENTRIES = 24;
-        private const int DAT_ARCHIVE_NAME_LENGTH = 50;
+        private const int DatArchiveEntries = 24;
+        private const int DatArchiveNameLength = 50;
 
         public DatArchive(byte[] data)
         {
-            this.FileData = new Dictionary<string, byte[]>();
-            this.Data = data;
+            FileData = new Dictionary<string, byte[]>();
+            Data = data;
         }
 
         public void ChangeDirectory(string relativeDirectory)
@@ -24,32 +23,29 @@ namespace Roton.Emulation
 
         protected byte[] Data
         {
-            get
-            {
-                return DataBytes;
-            }
+            get { return DataBytes; }
             set
             {
                 FileData.Clear();
                 DataBytes = value;
-                using (MemoryStream mem = new MemoryStream(DataBytes))
+                using (var mem = new MemoryStream(DataBytes))
                 {
-                    BinaryReader reader = new BinaryReader(mem);
+                    var reader = new BinaryReader(mem);
                     int count = reader.ReadInt16();
-                    string[] names = new string[DAT_ARCHIVE_ENTRIES];
-                    int[] offsets = new int[DAT_ARCHIVE_ENTRIES];
-                    byte[][] data = new byte[DAT_ARCHIVE_ENTRIES][];
+                    var names = new string[DatArchiveEntries];
+                    var offsets = new int[DatArchiveEntries];
+                    var data = new byte[DatArchiveEntries][];
 
                     // get virtual file names
-                    for (int i = 0; i < DAT_ARCHIVE_ENTRIES; i++)
+                    for (var i = 0; i < DatArchiveEntries; i++)
                     {
                         if (i < count)
                         {
                             int nameLength = reader.ReadByte();
-                            byte[] nameData = reader.ReadBytes(nameLength);
+                            var nameData = reader.ReadBytes(nameLength);
 
                             // read garbage bytes
-                            reader.ReadBytes(DAT_ARCHIVE_NAME_LENGTH - nameLength);
+                            reader.ReadBytes(DatArchiveNameLength - nameLength);
 
                             names[i] = nameData.ToStringValue();
                         }
@@ -60,22 +56,22 @@ namespace Roton.Emulation
                     }
 
                     // get offsets within the data
-                    for (int i = 0; i < DAT_ARCHIVE_ENTRIES; i++)
+                    for (var i = 0; i < DatArchiveEntries; i++)
                     {
                         offsets[i] = reader.ReadInt32();
                     }
 
                     // read from each offset
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         if (!string.IsNullOrWhiteSpace(names[i]))
                         {
                             mem.Position = offsets[i];
-                            StringBuilder lineBuilder = new StringBuilder();
+                            var lineBuilder = new StringBuilder();
                             while (true)
                             {
                                 int lineLength = reader.ReadByte();
-                                string line = reader.ReadBytes(lineLength).ToStringValue();
+                                var line = reader.ReadBytes(lineLength).ToStringValue();
                                 if (line != @"@")
                                 {
                                     if (lineBuilder.Length > 0)
@@ -96,23 +92,11 @@ namespace Roton.Emulation
             }
         }
 
-        protected byte[] DataBytes
-        {
-            get;
-            set;
-        }
+        protected byte[] DataBytes { get; set; }
 
-        protected Dictionary<string, byte[]> FileData
-        {
-            get;
-            set;
-        }
+        protected Dictionary<string, byte[]> FileData { get; set; }
 
-        protected List<string> Files
-        {
-            get;
-            set;
-        }
+        protected List<string> Files { get; set; }
 
         public IList<string> GetDirectories()
         {

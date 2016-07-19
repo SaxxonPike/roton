@@ -5,35 +5,35 @@ using System.Runtime.InteropServices;
 
 namespace Roton.Common
 {
-    sealed public class Glyph : Roton.Emulation.FixedList<int>
+    public sealed class Glyph : Emulation.FixedList<int>
     {
-        private const Int32 BLACK = -1 ^ COLOR_MASK;
-        private const Int32 COLOR_MASK = 0xFFFFFF;
-        private const Int32 WHITE = -1;
+        private const int Black = -1 ^ ColorMask;
+        private const int ColorMask = 0xFFFFFF;
+        private const int White = -1;
 
         internal Glyph(byte[] source, int xScale, int yScale)
         {
             Height = source.Length;
             Width = 8;
-            PixelCount = Width * Height * xScale * yScale;
-            Data = new Int32[PixelCount];
+            PixelCount = Width*Height*xScale*yScale;
+            Data = new int[PixelCount];
 
-            int index = 0;
-            int rowSize = 8 * xScale;
-            for (int i = 0; i < Height; i++)
+            var index = 0;
+            var rowSize = 8*xScale;
+            for (var i = 0; i < Height; i++)
             {
-                byte rowData = source[i];
-                for (int j = 0; j < 8; j++)
+                var rowData = source[i];
+                for (var j = 0; j < 8; j++)
                 {
-                    for (int x = 0; x < xScale; x++)
+                    for (var x = 0; x < xScale; x++)
                     {
-                        this[index++] = ((rowData & 0x80) != 0) ? WHITE : BLACK;
+                        this[index++] = (rowData & 0x80) != 0 ? White : Black;
                     }
                     rowData <<= 1;
                 }
-                for (int y = 1; y < yScale; y++)
+                for (var y = 1; y < yScale; y++)
                 {
-                    for (int x = 0; x < rowSize; x++)
+                    for (var x = 0; x < rowSize; x++)
                     {
                         this[index] = this[index - rowSize];
                         index++;
@@ -47,52 +47,31 @@ namespace Roton.Common
 
         public override int this[int index]
         {
-            get
-            {
-                return Data[index];
-            }
-            set
-            {
-                Data[index] = BLACK | (value & COLOR_MASK);
-            }
+            get { return Data[index]; }
+            set { Data[index] = Black | (value & ColorMask); }
         }
 
-        public override int Count
-        {
-            get { return PixelCount; }
-        }
+        public override int Count => PixelCount;
 
-        public Int32[] Data
-        {
-            get;
-            private set;
-        }
+        public int[] Data { get; }
 
-        public int Height
-        {
-            get;
-            private set;
-        }
+        public int Height { get; }
 
-        private int PixelCount
-        {
-            get;
-            set;
-        }
+        private int PixelCount { get; }
 
         /// <summary>
         /// Render the glyph using the specified raw color data.
         /// </summary>
-        public Int32[] Render(int foreColor, int backColor)
+        public int[] Render(int foreColor, int backColor)
         {
-            int length = PixelCount;
-            Int32[] result = new Int32[length];
-            Int32 mask;
+            var length = PixelCount;
+            var result = new int[length];
+            int mask;
 
-            for (int index = 0; index < length; index++)
+            for (var index = 0; index < length; index++)
             {
                 mask = Data[index];
-                result[index] = BLACK | (mask & foreColor) | ((mask ^ COLOR_MASK) & backColor);
+                result[index] = Black | (mask & foreColor) | ((mask ^ ColorMask) & backColor);
             }
 
             return result;
@@ -104,7 +83,8 @@ namespace Roton.Common
         public Bitmap Render(Color foreColor, Color backColor)
         {
             var result = new Bitmap(Width, Height, PixelFormat.Format32bppPArgb);
-            var bits = result.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
+            var bits = result.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppPArgb);
             Marshal.Copy(Render(foreColor.ToArgb(), backColor.ToArgb()), 0, bits.Scan0, PixelCount);
             result.UnlockBits(bits);
             return result;
@@ -115,17 +95,17 @@ namespace Roton.Common
         /// </summary>
         public void Render(FastBitmap bitmap, int x, int y, int foreColor, int backColor)
         {
-            Int32[] bits = bitmap.Bits;
-            Int32[] data = this.Data;
-            int bitsWidth = bitmap.Width;
-            int bitsOffset = ((y * bitmap.Width) + x);
+            var bits = bitmap.Bits;
+            var data = Data;
+            var bitsWidth = bitmap.Width;
+            var bitsOffset = y*bitmap.Width + x;
             int bitsRowOffset;
-            int dataOffset = 0;
+            var dataOffset = 0;
             int mask;
-            int height = this.Height;
-            int width = this.Width;
-            int i = 0;
-            int j = 0;
+            var height = Height;
+            var width = Width;
+            var i = 0;
+            var j = 0;
             while (i < height)
             {
                 j = 0;
@@ -133,7 +113,7 @@ namespace Roton.Common
                 while (j < width)
                 {
                     mask = data[dataOffset++];
-                    bits[bitsOffset++] = BLACK | (mask & foreColor) | ((mask ^ COLOR_MASK) & backColor);
+                    bits[bitsOffset++] = Black | (mask & foreColor) | ((mask ^ ColorMask) & backColor);
                     j++;
                 }
                 bitsOffset = bitsRowOffset + bitsWidth;
@@ -144,10 +124,6 @@ namespace Roton.Common
         /// <summary>
         /// Width of the glyph.
         /// </summary>
-        public int Width
-        {
-            get;
-            set;
-        }
+        public int Width { get; set; }
     }
 }

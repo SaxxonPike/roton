@@ -15,19 +15,19 @@ namespace Torch
         Context _context;
         IEditorTerminal _terminal;
 
-        public Editor(bool openGL = false)
+        public Editor(bool openGl = false)
         {
             var font1 = new Roton.Common.Font();
             var palette1 = new Roton.Common.Palette();
 
             InitializeComponent();
-            this.Load += (object sender, EventArgs e) => { OnLoad(); };
+            Load += (sender, e) => { OnLoad(); };
 
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            if (!openGL)
-                _terminal = new Roton.WinForms.Terminal();
+            if (!openGl)
+                _terminal = new Terminal();
             else
                 _terminal = new Roton.WinForms.OpenGL.Terminal();
 
@@ -38,15 +38,12 @@ namespace Torch
             _terminal.AutoSize = true;
             _terminal.TerminalFont = font1;
             _terminal.TerminalPalette = palette1;
-            mainPanel.Controls.Add((UserControl)_terminal);
+            mainPanel.Controls.Add((UserControl) _terminal);
         }
 
         Actor Actor
         {
-            get
-            {
-                return _actor;
-            }
+            get { return _actor; }
             set
             {
                 _actor = value;
@@ -64,16 +61,20 @@ namespace Torch
 
         ContextMenuStrip BuildBoardContextMenu(int parameterIndex)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
-            int index = 0;
+            var result = new ContextMenuStrip();
+            var items = new List<ToolStripMenuItem>();
+            var index = 0;
 
             foreach (var board in Context.Boards)
             {
                 var item = new ToolStripMenuItem();
                 item.Text = board.Name;
                 item.Tag = index;
-                item.Click += (object sender, EventArgs e) => { SetParameter(parameterIndex, (int)(sender as ToolStripItem).Tag); };
+                item.Click +=
+                    (sender, e) =>
+                    {
+                        SetParameter(parameterIndex, (int) (sender as ToolStripItem).Tag);
+                    };
                 items.Add(item);
                 index++;
             }
@@ -84,14 +85,14 @@ namespace Torch
 
         void BuildBoardList()
         {
-            int index = 0;
+            var index = 0;
             boardsMenu.DropDownItems.Clear();
             foreach (var board in Context.Boards)
             {
                 ToolStripItem item = new ToolStripMenuItem();
                 item.Text = "[" + index.ToString() + "] " + board.Name;
                 item.Tag = index;
-                item.Click += (object sender, EventArgs e) => { SetBoard((int)(sender as ToolStripItem).Tag); };
+                item.Click += (sender, e) => { SetBoard((int) (sender as ToolStripItem).Tag); };
                 boardsMenu.DropDownItems.Add(item);
                 index++;
             }
@@ -99,17 +100,21 @@ namespace Torch
 
         ContextMenuStrip BuildCharacterContextMenu(int parameterIndex)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
+            var result = new ContextMenuStrip();
+            var items = new List<ToolStripMenuItem>();
 
-            for (int i = 0; i < 256; i++)
+            for (var i = 0; i < 256; i++)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem();
+                var item = new ToolStripMenuItem();
                 item.Text = "Char #" + i.ToString() + " / " + i.ToHex8() + "h";
                 item.Image = _terminal.RenderSingle(i, Color);
                 item.ImageScaling = ToolStripItemImageScaling.None;
                 item.Tag = i;
-                item.Click += (object sender, EventArgs e) => { SetParameter(parameterIndex, (int)(sender as ToolStripMenuItem).Tag); };
+                item.Click +=
+                    (sender, e) =>
+                    {
+                        SetParameter(parameterIndex, (int) (sender as ToolStripMenuItem).Tag);
+                    };
                 items.Add(item);
             }
 
@@ -124,13 +129,16 @@ namespace Torch
             {
                 return new ToolStripSeparator();
             }
-            return new ToolStripMenuItem(text, null, (object sender, EventArgs e) => { if (click != null) click(); });
+            return new ToolStripMenuItem(text, null, (sender, e) =>
+            {
+                if (click != null) click();
+            });
         }
 
         ContextMenuStrip BuildElementContextMenu(int menuNumber)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            int index = 0;
+            var result = new ContextMenuStrip();
+            var index = 0;
 
             foreach (var element in Context.Elements)
             {
@@ -138,7 +146,7 @@ namespace Torch
                 {
                     if (element.Category.Length > 0)
                     {
-                        ToolStripMenuItem categoryItem = new ToolStripMenuItem();
+                        var categoryItem = new ToolStripMenuItem();
                         categoryItem.Text = element.Category;
                         categoryItem.Enabled = false;
                         if (result.Items.Count > 0)
@@ -147,12 +155,13 @@ namespace Torch
                         }
                         result.Items.Add(categoryItem);
                     }
-                    ToolStripMenuItem item = new ToolStripMenuItem();
+                    var item = new ToolStripMenuItem();
                     item.Text = "(&" + char.ConvertFromUtf32(element.Key) + ") " + element.Name;
                     item.Tag = index;
                     item.Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element));
                     item.ImageScaling = ToolStripItemImageScaling.None;
-                    item.Click += (object sender, EventArgs e) => { SelectElement((int)(sender as ToolStripMenuItem).Tag); };
+                    item.Click +=
+                        (sender, e) => { SelectElement((int) (sender as ToolStripMenuItem).Tag); };
                     result.Items.Add(item);
                 }
                 index++;
@@ -178,9 +187,9 @@ namespace Torch
 
         ContextMenuStrip BuildParameterContextMenu(int parameterIndex, bool includeHeader)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            ToolStripMenuItem category = new ToolStripMenuItem();
-            int preferredValue = 0;
+            var result = new ContextMenuStrip();
+            var category = new ToolStripMenuItem();
+            var preferredValue = 0;
 
             switch (parameterIndex)
             {
@@ -210,12 +219,16 @@ namespace Torch
                 preferredValue += 2;
             }
 
-            for (int i = 1; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem();
+                var item = new ToolStripMenuItem();
                 item.Text = i.ToString();
                 item.Tag = i - 1;
-                item.Click += (object sender, EventArgs e) => { SetParameter(parameterIndex, (int)(sender as ToolStripMenuItem).Tag); };
+                item.Click +=
+                    (sender, e) =>
+                    {
+                        SetParameter(parameterIndex, (int) (sender as ToolStripMenuItem).Tag);
+                    };
                 result.Items.Add(item);
             }
 
@@ -229,8 +242,8 @@ namespace Torch
 
         ContextMenuStrip BuildStepContextMenu(bool includeHeader)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            ToolStripMenuItem category = new ToolStripMenuItem();
+            var result = new ContextMenuStrip();
+            var category = new ToolStripMenuItem();
 
             category.Text = SelectedElement.Step;
             if (string.IsNullOrWhiteSpace(category.Text))
@@ -243,9 +256,9 @@ namespace Torch
                 result.Items.Add(new ToolStripSeparator());
             }
 
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem();
+                var item = new ToolStripMenuItem();
                 switch (i)
                 {
                     case 0:
@@ -265,7 +278,7 @@ namespace Torch
                         item.Tag = Vector.East;
                         break;
                 }
-                item.Click += (object sender, EventArgs e) => { SetStep((Vector)(sender as ToolStripMenuItem).Tag); };
+                item.Click += (sender, e) => { SetStep((Vector) (sender as ToolStripMenuItem).Tag); };
                 result.Items.Add(item);
             }
 
@@ -275,9 +288,9 @@ namespace Torch
 
         ContextMenuStrip BuildTileContextMenu(int x, int y)
         {
-            ContextMenuStrip result = new ContextMenuStrip();
-            bool actorPresent = false;
-            Tile tile = Context.TileAt(x + 1, y + 1);
+            var result = new ContextMenuStrip();
+            var actorPresent = false;
+            var tile = Context.TileAt(x + 1, y + 1);
 
             foreach (var actor in Context.Actors)
             {
@@ -342,27 +355,18 @@ namespace Torch
                 }
             }
 
-            return (result.Items.Count > 0) ? result : null;
+            return result.Items.Count > 0 ? result : null;
         }
 
         int Color
         {
-            get
-            {
-                return _color;
-            }
-            set
-            {
-                _color = value;
-            }
+            get { return _color; }
+            set { _color = value; }
         }
 
         Context Context
         {
-            get
-            {
-                return _context;
-            }
+            get { return _context; }
             set
             {
                 _context = value;
@@ -391,7 +395,7 @@ namespace Torch
             CopyCursorColor();
             var actor = Context.CreateActor();
             actor.DuplicateFrom(Actor);
-            this.Actor = actor;
+            Actor = actor;
         }
 
         void CycleAdvance()
@@ -434,16 +438,16 @@ namespace Torch
         }
 
         string FileFilters
-        {
-            get { return "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.szt)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"; }
-        }
+            =>
+                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.szt)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
+            ;
 
         void GetCursorActor()
         {
             Actor = Context.CreateActor();
 
-            int x = _terminal.CursorX + 1;
-            int y = _terminal.CursorY + 1;
+            var x = _terminal.CursorX + 1;
+            var y = _terminal.CursorY + 1;
             foreach (var actor in Context.Actors)
             {
                 if (actor.Location.X == x && actor.Location.Y == y)
@@ -476,10 +480,17 @@ namespace Torch
             string selectedParameter = null;
             switch (index)
             {
-                case 1: selectedParameter = SelectedElement.P1; break;
-                case 2: selectedParameter = SelectedElement.P2; break;
-                case 3: selectedParameter = SelectedElement.P3; break;
-                default: return null;
+                case 1:
+                    selectedParameter = SelectedElement.P1;
+                    break;
+                case 2:
+                    selectedParameter = SelectedElement.P2;
+                    break;
+                case 3:
+                    selectedParameter = SelectedElement.P3;
+                    break;
+                default:
+                    return null;
             }
 
             switch (selectedParameter.ToLowerInvariant())
@@ -515,26 +526,36 @@ namespace Torch
         void OnLoad()
         {
             // control events
-            this.codeEditor.Closed += (object sender, EventArgs e) => { this.codeEditor.Visible = false; };
-            this.elementComboBox.SelectedIndexChanged += (object sender, EventArgs e) => { if (elementComboBox.SelectedIndex >= 0) { SelectElement((elementComboBox.SelectedItem as ElementItem).Index); } };
-            this.editBoardButton.Click += (object sender, EventArgs e) => { SelectBoard(3); };
-            this.editCodeButton.Click += (object sender, EventArgs e) => { EditCode(); };
-            this.editP1Button.Click += (object sender, EventArgs e) => { SelectParameter(1); };
-            this.editP2Button.Click += (object sender, EventArgs e) => { SelectParameter(2); };
-            this.editP3Button.Click += (object sender, EventArgs e) => { SelectParameter(3); };
-            this.editStepButton.Click += (object sender, EventArgs e) => { SelectStep(); };
-            this.openToolStripMenuItem.Click += (object sender, EventArgs e) => { ShowOpenWorld(); };
-            this.saveToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorld(); };
-            this.saveAsToolStripMenuItem.Click += (object sender, EventArgs e) => { SaveWorldAs(); };
-            this.scale2xButton.Click += (object sender, EventArgs e) => { int scale = this.scale2xButton.Checked ? 2 : 1; _terminal.SetScale(scale, scale); };
-            this.showUndefinedElementsButton.CheckedChanged += (object sender, EventArgs e) => { BuildElementList(); };
-            this.statsEnabledButton.CheckedChanged += (object sender, EventArgs e) => { UpdateElement(); };
-            this.testMenuButton.Click += (object sender, EventArgs e) => { TestWorld(); };
+            codeEditor.Closed += (sender, e) => { codeEditor.Visible = false; };
+            elementComboBox.SelectedIndexChanged += (sender, e) =>
+            {
+                if (elementComboBox.SelectedIndex >= 0)
+                {
+                    SelectElement((elementComboBox.SelectedItem as ElementItem).Index);
+                }
+            };
+            editBoardButton.Click += (sender, e) => { SelectBoard(3); };
+            editCodeButton.Click += (sender, e) => { EditCode(); };
+            editP1Button.Click += (sender, e) => { SelectParameter(1); };
+            editP2Button.Click += (sender, e) => { SelectParameter(2); };
+            editP3Button.Click += (sender, e) => { SelectParameter(3); };
+            editStepButton.Click += (sender, e) => { SelectStep(); };
+            openToolStripMenuItem.Click += (sender, e) => { ShowOpenWorld(); };
+            saveToolStripMenuItem.Click += (sender, e) => { SaveWorld(); };
+            saveAsToolStripMenuItem.Click += (sender, e) => { SaveWorldAs(); };
+            scale2xButton.Click += (sender, e) =>
+            {
+                var scale = scale2xButton.Checked ? 2 : 1;
+                _terminal.SetScale(scale, scale);
+            };
+            showUndefinedElementsButton.CheckedChanged += (sender, e) => { BuildElementList(); };
+            statsEnabledButton.CheckedChanged += (sender, e) => { UpdateElement(); };
+            testMenuButton.Click += (sender, e) => { TestWorld(); };
 
             // tools
             foreach (var tool in Tools)
             {
-                tool.Click += (object sender, EventArgs e) => { SetTool(sender as ToolStripButton); };
+                tool.Click += (sender, e) => { SetTool(sender as ToolStripButton); };
             }
 
             // terminal events
@@ -550,13 +571,13 @@ namespace Torch
             Actor = new Actor();
 
             // timer settings
-            timerDaemon.Start(CycleAdvance, 71.8f / 9f);
+            timerDaemon.Start(CycleAdvance, 71.8f/9f);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            Keys modifier = keyData & Keys.Modifiers;
-            Keys code = keyData & Keys.KeyCode;
+            var modifier = keyData & Keys.Modifiers;
+            var code = keyData & Keys.KeyCode;
 
             if (msg.Msg == 0x100) // WM_KEYDOWN
             {
@@ -584,14 +605,14 @@ namespace Torch
                         case Keys.F1:
                         case Keys.F2:
                         case Keys.F3:
-                            ShowElementContextMenu((code - Keys.F1) + 1);
+                            ShowElementContextMenu(code - Keys.F1 + 1);
                             break;
                         case Keys.F4:
                             textEnabledButton.CheckState = CheckState.Checked;
                             break;
                         case Keys.F5:
                         case Keys.F6:
-                            ShowElementContextMenu((code - Keys.F1));
+                            ShowElementContextMenu(code - Keys.F1);
                             break;
                     }
                 }
@@ -613,7 +634,7 @@ namespace Torch
                         case Keys.D1:
                         case Keys.D2:
                         case Keys.D3:
-                            SelectParameter((code - Keys.D1) + 1);
+                            SelectParameter(code - Keys.D1 + 1);
                             break;
                         case Keys.D4:
                             SelectBoard(3);
@@ -645,7 +666,7 @@ namespace Torch
 
         void SaveWorldAs()
         {
-            if (ShowSaveWorld() == System.Windows.Forms.DialogResult.OK)
+            if (ShowSaveWorld() == DialogResult.OK)
             {
                 Context.Save(WorldFileName);
             }
@@ -686,7 +707,7 @@ namespace Torch
         {
             foreach (var item in elementComboBox.Items)
             {
-                var eitem = (item as ElementItem);
+                var eitem = item as ElementItem;
                 if (eitem.Index == index)
                 {
                     elementComboBox.SelectedItem = item;
@@ -694,7 +715,7 @@ namespace Torch
             }
 
             var element = Context.Elements[index];
-            statsEnabledButton.Checked = (element.Cycle >= 0);
+            statsEnabledButton.Checked = element.Cycle >= 0;
             UpdateElement();
         }
 
@@ -714,10 +735,10 @@ namespace Torch
         void SetBoard(int index)
         {
             // make a backup copy of the current actor
-            Actor actor = Context.CreateActor();
-            actor.CopyFrom(this.Actor);
-            actor.Code = this.Actor.Code;
-            this.Actor = actor;
+            var actor = Context.CreateActor();
+            actor.CopyFrom(Actor);
+            actor.Code = Actor.Code;
+            Actor = actor;
 
             try
             {
@@ -728,10 +749,10 @@ namespace Torch
             catch (Exception e)
             {
                 var result = MessageBox.Show("An error occurred when switching boards: " + Environment.NewLine +
-                    e.Message + Environment.NewLine + Environment.NewLine +
-                    "Would you like to attempt to reload the previously packed version of the board?",
+                                             e.Message + Environment.NewLine + Environment.NewLine +
+                                             "Would you like to attempt to reload the previously packed version of the board?",
                     "Board Switch Error", MessageBoxButtons.YesNo);
-                if (result == System.Windows.Forms.DialogResult.Yes)
+                if (result == DialogResult.Yes)
                 {
                     try
                     {
@@ -740,7 +761,7 @@ namespace Torch
                     catch (Exception f)
                     {
                         MessageBox.Show("An error occurred during board recovery:" +
-                            Environment.NewLine + f.Message, "Board Recovery Error", MessageBoxButtons.OK);
+                                        Environment.NewLine + f.Message, "Board Recovery Error", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -781,7 +802,7 @@ namespace Torch
         {
             foreach (var tool in Tools)
             {
-                tool.Checked = (tool == button);
+                tool.Checked = tool == button;
             }
         }
 
@@ -798,7 +819,7 @@ namespace Torch
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = FileFilters;
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Context = new Context(ofd.FileName, true);
                 WorldFileName = ofd.FileName;
@@ -848,13 +869,13 @@ namespace Torch
                     }
                 }
                 var result = sfd.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
                     WorldFileName = sfd.FileName;
                 }
                 return result;
             }
-            return System.Windows.Forms.DialogResult.Cancel;
+            return DialogResult.Cancel;
         }
 
         void ShowTileCode()
@@ -872,7 +893,7 @@ namespace Torch
 
         void TerminalMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 GetCursorActor();
                 CopyCursorElement();
@@ -889,7 +910,7 @@ namespace Torch
         {
             if (Context != null)
             {
-                using (MemoryStream mem = new MemoryStream(Context.Save()))
+                using (var mem = new MemoryStream(Context.Save()))
                 {
                     var gameForm = new Lyon.GameForm(mem);
                     gameForm.Show();
@@ -897,18 +918,13 @@ namespace Torch
             }
         }
 
-        IList<ToolStripButton> Tools
+        IList<ToolStripButton> Tools => new List<ToolStripButton>(new ToolStripButton[]
         {
-            get
-            {
-                return new List<ToolStripButton>(new ToolStripButton[] {
-                    drawToolButton,
-                    eraseToolButton,
-                    inspectToolButton,
-                    randomToolButton
-                });
-            }
-        }
+            drawToolButton,
+            eraseToolButton,
+            inspectToolButton,
+            randomToolButton
+        });
 
         void UpdateActors()
         {
@@ -925,9 +941,9 @@ namespace Torch
         void UpdateColorButton(ToolStripButton button, Color backgroundColor)
         {
             button.BackColor = backgroundColor;
-            
+
             // ensure foreground text is always visible by contrast
-            if (((backgroundColor.R + backgroundColor.G + backgroundColor.B) / 3) >= 0x80)
+            if ((backgroundColor.R + backgroundColor.G + backgroundColor.B)/3 >= 0x80)
             {
                 button.ForeColor = System.Drawing.Color.Black;
             }
@@ -994,10 +1010,6 @@ namespace Torch
             UpdateActors();
         }
 
-        string WorldFileName
-        {
-            get;
-            set;
-        }
+        string WorldFileName { get; set; }
     }
 }

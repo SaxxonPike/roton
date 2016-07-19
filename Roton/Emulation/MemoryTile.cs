@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
     internal sealed class MemoryTile : Tile
     {
@@ -15,38 +10,18 @@ namespace Roton.Emulation
 
         public override int Color
         {
-            get
-            {
-                return Memory.Read8(Offset + 0x01);
-            }
-            set
-            {
-                Memory.Write8(Offset + 0x01, value);
-            }
+            get { return Memory.Read8(Offset + 0x01); }
+            set { Memory.Write8(Offset + 0x01, value); }
         }
 
         public override int Id
         {
-            get
-            {
-                return Memory.Read8(Offset + 0x00);
-            }
-            set
-            {
-                Memory.Write8(Offset + 0x00, value);
-            }
+            get { return Memory.Read8(Offset + 0x00); }
+            set { Memory.Write8(Offset + 0x00, value); }
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; }
 
-        public int Offset
-        {
-            get;
-            private set;
-        }
+        public int Offset { get; }
     }
 }

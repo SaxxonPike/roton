@@ -2,11 +2,11 @@
 
 namespace Torch
 {
-    static public class ToolStripUtility
+    public static class ToolStripUtility
     {
-        static public ToolStripItem[] ToArray(this ToolStripItemCollection collection)
+        public static ToolStripItem[] ToArray(this ToolStripItemCollection collection)
         {
-            ToolStripItem[] result = new ToolStripItem[collection.Count];
+            var result = new ToolStripItem[collection.Count];
             collection.CopyTo(result, 0);
             return result;
         }

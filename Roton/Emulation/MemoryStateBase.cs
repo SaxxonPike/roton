@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
-    abstract internal class MemoryStateBase : State
+    internal abstract class MemoryStateBase : State
     {
         public MemoryStateBase(Memory memory)
         {
-            this.Memory = memory;
+            Memory = memory;
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; private set; }
 
         public virtual int SoundBufferLength { get; set; }
     }

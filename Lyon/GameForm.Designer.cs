@@ -33,7 +33,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openWorldMenuItem = new System.Windows.Forms.ToolStripMenuItem();

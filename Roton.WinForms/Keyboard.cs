@@ -16,37 +16,19 @@ namespace Roton.WinForms
             InitializeComponent();
         }
 
-        public bool Alt
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool Alt => false;
 
         public void Clear()
         {
         }
 
-        public bool Control
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool Control => false;
 
         public int GetKey()
         {
             return 0;
         }
 
-        public bool Shift
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool Shift => false;
     }
 }

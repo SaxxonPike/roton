@@ -1,45 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation
+﻿namespace Roton.Emulation
 {
-    sealed internal class MemoryStringByteCollection : FixedList<int>
+    internal sealed class MemoryStringByteCollection : FixedList<int>
     {
         public MemoryStringByteCollection(Memory memory, int offset)
         {
-            this.Memory = memory;
-            this.Offset = offset;
+            Memory = memory;
+            Offset = offset;
         }
 
         public override int this[int index]
         {
-            get
-            {
-                return Memory.Read8(Offset + index + 1);
-            }
-            set
-            {
-                Memory.Write8(Offset + index + 1, value);
-            }
+            get { return Memory.Read8(Offset + index + 1); }
+            set { Memory.Write8(Offset + index + 1, value); }
         }
 
-        public override int Count
-        {
-            get { return Memory.Read8(Offset); }
-        }
+        public override int Count => Memory.Read8(Offset);
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; }
 
-        public int Offset
-        {
-            get;
-            private set;
-        }
+        public int Offset { get; }
     }
 }

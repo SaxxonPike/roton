@@ -1,72 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Roton
 {
-    abstract internal class State
+    internal abstract class State
     {
-        virtual public bool AboutShown { get; set; }
-        virtual public int ActIndex { get; set; }
-        virtual public int ActorCount { get; set; }
-        virtual public bool AlertAmmo { get; set; }
-        virtual public bool AlertDark { get; set; }
-        virtual public bool AlertEnergy { get; set; }
-        virtual public bool AlertFake { get; set; }
-        virtual public bool AlertForest { get; set; }
-        virtual public bool AlertGem { get; set; }
-        virtual public bool AlertNoAmmo { get; set; }
-        virtual public bool AlertNoShoot { get; set; }
-        virtual public bool AlertNotDark { get; set; }
-        virtual public bool AlertNoTorch { get; set; }
-        virtual public bool AlertTorch { get; set; }
-        virtual public int BoardCount { get; set; }
-        virtual public Tile BorderTile { get; protected set; }
-        virtual public bool BreakGameLoop { get; set; }
-        virtual public bool CancelScroll { get; set; }
-        virtual public IList<string> Colors { get; protected set; }
-        virtual public Actor DefaultActor { get; protected set; }
-        virtual public string DefaultBoardName { get; set; }
-        virtual public string DefaultSaveName { get; set; }
-        virtual public string DefaultWorldName { get; set; }
-        virtual public Tile EdgeTile { get; protected set; }
-        virtual public bool EditorMode { get; set; }
-        virtual public int ForestIndex { get; set; }
-        virtual public int GameCycle { get; set; }
-        virtual public bool GameOver { get; set; }
-        virtual public bool GamePaused { get; set; }
-        virtual public bool GameQuiet { get; set; }
-        virtual public int GameSpeed { get; set; }
-        virtual public int GameWaitTime { get; set; }
-        virtual public bool Init { get; set; }
-        virtual public bool KeyArrow { get; set; }
-        virtual public int KeyPressed { get; set; }
-        virtual public bool KeyShift { get; set; }
-        virtual public Vector KeyVector { get; set; }
-        virtual public IList<int> LineChars { get; protected set; }
-        virtual public int MainTime { get; set; }
-        virtual public string Message { get; set; }
-        virtual public string Message2 { get; set; }
-        virtual public int OOPByte { get; set; }
-        virtual public int OOPNumber { get; set; }
-        virtual public string OOPWord { get; set; }
-        virtual public int PlayerElement { get; set; }
-        virtual public int PlayerTime { get; set; }
-        virtual public bool QuitZZT { get; set; }
-        virtual public IList<int> SoundBuffer { get; protected set; }
-        virtual public bool SoundPlaying { get; set; }
-        virtual public int SoundPriority { get; set; }
-        virtual public int SoundTicks { get; set; }
-        virtual public IList<int> StarChars { get; protected set; }
-        virtual public int StartBoard { get; set; }
-        virtual public IList<int> TransporterHChars { get; protected set; }
-        virtual public IList<int> TransporterVChars { get; protected set; }
-        virtual public IList<int> Vector4 { get; protected set; }
-        virtual public IList<int> Vector8 { get; protected set; }
-        virtual public int VisibleTileCount { get; set; }
-        virtual public IList<int> WebChars { get; protected set; }
-        virtual public string WorldFileName { get; set; }
-        virtual public bool WorldLoaded { get; set; }
+        public virtual bool AboutShown { get; set; }
+        public virtual int ActIndex { get; set; }
+        public virtual int ActorCount { get; set; }
+        public virtual bool AlertAmmo { get; set; }
+        public virtual bool AlertDark { get; set; }
+        public virtual bool AlertEnergy { get; set; }
+        public virtual bool AlertFake { get; set; }
+        public virtual bool AlertForest { get; set; }
+        public virtual bool AlertGem { get; set; }
+        public virtual bool AlertNoAmmo { get; set; }
+        public virtual bool AlertNoShoot { get; set; }
+        public virtual bool AlertNotDark { get; set; }
+        public virtual bool AlertNoTorch { get; set; }
+        public virtual bool AlertTorch { get; set; }
+        public virtual int BoardCount { get; set; }
+        public virtual Tile BorderTile { get; protected set; }
+        public virtual bool BreakGameLoop { get; set; }
+        public virtual bool CancelScroll { get; set; }
+        public virtual IList<string> Colors { get; protected set; }
+        public virtual Actor DefaultActor { get; protected set; }
+        public virtual string DefaultBoardName { get; set; }
+        public virtual string DefaultSaveName { get; set; }
+        public virtual string DefaultWorldName { get; set; }
+        public virtual Tile EdgeTile { get; protected set; }
+        public virtual bool EditorMode { get; set; }
+        public virtual int ForestIndex { get; set; }
+        public virtual int GameCycle { get; set; }
+        public virtual bool GameOver { get; set; }
+        public virtual bool GamePaused { get; set; }
+        public virtual bool GameQuiet { get; set; }
+        public virtual int GameSpeed { get; set; }
+        public virtual int GameWaitTime { get; set; }
+        public virtual bool Init { get; set; }
+        public virtual bool KeyArrow { get; set; }
+        public virtual int KeyPressed { get; set; }
+        public virtual bool KeyShift { get; set; }
+        public virtual Vector KeyVector { get; set; }
+        public virtual IList<int> LineChars { get; protected set; }
+        public virtual int MainTime { get; set; }
+        public virtual string Message { get; set; }
+        public virtual string Message2 { get; set; }
+        public virtual int OopByte { get; set; }
+        public virtual int OopNumber { get; set; }
+        public virtual string OopWord { get; set; }
+        public virtual int PlayerElement { get; set; }
+        public virtual int PlayerTime { get; set; }
+        public virtual bool QuitZzt { get; set; }
+        public virtual IList<int> SoundBuffer { get; protected set; }
+        public virtual bool SoundPlaying { get; set; }
+        public virtual int SoundPriority { get; set; }
+        public virtual int SoundTicks { get; set; }
+        public virtual IList<int> StarChars { get; protected set; }
+        public virtual int StartBoard { get; set; }
+        public virtual IList<int> TransporterHChars { get; protected set; }
+        public virtual IList<int> TransporterVChars { get; protected set; }
+        public virtual IList<int> Vector4 { get; protected set; }
+        public virtual IList<int> Vector8 { get; protected set; }
+        public virtual int VisibleTileCount { get; set; }
+        public virtual IList<int> WebChars { get; protected set; }
+        public virtual string WorldFileName { get; set; }
+        public virtual bool WorldLoaded { get; set; }
     }
 }

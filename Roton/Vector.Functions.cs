@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton
+﻿namespace Roton
 {
     public partial class Vector
     {
@@ -15,69 +10,45 @@ namespace Roton
         public Vector(int x, int y)
         {
             Initialize();
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
-        public Vector Clockwise
-        {
-            get
-            {
-                return new Vector(-this.Y, this.X);
-            }
-        }
+        public Vector Clockwise => new Vector(-Y, X);
 
-        public Vector Clone() 
+        public Vector Clone()
         {
-            return new Vector(this.X, this.Y);
+            return new Vector(X, Y);
         }
 
         public void CopyFrom(Location location)
         {
-            this.X = location.X;
-            this.Y = location.Y;
+            X = location.X;
+            Y = location.Y;
         }
 
         public void CopyFrom(Vector vector)
         {
-            this.X = vector.X;
-            this.Y = vector.Y;
+            X = vector.X;
+            Y = vector.Y;
         }
 
-        public Vector CounterClockwise
-        {
-            get
-            {
-                return new Vector(this.Y, -this.X);
-            }
-        }
+        public Vector CounterClockwise => new Vector(Y, -X);
 
-        virtual protected void Initialize()
+        protected virtual void Initialize()
         {
         }
 
-        public bool IsNonZero
-        {
-            get { return !IsZero; }
-        }
+        public bool IsNonZero => !IsZero;
 
-        public bool IsZero
-        {
-            get { return this.X == 0 && this.Y == 0; }
-        }
+        public bool IsZero => X == 0 && Y == 0;
 
         public Vector Multiply(int value)
         {
-            return new Vector(this.X * value, this.Y * value);
+            return new Vector(X*value, Y*value);
         }
 
-        public Vector Opposite
-        {
-            get
-            {
-                return new Vector(-this.X, -this.Y);
-            }
-        }
+        public Vector Opposite => new Vector(-X, -Y);
 
         public void SetClockwise()
         {
@@ -96,21 +67,15 @@ namespace Roton
 
         public void SetTo(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
-        public Vector Swap
-        {
-            get
-            {
-                return new Vector(this.Y, this.X);
-            }
-        }
+        public Vector Swap => new Vector(Y, X);
 
         public override string ToString()
         {
-            return "[" + this.X.ToString() + ", " + this.Y.ToString() + "]";
+            return "[" + X.ToString() + ", " + Y.ToString() + "]";
         }
     }
 }

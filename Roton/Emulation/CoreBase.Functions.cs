@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Roton.Emulation
 {
     internal partial class CoreBase
     {
-        virtual internal Actor ActorAt(Location location)
+        internal virtual Actor ActorAt(Location location)
         {
             return Actors[ActorIndexAt(location)];
         }
 
-        virtual internal int ActorIndexAt(Location location)
+        internal virtual int ActorIndexAt(Location location)
         {
-            int index = 0;
-            foreach (Actor actor in Actors)
+            var index = 0;
+            foreach (var actor in Actors)
             {
                 if (actor.Location.X == location.X && actor.Location.Y == location.Y)
                     return index;
@@ -26,7 +22,7 @@ namespace Roton.Emulation
             return -1;
         }
 
-        virtual internal void Attack(int index, Location location)
+        internal virtual void Attack(int index, Location location)
         {
             if (index == 0 && EnergyCycles > 0)
             {
@@ -55,12 +51,12 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void ClearBoard()
+        internal virtual void ClearBoard()
         {
-            int emptyId = Elements.EmptyId;
-            int boardEdgeId = EdgeTile.Id;
-            int boardBorderId = BorderTile.Id;
-            int boardBorderColor = BorderTile.Color;
+            var emptyId = Elements.EmptyId;
+            var boardEdgeId = EdgeTile.Id;
+            var boardBorderId = BorderTile.Id;
+            var boardBorderColor = BorderTile.Color;
 
             // board properties
             BoardName = "";
@@ -75,33 +71,33 @@ namespace Roton.Emulation
             ExitWest = 0;
 
             // build board edges
-            for (int y = 0; y <= Tiles.Height + 1; y++)
+            for (var y = 0; y <= Tiles.Height + 1; y++)
             {
                 TileAt(0, y).Id = boardEdgeId;
                 TileAt(Width + 1, y).Id = boardEdgeId;
             }
-            for (int x = 0; x <= Width + 1; x++)
+            for (var x = 0; x <= Width + 1; x++)
             {
                 TileAt(x, 0).Id = boardEdgeId;
                 TileAt(x, Height + 1).Id = boardEdgeId;
             }
 
             // clear out board
-            for (int x = 1; x <= Width; x++)
+            for (var x = 1; x <= Width; x++)
             {
-                for (int y = 1; y <= Height; y++)
+                for (var y = 1; y <= Height; y++)
                 {
                     TileAt(x, y).SetTo(emptyId, 0);
                 }
             }
 
             // build border
-            for (int y = 1; y <= Height; y++)
+            for (var y = 1; y <= Height; y++)
             {
                 TileAt(1, y).SetTo(boardBorderId, boardBorderColor);
                 TileAt(Width, y).SetTo(boardBorderId, boardBorderColor);
             }
-            for (int x = 1; x <= Width; x++)
+            for (var x = 1; x <= Width; x++)
             {
                 TileAt(x, 1).SetTo(boardBorderId, boardBorderColor);
                 TileAt(x, Height).SetTo(boardBorderId, boardBorderColor);
@@ -110,7 +106,7 @@ namespace Roton.Emulation
             // generate player actor
             var element = Elements.PlayerElement;
             ActorCount = 0;
-            Player.Location.SetTo(Width / 2, Height / 2);
+            Player.Location.SetTo(Width/2, Height/2);
             TileAt(Player.Location).SetTo(element.Index, element.Color);
             Player.Cycle = 1;
             Player.UnderTile.SetTo(0, 0);
@@ -118,14 +114,14 @@ namespace Roton.Emulation
             Player.Length = 0;
         }
 
-        virtual internal void ClearSound()
+        internal virtual void ClearSound()
         {
             SoundBufferLength = 0;
             SoundPlaying = false;
             StopSound();
         }
 
-        virtual internal void ClearWorld()
+        internal virtual void ClearWorld()
         {
             BoardCount = 0;
             Boards.Clear();
@@ -150,13 +146,13 @@ namespace Roton.Emulation
             WorldName = "";
         }
 
-        virtual internal void Convey(Location center, int direction)
+        internal virtual void Convey(Location center, int direction)
         {
         }
 
-        virtual internal void Destroy(Location location)
+        internal virtual void Destroy(Location location)
         {
-            int index = ActorIndexAt(location);
+            var index = ActorIndexAt(location);
             if (index == -1)
             {
                 TileAt(location).Id = Elements.EmptyId;
@@ -167,32 +163,32 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void DrawChar(Location location, AnsiChar ac)
+        internal virtual void DrawChar(Location location, AnsiChar ac)
         {
             Display.DrawChar(location.X, location.Y, ac);
         }
 
-        virtual internal void DrawString(Location location, string text, int color)
+        internal virtual void DrawString(Location location, string text, int color)
         {
             Display.DrawString(location.X, location.Y, text, color);
         }
 
-        virtual internal void DrawTile(Location location, AnsiChar ac)
+        internal virtual void DrawTile(Location location, AnsiChar ac)
         {
             Display.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
-        virtual internal Element ElementAt(Location location)
+        internal virtual Element ElementAt(Location location)
         {
             return Elements[TileAt(location).Id];
         }
 
-        virtual internal Element ElementAt(int x, int y)
+        internal virtual Element ElementAt(int x, int y)
         {
             return ElementAt(new Location(x, y));
         }
 
-        virtual internal void EnterBoard()
+        internal virtual void EnterBoard()
         {
             Enter.CopyFrom(Player.Location);
             if (Dark && AlertDark)
@@ -208,18 +204,18 @@ namespace Roton.Emulation
         {
         }
 
-        virtual internal void ExecutePassage(Location location)
+        internal virtual void ExecutePassage(Location location)
         {
-            int searchColor = TileAt(location).Color;
-            int oldBoard = Board;
-            int passageIndex = ActorIndexAt(location);
-            int passageTarget = Actors[passageIndex].P3;
+            var searchColor = TileAt(location).Color;
+            var oldBoard = Board;
+            var passageIndex = ActorIndexAt(location);
+            var passageTarget = Actors[passageIndex].P3;
             SetBoard(passageTarget);
-            Location target = new Location();
+            var target = new Location();
 
-            for (int x = 1; x <= Width; x++)
+            for (var x = 1; x <= Width; x++)
             {
-                for (int y = 1; y <= Height; y++)
+                for (var y = 1; y <= Height; y++)
                 {
                     if (TileAt(x, y).Id == Elements.PassageId)
                     {
@@ -244,26 +240,27 @@ namespace Roton.Emulation
             EnterBoard();
         }
 
-        virtual internal void FadeBoard(AnsiChar ac)
+        internal virtual void FadeBoard(AnsiChar ac)
         {
             Display.FadeBoard(ac);
         }
 
-        virtual internal void FadePurple()
+        internal virtual void FadePurple()
         {
             FadeBoard(new AnsiChar(0xDB, 0x05));
             RedrawBoard();
         }
 
-        virtual internal void FadeRed()
+        internal virtual void FadeRed()
         {
             FadeBoard(new AnsiChar(0xDB, 0x04));
             RedrawBoard();
         }
 
-        virtual internal void ForcePlayerColor()
+        internal virtual void ForcePlayerColor()
         {
-            if (TileAt(Player.Location).Color != Elements.PlayerElement.Color || Elements.PlayerElement.Character != 0x02)
+            if (TileAt(Player.Location).Color != Elements.PlayerElement.Color ||
+                Elements.PlayerElement.Character != 0x02)
             {
                 Elements.PlayerElement.Character = 2;
                 TileAt(Player.Location).Color = Elements.PlayerElement.Color;
@@ -273,7 +270,7 @@ namespace Roton.Emulation
 
         internal bool GetMainTimeElapsed(int interval)
         {
-            bool result = false;
+            var result = false;
             while (GetTimeDifference(TimerTick, MainTime) > 0)
             {
                 result = true;
@@ -284,7 +281,7 @@ namespace Roton.Emulation
 
         internal bool GetPlayerTimeElapsed(int interval)
         {
-            bool result = false;
+            var result = false;
             while (GetTimeDifference(TimerTick, PlayerTime) > 0)
             {
                 result = true;
@@ -304,17 +301,17 @@ namespace Roton.Emulation
             return now - then;
         }
 
-        virtual internal Vector GetVector4(int index)
+        internal virtual Vector GetVector4(int index)
         {
             return new Vector(Vector4[index], Vector4[index + 4]);
         }
 
-        virtual internal Vector GetVector8(int index)
+        internal virtual Vector GetVector8(int index)
         {
             return new Vector(Vector8[index], Vector8[index + 8]);
         }
 
-        virtual internal void Harm(int index)
+        internal virtual void Harm(int index)
         {
             var actor = Actors[index];
             if (index == 0)
@@ -324,7 +321,7 @@ namespace Roton.Emulation
                     Health -= 10;
                     UpdateStatus();
                     SetMessage(0x64, @"Ouch!");
-                    int color = TileAt(actor.Location).Color;
+                    var color = TileAt(actor.Location).Color;
                     color &= 0x0F;
                     color |= 0x70;
                     TileAt(actor.Location).Color = color;
@@ -336,7 +333,7 @@ namespace Roton.Emulation
                             PlaySound(4, Sounds.TimeOut);
                             TileAt(actor.Location).Id = Elements.EmptyId;
                             UpdateBoard(actor.Location);
-                            Location oldLocation = actor.Location.Clone();
+                            var oldLocation = actor.Location.Clone();
                             actor.Location.CopyFrom(Enter);
                             UpdateRadius(oldLocation, 0);
                             UpdateRadius(actor.Location, 0);
@@ -352,7 +349,7 @@ namespace Roton.Emulation
             }
             else
             {
-                int element = TileAt(actor.Location).Id;
+                var element = TileAt(actor.Location).Id;
                 if (element == Elements.BulletId)
                 {
                     PlaySound(3, Sounds.BulletDie);
@@ -362,16 +359,12 @@ namespace Roton.Emulation
                     PlaySound(3, Sounds.EnemyDie);
                 }
                 RemoveActor(index);
-
             }
         }
 
-        virtual public int Height
-        {
-            get { return Tiles.Height; }
-        }
+        public virtual int Height => Tiles.Height;
 
-        virtual internal void InitializeElements(bool showInvisibles)
+        internal virtual void InitializeElements(bool showInvisibles)
         {
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
@@ -380,16 +373,16 @@ namespace Roton.Emulation
             Elements.PlayerElement.Character = 0x02;
         }
 
-        virtual internal void InitializeElementDelegates()
+        internal virtual void InitializeElementDelegates()
         {
             foreach (var element in Elements)
             {
-                if (element.Index == Elements.AmmoId) 
+                if (element.Index == Elements.AmmoId)
                 {
-                    element.Interact = Interact_Ammo; 
+                    element.Interact = Interact_Ammo;
                 }
-                else if (element.Index == Elements.BearId) 
-                { 
+                else if (element.Index == Elements.BearId)
+                {
                     element.Act = Act_Bear;
                     element.Interact = Interact_Enemy;
                 }
@@ -539,7 +532,7 @@ namespace Roton.Emulation
                 {
                     element.Act = Act_Shark;
                 }
-                else if (element.Index == Elements.SliderEWId || element.Index == Elements.SliderNSId)
+                else if (element.Index == Elements.SliderEwId || element.Index == Elements.SliderNsId)
                 {
                     element.Interact = Interact_Pushable;
                 }
@@ -592,7 +585,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal byte[] LoadFile(string filename)
+        internal virtual byte[] LoadFile(string filename)
         {
             try
             {
@@ -604,7 +597,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void MoveActor(int index, Location target)
+        internal virtual void MoveActor(int index, Location target)
         {
             var actor = Actors[index];
             var sourceLocation = actor.Location.Clone();
@@ -631,14 +624,14 @@ namespace Roton.Emulation
             UpdateBoard(sourceLocation);
             if (index == 0 && Dark)
             {
-                int squareDistanceX = (target.X - sourceLocation.X).Square();
-                int squareDistanceY = (target.Y - sourceLocation.Y).Square();
+                var squareDistanceX = (target.X - sourceLocation.X).Square();
+                var squareDistanceY = (target.Y - sourceLocation.Y).Square();
                 if (squareDistanceX + squareDistanceY == 1)
                 {
-                    Location glowLocation = new Location();
-                    for (int x = target.X - 11; x <= target.X + 11; x++)
+                    var glowLocation = new Location();
+                    for (var x = target.X - 11; x <= target.X + 11; x++)
                     {
-                        for (int y = target.Y - 8; y <= target.Y + 8; y++)
+                        for (var y = target.Y - 8; y <= target.Y + 8; y++)
                         {
                             glowLocation.SetTo(x, y);
                             if ((Distance(sourceLocation, glowLocation) < 50) ^ (Distance(target, glowLocation) < 50))
@@ -655,9 +648,9 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void MoveTile(Location source, Location target)
+        internal virtual void MoveTile(Location source, Location target)
         {
-            int sourceIndex = ActorIndexAt(source);
+            var sourceIndex = ActorIndexAt(source);
             if (sourceIndex >= 0)
             {
                 MoveActor(sourceIndex, target);
@@ -671,18 +664,15 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void PackBoard()
+        internal virtual void PackBoard()
         {
-            PackedBoard board = new PackedBoard(Serializer.PackBoard(Tiles));
+            var board = new PackedBoard(Serializer.PackBoard(Tiles));
             Boards[Board] = board;
         }
 
-        virtual public Actor Player
-        {
-            get { return Actors[0]; }
-        }
+        public virtual Actor Player => Actors[0];
 
-        virtual internal void Push(Location location, Vector vector)
+        internal virtual void Push(Location location, Vector vector)
         {
             // this is here to prevent endless push loops
             // but doesn't exist in the original code
@@ -691,8 +681,9 @@ namespace Roton.Emulation
                 throw Exceptions.PushStackOverflow;
             }
 
-            Tile tile = TileAt(location);
-            if ((tile.Id == Elements.SliderEWId && vector.Y == 0) || (tile.Id == Elements.SliderNSId && vector.X == 0) || Elements[tile.Id].Pushable)
+            var tile = TileAt(location);
+            if ((tile.Id == Elements.SliderEwId && vector.Y == 0) || (tile.Id == Elements.SliderNsId && vector.X == 0) ||
+                Elements[tile.Id].Pushable)
             {
                 var furtherTile = TileAt(location.Sum(vector));
                 if (furtherTile.Id == Elements.TransporterId)
@@ -718,19 +709,19 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void PushThroughTransporter(Location location, Vector vector)
+        internal virtual void PushThroughTransporter(Location location, Vector vector)
         {
             // todo
         }
 
-        virtual internal Vector Rnd()
+        internal virtual Vector Rnd()
         {
             var result = new Vector();
             Rnd(result);
             return result;
         }
 
-        virtual internal void Rnd(Vector result)
+        internal virtual void Rnd(Vector result)
         {
             result.X = RandomNumberDeterministic(3) - 1;
             if (result.X == 0)
@@ -743,7 +734,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual public void ReadInput()
+        public virtual void ReadInput()
         {
             KeyShift = false;
             KeyArrow = false;
@@ -777,7 +768,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual public int ReadKey()
+        public virtual int ReadKey()
         {
             var key = Keyboard.GetKey();
             if (key > 0)
@@ -791,18 +782,18 @@ namespace Roton.Emulation
             return KeyPressed;
         }
 
-        virtual internal void RedrawBoard()
+        internal virtual void RedrawBoard()
         {
             Display.RedrawBoard();
         }
 
-        virtual internal void RemoveActor(int index)
+        internal virtual void RemoveActor(int index)
         {
             var actor = Actors[index];
             if (actor.Pointer != 0)
             {
-                int refCount = 0;
-                for (int i = 1; i < ActorCount; i++)
+                var refCount = 0;
+                for (var i = 1; i < ActorCount; i++)
                 {
                     if (Actors[i].Pointer == actor.Pointer)
                     {
@@ -827,7 +818,7 @@ namespace Roton.Emulation
                 UpdateBoard(actor.Location);
             }
 
-            for (int i = 1; i < ActorCount; i++)
+            for (var i = 1; i < ActorCount; i++)
             {
                 var a = Actors[i];
                 if (a.Follower >= index)
@@ -857,7 +848,7 @@ namespace Roton.Emulation
 
             if (index < ActorCount)
             {
-                for (int i = index; i < ActorCount; i++)
+                for (var i = index; i < ActorCount; i++)
                 {
                     Actors[i].CopyFrom(Actors[i + 1]);
                 }
@@ -866,7 +857,7 @@ namespace Roton.Emulation
             ActorCount--;
         }
 
-        virtual internal void ResetAlerts()
+        internal virtual void ResetAlerts()
         {
             AlertAmmo = true;
             AlertDark = true;
@@ -881,7 +872,7 @@ namespace Roton.Emulation
             AlertTorch = true;
         }
 
-        virtual internal void Seek(Location location, Vector result)
+        internal virtual void Seek(Location location, Vector result)
         {
             result.SetTo(0, 0);
             if (RandomNumberDeterministic(2) == 0 || Player.Y == location.Y)
@@ -898,7 +889,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void SetBoard(int boardIndex)
+        internal virtual void SetBoard(int boardIndex)
         {
             var element = Elements.PlayerElement;
             TileAt(Player.Location).SetTo(element.Index, element.Color);
@@ -906,21 +897,21 @@ namespace Roton.Emulation
             UnpackBoard(boardIndex);
         }
 
-        virtual internal void SetEditorMode()
+        internal virtual void SetEditorMode()
         {
             InitializeElements(true);
             EditorMode = true;
         }
 
-        virtual internal void SetGameMode()
+        internal virtual void SetGameMode()
         {
             InitializeElements(false);
             EditorMode = false;
         }
 
-        virtual internal void SetMessage(int duration, string message, string message2 = "")
+        internal virtual void SetMessage(int duration, string message, string message2 = "")
         {
-            int index = ActorIndexAt(new Location(0, 0));
+            var index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)
             {
                 RemoveActor(index);
@@ -929,20 +920,20 @@ namespace Roton.Emulation
             if ((message != null && message.Length > 0) || (message2 != null && message2.Length > 0))
             {
                 SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
-                Actors[ActorCount].P2 = duration / (GameWaitTime + 1);
+                Actors[ActorCount].P2 = duration/(GameWaitTime + 1);
             }
-            this.Message = message;
-            this.Message2 = message;
+            Message = message;
+            Message2 = message;
         }
 
-        virtual internal void ShowAbout()
+        internal virtual void ShowAbout()
         {
         }
 
-        virtual internal void SpawnActor(Location location, Tile tile, int cycle, Actor source)
+        internal virtual void SpawnActor(Location location, Tile tile, int cycle, Actor source)
         {
             // must reserve one actor for player, and one for messenger
-            if (ActorCount < (Actors.Capacity - 2))
+            if (ActorCount < Actors.Capacity - 2)
             {
                 ActorCount++;
                 var actor = Actors[ActorCount];
@@ -958,7 +949,7 @@ namespace Roton.Emulation
                 if (ElementAt(actor.Location).EditorFloor)
                 {
                     var newColor = TileAt(actor.Location).Color & 0x70;
-                    newColor |= (tile.Color & 0x0F);
+                    newColor |= tile.Color & 0x0F;
                     TileAt(actor.Location).Color = newColor;
                 }
                 else
@@ -973,7 +964,7 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned)
+        internal virtual bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned)
         {
             var target = location.Sum(vector);
             var element = ElementAt(target);
@@ -982,7 +973,7 @@ namespace Roton.Emulation
             {
                 SpawnActor(target, new Tile(id, Elements[id].Color), 1, DefaultActor);
                 var actor = Actors[ActorCount];
-                actor.P1 = (enemyOwned ? 1 : 0);
+                actor.P1 = enemyOwned ? 1 : 0;
                 actor.Vector.CopyFrom(vector);
                 actor.P2 = 0x64;
                 return true;
@@ -1020,53 +1011,51 @@ namespace Roton.Emulation
             return Tiles[new Location(x, y)];
         }
 
-        internal int TimerBase
-        {
-            get { return CoreTimer.Tick & 0x7FFF; }
-        }
+        internal int TimerBase => CoreTimer.Tick & 0x7FFF;
 
         private int _timerTick;
+
         internal int TimerTick
         {
             get { return _timerTick; }
             private set { _timerTick = value & 0x7FFF; }
         }
 
-        virtual internal void UnpackBoard(int boardIndex)
+        internal virtual void UnpackBoard(int boardIndex)
         {
             Serializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             Board = boardIndex;
         }
 
-        virtual internal void UpdateBoard(Location location)
+        internal virtual void UpdateBoard(Location location)
         {
             DrawTile(location, Draw(location));
         }
 
-        virtual internal void UpdateBorder()
+        internal virtual void UpdateBorder()
         {
             Display.UpdateBorder();
         }
 
-        virtual internal void UpdateCamera()
+        internal virtual void UpdateCamera()
         {
             Display.UpdateCamera();
         }
 
-        virtual internal void UpdateRadius(Location location, RadiusMode mode)
+        internal virtual void UpdateRadius(Location location, RadiusMode mode)
         {
-            Location source = location.Clone();
-            int left = source.X - 9;
-            int right = source.X + 9;
-            int top = source.Y - 6;
-            int bottom = source.Y + 6;
-            for (int x = left; x <= right; x++)
+            var source = location.Clone();
+            var left = source.X - 9;
+            var right = source.X + 9;
+            var top = source.Y - 6;
+            var bottom = source.Y + 6;
+            for (var x = left; x <= right; x++)
             {
-                for (int y = top; y <= bottom; y++)
+                for (var y = top; y <= bottom; y++)
                 {
                     if (x >= 1 && x <= Width && y >= 1 && y <= Height)
                     {
-                        Location target = new Location(x, y);
+                        var target = new Location(x, y);
                         if (mode != RadiusMode.Update)
                         {
                             if (Distance(source, target) < 50)
@@ -1076,7 +1065,7 @@ namespace Roton.Emulation
                                 {
                                     if (element.Code.Length > 0)
                                     {
-                                        int actorIndex = ActorIndexAt(target);
+                                        var actorIndex = ActorIndexAt(target);
                                         if (actorIndex > 0)
                                         {
                                             BroadcastLabel(-actorIndex, @"BOMBED", false);
@@ -1106,12 +1095,12 @@ namespace Roton.Emulation
             }
         }
 
-        virtual internal void UpdateStatus()
+        internal virtual void UpdateStatus()
         {
             Display.UpdateStatus();
         }
 
-        virtual public void WaitForTick()
+        public virtual void WaitForTick()
         {
             while (TimerTick == TimerBase && ThreadActive)
             {
@@ -1121,9 +1110,6 @@ namespace Roton.Emulation
             TimerTick++;
         }
 
-        virtual public int Width
-        {
-            get { return Tiles.Width; }
-        }
+        public virtual int Width => Tiles.Width;
     }
 }

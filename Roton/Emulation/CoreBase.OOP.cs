@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace Roton.Emulation
 {
-    abstract internal partial class CoreBase
+    internal abstract partial class CoreBase
     {
-        virtual internal bool ActorIsLocked(int index)
+        internal virtual bool ActorIsLocked(int index)
         {
             return Actors[index].P2 != 0;
         }
 
-        virtual internal bool BroadcastLabel(int sender, string label, bool force)
+        internal virtual bool BroadcastLabel(int sender, string label, bool force)
         {
-            string target = label;
-            bool external = false;
-            bool success = false;
-            int index = 0;
-            int offset = 0;
+            var target = label;
+            var external = false;
+            var success = false;
+            var index = 0;
+            var offset = 0;
 
             if (sender < 0)
             {
@@ -27,12 +24,12 @@ namespace Roton.Emulation
             }
 
             var info = new CodeSearchInfoProxy(
-                () => { return index; },
-                (int value) => { index = value; },
-                () => { return target; },
-                (string value) => { target = value; },
-                () => { return offset; },
-                (int value) => { offset = value; }
+                () => index,
+                value => { index = value; },
+                () => target,
+                value => { target = value; },
+                () => offset,
+                value => { offset = value; }
                 );
 
             while (ExecuteLabel(sender, info, "\x000D:"))
@@ -50,146 +47,146 @@ namespace Roton.Emulation
             return success;
         }
 
-        virtual internal void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
+        internal virtual void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
         {
-            ExecuteCodeContext context = new ExecuteCodeContext(index, instructionSource, name);
+            var context = new ExecuteCodeContext(index, instructionSource, name);
         }
 
-        virtual internal void ExecuteCode_Become(ExecuteCodeContext context)
-        {
-        }
-
-        virtual internal void ExecuteCode_Bind(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Become(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Change(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Bind(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Char(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Change(ExecuteCodeContext context)
+        {
+        }
+
+        internal virtual void ExecuteCode_Char(ExecuteCodeContext context)
         {
             ReadActorCodeNumber(context.Index, context);
-            if (OOPNumber > 0x00 && OOPNumber <= 0xFF)
+            if (OopNumber > 0x00 && OopNumber <= 0xFF)
             {
-                context.Actor.P1 = OOPNumber;
+                context.Actor.P1 = OopNumber;
                 UpdateBoard(context.Actor.Location);
             }
         }
 
-        virtual internal void ExecuteCode_Clear(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Clear(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Cycle(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Cycle(ExecuteCodeContext context)
         {
             ReadActorCodeNumber(context.Index, context);
-            if (OOPNumber > 0)
+            if (OopNumber > 0)
             {
-                context.Actor.Cycle = OOPNumber;
+                context.Actor.Cycle = OopNumber;
             }
         }
 
-        virtual internal void ExecuteCode_Die(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Die(ExecuteCodeContext context)
         {
             context.Died = true;
             context.DeathTile.SetTo(Elements.EmptyId, 0x0F);
         }
 
-        virtual internal void ExecuteCode_End(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_End(ExecuteCodeContext context)
         {
             context.Finished = true;
             context.Instruction = -1;
         }
 
-        virtual internal void ExecuteCode_EndGame(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_EndGame(ExecuteCodeContext context)
         {
             Health = 0;
         }
 
-        virtual internal void ExecuteCode_Give(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Give(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Go(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Go(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Idle(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Idle(ExecuteCodeContext context)
         {
             context.Moved = true;
         }
 
-        virtual internal void ExecuteCode_If(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_If(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Lock(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Lock(ExecuteCodeContext context)
         {
             context.Actor.P2 = 1;
         }
 
-        virtual internal void ExecuteCode_Play(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Play(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Put(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Put(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Restart(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Restart(ExecuteCodeContext context)
         {
             context.NextLine = false;
             context.Instruction = 0;
         }
 
-        virtual internal void ExecuteCode_Restore(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Restore(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Send(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Send(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Set(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Set(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Shoot(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Shoot(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Take(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Take(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_ThrowStar(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_ThrowStar(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Try(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Try(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Unlock(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Unlock(ExecuteCodeContext context)
         {
             context.Actor.P2 = 0;
         }
 
-        virtual internal void ExecuteCode_Walk(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Walk(ExecuteCodeContext context)
         {
         }
 
-        virtual internal void ExecuteCode_Zap(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Zap(ExecuteCodeContext context)
         {
         }
 
-        virtual internal bool ExecuteLabel(int sender, CodeSearchInfo search, string prefix)
+        internal virtual bool ExecuteLabel(int sender, CodeSearchInfo search, string prefix)
         {
-            string label = search.Label;
-            string target = @"";
+            var label = search.Label;
+            var target = @"";
             var success = false;
-            int split = label.IndexOf(':');
+            var split = label.IndexOf(':');
 
             if (split > 0)
             {
@@ -224,13 +221,13 @@ namespace Roton.Emulation
                     }
                 }
 
-                success = (search.Offset >= 0);
+                success = search.Offset >= 0;
                 break;
             }
             return success;
         }
 
-        virtual internal bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
+        internal virtual bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
         {
             var success = false;
             switch (target.ToUpperInvariant())
@@ -273,52 +270,52 @@ namespace Roton.Emulation
             return false;
         }
 
-        virtual internal void ReadActorCodeByte(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeByte(int index, ICodeSeekable instructionSource)
         {
             var actor = Actors[index];
             if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
             {
-                OOPByte = 0;
+                OopByte = 0;
             }
             else
             {
                 var heapCode = actor.Heap[actor.Pointer];
-                OOPByte = actor.Heap[actor.Pointer][instructionSource.Instruction];
+                OopByte = actor.Heap[actor.Pointer][instructionSource.Instruction];
                 instructionSource.Instruction++;
             }
         }
 
-        virtual internal string ReadActorCodeLine(int index, ICodeSeekable instructionSource)
+        internal virtual string ReadActorCodeLine(int index, ICodeSeekable instructionSource)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             ReadActorCodeByte(index, instructionSource);
-            while (OOPByte != 0x00 && OOPByte != 0x0D)
+            while (OopByte != 0x00 && OopByte != 0x0D)
             {
-                result.Append(OOPByte.ToChar());
+                result.Append(OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
             return result.ToString();
         }
 
-        virtual internal void ReadActorCodeNumber(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeNumber(int index, ICodeSeekable instructionSource)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             var success = false;
 
             while (true)
             {
                 ReadActorCodeByte(index, instructionSource);
-                if (OOPByte != 0x20)
+                if (OopByte != 0x20)
                 {
                     break;
                 }
             }
 
-            OOPByte = OOPByte.ToUpperCase();
-            while (OOPByte >= 0x30 && OOPByte <= 0x39)
+            OopByte = OopByte.ToUpperCase();
+            while (OopByte >= 0x30 && OopByte <= 0x39)
             {
                 success = true;
-                result.Append(OOPByte.ToChar());
+                result.Append(OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
 
@@ -329,38 +326,39 @@ namespace Roton.Emulation
 
             if (!success)
             {
-                OOPNumber = -1;
+                OopNumber = -1;
             }
             else
             {
-                int resultInt = -1;
+                var resultInt = -1;
                 int.TryParse(result.ToString(), out resultInt);
-                OOPNumber = resultInt;
+                OopNumber = resultInt;
             }
         }
 
-        virtual internal void ReadActorCodeWord(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeWord(int index, ICodeSeekable instructionSource)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             while (true)
             {
                 ReadActorCodeByte(index, instructionSource);
-                if (OOPByte != 0x20)
+                if (OopByte != 0x20)
                 {
                     break;
                 }
             }
 
-            OOPByte = OOPByte.ToUpperCase();
+            OopByte = OopByte.ToUpperCase();
 
-            if (!(OOPByte >= 0x30 && OOPByte <= 0x39))
+            if (!(OopByte >= 0x30 && OopByte <= 0x39))
             {
-                while ((OOPByte >= 0x41 && OOPByte <= 0x5A) || (OOPByte >= 0x30 && OOPByte <= 0x39) || (OOPByte == 0x3A) || (OOPByte == 0x5F))
+                while ((OopByte >= 0x41 && OopByte <= 0x5A) || (OopByte >= 0x30 && OopByte <= 0x39) || (OopByte == 0x3A) ||
+                       (OopByte == 0x5F))
                 {
-                    result.Append(OOPByte.ToChar());
+                    result.Append(OopByte.ToChar());
                     ReadActorCodeByte(index, instructionSource);
-                    OOPByte = OOPByte.ToUpperCase();
+                    OopByte = OopByte.ToUpperCase();
                 }
             }
 
@@ -369,26 +367,26 @@ namespace Roton.Emulation
                 instructionSource.Instruction--;
             }
 
-            OOPWord = result.ToString();
+            OopWord = result.ToString();
         }
 
-        virtual internal int SearchActorCode(int index, string term)
+        internal virtual int SearchActorCode(int index, string term)
         {
-            int result = -1;
+            var result = -1;
             var termBytes = term.ToBytes();
             var actor = Actors[index];
-            ByRefInstruction offset = new ByRefInstruction(0);
+            var offset = new ByRefInstruction(0);
 
             while (offset.Instruction < actor.Length)
             {
-                int oldOffset = offset.Instruction;
-                int termOffset = 0;
-                bool success = false;
+                var oldOffset = offset.Instruction;
+                var termOffset = 0;
+                var success = false;
 
                 while (true)
                 {
                     ReadActorCodeByte(index, offset);
-                    if (termBytes[termOffset].ToUpperCase() != OOPByte.ToUpperCase())
+                    if (termBytes[termOffset].ToUpperCase() != OopByte.ToUpperCase())
                     {
                         success = false;
                         break;
@@ -404,8 +402,8 @@ namespace Roton.Emulation
                 if (success)
                 {
                     ReadActorCodeByte(index, offset);
-                    OOPByte = OOPByte.ToUpperCase();
-                    if (!((OOPByte >= 0x41 && OOPByte <= 0x5A) || OOPByte == 0x5F))
+                    OopByte = OopByte.ToUpperCase();
+                    if (!((OopByte >= 0x41 && OopByte <= 0x5A) || OopByte == 0x5F))
                     {
                         result = oldOffset;
                         break;

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation
 {
-    abstract internal partial class CoreBase : IDisplayInfo
+    internal abstract partial class CoreBase : IDisplayInfo
     {
         public CoreBase()
         {
-            this.Boards = new List<PackedBoard>();
-            this.Memory = new Memory();
-            this.Random = new Random();
-            this.RandomDeterministic = new Random(0);
+            Boards = new List<PackedBoard>();
+            Memory = new Memory();
+            Random = new Random();
+            RandomDeterministic = new Random(0);
         }
 
-        abstract public MemoryActorCollectionBase Actors { get; }
+        public abstract MemoryActorCollectionBase Actors { get; }
 
         public bool AboutShown
         {
@@ -119,7 +117,7 @@ namespace Roton.Emulation
             set { StateData.BoardCount = value; }
         }
 
-        abstract public MemoryBoardBase BoardData { get; }
+        public abstract MemoryBoardBase BoardData { get; }
 
         public string BoardName
         {
@@ -127,16 +125,9 @@ namespace Roton.Emulation
             set { BoardData.Name = value; }
         }
 
-        public IList<PackedBoard> Boards
-        {
-            get;
-            private set;
-        }
+        public IList<PackedBoard> Boards { get; }
 
-        public Tile BorderTile
-        {
-            get { return StateData.BorderTile; }
-        }
+        public Tile BorderTile => StateData.BorderTile;
 
         public bool BreakGameLoop
         {
@@ -156,10 +147,7 @@ namespace Roton.Emulation
             set { StateData.CancelScroll = value; }
         }
 
-        public IList<string> Colors
-        {
-            get { return StateData.Colors; }
-        }
+        public IList<string> Colors => StateData.Colors;
 
         public bool Dark
         {
@@ -167,10 +155,7 @@ namespace Roton.Emulation
             set { BoardData.Dark = value; }
         }
 
-        public Actor DefaultActor
-        {
-            get { return StateData.DefaultActor; }
-        }
+        public Actor DefaultActor => StateData.DefaultActor;
 
         public string DefaultBoardName
         {
@@ -190,18 +175,11 @@ namespace Roton.Emulation
             set { StateData.DefaultWorldName = value; }
         }
 
-        public IFileSystem Disk
-        {
-            get;
-            set;
-        }
+        public IFileSystem Disk { get; set; }
 
-        abstract public Display Display { get; }
+        public abstract Display Display { get; }
 
-        public Tile EdgeTile
-        {
-            get { return StateData.EdgeTile; }
-        }
+        public Tile EdgeTile => StateData.EdgeTile;
 
         public bool EditorMode
         {
@@ -209,15 +187,9 @@ namespace Roton.Emulation
             set { StateData.EditorMode = value; }
         }
 
-        abstract public MemoryElementCollectionBase Elements { get; }
+        public abstract MemoryElementCollectionBase Elements { get; }
 
-        IList<Element> IDisplayInfo.Elements
-        {
-            get
-            {
-                return this.Elements;
-            }
-        }
+        IList<Element> IDisplayInfo.Elements => Elements;
 
         public Location Enter
         {
@@ -255,10 +227,7 @@ namespace Roton.Emulation
             set { BoardData.ExitWest = value; }
         }
 
-        public MemoryFlagArrayBase Flags
-        {
-            get { return WorldData.FlagMemory; }
-        }
+        public MemoryFlagArrayBase Flags => WorldData.FlagMemory;
 
         public int GameCycle
         {
@@ -308,10 +277,7 @@ namespace Roton.Emulation
             set { WorldData.Health = value; }
         }
 
-        public Heap Heap
-        {
-            get { return Memory.Heap; }
-        }
+        public Heap Heap => Memory.Heap;
 
         public bool Init
         {
@@ -325,11 +291,7 @@ namespace Roton.Emulation
             set { StateData.KeyArrow = value; }
         }
 
-        public IKeyboard Keyboard
-        {
-            get;
-            set;
-        }
+        public IKeyboard Keyboard { get; set; }
 
         public int KeyPressed
         {
@@ -337,16 +299,9 @@ namespace Roton.Emulation
             set { StateData.KeyPressed = value; }
         }
 
-        public MemoryKeyArray Keys
-        {
-            get { return WorldData.KeyMemory; }
-        }
+        public MemoryKeyArray Keys => WorldData.KeyMemory;
 
-        IList<bool> IDisplayInfo.Keys
-        {
-            // for some reason this can't be implicit
-            get { return (IList<bool>)WorldData.KeyMemory; }
-        }
+        IList<bool> IDisplayInfo.Keys => (IList<bool>) WorldData.KeyMemory;
 
         public bool KeyShift
         {
@@ -354,15 +309,9 @@ namespace Roton.Emulation
             set { StateData.KeyShift = value; }
         }
 
-        public Vector KeyVector
-        {
-            get { return StateData.KeyVector; }
-        }
+        public Vector KeyVector => StateData.KeyVector;
 
-        public IList<int> LineChars
-        {
-            get { return StateData.LineChars; }
-        }
+        public IList<int> LineChars => StateData.LineChars;
 
         public bool Locked
         {
@@ -376,11 +325,7 @@ namespace Roton.Emulation
             set { StateData.MainTime = value; }
         }
 
-        public Memory Memory
-        {
-            get;
-            private set;
-        }
+        public Memory Memory { get; }
 
         public string Message
         {
@@ -394,22 +339,22 @@ namespace Roton.Emulation
             set { StateData.Message2 = value; }
         }
 
-        public int OOPByte
+        public int OopByte
         {
-            get { return StateData.OOPByte; }
-            set { StateData.OOPByte = value; }
+            get { return StateData.OopByte; }
+            set { StateData.OopByte = value; }
         }
 
-        public int OOPNumber
+        public int OopNumber
         {
-            get { return StateData.OOPNumber; }
-            set { StateData.OOPNumber = value; }
+            get { return StateData.OopNumber; }
+            set { StateData.OopNumber = value; }
         }
 
-        public string OOPWord
+        public string OopWord
         {
-            get { return StateData.OOPWord; }
-            set { StateData.OOPWord = value; }
+            get { return StateData.OopWord; }
+            set { StateData.OopWord = value; }
         }
 
         public int PlayerElement
@@ -430,23 +375,15 @@ namespace Roton.Emulation
             set { StateData.GameQuiet = value; }
         }
 
-        public bool QuitZZT
+        public bool QuitZzt
         {
-            get { return StateData.QuitZZT; }
-            set { StateData.QuitZZT = value; }
+            get { return StateData.QuitZzt; }
+            set { StateData.QuitZzt = value; }
         }
 
-        private Random Random
-        {
-            get;
-            set;
-        }
+        private Random Random { get; }
 
-        private Random RandomDeterministic
-        {
-            get;
-            set;
-        }
+        private Random RandomDeterministic { get; }
 
         public int RandomNumber(int max)
         {
@@ -470,7 +407,7 @@ namespace Roton.Emulation
             set { WorldData.Score = value; }
         }
 
-        abstract public SerializerBase Serializer { get; }
+        public abstract SerializerBase Serializer { get; }
 
         public int Shots
         {
@@ -478,10 +415,7 @@ namespace Roton.Emulation
             set { BoardData.Shots = value; }
         }
 
-        public IList<int> SoundBuffer
-        {
-            get { return StateData.SoundBuffer; }
-        }
+        public IList<int> SoundBuffer => StateData.SoundBuffer;
 
         public int SoundBufferLength
         {
@@ -501,7 +435,7 @@ namespace Roton.Emulation
             set { StateData.SoundPriority = value; }
         }
 
-        abstract public SoundsBase Sounds { get; }
+        public abstract SoundsBase Sounds { get; }
 
         public int SoundTicks
         {
@@ -509,16 +443,9 @@ namespace Roton.Emulation
             set { StateData.SoundTicks = value; }
         }
 
-        public ISpeaker Speaker
-        {
-            get;
-            set;
-        }
+        public ISpeaker Speaker { get; set; }
 
-        public IList<int> StarChars
-        {
-            get { return StateData.StarChars; }
-        }
+        public IList<int> StarChars => StateData.StarChars;
 
         public int StartBoard
         {
@@ -526,7 +453,7 @@ namespace Roton.Emulation
             set { StateData.StartBoard = value; }
         }
 
-        abstract public MemoryStateBase StateData { get; }
+        public abstract MemoryStateBase StateData { get; }
 
         public int Stones
         {
@@ -534,10 +461,7 @@ namespace Roton.Emulation
             set { WorldData.Stones = value; }
         }
 
-        abstract public bool StonesEnabled
-        {
-            get;
-        }
+        public abstract bool StonesEnabled { get; }
 
         public ITerminal Terminal
         {
@@ -545,7 +469,7 @@ namespace Roton.Emulation
             set { Display.Terminal = value; }
         }
 
-        abstract public MemoryTileCollectionBase Tiles { get; }
+        public abstract MemoryTileCollectionBase Tiles { get; }
 
         public int TimeLimit
         {
@@ -559,10 +483,7 @@ namespace Roton.Emulation
             set { WorldData.TimePassed = value; }
         }
 
-        public bool TitleScreen
-        {
-            get { return PlayerElement != Elements.PlayerId; }
-        }
+        public bool TitleScreen => PlayerElement != Elements.PlayerId;
 
         public int TorchCycles
         {
@@ -576,30 +497,15 @@ namespace Roton.Emulation
             set { WorldData.Torches = value; }
         }
 
-        abstract public bool TorchesEnabled
-        {
-            get;
-        }
+        public abstract bool TorchesEnabled { get; }
 
-        public IList<int> TransporterHChars
-        {
-            get { return StateData.TransporterHChars; }
-        }
+        public IList<int> TransporterHChars => StateData.TransporterHChars;
 
-        public IList<int> TransporterVChars
-        {
-            get { return StateData.TransporterVChars; }
-        }
+        public IList<int> TransporterVChars => StateData.TransporterVChars;
 
-        public IList<int> Vector4
-        {
-            get { return StateData.Vector4; }
-        }
+        public IList<int> Vector4 => StateData.Vector4;
 
-        public IList<int> Vector8
-        {
-            get { return StateData.Vector8; }
-        }
+        public IList<int> Vector8 => StateData.Vector8;
 
         public int VisibleTileCount
         {
@@ -607,12 +513,9 @@ namespace Roton.Emulation
             set { StateData.VisibleTileCount = value; }
         }
 
-        public IList<int> WebChars
-        {
-            get { return StateData.WebChars; }
-        }
+        public IList<int> WebChars => StateData.WebChars;
 
-        abstract public MemoryWorldBase WorldData { get; }
+        public abstract MemoryWorldBase WorldData { get; }
 
         public string WorldFileName
         {

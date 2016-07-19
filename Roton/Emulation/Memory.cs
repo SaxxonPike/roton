@@ -1,68 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Roton.Emulation
 {
-    sealed internal class Memory
+    internal sealed class Memory
     {
         public Memory()
         {
-            this.Bytes = new byte[Length];
-            this.Heap = new Heap();
-            this.Reset();
+            Bytes = new byte[Length];
+            Heap = new Heap();
+            Reset();
         }
 
-        private byte[] Bytes
-        {
-            get;
-            set;
-        }
+        private byte[] Bytes { get; }
 
         public byte[] Dump()
         {
-            byte[] result = new byte[Length];
+            var result = new byte[Length];
             Array.Copy(Bytes, result, Length);
             return result;
         }
 
-        public Heap Heap
-        {
-            get;
-            private set;
-        }
+        public Heap Heap { get; private set; }
 
-        public int Length
-        {
-            get { return 0x1 << 16; }
-        }
+        public int Length => 0x1 << 16;
 
-        private int Mask
-        {
-            get { return Length - 1; }
-        }
+        private int Mask => Length - 1;
 
         public byte[] Read(int offset, int length)
         {
-            byte[] result = new byte[length];
-            for (int i = 0; i < length; i++)
+            var result = new byte[length];
+            for (var i = 0; i < length; i++)
             {
-                result[i] = Bytes[(offset++) & Mask];
+                result[i] = Bytes[offset++ & Mask];
             }
             return result;
         }
 
         public int Read8(int offset)
         {
-            Int32 result = 0;
+            var result = 0;
             result |= Bytes[(offset + 0) & Mask];
             return result;
         }
 
         public int Read16(int offset)
         {
-            Int32 result = 0;
+            var result = 0;
             result |= Bytes[(offset + 1) & Mask];
             result <<= 8;
             result |= Bytes[(offset + 0) & Mask];
@@ -73,7 +56,7 @@ namespace Roton.Emulation
 
         public int Read32(int offset)
         {
-            Int32 result = 0;
+            var result = 0;
             result |= Bytes[(offset + 3) & Mask];
             result <<= 8;
             result |= Bytes[(offset + 2) & Mask];
@@ -86,9 +69,9 @@ namespace Roton.Emulation
 
         public void Reset()
         {
-            for (int i = 0; i < this.Bytes.Length; i++)
+            for (var i = 0; i < Bytes.Length; i++)
             {
-                this.Bytes[i] = 0x00;
+                Bytes[i] = 0x00;
             }
         }
 
@@ -99,25 +82,24 @@ namespace Roton.Emulation
 
         public string ReadString(int offset)
         {
-            int length = Read8(offset++);
-            byte[] result = new byte[length];
+            var length = Read8(offset++);
+            var result = new byte[length];
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                result[i] = Bytes[(offset++) & Mask];
+                result[i] = Bytes[offset++ & Mask];
             }
 
             return result.ToStringValue();
         }
 
 
-
         public void Write(int offset, byte[] data)
         {
-            int length = data.Length;
-            for (int i = 0; i < length; i++)
+            var length = data.Length;
+            for (var i = 0; i < length; i++)
             {
-                Bytes[(offset++) & Mask] = data[i];
+                Bytes[offset++ & Mask] = data[i];
             }
         }
 
@@ -125,48 +107,48 @@ namespace Roton.Emulation
         {
             while (dataLength > 0)
             {
-                Bytes[(offset++) & Mask] = data[dataOffset++];
+                Bytes[offset++ & Mask] = data[dataOffset++];
                 dataLength--;
             }
         }
 
         public void Write8(int offset, int value)
         {
-            Bytes[(offset) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset & Mask] = (byte) (value & 0xFF);
         }
 
         public void Write16(int offset, int value)
         {
-            Bytes[(offset++) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset++ & Mask] = (byte) (value & 0xFF);
             value >>= 8;
-            Bytes[(offset) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset & Mask] = (byte) (value & 0xFF);
         }
 
         public void Write32(int offset, int value)
         {
-            Bytes[(offset++) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset++ & Mask] = (byte) (value & 0xFF);
             value >>= 8;
-            Bytes[(offset++) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset++ & Mask] = (byte) (value & 0xFF);
             value >>= 8;
-            Bytes[(offset++) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset++ & Mask] = (byte) (value & 0xFF);
             value >>= 8;
-            Bytes[(offset) & Mask] = (byte)(value & 0xFF);
+            Bytes[offset & Mask] = (byte) (value & 0xFF);
         }
 
         public void WriteBool(int offset, bool value)
         {
-            Bytes[offset & Mask] = value ? (byte)1 : (byte)0;
+            Bytes[offset & Mask] = value ? (byte) 1 : (byte) 0;
         }
 
         public void WriteString(int offset, string value)
         {
-            byte length = (byte)(value.Length & 0xFF);
-            Bytes[(offset++) & Mask] = length;
-            byte[] encodedString = value.ToBytes();
+            var length = (byte) (value.Length & 0xFF);
+            Bytes[offset++ & Mask] = length;
+            var encodedString = value.ToBytes();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                Bytes[(offset++) & Mask] = encodedString[i];
+                Bytes[offset++ & Mask] = encodedString[i];
             }
         }
     }
