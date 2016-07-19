@@ -42,7 +42,11 @@ namespace Roton.Emulation.Execution
             return @"You now have the " + Colors[color] + " key.";
         }
 
+        internal virtual string NoAmmoMessage => @"You don't have any ammo!";
+
         internal virtual string NotDarkMessage => @"Don't need torch - room is not dark!";
+
+        internal virtual string NoShootMessage => @"Can't shoot in this place!";
 
         internal virtual string NoTorchMessage => @"You don't have any torches!";
 

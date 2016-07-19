@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Roton.Core;
 using Roton.Extensions;
 
@@ -541,9 +542,44 @@ namespace Roton.Emulation.Execution
                 GameOver = true;
             }
 
-            if (!KeyShift)
+            if (KeyVector.IsNonZero())
             {
-                if (!KeyVector.IsZero())
+                if (KeyShift || KeyPressed == 0x20)
+                {
+                    if (Shots > 0)
+                    {
+                        if (Ammo > 0)
+                        {
+                            var bulletCount = Actors.Count(a => a.P1 == 0 && TileAt(a.Location).Id == Elements.BulletId);
+                            if (bulletCount < Shots)
+                            {
+                                if (SpawnProjectile(Elements.BulletId, actor.Location, KeyVector, false))
+                                {
+                                    Ammo--;
+                                    UpdateStatus();
+                                    PlaySound(2, Sounds.Shoot);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (AlertNoAmmo)
+                            {
+                                SetMessage(0xC8, NoAmmoMessage);
+                                AlertNoAmmo = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (AlertNoShoot)
+                        {
+                            SetMessage(0xC8, NoShootMessage);
+                            AlertNoShoot = false;
+                        }
+                    }
+                }
+                else
                 {
                     ElementAt(actor.Location.Sum(KeyVector)).Interact(actor.Location.Sum(KeyVector), 0, KeyVector);
                     if (!KeyVector.IsZero())
