@@ -715,7 +715,60 @@ namespace Roton.Emulation.Execution
 
         internal virtual void PushThroughTransporter(IXyPair location, IXyPair vector)
         {
-            // todo
+            var actor = ActorAt(location.Sum(vector));
+
+            if (actor.Vector.Matches(vector))
+            {
+                var search = actor.Location.Clone();
+                var target = new Location();
+                var ended = false;
+                var success = true;
+
+                while (!ended)
+                {
+                    search.Add(vector);
+                    var element = ElementAt(search);
+                    if (element.Id == Elements.BoardEdgeId)
+                    {
+                        ended = true;
+                    }
+                    else
+                    {
+                        if (success)
+                        {
+                            success = false;
+                            if (!element.IsFloor)
+                            {
+                                Push(search, vector);
+                                element = ElementAt(search);
+                            }
+                            if (element.IsFloor)
+                            {
+                                ended = true;
+                                target.CopyFrom(search);
+                            }
+                            else
+                            {
+                                target.X = 0;
+                            }
+                        }
+                    }
+
+                    if (element.Id == Elements.TransporterId)
+                    {
+                        if (ActorAt(search).Vector.Matches(vector.Opposite()))
+                        {
+                            success = true;
+                        }
+                    }
+                }
+
+                if (target.X > 0)
+                {
+                    MoveTile(actor.Location.Difference(vector), target);
+                    PlaySound(3, Sounds.Transporter);
+                }
+            }
         }
 
         internal virtual IXyPair Rnd()
