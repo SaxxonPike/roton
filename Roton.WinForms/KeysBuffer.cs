@@ -8,8 +8,9 @@ namespace Roton.WinForms
 {
     public class KeysBuffer : IKeyboard
     {
-        private static Encoding _enc = Encoding.GetEncoding(437);
-        private Queue<int> _queue = new Queue<int>();
+        private static readonly Encoding _enc = Encoding.GetEncoding(437);
+        private readonly Queue<int> _queue = new Queue<int>();
+        private readonly object _syncObject = new object();
 
         public bool Alt { get; set; }
 
@@ -17,7 +18,7 @@ namespace Roton.WinForms
 
         public void Clear()
         {
-            lock (_queue)
+            lock (_syncObject)
             {
                 _queue.Clear();
                 Shift = false;
@@ -30,7 +31,7 @@ namespace Roton.WinForms
 
         private void Enqueue(int data)
         {
-            lock (_queue)
+            lock (_syncObject)
             {
                 if (_queue.Count(i => i == data) < 2)
                     _queue.Enqueue(data);
@@ -73,7 +74,7 @@ namespace Roton.WinForms
 
         public int GetKey()
         {
-            lock (_queue)
+            lock (_syncObject)
             {
                 if (_queue.Count > 0)
                 {
@@ -102,6 +103,7 @@ namespace Roton.WinForms
             }
             catch (Exception)
             {
+                // todo: This kind of error handling is bad.
                 return false;
             }
         }
