@@ -1,4 +1,5 @@
 ﻿using Roton.Extensions;
+using Roton.Internal;
 
 namespace Roton.Emulation
 {

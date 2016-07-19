@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Roton.Extensions;
 
 namespace Torch
 {
@@ -447,7 +448,7 @@ namespace Torch
             actorEditor.Actor = Actor;
         }
 
-        private int GetDefaultColor(Element element)
+        private int GetDefaultColor(IElement element)
         {
             if (defaultElementPropertiesButton.Checked)
             {
@@ -556,7 +557,7 @@ namespace Torch
             mainPanel.HorizontalScroll.Visible = true;
             mainPanel.VerticalScroll.Visible = true;
             codeEditor.Dock = DockStyle.Fill;
-            Actor = new Actor();
+            Actor = default(IActor);
 
             // timer settings
             timerDaemon.Start(CycleAdvance, 71.8f/9f);
@@ -671,7 +672,7 @@ namespace Torch
             }
         }
 
-        private Element SelectedElement
+        private IElement SelectedElement
         {
             get
             {
@@ -766,7 +767,7 @@ namespace Torch
             }
         }
 
-        private void SetStep(Vector vector)
+        private void SetStep(IXyPair vector)
         {
             Actor.Vector.CopyFrom(vector);
         }

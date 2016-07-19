@@ -127,7 +127,7 @@ namespace Roton.Emulation
 
         public IList<PackedBoard> Boards { get; }
 
-        public Tile BorderTile => StateData.BorderTile;
+        public ITile BorderTile => StateData.BorderTile;
 
         public bool BreakGameLoop
         {
@@ -179,7 +179,7 @@ namespace Roton.Emulation
 
         public abstract Display Display { get; }
 
-        public Tile EdgeTile => StateData.EdgeTile;
+        public ITile EdgeTile => StateData.EdgeTile;
 
         public bool EditorMode
         {
@@ -189,7 +189,7 @@ namespace Roton.Emulation
 
         public abstract MemoryElementCollectionBase Elements { get; }
 
-        IList<Element> IDisplayInfo.Elements => Elements;
+        IList<IElement> IDisplayInfo.Elements => Elements;
 
         public IXyPair Enter
         {
@@ -307,7 +307,7 @@ namespace Roton.Emulation
             set { StateData.KeyShift = value; }
         }
 
-        public Vector KeyVector => StateData.KeyVector;
+        public IXyPair KeyVector => StateData.KeyVector;
 
         public IList<int> LineChars => StateData.LineChars;
 

@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Roton
 {
-    public interface IXyPair
+    public interface ITile
     {
-        int X { get; set; }
-        int Y { get; set; }
-        IXyPair Clone();
+        int Color { get; set; }
+        int Id { get; set; }
+        ITile Clone();
     }
 }

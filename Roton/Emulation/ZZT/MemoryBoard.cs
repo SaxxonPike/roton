@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.ZZT
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation.ZZT
 {
     internal sealed class MemoryBoard : MemoryBoardBase
     {

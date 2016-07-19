@@ -1,8 +1,9 @@
 ﻿using System;
+using Roton.Internal;
 
 namespace Roton.Emulation
 {
-    internal abstract class MemoryElementCollectionBase : FixedList<Element>
+    internal abstract class MemoryElementCollectionBase : FixedList<IElement>
     {
         protected MemoryElementCollectionBase(Memory memory)
         {
@@ -335,73 +336,73 @@ namespace Roton.Emulation
         public virtual int WaterId => -1;
         public virtual int WebId => -1;
 
-        public Element AmmoElement => this[AmmoId];
-        public Element BearElement => this[BearId];
-        public Element BlinkRayHElement => this[BlinkRayHId];
-        public Element BlinkRayVElement => this[BlinkRayVId];
-        public Element BlinkWallElement => this[BlinkWallId];
-        public Element BoardEdgeElement => this[BoardEdgeId];
-        public Element BombElement => this[BombId];
-        public Element BoulderElement => this[BoulderId];
-        public Element BreakableElement => this[BreakableId];
-        public Element BulletElement => this[BulletId];
-        public Element ClockwiseElement => this[ClockwiseId];
-        public Element CounterElement => this[CounterId];
-        public Element DoorElement => this[DoorId];
-        public Element DragonPupElement => this[DragonPupId];
-        public Element DuplicatorElement => this[DuplicatorId];
-        public Element EmptyElement => this[EmptyId];
-        public Element EnergizerElement => this[EnergizerId];
-        public Element FakeElement => this[FakeId];
-        public Element FloorElement => this[FloorId];
-        public Element ForestElement => this[ForestId];
-        public Element GemElement => this[GemId];
-        public Element HeadElement => this[HeadId];
-        public Element InvisibleElement => this[InvisibleId];
-        public Element KeyElement => this[KeyId];
-        public Element LavaElement => this[LavaId];
-        public Element LineElement => this[LineId];
-        public Element LionElement => this[LionId];
-        public Element MessengerElement => this[MessengerId];
-        public Element MonitorElement => this[MonitorId];
-        public Element NormalElement => this[NormalId];
-        public Element ObjectElement => this[ObjectId];
-        public Element PairerElement => this[PairerId];
-        public Element PassageElement => this[PassageId];
-        public Element PlayerElement => this[PlayerId];
-        public Element PusherElement => this[PusherId];
-        public Element RicochetElement => this[RicochetId];
-        public Element RiverEElement => this[RiverEId];
-        public Element RiverNElement => this[RiverNId];
-        public Element RiverSElement => this[RiverSId];
-        public Element RiverWElement => this[RiverWId];
-        public Element RotonElement => this[RotonId];
-        public Element RuffianElement => this[RuffianId];
-        public Element ScrollElement => this[ScrollId];
-        public Element SegmentElement => this[SegmentId];
-        public Element SharkElement => this[SharkId];
-        public Element SliderEwElement => this[SliderEwId];
-        public Element SliderNsElement => this[SliderNsId];
-        public Element SlimeElement => this[SlimeId];
-        public Element SolidElement => this[SolidId];
-        public Element SpiderElement => this[SpiderId];
-        public Element SpinningGunElement => this[SpinningGunId];
-        public Element StarElement => this[StarId];
-        public Element StoneElement => this[StoneId];
-        public Element TigerElement => this[TigerId];
-        public Element TorchElement => this[TorchId];
-        public Element TransporterElement => this[TransporterId];
-        public Element WaterElement => this[WaterId];
-        public Element WebElement => this[WebId];
+        public IElement AmmoElement => this[AmmoId];
+        public IElement BearElement => this[BearId];
+        public IElement BlinkRayHElement => this[BlinkRayHId];
+        public IElement BlinkRayVElement => this[BlinkRayVId];
+        public IElement BlinkWallElement => this[BlinkWallId];
+        public IElement BoardEdgeElement => this[BoardEdgeId];
+        public IElement BombElement => this[BombId];
+        public IElement BoulderElement => this[BoulderId];
+        public IElement BreakableElement => this[BreakableId];
+        public IElement BulletElement => this[BulletId];
+        public IElement ClockwiseElement => this[ClockwiseId];
+        public IElement CounterElement => this[CounterId];
+        public IElement DoorElement => this[DoorId];
+        public IElement DragonPupElement => this[DragonPupId];
+        public IElement DuplicatorElement => this[DuplicatorId];
+        public IElement EmptyElement => this[EmptyId];
+        public IElement EnergizerElement => this[EnergizerId];
+        public IElement FakeElement => this[FakeId];
+        public IElement FloorElement => this[FloorId];
+        public IElement ForestElement => this[ForestId];
+        public IElement GemElement => this[GemId];
+        public IElement HeadElement => this[HeadId];
+        public IElement InvisibleElement => this[InvisibleId];
+        public IElement KeyElement => this[KeyId];
+        public IElement LavaElement => this[LavaId];
+        public IElement LineElement => this[LineId];
+        public IElement LionElement => this[LionId];
+        public IElement MessengerElement => this[MessengerId];
+        public IElement MonitorElement => this[MonitorId];
+        public IElement NormalElement => this[NormalId];
+        public IElement ObjectElement => this[ObjectId];
+        public IElement PairerElement => this[PairerId];
+        public IElement PassageElement => this[PassageId];
+        public IElement PlayerElement => this[PlayerId];
+        public IElement PusherElement => this[PusherId];
+        public IElement RicochetElement => this[RicochetId];
+        public IElement RiverEElement => this[RiverEId];
+        public IElement RiverNElement => this[RiverNId];
+        public IElement RiverSElement => this[RiverSId];
+        public IElement RiverWElement => this[RiverWId];
+        public IElement RotonElement => this[RotonId];
+        public IElement RuffianElement => this[RuffianId];
+        public IElement ScrollElement => this[ScrollId];
+        public IElement SegmentElement => this[SegmentId];
+        public IElement SharkElement => this[SharkId];
+        public IElement SliderEwElement => this[SliderEwId];
+        public IElement SliderNsElement => this[SliderNsId];
+        public IElement SlimeElement => this[SlimeId];
+        public IElement SolidElement => this[SolidId];
+        public IElement SpiderElement => this[SpiderId];
+        public IElement SpinningGunElement => this[SpinningGunId];
+        public IElement StarElement => this[StarId];
+        public IElement StoneElement => this[StoneId];
+        public IElement TigerElement => this[TigerId];
+        public IElement TorchElement => this[TorchId];
+        public IElement TransporterElement => this[TransporterId];
+        public IElement WaterElement => this[WaterId];
+        public IElement WebElement => this[WebId];
 
-        protected override Element GetItem(int index)
+        protected override IElement GetItem(int index)
         {
             if (index >= 0 && index < Count)
                 return Cache[index];
             return GetElement(index);
         }
 
-        protected override void SetItem(int index, Element value)
+        protected override void SetItem(int index, IElement value)
         {
             throw Exceptions.InvalidSet;
         }

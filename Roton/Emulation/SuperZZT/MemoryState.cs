@@ -4,7 +4,7 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed class MemoryState : MemoryStateBase
     {
-        private Tile _borderTile;
+        private ITile _borderTile;
         private MemoryColorArray _colors;
         private MemoryActor _defaultActor;
         private MemoryTile _edgeTile;
@@ -122,7 +122,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x7784, value); }
         }
 
-        public override Tile BorderTile
+        public override ITile BorderTile
         {
             get { return _borderTile; }
             protected set { }
@@ -164,7 +164,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.WriteString(0x2B70, value); }
         }
 
-        public override Tile EdgeTile
+        public override ITile EdgeTile
         {
             get { return _edgeTile; }
             protected set { }
@@ -236,7 +236,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.WriteBool(0xCC72, value); }
         }
 
-        public override Vector KeyVector
+        public override IXyPair KeyVector
         {
             get { return _keyVector; }
             set { }

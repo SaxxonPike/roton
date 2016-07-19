@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
@@ -125,7 +126,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x45BE, value); }
         }
 
-        public override Tile BorderTile
+        public override ITile BorderTile
         {
             get { return _borderTile; }
             protected set { }
@@ -173,7 +174,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteString(0x2452, value); }
         }
 
-        public override Tile EdgeTile
+        public override ITile EdgeTile
         {
             get { return _edgeTile; }
             protected set { }
@@ -245,7 +246,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteBool(0x7C6C, value); }
         }
 
-        public override Vector KeyVector
+        public override IXyPair KeyVector
         {
             get { return _keyVector; }
             set { _keyVector.CopyFrom(value); }

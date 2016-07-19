@@ -1,8 +1,6 @@
-﻿using Roton.Emulation;
-
-namespace Roton
+﻿namespace Roton.Internal
 {
-    public partial class Actor : IActor
+    internal partial class Actor : IActor
     {
         /// <summary>
         /// The frequency at which the actor will run its action code.
@@ -57,7 +55,7 @@ namespace Roton
         /// <summary>
         /// Tile underneath the actor.
         /// </summary>
-        public virtual Tile UnderTile { get; }
+        public virtual ITile UnderTile { get; }
 
         /// <summary>
         /// Actor's vector, when applicable.

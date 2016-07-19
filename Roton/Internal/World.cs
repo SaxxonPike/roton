@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton
+namespace Roton.Internal
 {
-    public abstract partial class World
+    internal abstract partial class World : IWorld
     {
         public virtual int Ammo { get; set; }
         public virtual int Board { get; set; }

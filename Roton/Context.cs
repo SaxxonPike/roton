@@ -1,6 +1,7 @@
 ﻿using Roton.Emulation;
 using System.Collections.Generic;
 using System.Linq;
+using Roton.Internal;
 
 namespace Roton
 {
@@ -16,7 +17,7 @@ namespace Roton
             set { Core.SetBoard(value); }
         }
 
-        public Board BoardData => Core.BoardData;
+        public IBoard BoardData => Core.BoardData;
 
         public IList<PackedBoard> Boards => Core.Boards;
 
@@ -24,13 +25,12 @@ namespace Roton
 
         private CoreBase Core { get; set; }
 
-        public Actor CreateActor()
+        public IActor CreateActor()
         {
-            var result = new Actor();
-            return result;
+            return new Actor();
         }
 
-        public IList<Element> Elements => Core.Elements;
+        public IList<IElement> Elements => Core.Elements;
 
         public IKeyboard Keyboard
         {
@@ -75,17 +75,12 @@ namespace Roton
             }
         }
 
-        public Tile TileAt(Location l)
-        {
-            return Core.Tiles[l];
-        }
-
-        public Tile TileAt(int x, int y)
+        public ITile TileAt(int x, int y)
         {
             return Core.Tiles[new Location(x, y)];
         }
 
-        public World WorldData => Core.WorldData;
+        public IWorld WorldData => Core.WorldData;
 
         public int WorldSize
         {

@@ -16,7 +16,7 @@ namespace Torch
             Initialize();
         }
 
-        public CodeEditor(Actor actor)
+        public CodeEditor(IActor actor)
         {
             InitializeComponent();
             Initialize();

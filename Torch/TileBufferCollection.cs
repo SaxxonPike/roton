@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace Torch
 {
-    public class TileBufferCollection : IList<Tile>
+    public class TileBufferCollection : IList<ITile>
     {
         public TileBufferCollection()
         {
-            InnerList = new List<Tile>();
+            InnerList = new List<ITile>();
         }
 
-        private List<Tile> InnerList { get; }
+        private List<ITile> InnerList { get; }
 
-        public int IndexOf(Tile item)
+        public int IndexOf(ITile item)
         {
             return InnerList.IndexOf(item);
         }
 
-        public void Insert(int index, Tile item)
+        public void Insert(int index, ITile item)
         {
             InnerList.Insert(index, item);
         }
@@ -27,13 +27,13 @@ namespace Torch
             InnerList.RemoveAt(index);
         }
 
-        public Tile this[int index]
+        public ITile this[int index]
         {
             get { return InnerList[index]; }
             set { InnerList[index] = value; }
         }
 
-        public void Add(Tile item)
+        public void Add(ITile item)
         {
             InnerList.Add(item);
         }
@@ -43,12 +43,12 @@ namespace Torch
             InnerList.Clear();
         }
 
-        public bool Contains(Tile item)
+        public bool Contains(ITile item)
         {
             return InnerList.Contains(item);
         }
 
-        public void CopyTo(Tile[] array, int arrayIndex)
+        public void CopyTo(ITile[] array, int arrayIndex)
         {
             InnerList.CopyTo(array, arrayIndex);
         }
@@ -57,12 +57,12 @@ namespace Torch
 
         public bool IsReadOnly => false;
 
-        public bool Remove(Tile item)
+        public bool Remove(ITile item)
         {
             return InnerList.Remove(item);
         }
 
-        public IEnumerator<Tile> GetEnumerator()
+        public IEnumerator<ITile> GetEnumerator()
         {
             return InnerList.GetEnumerator();
         }

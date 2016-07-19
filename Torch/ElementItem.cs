@@ -4,12 +4,12 @@ namespace Torch
 {
     public class ElementItem
     {
-        public ElementItem(Element element)
+        public ElementItem(IElement element)
         {
             Element = element;
         }
 
-        public Element Element { get; }
+        public IElement Element { get; }
 
         public int Index => Element.Index;
 

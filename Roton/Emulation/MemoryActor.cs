@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Internal;
+
+namespace Roton.Emulation
 {
     internal sealed class MemoryActor : Actor
     {
@@ -76,7 +78,7 @@
             set { Memory.Write32(Offset + 0x11, value); }
         }
 
-        public override Tile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
+        public override ITile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
 
         public override IXyPair Vector => new MemoryVector(Memory, Offset + 0x02);
     }

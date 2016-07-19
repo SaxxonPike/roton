@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Roton
+namespace Roton.Internal
 {
     internal static class Exceptions
     {

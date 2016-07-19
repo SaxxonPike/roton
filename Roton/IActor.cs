@@ -13,11 +13,8 @@ namespace Roton
         int P2 { get; set; }
         int P3 { get; set; }
         int Pointer { get; set; }
-        Tile UnderTile { get; }
+        ITile UnderTile { get; }
         IXyPair Vector { get; }
-        int X { get; set; }
-        int Y { get; set; }
-        void CopyFrom(IActor other);
         bool IsAttached { get; }
     }
 }

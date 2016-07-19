@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Roton
+namespace Roton.Internal
 {
-    public partial class Actor
+    internal partial class Actor
     {
         /// <summary>
         /// Create an actor.
@@ -27,26 +27,6 @@ namespace Roton
         /// Get or set this actor's code.
         /// </summary>
         public virtual char[] Code { get; set; }
-
-        /// <summary>
-        /// Copy actor data. Code is not duplicated, but Pointer reference will be.
-        /// </summary>
-        public void CopyFrom(IActor actor)
-        {
-            Cycle = actor.Cycle;
-            Follower = actor.Follower;
-            Instruction = actor.Instruction;
-            Leader = actor.Leader;
-            Length = actor.Length;
-            Location.CopyFrom(actor.Location);
-            P1 = actor.P1;
-            P2 = actor.P2;
-            P3 = actor.P3;
-            Pointer = actor.Pointer;
-            UnderTile.CopyFrom(actor.UnderTile);
-            Vector.CopyFrom(actor.Vector);
-            Code = actor.Code;
-        }
 
         /// <summary>
         /// If true, the actor is attached to a Context.
@@ -81,24 +61,6 @@ namespace Roton
             }
             name = Location + name;
             return name;
-        }
-
-        /// <summary>
-        /// X location of the actor. Directly references Location.
-        /// </summary>
-        public int X
-        {
-            get { return Location.X; }
-            set { Location.X = value; }
-        }
-
-        /// <summary>
-        /// Y location of the actor. Directly references Location.
-        /// </summary>
-        public int Y
-        {
-            get { return Location.Y; }
-            set { Location.Y = value; }
         }
     }
 }

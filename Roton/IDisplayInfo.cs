@@ -7,7 +7,7 @@ namespace Roton
         int Ammo { get; }
         IXyPair Camera { get; }
         AnsiChar Draw(IXyPair location);
-        IList<Element> Elements { get; }
+        IList<IElement> Elements { get; }
         int EnergyCycles { get; }
         int GameSpeed { get; }
         int Gems { get; }

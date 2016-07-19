@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Roton.Extensions;
+using Roton.Internal;
 
 namespace Roton.Emulation
 {
@@ -180,12 +181,12 @@ namespace Roton.Emulation
             Display.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
-        internal virtual Element ElementAt(IXyPair location)
+        internal virtual IElement ElementAt(IXyPair location)
         {
             return Elements[TileAt(location).Id];
         }
 
-        internal virtual Element ElementAt(int x, int y)
+        internal virtual IElement ElementAt(int x, int y)
         {
             return ElementAt(new Location(x, y));
         }
@@ -855,13 +856,13 @@ namespace Roton.Emulation
         internal virtual void Seek(IXyPair location, IXyPair result)
         {
             result.SetTo(0, 0);
-            if (RandomNumberDeterministic(2) == 0 || Player.Y == location.Y)
+            if (RandomNumberDeterministic(2) == 0 || Player.Location.Y == location.Y)
             {
-                result.X = (Player.X - location.X).Polarity();
+                result.X = (Player.Location.X - location.X).Polarity();
             }
             if (result.X == 0)
             {
-                result.Y = (Player.Y - location.Y).Polarity();
+                result.Y = (Player.Location.Y - location.Y).Polarity();
             }
             if (EnergyCycles > 0)
             {
@@ -910,7 +911,7 @@ namespace Roton.Emulation
         {
         }
 
-        internal virtual void SpawnActor(IXyPair location, Tile tile, int cycle, IActor source)
+        internal virtual void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
         {
             // must reserve one actor for player, and one for messenger
             if (ActorCount < Actors.Capacity - 2)
@@ -978,12 +979,12 @@ namespace Roton.Emulation
             return false;
         }
 
-        internal Tile TileAt(IXyPair l)
+        internal ITile TileAt(IXyPair l)
         {
             return Tiles[l];
         }
 
-        internal Tile TileAt(int x, int y)
+        internal ITile TileAt(int x, int y)
         {
             return Tiles[new Location(x, y)];
         }

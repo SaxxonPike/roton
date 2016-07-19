@@ -19,7 +19,7 @@ namespace Roton
         public virtual bool AlertNoTorch { get; set; }
         public virtual bool AlertTorch { get; set; }
         public virtual int BoardCount { get; set; }
-        public virtual Tile BorderTile { get; protected set; }
+        public virtual ITile BorderTile { get; protected set; }
         public virtual bool BreakGameLoop { get; set; }
         public virtual bool CancelScroll { get; set; }
         public virtual IList<string> Colors { get; protected set; }
@@ -27,7 +27,7 @@ namespace Roton
         public virtual string DefaultBoardName { get; set; }
         public virtual string DefaultSaveName { get; set; }
         public virtual string DefaultWorldName { get; set; }
-        public virtual Tile EdgeTile { get; protected set; }
+        public virtual ITile EdgeTile { get; protected set; }
         public virtual bool EditorMode { get; set; }
         public virtual int ForestIndex { get; set; }
         public virtual int GameCycle { get; set; }
@@ -40,7 +40,7 @@ namespace Roton
         public virtual bool KeyArrow { get; set; }
         public virtual int KeyPressed { get; set; }
         public virtual bool KeyShift { get; set; }
-        public virtual Vector KeyVector { get; set; }
+        public virtual IXyPair KeyVector { get; set; }
         public virtual IList<int> LineChars { get; protected set; }
         public virtual int MainTime { get; set; }
         public virtual string Message { get; set; }

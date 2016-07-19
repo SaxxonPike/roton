@@ -1,4 +1,5 @@
 ﻿using Roton.Extensions;
+using Roton.Internal;
 
 namespace Roton.Emulation
 {
@@ -9,20 +10,20 @@ namespace Roton.Emulation
             var actor = Actors[index];
             var vector = new Vector();
 
-            if (Player.X == actor.X || (8 - actor.P1 < Player.Y.AbsDiff(actor.Y)))
+            if (Player.Location.X == actor.Location.X || (8 - actor.P1 < Player.Location.Y.AbsDiff(actor.Location.Y)))
             {
-                if (8 - actor.P1 < Player.X.AbsDiff(actor.X))
+                if (8 - actor.P1 < Player.Location.X.AbsDiff(actor.Location.X))
                 {
                     vector.SetTo(0, 0);
                 }
                 else
                 {
-                    vector.SetTo(0, (Player.Y - actor.Y).Polarity());
+                    vector.SetTo(0, (Player.Location.Y - actor.Location.Y).Polarity());
                 }
             }
             else
             {
-                vector.SetTo((Player.X - actor.X).Polarity(), 0);
+                vector.SetTo((Player.Location.X - actor.Location.X).Polarity(), 0);
             }
 
             var target = actor.Location.Sum(vector);
@@ -319,7 +320,7 @@ namespace Roton.Emulation
         public virtual void Act_Messenger(int index)
         {
             var actor = Actors[index];
-            if (actor.X == 0)
+            if (actor.Location.X == 0)
             {
                 Display.DrawMessage(Message, actor.P2%7 + 9);
                 actor.P2--;
@@ -606,7 +607,7 @@ namespace Roton.Emulation
             }
             else
             {
-                if (actor.X == Player.X || actor.Y == Player.Y)
+                if (actor.Location.X == Player.Location.X || actor.Location.Y == Player.Location.Y)
                 {
                     if (actor.P1 >= RandomNumberDeterministic(9))
                     {
@@ -800,15 +801,15 @@ namespace Roton.Emulation
             {
                 if (actor.P1 >= RandomNumberDeterministic(9))
                 {
-                    if (actor.X.AbsDiff(Player.X) <= 2)
+                    if (actor.Location.X.AbsDiff(Player.Location.X) <= 2)
                     {
                         shot = SpawnProjectile(firingElement, actor.Location,
-                            new Vector(0, (Player.Y - actor.Y).Polarity()), true);
+                            new Vector(0, (Player.Location.Y - actor.Location.Y).Polarity()), true);
                     }
-                    if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
+                    if (!shot && actor.Location.Y.AbsDiff(Player.Location.Y) <= 2)
                     {
                         shot = SpawnProjectile(firingElement, actor.Location,
-                            new Vector((Player.X - actor.X).Polarity(), 0), true);
+                            new Vector((Player.Location.X - actor.Location.X).Polarity(), 0), true);
                     }
                 }
                 else
@@ -838,12 +839,12 @@ namespace Roton.Emulation
 
             if ((actor.P2 & 0x7F) > 3*RandomNumberDeterministic(10))
             {
-                var shot = actor.X.AbsDiff(Player.X) <= 2 &&
-                    SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
+                var shot = actor.Location.X.AbsDiff(Player.Location.X) <= 2 &&
+                    SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Location.Y - actor.Location.Y).Polarity()), true);
 
-                if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
+                if (!shot && actor.Location.Y.AbsDiff(Player.Location.Y) <= 2)
                 {
-                    SpawnProjectile(firingElement, actor.Location, new Vector((Player.X - actor.X).Polarity(), 0), true);
+                    SpawnProjectile(firingElement, actor.Location, new Vector((Player.Location.X - actor.Location.X).Polarity(), 0), true);
                 }
             }
 

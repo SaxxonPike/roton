@@ -1,6 +1,6 @@
 ﻿namespace Roton
 {
-    public partial class Element
+    internal partial class Element
     {
         internal Element()
         {

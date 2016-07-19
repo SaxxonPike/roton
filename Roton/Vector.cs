@@ -6,12 +6,10 @@ namespace Roton
     {
         public Vector()
         {
-            Initialize();
         }
 
         public Vector(int x, int y)
         {
-            Initialize();
             X = x;
             Y = y;
         }
@@ -27,16 +25,6 @@ namespace Roton
         public IXyPair Clone()
         {
             return new Vector(X, Y);
-        }
-
-        public void CopyFrom(IXyPair other)
-        {
-            X = other.X;
-            Y = other.Y;
-        }
-
-        protected virtual void Initialize()
-        {
         }
 
         public override string ToString()

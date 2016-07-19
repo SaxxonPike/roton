@@ -1,6 +1,6 @@
-﻿namespace Roton
+﻿namespace Roton.Internal
 {
-    public abstract partial class World
+    internal abstract partial class World
     {
         public override string ToString()
         {

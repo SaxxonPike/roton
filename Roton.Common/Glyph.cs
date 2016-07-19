@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Roton.Common
 {
-    public sealed class Glyph : Emulation.FixedList<int>
+    public sealed class Glyph : FixedList<int>
     {
         private const int Black = -1 ^ ColorMask;
         private const int ColorMask = 0xFFFFFF;

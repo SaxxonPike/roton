@@ -15,7 +15,7 @@
 
         public int CommandsExecuted { get; set; }
 
-        public Tile DeathTile { get; set; }
+        public ITile DeathTile { get; set; }
 
         public bool Died { get; set; }
 
