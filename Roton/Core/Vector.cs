@@ -19,6 +19,7 @@
         public static IXyPair North => new Vector(0, -1);
         public static IXyPair South => new Vector(0, 1);
         public static IXyPair West => new Vector(-1, 0);
+        public static IXyPair Idle => new Vector(0, 0);
 
         public IXyPair Clone()
         {

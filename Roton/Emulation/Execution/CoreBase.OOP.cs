@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Security;
+using System.Text;
 using Roton.Core;
 using Roton.Extensions;
 
@@ -67,6 +70,127 @@ namespace Roton.Emulation.Execution
             if (element.Color == 0xFE)
                 return ((tile.Color >> 4) & 0x0F) + 8;
             return tile.Color & 0x0F;
+        }
+
+        internal virtual bool ReadCondition(ExecuteCodeContext context)
+        {
+            var actor = context.Actor;
+            ReadActorCodeWord(context.Index, context);
+            var word = OopWord;
+            switch (word)
+            {
+                case "ALLIGNED":
+                    return Player.Location.X == actor.Location.X || Player.Location.Y == actor.Location.Y;
+                case "ENERGIZED":
+                    return WorldData.EnergyCycles > 0;
+                case "NOT":
+                    return !ReadCondition(context);
+                default:
+                    return Flags.Contains(word);
+            }
+        }
+
+        internal virtual IXyPair ReadDirection(ExecuteCodeContext context)
+        {
+            var actor = context.Actor;
+            ReadActorCodeWord(context.Index, context);
+            var word = OopWord;
+            switch (word)
+            {
+                case "CW":
+                    return ReadDirection(context)?.Clockwise();
+                case "CCW":
+                    return ReadDirection(context)?.CounterClockwise();
+                case "E":
+                case "EAST":
+                    return Vector.East;
+                case "FLOW":
+                    return actor.Vector.Clone();
+                case "I":
+                case "IDLE":
+                    return Vector.Idle;
+                case "N":
+                case "NORTH":
+                    return Vector.North;
+                case "OPP":
+                    return ReadDirection(context)?.Opposite();
+                case "RND":
+                    return Rnd();
+                case "RNDNE":
+                    return RandomNumber(2) == 0
+                        ? Vector.North
+                        : Vector.East;
+                case "RNDNS":
+                    return RandomNumber(2) == 0
+                        ? Vector.North
+                        : Vector.South;
+                case "RNDP":
+                    var rndpDirection = ReadDirection(context);
+                    if (rndpDirection != null)
+                    {
+                        return RandomNumber(2) == 0
+                            ? rndpDirection.Clockwise()
+                            : rndpDirection.CounterClockwise();
+                    }
+                    return null;
+                case "SEEK":
+                    return Seek(actor.Location);
+                case "S":
+                case "SOUTH":
+                    return Vector.South;
+                case "W":
+                case "WEST":
+                    return Vector.West;
+                default:
+                    return null;
+            }
+        }
+
+        internal virtual ITile ReadKind(ExecuteCodeContext context)
+        {
+            var success = false;
+            var result = new Tile(0, 0);
+
+            while (!success)
+            {
+                var valid = false;
+                ReadActorCodeWord(context.Index, context);
+                var word = OopWord;
+
+                if (result.Color == 0)
+                {
+                    for (var i = 1; i <= 8; i++)
+                    {
+                        if (Colors[i].ToUpperInvariant() == word)
+                        {
+                            result.Color = i + 8;
+                            valid = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!valid)
+                {
+                    foreach (var element in Elements)
+                    {
+                        if (string.IsNullOrEmpty(element.Name) || element.Name.ToUpperInvariant() != word)
+                            continue;
+
+                        result.Id = element.Id;
+                        success = true;
+                        valid = true;
+                        break;
+                    }
+                }
+
+                if (valid)
+                    continue;
+
+                break;
+            }
+
+            return success ? result : null;
         }
 
         internal virtual void ExecuteCode(int index, ICodeSeekable instructionSource, string name)

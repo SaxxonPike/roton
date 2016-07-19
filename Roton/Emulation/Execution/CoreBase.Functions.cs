@@ -994,6 +994,13 @@ namespace Roton.Emulation.Execution
             AlertTorch = true;
         }
 
+        internal virtual IXyPair Seek(IXyPair location)
+        {
+            var result = new Vector();
+            Seek(location, result);
+            return result;
+        }
+
         internal virtual void Seek(IXyPair location, IXyPair result)
         {
             result.SetTo(0, 0);
