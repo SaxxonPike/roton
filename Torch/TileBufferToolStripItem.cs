@@ -3,6 +3,7 @@ using Roton.WinForms;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Roton.Core;
 
 namespace Torch
 {

@@ -7,6 +7,7 @@ using System.Text;
 using OpenTK.Graphics.OpenGL;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
+using Roton.Core;
 
 namespace Roton.WinForms.OpenGL
 {

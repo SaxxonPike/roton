@@ -39,15 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\TileExtensions.cs" />
-    <Compile Include="IElement.cs" />
+    <Compile Include="Core\IHud.cs" />
+    <Compile Include="Core\IElement.cs" />
     <Compile Include="Internal\Actor.cs" />
     <Compile Include="Internal\Actor.Functions.cs" />
-    <Compile Include="AnsiChar.cs" />
+    <Compile Include="Core\AnsiChar.cs" />
     <Compile Include="Internal\Board.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="Context.Functions.cs" />
-    <Compile Include="Display.cs" />
-    <Compile Include="Display.Functions.cs" />
+    <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\Context.Functions.cs" />
+    <Compile Include="Internal\Hud.cs" />
     <Compile Include="Emulation\ByRefInstruction.cs" />
     <Compile Include="Emulation\CodeSearchInfo.cs" />
     <Compile Include="Emulation\CodeSearchInfoProxy.cs" />
@@ -72,10 +72,10 @@
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="Extensions\ActorExtensions.cs" />
     <Compile Include="Extensions\XyPairExtensions.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="IActor.cs" />
-    <Compile Include="IBoard.cs" />
-    <Compile Include="IDisplayInfo.cs" />
+    <Compile Include="Core\FileSystem.cs" />
+    <Compile Include="Core\IActor.cs" />
+    <Compile Include="Core\IBoard.cs" />
+    <Compile Include="Core\IDisplayInfo.cs" />
     <Compile Include="Internal\Element.cs" />
     <Compile Include="Internal\Element.Functions.cs" />
     <Compile Include="Emulation\CoreBase.Behavior.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Emulation\MemoryStateBase.cs" />
     <Compile Include="Emulation\MemoryStringByteCollection.cs" />
     <Compile Include="Emulation\SerializerBase.cs" />
-    <Compile Include="FixedList.cs" />
+    <Compile Include="Core\FixedList.cs" />
     <Compile Include="Emulation\LinearEnumerator.cs" />
     <Compile Include="Emulation\MemoryElementBase.cs" />
     <Compile Include="Emulation\MemoryElementCollectionBase.cs" />
@@ -104,14 +104,14 @@
     <Compile Include="Emulation\SuperZZT\MemoryState.cs" />
     <Compile Include="Emulation\SuperZZT\MemoryTileCollection.cs" />
     <Compile Include="Emulation\SuperZZT\Sounds.cs" />
-    <Compile Include="Emulation\SuperZZT\TerminalDisplay.cs" />
+    <Compile Include="Emulation\SuperZZT\TerminalHud.cs" />
     <Compile Include="Emulation\ZZT\Core.Interface.cs" />
     <Compile Include="Emulation\ZZT\MemoryElementCollection.Ids.cs" />
     <Compile Include="Emulation\ZZT\MemoryFlagArray.cs" />
     <Compile Include="Emulation\ZZT\Serializer.cs" />
     <Compile Include="Emulation\ZZT\MemoryActorCollection.cs" />
     <Compile Include="Emulation\ZZT\MemoryElement.cs" />
-    <Compile Include="ContextEngine.cs" />
+    <Compile Include="Core\ContextEngine.cs" />
     <Compile Include="Emulation\Memory.cs" />
     <Compile Include="Emulation\MemoryActor.cs" />
     <Compile Include="Emulation\MemoryActorCollectionBase.cs" />
@@ -120,15 +120,16 @@
     <Compile Include="Emulation\ZZT\MemoryState.cs" />
     <Compile Include="Emulation\ZZT\MemoryTileCollection.cs" />
     <Compile Include="Emulation\ZZT\Sounds.cs" />
-    <Compile Include="Emulation\ZZT\TerminalDisplay.cs" />
-    <Compile Include="IFileSystem.cs" />
-    <Compile Include="IKeyboard.cs" />
-    <Compile Include="ISpeaker.cs" />
-    <Compile Include="ITerminal.cs" />
-    <Compile Include="ITile.cs" />
-    <Compile Include="IWorld.cs" />
-    <Compile Include="IXyPair.cs" />
-    <Compile Include="PackedBoard.cs" />
+    <Compile Include="Emulation\ZZT\TerminalHud.cs" />
+    <Compile Include="Core\IFileSystem.cs" />
+    <Compile Include="Core\IKeyboard.cs" />
+    <Compile Include="Core\ISpeaker.cs" />
+    <Compile Include="Core\IState.cs" />
+    <Compile Include="Core\ITerminal.cs" />
+    <Compile Include="Core\ITile.cs" />
+    <Compile Include="Core\IWorld.cs" />
+    <Compile Include="Core\IXyPair.cs" />
+    <Compile Include="Core\PackedBoard.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -145,13 +146,13 @@
     <Compile Include="Emulation\ZZT\MemoryBoard.cs" />
     <Compile Include="Emulation\ZZT\MemoryWorld.cs" />
     <Compile Include="Internal\Exceptions.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="Core\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\RadiusMode.cs" />
-    <Compile Include="State.cs" />
-    <Compile Include="Tile.cs" />
-    <Compile Include="Utility.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Internal\State.cs" />
+    <Compile Include="Core\Tile.cs" />
+    <Compile Include="Core\Utility.cs" />
+    <Compile Include="Core\Vector.cs" />
     <Compile Include="Internal\World.cs" />
     <Compile Include="Internal\World.Functions.cs" />
   </ItemGroup>

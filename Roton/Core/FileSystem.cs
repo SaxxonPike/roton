@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Roton
+namespace Roton.Core
 {
     public class FileSystem : IFileSystem
     {

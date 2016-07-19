@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Core;
+
+namespace Roton.Emulation
 {
     internal sealed class MemoryLocation : Location
     {

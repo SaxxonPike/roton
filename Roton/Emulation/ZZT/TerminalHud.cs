@@ -1,11 +1,13 @@
 ﻿using System;
+using Roton.Core;
 using Roton.Extensions;
+using Roton.Internal;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class TerminalDisplay : Display
+    internal sealed class TerminalHud : Hud
     {
-        public TerminalDisplay(IDisplayInfo infoSource)
+        public TerminalHud(IDisplayInfo infoSource)
             : base(infoSource)
         {
             FadeMatrix = new Location[ViewportTileCount];
@@ -152,7 +154,7 @@ namespace Roton.Emulation.ZZT
             DrawTileCommon(x, y, ac);
         }
 
-        private void DrawTileAt(Location location)
+        private void DrawTileAt(IXyPair location)
         {
             DrawTileCommon(location.X, location.Y, DisplayInfo.Draw(location.Sum(1, 1)));
         }

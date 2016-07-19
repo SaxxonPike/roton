@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation

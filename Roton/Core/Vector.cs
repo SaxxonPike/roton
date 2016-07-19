@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roton
+﻿namespace Roton.Core
 {
     public class Vector : IXyPair
     {

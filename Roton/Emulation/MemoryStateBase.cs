@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Internal;
+
+namespace Roton.Emulation
 {
     internal abstract class MemoryStateBase : State
     {

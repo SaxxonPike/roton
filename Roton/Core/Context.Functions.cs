@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Roton.Internal;
 
-namespace Roton
+namespace Roton.Core
 {
     public sealed partial class Context
     {

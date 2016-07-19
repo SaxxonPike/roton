@@ -1,4 +1,5 @@
-﻿using Roton.Extensions;
+﻿using Roton.Core;
+using Roton.Extensions;
 using Roton.Internal;
 
 namespace Roton.Emulation
@@ -322,7 +323,7 @@ namespace Roton.Emulation
             var actor = Actors[index];
             if (actor.Location.X == 0)
             {
-                Display.DrawMessage(Message, actor.P2%7 + 9);
+                Hud.DrawMessage(Message, actor.P2%7 + 9);
                 actor.P2--;
                 if (actor.P2 > 0) return;
 
@@ -457,7 +458,7 @@ namespace Roton.Emulation
                     break;
                 case 0x51: // Q
                 case 0x1B: // escape
-                    BreakGameLoop = Display.EndGameConfirmation();
+                    BreakGameLoop = Hud.EndGameConfirmation();
                     break;
                 case 0x53: // S
                     break;
@@ -646,6 +647,7 @@ namespace Roton.Emulation
                 color = 0x09;
             }
             TileAt(actor.Location).Color = color;
+            UpdateBoard(actor.Location);
         }
 
         public virtual void Act_Segment(int index)
@@ -808,13 +810,13 @@ namespace Roton.Emulation
                     }
                     if (!shot && actor.Location.Y.AbsDiff(Player.Location.Y) <= 2)
                     {
-                        shot = SpawnProjectile(firingElement, actor.Location,
+                        SpawnProjectile(firingElement, actor.Location,
                             new Vector((Player.Location.X - actor.Location.X).Polarity(), 0), true);
                     }
                 }
                 else
                 {
-                    shot = SpawnProjectile(firingElement, actor.Location, Rnd(), true);
+                    SpawnProjectile(firingElement, actor.Location, Rnd(), true);
                 }
             }
         }

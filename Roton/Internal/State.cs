@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Roton.Core;
 
-namespace Roton
+namespace Roton.Internal
 {
-    internal abstract class State
+    internal abstract class State : IState
     {
         public virtual bool AboutShown { get; set; }
         public virtual int ActIndex { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Roton.Core;
 
 namespace Roton.WinForms
 {

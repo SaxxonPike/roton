@@ -1,4 +1,6 @@
-﻿namespace Roton.Internal
+﻿using Roton.Core;
+
+namespace Roton.Internal
 {
     internal abstract class Board : IBoard
     {

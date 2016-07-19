@@ -1,4 +1,4 @@
-﻿namespace Roton
+﻿namespace Roton.Internal
 {
     internal partial class Element
     {

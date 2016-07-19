@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Roton
+namespace Roton.Core
 {
     public static class Utility
     {

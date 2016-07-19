@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.ZZT
+﻿using Roton.Core;
+
+namespace Roton.Emulation.ZZT
 {
     internal sealed partial class Core
     {

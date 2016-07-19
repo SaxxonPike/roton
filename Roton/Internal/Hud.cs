@@ -1,11 +1,20 @@
-﻿namespace Roton
+﻿using System.Collections.Generic;
+using Roton.Core;
+
+namespace Roton.Internal
 {
-    public abstract partial class Display
+    internal abstract class Hud : IHud
     {
-        protected Display(IDisplayInfo infoSource)
+        protected Hud(IDisplayInfo infoSource)
         {
             DisplayInfo = infoSource;
         }
+
+        protected int Ammo => DisplayInfo.Ammo;
+        protected int Gems => DisplayInfo.Gems;
+        protected IList<bool> Keys => DisplayInfo.Keys;
+        protected int TorchCycles => DisplayInfo.TorchCycles;
+        protected int Torches => DisplayInfo.Torches;
 
         public virtual void ClearPausing()
         {

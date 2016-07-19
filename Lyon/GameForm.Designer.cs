@@ -1,4 +1,6 @@
-﻿namespace Lyon
+﻿using Roton.Core;
+
+namespace Lyon
 {
     partial class GameForm
     {
@@ -17,7 +19,7 @@
             {
                 components.Dispose();
             }
-            if (this.Context is Roton.Context)
+            if (this.Context is Context)
             {
                 this.Context.Stop();
             }

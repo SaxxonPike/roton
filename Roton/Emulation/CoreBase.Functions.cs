@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Roton.Core;
 using Roton.Extensions;
 using Roton.Internal;
 
@@ -119,7 +120,6 @@ namespace Roton.Emulation
 
         internal virtual void ClearSound()
         {
-            SoundBufferLength = 0;
             SoundPlaying = false;
             StopSound();
         }
@@ -168,17 +168,17 @@ namespace Roton.Emulation
 
         internal virtual void DrawChar(IXyPair location, AnsiChar ac)
         {
-            Display.DrawChar(location.X, location.Y, ac);
+            Hud.DrawChar(location.X, location.Y, ac);
         }
 
         internal virtual void DrawString(IXyPair location, string text, int color)
         {
-            Display.DrawString(location.X, location.Y, text, color);
+            Hud.DrawString(location.X, location.Y, text, color);
         }
 
         internal virtual void DrawTile(IXyPair location, AnsiChar ac)
         {
-            Display.DrawTile(location.X - 1, location.Y - 1, ac);
+            Hud.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
         internal virtual IElement ElementAt(IXyPair location)
@@ -244,7 +244,7 @@ namespace Roton.Emulation
 
         internal virtual void FadeBoard(AnsiChar ac)
         {
-            Display.FadeBoard(ac);
+            Hud.FadeBoard(ac);
         }
 
         internal virtual void FadePurple()
@@ -782,7 +782,7 @@ namespace Roton.Emulation
 
         internal virtual void RedrawBoard()
         {
-            Display.RedrawBoard();
+            Hud.RedrawBoard();
         }
 
         internal virtual void RemoveActor(int index)
@@ -1012,12 +1012,12 @@ namespace Roton.Emulation
 
         internal virtual void UpdateBorder()
         {
-            Display.UpdateBorder();
+            Hud.UpdateBorder();
         }
 
         internal virtual void UpdateCamera()
         {
-            Display.UpdateCamera();
+            Hud.UpdateCamera();
         }
 
         internal virtual void UpdateRadius(IXyPair location, RadiusMode mode)
@@ -1075,7 +1075,7 @@ namespace Roton.Emulation
 
         internal virtual void UpdateStatus()
         {
-            Display.UpdateStatus();
+            Hud.UpdateStatus();
         }
 
         public virtual void WaitForTick()

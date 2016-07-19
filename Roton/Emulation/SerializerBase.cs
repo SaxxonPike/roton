@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Roton.Core;
 using Roton.Internal;
 
 namespace Roton.Emulation

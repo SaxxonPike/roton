@@ -1,4 +1,7 @@
-﻿namespace Roton.Emulation
+﻿using Roton.Core;
+using Roton.Internal;
+
+namespace Roton.Emulation
 {
     internal abstract class MemoryElementBase : Element
     {

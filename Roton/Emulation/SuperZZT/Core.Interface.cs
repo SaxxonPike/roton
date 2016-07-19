@@ -1,11 +1,13 @@
-﻿namespace Roton.Emulation.SuperZZT
+﻿using Roton.Core;
+
+namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class Core : CoreBase
     {
         private MemoryActorCollection _actors;
         private MemoryBoard _board;
         private Serializer _disk;
-        private TerminalDisplay _display;
+        private TerminalHud _hud;
         private MemoryElementCollection _elements;
         private Sounds _sounds;
         private MemoryState _state;
@@ -17,7 +19,7 @@
             _actors = new MemoryActorCollection(Memory);
             _board = new MemoryBoard(Memory);
             _disk = new Serializer(Memory);
-            _display = new TerminalDisplay(this);
+            _hud = new TerminalHud(this);
             _elements = new MemoryElementCollection(Memory);
             _sounds = new Sounds();
             _state = new MemoryState(Memory);
@@ -30,7 +32,7 @@
 
         public override MemoryBoardBase BoardData => _board;
 
-        public override Display Display => _display;
+        public override IHud Hud => _hud;
 
         public override MemoryElementCollectionBase Elements => _elements;
 
@@ -38,7 +40,7 @@
 
         public override SoundsBase Sounds => _sounds;
 
-        public override MemoryStateBase StateData => _state;
+        public override IState StateData => _state;
 
         public override bool StonesEnabled => true;
 

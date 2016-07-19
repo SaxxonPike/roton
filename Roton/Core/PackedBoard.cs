@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton
+namespace Roton.Core
 {
     public sealed class PackedBoard
     {

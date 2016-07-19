@@ -1,10 +1,12 @@
-﻿using Roton.Extensions;
+﻿using Roton.Core;
+using Roton.Extensions;
+using Roton.Internal;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class TerminalDisplay : Display
+    internal sealed class TerminalHud : Hud
     {
-        public TerminalDisplay(IDisplayInfo infoSource)
+        public TerminalHud(IDisplayInfo infoSource)
             : base(infoSource)
         {
             OldCamera = new Location(int.MinValue, int.MinValue);

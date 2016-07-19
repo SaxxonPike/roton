@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton
+namespace Roton.Core
 {
     public interface IFileSystem
     {

@@ -1,4 +1,6 @@
-﻿namespace Roton.Common
+﻿using Roton.Core;
+
+namespace Roton.Common
 {
     public interface IGameTerminal : ITerminal
     {

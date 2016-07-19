@@ -1,6 +1,7 @@
 ﻿using System;
+using Roton.Core;
 
-namespace Roton
+namespace Roton.Internal
 {
     internal partial class Element : IElement
     {

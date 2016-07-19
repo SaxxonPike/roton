@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Roton.Core;
 
 namespace Roton.Emulation
 {
@@ -177,7 +178,7 @@ namespace Roton.Emulation
 
         public IFileSystem Disk { get; set; }
 
-        public abstract Display Display { get; }
+        public abstract IHud Hud { get; }
 
         public ITile EdgeTile => StateData.EdgeTile;
 
@@ -415,12 +416,6 @@ namespace Roton.Emulation
 
         public IList<int> SoundBuffer => StateData.SoundBuffer;
 
-        public int SoundBufferLength
-        {
-            get { return StateData.SoundBufferLength; }
-            set { StateData.SoundBufferLength = value; }
-        }
-
         public bool SoundPlaying
         {
             get { return StateData.SoundPlaying; }
@@ -451,7 +446,7 @@ namespace Roton.Emulation
             set { StateData.StartBoard = value; }
         }
 
-        public abstract MemoryStateBase StateData { get; }
+        public abstract IState StateData { get; }
 
         public int Stones
         {
@@ -463,8 +458,8 @@ namespace Roton.Emulation
 
         public ITerminal Terminal
         {
-            get { return Display.Terminal; }
-            set { Display.Terminal = value; }
+            get { return Hud.Terminal; }
+            set { Hud.Terminal = value; }
         }
 
         public abstract MemoryTileCollectionBase Tiles { get; }

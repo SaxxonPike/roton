@@ -1,4 +1,5 @@
-﻿using Roton.Extensions;
+﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
@@ -48,7 +49,7 @@ namespace Roton.Emulation.SuperZZT
             DefaultSaveName = "SAVED";
             DefaultBoardName = "TEMP";
             DefaultWorldName = "MONSTER";
-            Display.GenerateFadeMatrix();
+            Hud.GenerateFadeMatrix();
             if (!WorldLoaded)
             {
                 ClearWorld();

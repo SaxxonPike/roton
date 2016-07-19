@@ -1,9 +1,9 @@
-﻿using Roton.Emulation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Roton.Emulation;
 using Roton.Internal;
 
-namespace Roton
+namespace Roton.Core
 {
     public sealed partial class Context
     {

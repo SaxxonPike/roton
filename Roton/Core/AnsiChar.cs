@@ -1,4 +1,4 @@
-﻿namespace Roton
+﻿namespace Roton.Core
 {
     public struct AnsiChar
     {

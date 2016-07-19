@@ -2,7 +2,7 @@
 {
     internal abstract class SoundsBase
     {
-        public static byte[] Silence = new byte[0];
+        public static readonly byte[] Silence = new byte[0];
 
         public virtual byte[] Ammo => Silence;
         public virtual byte[] BombActivate => Silence;

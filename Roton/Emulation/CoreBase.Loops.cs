@@ -1,4 +1,5 @@
-﻿using Roton.Extensions;
+﻿using Roton.Core;
+using Roton.Extensions;
 using Roton.Internal;
 
 namespace Roton.Emulation
@@ -9,8 +10,8 @@ namespace Roton.Emulation
         {
             var alternating = false;
 
-            Display.CreateStatusText();
-            Display.UpdateStatus();
+            Hud.CreateStatusText();
+            Hud.UpdateStatus();
 
             if (Init)
             {
@@ -33,7 +34,7 @@ namespace Roton.Emulation
             if (PlayerElement == Elements.MonitorId)
             {
                 SetMessage(0, @"");
-                Display.DrawTitleStatus();
+                Hud.DrawTitleStatus();
             }
 
             if (gameIsActive)
@@ -86,13 +87,13 @@ namespace Roton.Emulation
                             UpdateBoard(Player.Location);
                         }
                     }
-                    Display.DrawPausing();
+                    Hud.DrawPausing();
                     ReadInput();
                     if (KeyPressed == 0x1B)
                     {
                         if (Health > 0)
                         {
-                            BreakGameLoop = Display.EndGameConfirmation();
+                            BreakGameLoop = Hud.EndGameConfirmation();
                         }
                         else
                         {
@@ -125,7 +126,7 @@ namespace Roton.Emulation
                                 UpdateRadius(Player.Location.Difference(KeyVector), RadiusMode.Update);
                             }
                             GamePaused = false;
-                            Display.ClearPausing();
+                            Hud.ClearPausing();
                             GameCycle = RandomNumberDeterministic(100);
                             Locked = true;
                         }
@@ -162,7 +163,7 @@ namespace Roton.Emulation
                     }
                     else if (PlayerElement == Elements.MonitorId)
                     {
-                        Display.ClearTitleStatus();
+                        Hud.ClearTitleStatus();
                     }
                     element = Elements.PlayerElement;
                     TileAt(Player.Location).SetTo(element.Index, element.Color);
@@ -178,7 +179,7 @@ namespace Roton.Emulation
             DefaultSaveName = "SAVED";
             DefaultBoardName = "TEMP";
             DefaultWorldName = "TOWN";
-            Display.GenerateFadeMatrix();
+            Hud.GenerateFadeMatrix();
             if (!WorldLoaded)
             {
                 ClearWorld();
