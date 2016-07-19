@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton", "Roton\Roton.csproj", "{A93864EF-3C61-4654-8598-BC49D822187C}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.WinForms.OpenGL", "Roton.WinForms.OpenGL\Roton.WinForms.OpenGL.csproj", "{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Common", "Roton.Common\Roton.Common.csproj", "{AF3DE1E8-0883-4429-9E23-182A95693C18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Test", "Roton.Test\Roton.Test.csproj", "{F87DC9C8-B22C-4A29-AB64-D529828950DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{AF3DE1E8-0883-4429-9E23-182A95693C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF3DE1E8-0883-4429-9E23-182A95693C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF3DE1E8-0883-4429-9E23-182A95693C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
