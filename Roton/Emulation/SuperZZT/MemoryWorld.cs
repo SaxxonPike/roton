@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.SuperZZT
+﻿using Roton.Emulation.Mapping;
+
+namespace Roton.Emulation.SuperZZT
 {
     internal sealed class MemoryWorld : MemoryWorldBase
     {

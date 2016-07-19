@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.ZZT
+﻿using Roton.Emulation.Mapping;
+
+namespace Roton.Emulation.ZZT
 {
     internal sealed class MemoryTileCollection : MemoryTileCollectionBase
     {

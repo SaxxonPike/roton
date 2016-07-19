@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.SuperZZT
+﻿using Roton.Emulation.Execution;
+
+namespace Roton.Emulation.SuperZZT
 {
     internal sealed class Sounds : SoundsCommon
     {

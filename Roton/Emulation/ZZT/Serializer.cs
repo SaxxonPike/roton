@@ -1,4 +1,7 @@
-﻿namespace Roton.Emulation.ZZT
+﻿using Roton.Emulation.Mapping;
+using Roton.Emulation.Serialization;
+
+namespace Roton.Emulation.ZZT
 {
     internal sealed class Serializer : SerializerBase
     {

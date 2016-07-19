@@ -1,6 +1,6 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Models;
 using Roton.Extensions;
-using Roton.Internal;
 
 namespace Roton.Emulation.SuperZZT
 {
