@@ -13,7 +13,7 @@ namespace Roton.Common
     /// <summary>
     /// A replacement for the .NET Bitmap class that allows fast direct bit access.
     /// </summary>
-    public sealed partial class FastBitmap : MarshalByRefObject, IDisposable
+    public sealed class FastBitmap : MarshalByRefObject, IDisposable
     {
         /* 1) Implementation copied from http://msdn.microsoft.com/en-us/library/system.drawing.bitmap%28v=vs.110%29.aspx
               because we can't subclass Image for some reason... but we want a decent drop-in replacement.
@@ -367,7 +367,7 @@ namespace Roton.Common
         /// <summary>
         /// Initialize the FastBitmap.
         /// </summary>
-        void Initialize(int width, int height)
+        private void Initialize(int width, int height)
         {
             Width = width;
             Height = height;
@@ -387,7 +387,7 @@ namespace Roton.Common
         /// <summary>
         /// Initialize a FastBitmap from another image.
         /// </summary>
-        void Initialize(Image image)
+        private void Initialize(Image image)
         {
             // convert to a bitmap so we can manipulate it
             var tempBitmap = new Bitmap(image);

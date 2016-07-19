@@ -119,7 +119,7 @@
 
         public override string ToString()
         {
-            return "(" + X.ToString() + ", " + Y.ToString() + ")";
+            return $"({X}, {Y})";
         }
     }
 }

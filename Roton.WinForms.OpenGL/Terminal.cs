@@ -14,7 +14,7 @@ namespace Roton.WinForms.OpenGL
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
 
-        private bool _glReady = false;
+        private bool _glReady;
         private int _glLastTexture = -1;
         private KeysBuffer _keys;
         private bool _shiftHoldX;
@@ -24,7 +24,6 @@ namespace Roton.WinForms.OpenGL
         private int _terminalHeight;
         private Palette _terminalPalette;
         private int _terminalWidth;
-        private bool _updated;
         private bool _wideMode;
 
         // Auto-properties.
@@ -144,11 +143,10 @@ namespace Roton.WinForms.OpenGL
                     ? bgColor
                     : _terminalPalette.Colors[ac.Color & 0xF];
                 _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
-                _updated = true;
             }
         }
 
-        void glControl_KeyPress(object sender, KeyPressEventArgs e)
+        private void glControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             OnKeyPress(e);
             _keys.Press(e.KeyChar);
@@ -181,7 +179,7 @@ namespace Roton.WinForms.OpenGL
             displayTimer.Enabled = true;
         }
 
-        void glControl_MouseDown(object sender, MouseEventArgs e)
+        private void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             OnMouse(this, e);
             OnMouseDown(e);
@@ -244,7 +242,7 @@ namespace Roton.WinForms.OpenGL
             glControl.SwapBuffers();
         }
 
-        void OnKey(KeyEventArgs e)
+        private void OnKey(KeyEventArgs e)
         {
             if (!e.Shift)
             {
@@ -260,7 +258,7 @@ namespace Roton.WinForms.OpenGL
             Control = e.Control;
         }
 
-        void OnMouse(object sender, MouseEventArgs e)
+        private void OnMouse(object sender, MouseEventArgs e)
         {
             if (CursorEnabled)
             {
@@ -431,7 +429,7 @@ namespace Roton.WinForms.OpenGL
             return color;
         }
 
-        void UpdateCursor(int newX, int newY)
+        private void UpdateCursor(int newX, int newY)
         {
             if (Shift && !_shiftHoldX && !_shiftHoldY)
             {
@@ -453,7 +451,6 @@ namespace Roton.WinForms.OpenGL
 
             if (newX != CursorX || newY != CursorY)
             {
-                _updated = true;
                 CursorX = newX;
                 CursorY = newY;
             }

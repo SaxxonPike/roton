@@ -1,5 +1,4 @@
 ﻿using Roton;
-using System;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -32,7 +31,7 @@ namespace Torch
             }
         }
 
-        void InitializeEvents()
+        private void InitializeEvents()
         {
             SuppressUpdate = true;
 
@@ -123,7 +122,7 @@ namespace Torch
             SuppressUpdate = false;
         }
 
-        bool SuppressUpdate
+        private bool SuppressUpdate
         {
             get { return _suppressUpdateCount > 0 || _context == null; }
             set
@@ -145,7 +144,7 @@ namespace Torch
             SuppressUpdate = false;
         }
 
-        void UpdateAdvancedEdit()
+        private void UpdateAdvancedEdit()
         {
             var enabled = advancedEditingCheckBox.Checked;
             filenameTextBox.Enabled = enabled;

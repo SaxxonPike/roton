@@ -4,41 +4,32 @@
     {
         public virtual AnsiChar Draw(Location location)
         {
-            if (!Dark || ElementAt(location).Shown || (TorchCycles > 0 && Distance(Player.Location, location) < 50) ||
-                EditorMode)
-            {
-                var tile = Tiles[location];
-                var element = Elements[tile.Id];
-                var elementCount = Elements.Count;
-
-                if (tile.Id == Elements.EmptyId)
-                {
-                    return new AnsiChar(0x20, 0x0F);
-                }
-                else if (element.DrawCodeEnable)
-                {
-                    return element.Draw(location);
-                }
-                else if (tile.Id < elementCount - 7)
-                {
-                    return new AnsiChar(element.Character, tile.Color);
-                }
-                else
-                {
-                    if (tile.Id != elementCount - 1)
-                    {
-                        return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
-                    }
-                    else
-                    {
-                        return new AnsiChar(tile.Color, 0x0F);
-                    }
-                }
-            }
-            else
+            if (Dark && !ElementAt(location).Shown && (TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !EditorMode)
             {
                 return new AnsiChar(0xB0, 0x07);
             }
+
+            var tile = Tiles[location];
+            var element = Elements[tile.Id];
+            var elementCount = Elements.Count;
+
+            if (tile.Id == Elements.EmptyId)
+            {
+                return new AnsiChar(0x20, 0x0F);
+            }
+            if (element.DrawCodeEnable)
+            {
+                return element.Draw(location);
+            }
+            if (tile.Id < elementCount - 7)
+            {
+                return new AnsiChar(element.Character, tile.Color);
+            }
+            if (tile.Id != elementCount - 1)
+            {
+                return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
+            }
+            return new AnsiChar(tile.Color, 0x0F);
         }
 
         public virtual AnsiChar Draw_BlinkWall(Location location)
@@ -126,14 +117,17 @@
         public virtual AnsiChar Draw_Pusher(Location location)
         {
             var actor = Actors[ActorIndexAt(location)];
-            if (actor.Vector.X == 1)
-                return new AnsiChar(0x10, Tiles[location].Color);
-            else if (actor.Vector.X == -1)
-                return new AnsiChar(0x11, Tiles[location].Color);
-            else if (actor.Vector.Y == -1)
-                return new AnsiChar(0x1E, Tiles[location].Color);
-            else
-                return new AnsiChar(0x1F, Tiles[location].Color);
+            switch (actor.Vector.X)
+            {
+                case 1:
+                    return new AnsiChar(0x10, Tiles[location].Color);
+                case -1:
+                    return new AnsiChar(0x11, Tiles[location].Color);
+                default:
+                    return actor.Vector.Y == -1
+                        ? new AnsiChar(0x1E, Tiles[location].Color)
+                        : new AnsiChar(0x1F, Tiles[location].Color);
+            }
         }
 
         public virtual AnsiChar Draw_SpinningGun(Location location)
@@ -182,15 +176,12 @@
                 index += (actor.Vector.Y << 1) + 2;
                 return new AnsiChar(TransporterVChars[index], Tiles[location].Color);
             }
+            if (actor.Cycle > 0)
+                index = (GameCycle/actor.Cycle) & 0x3;
             else
-            {
-                if (actor.Cycle > 0)
-                    index = (GameCycle/actor.Cycle) & 0x3;
-                else
-                    index = 0;
-                index += (actor.Vector.X << 1) + 2;
-                return new AnsiChar(TransporterHChars[index], Tiles[location].Color);
-            }
+                index = 0;
+            index += (actor.Vector.X << 1) + 2;
+            return new AnsiChar(TransporterHChars[index], Tiles[location].Color);
         }
 
         public virtual AnsiChar Draw_Web(Location location)

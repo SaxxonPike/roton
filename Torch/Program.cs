@@ -4,13 +4,13 @@ using System.Windows.Forms;
 
 namespace Torch
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // TODO: Make argument/config handling better.
             var useOpenGl = false;
@@ -53,7 +53,7 @@ namespace Torch
             Application.Run(new Editor(useOpenGl));
         }
 
-        static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             var mbox = MessageBox.Show(
                 "Unhandled exception: " + Environment.NewLine +

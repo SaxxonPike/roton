@@ -28,7 +28,7 @@ namespace Roton.WinForms
 
         public bool Control { get; set; }
 
-        void Enqueue(int data)
+        private void Enqueue(int data)
         {
             lock (_queue)
             {

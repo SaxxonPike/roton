@@ -53,7 +53,7 @@ namespace Roton.WinForms
             form.KeyUp += (sender, e) => { OnKey(e); };
         }
 
-        void Blink()
+        private void Blink()
         {
             SuspendLayout();
             Blinking = !Blinking;
@@ -80,7 +80,7 @@ namespace Roton.WinForms
 
         public bool BlinkEnabled { get; set; }
 
-        bool Blinking { get; set; }
+        private bool Blinking { get; set; }
 
         public void Clear()
         {
@@ -157,7 +157,7 @@ namespace Roton.WinForms
 
         public IKeyboard Keyboard => _keys as IKeyboard;
 
-        void OnKey(KeyEventArgs e)
+        private void OnKey(KeyEventArgs e)
         {
             if (!e.Shift)
             {
@@ -179,7 +179,7 @@ namespace Roton.WinForms
             _keys.Press(e.KeyChar);
         }
 
-        void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             _terminalFont = new Common.Font();
             _terminalPalette = new Palette();
@@ -189,7 +189,7 @@ namespace Roton.WinForms
             displayTimer.Enabled = true;
         }
 
-        void OnMouse(object sender, MouseEventArgs e)
+        private void OnMouse(object sender, MouseEventArgs e)
         {
             if (_cursorEnabled)
             {
@@ -371,7 +371,7 @@ namespace Roton.WinForms
             return color;
         }
 
-        void UpdateCursor()
+        private void UpdateCursor()
         {
             if (_cursorEnabled)
             {
@@ -400,7 +400,7 @@ namespace Roton.WinForms
             }
         }
 
-        void UpdateCursor(int newX, int newY)
+        private void UpdateCursor(int newX, int newY)
         {
             if (Shift && !_shiftHoldX && !_shiftHoldY)
             {

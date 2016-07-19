@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using Roton.Emulation;
 
 namespace Roton.Common
 {
-    public sealed class Font : Emulation.FixedList<Glyph>
+    public sealed class Font : FixedList<Glyph>
     {
         /// <summary>
         /// Create a font with the default glyphs.
@@ -163,7 +164,7 @@ namespace Roton.Common
 
         public int OriginalWidth { get; private set; }
 
-        void Rasterize(int xScale, int yScale)
+        private void Rasterize(int xScale, int yScale)
         {
             var glyphData = new byte[OriginalHeight];
             var glyphDataOffset = 0;

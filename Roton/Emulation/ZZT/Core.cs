@@ -2,9 +2,9 @@
 {
     internal sealed partial class Core
     {
-        IFileSystem _datArchive;
+        private IFileSystem _datArchive;
 
-        void InitializeDatArchive()
+        private void InitializeDatArchive()
         {
             _datArchive = new DatArchive(Properties.Resources.zztdat);
         }
@@ -15,10 +15,7 @@
             {
                 return _datArchive.ReadFile(filename);
             }
-            else
-            {
-                return base.LoadFile(filename);
-            }
+            return base.LoadFile(filename);
         }
     }
 }

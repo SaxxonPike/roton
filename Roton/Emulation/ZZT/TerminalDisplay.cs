@@ -158,7 +158,7 @@ namespace Roton.Emulation.ZZT
             DrawTileCommon(x, y, ac);
         }
 
-        void DrawTileAt(Location location)
+        private void DrawTileAt(Location location)
         {
             DrawTileCommon(location.X, location.Y, DisplayInfo.Draw(location.Sum(1, 1)));
         }
@@ -227,7 +227,7 @@ namespace Roton.Emulation.ZZT
 
         private string IntToString(int i)
         {
-            return i.ToString() + " ";
+            return i + " ";
         }
 
         public override void RedrawBoard()

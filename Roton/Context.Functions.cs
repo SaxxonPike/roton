@@ -1,10 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Roton
 {
     public sealed partial class Context
     {
+        private const int MaxGameCycle = 420;
+
         public Context(string filename, bool editor)
         {
             using (var mem = new MemoryStream(File.ReadAllBytes(filename)))
@@ -38,10 +39,11 @@ namespace Roton
                 // simulate a game cycle for visuals only
                 Core.ActIndex = 0;
                 Core.GameCycle++;
-                if (Core.GameCycle >= 420)
+                if (Core.GameCycle >= MaxGameCycle)
                 {
                     Core.GameCycle = 0;
                 }
+
                 foreach (var actor in Actors)
                 {
                     if (actor.Cycle > 0 && Core.ActIndex%actor.Cycle == Core.GameCycle%actor.Cycle)
@@ -50,9 +52,6 @@ namespace Roton
                     }
                     Core.ActIndex++;
                 }
-            }
-            else
-            {
             }
         }
 
@@ -121,10 +120,7 @@ namespace Roton
             {
                 throw Exceptions.InvalidFormat;
             }
-            else
-            {
-                LoadAfterType(stream);
-            }
+            LoadAfterType(stream);
         }
 
         private void LoadAfterType(Stream stream)

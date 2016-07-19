@@ -978,25 +978,22 @@ namespace Roton.Emulation
                 actor.P2 = 0x64;
                 return true;
             }
-            else
+            if (element.Index != Elements.BreakableId)
             {
-                if (element.Index != Elements.BreakableId)
+                if (element.Destructible)
                 {
-                    if (element.Destructible)
-                    {
-                        if (enemyOwned != (element.Index == Elements.PlayerId) || EnergyCycles > 0)
-                        {
-                            return false;
-                        }
-                    }
-                    else
+                    if (enemyOwned != (element.Index == Elements.PlayerId) || EnergyCycles > 0)
                     {
                         return false;
                     }
-                    Destroy(target);
-                    PlaySound(2, Sounds.BulletDie);
-                    return true;
                 }
+                else
+                {
+                    return false;
+                }
+                Destroy(target);
+                PlaySound(2, Sounds.BulletDie);
+                return true;
             }
             return false;
         }

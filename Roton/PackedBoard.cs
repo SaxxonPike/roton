@@ -28,7 +28,7 @@ namespace Roton
                     Array.Copy(Data, 1, nameData, 0, nameLength);
                     return nameData.ToStringValue();
                 }
-                return "";
+                return string.Empty;
             }
             set
             {

@@ -8,7 +8,7 @@ namespace Lyon
 {
     public partial class GameForm : Form
     {
-        bool _initScaleDisplay = true;
+        private bool _initScaleDisplay = true;
         private IGameTerminal _terminal;
         private bool _openGl;
 
@@ -58,7 +58,7 @@ namespace Lyon
 
         public Context Context { get; private set; }
 
-        void DumpRam()
+        private void DumpRam()
         {
             using (var sfd = new SaveFileDialog())
             {
@@ -69,12 +69,12 @@ namespace Lyon
             }
         }
 
-        string FileFilters
+        private string FileFilters
             =>
                 "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
             ;
 
-        void Initialize(Context context)
+        private void Initialize(Context context)
         {
             speaker.Stop();
             _terminal.Keyboard.Clear();
@@ -104,7 +104,7 @@ namespace Lyon
             context.Start();
         }
 
-        void InitializeEvents()
+        private void InitializeEvents()
         {
             exitMenuItem.Click += (sender, e) => { Close(); };
             openWorldMenuItem.Click += (sender, e) => { OpenWorld(); };
@@ -115,7 +115,7 @@ namespace Lyon
             dumpRAMToolStripMenuItem.Click += (sender, e) => { DumpRam(); };
         }
 
-        void OpenWorld()
+        private void OpenWorld()
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = FileFilters;
@@ -125,7 +125,7 @@ namespace Lyon
             }
         }
 
-        void RestartCore()
+        private void RestartCore()
         {
             if (Context != null)
             {
@@ -137,17 +137,17 @@ namespace Lyon
             }
         }
 
-        void RestartSuperZzt()
+        private void RestartSuperZzt()
         {
             Initialize(new Context(ContextEngine.SuperZzt, false));
         }
 
-        void RestartZzt()
+        private void RestartZzt()
         {
             Initialize(new Context(ContextEngine.Zzt, false));
         }
 
-        void SaveWorld()
+        private void SaveWorld()
         {
             if (Context != null)
             {
@@ -161,12 +161,12 @@ namespace Lyon
             }
         }
 
-        void SetScale(int scale)
+        private void SetScale(int scale)
         {
             _terminal.SetScale(scale, scale);
         }
 
-        void UpdateTitle()
+        private void UpdateTitle()
         {
             Text = "Lyon" +
                    (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? "" : " [" + Context.WorldData.Name + "]");

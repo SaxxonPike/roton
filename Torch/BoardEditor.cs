@@ -1,5 +1,4 @@
 ﻿using Roton;
-using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -32,7 +31,7 @@ namespace Torch
             }
         }
 
-        void InitializeEvents()
+        private void InitializeEvents()
         {
             SuppressUpdate = true;
 
@@ -109,7 +108,7 @@ namespace Torch
             SuppressUpdate = false;
         }
 
-        int SetComboControlValue(TextBox textbox, ComboBox combobox, string value)
+        private int SetComboControlValue(TextBox textbox, ComboBox combobox, string value)
         {
             SuppressUpdate = true;
 
@@ -135,7 +134,7 @@ namespace Torch
             return index;
         }
 
-        bool SuppressUpdate
+        private bool SuppressUpdate
         {
             get { return _suppressUpdateCount > 0 || _context == null; }
             set
@@ -146,7 +145,7 @@ namespace Torch
             }
         }
 
-        void UpdateAdvancedEdit()
+        private void UpdateAdvancedEdit()
         {
             var enabled = advancedEditingCheckBox.Checked;
             cameraXTextBox.Enabled = enabled;
@@ -181,7 +180,7 @@ namespace Torch
             SuppressUpdate = false;
         }
 
-        void UpdateBoardComboBoxes()
+        private void UpdateBoardComboBoxes()
         {
             SuppressUpdate = true;
             SetComboControlValue(exitEastTextBox, exitEastComboBox, _context.BoardData.ExitEast.ToString());

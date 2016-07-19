@@ -52,7 +52,7 @@
 
         public override string ToString()
         {
-            return "Id: " + Id.ToHex8() + ", Color: " + Color.ToHex8();
+            return $"Id: {Id:x2}, Color: {Color:x2}";
         }
     }
 }

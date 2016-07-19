@@ -301,7 +301,7 @@ namespace Roton.Emulation
 
         public MemoryKeyArray Keys => WorldData.KeyMemory;
 
-        IList<bool> IDisplayInfo.Keys => (IList<bool>) WorldData.KeyMemory;
+        IList<bool> IDisplayInfo.Keys => WorldData.KeyMemory;
 
         public bool KeyShift
         {

@@ -36,7 +36,7 @@ namespace Torch
             }
         }
 
-        void Close()
+        private void Close()
         {
             if (Closed != null)
             {
@@ -44,13 +44,13 @@ namespace Torch
             }
         }
 
-        void Initialize()
+        private void Initialize()
         {
             cancelButton.Click += (sender, e) => { Close(); };
             okButton.Click += (sender, e) => { SaveAndClose(); };
         }
 
-        void SaveAndClose()
+        private void SaveAndClose()
         {
             if (_actor != null)
             {

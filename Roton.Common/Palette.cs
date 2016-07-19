@@ -1,17 +1,18 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
+using Roton.Common.Properties;
+using Roton.Emulation;
 
 namespace Roton.Common
 {
-    public sealed class Palette : Emulation.FixedList<Color>
+    public sealed class Palette : FixedList<Color>
     {
         /// <summary>
         /// Create a new palette with the default colors.
         /// </summary>
         public Palette()
         {
-            Initialize(Properties.Resources.vgapalette);
+            Initialize(Resources.vgapalette);
         }
 
         /// <summary>
@@ -73,14 +74,13 @@ namespace Roton.Common
                 throw Exceptions.InvalidPalette;
             }
             var offset = 0;
-            byte red, green, blue;
             Colors = new int[16];
 
             for (var i = 0; i < 16; i++)
             {
-                red = ImportColorValue(palette[offset++]);
-                green = ImportColorValue(palette[offset++]);
-                blue = ImportColorValue(palette[offset++]);
+                var red = ImportColorValue(palette[offset++]);
+                var green = ImportColorValue(palette[offset++]);
+                var blue = ImportColorValue(palette[offset++]);
                 Colors[i] = Color.FromArgb(0xFF, red, green, blue).ToArgb();
             }
         }

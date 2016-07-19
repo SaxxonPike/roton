@@ -38,7 +38,7 @@ namespace Roton
             set { Core.Disk = value; }
         }
 
-        public IDisplayInfo DisplayInfo => (IDisplayInfo) Core;
+        public IDisplayInfo DisplayInfo => Core;
 
         public IList<Element> Elements => Core.Elements;
 

@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace Lyon
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // TODO: Make argument/config handling better.
             var useOpenGl = false;

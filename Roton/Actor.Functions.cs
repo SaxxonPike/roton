@@ -34,19 +34,9 @@ namespace Roton
             {
                 if (Heap != null)
                 {
-                    if (Heap.Contains(Pointer))
-                    {
-                        return Heap[Pointer].ToStringValue();
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    return Heap.Contains(Pointer) ? Heap[Pointer].ToStringValue() : null;
                 }
-                else
-                {
-                    return _code;
-                }
+                return _code;
             }
             set
             {
@@ -141,7 +131,7 @@ namespace Roton
                     name = " " + name;
                 }
             }
-            name = Location.ToString() + name;
+            name = Location + name;
             return name;
         }
 

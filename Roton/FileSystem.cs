@@ -22,14 +22,14 @@ namespace Roton
         public IList<string> GetDirectories()
         {
             var result = Directory.GetDirectories(CurrentDirectory)
-                .Select<string, string>(i => Path.GetFileName(i)).ToList();
+                .Select(Path.GetFileName).ToList();
             return result;
         }
 
         public IList<string> GetFiles()
         {
             var result = Directory.GetFiles(CurrentDirectory)
-                .Select<string, string>(i => Path.GetFileName(i)).ToList();
+                .Select(Path.GetFileName).ToList();
             return result;
         }
 

@@ -39,7 +39,6 @@
         public virtual void Act_BlinkWall(int index)
         {
             var actor = Actors[index];
-            int color;
 
             if (actor.P3 == 0)
                 actor.P3 = actor.P1 + 1;
@@ -52,15 +51,14 @@
                 var target = actor.Location.Sum(actor.Vector);
                 var emptyElement = Elements.EmptyId;
                 int rayElement;
-                Tile rayTile;
 
                 if (actor.Vector.X == 0)
                     rayElement = Elements.BlinkRayVId;
                 else
                     rayElement = Elements.BlinkRayHId;
 
-                color = TileAt(actor.Location).Color;
-                rayTile = new Tile(rayElement, color);
+                var color = TileAt(actor.Location).Color;
+                var rayTile = new Tile(rayElement, color);
 
                 while (TileAt(target).Matches(rayTile))
                 {
@@ -70,68 +68,66 @@
                     erasedRay = true;
                 }
 
-                if (!erasedRay)
+                if (erasedRay) return;
+                var blocked = false;
+
+                do
                 {
-                    var blocked = false;
-
-                    do
+                    if (ElementAt(target).Destructible)
                     {
-                        if (ElementAt(target).Destructible)
-                        {
-                            Destroy(target);
-                        }
+                        Destroy(target);
+                    }
 
-                        if (TileAt(target).Id == Elements.PlayerId)
-                        {
-                            var playerIndex = ActorIndexAt(target);
-                            Vector testVector;
+                    if (TileAt(target).Id == Elements.PlayerId)
+                    {
+                        var playerIndex = ActorIndexAt(target);
+                        Vector testVector;
 
-                            if (actor.Vector.Y == 0)
-                            {
-                                testVector = new Vector(0, 1);
-                                if (TileAt(target.Difference(testVector)).Id == emptyElement)
-                                {
-                                    MoveActor(playerIndex, target.Difference(testVector));
-                                }
-                                else if (TileAt(target.Sum(testVector)).Id == emptyElement)
-                                {
-                                    MoveActor(playerIndex, target.Sum(testVector));
-                                }
-                            }
-                            else
-                            {
-                                testVector = new Vector(1, 0);
-                                if (TileAt(target.Sum(testVector)).Id == emptyElement)
-                                {
-                                    MoveActor(playerIndex, target.Sum(testVector));
-                                }
-                                else if (TileAt(target.Difference(testVector)).Id == emptyElement)
-                                {
-                                    // "sum" is not a mistake; this is an original engine bug
-                                    MoveActor(playerIndex, target.Sum(testVector));
-                                }
-                            }
-                            if (TileAt(target).Id == Elements.PlayerId)
-                            {
-                                while (Health > 0)
-                                {
-                                    Harm(0);
-                                }
-                                blocked = true;
-                            }
-                        }
-                        if (TileAt(target).Id == emptyElement)
+                        if (actor.Vector.Y == 0)
                         {
-                            TileAt(target).CopyFrom(rayTile);
-                            UpdateBoard(target);
+                            testVector = new Vector(0, 1);
+                            if (TileAt(target.Difference(testVector)).Id == emptyElement)
+                            {
+                                MoveActor(playerIndex, target.Difference(testVector));
+                            }
+                            else if (TileAt(target.Sum(testVector)).Id == emptyElement)
+                            {
+                                MoveActor(playerIndex, target.Sum(testVector));
+                            }
                         }
                         else
                         {
+                            testVector = new Vector(1, 0);
+                            if (TileAt(target.Sum(testVector)).Id == emptyElement)
+                            {
+                                MoveActor(playerIndex, target.Sum(testVector));
+                            }
+                            else if (TileAt(target.Difference(testVector)).Id == emptyElement)
+                            {
+                                // "sum" is not a mistake; this is an original engine bug
+                                MoveActor(playerIndex, target.Sum(testVector));
+                            }
+                        }
+                        if (TileAt(target).Id == Elements.PlayerId)
+                        {
+                            while (Health > 0)
+                            {
+                                Harm(0);
+                            }
                             blocked = true;
                         }
-                        target.Add(actor.Vector);
-                    } while (!blocked);
-                }
+                    }
+                    if (TileAt(target).Id == emptyElement)
+                    {
+                        TileAt(target).CopyFrom(rayTile);
+                        UpdateBoard(target);
+                    }
+                    else
+                    {
+                        blocked = true;
+                    }
+                    target.Add(actor.Vector);
+                } while (!blocked);
             }
             else
             {
@@ -142,29 +138,24 @@
         public virtual void Act_Bomb(int index)
         {
             var actor = Actors[index];
-            if (actor.P1 > 0)
+            if (actor.P1 <= 0) return;
+
+            actor.P1--;
+            UpdateBoard(actor.Location);
+            switch (actor.P1)
             {
-                actor.P1--;
-                UpdateBoard(actor.Location);
-                if (actor.P1 == 1)
-                {
+                case 1:
                     PlaySound(1, Sounds.BombExplode);
                     UpdateRadius(actor.Location, RadiusMode.Explode);
-                }
-                else if (actor.P1 == 0)
-                {
+                    break;
+                case 0:
                     var location = actor.Location.Clone();
                     RemoveActor(index);
                     UpdateRadius(location, RadiusMode.Clear);
-                }
-                else if ((actor.P1 & 0x01) == 0)
-                {
-                    PlaySound(1, Sounds.BombTock);
-                }
-                else
-                {
-                    PlaySound(1, Sounds.BombTick);
-                }
+                    break;
+                default:
+                    PlaySound(1, (actor.P1 & 0x01) == 0 ? Sounds.BombTock : Sounds.BombTick);
+                    break;
             }
         }
 
@@ -181,15 +172,15 @@
                     MoveActor(index, target);
                     break;
                 }
-                else if (canRicochet && element.Index == Elements.RicochetId)
+                if (canRicochet && element.Index == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetOpposite();
                     PlaySound(1, Sounds.Ricochet);
                     continue;
                 }
-                else if (element.Index == Elements.BreakableId ||
-                         (element.Destructible && (element.Index == Elements.PlayerId || actor.P1 == 0)))
+                if (element.Index == Elements.BreakableId ||
+                    (element.Destructible && (element.Index == Elements.PlayerId || actor.P1 == 0)))
                 {
                     if (element.Points != 0)
                     {
@@ -199,30 +190,27 @@
                     Attack(index, target);
                     break;
                 }
-                else if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.Clockwise)).Id == Elements.RicochetId)
+                if (canRicochet && TileAt(actor.Location.Sum(actor.Vector.Clockwise)).Id == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetCounterClockwise();
                     PlaySound(1, Sounds.Ricochet);
                     continue;
                 }
-                else if (canRicochet &&
-                         TileAt(actor.Location.Sum(actor.Vector.CounterClockwise)).Id == Elements.RicochetId)
+                if (canRicochet &&
+                    TileAt(actor.Location.Sum(actor.Vector.CounterClockwise)).Id == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetClockwise();
                     PlaySound(1, Sounds.Ricochet);
                     continue;
                 }
-                else
+                RemoveActor(index);
+                ActIndex--;
+                if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
                 {
-                    RemoveActor(index);
-                    ActIndex--;
-                    if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
-                    {
-                        BroadcastLabel(-ActorIndexAt(target), @"SHOT", false);
-                        break;
-                    }
+                    BroadcastLabel(-ActorIndexAt(target), @"SHOT", false);
+                    break;
                 }
                 break;
             }
@@ -335,13 +323,12 @@
             {
                 Display.DrawMessage(Message, actor.P2%7 + 9);
                 actor.P2--;
-                if (actor.P2 <= 0)
-                {
-                    RemoveActor(index);
-                    ActIndex--;
-                    UpdateBorder();
-                    Message = "";
-                }
+                if (actor.P2 > 0) return;
+
+                RemoveActor(index);
+                ActIndex--;
+                UpdateBorder();
+                Message = "";
             }
         }
 
@@ -360,17 +347,16 @@
             {
                 ExecuteCode(index, actor, @"Interaction");
             }
-            if (!actor.Vector.IsZero)
+            if (actor.Vector.IsZero) return;
+
+            var target = actor.Location.Sum(actor.Vector);
+            if (ElementAt(target).Floor)
             {
-                var target = actor.Location.Sum(actor.Vector);
-                if (ElementAt(target).Floor)
-                {
-                    MoveActor(index, target);
-                }
-                else
-                {
-                    BroadcastLabel(-index, @"THUD", false);
-                }
+                MoveActor(index, target);
+            }
+            else
+            {
+                BroadcastLabel(-index, @"THUD", false);
             }
         }
 
@@ -386,14 +372,7 @@
 
             if (EnergyCycles > 0)
             {
-                if (playerElement.Character == 1)
-                {
-                    playerElement.Character = 2;
-                }
-                else
-                {
-                    playerElement.Character = 1;
-                }
+                playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
                 if ((GameCycle & 0x01) == 0)
                 {
@@ -440,10 +419,6 @@
                         }
                     }
                 }
-            }
-            else
-            {
-                // todo: shoot logic
             }
 
             switch (KeyPressed.ToUpperCase())
@@ -567,20 +542,18 @@
 
             index = ActorIndexAt(source);
             actor = Actors[index];
-            if (ElementAt(actor.Location.Sum(actor.Vector)).Floor)
+            if (!ElementAt(actor.Location.Sum(actor.Vector)).Floor) return;
+
+            MoveActor(index, actor.Location.Sum(actor.Vector));
+            PlaySound(2, Sounds.Push);
+            var behindLocation = actor.Location.Difference(actor.Vector);
+            if (TileAt(behindLocation).Id != Elements.PusherId) return;
+
+            var behindIndex = ActorIndexAt(behindLocation);
+            var behindActor = Actors[behindIndex];
+            if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
             {
-                MoveActor(index, actor.Location.Sum(actor.Vector));
-                PlaySound(2, Sounds.Push);
-                var behindLocation = actor.Location.Difference(actor.Vector);
-                if (TileAt(behindLocation).Id == Elements.PusherId)
-                {
-                    var behindIndex = ActorIndexAt(behindLocation);
-                    var behindActor = Actors[behindIndex];
-                    if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
-                    {
-                        Elements.PusherElement.Act(behindIndex);
-                    }
-                }
+                Elements.PusherElement.Act(behindIndex);
             }
         }
 
@@ -801,7 +774,7 @@
                 MoveActor(index, target);
                 return true;
             }
-            else if (targetElement == Elements.PlayerId)
+            if (targetElement == Elements.PlayerId)
             {
                 Attack(index, target);
                 return true;
@@ -857,7 +830,6 @@
         {
             var actor = Actors[index];
             var firingElement = Elements.BulletId;
-            var shot = false;
 
             if (actor.P2 >= 0x80)
             {
@@ -866,10 +838,10 @@
 
             if ((actor.P2 & 0x7F) > 3*RandomNumberDeterministic(10))
             {
+                bool shot;
                 if (actor.X.AbsDiff(Player.X) <= 2)
                 {
-                    shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()),
-                        true);
+                    shot = SpawnProjectile(firingElement, actor.Location, new Vector(0, (Player.Y - actor.Y).Polarity()), true);
                 }
                 else
                 {
@@ -878,8 +850,7 @@
 
                 if (!shot && actor.Y.AbsDiff(Player.Y) <= 2)
                 {
-                    shot = SpawnProjectile(firingElement, actor.Location, new Vector((Player.X - actor.X).Polarity(), 0),
-                        true);
+                    SpawnProjectile(firingElement, actor.Location, new Vector((Player.X - actor.X).Polarity(), 0), true);
                 }
             }
 
@@ -910,25 +881,28 @@
             var targetBoard = 0;
             var oldBoard = Board;
 
-            if (vector.Y == -1)
+            switch (vector.Y)
             {
-                targetBoard = ExitNorth;
-                target.Y = Height;
-            }
-            else if (vector.Y == 1)
-            {
-                targetBoard = ExitSouth;
-                target.Y = 1;
-            }
-            else if (vector.X == -1)
-            {
-                targetBoard = ExitWest;
-                target.X = Width;
-            }
-            else
-            {
-                targetBoard = ExitEast;
-                target.X = 1;
+                case -1:
+                    targetBoard = ExitNorth;
+                    target.Y = Height;
+                    break;
+                case 1:
+                    targetBoard = ExitSouth;
+                    target.Y = 1;
+                    break;
+                default:
+                    if (vector.X == -1)
+                    {
+                        targetBoard = ExitWest;
+                        target.X = Width;
+                    }
+                    else
+                    {
+                        targetBoard = ExitEast;
+                        target.X = 1;
+                    }
+                    break;
             }
 
             if (targetBoard != 0)
@@ -1011,11 +985,10 @@
 
         public virtual void Interact_Fake(Location location, int index, Vector vector)
         {
-            if (AlertFake)
-            {
-                AlertFake = false;
-                SetMessage(0xC8, FakeMessage);
-            }
+            if (!AlertFake) return;
+
+            AlertFake = false;
+            SetMessage(0xC8, FakeMessage);
         }
 
         public virtual void Interact_Forest(Location location, int index, Vector vector)
@@ -1074,7 +1047,6 @@
         public virtual void Interact_Object(Location location, int index, Vector vector)
         {
             var objectIndex = ActorIndexAt(location);
-            var actor = Actors[objectIndex];
             BroadcastLabel(-objectIndex, @"TOUCH", false);
         }
 

@@ -10,10 +10,10 @@ namespace Torch
 {
     public partial class Editor : Form
     {
-        Actor _actor;
-        int _color;
-        Context _context;
-        IEditorTerminal _terminal;
+        private Actor _actor;
+        private int _color;
+        private Context _context;
+        private IEditorTerminal _terminal;
 
         public Editor(bool openGl = false)
         {
@@ -41,7 +41,7 @@ namespace Torch
             mainPanel.Controls.Add((UserControl) _terminal);
         }
 
-        Actor Actor
+        private Actor Actor
         {
             get { return _actor; }
             set
@@ -59,7 +59,7 @@ namespace Torch
             }
         }
 
-        ContextMenuStrip BuildBoardContextMenu(int parameterIndex)
+        private ContextMenuStrip BuildBoardContextMenu(int parameterIndex)
         {
             var result = new ContextMenuStrip();
             var items = new List<ToolStripMenuItem>();
@@ -83,14 +83,14 @@ namespace Torch
             return result;
         }
 
-        void BuildBoardList()
+        private void BuildBoardList()
         {
             var index = 0;
             boardsMenu.DropDownItems.Clear();
             foreach (var board in Context.Boards)
             {
                 ToolStripItem item = new ToolStripMenuItem();
-                item.Text = "[" + index.ToString() + "] " + board.Name;
+                item.Text = "[" + index + "] " + board.Name;
                 item.Tag = index;
                 item.Click += (sender, e) => { SetBoard((int) (sender as ToolStripItem).Tag); };
                 boardsMenu.DropDownItems.Add(item);
@@ -98,7 +98,7 @@ namespace Torch
             }
         }
 
-        ContextMenuStrip BuildCharacterContextMenu(int parameterIndex)
+        private ContextMenuStrip BuildCharacterContextMenu(int parameterIndex)
         {
             var result = new ContextMenuStrip();
             var items = new List<ToolStripMenuItem>();
@@ -106,14 +106,14 @@ namespace Torch
             for (var i = 0; i < 256; i++)
             {
                 var item = new ToolStripMenuItem();
-                item.Text = "Char #" + i.ToString() + " / " + i.ToHex8() + "h";
+                item.Text = $"Char #{i} / {i:x2}h";
                 item.Image = _terminal.RenderSingle(i, Color);
                 item.ImageScaling = ToolStripItemImageScaling.None;
                 item.Tag = i;
                 item.Click +=
                     (sender, e) =>
                     {
-                        SetParameter(parameterIndex, (int) (sender as ToolStripMenuItem).Tag);
+                        SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag);
                     };
                 items.Add(item);
             }
@@ -123,7 +123,7 @@ namespace Torch
             return result;
         }
 
-        ToolStripItem BuildContextMenuItem(string text, Action click = null)
+        private ToolStripItem BuildContextMenuItem(string text, Action click = null)
         {
             if (text == "-")
             {
@@ -131,11 +131,11 @@ namespace Torch
             }
             return new ToolStripMenuItem(text, null, (sender, e) =>
             {
-                if (click != null) click();
+                click?.Invoke();
             });
         }
 
-        ContextMenuStrip BuildElementContextMenu(int menuNumber)
+        private ContextMenuStrip BuildElementContextMenu(int menuNumber)
         {
             var result = new ContextMenuStrip();
             var index = 0;
@@ -169,11 +169,10 @@ namespace Torch
 
             if (result.Items.Count > 0)
                 return result;
-            else
-                return null;
+            return null;
         }
 
-        void BuildElementList()
+        private void BuildElementList()
         {
             elementComboBox.Items.Clear();
             foreach (var element in Context.Elements)
@@ -185,7 +184,7 @@ namespace Torch
             }
         }
 
-        ContextMenuStrip BuildParameterContextMenu(int parameterIndex, bool includeHeader)
+        private ContextMenuStrip BuildParameterContextMenu(int parameterIndex, bool includeHeader)
         {
             var result = new ContextMenuStrip();
             var category = new ToolStripMenuItem();
@@ -221,13 +220,15 @@ namespace Torch
 
             for (var i = 1; i <= 9; i++)
             {
-                var item = new ToolStripMenuItem();
-                item.Text = i.ToString();
-                item.Tag = i - 1;
+                var item = new ToolStripMenuItem
+                {
+                    Text = i.ToString(),
+                    Tag = i - 1
+                };
                 item.Click +=
                     (sender, e) =>
                     {
-                        SetParameter(parameterIndex, (int) (sender as ToolStripMenuItem).Tag);
+                        SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag);
                     };
                 result.Items.Add(item);
             }
@@ -240,12 +241,11 @@ namespace Torch
             return result;
         }
 
-        ContextMenuStrip BuildStepContextMenu(bool includeHeader)
+        private ContextMenuStrip BuildStepContextMenu(bool includeHeader)
         {
             var result = new ContextMenuStrip();
-            var category = new ToolStripMenuItem();
+            var category = new ToolStripMenuItem {Text = SelectedElement.Step};
 
-            category.Text = SelectedElement.Step;
             if (string.IsNullOrWhiteSpace(category.Text))
                 return null;
 
@@ -278,7 +278,7 @@ namespace Torch
                         item.Tag = Vector.East;
                         break;
                 }
-                item.Click += (sender, e) => { SetStep((Vector) (sender as ToolStripMenuItem).Tag); };
+                item.Click += (sender, e) => { SetStep((Vector) ((ToolStripMenuItem) sender).Tag); };
                 result.Items.Add(item);
             }
 
@@ -286,7 +286,7 @@ namespace Torch
             return result;
         }
 
-        ContextMenuStrip BuildTileContextMenu(int x, int y)
+        private ContextMenuStrip BuildTileContextMenu(int x, int y)
         {
             var result = new ContextMenuStrip();
             var actorPresent = false;
@@ -358,13 +358,13 @@ namespace Torch
             return result.Items.Count > 0 ? result : null;
         }
 
-        int Color
+        private int Color
         {
             get { return _color; }
             set { _color = value; }
         }
 
-        Context Context
+        private Context Context
         {
             get { return _context; }
             set
@@ -374,14 +374,14 @@ namespace Torch
             }
         }
 
-        void CopyCursorColor()
+        private void CopyCursorColor()
         {
             var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
             Color = tile.Color;
             UpdateColor();
         }
 
-        void CopyCursorElement()
+        private void CopyCursorElement()
         {
             var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
             {
@@ -389,7 +389,7 @@ namespace Torch
             }
         }
 
-        void CopyCursorTile()
+        private void CopyCursorTile()
         {
             CopyCursorElement();
             CopyCursorColor();
@@ -398,7 +398,7 @@ namespace Torch
             Actor = actor;
         }
 
-        void CycleAdvance()
+        private void CycleAdvance()
         {
             if (Context != null)
             {
@@ -409,13 +409,13 @@ namespace Torch
             }
         }
 
-        void CycleBackgroundColor()
+        private void CycleBackgroundColor()
         {
             Color = (Color + 0x10) & 0xFF;
             UpdateColor();
         }
 
-        void CycleForegroundColor()
+        private void CycleForegroundColor()
         {
             Color = (Color & 0xF0) | ((Color + 1) & 0x0F);
             UpdateColor();
@@ -431,18 +431,18 @@ namespace Torch
             base.Dispose(disposing);
         }
 
-        void EditCode()
+        private void EditCode()
         {
             codeEditor.Visible = true;
             codeEditor.Actor = Actor;
         }
 
-        string FileFilters
+        private string FileFilters
             =>
                 "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.szt)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
             ;
 
-        void GetCursorActor()
+        private void GetCursorActor()
         {
             Actor = Context.CreateActor();
 
@@ -459,7 +459,7 @@ namespace Torch
             actorEditor.Actor = Actor;
         }
 
-        int GetDefaultColor(Element element)
+        private int GetDefaultColor(Element element)
         {
             if (defaultElementPropertiesButton.Checked)
             {
@@ -467,7 +467,7 @@ namespace Torch
                 {
                     return element.Color;
                 }
-                else if (element.Color == 0xFE)
+                if (element.Color == 0xFE)
                 {
                     return (((Color - 8) << 4) + 0x0F) & 0xFF;
                 }
@@ -475,7 +475,7 @@ namespace Torch
             return Color;
         }
 
-        ContextMenuStrip GetParameterMenu(int index)
+        private ContextMenuStrip GetParameterMenu(int index)
         {
             string selectedParameter = null;
             switch (index)
@@ -502,7 +502,7 @@ namespace Torch
             }
         }
 
-        void LoadContext()
+        private void LoadContext()
         {
             timerDaemon.Pause();
             _terminal.Visible = true;
@@ -523,7 +523,7 @@ namespace Torch
             timerDaemon.Resume();
         }
 
-        void OnLoad()
+        private void OnLoad()
         {
             // control events
             codeEditor.Closed += (sender, e) => { codeEditor.Visible = false; };
@@ -652,7 +652,7 @@ namespace Torch
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        void SaveWorld()
+        private void SaveWorld()
         {
             if (string.IsNullOrWhiteSpace(WorldFileName))
             {
@@ -664,7 +664,7 @@ namespace Torch
             }
         }
 
-        void SaveWorldAs()
+        private void SaveWorldAs()
         {
             if (ShowSaveWorld() == DialogResult.OK)
             {
@@ -672,7 +672,7 @@ namespace Torch
             }
         }
 
-        void SelectBoard(int parameterIndex)
+        private void SelectBoard(int parameterIndex)
         {
             var element = SelectedElement;
 
@@ -683,7 +683,7 @@ namespace Torch
             }
         }
 
-        Element SelectedElement
+        private Element SelectedElement
         {
             get
             {
@@ -693,7 +693,7 @@ namespace Torch
             }
         }
 
-        int SelectedElementIndex
+        private int SelectedElementIndex
         {
             get
             {
@@ -703,7 +703,7 @@ namespace Torch
             }
         }
 
-        void SelectElement(int index)
+        private void SelectElement(int index)
         {
             foreach (var item in elementComboBox.Items)
             {
@@ -719,7 +719,7 @@ namespace Torch
             UpdateElement();
         }
 
-        void SelectParameter(int index)
+        private void SelectParameter(int index)
         {
             var menu = GetParameterMenu(index);
             if (menu != null)
@@ -728,11 +728,11 @@ namespace Torch
             }
         }
 
-        void SelectStep()
+        private void SelectStep()
         {
         }
 
-        void SetBoard(int index)
+        private void SetBoard(int index)
         {
             // make a backup copy of the current actor
             var actor = Context.CreateActor();
@@ -772,12 +772,12 @@ namespace Torch
             }
         }
 
-        void SetBoardParameter(int value)
+        private void SetBoardParameter(int value)
         {
             Actor.P3 = value;
         }
 
-        void SetParameter(int index, int value)
+        private void SetParameter(int index, int value)
         {
             if (index == 1)
             {
@@ -793,12 +793,12 @@ namespace Torch
             }
         }
 
-        void SetStep(Vector vector)
+        private void SetStep(Vector vector)
         {
             Actor.Vector.CopyFrom(vector);
         }
 
-        void SetTool(ToolStripButton button)
+        private void SetTool(ToolStripButton button)
         {
             foreach (var tool in Tools)
             {
@@ -806,7 +806,7 @@ namespace Torch
             }
         }
 
-        void ShowElementContextMenu(int index)
+        private void ShowElementContextMenu(int index)
         {
             var menu = BuildElementContextMenu(index);
             if (menu != null)
@@ -815,7 +815,7 @@ namespace Torch
             }
         }
 
-        void ShowOpenWorld()
+        private void ShowOpenWorld()
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = FileFilters;
@@ -826,7 +826,7 @@ namespace Torch
             }
         }
 
-        void ShowParameterDropdown(int index, ContextMenuStrip menu)
+        private void ShowParameterDropdown(int index, ContextMenuStrip menu)
         {
             if (menu != null)
             {
@@ -845,7 +845,7 @@ namespace Torch
             }
         }
 
-        DialogResult ShowSaveWorld()
+        private DialogResult ShowSaveWorld()
         {
             if (Context != null)
             {
@@ -878,20 +878,20 @@ namespace Torch
             return DialogResult.Cancel;
         }
 
-        void ShowTileCode()
+        private void ShowTileCode()
         {
             GetCursorActor();
             EditCode();
         }
 
-        void ShowTileProperties()
+        private void ShowTileProperties()
         {
             GetCursorActor();
             CopyCursorElement();
             tabControl.SelectTab(editTab);
         }
 
-        void TerminalMouseDown(object sender, MouseEventArgs e)
+        private void TerminalMouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -906,7 +906,7 @@ namespace Torch
             }
         }
 
-        void TestWorld()
+        private void TestWorld()
         {
             if (Context != null)
             {
@@ -918,7 +918,7 @@ namespace Torch
             }
         }
 
-        IList<ToolStripButton> Tools => new List<ToolStripButton>(new[]
+        private IList<ToolStripButton> Tools => new List<ToolStripButton>(new[]
         {
             drawToolButton,
             eraseToolButton,
@@ -926,19 +926,19 @@ namespace Torch
             randomToolButton
         });
 
-        void UpdateActors()
+        private void UpdateActors()
         {
             // we subtract 1 from the capacity because there must always be room for the messenger object
-            actorInfoLabel.Text = Context.Actors.Count.ToString() + "/" + (Context.ActorCapacity - 1).ToString();
+            actorInfoLabel.Text = Context.Actors.Count + "/" + (Context.ActorCapacity - 1);
         }
 
-        void UpdateColor()
+        private void UpdateColor()
         {
             UpdateColorButton(foregroundColorButton, _terminal.TerminalPalette[Color & 0x0F]);
             UpdateColorButton(backgroundColorButton, _terminal.TerminalPalette[(Color >> 4) & 0x0F]);
         }
 
-        void UpdateColorButton(ToolStripButton button, Color backgroundColor)
+        private void UpdateColorButton(ToolStripButton button, Color backgroundColor)
         {
             button.BackColor = backgroundColor;
 
@@ -953,7 +953,7 @@ namespace Torch
             }
         }
 
-        void UpdateElement()
+        private void UpdateElement()
         {
             if (elementComboBox.SelectedIndex >= 0)
             {
@@ -1002,14 +1002,14 @@ namespace Torch
             }
         }
 
-        void UpdateInfo()
+        private void UpdateInfo()
         {
             Context.PackBoard();
-            boardInfoLabel.Text = (Context.Boards[Context.Board].Data.Length + 2).ToString() + "/20000";
-            worldInfoLabel.Text = Context.WorldSize.ToString() + "/360000";
+            boardInfoLabel.Text = (Context.Boards[Context.Board].Data.Length + 2) + "/20000";
+            worldInfoLabel.Text = Context.WorldSize + "/360000";
             UpdateActors();
         }
 
-        string WorldFileName { get; set; }
+        private string WorldFileName { get; set; }
     }
 }

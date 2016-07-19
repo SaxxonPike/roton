@@ -4,7 +4,6 @@
     {
         internal virtual void MainLoop(bool gameIsActive)
         {
-            Actor actorData;
             var alternating = false;
 
             Display.CreateStatusText();
@@ -50,7 +49,7 @@
                 {
                     if (ActIndex <= ActorCount)
                     {
-                        actorData = Actors[ActIndex];
+                        var actorData = Actors[ActIndex];
                         if (actorData.Cycle != 0)
                         {
                             if (ActIndex%actorData.Cycle == GameCycle%actorData.Cycle)
@@ -188,13 +187,10 @@
 
         internal virtual void TitleScreenLoop()
         {
-            bool gameIsActive;
-            bool gameEnded;
-
             QuitZzt = false;
             Init = true;
             StartBoard = 0;
-            gameEnded = true;
+            var gameEnded = true;
             while (ThreadActive)
             {
                 if (!Init)
@@ -204,7 +200,7 @@
                 while (ThreadActive)
                 {
                     PlayerElement = Elements.MonitorId;
-                    gameIsActive = false;
+                    var gameIsActive = false;
                     GamePaused = false;
                     MainLoop(gameEnded);
                     if (!ThreadActive)

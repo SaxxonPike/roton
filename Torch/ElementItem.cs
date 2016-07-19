@@ -18,7 +18,7 @@ namespace Torch
             var name = Element.ToString();
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = "(Element " + Element.Index.ToString() + ")";
+                name = "(Element " + Element.Index + ")";
             }
             return name;
         }

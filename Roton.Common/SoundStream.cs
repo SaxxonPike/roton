@@ -73,7 +73,7 @@ namespace Roton.Common
             }
         }
 
-        void Initialize()
+        private void Initialize()
         {
             Data = new byte[]
             {

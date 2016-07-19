@@ -6,8 +6,8 @@ namespace Roton
 {
     public static class Utility
     {
-        private static Encoding _codePage437 = Encoding.GetEncoding(437);
-        private static string _hexAlphabet = "0123456789ABCDEF";
+        private static readonly Encoding _codePage437 = Encoding.GetEncoding(437);
+        private static readonly string _hexAlphabet = "0123456789ABCDEF";
 
         /// <summary>
         /// Return the absolute difference between this value and another specified value.
@@ -27,7 +27,7 @@ namespace Roton
         {
             if (value > 0)
                 return 1;
-            else if (value < 0)
+            if (value < 0)
                 return -1;
             return 0;
         }

@@ -4,15 +4,15 @@ namespace Roton.Emulation
 {
     internal sealed class CodeSearchInfoProxy : CodeSearchInfo
     {
-        private Func<int> _getIndex;
-        private Func<string> _getLabel;
-        private Func<int> _getOffset;
+        private readonly Func<int> _getIndex;
+        private readonly Func<string> _getLabel;
+        private readonly Func<int> _getOffset;
         private int _index;
         private string _label;
         private int _offset;
-        private Action<int> _setIndex;
-        private Action<string> _setLabel;
-        private Action<int> _setOffset;
+        private readonly Action<int> _setIndex;
+        private readonly Action<string> _setLabel;
+        private readonly Action<int> _setOffset;
 
         public CodeSearchInfoProxy(Func<int> getIndex, Action<int> setIndex, Func<string> getLabel,
             Action<string> setLabel, Func<int> getOffset, Action<int> setOffset)

@@ -2,15 +2,15 @@
 {
     internal sealed partial class Core : CoreBase
     {
-        MemoryActorCollection _actors;
-        MemoryBoard _board;
-        Serializer _disk;
-        TerminalDisplay _display;
-        MemoryElementCollection _elements;
-        Sounds _sounds;
-        MemoryState _state;
-        MemoryTileCollection _tiles;
-        MemoryWorld _world;
+        private MemoryActorCollection _actors;
+        private MemoryBoard _board;
+        private Serializer _disk;
+        private TerminalDisplay _display;
+        private MemoryElementCollection _elements;
+        private Sounds _sounds;
+        private MemoryState _state;
+        private MemoryTileCollection _tiles;
+        private MemoryWorld _world;
 
         public Core()
         {

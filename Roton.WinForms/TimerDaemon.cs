@@ -8,8 +8,8 @@ namespace Roton.WinForms
 {
     public partial class TimerDaemon : Component
     {
-        bool _disposed;
-        bool _paused;
+        private bool _disposed;
+        private bool _paused;
 
         private class TimerDaemonInfo
         {
@@ -51,7 +51,7 @@ namespace Roton.WinForms
             base.Dispose(disposing);
         }
 
-        void Initialize()
+        private void Initialize()
         {
             TimerThreads = new Dictionary<int, TimerDaemonInfo>();
         }
@@ -110,7 +110,7 @@ namespace Roton.WinForms
             TimerThreads.Clear();
         }
 
-        void TimerThreadMethod(object timerDaemonInfo)
+        private void TimerThreadMethod(object timerDaemonInfo)
         {
             var info = timerDaemonInfo as TimerDaemonInfo;
             var method = info.Method;

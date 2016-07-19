@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roton.Emulation.SuperZZT
+﻿namespace Roton.Emulation.SuperZZT
 {
     internal sealed class TerminalDisplay : Display
     {
@@ -71,13 +69,13 @@ namespace Roton.Emulation.SuperZZT
             CreateStatusWindow();
         }
 
-        void CreateStatusWindow()
+        private void CreateStatusWindow()
         {
             DrawString(0x0D, 0x01, new string(0xDC.ToChar(), 26), 0x1F);
             DrawString(0x0D, 0x16, new string(0xDF.ToChar(), 1), 0x1F);
             DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
 
-            var column = 0xDB.ToChar().ToString() + new string(' ', 24) + 0xDB.ToChar().ToString();
+            var column = 0xDB.ToChar() + new string(' ', 24) + 0xDB.ToChar();
             for (var y = 0x02; y <= 0x15; y++)
             {
                 DrawString(0x0D, y, column, 0x0F);
@@ -90,7 +88,7 @@ namespace Roton.Emulation.SuperZZT
             Terminal.Plot(x, y, ac);
         }
 
-        void DrawNumber(int y, int value)
+        private void DrawNumber(int y, int value)
         {
             var s = value.ToString();
             var x = 11 - s.Length;
@@ -108,7 +106,7 @@ namespace Roton.Emulation.SuperZZT
             DrawTileCommon(x, y, ac);
         }
 
-        void DrawTileAt(Location location)
+        private void DrawTileAt(Location location)
         {
             DrawTileCommon(location.X, location.Y, DisplayInfo.Draw(location));
         }
@@ -125,12 +123,12 @@ namespace Roton.Emulation.SuperZZT
             }
         }
 
-        Vector GetTranslation()
+        private Vector GetTranslation()
         {
             return new Vector(0x0F + -DisplayInfo.Camera.X, 0x03 + -DisplayInfo.Camera.Y);
         }
 
-        Location OldCamera { get; }
+        private Location OldCamera { get; }
 
         public override void RedrawBoard()
         {
@@ -235,8 +233,8 @@ namespace Roton.Emulation.SuperZZT
             }
         }
 
-        int ViewportHeight => 25;
+        private int ViewportHeight => 25;
 
-        int ViewportWidth => 40;
+        private int ViewportWidth => 40;
     }
 }
