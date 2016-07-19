@@ -862,6 +862,7 @@ namespace Roton.Emulation.Execution
 
         public virtual void Act_Stone(int index)
         {
+            UpdateBoard(Actors[index].Location);
         }
 
         public virtual void Act_Tiger(int index)
