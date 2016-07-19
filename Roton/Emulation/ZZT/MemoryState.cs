@@ -7,18 +7,18 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed class MemoryState : MemoryStateBase
     {
-        private MemoryTile _borderTile;
-        private MemoryColorArray _colors;
-        private MemoryActor _defaultActor;
-        private MemoryTile _edgeTile;
-        private MemoryVector _keyVector;
-        private MemoryStringByteCollection _lineChars;
-        private MemoryInt16Collection _soundBuffer;
-        private MemoryStringByteCollection _starChars;
-        private MemoryStringByteCollection _transporterHChars;
-        private MemoryStringByteCollection _transporterVChars;
-        private MemoryInt16Collection _vector4;
-        private MemoryInt16Collection _vector8;
+        private readonly MemoryTile _borderTile;
+        private readonly MemoryColorArray _colors;
+        private readonly MemoryActor _defaultActor;
+        private readonly MemoryTile _edgeTile;
+        private readonly MemoryVector _keyVector;
+        private readonly MemoryStringByteCollection _lineChars;
+        private readonly MemoryInt16Collection _soundBuffer;
+        private readonly MemoryStringByteCollection _starChars;
+        private readonly MemoryStringByteCollection _transporterHChars;
+        private readonly MemoryStringByteCollection _transporterVChars;
+        private readonly MemoryInt16Collection _vector4;
+        private readonly MemoryInt16Collection _vector8;
 
         public MemoryState(Memory memory)
             : base(memory)

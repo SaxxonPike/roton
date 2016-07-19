@@ -150,6 +150,77 @@ namespace Roton.Emulation.Execution
 
         internal virtual void Convey(IXyPair center, int direction)
         {
+            int beginIndex;
+            int endIndex;
+
+            var surrounding = new ITile[8];
+
+            if (direction == 1)
+            {
+                beginIndex = 0;
+                endIndex = 8;
+            }
+            else
+            {
+                beginIndex = 7;
+                endIndex = -1;
+            }
+
+            var pushable = true;
+            for (var i = beginIndex; i != endIndex; i += direction)
+            {
+                surrounding[i] = TileAt(center.Sum(GetConveyorVector(i))).Clone();
+                var element = Elements[surrounding[i].Id];
+                if (element.Id == Elements.EmptyId)
+                    pushable = true;
+                else if (!element.IsPushable)
+                    pushable = false;
+            }
+
+            for (var i = beginIndex; i != endIndex; i += direction)
+            {
+                var element = Elements[surrounding[i].Id];
+
+                if (pushable)
+                {
+                    if (element.IsPushable)
+                    {
+                        var source = center.Sum(GetConveyorVector(i));
+                        var target = center.Sum(GetConveyorVector((i + 8 - direction) % 8));
+                        if (element.Cycle > -1)
+                        {
+                            var tile = TileAt(source);
+                            var index = ActorIndexAt(source);
+                            TileAt(source).CopyFrom(surrounding[i]);
+                            TileAt(target).Id = Elements.EmptyId;
+                            MoveActor(index, target);
+                            TileAt(source).CopyFrom(tile);
+                        }
+                        else
+                        {
+                            TileAt(target).CopyFrom(surrounding[i]);
+                            UpdateBoard(target);
+                        }
+
+                        if (!Elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
+                        {
+                            TileAt(source).Id = Elements.EmptyId;
+                            UpdateBoard(source);
+                        }
+                    }
+                    else
+                    {
+                        pushable = false;
+                    }
+                }
+                else
+                {
+                    if (element.Id == Elements.EmptyId)
+                        pushable = true;
+                    else if (!element.IsPushable)
+                        pushable = false;
+                }
+            }
         }
 
         internal virtual void Destroy(IXyPair location)
