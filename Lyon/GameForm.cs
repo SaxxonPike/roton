@@ -94,8 +94,8 @@ namespace Lyon
             {
                 var workingArea = Screen.FromControl(this).WorkingArea;
                 _initScaleDisplay = false;
-                int idealXScale = workingArea.Width/Width;
-                int idealYScale = workingArea.Height/Height;
+                var idealXScale = workingArea.Width/Width;
+                var idealYScale = workingArea.Height/Height;
                 var idealScale = Math.Min(idealXScale, idealYScale);
                 SetScale(idealScale);
                 _initScaleDisplay = false;

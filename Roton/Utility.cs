@@ -67,7 +67,7 @@ namespace Roton
         /// </summary>
         internal static string ToAscii(this int value)
         {
-            return _codePage437.GetString(new byte[] {(byte) (value & 0xFF)});
+            return _codePage437.GetString(new[] {(byte) (value & 0xFF)});
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Roton
         /// </summary>
         internal static char ToChar(this int value)
         {
-            return _codePage437.GetChars(new byte[] {(byte) (value & 0xFF)})[0];
+            return _codePage437.GetChars(new[] {(byte) (value & 0xFF)})[0];
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Roton
         /// </summary>
         internal static string ToStringValue(this int value)
         {
-            return _codePage437.GetString(new byte[] {(byte) (value & 0xFF)});
+            return _codePage437.GetString(new[] {(byte) (value & 0xFF)});
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Roton
         {
             var length = (byte) (value.Length & 0xFF);
             var buffer = new byte[length + 1];
-            byte[] data = value.ToBytes();
+            var data = value.ToBytes();
             Array.Copy(data, 0, buffer, 1, length);
             buffer[0] = length;
             writer.Write(buffer);

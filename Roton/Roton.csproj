@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -145,9 +149,6 @@
     <Compile Include="Vector.Functions.cs" />
     <Compile Include="World.cs" />
     <Compile Include="World.Functions.cs" />
-    <Compile Include="Zip\ZipArchive.cs" />
-    <Compile Include="Zip\ZipArchiveFile.cs" />
-    <Compile Include="Zip\ZipCompressionMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -156,6 +157,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\szztelement.bin" />
     <None Include="Resources\szztextra.bin" />
     <None Include="Resources\ZZT.DAT" />

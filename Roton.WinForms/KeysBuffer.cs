@@ -89,7 +89,7 @@ namespace Roton.WinForms
         {
             try
             {
-                int code = _enc.GetBytes(new char[] {data})[0];
+                int code = _enc.GetBytes(new[] {data})[0];
                 if (code >= 0x20 && code <= 0xFF)
                 {
                     Enqueue(code);

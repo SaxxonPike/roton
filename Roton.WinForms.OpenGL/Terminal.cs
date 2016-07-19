@@ -12,7 +12,7 @@ namespace Roton.WinForms.OpenGL
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {
-        private static Encoding _encoding = Encoding.GetEncoding(437);
+        private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
 
         private bool _glReady = false;
         private int _glLastTexture = -1;
@@ -99,7 +99,7 @@ namespace Roton.WinForms.OpenGL
             set { _keys.Control = value; }
         }
 
-        void Blink()
+        private void Blink()
         {
             //SuspendLayout();
             Blinking = !Blinking;
@@ -288,7 +288,7 @@ namespace Roton.WinForms.OpenGL
             _keys.NumLock = IsKeyLocked(Keys.NumLock);
             _keys.CapsLock = IsKeyLocked(Keys.CapsLock);
 
-            bool result = base.ProcessCmdKey(ref msg, keyData);
+            var result = base.ProcessCmdKey(ref msg, keyData);
             if (!keyAlt && !keyControl && keyRaw != Keys.ShiftKey)
             {
                 OnKey(new KeyEventArgs(keyData));
@@ -306,7 +306,7 @@ namespace Roton.WinForms.OpenGL
 
             // Update the cursor if it's enabled and the bitmap is valid.
             if (!CursorEnabled || Bitmap == null) return;
-            using (Graphics g = Graphics.FromImage(Bitmap))
+            using (var g = Graphics.FromImage(Bitmap))
             {
                 using (
                     Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
@@ -314,13 +314,13 @@ namespace Roton.WinForms.OpenGL
                 {
                     var outerRect = new Rectangle(CursorX*_terminalFont.Width, CursorY*_terminalFont.Height,
                         _terminalFont.Width - 1, _terminalFont.Height - 1);
-                    g.DrawLines(dark, new Point[]
+                    g.DrawLines(dark, new[]
                     {
                         new Point(outerRect.Left, outerRect.Bottom),
                         new Point(outerRect.Right, outerRect.Bottom),
                         new Point(outerRect.Right, outerRect.Top)
                     });
-                    g.DrawLines(bright, new Point[]
+                    g.DrawLines(bright, new[]
                     {
                         new Point(outerRect.Left, outerRect.Bottom),
                         new Point(outerRect.Left, outerRect.Top),
@@ -338,7 +338,7 @@ namespace Roton.WinForms.OpenGL
             if (_wideMode)
             {
                 var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
-                using (Graphics g = Graphics.FromImage(wideResult))
+                using (var g = Graphics.FromImage(wideResult))
                 {
                     g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                     g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -375,8 +375,7 @@ namespace Roton.WinForms.OpenGL
             // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
             var oldBitmap = Bitmap;
             Bitmap = new FastBitmap(_terminalWidth*_terminalFont.Width, _terminalHeight*_terminalFont.Height);
-            if (oldBitmap != null)
-                oldBitmap.Dispose();
+            oldBitmap?.Dispose();
 
             if (width != oldWidth || height != oldHeight)
                 Clear();
@@ -463,7 +462,7 @@ namespace Roton.WinForms.OpenGL
         public void Write(int x, int y, string value, int color)
         {
             var ac = new AnsiChar {Color = color};
-            var characters = _encoding.GetBytes(value);
+            var characters = DosEncoding.GetBytes(value);
             var count = characters.Length;
 
             while (x < 0)

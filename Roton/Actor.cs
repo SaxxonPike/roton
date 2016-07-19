@@ -62,11 +62,11 @@ namespace Roton
         /// <summary>
         /// Tile underneath the actor.
         /// </summary>
-        public virtual Tile UnderTile { get; set; }
+        public virtual Tile UnderTile { get; protected set; }
 
         /// <summary>
         /// Actor's vector, when applicable.
         /// </summary>
-        public virtual Vector Vector { get; set; }
+        public virtual Vector Vector { get; protected set; }
     }
 }

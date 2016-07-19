@@ -918,7 +918,7 @@ namespace Torch
             }
         }
 
-        IList<ToolStripButton> Tools => new List<ToolStripButton>(new ToolStripButton[]
+        IList<ToolStripButton> Tools => new List<ToolStripButton>(new[]
         {
             drawToolButton,
             eraseToolButton,

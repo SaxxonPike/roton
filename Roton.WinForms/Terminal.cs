@@ -250,7 +250,7 @@ namespace Roton.WinForms
             _keys.NumLock = IsKeyLocked(Keys.NumLock);
             _keys.CapsLock = IsKeyLocked(Keys.CapsLock);
 
-            bool result = base.ProcessCmdKey(ref msg, keyData);
+            var result = base.ProcessCmdKey(ref msg, keyData);
             if (!keyAlt && !keyControl && keyRaw != Keys.ShiftKey)
             {
                 OnKey(new KeyEventArgs(keyData));
@@ -279,7 +279,7 @@ namespace Roton.WinForms
             if (_terminalWide)
             {
                 var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
-                using (Graphics g = Graphics.FromImage(wideResult))
+                using (var g = Graphics.FromImage(wideResult))
                 {
                     g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                     g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -375,7 +375,7 @@ namespace Roton.WinForms
         {
             if (_cursorEnabled)
             {
-                using (Graphics g = CreateGraphics())
+                using (var g = CreateGraphics())
                 {
                     using (
                         Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
@@ -383,13 +383,13 @@ namespace Roton.WinForms
                     {
                         var outerRect = new Rectangle(_cursorX*_terminalFont.Width, _cursorY*_terminalFont.Height,
                             _terminalFont.Width - 1, _terminalFont.Height - 1);
-                        g.DrawLines(dark, new Point[]
+                        g.DrawLines(dark, new[]
                         {
                             new Point(outerRect.Left, outerRect.Bottom),
                             new Point(outerRect.Right, outerRect.Bottom),
                             new Point(outerRect.Right, outerRect.Top)
                         });
-                        g.DrawLines(bright, new Point[]
+                        g.DrawLines(bright, new[]
                         {
                             new Point(outerRect.Left, outerRect.Bottom),
                             new Point(outerRect.Left, outerRect.Top),

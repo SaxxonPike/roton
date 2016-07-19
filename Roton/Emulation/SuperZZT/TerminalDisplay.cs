@@ -29,7 +29,7 @@ namespace Roton.Emulation.SuperZZT
             }
             else
             {
-                var arrows = new string(new char[]
+                var arrows = new string(new[]
                 {
                     0x18.ToChar(),
                     0x19.ToChar(),

@@ -83,13 +83,13 @@
         public override Tile UnderTile
         {
             get { return new MemoryTile(Memory, Offset + 0x0F); }
-            set { new MemoryTile(Memory, Offset + 0x0F).CopyFrom(value); }
+            protected set { new MemoryTile(Memory, Offset + 0x0F).CopyFrom(value); }
         }
 
         public override Vector Vector
         {
             get { return new MemoryVector(Memory, Offset + 0x02); }
-            set { new MemoryVector(Memory, Offset + 0x02).CopyFrom(value); }
+            protected set { new MemoryVector(Memory, Offset + 0x02).CopyFrom(value); }
         }
     }
 }
