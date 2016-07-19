@@ -822,6 +822,42 @@ namespace Roton.Emulation.Execution
 
         public virtual void Act_Star(int index)
         {
+            var actor = Actors[index];
+
+            actor.P2 = (actor.P2 - 1) & 0xFF;
+            if (actor.P2 > 0)
+            {
+                if ((actor.P2 & 1) == 0)
+                {
+                    Seek(actor.Location, actor.Vector);
+                    var targetLocation = actor.Location.Sum(actor.Vector);
+                    var targetElement = ElementAt(targetLocation);
+
+                    if (targetElement.Index == Elements.PlayerId || targetElement.Index == Elements.BreakableId)
+                    {
+                        Attack(index, targetLocation);
+                    }
+                    else
+                    {
+                        if (!targetElement.Floor)
+                        {
+                            Push(targetLocation, actor.Vector);
+                        }
+                        if (targetElement.Floor || targetElement.Index == Elements.WaterId)
+                        {
+                            MoveActor(index, targetLocation);
+                        }
+                    }
+                }
+                else
+                {
+                    UpdateBoard(actor.Location);
+                }
+            }
+            else
+            {
+                RemoveActor(index);
+            }
         }
 
         public virtual void Act_Stone(int index)
