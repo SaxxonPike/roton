@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System;
+using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
@@ -291,6 +292,143 @@ namespace Roton.Emulation.Execution
 
         public virtual void Act_Head(int index)
         {
+            var player = Player;
+            var actor = Actors[index];
+
+            // The centipede can randomly change direction towards the player if aligned
+
+            if (player.Location.X == actor.Location.X && actor.P1 > RandomNumberDeterministic(10))
+            {
+                Seek(actor.Location, actor.Vector);
+            }
+            else if (player.Location.Y == actor.Location.Y && actor.P1 > RandomNumberDeterministic(10))
+            {
+                Seek(actor.Location, actor.Vector);
+            }
+            else if (actor.Vector.IsZero() || actor.P2 > (RandomNumberDeterministic(10) << 2))
+            {
+                Rnd(actor.Vector);
+            }
+
+            if (actor.Vector.IsNonZero())
+            {
+                // The centipede wants to move, determine where it can
+
+                var vector = actor.Vector.Clone();
+                var element = ElementAt(actor.Location.Sum(vector));
+                if (!element.IsFloor && element.Id != Elements.PlayerId)
+                {
+                    RndP(vector, actor.Vector);
+                    element = ElementAt(actor.Location.Sum(actor.Vector));
+                    if (!element.IsFloor && element.Id != Elements.PlayerId)
+                    {
+                        actor.Vector.SetOpposite();
+                        element = ElementAt(actor.Location.Sum(actor.Vector));
+                        if (!element.IsFloor && element.Id != Elements.PlayerId)
+                        {
+                            actor.Vector.CopyFrom(vector.Opposite());
+                            element = ElementAt(actor.Location.Sum(actor.Vector));
+                            if (!element.IsFloor && element.Id != Elements.PlayerId)
+                            {
+                                actor.Vector.SetTo(0, 0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (actor.Vector.IsZero())
+            {
+                // Reverse the centipede
+
+                TileAt(actor.Location).Id = Elements.SegmentId;
+                UpdateBoard(actor.Location);
+                var segmentIndex = index;
+                while (true)
+                {
+                    var segment = Actors[segmentIndex];
+                    var i = segment.Follower;
+                    segment.Follower = segment.Leader;
+                    segment.Leader = i;
+                    if (i > 0)
+                        segmentIndex = i;
+                    else
+                        break;
+                }
+                var newHead = Actors[segmentIndex];
+                TileAt(newHead.Location).Id = Elements.HeadId;
+                UpdateBoard(newHead.Location);
+            }
+            else
+            {
+                // The centipede has a direction to go, so move it
+
+                var target = actor.Location.Sum(actor.Vector);
+
+                if (ElementAt(target).Id == Elements.PlayerId)
+                {
+                    // The centipede is moving into a player
+
+                    if (actor.Follower > 0)
+                    {
+                        var follower = Actors[actor.Follower];
+                        TileAt(follower.Location).Id = Elements.HeadId;
+                        follower.Leader = -1;
+                        UpdateBoard(follower.Location);
+                    }
+                    actor.Follower = -1;
+                    actor.Leader = -1;
+                    Attack(index, target);
+                }
+                else
+                {
+                    MoveActor(index, target);
+                    var segmentIndex = index;
+
+                    // The centipede has moved, so move its followers
+
+                    do
+                    {
+                        var segment = Actors[segmentIndex];
+                        var origin = segment.Location.Difference(segment.Vector);
+                        var vector = segment.Vector;
+
+                        if (segment.Follower < 0)
+                        {
+                            // Determine if there are any eligible new follower segments
+                            if (ElementAt(origin.Difference(vector)).Id == Elements.SegmentId && ActorAt(origin.Difference(vector)).Leader <= 0)
+                            {
+                                segment.Follower = ActorIndexAt(origin.Difference(vector));
+                            }
+                            else if (ElementAt(origin.Difference(vector.Swap())).Id == Elements.SegmentId && ActorAt(origin.Difference(vector.Swap())).Leader <= 0)
+                            {
+                                segment.Follower = ActorIndexAt(origin.Difference(vector.Swap()));
+                            }
+                            else if (ElementAt(origin.Sum(vector.Swap())).Id == Elements.SegmentId && ActorAt(origin.Sum(vector.Swap())).Leader <= 0)
+                            {
+                                segment.Follower = ActorIndexAt(origin.Sum(vector.Swap()));
+                            }
+                            else
+                            {
+                                segment.Follower = -1;
+                            }
+                        }
+
+                        // Move follower segment
+                        if (segment.Follower > 0)
+                        {
+                            var follower = Actors[segment.Follower];
+                            follower.Leader = segmentIndex;
+                            follower.P1 = segment.P1;
+                            follower.P2 = segment.P2;
+                            follower.Vector.SetTo(origin.X - follower.Location.X, origin.Y - follower.Location.Y);
+                            MoveActor(segment.Follower, origin);
+                        }
+
+                        segmentIndex = segment.Follower;
+                    } while (segmentIndex > 0);
+                }
+            }
         }
 
         public virtual void Act_Lion(int index)

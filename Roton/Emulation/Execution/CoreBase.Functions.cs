@@ -862,6 +862,14 @@ namespace Roton.Emulation.Execution
             }
         }
 
+        internal virtual void RndP(IXyPair source, IXyPair result)
+        {
+            result.CopyFrom(
+                RandomNumberDeterministic(2) == 0
+                    ? source.Clockwise()
+                    : source.CounterClockwise());
+        }
+
         public virtual void ReadInput()
         {
             KeyShift = false;
@@ -922,7 +930,7 @@ namespace Roton.Emulation.Execution
                 UpdateBoard(actor.Location);
             }
 
-            for (var i = 1; i < ActorCount; i++)
+            for (var i = 1; i <= ActorCount; i++)
             {
                 var a = Actors[i];
                 if (a.Follower >= index)
