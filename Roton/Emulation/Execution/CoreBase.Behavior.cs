@@ -510,6 +510,8 @@ namespace Roton.Emulation.Execution
             var actor = Actors[index];
             var playerElement = Elements.PlayerElement;
 
+            // Energizer graphics
+
             if (EnergyCycles > 0)
             {
                 playerElement.Character = playerElement.Character == 1 ? 2 : 1;
@@ -527,8 +529,10 @@ namespace Roton.Emulation.Execution
             }
             else
             {
-                ForcePlayerColor();
+                ForcePlayerColor(index);
             }
+
+            // Health logic
 
             if (Health <= 0)
             {
@@ -546,6 +550,8 @@ namespace Roton.Emulation.Execution
             {
                 if (KeyShift || KeyPressed == 0x20)
                 {
+                    // Shooting logic
+
                     if (Shots > 0)
                     {
                         if (Ammo > 0)
@@ -581,6 +587,8 @@ namespace Roton.Emulation.Execution
                 }
                 else
                 {
+                    // Movement logic
+
                     ElementAt(actor.Location.Sum(KeyVector)).Interact(actor.Location.Sum(KeyVector), 0, KeyVector);
                     if (!KeyVector.IsZero())
                     {
@@ -595,6 +603,8 @@ namespace Roton.Emulation.Execution
                     }
                 }
             }
+
+            // Hotkey logic
 
             switch (KeyPressed.ToUpperCase())
             {
@@ -655,6 +665,8 @@ namespace Roton.Emulation.Execution
                     break;
             }
 
+            // Torch logic
+
             if (TorchCycles > 0)
             {
                 TorchCycles--;
@@ -670,6 +682,8 @@ namespace Roton.Emulation.Execution
                 }
             }
 
+            // Energizer logic
+
             if (EnergyCycles > 0)
             {
                 EnergyCycles--;
@@ -679,9 +693,11 @@ namespace Roton.Emulation.Execution
                 }
                 else if (EnergyCycles <= 0)
                 {
-                    ForcePlayerColor();
+                    ForcePlayerColor(index);
                 }
             }
+
+            // Time limit logic
 
             if (TimeLimit > 0)
             {

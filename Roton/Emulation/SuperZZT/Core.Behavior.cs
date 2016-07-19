@@ -13,5 +13,10 @@
             base.Act_Player(index);
             MoveActorOnRiver(index);
         }
+
+        internal override void ForcePlayerColor(int index)
+        {
+            // Do nothing to override the player's color.
+        }
     }
 }

@@ -329,14 +329,15 @@ namespace Roton.Emulation.Execution
             RedrawBoard();
         }
 
-        internal virtual void ForcePlayerColor()
+        internal virtual void ForcePlayerColor(int index)
         {
-            if (TileAt(Player.Location).Color != Elements.PlayerElement.Color ||
+            var actor = Actors[index];
+            if (TileAt(actor.Location).Color != Elements.PlayerElement.Color ||
                 Elements.PlayerElement.Character != 0x02)
             {
                 Elements.PlayerElement.Character = 2;
-                TileAt(Player.Location).Color = Elements.PlayerElement.Color;
-                UpdateBoard(Player.Location);
+                TileAt(actor.Location).Color = Elements.PlayerElement.Color;
+                UpdateBoard(actor.Location);
             }
         }
 
@@ -681,11 +682,7 @@ namespace Roton.Emulation.Execution
             var underTile = actor.UnderTile.Clone();
 
             actor.UnderTile.CopyFrom(targetTile);
-            if (sourceTile.Id == Elements.PlayerId)
-            {
-                targetTile.CopyFrom(sourceTile);
-            }
-            else if (targetTile.Id == Elements.EmptyId)
+            if (targetTile.Id == Elements.EmptyId)
             {
                 targetTile.SetTo(sourceTile.Id, sourceTile.Color & 0x0F);
             }
@@ -695,6 +692,10 @@ namespace Roton.Emulation.Execution
             }
             sourceTile.CopyFrom(underTile);
             actor.Location.CopyFrom(target);
+            if (targetTile.Id == Elements.PlayerId)
+            {
+                ForcePlayerColor(index);
+            }
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
             if (index == 0 && Dark)
