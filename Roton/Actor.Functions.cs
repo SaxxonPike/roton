@@ -26,7 +26,7 @@ namespace Roton
         /// <summary>
         /// Get or set this actor's code.
         /// </summary>
-        public char[] Code { get; set; }
+        public virtual char[] Code { get; set; }
 
         /// <summary>
         /// Copy actor data. Code is not duplicated, but Pointer reference will be.

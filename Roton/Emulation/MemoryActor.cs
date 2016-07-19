@@ -8,6 +8,12 @@
             Offset = offset;
         }
 
+        public override char[] Code
+        {
+            get { return Memory.CodeHeap[Pointer]; }
+            set { }
+        }
+
         public override int Cycle
         {
             get { return Memory.Read16(Offset + 0x06); }

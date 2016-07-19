@@ -58,6 +58,7 @@
     <Compile Include="Emulation\CoreTimer.cs" />
     <Compile Include="Emulation\DatArchive.cs" />
     <Compile Include="Emulation\ExecuteCodeContext.cs" />
+    <Compile Include="Emulation\CodeHeap.cs" />
     <Compile Include="Emulation\ICode.cs" />
     <Compile Include="Emulation\ICodeSeekable.cs" />
     <Compile Include="Emulation\MemoryColorArrayBase.cs" />

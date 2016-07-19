@@ -46,7 +46,8 @@ namespace Roton.Emulation
         private void PackActors(BinaryWriter target, int count)
         {
             // list of actors and saved code
-            var savedCode = new Dictionary<char[], int>();
+            var savedCode = new Dictionary<int, int>();
+            var heap = Memory.CodeHeap;
 
             // backed up memory (so we don't modify the working version)
             var mem = new Memory();
@@ -56,24 +57,22 @@ namespace Roton.Emulation
             {
                 var writeCode = false;
                 var actor = new MemoryActor(mem, ActorDataOffset + ActorDataLength*i);
+                var code = heap[actor.Pointer];
 
                 // check to see if the code needs to be stored
-                if (actor.Code != null)
+                if (code != null)
                 {
-                    if (savedCode.ContainsKey(actor.Code))
+                    if (savedCode.ContainsKey(actor.Pointer))
                     {
-                        actor.Length = -savedCode[actor.Code];
-                        writeCode = true;
+                        actor.Length = -savedCode[actor.Pointer];
                     }
                     else
                     {
-                        savedCode[actor.Code] = i;
+                        savedCode[actor.Pointer] = i;
+                        writeCode = true;
                     }
                 }
-                else
-                {
-                    actor.Pointer = 0;
-                }
+                actor.Pointer = 0;
 
                 // write memory to stream
                 target.Write(Memory.Read(actor.Offset, ActorDataLength));
@@ -81,7 +80,7 @@ namespace Roton.Emulation
                 // write code if applicable
                 if (writeCode)
                 {
-                    target.Write(actor.Code);
+                    target.Write(code.ToBytes());
                 }
             }
         }
@@ -163,6 +162,10 @@ namespace Roton.Emulation
                 throw Exceptions.CorruptedData;
             }
 
+            // clean out code heap (there are no cross-board references)
+            var heap = Memory.CodeHeap;
+            heap.FreeAll();
+
             // load all actors
             var actorList = new List<IActor>();
             for (var i = 0; i <= count; i++)
@@ -173,10 +176,12 @@ namespace Roton.Emulation
                 if (actor.Length > 0)
                 {
                     var code = source.ReadBytes(actor.Length);
-                    actor.Code = code.ToChars();
+                    var pointer = heap.Allocate(code.ToChars());
+                    actor.Pointer = pointer;
                 }
                 actorList.Add(actor);
             }
+
             // now check to see if any are in #bind
             for (var i = 0; i <= count; i++)
             {
