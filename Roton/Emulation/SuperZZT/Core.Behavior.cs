@@ -17,6 +17,12 @@ namespace Roton.Emulation.SuperZZT
             MoveActorOnRiver(index);
         }
 
+        internal override void EnterBoard()
+        {
+            BroadcastLabel(0, @"ENTER", false);
+            base.EnterBoard();
+        }
+
         internal override void ForcePlayerColor(int index)
         {
             // Do nothing to override the player's color.
