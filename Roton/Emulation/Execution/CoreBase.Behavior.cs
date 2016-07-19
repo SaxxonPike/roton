@@ -1086,8 +1086,8 @@ namespace Roton.Emulation.Execution
 
         public virtual void Interact_Ammo(IXyPair location, int index, IXyPair vector)
         {
-            Ammo += 5;
-            TileAt(location).Id = Elements.EmptyId;
+            // Ammo gain is implemented per engine, do it before this
+            RemoveItem(location);
             UpdateStatus();
             PlaySound(2, Sounds.Ammo);
             if (AlertAmmo)
@@ -1179,7 +1179,7 @@ namespace Roton.Emulation.Execution
             else
             {
                 Keys[keyIndex] = false;
-                TileAt(location).Id = Elements.EmptyId;
+                RemoveItem(location);
                 SetMessage(0xC8, DoorOpenMessage(color));
                 PlaySound(3, Sounds.DoorOpen);
             }
@@ -1193,7 +1193,7 @@ namespace Roton.Emulation.Execution
         public virtual void Interact_Energizer(IXyPair location, int index, IXyPair vector)
         {
             PlaySound(9, Sounds.Energizer);
-            TileAt(location).Id = Elements.EmptyId;
+            RemoveItem(location);
             EnergyCycles = 0x4B;
             UpdateStatus();
             UpdateBoard(location);
@@ -1215,7 +1215,7 @@ namespace Roton.Emulation.Execution
 
         public virtual void Interact_Forest(IXyPair location, int index, IXyPair vector)
         {
-            TileAt(location).Id = Elements.EmptyId;
+            RemoveItem(location);
             UpdateBoard(location);
             PlaySound(3, Sounds.Forest);
             if (AlertForest)
@@ -1227,10 +1227,10 @@ namespace Roton.Emulation.Execution
 
         public virtual void Interact_Gem(IXyPair location, int index, IXyPair vector)
         {
+            // Health gain is implemented per engine, do it before this
             Gems += 1;
-            Health += 1;
             Score += 10;
-            TileAt(location).Id = Elements.EmptyId;
+            RemoveItem(location);
             UpdateStatus();
             PlaySound(2, Sounds.Gem);
             if (AlertGem)
@@ -1260,7 +1260,7 @@ namespace Roton.Emulation.Execution
             else
             {
                 Keys[keyIndex] = true;
-                TileAt(location).Id = Elements.EmptyId;
+                RemoveItem(location);
                 SetMessage(0xC8, KeyMessage(color));
                 PlaySound(2, Sounds.Key);
             }
@@ -1319,7 +1319,7 @@ namespace Roton.Emulation.Execution
         public virtual void Interact_Torch(IXyPair location, int index, IXyPair vector)
         {
             Torches++;
-            TileAt(location).Id = Elements.EmptyId;
+            RemoveItem(location);
             UpdateStatus();
             if (AlertTorch)
             {

@@ -8,12 +8,12 @@ namespace Roton.Emulation.Execution
 {
     internal partial class CoreBase
     {
-        internal virtual IActor ActorAt(IXyPair location)
+        public IActor ActorAt(IXyPair location)
         {
             return Actors[ActorIndexAt(location)];
         }
 
-        internal virtual int ActorIndexAt(IXyPair location)
+        public int ActorIndexAt(IXyPair location)
         {
             var index = 0;
             foreach (var actor in Actors)
@@ -25,7 +25,7 @@ namespace Roton.Emulation.Execution
             return -1;
         }
 
-        internal virtual void Attack(int index, IXyPair location)
+        public void Attack(int index, IXyPair location)
         {
             if (index == 0 && EnergyCycles > 0)
             {
@@ -54,7 +54,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void ClearBoard()
+        public void ClearBoard()
         {
             var emptyId = Elements.EmptyId;
             var boardEdgeId = EdgeTile.Id;
@@ -117,13 +117,13 @@ namespace Roton.Emulation.Execution
             Player.Length = 0;
         }
 
-        internal virtual void ClearSound()
+        public void ClearSound()
         {
             SoundPlaying = false;
             StopSound();
         }
 
-        internal virtual void ClearWorld()
+        public void ClearWorld()
         {
             BoardCount = 0;
             Boards.Clear();
@@ -148,7 +148,7 @@ namespace Roton.Emulation.Execution
             WorldName = "";
         }
 
-        internal virtual void Convey(IXyPair center, int direction)
+        public void Convey(IXyPair center, int direction)
         {
             int beginIndex;
             int endIndex;
@@ -223,17 +223,22 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void Destroy(IXyPair location)
+        public virtual void Destroy(IXyPair location)
         {
             var index = ActorIndexAt(location);
             if (index == -1)
             {
-                TileAt(location).Id = Elements.EmptyId;
+                RemoveItem(location);
             }
             else
             {
                 Harm(index);
             }
+        }
+
+        public virtual void RemoveItem(IXyPair location)
+        {
+            TileAt(location).Id = Elements.EmptyId;
         }
 
         internal virtual void DrawChar(IXyPair location, AnsiChar ac)
@@ -734,9 +739,9 @@ namespace Roton.Emulation.Execution
             else
             {
                 TileAt(target).CopyFrom(TileAt(source));
-                TileAt(source).Id = Elements.EmptyId;
-                UpdateBoard(source);
                 UpdateBoard(target);
+                RemoveItem(source);
+                UpdateBoard(source);
             }
         }
 
