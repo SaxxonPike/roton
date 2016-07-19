@@ -641,7 +641,7 @@ namespace Roton.Emulation.Execution
                     break;
                 case 0x51: // Q
                 case 0x1B: // escape
-                    BreakGameLoop = Hud.EndGameConfirmation();
+                    BreakGameLoop = GameOver || Hud.EndGameConfirmation();
                     break;
                 case 0x53: // S
                     break;
@@ -658,6 +658,7 @@ namespace Roton.Emulation.Execution
                     KeyPressed = 0x20;
                     break;
                 case 0x48: // H
+                    ShowInGameHelp();
                     break;
                 case 0x46: // F
                     break;

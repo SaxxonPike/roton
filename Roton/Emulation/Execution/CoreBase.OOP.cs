@@ -49,6 +49,26 @@ namespace Roton.Emulation.Execution
             return success;
         }
 
+        internal virtual void ClearFlag(string flag)
+        {
+            var index = Flags.IndexOf(flag);
+            if (index >= 0)
+            {
+                Flags[index] = string.Empty;
+            }
+        }
+
+        internal virtual int ColorMatch(ITile tile)
+        {
+            var element = Elements[tile.Id];
+
+            if (element.Color < 0xF0)
+                return (element.Color & 7);
+            if (element.Color == 0xFE)
+                return ((tile.Color >> 4) & 0x0F) + 8;
+            return tile.Color & 0x0F;
+        }
+
         internal virtual void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
         {
             var context = new ExecuteCodeContext(index, instructionSource, name);

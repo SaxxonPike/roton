@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
@@ -23,9 +24,27 @@ namespace Roton.Emulation.SuperZZT
             base.EnterBoard();
         }
 
+        internal override void ExecuteCode_Lock(ExecuteCodeContext context)
+        {
+            // Super ZZT uses P3 for lock instead of P2.
+            context.Actor.P3 = 1;
+        }
+
+        internal override void ExecuteCode_Unlock(ExecuteCodeContext context)
+        {
+            // Super ZZT uses P3 for lock instead of P2.
+            context.Actor.P3 = 0;
+        }
+
+        internal override void ExecutePassageCleanup()
+        {
+            // Passage holes were fixed in Super ZZT
+            TileAt(Player.Location).CopyFrom(Player.UnderTile);
+        }
+
         internal override void ForcePlayerColor(int index)
         {
-            // Do nothing to override the player's color.
+            // Do nothing to override the player's color in Super ZZT
         }
 
         public override void Interact_Ammo(IXyPair location, int index, IXyPair vector)
@@ -93,6 +112,12 @@ namespace Roton.Emulation.SuperZZT
                 result.Id = Elements.EmptyId;
             }
             TileAt(location).CopyFrom(result);
+        }
+
+        internal override void ShowInGameHelp()
+        {
+            // Super ZZT doesn't have in-game help, but it does have hints
+            BroadcastLabel(0, @"HINT", false);
         }
     }
 }

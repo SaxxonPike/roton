@@ -304,9 +304,7 @@ namespace Roton.Emulation.Execution
                 }
             }
 
-            // this is what causes the black holes when using passages
-            TileAt(Player.Location).SetTo(Elements.EmptyId, 0);
-
+            ExecutePassageCleanup();
             if (target.X != 0)
             {
                 Player.Location.CopyFrom(target);
@@ -315,6 +313,12 @@ namespace Roton.Emulation.Execution
             PlaySound(4, Sounds.Passage);
             FadePurple();
             EnterBoard();
+        }
+
+        internal virtual void ExecutePassageCleanup()
+        {
+            // this is what causes the black holes when using passages
+            TileAt(Player.Location).SetTo(Elements.EmptyId, 0);
         }
 
         internal virtual void FadeBoard(AnsiChar ac)
@@ -1046,6 +1050,16 @@ namespace Roton.Emulation.Execution
 
         internal virtual void ShowAbout()
         {
+            ShowHelp("ABOUT");
+        }
+
+        internal virtual void ShowHelp(string filename)
+        {
+        }
+
+        internal virtual void ShowInGameHelp()
+        {
+            ShowHelp("GAME");
         }
 
         internal virtual void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
