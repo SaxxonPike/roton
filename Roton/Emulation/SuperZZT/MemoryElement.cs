@@ -7,16 +7,16 @@ namespace Roton.Emulation.SuperZZT
         public MemoryElement(Memory memory, int index)
             : base(memory, 0x7CAA + index*0x00C2)
         {
-            Index = index;
+            Id = index;
         }
 
-        public override string Board
+        public override string BoardEditText
         {
             get { return Memory.ReadString(Offset + 0x81); }
             set { Memory.WriteString(Offset + 0x81, value); }
         }
 
-        public override string Category
+        public override string EditorCategory
         {
             get { return Memory.ReadString(Offset + 0x2D); }
             set { Memory.WriteString(Offset + 0x2D, value); }
@@ -28,7 +28,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write8(Offset + 0x00, value); }
         }
 
-        public override string Code
+        public override string CodeEditText
         {
             get { return Memory.ReadString(Offset + 0xAB); }
             set { Memory.WriteString(Offset + 0xAB, value); }
@@ -51,37 +51,37 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(Offset + 0x0B, value); }
         }
 
-        public override bool Destructible
+        public override bool IsDestructible
         {
             get { return Memory.ReadBool(Offset + 0x02); }
             set { Memory.WriteBool(Offset + 0x02, value); }
         }
 
-        public override bool DrawCodeEnable
+        public override bool HasDrawCode
         {
             get { return Memory.ReadBool(Offset + 0x06); }
             set { Memory.WriteBool(Offset + 0x06, value); }
         }
 
-        public override bool EditorFloor
+        public override bool IsEditorFloor
         {
             get { return Memory.ReadBool(Offset + 0x04); }
             set { Memory.WriteBool(Offset + 0x04, value); }
         }
 
-        public override bool Floor
+        public override bool IsFloor
         {
             get { return Memory.ReadBool(Offset + 0x05); }
             set { Memory.WriteBool(Offset + 0x05, value); }
         }
 
-        public override int Key
+        public override int MenuKey
         {
             get { return Memory.Read8(Offset + 0x17); }
             set { Memory.Write8(Offset + 0x17, value); }
         }
 
-        public override int Menu
+        public override int MenuIndex
         {
             get { return Memory.Read16(Offset + 0x15); }
             set { Memory.Write16(Offset + 0x15, value); }
@@ -93,19 +93,19 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.WriteString(Offset + 0x18, value); }
         }
 
-        public override string P1
+        public override string P1EditText
         {
             get { return Memory.ReadString(Offset + 0x42); }
             set { Memory.WriteString(Offset + 0x42, value); }
         }
 
-        public override string P2
+        public override string P2EditText
         {
             get { return Memory.ReadString(Offset + 0x57); }
             set { Memory.WriteString(Offset + 0x57, value); }
         }
 
-        public override string P3
+        public override string P3EditText
         {
             get { return Memory.ReadString(Offset + 0x6C); }
             set { Memory.WriteString(Offset + 0x6C, value); }
@@ -117,13 +117,13 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(Offset + 0xC0, value); }
         }
 
-        public override bool Pushable
+        public override bool IsPushable
         {
             get { return Memory.ReadBool(Offset + 0x03); }
             set { Memory.WriteBool(Offset + 0x03, value); }
         }
 
-        public override string Step
+        public override string StepEditText
         {
             get { return Memory.ReadString(Offset + 0x96); }
             set { Memory.WriteString(Offset + 0x96, value); }

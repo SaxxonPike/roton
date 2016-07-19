@@ -28,7 +28,7 @@ namespace Roton.Emulation.SuperZZT
                 vector.SetTo(1, 0);
             }
 
-            if (ElementAt(actor.Location).Index == Elements.PlayerId)
+            if (ElementAt(actor.Location).Id == Elements.PlayerId)
             {
                 ElementAt(actor.Location.Sum(vector)).Interact(actor.Location.Sum(vector), 0, vector);
             }
@@ -36,7 +36,7 @@ namespace Roton.Emulation.SuperZZT
             if (vector.IsNonZero())
             {
                 var target = actor.Location.Sum(vector);
-                if (ElementAt(target).Floor)
+                if (ElementAt(target).IsFloor)
                 {
                     MoveActor(index, target);
                 }

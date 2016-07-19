@@ -29,7 +29,7 @@ namespace Roton.Emulation.Execution
             }
 
             var element = Elements[PlayerElement];
-            TileAt(Player.Location).SetTo(element.Index, element.Color);
+            TileAt(Player.Location).SetTo(element.Id, element.Color);
             if (PlayerElement == Elements.MonitorId)
             {
                 SetMessage(0, @"");
@@ -109,9 +109,9 @@ namespace Roton.Emulation.Execution
                     if (!KeyVector.IsZero())
                     {
                         var target = Player.Location.Sum(KeyVector);
-                        if (ElementAt(target).Floor)
+                        if (ElementAt(target).IsFloor)
                         {
-                            if (ElementAt(Player.Location).Index == Elements.PlayerId)
+                            if (ElementAt(Player.Location).Id == Elements.PlayerId)
                             {
                                 MoveActor(0, target);
                             }
@@ -165,7 +165,7 @@ namespace Roton.Emulation.Execution
                         Hud.ClearTitleStatus();
                     }
                     element = Elements.PlayerElement;
-                    TileAt(Player.Location).SetTo(element.Index, element.Color);
+                    TileAt(Player.Location).SetTo(element.Id, element.Color);
                     GameOver = false;
                     break;
                 }

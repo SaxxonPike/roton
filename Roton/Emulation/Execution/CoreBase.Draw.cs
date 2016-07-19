@@ -6,7 +6,7 @@ namespace Roton.Emulation.Execution
     {
         public virtual AnsiChar Draw(IXyPair location)
         {
-            if (Dark && !ElementAt(location).Shown && (TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !EditorMode)
+            if (Dark && !ElementAt(location).IsAlwaysVisible && (TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !EditorMode)
             {
                 return new AnsiChar(0xB0, 0x07);
             }
@@ -19,7 +19,7 @@ namespace Roton.Emulation.Execution
             {
                 return new AnsiChar(0x20, 0x0F);
             }
-            if (element.DrawCodeEnable)
+            if (element.HasDrawCode)
             {
                 return element.Draw(location);
             }

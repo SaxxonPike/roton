@@ -5,29 +5,29 @@ namespace Roton.Core
     public interface IElement
     {
         Action<int> Act { get; set; }
-        string Board { get; set; }
-        string Category { get; set; }
+        string BoardEditText { get; set; }
+        string EditorCategory { get; set; }
         int Character { get; set; }
-        string Code { get; set; }
+        string CodeEditText { get; set; }
         int Color { get; set; }
         int Cycle { get; set; }
-        bool Destructible { get; set; }
+        bool IsDestructible { get; set; }
         Func<IXyPair, AnsiChar> Draw { get; set; }
-        bool DrawCodeEnable { get; set; }
-        bool EditorFloor { get; set; }
-        bool Floor { get; set; }
-        int Index { get; set; }
+        bool HasDrawCode { get; set; }
+        bool IsEditorFloor { get; set; }
+        bool IsFloor { get; set; }
+        int Id { get; set; }
         Action<IXyPair, int, IXyPair> Interact { get; set; }
-        int Key { get; set; }
+        int MenuKey { get; set; }
         string KnownName { get; set; }
-        int Menu { get; set; }
+        int MenuIndex { get; set; }
         string Name { get; set; }
-        string P1 { get; set; }
-        string P2 { get; set; }
-        string P3 { get; set; }
+        string P1EditText { get; set; }
+        string P2EditText { get; set; }
+        string P3EditText { get; set; }
         int Points { get; set; }
-        bool Pushable { get; set; }
-        bool Shown { get; set; }
-        string Step { get; set; }
+        bool IsPushable { get; set; }
+        bool IsAlwaysVisible { get; set; }
+        string StepEditText { get; set; }
     }
 }

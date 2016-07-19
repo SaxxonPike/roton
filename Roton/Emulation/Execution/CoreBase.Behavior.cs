@@ -29,11 +29,11 @@ namespace Roton.Emulation.Execution
             var target = actor.Location.Sum(vector);
             var targetElement = ElementAt(target);
 
-            if (targetElement.Floor)
+            if (targetElement.IsFloor)
             {
                 MoveActor(index, target);
             }
-            else if (targetElement.Index == Elements.PlayerId || targetElement.Index == Elements.BreakableId)
+            else if (targetElement.Id == Elements.PlayerId || targetElement.Id == Elements.BreakableId)
             {
                 Attack(index, target);
             }
@@ -74,7 +74,7 @@ namespace Roton.Emulation.Execution
 
                 do
                 {
-                    if (ElementAt(target).Destructible)
+                    if (ElementAt(target).IsDestructible)
                     {
                         Destroy(target);
                     }
@@ -168,20 +168,20 @@ namespace Roton.Emulation.Execution
             {
                 var target = actor.Location.Sum(actor.Vector);
                 var element = ElementAt(target);
-                if (element.Floor || element.Index == Elements.WaterId)
+                if (element.IsFloor || element.Id == Elements.WaterId)
                 {
                     MoveActor(index, target);
                     break;
                 }
-                if (canRicochet && element.Index == Elements.RicochetId)
+                if (canRicochet && element.Id == Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetOpposite();
                     PlaySound(1, Sounds.Ricochet);
                     continue;
                 }
-                if (element.Index == Elements.BreakableId ||
-                    (element.Destructible && (element.Index == Elements.PlayerId || actor.P1 == 0)))
+                if (element.Id == Elements.BreakableId ||
+                    (element.IsDestructible && (element.Id == Elements.PlayerId || actor.P1 == 0)))
                 {
                     if (element.Points != 0)
                     {
@@ -208,7 +208,7 @@ namespace Roton.Emulation.Execution
                 }
                 RemoveActor(index);
                 ActIndex--;
-                if (element.Index == Elements.ObjectId || element.Index == Elements.ScrollId)
+                if (element.Id == Elements.ObjectId || element.Id == Elements.ScrollId)
                 {
                     BroadcastLabel(-ActorIndexAt(target), @"SHOT", false);
                     break;
@@ -307,11 +307,11 @@ namespace Roton.Emulation.Execution
             }
             var target = actor.Location.Sum(vector);
             var element = ElementAt(target);
-            if (element.Floor)
+            if (element.IsFloor)
             {
                 MoveActor(index, target);
             }
-            else if (element.Index == Elements.PlayerId)
+            else if (element.Id == Elements.PlayerId)
             {
                 Attack(index, target);
             }
@@ -351,7 +351,7 @@ namespace Roton.Emulation.Execution
             if (actor.Vector.IsZero()) return;
 
             var target = actor.Location.Sum(actor.Vector);
-            if (ElementAt(target).Floor)
+            if (ElementAt(target).IsFloor)
             {
                 MoveActor(index, target);
             }
@@ -414,7 +414,7 @@ namespace Roton.Emulation.Execution
                         {
                             Speaker.PlayDrum(3);
                         }
-                        if (ElementAt(actor.Location.Sum(KeyVector)).Floor)
+                        if (ElementAt(actor.Location.Sum(KeyVector)).IsFloor)
                         {
                             MoveActor(0, actor.Location.Sum(KeyVector));
                         }
@@ -536,14 +536,14 @@ namespace Roton.Emulation.Execution
             var actor = Actors[index];
             var source = actor.Location.Clone();
 
-            if (!ElementAt(actor.Location.Sum(actor.Vector)).Floor)
+            if (!ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
             {
                 Push(actor.Location.Sum(actor.Vector), actor.Vector);
             }
 
             index = ActorIndexAt(source);
             actor = Actors[index];
-            if (!ElementAt(actor.Location.Sum(actor.Vector)).Floor) return;
+            if (!ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
 
             MoveActor(index, actor.Location.Sum(actor.Vector));
             PlaySound(2, Sounds.Push);
@@ -577,7 +577,7 @@ namespace Roton.Emulation.Execution
             }
 
             var target = actor.Location.Sum(actor.Vector);
-            if (ElementAt(target).Floor)
+            if (ElementAt(target).IsFloor)
             {
                 MoveActor(index, target);
             }
@@ -616,11 +616,11 @@ namespace Roton.Emulation.Execution
                 }
 
                 var target = actor.Location.Sum(actor.Vector);
-                if (ElementAt(target).Index == Elements.PlayerId)
+                if (ElementAt(target).Id == Elements.PlayerId)
                 {
                     Attack(index, target);
                 }
-                else if (ElementAt(target).Floor)
+                else if (ElementAt(target).IsFloor)
                 {
                     MoveActor(index, target);
                     if (actor.P2 + 8 <= RandomNumberDeterministic(17))
@@ -682,11 +682,11 @@ namespace Roton.Emulation.Execution
             var target = actor.Location.Sum(vector);
             var targetElement = ElementAt(target);
 
-            if (targetElement.Index == Elements.WaterId)
+            if (targetElement.Id == Elements.WaterId)
             {
                 MoveActor(index, target);
             }
-            else if (targetElement.Index == Elements.PlayerId)
+            else if (targetElement.Id == Elements.PlayerId)
             {
                 Attack(index, target);
             }
@@ -708,7 +708,7 @@ namespace Roton.Emulation.Execution
                 for (var i = 0; i < 4; i++)
                 {
                     var target = source.Sum(GetVector4(i));
-                    if (ElementAt(target).Floor)
+                    if (ElementAt(target).IsFloor)
                     {
                         if (spawnCount == 0)
                         {
@@ -769,7 +769,7 @@ namespace Roton.Emulation.Execution
         {
             var actor = Actors[index];
             var target = actor.Location.Sum(vector);
-            var targetElement = ElementAt(target).Index;
+            var targetElement = ElementAt(target).Id;
 
             if (targetElement == Elements.WebId)
             {
@@ -833,17 +833,17 @@ namespace Roton.Emulation.Execution
                     var targetLocation = actor.Location.Sum(actor.Vector);
                     var targetElement = ElementAt(targetLocation);
 
-                    if (targetElement.Index == Elements.PlayerId || targetElement.Index == Elements.BreakableId)
+                    if (targetElement.Id == Elements.PlayerId || targetElement.Id == Elements.BreakableId)
                     {
                         Attack(index, targetLocation);
                     }
                     else
                     {
-                        if (!targetElement.Floor)
+                        if (!targetElement.IsFloor)
                         {
                             Push(targetLocation, actor.Vector);
                         }
-                        if (targetElement.Floor || targetElement.Index == Elements.WaterId)
+                        if (targetElement.IsFloor || targetElement.Id == Elements.WaterId)
                         {
                             MoveActor(index, targetLocation);
                         }
@@ -944,9 +944,9 @@ namespace Roton.Emulation.Execution
                 {
                     ElementAt(target).Interact(target, index, KeyVector);
                 }
-                if (ElementAt(target).Floor || ElementAt(target).Index == Elements.PlayerId)
+                if (ElementAt(target).IsFloor || ElementAt(target).Id == Elements.PlayerId)
                 {
-                    if (ElementAt(target).Index != Elements.PlayerId)
+                    if (ElementAt(target).Id != Elements.PlayerId)
                     {
                         MoveActor(0, target);
                     }

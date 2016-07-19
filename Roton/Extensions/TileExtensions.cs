@@ -32,7 +32,7 @@ namespace Roton.Extensions
 
         public static void SetTo(this ITile self, IElement element)
         {
-            self.Id = element.Index;
+            self.Id = element.Id;
         }
 
         public static void SetTo(this ITile self, IElement element, int color)

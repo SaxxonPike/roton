@@ -142,13 +142,13 @@ namespace Torch
 
             foreach (var element in Context.Elements)
             {
-                if (element.Menu == menuNumber)
+                if (element.MenuIndex == menuNumber)
                 {
-                    if (element.Category.Length > 0)
+                    if (element.EditorCategory.Length > 0)
                     {
                         var categoryItem = new ToolStripMenuItem
                         {
-                            Text = element.Category,
+                            Text = element.EditorCategory,
                             Enabled = false
                         };
                         if (result.Items.Count > 0)
@@ -159,7 +159,7 @@ namespace Torch
                     }
                     var item = new ToolStripMenuItem
                     {
-                        Text = "(&" + char.ConvertFromUtf32(element.Key) + ") " + element.Name,
+                        Text = "(&" + char.ConvertFromUtf32(element.MenuKey) + ") " + element.Name,
                         Tag = index,
                         Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element)),
                         ImageScaling = ToolStripItemImageScaling.None
@@ -197,15 +197,15 @@ namespace Torch
             switch (parameterIndex)
             {
                 case 1:
-                    category.Text = SelectedElement.P1;
+                    category.Text = SelectedElement.P1EditText;
                     preferredValue = Actor.P1;
                     break;
                 case 2:
-                    category.Text = SelectedElement.P2;
+                    category.Text = SelectedElement.P2EditText;
                     preferredValue = Actor.P2;
                     break;
                 case 3:
-                    category.Text = SelectedElement.P3;
+                    category.Text = SelectedElement.P3EditText;
                     preferredValue = Actor.P3;
                     break;
             }
@@ -248,7 +248,7 @@ namespace Torch
         private ContextMenuStrip BuildStepContextMenu(bool includeHeader)
         {
             var result = new ContextMenuStrip();
-            var category = new ToolStripMenuItem {Text = SelectedElement.Step};
+            var category = new ToolStripMenuItem {Text = SelectedElement.StepEditText};
 
             if (string.IsNullOrWhiteSpace(category.Text))
                 return null;
@@ -308,44 +308,44 @@ namespace Torch
             if (actorPresent)
             {
                 var element = Context.Elements[tile.Id];
-                if (!string.IsNullOrWhiteSpace(element.P1))
+                if (!string.IsNullOrWhiteSpace(element.P1EditText))
                 {
                     var submenu = GetParameterMenu(1);
-                    var item = new ToolStripMenuItem {Text = element.P1};
+                    var item = new ToolStripMenuItem {Text = element.P1EditText};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
-                if (!string.IsNullOrWhiteSpace(element.P2))
+                if (!string.IsNullOrWhiteSpace(element.P2EditText))
                 {
                     var submenu = GetParameterMenu(2);
-                    var item = new ToolStripMenuItem {Text = element.P2};
+                    var item = new ToolStripMenuItem {Text = element.P2EditText};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
-                if (!string.IsNullOrWhiteSpace(element.P3))
+                if (!string.IsNullOrWhiteSpace(element.P3EditText))
                 {
                     var submenu = GetParameterMenu(3);
-                    var item = new ToolStripMenuItem {Text = element.P3};
+                    var item = new ToolStripMenuItem {Text = element.P3EditText};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
-                if (!string.IsNullOrWhiteSpace(element.Board))
+                if (!string.IsNullOrWhiteSpace(element.BoardEditText))
                 {
                     var submenu = BuildBoardContextMenu(3);
-                    var item = new ToolStripMenuItem {Text = element.Board};
+                    var item = new ToolStripMenuItem {Text = element.BoardEditText};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
-                if (!string.IsNullOrWhiteSpace(element.Step))
+                if (!string.IsNullOrWhiteSpace(element.StepEditText))
                 {
                     var submenu = BuildStepContextMenu(false);
-                    var item = new ToolStripMenuItem {Text = element.Step};
+                    var item = new ToolStripMenuItem {Text = element.StepEditText};
                     item.DropDownItems.AddRange(submenu.Items.ToArray());
                     result.Items.Add(item);
                 }
-                if (!string.IsNullOrWhiteSpace(element.Code))
+                if (!string.IsNullOrWhiteSpace(element.CodeEditText))
                 {
-                    result.Items.Add(BuildContextMenuItem(element.Code, ShowTileCode));
+                    result.Items.Add(BuildContextMenuItem(element.CodeEditText, ShowTileCode));
                 }
                 if (result.Items.Count > 0)
                 {
@@ -471,13 +471,13 @@ namespace Torch
             switch (index)
             {
                 case 1:
-                    selectedParameter = SelectedElement.P1;
+                    selectedParameter = SelectedElement.P1EditText;
                     break;
                 case 2:
-                    selectedParameter = SelectedElement.P2;
+                    selectedParameter = SelectedElement.P2EditText;
                     break;
                 case 3:
-                    selectedParameter = SelectedElement.P3;
+                    selectedParameter = SelectedElement.P3EditText;
                     break;
                 default:
                     return null;
@@ -666,7 +666,7 @@ namespace Torch
         {
             var element = SelectedElement;
 
-            if (!string.IsNullOrWhiteSpace(element?.Board))
+            if (!string.IsNullOrWhiteSpace(element?.BoardEditText))
             {
                 var menu = BuildBoardContextMenu(parameterIndex);
                 ShowParameterDropdown(parameterIndex, menu);
@@ -916,12 +916,12 @@ namespace Torch
             if (elementComboBox.SelectedIndex >= 0)
             {
                 var element = Context.Elements[((ElementItem) elementComboBox.SelectedItem).Index];
-                var editBoard = element.Board;
-                var editCode = element.Code;
-                var editP1 = element.P1;
-                var editP2 = element.P2;
-                var editP3 = element.P3;
-                var editStep = element.Step;
+                var editBoard = element.BoardEditText;
+                var editCode = element.CodeEditText;
+                var editP1 = element.P1EditText;
+                var editP2 = element.P2EditText;
+                var editP3 = element.P3EditText;
+                var editStep = element.StepEditText;
 
                 editBoardButton.Text = "<Ctrl-4> " + editBoard;
                 editBoardButton.Visible = !string.IsNullOrWhiteSpace(editBoard) && statsEnabledButton.Checked;

@@ -110,7 +110,7 @@ namespace Roton.Emulation.Execution
             var element = Elements.PlayerElement;
             ActorCount = 0;
             Player.Location.SetTo(Width/2, Height/2);
-            TileAt(Player.Location).SetTo(element.Index, element.Color);
+            TileAt(Player.Location).SetTo(element.Id, element.Color);
             Player.Cycle = 1;
             Player.UnderTile.SetTo(0, 0);
             Player.Pointer = 0;
@@ -380,208 +380,208 @@ namespace Roton.Emulation.Execution
         {
             foreach (var element in Elements)
             {
-                if (element.Index == Elements.AmmoId)
+                if (element.Id == Elements.AmmoId)
                 {
                     element.Interact = Interact_Ammo;
                 }
-                else if (element.Index == Elements.BearId)
+                else if (element.Id == Elements.BearId)
                 {
                     element.Act = Act_Bear;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.BlinkWallId)
+                else if (element.Id == Elements.BlinkWallId)
                 {
                     element.Act = Act_BlinkWall;
                     element.Draw = Draw_BlinkWall;
                 }
-                else if (element.Index == Elements.BoardEdgeId)
+                else if (element.Id == Elements.BoardEdgeId)
                 {
                     element.Interact = Interact_BoardEdge;
                 }
-                else if (element.Index == Elements.BombId)
+                else if (element.Id == Elements.BombId)
                 {
                     element.Act = Act_Bomb;
                     element.Draw = Draw_Bomb;
                     element.Interact = Interact_Bomb;
                 }
-                else if (element.Index == Elements.BoulderId)
+                else if (element.Id == Elements.BoulderId)
                 {
                     element.Interact = Interact_Pushable;
                 }
-                else if (element.Index == Elements.BulletId)
+                else if (element.Id == Elements.BulletId)
                 {
                     element.Act = Act_Bullet;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.ClockwiseId)
+                else if (element.Id == Elements.ClockwiseId)
                 {
                     element.Act = Act_Clockwise;
                     element.Draw = Draw_Clockwise;
                 }
-                else if (element.Index == Elements.CounterId)
+                else if (element.Id == Elements.CounterId)
                 {
                     element.Act = Act_Counter;
                     element.Draw = Draw_Counter;
                 }
-                else if (element.Index == Elements.DoorId)
+                else if (element.Id == Elements.DoorId)
                 {
                     element.Interact = Interact_Door;
                 }
-                else if (element.Index == Elements.DragonPupId)
+                else if (element.Id == Elements.DragonPupId)
                 {
                     element.Act = Act_DragonPup;
                     element.Draw = Draw_DragonPup;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.DuplicatorId)
+                else if (element.Id == Elements.DuplicatorId)
                 {
                     element.Act = Act_Duplicator;
                     element.Draw = Draw_Duplicator;
                 }
-                else if (element.Index == Elements.EnergizerId)
+                else if (element.Id == Elements.EnergizerId)
                 {
                     element.Interact = Interact_Energizer;
                 }
-                else if (element.Index == Elements.FakeId)
+                else if (element.Id == Elements.FakeId)
                 {
                     element.Interact = Interact_Fake;
                 }
-                else if (element.Index == Elements.ForestId)
+                else if (element.Id == Elements.ForestId)
                 {
                     element.Interact = Interact_Forest;
                 }
-                else if (element.Index == Elements.GemId)
+                else if (element.Id == Elements.GemId)
                 {
                     element.Interact = Interact_Gem;
                 }
-                else if (element.Index == Elements.HeadId)
+                else if (element.Id == Elements.HeadId)
                 {
                     element.Act = Act_Head;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.InvisibleId)
+                else if (element.Id == Elements.InvisibleId)
                 {
                     element.Interact = Interact_Invisible;
                 }
-                else if (element.Index == Elements.KeyId)
+                else if (element.Id == Elements.KeyId)
                 {
                     element.Interact = Interact_Key;
                 }
-                else if (element.Index == Elements.LavaId || element.Index == Elements.WaterId)
+                else if (element.Id == Elements.LavaId || element.Id == Elements.WaterId)
                 {
                     element.Interact = Interact_Water;
                 }
-                else if (element.Index == Elements.LineId)
+                else if (element.Id == Elements.LineId)
                 {
                     element.Draw = Draw_Line;
                 }
-                else if (element.Index == Elements.LionId)
+                else if (element.Id == Elements.LionId)
                 {
                     element.Act = Act_Lion;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.MessengerId)
+                else if (element.Id == Elements.MessengerId)
                 {
                     element.Act = Act_Messenger;
                 }
-                else if (element.Index == Elements.MonitorId)
+                else if (element.Id == Elements.MonitorId)
                 {
                     element.Act = Act_Monitor;
                 }
-                else if (element.Index == Elements.ObjectId)
+                else if (element.Id == Elements.ObjectId)
                 {
                     element.Act = Act_Object;
                     element.Draw = Draw_Object;
                     element.Interact = Interact_Object;
                 }
-                else if (element.Index == Elements.PairerId)
+                else if (element.Id == Elements.PairerId)
                 {
                     element.Act = Act_Pairer;
                 }
-                else if (element.Index == Elements.PassageId)
+                else if (element.Id == Elements.PassageId)
                 {
                     element.Interact = Interact_Passage;
                 }
-                else if (element.Index == Elements.PlayerId)
+                else if (element.Id == Elements.PlayerId)
                 {
                     element.Act = Act_Player;
                 }
-                else if (element.Index == Elements.PusherId)
+                else if (element.Id == Elements.PusherId)
                 {
                     element.Act = Act_Pusher;
                     element.Draw = Draw_Pusher;
                 }
-                else if (element.Index == Elements.RotonId)
+                else if (element.Id == Elements.RotonId)
                 {
                     element.Act = Act_Roton;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.RuffianId)
+                else if (element.Id == Elements.RuffianId)
                 {
                     element.Act = Act_Ruffian;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.ScrollId)
+                else if (element.Id == Elements.ScrollId)
                 {
                     element.Act = Act_Scroll;
                     element.Interact = Interact_Scroll;
                 }
-                else if (element.Index == Elements.SegmentId)
+                else if (element.Id == Elements.SegmentId)
                 {
                     element.Act = Act_Segment;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.SharkId)
+                else if (element.Id == Elements.SharkId)
                 {
                     element.Act = Act_Shark;
                 }
-                else if (element.Index == Elements.SliderEwId || element.Index == Elements.SliderNsId)
+                else if (element.Id == Elements.SliderEwId || element.Id == Elements.SliderNsId)
                 {
                     element.Interact = Interact_Pushable;
                 }
-                else if (element.Index == Elements.SlimeId)
+                else if (element.Id == Elements.SlimeId)
                 {
                     element.Act = Act_Slime;
                     element.Interact = Interact_Slime;
                 }
-                else if (element.Index == Elements.SpiderId)
+                else if (element.Id == Elements.SpiderId)
                 {
                     element.Act = Act_Spider;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.SpinningGunId)
+                else if (element.Id == Elements.SpinningGunId)
                 {
                     element.Act = Act_SpinningGun;
                     element.Draw = Draw_SpinningGun;
                 }
-                else if (element.Index == Elements.StarId)
+                else if (element.Id == Elements.StarId)
                 {
                     element.Act = Act_Star;
                     element.Draw = Draw_SpinningGun;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.StoneId)
+                else if (element.Id == Elements.StoneId)
                 {
                     element.Act = Act_Stone;
                     element.Draw = Draw_Stone;
                     element.Interact = Interact_Stone;
                 }
-                else if (element.Index == Elements.TigerId)
+                else if (element.Id == Elements.TigerId)
                 {
                     element.Act = Act_Tiger;
                     element.Interact = Interact_Enemy;
                 }
-                else if (element.Index == Elements.TorchId)
+                else if (element.Id == Elements.TorchId)
                 {
                     element.Interact = Interact_Torch;
                 }
-                else if (element.Index == Elements.TransporterId)
+                else if (element.Id == Elements.TransporterId)
                 {
                     element.Act = Act_Transporter;
                     element.Draw = Draw_Transporter;
                     element.Interact = Interact_Transporter;
                 }
-                else if (element.Index == Elements.WebId)
+                else if (element.Id == Elements.WebId)
                 {
                     element.Draw = Draw_Web;
                 }
@@ -687,7 +687,7 @@ namespace Roton.Emulation.Execution
 
             var tile = TileAt(location);
             if ((tile.Id == Elements.SliderEwId && vector.Y == 0) || (tile.Id == Elements.SliderNsId && vector.X == 0) ||
-                Elements[tile.Id].Pushable)
+                Elements[tile.Id].IsPushable)
             {
                 var furtherTile = TileAt(location.Sum(vector));
                 if (furtherTile.Id == Elements.TransporterId)
@@ -700,13 +700,13 @@ namespace Roton.Emulation.Execution
                 }
 
                 var furtherElement = Elements[furtherTile.Id];
-                if (!furtherElement.Floor && furtherElement.Destructible && furtherTile.Id != Elements.PlayerId)
+                if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != Elements.PlayerId)
                 {
                     Destroy(location.Sum(vector));
                 }
 
                 furtherElement = Elements[furtherTile.Id];
-                if (furtherElement.Floor)
+                if (furtherElement.IsFloor)
                 {
                     MoveTile(location, location.Sum(vector));
                 }
@@ -872,7 +872,7 @@ namespace Roton.Emulation.Execution
         internal virtual void SetBoard(int boardIndex)
         {
             var element = Elements.PlayerElement;
-            TileAt(Player.Location).SetTo(element.Index, element.Color);
+            TileAt(Player.Location).SetTo(element.Id, element.Color);
             PackBoard();
             UnpackBoard(boardIndex);
         }
@@ -903,7 +903,7 @@ namespace Roton.Emulation.Execution
                 Actors[ActorCount].P2 = duration/(GameWaitTime + 1);
             }
             Message = message;
-            Message2 = message;
+            Message2 = message2;
         }
 
         internal virtual void ShowAbout()
@@ -926,7 +926,7 @@ namespace Roton.Emulation.Execution
                 actor.Location.CopyFrom(location);
                 actor.Cycle = cycle;
                 actor.UnderTile.CopyFrom(TileAt(location));
-                if (ElementAt(actor.Location).EditorFloor)
+                if (ElementAt(actor.Location).IsEditorFloor)
                 {
                     var newColor = TileAt(actor.Location).Color & 0x70;
                     newColor |= tile.Color & 0x0F;
@@ -949,7 +949,7 @@ namespace Roton.Emulation.Execution
             var target = location.Sum(vector);
             var element = ElementAt(target);
 
-            if (element.Floor || element.Index == Elements.WaterId)
+            if (element.IsFloor || element.Id == Elements.WaterId)
             {
                 SpawnActor(target, new Tile(id, Elements[id].Color), 1, DefaultActor);
                 var actor = Actors[ActorCount];
@@ -958,11 +958,11 @@ namespace Roton.Emulation.Execution
                 actor.P2 = 0x64;
                 return true;
             }
-            if (element.Index != Elements.BreakableId)
+            if (element.Id != Elements.BreakableId)
             {
-                if (element.Destructible)
+                if (element.IsDestructible)
                 {
-                    if (enemyOwned != (element.Index == Elements.PlayerId) || EnergyCycles > 0)
+                    if (enemyOwned != (element.Id == Elements.PlayerId) || EnergyCycles > 0)
                     {
                         return false;
                     }
@@ -1040,7 +1040,7 @@ namespace Roton.Emulation.Execution
                                 var element = ElementAt(target);
                                 if (mode == RadiusMode.Explode)
                                 {
-                                    if (element.Code.Length > 0)
+                                    if (element.CodeEditText.Length > 0)
                                     {
                                         var actorIndex = ActorIndexAt(target);
                                         if (actorIndex > 0)
@@ -1048,11 +1048,11 @@ namespace Roton.Emulation.Execution
                                             BroadcastLabel(-actorIndex, @"BOMBED", false);
                                         }
                                     }
-                                    if (element.Destructible || element.Index == Elements.StarId)
+                                    if (element.IsDestructible || element.Id == Elements.StarId)
                                     {
                                         Destroy(target);
                                     }
-                                    if (element.Index == Elements.EmptyId || element.Index == Elements.BreakableId)
+                                    if (element.Id == Elements.EmptyId || element.Id == Elements.BreakableId)
                                     {
                                         TileAt(target).SetTo(Elements.BreakableId, RandomNumberDeterministic(7) + 9);
                                     }
