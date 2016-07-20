@@ -60,7 +60,8 @@ namespace Roton.Extensions
         {
             var length = value.Length & 0xFF;
             var encodedString = value.ToBytes();
-            Write(memory, offset, encodedString, 0, length);
+            memory.Write8(offset, length);
+            Write(memory, offset + 1, encodedString, 0, length);
         }
     }
 }
