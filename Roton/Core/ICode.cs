@@ -2,6 +2,6 @@
 {
     public interface ICode
     {
-        char[] Code { get; set; }
+        byte[] Code { get; set; }
     }
 }

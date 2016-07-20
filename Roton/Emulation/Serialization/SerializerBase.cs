@@ -50,7 +50,7 @@ namespace Roton.Emulation.Serialization
         {
             // list of actors and saved code
             var savedCode = new Dictionary<int, int>();
-            var heap = Memory.CodeHeap;
+            var heap = Memory.Heap;
 
             // backed up memory (so we don't modify the working version)
             var mem = new Memory();
@@ -83,7 +83,7 @@ namespace Roton.Emulation.Serialization
                 // write code if applicable
                 if (writeCode)
                 {
-                    target.Write(code.ToBytes());
+                    target.Write(code);
                 }
             }
         }
@@ -166,7 +166,7 @@ namespace Roton.Emulation.Serialization
             }
 
             // clean out code heap (there are no cross-board references)
-            var heap = Memory.CodeHeap;
+            var heap = Memory.Heap;
             heap.FreeAll();
 
             // load all actors
@@ -179,7 +179,7 @@ namespace Roton.Emulation.Serialization
                 if (actor.Length > 0)
                 {
                     var code = source.ReadBytes(actor.Length);
-                    var pointer = heap.Allocate(code.ToChars());
+                    var pointer = heap.Allocate(code);
                     actor.Pointer = pointer;
                 }
                 actorList.Add(actor);

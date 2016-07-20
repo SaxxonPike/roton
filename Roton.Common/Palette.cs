@@ -2,7 +2,6 @@
 using System.IO;
 using Roton.Common.Properties;
 using Roton.Core;
-using Roton.Emulation;
 
 namespace Roton.Common
 {

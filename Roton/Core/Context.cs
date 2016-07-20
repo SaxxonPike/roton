@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Roton.Emulation;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Models;
 using Roton.Emulation.Serialization;

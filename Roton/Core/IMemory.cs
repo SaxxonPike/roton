@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation.Mapping
+﻿namespace Roton.Core
 {
     public interface IMemory
     {
-        CodeHeap CodeHeap { get; }
+        IHeap Heap { get; }
         byte[] Dump();
         int Length { get; }
         byte[] Read(int offset, int length);

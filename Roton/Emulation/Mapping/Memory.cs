@@ -8,7 +8,7 @@ namespace Roton.Emulation.Mapping
         public Memory()
         {
             Bytes = new byte[Length];
-            CodeHeap = new CodeHeap();
+            Heap = new Heap();
             Reset();
         }
 
@@ -21,7 +21,7 @@ namespace Roton.Emulation.Mapping
             return result;
         }
 
-        public CodeHeap CodeHeap { get; }
+        public IHeap Heap { get; }
 
         public int Length => 0x1 << 16;
 

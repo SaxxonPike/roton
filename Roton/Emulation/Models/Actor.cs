@@ -87,7 +87,7 @@ namespace Roton.Emulation.Models
         /// <summary>
         /// Get or set this actor's code.
         /// </summary>
-        public virtual char[] Code { get; set; }
+        public virtual byte[] Code { get; set; }
 
         /// <summary>
         /// If true, the actor is attached to a Context.

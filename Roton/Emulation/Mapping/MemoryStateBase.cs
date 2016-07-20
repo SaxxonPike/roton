@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Models;
+﻿using Roton.Core;
+using Roton.Emulation.Models;
 
 namespace Roton.Emulation.Mapping
 {

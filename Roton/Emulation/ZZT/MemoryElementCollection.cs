@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Mapping;
+﻿using Roton.Core;
+using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {

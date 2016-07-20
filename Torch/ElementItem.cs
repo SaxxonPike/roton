@@ -1,5 +1,4 @@
-﻿using Roton;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Torch
 {

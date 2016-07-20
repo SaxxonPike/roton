@@ -1,6 +1,4 @@
-﻿using Roton.Emulation;
-
-namespace Roton.Core
+﻿namespace Roton.Core
 {
     public interface IActor : ICodeSeekable, ICode
     {

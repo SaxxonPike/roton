@@ -1,4 +1,4 @@
-﻿using Roton.Emulation.Mapping;
+﻿using Roton.Core;
 using Roton.Emulation.Serialization;
 
 namespace Roton.Emulation.SuperZZT

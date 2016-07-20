@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Roton.Core;
 
 namespace Roton.Extensions
@@ -23,6 +20,28 @@ namespace Roton.Extensions
             self.UnderTile.CopyFrom(actor.UnderTile);
             self.Vector.CopyFrom(actor.Vector);
             self.Code = actor.Code;
+        }
+
+        public static string GetCodeAsString(this IActor self)
+        {
+            return (self.Code ?? new byte[0]).ToStringValue();
+        }
+
+        public static void ModifyCodeAsString(this IActor self, string value)
+        {
+            if (self.Code == null)
+            {
+                self.Code = new byte[0];
+            }
+            var code = self.Code;
+            var newCode = value.ToBytes();
+            Array.Resize(ref code, newCode.Length);
+            Array.Copy(newCode, code, newCode.Length);
+        }
+
+        public static void SetCodeAsString(this IActor self, string value)
+        {
+            self.Code = value.ToBytes();
         }
     }
 }

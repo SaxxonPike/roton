@@ -12,9 +12,9 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
-        public override char[] Code
+        public override byte[] Code
         {
-            get { return Memory.CodeHeap[Pointer]; }
+            get { return Memory.Heap[Pointer]; }
             set { }
         }
 

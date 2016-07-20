@@ -1,7 +1,7 @@
-﻿using Roton;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Torch
 {
@@ -32,7 +32,7 @@ namespace Torch
                 if (value != null)
                 {
                     _actor = value;
-                    codeTextBox.Text = new string(_actor.Code ?? new char[0]);
+                    codeTextBox.Text = _actor.GetCodeAsString();
                 }
             }
         }
@@ -50,10 +50,7 @@ namespace Torch
 
         private void SaveAndClose()
         {
-            if (_actor != null)
-            {
-                _actor.Code = codeTextBox.Text.ToCharArray();
-            }
+            _actor?.ModifyCodeAsString(codeTextBox.Text);
             Close();
         }
     }
