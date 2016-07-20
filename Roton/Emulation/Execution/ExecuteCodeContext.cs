@@ -4,7 +4,7 @@ namespace Roton.Emulation.Execution
 {
     internal class ExecuteCodeContext : ICodeInstruction
     {
-        private ICodeInstruction _instructionSource;
+        private readonly ICodeInstruction _instructionSource;
 
         public ExecuteCodeContext(int index, ICodeInstruction instructionSource, string name)
         {

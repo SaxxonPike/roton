@@ -11,17 +11,17 @@ namespace Roton.Emulation.Mapping
             Memory = memory;
         }
 
-        public abstract MemoryFlagArrayBase FlagMemory { get; }
+        public abstract IFlagList FlagMemory { get; }
 
-        public override IList<string> Flags
+        public override IFlagList Flags
         {
             get { return FlagMemory; }
             protected set { }
         }
 
-        public abstract MemoryKeyArray KeyMemory { get; }
+        public abstract IKeyList KeyMemory { get; }
 
-        public override IList<bool> Keys
+        public override IKeyList Keys
         {
             get { return KeyMemory; }
             protected set { }

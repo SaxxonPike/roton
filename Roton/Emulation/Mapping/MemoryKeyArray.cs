@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryKeyArray : FixedList<bool>
+    internal sealed class MemoryKeyArray : FixedList<bool>, IKeyList
     {
         public MemoryKeyArray(IMemory memory, int offset)
         {

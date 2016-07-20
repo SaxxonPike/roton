@@ -5,8 +5,6 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class MemoryElementCollection : MemoryElementCollectionBase
     {
-        protected override Type ElementType => typeof(MemoryElement);
-
         public override int EmptyId => 0x00;
 
         public override int BoardEdgeId => 0x01;

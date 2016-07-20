@@ -11,7 +11,7 @@ namespace Roton.Emulation.ZZT
             memory.Write(0x4AD4, Properties.Resources.zztelement);
         }
 
-        protected override MemoryElementBase GetElement(int index)
+        protected override IElement GetElement(int index)
         {
             return new MemoryElement(Memory, index);
         }

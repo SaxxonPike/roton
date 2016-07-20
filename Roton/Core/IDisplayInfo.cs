@@ -7,7 +7,7 @@ namespace Roton.Core
         int Ammo { get; }
         IXyPair Camera { get; }
         AnsiChar Draw(IXyPair location);
-        IList<IElement> Elements { get; }
+        IElementList Elements { get; }
         int EnergyCycles { get; }
         int GameSpeed { get; }
         int Gems { get; }
@@ -15,7 +15,7 @@ namespace Roton.Core
         int Height { get; }
         int KeyPressed { get; }
         bool KeyShift { get; }
-        IList<bool> Keys { get; }
+        IKeyList Keys { get; }
         string Message { get; }
         string Message2 { get; }
         IActor Player { get; }

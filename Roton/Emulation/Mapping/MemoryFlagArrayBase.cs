@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class MemoryFlagArrayBase : FixedList<string>
+    internal abstract class MemoryFlagArrayBase : FixedList<string>, IFlagList
     {
         public MemoryFlagArrayBase(IMemory memory, int offset)
         {

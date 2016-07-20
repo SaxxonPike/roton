@@ -38,7 +38,7 @@ namespace Roton.Emulation.ZZT
 
         public override IHud Hud => _hud;
 
-        public override MemoryElementCollectionBase Elements => _elements;
+        public override IElementList Elements => _elements;
 
         public override SerializerBase Serializer => _disk;
 

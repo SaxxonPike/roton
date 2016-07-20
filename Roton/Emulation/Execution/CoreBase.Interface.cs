@@ -190,9 +190,7 @@ namespace Roton.Emulation.Execution
             set { StateData.EditorMode = value; }
         }
 
-        public abstract MemoryElementCollectionBase Elements { get; }
-
-        IList<IElement> IDisplayInfo.Elements => Elements;
+        public abstract IElementList Elements { get; }
 
         public IXyPair Enter
         {
@@ -230,7 +228,7 @@ namespace Roton.Emulation.Execution
             set { BoardData.ExitWest = value; }
         }
 
-        public MemoryFlagArrayBase Flags => WorldData.FlagMemory;
+        public IFlagList Flags => WorldData.FlagMemory;
 
         public int GameCycle
         {
@@ -300,9 +298,7 @@ namespace Roton.Emulation.Execution
             set { StateData.KeyPressed = value; }
         }
 
-        public MemoryKeyArray Keys => WorldData.KeyMemory;
-
-        IList<bool> IDisplayInfo.Keys => WorldData.KeyMemory;
+        public IKeyList Keys => WorldData.KeyMemory;
 
         public bool KeyShift
         {

@@ -11,7 +11,7 @@ namespace Roton.Emulation.SuperZZT
             memory.Write(0x7CAA, Properties.Resources.szztelement);
         }
 
-        protected override MemoryElementBase GetElement(int index)
+        protected override IElement GetElement(int index)
         {
             return new MemoryElement(Memory, index);
         }

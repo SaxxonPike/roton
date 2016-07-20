@@ -1,9 +1,8 @@
-﻿using System;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class MemoryElementCollectionBase : FixedList<IElement>
+    internal abstract class MemoryElementCollectionBase : FixedList<IElement>, IElementList
     {
         protected MemoryElementCollectionBase(IMemory memory)
         {
@@ -407,11 +406,9 @@ namespace Roton.Emulation.Mapping
             throw Exceptions.InvalidSet;
         }
 
-        private MemoryElementBase[] Cache { get; }
+        private IElement[] Cache { get; }
 
-        protected abstract Type ElementType { get; }
-
-        protected abstract MemoryElementBase GetElement(int index);
+        protected abstract IElement GetElement(int index);
 
         public IMemory Memory { get; private set; }
     }

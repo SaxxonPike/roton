@@ -31,7 +31,7 @@ namespace Roton.Core
             return new Actor();
         }
 
-        public IList<IElement> Elements => Core.Elements;
+        public IElementList Elements => Core.Elements;
 
         public IKeyboard Keyboard
         {
