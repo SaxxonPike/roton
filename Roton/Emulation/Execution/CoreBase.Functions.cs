@@ -719,9 +719,13 @@ namespace Roton.Emulation.Execution
                         for (var y = target.Y - 8; y <= target.Y + 8; y++)
                         {
                             glowLocation.SetTo(x, y);
-                            if ((Distance(sourceLocation, glowLocation) < 50) ^ (Distance(target, glowLocation) < 50))
+                            if (glowLocation.X >= 1 && glowLocation.X <= Width && glowLocation.Y >= 1 &&
+                                glowLocation.Y <= Height)
                             {
-                                UpdateBoard(glowLocation);
+                                if ((Distance(sourceLocation, glowLocation) < 50) ^ (Distance(target, glowLocation) < 50))
+                                {
+                                    UpdateBoard(glowLocation);
+                                }
                             }
                         }
                     }
