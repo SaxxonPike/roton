@@ -241,32 +241,32 @@ namespace Roton.Emulation.Execution
             TileAt(location).Id = Elements.EmptyId;
         }
 
-        internal virtual void DrawChar(IXyPair location, AnsiChar ac)
+        protected void DrawChar(IXyPair location, AnsiChar ac)
         {
             Hud.DrawChar(location.X, location.Y, ac);
         }
 
-        internal virtual void DrawString(IXyPair location, string text, int color)
+        protected void DrawString(IXyPair location, string text, int color)
         {
             Hud.DrawString(location.X, location.Y, text, color);
         }
 
-        internal virtual void DrawTile(IXyPair location, AnsiChar ac)
+        protected void DrawTile(IXyPair location, AnsiChar ac)
         {
             Hud.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
-        internal virtual IElement ElementAt(IXyPair location)
+        protected IElement ElementAt(IXyPair location)
         {
             return Elements[TileAt(location).Id];
         }
 
-        internal virtual IElement ElementAt(int x, int y)
+        protected IElement ElementAt(int x, int y)
         {
             return ElementAt(new Location(x, y));
         }
 
-        internal virtual void EnterBoard()
+        protected virtual void EnterBoard()
         {
             Enter.CopyFrom(Player.Location);
             if (Dark && AlertDark)
@@ -278,11 +278,11 @@ namespace Roton.Emulation.Execution
             UpdateStatus();
         }
 
-        internal void EnterHighScore(int score)
+        private void EnterHighScore(int score)
         {
         }
 
-        internal virtual void ExecutePassage(IXyPair location)
+        private void ExecutePassage(IXyPair location)
         {
             var searchColor = TileAt(location).Color;
             var passageIndex = ActorIndexAt(location);
@@ -315,30 +315,30 @@ namespace Roton.Emulation.Execution
             EnterBoard();
         }
 
-        internal virtual void ExecutePassageCleanup()
+        protected virtual void ExecutePassageCleanup()
         {
             // this is what causes the black holes when using passages
             TileAt(Player.Location).SetTo(Elements.EmptyId, 0);
         }
 
-        internal virtual void FadeBoard(AnsiChar ac)
+        protected void FadeBoard(AnsiChar ac)
         {
             Hud.FadeBoard(ac);
         }
 
-        internal virtual void FadePurple()
+        protected void FadePurple()
         {
             FadeBoard(new AnsiChar(0xDB, 0x05));
             RedrawBoard();
         }
 
-        internal virtual void FadeRed()
+        protected void FadeRed()
         {
             FadeBoard(new AnsiChar(0xDB, 0x04));
             RedrawBoard();
         }
 
-        internal virtual void ForcePlayerColor(int index)
+        protected virtual void ForcePlayerColor(int index)
         {
             var actor = Actors[index];
             if (TileAt(actor.Location).Color != Elements.PlayerElement.Color ||
@@ -350,7 +350,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal bool GetMainTimeElapsed(int interval)
+        private bool GetMainTimeElapsed(int interval)
         {
             return TimerTick%interval == 0;
             // TODO: Fix this for real.
@@ -363,7 +363,7 @@ namespace Roton.Emulation.Execution
             //return result;
         }
 
-        internal bool GetPlayerTimeElapsed(int interval)
+        private bool GetPlayerTimeElapsed(int interval)
         {
             var result = false;
             while (GetTimeDifference(TimerTick, PlayerTime) > 0)
@@ -385,17 +385,17 @@ namespace Roton.Emulation.Execution
             return now - then;
         }
 
-        internal virtual Vector GetVector4(int index)
+        protected virtual Vector GetVector4(int index)
         {
             return new Vector(Vector4[index], Vector4[index + 4]);
         }
 
-        internal virtual Vector GetVector8(int index)
+        protected virtual Vector GetVector8(int index)
         {
             return new Vector(Vector8[index], Vector8[index + 8]);
         }
 
-        internal virtual void Harm(int index)
+        protected virtual void Harm(int index)
         {
             var actor = Actors[index];
             if (index == 0)
@@ -448,7 +448,7 @@ namespace Roton.Emulation.Execution
 
         public virtual int Height => Tiles.Height;
 
-        internal virtual void InitializeElements(bool showInvisibles)
+        protected virtual void InitializeElements(bool showInvisibles)
         {
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
@@ -457,7 +457,7 @@ namespace Roton.Emulation.Execution
             Elements.PlayerElement.Character = 0x02;
         }
 
-        internal virtual void InitializeElementDelegates()
+        protected virtual void InitializeElementDelegates()
         {
             foreach (var element in Elements)
             {
@@ -669,7 +669,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual byte[] LoadFile(string filename)
+        protected virtual byte[] LoadFile(string filename)
         {
             try
             {
@@ -682,7 +682,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void MoveActor(int index, IXyPair target)
+        protected virtual void MoveActor(int index, IXyPair target)
         {
             var actor = Actors[index];
             var sourceLocation = actor.Location.Clone();
@@ -733,7 +733,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void MoveTile(IXyPair source, IXyPair target)
+        protected virtual void MoveTile(IXyPair source, IXyPair target)
         {
             var sourceIndex = ActorIndexAt(source);
             if (sourceIndex >= 0)
@@ -749,7 +749,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void PackBoard()
+        public virtual void PackBoard()
         {
             var board = new PackedBoard(Serializer.PackBoard(Tiles));
             Boards[Board] = board;
@@ -757,7 +757,7 @@ namespace Roton.Emulation.Execution
 
         public virtual IActor Player => Actors[0];
 
-        internal virtual void Push(IXyPair location, IXyPair vector)
+        protected virtual void Push(IXyPair location, IXyPair vector)
         {
             // this is here to prevent endless push loops
             // but doesn't exist in the original code
@@ -794,7 +794,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void PushThroughTransporter(IXyPair location, IXyPair vector)
+        protected virtual void PushThroughTransporter(IXyPair location, IXyPair vector)
         {
             var actor = ActorAt(location.Sum(vector));
 
@@ -852,14 +852,14 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual IXyPair Rnd()
+        private IXyPair Rnd()
         {
             var result = new Vector();
             Rnd(result);
             return result;
         }
 
-        internal virtual void Rnd(IXyPair result)
+        private void Rnd(IXyPair result)
         {
             result.X = RandomNumberDeterministic(3) - 1;
             if (result.X == 0)
@@ -872,7 +872,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void RndP(IXyPair source, IXyPair result)
+        private void RndP(IXyPair source, IXyPair result)
         {
             result.CopyFrom(
                 RandomNumberDeterministic(2) == 0
@@ -921,12 +921,12 @@ namespace Roton.Emulation.Execution
             return KeyPressed;
         }
 
-        internal virtual void RedrawBoard()
+        private void RedrawBoard()
         {
             Hud.RedrawBoard();
         }
 
-        internal virtual void RemoveActor(int index)
+        private void RemoveActor(int index)
         {
             var actor = Actors[index];
             if (index < ActIndex)
@@ -979,7 +979,7 @@ namespace Roton.Emulation.Execution
             ActorCount--;
         }
 
-        internal virtual void ResetAlerts()
+        private void ResetAlerts()
         {
             AlertAmmo = true;
             AlertDark = true;
@@ -994,14 +994,14 @@ namespace Roton.Emulation.Execution
             AlertTorch = true;
         }
 
-        internal virtual IXyPair Seek(IXyPair location)
+        protected IXyPair Seek(IXyPair location)
         {
             var result = new Vector();
             Seek(location, result);
             return result;
         }
 
-        internal virtual void Seek(IXyPair location, IXyPair result)
+        protected void Seek(IXyPair location, IXyPair result)
         {
             result.SetTo(0, 0);
             if (RandomNumberDeterministic(2) == 0 || Player.Location.Y == location.Y)
@@ -1018,7 +1018,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void SetBoard(int boardIndex)
+        public virtual void SetBoard(int boardIndex)
         {
             var element = Elements.PlayerElement;
             TileAt(Player.Location).SetTo(element.Id, element.Color);
@@ -1026,19 +1026,19 @@ namespace Roton.Emulation.Execution
             UnpackBoard(boardIndex);
         }
 
-        internal virtual void SetEditorMode()
+        protected void SetEditorMode()
         {
             InitializeElements(true);
             EditorMode = true;
         }
 
-        internal virtual void SetGameMode()
+        protected void SetGameMode()
         {
             InitializeElements(false);
             EditorMode = false;
         }
 
-        internal virtual void SetMessage(int duration, string message, string message2 = "")
+        protected void SetMessage(int duration, string message, string message2 = "")
         {
             var index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)
@@ -1055,21 +1055,21 @@ namespace Roton.Emulation.Execution
             Message2 = message2;
         }
 
-        internal virtual void ShowAbout()
+        private void ShowAbout()
         {
             ShowHelp("ABOUT");
         }
 
-        internal virtual void ShowHelp(string filename)
+        private void ShowHelp(string filename)
         {
         }
 
-        internal virtual void ShowInGameHelp()
+        protected virtual void ShowInGameHelp()
         {
             ShowHelp("GAME");
         }
 
-        internal virtual void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
+        private void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
         {
             // must reserve one actor for player, and one for messenger
             if (ActorCount < Actors.Capacity - 2)
@@ -1103,7 +1103,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned)
+        protected bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned)
         {
             var target = location.Sum(vector);
             var element = ElementAt(target);
@@ -1137,48 +1137,48 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        internal ITile TileAt(IXyPair l)
+        protected ITile TileAt(IXyPair l)
         {
             return Tiles[l];
         }
 
-        internal ITile TileAt(int x, int y)
+        private ITile TileAt(int x, int y)
         {
             return Tiles[new Location(x, y)];
         }
 
-        internal int TimerBase => CoreTimer.Tick & 0x7FFF;
+        private int TimerBase => CoreTimer.Tick & 0x7FFF;
 
         private int _timerTick;
 
-        internal int TimerTick
+        private int TimerTick
         {
             get { return _timerTick; }
-            private set { _timerTick = value & 0x7FFF; }
+            set { _timerTick = value & 0x7FFF; }
         }
 
-        internal virtual void UnpackBoard(int boardIndex)
+        public virtual void UnpackBoard(int boardIndex)
         {
             Serializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             Board = boardIndex;
         }
 
-        internal virtual void UpdateBoard(IXyPair location)
+        public virtual void UpdateBoard(IXyPair location)
         {
             DrawTile(location, Draw(location));
         }
 
-        internal virtual void UpdateBorder()
+        private void UpdateBorder()
         {
             Hud.UpdateBorder();
         }
 
-        internal virtual void UpdateCamera()
+        private void UpdateCamera()
         {
             Hud.UpdateCamera();
         }
 
-        internal virtual void UpdateRadius(IXyPair location, RadiusMode mode)
+        private void UpdateRadius(IXyPair location, RadiusMode mode)
         {
             var source = location.Clone();
             var left = source.X - 9;
@@ -1231,7 +1231,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void UpdateStatus()
+        private void UpdateStatus()
         {
             Hud.UpdateStatus();
         }

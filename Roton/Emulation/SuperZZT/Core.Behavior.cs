@@ -18,7 +18,7 @@ namespace Roton.Emulation.SuperZZT
             MoveActorOnRiver(index);
         }
 
-        internal override void EnterBoard()
+        protected override void EnterBoard()
         {
             BroadcastLabel(0, @"ENTER", false);
             base.EnterBoard();
@@ -36,13 +36,13 @@ namespace Roton.Emulation.SuperZZT
             context.Actor.P3 = 0;
         }
 
-        internal override void ExecutePassageCleanup()
+        protected override void ExecutePassageCleanup()
         {
             // Passage holes were fixed in Super ZZT
             TileAt(Player.Location).CopyFrom(Player.UnderTile);
         }
 
-        internal override void ForcePlayerColor(int index)
+        protected override void ForcePlayerColor(int index)
         {
             // Do nothing to override the player's color in Super ZZT
         }
@@ -114,7 +114,7 @@ namespace Roton.Emulation.SuperZZT
             TileAt(location).CopyFrom(result);
         }
 
-        internal override void ShowInGameHelp()
+        protected override void ShowInGameHelp()
         {
             // Super ZZT doesn't have in-game help, but it does have hints
             BroadcastLabel(0, @"HINT", false);

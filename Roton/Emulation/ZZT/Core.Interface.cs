@@ -32,15 +32,15 @@ namespace Roton.Emulation.ZZT
             InitializeDatArchive();
         }
 
-        public override MemoryActorCollectionBase Actors => _actors;
+        public override IActorList Actors => _actors;
 
-        public override MemoryBoardBase BoardData => _board;
+        public override IBoard BoardData => _board;
 
         public override IHud Hud => _hud;
 
         public override IElementList Elements => _elements;
 
-        public override SerializerBase Serializer => _disk;
+        public override ISerializer Serializer => _disk;
 
         public override SoundsBase Sounds => _sounds;
 
@@ -48,10 +48,10 @@ namespace Roton.Emulation.ZZT
 
         public override bool StonesEnabled => false;
 
-        public override MemoryTileCollectionBase Tiles => _tiles;
+        public override ITileGrid Tiles => _tiles;
 
         public override bool TorchesEnabled => true;
 
-        public override MemoryWorldBase WorldData => _world;
+        public override IWorld WorldData => _world;
     }
 }

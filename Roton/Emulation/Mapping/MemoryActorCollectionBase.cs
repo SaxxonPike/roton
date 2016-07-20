@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class MemoryActorCollectionBase : FixedList<IActor>
+    internal abstract class MemoryActorCollectionBase : FixedList<IActor>, IActorList
     {
         protected MemoryActorCollectionBase(IMemory memory)
         {

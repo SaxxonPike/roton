@@ -12,7 +12,7 @@ namespace Roton.Emulation.ZZT
             _datArchive = new DatArchive(Properties.Resources.zztdat);
         }
 
-        internal override byte[] LoadFile(string filename)
+        protected override byte[] LoadFile(string filename)
         {
             if (_datArchive.GetFiles().Contains(filename.ToLowerInvariant()))
             {

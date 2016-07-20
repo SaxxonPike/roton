@@ -20,7 +20,7 @@ namespace Roton.Emulation.Execution
             return (a.Y - b.Y).Square()*2 + (a.X - b.X).Square();
         }
 
-        internal virtual void Start()
+        public virtual void Start()
         {
             if (!ThreadActive)
             {
@@ -31,7 +31,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void Stop()
+        public virtual void Stop()
         {
             if (ThreadActive)
             {

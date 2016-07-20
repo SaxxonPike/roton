@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class MemoryTileCollectionBase : FixedList<ITile>
+    internal abstract class MemoryTileCollectionBase : FixedList<ITile>, ITileGrid
     {
         public MemoryTileCollectionBase(IMemory memory, int offset, int width, int height)
         {

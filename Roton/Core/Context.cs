@@ -10,7 +10,7 @@ namespace Roton.Core
     {
         public int ActorCapacity => Core.Actors.Capacity;
 
-        public IList<IActor> Actors => Core.Actors;
+        public IActorList Actors => Core.Actors;
 
         public int Board
         {
@@ -24,7 +24,7 @@ namespace Roton.Core
 
         public ContextEngine ContextEngine { get; private set; }
 
-        private CoreBase Core { get; set; }
+        private ICore Core { get; set; }
 
         public IActor CreateActor()
         {
@@ -47,7 +47,7 @@ namespace Roton.Core
 
         public int ScreenWidth { get; private set; }
 
-        internal SerializerBase Serializer => Core.Serializer;
+        internal ISerializer Serializer => Core.Serializer;
 
         public ISpeaker Speaker
         {

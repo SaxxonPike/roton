@@ -38,11 +38,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\IActorList.cs" />
+    <Compile Include="Core\ICore.cs" />
     <Compile Include="Core\IElementList.cs" />
     <Compile Include="Core\IFlagList.cs" />
     <Compile Include="Core\IHeap.cs" />
     <Compile Include="Core\IKeyList.cs" />
     <Compile Include="Core\IMemory.cs" />
+    <Compile Include="Core\ISerializer.cs" />
+    <Compile Include="Core\ITileGrid.cs" />
     <Compile Include="Extensions\MemoryExtensions.cs" />
     <Compile Include="Extensions\TileExtensions.cs" />
     <Compile Include="Core\IHud.cs" />

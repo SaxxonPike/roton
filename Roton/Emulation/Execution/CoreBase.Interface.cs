@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Roton.Core;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.Serialization;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
-    internal abstract partial class CoreBase : IDisplayInfo
+    internal abstract partial class CoreBase : IDisplayInfo, ICore
     {
         public CoreBase()
         {
@@ -16,7 +17,7 @@ namespace Roton.Emulation.Execution
             RandomDeterministic = new Random(0);
         }
 
-        public abstract MemoryActorCollectionBase Actors { get; }
+        public abstract IActorList Actors { get; }
 
         public bool AboutShown
         {
@@ -120,7 +121,7 @@ namespace Roton.Emulation.Execution
             set { StateData.BoardCount = value; }
         }
 
-        public abstract MemoryBoardBase BoardData { get; }
+        public abstract IBoard BoardData { get; }
 
         public string BoardName
         {
@@ -141,7 +142,7 @@ namespace Roton.Emulation.Execution
         public IXyPair Camera
         {
             get { return BoardData.Camera; }
-            set { BoardData.Camera = value; }
+            set { BoardData.Camera.CopyFrom(value); }
         }
 
         public bool CancelScroll
@@ -195,7 +196,7 @@ namespace Roton.Emulation.Execution
         public IXyPair Enter
         {
             get { return BoardData.Enter; }
-            set { BoardData.Enter = value; }
+            set { BoardData.Enter.CopyFrom(value); }
         }
 
         public int EnergyCycles
@@ -228,7 +229,7 @@ namespace Roton.Emulation.Execution
             set { BoardData.ExitWest = value; }
         }
 
-        public IFlagList Flags => WorldData.FlagMemory;
+        public IFlagList Flags => WorldData.Flags;
 
         public int GameCycle
         {
@@ -298,7 +299,7 @@ namespace Roton.Emulation.Execution
             set { StateData.KeyPressed = value; }
         }
 
-        public IKeyList Keys => WorldData.KeyMemory;
+        public IKeyList Keys => WorldData.Keys;
 
         public bool KeyShift
         {
@@ -404,7 +405,7 @@ namespace Roton.Emulation.Execution
             set { WorldData.Score = value; }
         }
 
-        public abstract SerializerBase Serializer { get; }
+        public abstract ISerializer Serializer { get; }
 
         public int Shots
         {
@@ -460,7 +461,7 @@ namespace Roton.Emulation.Execution
             set { Hud.Terminal = value; }
         }
 
-        public abstract MemoryTileCollectionBase Tiles { get; }
+        public abstract ITileGrid Tiles { get; }
 
         public int TimeLimit
         {
@@ -516,7 +517,7 @@ namespace Roton.Emulation.Execution
 
         public IList<int> WebChars => StateData.WebChars;
 
-        public abstract MemoryWorldBase WorldData { get; }
+        public abstract IWorld WorldData { get; }
 
         public string WorldFileName
         {

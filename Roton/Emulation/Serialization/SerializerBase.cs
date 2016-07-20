@@ -7,7 +7,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Serialization
 {
-    internal abstract class SerializerBase
+    internal abstract class SerializerBase : ISerializer
     {
         public SerializerBase(IMemory memory)
         {
@@ -88,7 +88,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        public byte[] PackBoard(MemoryTileCollectionBase tiles)
+        public byte[] PackBoard(ITileGrid tiles)
         {
             using (var mem = new MemoryStream())
             {
@@ -104,7 +104,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        private void PackTiles(MemoryTileCollectionBase tiles, BinaryWriter target)
+        private void PackTiles(ITileGrid tiles, BinaryWriter target)
         {
             var firstTile = tiles[new Location(1, 1)];
             var count = 0;
@@ -198,7 +198,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        public void UnpackBoard(MemoryTileCollectionBase tiles, byte[] data)
+        public void UnpackBoard(ITileGrid tiles, byte[] data)
         {
             using (var mem = new MemoryStream(data))
             {
@@ -212,7 +212,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        private void UnpackTiles(MemoryTileCollectionBase tiles, BinaryReader source)
+        private void UnpackTiles(ITileGrid tiles, BinaryReader source)
         {
             var count = 0;
             var id = 0;

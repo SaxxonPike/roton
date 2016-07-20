@@ -6,7 +6,7 @@ namespace Roton.Extensions
     {
         public static int Read16(this IMemory memory, int offset)
         {
-            return memory.Read8(offset) | (memory.Read8(offset + 1) << 8);
+            return ((memory.Read8(offset) | (memory.Read8(offset + 1) << 8)) << 16) >> 16;
         }
 
         public static int Read32(this IMemory memory, int offset)
