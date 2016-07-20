@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Roton.Core
 {
-    internal interface ISerializer
+    public interface ISerializer
     {
         byte[] LoadBoardData(Stream source);
         void LoadWorld(Stream source);

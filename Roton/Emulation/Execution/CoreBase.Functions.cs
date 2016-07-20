@@ -852,7 +852,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        private IXyPair Rnd()
+        public IXyPair Rnd()
         {
             var result = new Vector();
             Rnd(result);
@@ -921,7 +921,7 @@ namespace Roton.Emulation.Execution
             return KeyPressed;
         }
 
-        private void RedrawBoard()
+        public void RedrawBoard()
         {
             Hud.RedrawBoard();
         }
@@ -994,7 +994,7 @@ namespace Roton.Emulation.Execution
             AlertTorch = true;
         }
 
-        protected IXyPair Seek(IXyPair location)
+        public IXyPair Seek(IXyPair location)
         {
             var result = new Vector();
             Seek(location, result);

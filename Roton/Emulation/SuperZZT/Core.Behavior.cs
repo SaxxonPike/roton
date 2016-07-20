@@ -6,6 +6,8 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class Core
     {
+        public override IGrammar Grammar { get; }
+
         public override void Act_Monitor(int index)
         {
             base.Act_Monitor(index);
@@ -24,13 +26,13 @@ namespace Roton.Emulation.SuperZZT
             base.EnterBoard();
         }
 
-        internal override void ExecuteCode_Lock(ExecuteCodeContext context)
+        internal override void ExecuteCode_Lock(OopContext context)
         {
             // Super ZZT uses P3 for lock instead of P2.
             context.Actor.P3 = 1;
         }
 
-        internal override void ExecuteCode_Unlock(ExecuteCodeContext context)
+        internal override void ExecuteCode_Unlock(OopContext context)
         {
             // Super ZZT uses P3 for lock instead of P2.
             context.Actor.P3 = 0;

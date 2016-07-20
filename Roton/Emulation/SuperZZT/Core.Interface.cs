@@ -7,15 +7,15 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class Core : CoreBase
     {
-        private MemoryActorCollection _actors;
-        private MemoryBoard _board;
-        private Serializer _disk;
-        private TerminalHud _hud;
-        private MemoryElementCollection _elements;
-        private Sounds _sounds;
-        private MemoryState _state;
-        private MemoryTileCollection _tiles;
-        private MemoryWorld _world;
+        private readonly MemoryActorCollection _actors;
+        private readonly MemoryBoard _board;
+        private readonly Serializer _disk;
+        private readonly TerminalHud _hud;
+        private readonly MemoryElementCollection _elements;
+        private readonly Sounds _sounds;
+        private readonly MemoryState _state;
+        private readonly MemoryTileCollection _tiles;
+        private readonly MemoryWorld _world;
 
         public Core()
         {

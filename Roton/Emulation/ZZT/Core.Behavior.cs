@@ -4,6 +4,8 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed partial class Core
     {
+        public override IGrammar Grammar { get; }
+
         public override void Interact_Ammo(IXyPair location, int index, IXyPair vector)
         {
             Ammo += 5;

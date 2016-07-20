@@ -4,7 +4,7 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Core
 {
-    internal interface ICore
+    public interface ICore
     {
         IActorList Actors { get; }
         bool AboutShown { get; set; }
@@ -197,5 +197,15 @@ namespace Roton.Core
         void Stop();
         void SetBoard(int boardIndex);
         void PackBoard();
+        IGrammar Grammar { get; }
+        IXyPair Rnd();
+        IXyPair Seek(IXyPair location);
+        int ReadActorCodeByte(int index, ICodeInstruction instructionSource);
+        string ReadActorCodeLine(int index, ICodeInstruction instructionSource);
+        int ReadActorCodeNumber(int index, ICodeInstruction instructionSource);
+        string ReadActorCodeWord(int index, ICodeInstruction instructionSource);
+        void RedrawBoard();
+        IXyPair GetCardinalVector(int index);
+        IXyPair GetConveyorVector(int index);
     }
 }

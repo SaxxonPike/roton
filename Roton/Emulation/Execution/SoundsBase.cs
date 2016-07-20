@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Execution
 {
-    internal abstract class SoundsBase
+    public abstract class SoundsBase
     {
         public static readonly byte[] Silence = new byte[0];
 

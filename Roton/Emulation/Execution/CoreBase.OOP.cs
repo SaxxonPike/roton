@@ -6,6 +6,8 @@ namespace Roton.Emulation.Execution
 {
     internal abstract partial class CoreBase
     {
+        public abstract IGrammar Grammar { get; }
+
         internal virtual bool ActorIsLocked(int index)
         {
             return Actors[index].P2 != 0;
@@ -69,7 +71,7 @@ namespace Roton.Emulation.Execution
             return tile.Color & 0x0F;
         }
 
-        internal virtual bool ReadCondition(ExecuteCodeContext context)
+        internal virtual bool ReadCondition(OopContext context)
         {
             var actor = context.Actor;
             ReadActorCodeWord(context.Index, context);
@@ -87,7 +89,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual IXyPair ReadDirection(ExecuteCodeContext context)
+        internal virtual IXyPair ReadDirection(OopContext context)
         {
             var actor = context.Actor;
             ReadActorCodeWord(context.Index, context);
@@ -143,7 +145,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual ITile ReadKind(ExecuteCodeContext context)
+        internal virtual ITile ReadKind(OopContext context)
         {
             var success = false;
             var result = new Tile(0, 0);
@@ -192,22 +194,22 @@ namespace Roton.Emulation.Execution
 
         internal virtual void ExecuteCode(int index, ICodeInstruction instructionSource, string name)
         {
-            var context = new ExecuteCodeContext(index, instructionSource, name);
+            var context = new OopContext(index, instructionSource, name, this);
         }
 
-        internal virtual void ExecuteCode_Become(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Become(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Bind(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Bind(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Change(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Change(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Char(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Char(OopContext context)
         {
             ReadActorCodeNumber(context.Index, context);
             if (OopNumber > 0x00 && OopNumber <= 0xFF)
@@ -217,11 +219,11 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void ExecuteCode_Clear(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Clear(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Cycle(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Cycle(OopContext context)
         {
             ReadActorCodeNumber(context.Index, context);
             if (OopNumber > 0)
@@ -230,97 +232,97 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void ExecuteCode_Die(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Die(OopContext context)
         {
             context.Died = true;
             context.DeathTile.SetTo(Elements.EmptyId, 0x0F);
         }
 
-        internal virtual void ExecuteCode_End(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_End(OopContext context)
         {
             context.Finished = true;
             context.Instruction = -1;
         }
 
-        internal virtual void ExecuteCode_EndGame(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_EndGame(OopContext context)
         {
             Health = 0;
         }
 
-        internal virtual void ExecuteCode_Give(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Give(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Go(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Go(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Idle(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Idle(OopContext context)
         {
             context.Moved = true;
         }
 
-        internal virtual void ExecuteCode_If(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_If(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Lock(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Lock(OopContext context)
         {
             context.Actor.P2 = 1;
         }
 
-        internal virtual void ExecuteCode_Play(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Play(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Put(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Put(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Restart(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Restart(OopContext context)
         {
             context.NextLine = false;
             context.Instruction = 0;
         }
 
-        internal virtual void ExecuteCode_Restore(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Restore(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Send(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Send(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Set(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Set(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Shoot(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Shoot(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Take(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Take(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_ThrowStar(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_ThrowStar(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Try(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Try(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Unlock(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Unlock(OopContext context)
         {
             context.Actor.P2 = 0;
         }
 
-        internal virtual void ExecuteCode_Walk(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Walk(OopContext context)
         {
         }
 
-        internal virtual void ExecuteCode_Zap(ExecuteCodeContext context)
+        internal virtual void ExecuteCode_Zap(OopContext context)
         {
         }
 
@@ -413,21 +415,25 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        internal virtual void ReadActorCodeByte(int index, ICodeInstruction instructionSource)
+        public virtual int ReadActorCodeByte(int index, ICodeInstruction instructionSource)
         {
             var actor = Actors[index];
+            var value = 0;
+
             if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
             {
                 OopByte = 0;
             }
             else
             {
-                OopByte = actor.Code[instructionSource.Instruction];
+                value = actor.Code[instructionSource.Instruction];
+                OopByte = value;
                 instructionSource.Instruction++;
             }
+            return value;
         }
 
-        internal virtual string ReadActorCodeLine(int index, ICodeInstruction instructionSource)
+        public virtual string ReadActorCodeLine(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
             ReadActorCodeByte(index, instructionSource);
@@ -439,18 +445,13 @@ namespace Roton.Emulation.Execution
             return result.ToString();
         }
 
-        internal virtual void ReadActorCodeNumber(int index, ICodeInstruction instructionSource)
+        public virtual int ReadActorCodeNumber(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
             var success = false;
 
-            while (true)
+            while (ReadActorCodeByte(index, instructionSource) == 0x20)
             {
-                ReadActorCodeByte(index, instructionSource);
-                if (OopByte != 0x20)
-                {
-                    break;
-                }
             }
 
             OopByte = OopByte.ToUpperCase();
@@ -476,9 +477,11 @@ namespace Roton.Emulation.Execution
                 int.TryParse(result.ToString(), out resultInt);
                 OopNumber = resultInt;
             }
+
+            return OopNumber;
         }
 
-        internal virtual void ReadActorCodeWord(int index, ICodeInstruction instructionSource)
+        public virtual string ReadActorCodeWord(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
 
@@ -510,6 +513,7 @@ namespace Roton.Emulation.Execution
             }
 
             OopWord = result.ToString();
+            return OopWord;
         }
 
         internal virtual int SearchActorCode(int index, string term)

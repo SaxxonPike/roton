@@ -497,14 +497,14 @@ namespace Roton.Emulation.Execution
 
         public IList<int> Vector4 => StateData.Vector4;
 
-        protected IXyPair GetCardinalVector(int index)
+        public IXyPair GetCardinalVector(int index)
         {
             return new Vector(Vector4[index], Vector4[index + 4]);
         }
 
         public IList<int> Vector8 => StateData.Vector8;
 
-        protected IXyPair GetConveyorVector(int index)
+        public IXyPair GetConveyorVector(int index)
         {
             return new Vector(Vector8[index], Vector8[index + 8]);
         }
