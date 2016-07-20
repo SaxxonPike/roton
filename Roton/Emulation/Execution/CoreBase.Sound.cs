@@ -7,7 +7,7 @@
             return new byte[0];
         }
 
-        internal virtual void PlaySound(int priority, byte[] sound)
+        public virtual void PlaySound(int priority, byte[] sound)
         {
         }
 

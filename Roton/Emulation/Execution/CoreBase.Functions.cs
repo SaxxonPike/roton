@@ -256,7 +256,7 @@ namespace Roton.Emulation.Execution
             Hud.DrawTile(location.X - 1, location.Y - 1, ac);
         }
 
-        protected IElement ElementAt(IXyPair location)
+        public IElement ElementAt(IXyPair location)
         {
             return Elements[TileAt(location).Id];
         }
@@ -682,7 +682,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        protected virtual void MoveActor(int index, IXyPair target)
+        public virtual void MoveActor(int index, IXyPair target)
         {
             var actor = Actors[index];
             var sourceLocation = actor.Location.Clone();
@@ -757,7 +757,7 @@ namespace Roton.Emulation.Execution
 
         public virtual IActor Player => Actors[0];
 
-        protected virtual void Push(IXyPair location, IXyPair vector)
+        public virtual void Push(IXyPair location, IXyPair vector)
         {
             // this is here to prevent endless push loops
             // but doesn't exist in the original code
@@ -1038,7 +1038,7 @@ namespace Roton.Emulation.Execution
             EditorMode = false;
         }
 
-        protected void SetMessage(int duration, string message, string message2 = "")
+        public void SetMessage(int duration, string message, string message2 = "")
         {
             var index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)

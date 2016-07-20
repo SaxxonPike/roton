@@ -427,7 +427,7 @@ namespace Roton.Emulation.Execution
             set { StateData.SoundPriority = value; }
         }
 
-        public abstract SoundsBase Sounds { get; }
+        public abstract ISounds Sounds { get; }
 
         public int SoundTicks
         {

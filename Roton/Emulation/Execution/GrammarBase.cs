@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Roton.Core;
 using Roton.Extensions;
 
@@ -110,11 +109,107 @@ namespace Roton.Emulation.Execution
             return success ? result : null;
         }
 
-        protected abstract IDictionary<string, Action<ICore>> GetCheats();
-        protected abstract IDictionary<string, Action<IOopContext>> GetCommands();
-        protected abstract IDictionary<string, Func<IOopContext, bool?>> GetConditions();
-        protected abstract IDictionary<string, Func<IOopContext, IXyPair>> GetDirections();
-        protected abstract IDictionary<string, Func<IOopContext, IOopItem>> GetItems();
+        protected virtual IDictionary<string, Action<ICore>> GetCheats()
+        {
+            return new Dictionary<string, Action<ICore>>
+            {
+                { "AMMO", Cheat_Ammo },
+                { "DARK", Cheat_Dark },
+                { "GEMS", Cheat_Gems },
+                { "HEALTH", Cheat_Health },
+                { "KEYS", Cheat_Keys },
+                { "TIME", Cheat_Time },
+                { "TORCHES", Cheat_Torches },
+                { "ZAP", Cheat_Zap }
+            };
+        }
+
+        protected virtual IDictionary<string, Action<IOopContext>> GetCommands()
+        {
+            return new Dictionary<string, Action<IOopContext>>()
+            {
+                { "BECOME", Command_Become },
+                { "BIND", Command_Bind },
+                { "CHANGE", Command_Change },
+                { "CHAR", Command_Char },
+                { "CLEAR", Command_Clear },
+                { "CYCLE", Command_Cycle },
+                { "DIE", Command_Die },
+                { "END", Command_End },
+                { "ENDGAME", Command_Endgame },
+                { "GIVE", Command_Give },
+                { "GO", Command_Go },
+                { "IDLE", Command_Idle },
+                { "IF", Command_If },
+                { "LOCK", Command_Lock },
+                { "PLAY", Command_Play },
+                { "PUT", Command_Put },
+                { "RESTART", Command_Restart },
+                { "RESTORE", Command_Restore },
+                { "SEND", Command_Send },
+                { "SET", Command_Set },
+                { "SHOOT", Command_Shoot },
+                { "TAKE", Command_Take },
+                { "THEN", Command_Then },
+                { "THROWSTAR", Command_Throwstar },
+                { "TRY", Command_Try },
+                { "UNLOCK", Command_Unlock },
+                { "WALK", Command_Walk },
+                { "ZAP", Command_Zap }
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, bool?>> GetConditions()
+        {
+            return new Dictionary<string, Func<IOopContext, bool?>>
+            {
+                { "ALLIGNED", Condition_Alligned },
+                { "ANY", Condition_Any },
+                { "BLOCKED", Condition_Blocked },
+                { "CONTACT", Condition_Contact },
+                { "ENERGIZED", Condition_Energized },
+                { "NOT", Condition_Not }
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, IXyPair>> GetDirections()
+        {
+            return new Dictionary<string, Func<IOopContext, IXyPair>>
+            {
+                { "CW", Direction_Cw },
+                { "CCW", Direction_Ccw },
+                { "E", Direction_East },
+                { "EAST", Direction_East },
+                { "FLOW", Direction_Flow },
+                { "I", Direction_Idle },
+                { "IDLE", Direction_Idle },
+                { "N", Direction_North },
+                { "NORTH", Direction_North },
+                { "OPP", Direction_Opp },
+                { "RND", Direction_Rnd },
+                { "RNDNE", Direction_RndNe },
+                { "RNDNS", Direction_RndNs },
+                { "RNDP", Direction_RndP },
+                { "S", Direction_South },
+                { "SOUTH", Direction_South },
+                { "SEEK", Direction_Seek },
+                { "W", Direction_West },
+                { "WEST", Direction_West }
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, IOopItem>> GetItems()
+        {
+            return new Dictionary<string, Func<IOopContext, IOopItem>>
+            {
+                { "AMMO", Item_Ammo },
+                { "GEMS", Item_Gems },
+                { "HEALTH", Item_Health },
+                { "SCORE", Item_Score },
+                { "TIME", Item_Time },
+                { "TORCHES", Item_Torches }
+            };
+        }
 
         protected bool? Condition_Alligned(IOopContext context)
         {
@@ -274,7 +369,7 @@ namespace Roton.Emulation.Execution
                 v => context.World.Torches = v);
         }
 
-        protected virtual void Cheat_Ammo(ICore core)
+        protected void Cheat_Ammo(ICore core)
         {
             core.WorldData.Ammo += 5;
         }
@@ -319,6 +414,221 @@ namespace Roton.Emulation.Execution
             {
                 core.Destroy(core.Player.Location.Sum(core.GetCardinalVector(i)));
             }
+        }
+
+        protected void Command_Become(IOopContext context)
+        {
+            var kind = GetKind(context);
+            if (kind == null)
+            {
+                context.RaiseError("Bad #BECOME");
+                return;
+            }
+
+            context.Died = true;
+            context.DeathTile.CopyFrom(kind);
+        }
+
+        protected void Command_Bind(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Change(IOopContext context)
+        {
+        }
+
+        protected void Command_Char(IOopContext context)
+        {
+            var value = context.ReadNextNumber();
+            if (value >= 0)
+            {
+                context.Actor.P1 = value;
+                context.UpdateBoard(context.Actor.Location);
+            }
+        }
+
+        protected void Command_Clear(IOopContext context)
+        {
+            var flag = context.ReadNextWord();
+            context.Flags.Remove(flag);
+        }
+
+        protected void Command_Cycle(IOopContext context)
+        {
+            var value = context.ReadNextNumber();
+            if (value > 0)
+            {
+                context.Actor.Cycle = value;
+            }
+        }
+
+        protected void Command_Die(IOopContext context)
+        {
+            context.Died = true;
+            context.DeathTile.SetTo(context.Elements.EmptyId, 0);
+        }
+
+        protected void Command_End(IOopContext context)
+        {
+            context.OopByte = 0;
+            context.Instruction = -1;
+        }
+
+        protected void Command_Endgame(IOopContext context)
+        {
+            context.World.Health = 0;
+        }
+
+        private bool ExecuteTransaction(IOopContext context, bool take)
+        {
+            // Does the item exist?
+            var item = GetItem(context);
+            if (item == null)
+                return true;
+
+            // Do we have a valid amount?
+            var amount = context.ReadNextNumber();
+            if (amount <= 0)
+                return true;
+
+            // Modify value if we are taking.
+            if (take)
+                context.OopNumber = -context.OopNumber;
+
+            // Determine if the result will be in range.
+            var pendingAmount = (item.Value + context.OopNumber);
+            if ((pendingAmount & 0xFFFF) >= 0x8000)
+                return true;
+
+            // Successful transaction.
+            item.Value = pendingAmount;
+            return false;
+        }
+
+        protected void Command_Give(IOopContext context)
+        {
+            context.Repeat = ExecuteTransaction(context, false);
+        }
+
+        protected void Command_Go(IOopContext context)
+        {
+            var vector = GetDirection(context);
+            if (vector != null)
+            {
+                var target = context.Actor.Location.Sum(vector);
+                if (!context.ElementAt(target).IsFloor)
+                {
+                    context.Push(target, vector);
+                }
+                if (context.ElementAt(target).IsFloor)
+                {
+                    context.MoveActor(context.Index, target);
+                    context.Moved = true;
+                }
+                else
+                {
+                    context.Repeat = true;
+                }
+            }
+        }
+
+        protected void Command_Idle(IOopContext context)
+        {
+            context.Moved = true;
+        }
+
+        protected void Command_If(IOopContext context)
+        {
+            var condition = GetCondition(context);
+            if (condition.HasValue)
+            {
+                context.Repeat = condition.Value;
+            }
+        }
+
+        protected virtual void Command_Lock(IOopContext context)
+        {
+            context.Actor.P2 = 1;
+        }
+
+        protected void Command_Play(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Put(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Restart(IOopContext context)
+        {
+            context.Instruction = 0;
+            context.NextLine = false;
+        }
+
+        protected void Command_Restore(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Send(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Set(IOopContext context)
+        {
+            var flag = context.ReadNextWord();
+            context.Flags.Add(flag);
+        }
+
+        protected void Command_Shoot(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Take(IOopContext context)
+        {
+            context.Repeat = ExecuteTransaction(context, true);
+        }
+
+        protected void Command_Then(IOopContext context)
+        {
+            // The actual code doesn't work this way.
+            // TODO: Actually implement it without this hack.
+            context.NextLine = false;
+            context.CommandsExecuted--;
+        }
+
+        protected void Command_Throwstar(IOopContext context)
+        {
+
+        }
+
+        protected void Command_Try(IOopContext context)
+        {
+
+        }
+
+        protected virtual void Command_Unlock(IOopContext context)
+        {
+            context.Actor.P2 = 0;
+        }
+
+        protected void Command_Walk(IOopContext context)
+        {
+            var vector = GetDirection(context);
+            if (vector != null)
+            {
+                context.Actor.Vector.CopyFrom(vector);
+            }
+        }
+
+        protected void Command_Zap(IOopContext context)
+        {
+
         }
     }
 }

@@ -84,7 +84,7 @@ namespace Roton.Core
         IList<int> SoundBuffer { get; }
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }
-        SoundsBase Sounds { get; }
+        ISounds Sounds { get; }
         int SoundTicks { get; set; }
         ISpeaker Speaker { get; set; }
         IList<int> StarChars { get; }
@@ -207,5 +207,10 @@ namespace Roton.Core
         void RedrawBoard();
         IXyPair GetCardinalVector(int index);
         IXyPair GetConveyorVector(int index);
+        void PlaySound(int priority, byte[] sound);
+        void SetMessage(int duration, string message, string message2 = "");
+        IElement ElementAt(IXyPair location);
+        void Push(IXyPair location, IXyPair vector);
+        void MoveActor(int index, IXyPair location);
     }
 }

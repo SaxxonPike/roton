@@ -41,7 +41,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override ISerializer Serializer => _disk;
 
-        public override SoundsBase Sounds => _sounds;
+        public override ISounds Sounds => _sounds;
 
         public override IState StateData => _state;
 
