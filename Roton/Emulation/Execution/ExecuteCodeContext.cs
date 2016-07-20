@@ -2,11 +2,11 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class ExecuteCodeContext : ICodeSeekable
+    internal class ExecuteCodeContext : ICodeInstruction
     {
-        private ICodeSeekable _instructionSource;
+        private ICodeInstruction _instructionSource;
 
-        public ExecuteCodeContext(int index, ICodeSeekable instructionSource, string name)
+        public ExecuteCodeContext(int index, ICodeInstruction instructionSource, string name)
         {
             _instructionSource = instructionSource;
             Index = index;

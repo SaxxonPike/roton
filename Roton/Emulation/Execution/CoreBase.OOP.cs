@@ -190,7 +190,7 @@ namespace Roton.Emulation.Execution
             return success ? result : null;
         }
 
-        internal virtual void ExecuteCode(int index, ICodeSeekable instructionSource, string name)
+        internal virtual void ExecuteCode(int index, ICodeInstruction instructionSource, string name)
         {
             var context = new ExecuteCodeContext(index, instructionSource, name);
         }
@@ -413,7 +413,7 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        internal virtual void ReadActorCodeByte(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeByte(int index, ICodeInstruction instructionSource)
         {
             var actor = Actors[index];
             if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
@@ -427,7 +427,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual string ReadActorCodeLine(int index, ICodeSeekable instructionSource)
+        internal virtual string ReadActorCodeLine(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
             ReadActorCodeByte(index, instructionSource);
@@ -439,7 +439,7 @@ namespace Roton.Emulation.Execution
             return result.ToString();
         }
 
-        internal virtual void ReadActorCodeNumber(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeNumber(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
             var success = false;
@@ -478,7 +478,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual void ReadActorCodeWord(int index, ICodeSeekable instructionSource)
+        internal virtual void ReadActorCodeWord(int index, ICodeInstruction instructionSource)
         {
             var result = new StringBuilder();
 

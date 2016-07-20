@@ -63,7 +63,7 @@
     <Compile Include="Emulation\Execution\ExecuteCodeContext.cs" />
     <Compile Include="Emulation\Mapping\Heap.cs" />
     <Compile Include="Core\ICode.cs" />
-    <Compile Include="Core\ICodeSeekable.cs" />
+    <Compile Include="Core\ICodeInstruction.cs" />
     <Compile Include="Emulation\Mapping\MemoryColorArrayBase.cs" />
     <Compile Include="Emulation\Mapping\MemoryString.cs" />
     <Compile Include="Emulation\SuperZZT\Core.Behavior.cs" />

@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface IActor : ICodeSeekable, ICode
+    public interface IActor : ICodeInstruction, ICode
     {
         int Cycle { get; set; }
         int Follower { get; set; }

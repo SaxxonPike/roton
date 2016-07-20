@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface ICodeSeekable
+    public interface ICodeInstruction
     {
         int Instruction { get; set; }
     }
