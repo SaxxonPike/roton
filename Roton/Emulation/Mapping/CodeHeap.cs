@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class CodeHeap
+    public sealed class CodeHeap
     {
         public CodeHeap()
         {

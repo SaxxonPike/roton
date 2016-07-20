@@ -4,7 +4,7 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed class MemoryColorArray : MemoryColorArrayBase
     {
-        public MemoryColorArray(Memory memory)
+        public MemoryColorArray(IMemory memory)
             : base(memory, 0xFFF9)
         {
         }

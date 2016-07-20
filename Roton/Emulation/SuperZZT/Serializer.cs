@@ -5,7 +5,7 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed class Serializer : SerializerBase
     {
-        public Serializer(Memory memory)
+        public Serializer(IMemory memory)
             : base(memory)
         {
         }

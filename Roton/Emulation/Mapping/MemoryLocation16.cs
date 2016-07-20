@@ -1,16 +1,17 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryLocation16 : Location
     {
-        public MemoryLocation16(Memory memory, int offset)
+        public MemoryLocation16(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

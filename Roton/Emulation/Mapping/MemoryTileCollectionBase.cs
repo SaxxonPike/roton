@@ -4,7 +4,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryTileCollectionBase : FixedList<ITile>
     {
-        public MemoryTileCollectionBase(Memory memory, int offset, int width, int height)
+        public MemoryTileCollectionBase(IMemory memory, int offset, int width, int height)
         {
             Memory = memory;
             Offset = offset;
@@ -28,7 +28,7 @@ namespace Roton.Emulation.Mapping
 
         public int Height { get; }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

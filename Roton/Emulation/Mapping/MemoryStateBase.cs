@@ -4,12 +4,12 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryStateBase : State
     {
-        public MemoryStateBase(Memory memory)
+        public MemoryStateBase(IMemory memory)
         {
             Memory = memory;
         }
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
 
         public virtual int SoundBufferLength { get; set; }
     }

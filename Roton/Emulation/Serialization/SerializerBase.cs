@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using Roton.Core;
 using Roton.Emulation.Mapping;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Serialization
 {
     internal abstract class SerializerBase
     {
-        public SerializerBase(Memory memory)
+        public SerializerBase(IMemory memory)
         {
             Memory = memory;
         }
@@ -43,7 +44,7 @@ namespace Roton.Emulation.Serialization
             Memory.Write(WorldDataOffset, header, 0, WorldDataSize);
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         private void PackActors(BinaryWriter target, int count)
         {

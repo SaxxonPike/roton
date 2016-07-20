@@ -4,7 +4,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryActorCollectionBase : FixedList<IActor>
     {
-        protected MemoryActorCollectionBase(Memory memory)
+        protected MemoryActorCollectionBase(IMemory memory)
         {
             Memory = memory;
             Cache = new MemoryActor[Capacity];
@@ -32,6 +32,6 @@ namespace Roton.Emulation.Mapping
 
         protected abstract MemoryActor GetActor(int index);
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
     }
 }

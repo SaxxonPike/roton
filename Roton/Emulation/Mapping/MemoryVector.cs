@@ -1,16 +1,17 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryVector : Vector
     {
-        public MemoryVector(Memory memory, int offset)
+        public MemoryVector(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

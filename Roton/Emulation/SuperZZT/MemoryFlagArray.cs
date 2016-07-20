@@ -4,7 +4,7 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed class MemoryFlagArray : MemoryFlagArrayBase
     {
-        public MemoryFlagArray(Memory memory)
+        public MemoryFlagArray(IMemory memory)
             : base(memory, 0x7863 + 21)
         {
         }

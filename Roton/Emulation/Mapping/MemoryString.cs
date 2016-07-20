@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Mapping
+﻿using Roton.Extensions;
+
+namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryString
     {
@@ -7,13 +9,13 @@
             return source.ToString();
         }
 
-        public MemoryString(Memory memory, int offset)
+        public MemoryString(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

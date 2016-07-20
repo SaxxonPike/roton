@@ -6,7 +6,7 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed class MemoryBoard : MemoryBoardBase
     {
-        public MemoryBoard(Memory memory)
+        public MemoryBoard(IMemory memory)
             : base(memory)
         {
             Camera = new Location();

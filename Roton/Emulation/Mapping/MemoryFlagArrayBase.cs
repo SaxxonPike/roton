@@ -1,10 +1,11 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryFlagArrayBase : FixedList<string>
     {
-        public MemoryFlagArrayBase(Memory memory, int offset)
+        public MemoryFlagArrayBase(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
@@ -28,7 +29,7 @@ namespace Roton.Emulation.Mapping
             }
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
     }

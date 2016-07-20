@@ -4,11 +4,11 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryBoardBase : Board
     {
-        public MemoryBoardBase(Memory memory)
+        public MemoryBoardBase(IMemory memory)
         {
             Memory = memory;
         }
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
     }
 }

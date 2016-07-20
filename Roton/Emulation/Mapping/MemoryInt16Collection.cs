@@ -1,10 +1,11 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryInt16Collection : FixedList<int>
     {
-        public MemoryInt16Collection(Memory memory, int offset, int count)
+        public MemoryInt16Collection(IMemory memory, int offset, int count)
         {
             Memory = memory;
             Offset = offset;
@@ -23,7 +24,7 @@ namespace Roton.Emulation.Mapping
 
         public override int Count { get; }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
     }

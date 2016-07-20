@@ -20,7 +20,7 @@ namespace Roton.Emulation.ZZT
         private readonly MemoryInt16Collection _vector4;
         private readonly MemoryInt16Collection _vector8;
 
-        public MemoryState(Memory memory)
+        public MemoryState(IMemory memory)
             : base(memory)
         {
             memory.Write(0x0000, Properties.Resources.zztextra);

@@ -1,11 +1,12 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Models;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryActor : Actor
     {
-        public MemoryActor(Memory memory, int offset)
+        public MemoryActor(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
@@ -51,7 +52,7 @@ namespace Roton.Emulation.Mapping
 
         public override IXyPair Location => new MemoryLocation(Memory, Offset + 0x00);
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

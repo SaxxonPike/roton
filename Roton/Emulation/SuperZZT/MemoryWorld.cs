@@ -1,10 +1,11 @@
 ﻿using Roton.Emulation.Mapping;
+using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
     internal sealed class MemoryWorld : MemoryWorldBase
     {
-        public MemoryWorld(Memory memory)
+        public MemoryWorld(IMemory memory)
             : base(memory, -2)
         {
         }

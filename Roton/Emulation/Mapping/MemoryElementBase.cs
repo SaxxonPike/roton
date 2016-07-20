@@ -5,7 +5,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryElementBase : Element
     {
-        public MemoryElementBase(Memory memory, int offset)
+        public MemoryElementBase(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
@@ -29,7 +29,7 @@ namespace Roton.Emulation.Mapping
         {
         }
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
 
         public int Offset { get; private set; }
     }

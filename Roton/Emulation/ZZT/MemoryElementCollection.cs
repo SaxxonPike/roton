@@ -4,7 +4,7 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed partial class MemoryElementCollection
     {
-        public MemoryElementCollection(Memory memory)
+        public MemoryElementCollection(IMemory memory)
             : base(memory)
         {
             memory.Write(0x4AD4, Properties.Resources.zztelement);

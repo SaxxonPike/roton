@@ -1,10 +1,11 @@
 ﻿using Roton.Emulation.Mapping;
+using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
     internal sealed class MemoryElement : MemoryElementBase
     {
-        public MemoryElement(Memory memory, int index)
+        public MemoryElement(IMemory memory, int index)
             : base(memory, 0x7CAA + index*0x00C2)
         {
             Id = index;

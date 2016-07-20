@@ -5,7 +5,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryElementCollectionBase : FixedList<IElement>
     {
-        protected MemoryElementCollectionBase(Memory memory)
+        protected MemoryElementCollectionBase(IMemory memory)
         {
             Memory = memory;
             Cache = new MemoryElementBase[Count];
@@ -413,6 +413,6 @@ namespace Roton.Emulation.Mapping
 
         protected abstract MemoryElementBase GetElement(int index);
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
     }
 }

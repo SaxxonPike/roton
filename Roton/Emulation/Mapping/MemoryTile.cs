@@ -4,7 +4,7 @@ namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryTile : Tile
     {
-        public MemoryTile(Memory memory, int offset)
+        public MemoryTile(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
@@ -22,7 +22,7 @@ namespace Roton.Emulation.Mapping
             set { Memory.Write8(Offset + 0x00, value); }
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
     }

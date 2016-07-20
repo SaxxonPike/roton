@@ -4,13 +4,13 @@ namespace Roton.Emulation.Mapping
 {
     internal sealed class MemoryLocation : Location
     {
-        public MemoryLocation(Memory memory, int offset)
+        public MemoryLocation(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public int Offset { get; }
 

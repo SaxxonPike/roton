@@ -1,10 +1,11 @@
 ﻿using Roton.Emulation.Mapping;
+using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
     internal class MemoryActorCollection : MemoryActorCollectionBase
     {
-        public MemoryActorCollection(Memory memory)
+        public MemoryActorCollection(IMemory memory)
             : base(memory)
         {
         }

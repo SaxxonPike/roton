@@ -326,7 +326,7 @@ namespace Roton.Emulation.Execution
             set { StateData.MainTime = value; }
         }
 
-        public Memory Memory { get; }
+        public IMemory Memory { get; }
 
         public string Message
         {

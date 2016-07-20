@@ -5,7 +5,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryWorldBase : World
     {
-        public MemoryWorldBase(Memory memory, int worldType)
+        public MemoryWorldBase(IMemory memory, int worldType)
         {
             Memory = memory;
         }
@@ -26,6 +26,6 @@ namespace Roton.Emulation.Mapping
             protected set { }
         }
 
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
     }
 }
