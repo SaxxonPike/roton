@@ -22,7 +22,7 @@ namespace Roton.Core
         ITile BorderTile { get; }
         bool BreakGameLoop { get; set; }
         bool CancelScroll { get; set; }
-        IList<string> Colors { get; }
+        IColorList Colors { get; }
         IActor DefaultActor { get; }
         string DefaultBoardName { get; set; }
         string DefaultSaveName { get; set; }

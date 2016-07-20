@@ -415,9 +415,14 @@ namespace Roton.Emulation.Execution
                         }
 
                         // Move follower segment
-                        if (segment.Follower > 0)
+                        var followerIndex = segment.Follower;
+                        if (followerIndex == segmentIndex)
                         {
-                            var follower = Actors[segment.Follower];
+                            throw Exceptions.SelfReferenceCentipede;
+                        }
+                        else if (followerIndex > 0)
+                        {
+                            var follower = Actors[followerIndex];
                             follower.Leader = segmentIndex;
                             follower.P1 = segment.P1;
                             follower.P2 = segment.P2;

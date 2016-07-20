@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\IActorList.cs" />
+    <Compile Include="Core\IColorList.cs" />
     <Compile Include="Core\ICore.cs" />
     <Compile Include="Core\IElementList.cs" />
     <Compile Include="Core\IFlagList.cs" />

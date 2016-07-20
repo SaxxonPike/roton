@@ -3,9 +3,9 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class MemoryColorArrayBase : FixedList<string>
+    internal abstract class MemoryColorArrayBase : FixedList<string>, IColorList
     {
-        public MemoryColorArrayBase(IMemory memory, int offset)
+        protected MemoryColorArrayBase(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

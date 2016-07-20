@@ -31,7 +31,7 @@ namespace Roton.Core
         bool BreakGameLoop { get; set; }
         IXyPair Camera { get; set; }
         bool CancelScroll { get; set; }
-        IList<string> Colors { get; }
+        IColorList Colors { get; }
         bool Dark { get; set; }
         IActor DefaultActor { get; }
         string DefaultBoardName { get; set; }

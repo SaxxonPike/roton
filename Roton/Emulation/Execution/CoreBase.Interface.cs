@@ -151,7 +151,7 @@ namespace Roton.Emulation.Execution
             set { StateData.CancelScroll = value; }
         }
 
-        public IList<string> Colors => StateData.Colors;
+        public IColorList Colors => StateData.Colors;
 
         public bool Dark
         {

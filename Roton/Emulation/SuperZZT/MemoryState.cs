@@ -137,7 +137,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.WriteBool(0x7C9E, value); }
         }
 
-        public override IList<string> Colors
+        public override IColorList Colors
         {
             get { return _colors; }
             protected set { }
