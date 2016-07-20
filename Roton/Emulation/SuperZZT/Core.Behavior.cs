@@ -26,18 +26,6 @@ namespace Roton.Emulation.SuperZZT
             base.EnterBoard();
         }
 
-        internal override void ExecuteCode_Lock(OopContext context)
-        {
-            // Super ZZT uses P3 for lock instead of P2.
-            context.Actor.P3 = 1;
-        }
-
-        internal override void ExecuteCode_Unlock(OopContext context)
-        {
-            // Super ZZT uses P3 for lock instead of P2.
-            context.Actor.P3 = 0;
-        }
-
         protected override void ExecutePassageCleanup()
         {
             // Passage holes were fixed in Super ZZT
