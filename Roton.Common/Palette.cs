@@ -1,6 +1,8 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using Roton.Common.Properties;
+using Roton.Common.Resources;
 using Roton.Core;
 
 namespace Roton.Common
@@ -12,7 +14,8 @@ namespace Roton.Common
         /// </summary>
         public Palette()
         {
-            Initialize(Resources.vgapalette);
+            var resources = new CommonResourceZipFileSystem(Properties.Resources.resources);
+            Initialize(resources.GetPalette());
         }
 
         /// <summary>
@@ -26,7 +29,7 @@ namespace Roton.Common
         /// <summary>
         /// Create a palette from raw data.
         /// </summary>
-        public Palette(byte[] source)
+        public Palette(IList<byte> source)
         {
             Initialize(source);
         }
@@ -68,9 +71,9 @@ namespace Roton.Common
             return (byte) (result & 0xFF);
         }
 
-        private void Initialize(byte[] palette)
+        private void Initialize(IList<byte> palette)
         {
-            if (palette.Length < 48)
+            if (palette.Count < 48)
             {
                 throw Exceptions.InvalidPalette;
             }

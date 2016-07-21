@@ -4,10 +4,11 @@ namespace Roton.Core
 {
     public interface IFileSystem
     {
-        void ChangeDirectory(string relativeDirectory);
-        IList<string> GetDirectories();
-        IList<string> GetFiles();
-        byte[] ReadFile(string filename);
-        void WriteFile(string filename, byte[] data);
+        string GetCombinedPath(params string[] paths);
+        IEnumerable<string> GetDirectoryNames(string path);
+        byte[] GetFile(string path);
+        IEnumerable<string> GetFileNames(string path);
+        string GetParentPath(string path);
+        void PutFile(string path, byte[] data);
     }
 }

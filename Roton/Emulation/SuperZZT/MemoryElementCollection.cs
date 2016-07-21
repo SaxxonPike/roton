@@ -5,10 +5,10 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class MemoryElementCollection
     {
-        public MemoryElementCollection(IMemory memory)
+        public MemoryElementCollection(IMemory memory, byte[] elementBytes)
             : base(memory)
         {
-            memory.Write(0x7CAA, Properties.Resources.szztelement);
+            memory.Write(0x7CAA, elementBytes);
         }
 
         protected override IElement GetElement(int index)

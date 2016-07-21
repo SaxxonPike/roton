@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Roton.Resources;
 
 namespace Roton.Core
 {
@@ -6,11 +7,7 @@ namespace Roton.Core
     {
         private const int MaxGameCycle = 420;
 
-        public Context(string filename, bool editor) : this(File.ReadAllBytes(filename), editor)
-        {
-        }
-
-        private Context(byte[] data, bool editor)
+        public Context(byte[] data, bool editor)
         {
             using (var mem = new MemoryStream(data))
             {
@@ -55,17 +52,18 @@ namespace Roton.Core
 
         private void Initialize(ContextEngine engine, bool editor)
         {
+            var resources = new ResourceZipFileSystem(Properties.Resources.resources);
             ContextEngine = engine;
             switch (engine)
             {
                 case ContextEngine.Zzt:
-                    Core = new Emulation.ZZT.Core();
+                    Core = new Emulation.ZZT.Core(resources.GetZztMemoryData(), resources.GetZztElementData());
                     ScreenWidth = 80;
                     ScreenHeight = 25;
                     ScreenWide = false;
                     break;
                 case ContextEngine.SuperZzt:
-                    Core = new Emulation.SuperZZT.Core();
+                    Core = new Emulation.SuperZZT.Core(resources.GetSuperZztMemoryData(), resources.GetSuperZztElementData());
                     ScreenWidth = 40;
                     ScreenHeight = 25;
                     ScreenWide = true;
@@ -83,7 +81,7 @@ namespace Roton.Core
 
             Core.ClearWorld();
             Core.EditorMode = editor;
-            Core.Disk = new FileSystem();
+            Core.Disk = new DiskFileSystem();
         }
 
         private void Initialize(Stream stream, bool editor)

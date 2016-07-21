@@ -1,14 +1,16 @@
 ﻿using Roton.Common;
 using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
+using Roton.Common.Resources;
 using Roton.Core;
 
 namespace Roton.WinForms
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {
-        private static System.Text.Encoding _encoding = System.Text.Encoding.GetEncoding(437);
+        private static readonly Encoding CodePage437 = Encoding.GetEncoding(437);
 
         private bool _cursorEnabled;
         private int _cursorX;
@@ -17,7 +19,7 @@ namespace Roton.WinForms
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
-        private Common.Font _terminalFont;
+        private RasterFont _terminalFont;
         private int _terminalHeight;
         private Palette _terminalPalette;
         private bool _terminalWide;
@@ -27,9 +29,13 @@ namespace Roton.WinForms
         public Terminal()
         {
             // Initialize a default font/palette in case one isn't defined.
-            _terminalFont = new Common.Font();
+            _terminalFont = new RasterFont();
             _terminalPalette = new Palette();
+            Initialize();
+        }
 
+        private void Initialize()
+        {
             _keys = new KeysBuffer();
             _cursorEnabled = false;
             InitializeComponent();
@@ -182,7 +188,7 @@ namespace Roton.WinForms
 
         private void OnLoad(object sender, EventArgs e)
         {
-            _terminalFont = new Common.Font();
+            _terminalFont = new Common.RasterFont();
             _terminalPalette = new Palette();
             SetSize(80, 25, false);
             BlinkEnabled = true;
@@ -338,7 +344,7 @@ namespace Roton.WinForms
             set { _keys.Shift = value; }
         }
 
-        public Common.Font TerminalFont
+        public Common.RasterFont TerminalFont
         {
             get { return _terminalFont; }
             set
@@ -429,7 +435,7 @@ namespace Roton.WinForms
         public void Write(int x, int y, string value, int color)
         {
             var ac = new AnsiChar {Color = color};
-            var characters = _encoding.GetBytes(value);
+            var characters = CodePage437.GetBytes(value);
             var count = characters.Length;
 
             while (x < 0)

@@ -38,7 +38,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
+    <Compile Include="Core\IFileSystem.cs" />
     <Compile Include="Core\ICheat.cs" />
     <Compile Include="Core\IColorList.cs" />
     <Compile Include="Core\ICore.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Core\ISerializer.cs" />
     <Compile Include="Core\ITileGrid.cs" />
     <Compile Include="Core\IOopContext.cs" />
+    <Compile Include="Core\ZipFileSystem.cs" />
     <Compile Include="Emulation\Execution\GrammarBase.cs" />
     <Compile Include="Emulation\Execution\ISounds.cs" />
     <Compile Include="Emulation\Execution\OopItem.cs" />
@@ -75,7 +78,6 @@
     <Compile Include="Emulation\Execution\CoreBase.Sound.cs" />
     <Compile Include="Emulation\Execution\CoreBase.Utility.cs" />
     <Compile Include="Emulation\Timing\CoreTimer.cs" />
-    <Compile Include="Emulation\Serialization\DatArchive.cs" />
     <Compile Include="Emulation\Execution\OopContext.cs" />
     <Compile Include="Emulation\Mapping\Heap.cs" />
     <Compile Include="Core\ICode.cs" />
@@ -90,7 +92,6 @@
     <Compile Include="Emulation\ZZT\MemoryColorArray.cs" />
     <Compile Include="Extensions\ActorExtensions.cs" />
     <Compile Include="Extensions\XyPairExtensions.cs" />
-    <Compile Include="Core\FileSystem.cs" />
     <Compile Include="Core\IActor.cs" />
     <Compile Include="Core\IBoard.cs" />
     <Compile Include="Core\IDisplayInfo.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Emulation\ZZT\MemoryTileCollection.cs" />
     <Compile Include="Emulation\ZZT\Sounds.cs" />
     <Compile Include="Emulation\ZZT\TerminalHud.cs" />
-    <Compile Include="Core\IFileSystem.cs" />
     <Compile Include="Core\IKeyboard.cs" />
     <Compile Include="Core\ISpeaker.cs" />
     <Compile Include="Core\IState.cs" />
@@ -171,6 +171,8 @@
     <Compile Include="Core\Utility.cs" />
     <Compile Include="Core\Vector.cs" />
     <Compile Include="Emulation\Models\World.cs" />
+    <Compile Include="Resources\IResourceArchive.cs" />
+    <Compile Include="Resources\ResourceZipFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -180,11 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\szztelement.bin" />
-    <None Include="Resources\szztextra.bin" />
-    <None Include="Resources\ZZT.DAT" />
-    <None Include="Resources\zztelement.bin" />
-    <None Include="Resources\zztextra.bin" />
+    <None Include="Resources\resources.zip" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,11 +4,11 @@ namespace Roton.Common
 {
     internal static class Exceptions
     {
-        public static Exception InvalidFont = new FormatException(
+        public static readonly Exception InvalidFont = new FormatException(
             "The font format is invalid."
             );
 
-        public static Exception InvalidPalette = new FormatException(
+        public static readonly Exception InvalidPalette = new FormatException(
             "The palette format is invalid."
             );
     }

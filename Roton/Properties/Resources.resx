@@ -118,19 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="szztelement" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\szztelement.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="szztextra" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\szztextra.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="zztdat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ZZT.DAT;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="zztelement" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zztelement.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="zztextra" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zztextra.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="resources" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\resources.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

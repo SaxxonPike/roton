@@ -17,7 +17,7 @@ namespace Torch
 
         public Editor(bool openGl = false)
         {
-            var font1 = new Roton.Common.Font();
+            var font1 = new Roton.Common.RasterFont();
             var palette1 = new Roton.Common.Palette();
 
             InitializeComponent();
@@ -791,7 +791,7 @@ namespace Torch
             var ofd = new OpenFileDialog {Filter = FileFilters};
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
-            Context = new Context(ofd.FileName, true);
+            Context = new Context(File.ReadAllBytes(ofd.FileName), true);
             WorldFileName = ofd.FileName;
         }
 

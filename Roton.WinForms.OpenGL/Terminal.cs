@@ -21,7 +21,7 @@ namespace Roton.WinForms.OpenGL
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
-        private Common.Font _terminalFont;
+        private Common.RasterFont _terminalFont;
         private int _terminalHeight;
         private Palette _terminalPalette;
         private int _terminalWidth;
@@ -45,7 +45,7 @@ namespace Roton.WinForms.OpenGL
             InitializeComponent();
 
             // Initialize font and palette.
-            _terminalFont = new Common.Font();
+            _terminalFont = new Common.RasterFont();
             _terminalPalette = new Palette();
 
             // Set default scale.
@@ -399,7 +399,7 @@ namespace Roton.WinForms.OpenGL
             GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
-        public Common.Font TerminalFont
+        public Common.RasterFont TerminalFont
         {
             get { return _terminalFont; }
             set

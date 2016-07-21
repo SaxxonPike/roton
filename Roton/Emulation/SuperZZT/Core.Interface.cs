@@ -17,15 +17,15 @@ namespace Roton.Emulation.SuperZZT
         private readonly MemoryTileCollection _tiles;
         private readonly MemoryWorld _world;
 
-        public Core()
+        public Core(byte[] memoryBytes, byte[] elementBytes)
         {
             _actors = new MemoryActorCollection(Memory);
             _board = new MemoryBoard(Memory);
             _disk = new Serializer(Memory);
             _hud = new TerminalHud(this);
-            _elements = new MemoryElementCollection(Memory);
+            _elements = new MemoryElementCollection(Memory, elementBytes);
             _sounds = new Sounds();
-            _state = new MemoryState(Memory);
+            _state = new MemoryState(Memory, memoryBytes);
             _tiles = new MemoryTileCollection(Memory);
             _world = new MemoryWorld(Memory);
             InitializeElementDelegates();

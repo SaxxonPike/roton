@@ -21,10 +21,10 @@ namespace Roton.Emulation.SuperZZT
         private readonly MemoryInt16Collection _vector8;
         private readonly MemoryStringByteCollection _webChars;
 
-        public MemoryState(IMemory memory)
+        public MemoryState(IMemory memory, byte[] memoryBytes)
             : base(memory)
         {
-            memory.Write(0x0000, Properties.Resources.szztextra);
+            memory.Write(0x0000, memoryBytes);
 
             _borderTile = new Tile(0, 0); //Super ZZT doesn't keep this in game memory; it's in code
             _colors = new MemoryColorArray(Memory);

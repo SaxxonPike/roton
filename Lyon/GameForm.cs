@@ -15,7 +15,7 @@ namespace Lyon
         private void CommonSetup()
         {
             // Set up default font and palette.
-            var font1 = new Font();
+            var font1 = new RasterFont();
             var palette1 = new Palette();
 
             InitializeComponent();
@@ -117,7 +117,7 @@ namespace Lyon
             var ofd = new OpenFileDialog {Filter = FileFilters};
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Initialize(new Context(ofd.FileName, false));
+                Initialize(new Context(File.ReadAllBytes(ofd.FileName), false));
             }
         }
 

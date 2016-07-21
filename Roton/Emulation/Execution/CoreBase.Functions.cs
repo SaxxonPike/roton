@@ -673,7 +673,7 @@ namespace Roton.Emulation.Execution
         {
             try
             {
-                return Disk.ReadFile(filename);
+                return Disk.GetFile(filename);
             }
             catch (Exception)
             {

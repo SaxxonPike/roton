@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using Roton.Common.Resources;
 using Roton.Core;
 
 namespace Roton.Common
 {
-    public sealed class Font : FixedList<Glyph>
+    public sealed class RasterFont : FixedList<Glyph>
     {
         /// <summary>
         /// Create a font with the default glyphs.
         /// </summary>
-        public Font()
+        public RasterFont()
         {
-            Initialize(FontDefault.BestFit);
+            var resources = new CommonResourceZipFileSystem(Properties.Resources.resources);
+            Initialize(resources.GetFont());
         }
 
         /// <summary>
         /// Load a font from the specified file.
         /// </summary>
-        public Font(string filename)
+        public RasterFont(string filename)
         {
             Initialize(File.ReadAllBytes(filename));
         }
@@ -26,23 +28,15 @@ namespace Roton.Common
         /// <summary>
         /// Create a font from raw data.
         /// </summary>
-        public Font(byte[] font)
+        public RasterFont(byte[] font)
         {
             Initialize(font);
         }
 
         /// <summary>
-        /// Create a font from a specific set of internally defined glyphs.
-        /// </summary>
-        public Font(FontDefault fontDefault)
-        {
-            Initialize(fontDefault);
-        }
-
-        /// <summary>
         /// Load a font from the specified stream. The length must be specified because raw data may lack a header.
         /// </summary>
-        public Font(Stream source, int length)
+        public RasterFont(Stream source, int length)
         {
             var font = new byte[length];
             source.Read(font, 0, length);
@@ -58,37 +52,6 @@ namespace Roton.Common
         private Glyph[] GlyphsUnscaled { get; set; }
 
         public int Height { get; private set; }
-
-        private void Initialize(FontDefault fd)
-        {
-            byte[] font;
-
-            // todo: allow user to specify desired pixel dimensions of target window
-            // so we can more accurately determine the real best fit
-            if (fd == FontDefault.BestFit)
-            {
-                fd = FontDefault.Height14;
-            }
-
-            // select the font resource to use
-            switch (fd)
-            {
-                case FontDefault.Height8:
-                    font = Properties.Resources.vgaromf08;
-                    break;
-                case FontDefault.Height14:
-                    font = Properties.Resources.vgaromf14;
-                    break;
-                case FontDefault.Height16:
-                    font = Properties.Resources.vgaromf16;
-                    break;
-                default:
-                    throw Exceptions.InvalidFont;
-            }
-
-            // continue initialization
-            Initialize(font);
-        }
 
         private void Initialize(byte[] font)
         {

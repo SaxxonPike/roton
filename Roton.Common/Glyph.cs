@@ -70,11 +70,10 @@ namespace Roton.Common
         {
             var length = PixelCount;
             var result = new int[length];
-            int mask;
 
             for (var index = 0; index < length; index++)
             {
-                mask = Data[index];
+                var mask = Data[index];
                 result[index] = Black | (mask & foreColor) | ((mask ^ ColorMask) & backColor);
             }
 
@@ -125,6 +124,6 @@ namespace Roton.Common
         /// <summary>
         /// Width of the glyph.
         /// </summary>
-        public int Width { get; set; }
+        public int Width { get; }
     }
 }

@@ -4,7 +4,7 @@ namespace Roton.Common
 {
     public interface IGameTerminal : ITerminal
     {
-        Font TerminalFont { get; set; }
+        RasterFont TerminalFont { get; set; }
         Palette TerminalPalette { get; set; }
     }
 }
