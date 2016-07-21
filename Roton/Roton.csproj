@@ -40,7 +40,7 @@
   <ItemGroup>
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
-    <Compile Include="Core\IFileSystem.cs" />
+    <Compile Include="FileIo\IFileSystem.cs" />
     <Compile Include="Core\ICheat.cs" />
     <Compile Include="Core\IColorList.cs" />
     <Compile Include="Core\ICore.cs" />
