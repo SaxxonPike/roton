@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Execution
 {
-    public class SoundsCommon : SoundsBase
+    internal class SoundCollectionBase : SoundsBase
     {
         public override byte[] Ammo => new byte[]
         {

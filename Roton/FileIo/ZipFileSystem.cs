@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
-using Roton.Core;
 
 namespace Roton.FileIo
 {
@@ -37,7 +36,7 @@ namespace Roton.FileIo
             using (var archiveStream = new MemoryStream(_file))
             using (var archive = ZipFile.Read(archiveStream))
             {
-                var entry = archive.Entries.First(e => e.FileName == filename);
+                var entry = archive.Entries.FirstOrDefault(e => e.FileName == filename);
                 if (entry == null)
                     return null;
 

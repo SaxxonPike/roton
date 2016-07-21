@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class Sounds : SoundsCommon
+    internal sealed class Sounds : SoundCollectionBase
     {
         public override byte[] Forest => new byte[]
         {

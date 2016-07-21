@@ -11,11 +11,7 @@ namespace Roton.Emulation.SuperZZT
         {
         }
 
-        public override IXyPair Camera
-        {
-            get { return new MemoryLocation16(Memory, 0x776F); }
-            set { new MemoryLocation16(Memory, 0x776F).CopyFrom(value); }
-        }
+        public override IXyPair Camera => new MemoryLocation16(Memory, 0x776F);
 
         public override bool Dark
         {
@@ -23,11 +19,7 @@ namespace Roton.Emulation.SuperZZT
             set { }
         }
 
-        public override IXyPair Enter
-        {
-            get { return new MemoryLocation(Memory, 0x776D); }
-            set { new MemoryLocation(Memory, 0x776D).CopyFrom(value); }
-        }
+        public override IXyPair Enter => new MemoryLocation(Memory, 0x776D);
 
         public override int ExitEast
         {

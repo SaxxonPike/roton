@@ -40,7 +40,7 @@ namespace Roton.Core
         bool KeyArrow { get; set; }
         int KeyPressed { get; set; }
         bool KeyShift { get; set; }
-        IXyPair KeyVector { get; set; }
+        IXyPair KeyVector { get; }
         IList<int> LineChars { get; }
         int MainTime { get; set; }
         string Message { get; set; }
@@ -52,6 +52,7 @@ namespace Roton.Core
         int PlayerTime { get; set; }
         bool QuitZzt { get; set; }
         IList<int> SoundBuffer { get; }
+        int SoundBufferLength { get; set; }
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }
         int SoundTicks { get; set; }

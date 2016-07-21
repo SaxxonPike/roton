@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Emulation.Models;
 
 namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryWorldBase : World
     {
-        public MemoryWorldBase(IMemory memory, int worldType)
+        protected MemoryWorldBase(IMemory memory)
         {
             Memory = memory;
         }

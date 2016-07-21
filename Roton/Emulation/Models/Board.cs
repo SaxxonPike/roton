@@ -7,19 +7,14 @@ namespace Roton.Emulation.Models
         protected Board()
         {
             if (Camera == null)
-            {
                 Camera = new Location();
-            }
-
             if (Enter == null)
-            {
                 Enter = new Location();
-            }
         }
 
-        public virtual IXyPair Camera { get; set; }
+        public virtual IXyPair Camera { get; }
         public virtual bool Dark { get; set; }
-        public virtual IXyPair Enter { get; set; }
+        public virtual IXyPair Enter { get; }
         public virtual int ExitEast { get; set; }
         public virtual int ExitNorth { get; set; }
         public virtual int ExitSouth { get; set; }

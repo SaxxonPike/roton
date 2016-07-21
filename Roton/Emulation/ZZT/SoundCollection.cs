@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class Sounds : SoundsCommon
+    internal sealed class SoundCollection : SoundCollectionBase
     {
     }
 }

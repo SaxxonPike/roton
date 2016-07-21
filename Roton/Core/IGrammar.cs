@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Emulation.Execution;
-
-namespace Roton.Core
+﻿namespace Roton.Core
 {
     public interface IGrammar
     {

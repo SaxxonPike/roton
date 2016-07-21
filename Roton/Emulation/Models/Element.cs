@@ -5,11 +5,6 @@ namespace Roton.Emulation.Models
 {
     internal class Element : IElement
     {
-        internal Element()
-        {
-            Id = -1;
-        }
-
         public virtual Action<int> Act { get; set; }
         public virtual string BoardEditText { get; set; }
         public virtual string EditorCategory { get; set; }
@@ -22,7 +17,7 @@ namespace Roton.Emulation.Models
         public virtual bool HasDrawCode { get; set; }
         public virtual bool IsEditorFloor { get; set; }
         public virtual bool IsFloor { get; set; }
-        public virtual int Id { get; set; }
+        public virtual int Id { get; set; } = -1;
         public virtual Action<IXyPair, int, IXyPair> Interact { get; set; }
         public virtual int MenuKey { get; set; }
         public virtual string KnownName { get; set; }

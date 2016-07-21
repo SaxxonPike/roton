@@ -7,7 +7,7 @@ namespace Roton.Emulation.SuperZZT
     internal sealed class MemoryWorld : MemoryWorldBase
     {
         public MemoryWorld(IMemory memory)
-            : base(memory, -2)
+            : base(memory)
         {
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Roton.Core
+﻿namespace Roton.Core
 {
     public interface IDisplayInfo
     {

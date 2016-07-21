@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal class MemoryActorCollection : MemoryActorCollectionBase
+    internal sealed class MemoryActorCollection : MemoryActorCollectionBase
     {
         public MemoryActorCollection(IMemory memory)
             : base(memory)

@@ -5,9 +5,8 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class MemoryState : MemoryStateBase
+    internal sealed class MemoryState : IState
     {
-        private readonly ITile _borderTile;
         private readonly MemoryColorArray _colors;
         private readonly MemoryActor _defaultActor;
         private readonly MemoryTile _edgeTile;
@@ -21,366 +20,326 @@ namespace Roton.Emulation.SuperZZT
         private readonly MemoryInt16Collection _vector8;
         private readonly MemoryStringByteCollection _webChars;
 
+        private readonly IMemory _memory;
+
         public MemoryState(IMemory memory, byte[] memoryBytes)
-            : base(memory)
         {
+            _memory = memory;
             memory.Write(0x0000, memoryBytes);
 
-            _borderTile = new Tile(0, 0); //Super ZZT doesn't keep this in game memory; it's in code
-            _colors = new MemoryColorArray(Memory);
-            _defaultActor = new MemoryActor(Memory, 0x2262);
-            _edgeTile = new MemoryTile(Memory, 0x2260);
-            _keyVector = new MemoryVector(Memory, 0xCC6E);
-            _lineChars = new MemoryStringByteCollection(Memory, 0x22BA);
-            _soundBuffer = new MemoryInt16Collection(Memory, 0xCF9F, 127);
-            _starChars = new MemoryStringByteCollection(Memory, 0x2064);
-            _transporterHChars = new MemoryStringByteCollection(Memory, 0x1F64);
-            _transporterVChars = new MemoryStringByteCollection(Memory, 0x1E64);
-            _vector4 = new MemoryInt16Collection(Memory, 0x2250, 8);
-            _vector8 = new MemoryInt16Collection(Memory, 0x2230, 16);
-            _webChars = new MemoryStringByteCollection(Memory, 0x227C);
+            BorderTile = new Tile(0, 0); //Super ZZT doesn't keep this in game memory; it's in code
+            _colors = new MemoryColorArray(_memory);
+            _defaultActor = new MemoryActor(_memory, 0x2262);
+            _edgeTile = new MemoryTile(_memory, 0x2260);
+            _keyVector = new MemoryVector(_memory, 0xCC6E);
+            _lineChars = new MemoryStringByteCollection(_memory, 0x22BA);
+            _soundBuffer = new MemoryInt16Collection(_memory, 0xCF9F, 127);
+            _starChars = new MemoryStringByteCollection(_memory, 0x2064);
+            _transporterHChars = new MemoryStringByteCollection(_memory, 0x1F64);
+            _transporterVChars = new MemoryStringByteCollection(_memory, 0x1E64);
+            _vector4 = new MemoryInt16Collection(_memory, 0x2250, 8);
+            _vector8 = new MemoryInt16Collection(_memory, 0x2230, 16);
+            _webChars = new MemoryStringByteCollection(_memory, 0x227C);
         }
 
-        public override int ActIndex
+        public bool AboutShown { get; set; }
+
+        public int ActIndex
         {
-            get { return Memory.Read16(0xB95A); }
-            set { Memory.Write16(0xB95A, value); }
+            get { return _memory.Read16(0xB95A); }
+            set { _memory.Write16(0xB95A, value); }
         }
 
-        public override int ActorCount
+        public int ActorCount
         {
-            get { return Memory.Read16(0x6AB3); }
-            set { Memory.Write16(0x6AB3, value); }
+            get { return _memory.Read16(0x6AB3); }
+            set { _memory.Write16(0x6AB3, value); }
         }
 
-        public override bool AlertAmmo
+        public bool AlertAmmo
         {
-            get { return Memory.ReadBool(0x7C0B); }
-            set { Memory.WriteBool(0x7C0B, value); }
+            get { return _memory.ReadBool(0x7C0B); }
+            set { _memory.WriteBool(0x7C0B, value); }
         }
 
-        public override bool AlertDark
-        {
-            get { return false; }
-            set { }
-        }
-
-        public override bool AlertEnergy
-        {
-            get { return Memory.ReadBool(0x7C11); }
-            set { Memory.WriteBool(0x7C11, value); }
-        }
-
-        public override bool AlertFake
-        {
-            get { return Memory.ReadBool(0x7C0F); }
-            set { Memory.WriteBool(0x7C0F, value); }
-        }
-
-        public override bool AlertForest
-        {
-            get { return Memory.ReadBool(0x7C0E); }
-            set { Memory.WriteBool(0x7C0E, value); }
-        }
-
-        public override bool AlertGem
-        {
-            get { return Memory.ReadBool(0x7C10); }
-            set { Memory.WriteBool(0x7C10, value); }
-        }
-
-        public override bool AlertNoAmmo
-        {
-            get { return Memory.ReadBool(0x7C0C); }
-            set { Memory.WriteBool(0x7C0C, value); }
-        }
-
-        public override bool AlertNoShoot
-        {
-            get { return Memory.ReadBool(0x7C0D); }
-            set { Memory.WriteBool(0x7C0D, value); }
-        }
-
-        public override bool AlertNotDark
+        public bool AlertDark
         {
             get { return false; }
             set { }
         }
 
-        public override bool AlertNoTorch
+        public bool AlertEnergy
+        {
+            get { return _memory.ReadBool(0x7C11); }
+            set { _memory.WriteBool(0x7C11, value); }
+        }
+
+        public bool AlertFake
+        {
+            get { return _memory.ReadBool(0x7C0F); }
+            set { _memory.WriteBool(0x7C0F, value); }
+        }
+
+        public bool AlertForest
+        {
+            get { return _memory.ReadBool(0x7C0E); }
+            set { _memory.WriteBool(0x7C0E, value); }
+        }
+
+        public bool AlertGem
+        {
+            get { return _memory.ReadBool(0x7C10); }
+            set { _memory.WriteBool(0x7C10, value); }
+        }
+
+        public bool AlertNoAmmo
+        {
+            get { return _memory.ReadBool(0x7C0C); }
+            set { _memory.WriteBool(0x7C0C, value); }
+        }
+
+        public bool AlertNoShoot
+        {
+            get { return _memory.ReadBool(0x7C0D); }
+            set { _memory.WriteBool(0x7C0D, value); }
+        }
+
+        public bool AlertNotDark
         {
             get { return false; }
             set { }
         }
 
-        public override bool AlertTorch
+        public bool AlertNoTorch
         {
             get { return false; }
             set { }
         }
 
-        public override int BoardCount
+        public bool AlertTorch
         {
-            get { return Memory.Read16(0x7784); }
-            set { Memory.Write16(0x7784, value); }
-        }
-
-        public override ITile BorderTile
-        {
-            get { return _borderTile; }
-            protected set { }
-        }
-
-        public override bool BreakGameLoop
-        {
-            get { return Memory.ReadBool(0x7C9E); }
-            set { Memory.WriteBool(0x7C9E, value); }
-        }
-
-        public override IColorList Colors
-        {
-            get { return _colors; }
-            protected set { }
-        }
-
-        public override IActor DefaultActor
-        {
-            get { return _defaultActor; }
-            protected set { }
-        }
-
-        public override string DefaultBoardName
-        {
-            get { return Memory.ReadString(0x2B32); }
-            set { Memory.WriteString(0x2B32, value); }
-        }
-
-        public override string DefaultSaveName
-        {
-            get { return Memory.ReadString(0x2AF4); }
-            set { Memory.WriteString(0x2AF4, value); }
-        }
-
-        public override string DefaultWorldName
-        {
-            get { return Memory.ReadString(0x2B70); }
-            set { Memory.WriteString(0x2B70, value); }
-        }
-
-        public override ITile EdgeTile
-        {
-            get { return _edgeTile; }
-            protected set { }
-        }
-
-        public override bool EditorMode
-        {
-            get { return Memory.ReadBool(0xB960); }
-            set { Memory.WriteBool(0xB960, value); }
-        }
-
-        public override int ForestIndex
-        {
-            get { return Memory.Read16(0x2334); }
-            set { Memory.Write16(0x2334, value); }
-        }
-
-        public override int GameCycle
-        {
-            get { return Memory.Read16(0xB958); }
-            set { Memory.Write16(0xB958, value); }
-        }
-
-        public override bool GameOver
-        {
-            get { return Memory.ReadBool(0xCD9B); }
-            set { Memory.WriteBool(0xCD9B, value); }
-        }
-
-        public override bool GamePaused
-        {
-            get { return Memory.ReadBool(0xB95C); }
-            set { Memory.WriteBool(0xB95C, value); }
-        }
-
-        public override bool GameQuiet
-        {
-            get { return Memory.ReadBool(0xCD9A); }
-            set { Memory.WriteBool(0xCD9A, value); }
-        }
-
-        public override int GameSpeed
-        {
-            get { return Memory.Read16(0x7CA4); }
-            set { Memory.Write16(0x7CA4, value); }
-        }
-
-        public override int GameWaitTime
-        {
-            get { return Memory.Read16(0xB956); }
-            set { Memory.Write16(0xB956, value); }
-        }
-
-        public override bool KeyArrow
-        {
-            get { return Memory.ReadBool(0xCC84); }
-            set { Memory.WriteBool(0xCC84, value); }
-        }
-
-        public override int KeyPressed
-        {
-            get { return Memory.Read8(0xCC76); }
-            set { Memory.Write8(0xCC76, value); }
-        }
-
-        public override bool KeyShift
-        {
-            get { return Memory.ReadBool(0xCC72); }
-            set { Memory.WriteBool(0xCC72, value); }
-        }
-
-        public override IXyPair KeyVector
-        {
-            get { return _keyVector; }
+            get { return false; }
             set { }
         }
 
-        public override IList<int> LineChars
+        public int BoardCount
         {
-            get { return _lineChars; }
-            protected set { }
+            get { return _memory.Read16(0x7784); }
+            set { _memory.Write16(0x7784, value); }
         }
 
-        public override string Message
+        public ITile BorderTile { get; }
+
+        public bool BreakGameLoop
         {
-            get { return Memory.ReadString(0x7C22); }
-            set { Memory.WriteString(0x7C22, value); }
+            get { return _memory.ReadBool(0x7C9E); }
+            set { _memory.WriteBool(0x7C9E, value); }
         }
 
-        public override string Message2
+        public bool CancelScroll { get; set; }
+
+        public IColorList Colors => _colors;
+
+        public IActor DefaultActor => _defaultActor;
+
+        public string DefaultBoardName
         {
-            get { return Memory.ReadString(0x7C60); }
-            set { Memory.WriteString(0x7C60, value); }
+            get { return _memory.ReadString(0x2B32); }
+            set { _memory.WriteString(0x2B32, value); }
         }
 
-        public override int OopByte
+        public string DefaultSaveName
         {
-            get { return Memory.Read8(0xB962); }
-            set { Memory.Write8(0xB962, value); }
+            get { return _memory.ReadString(0x2AF4); }
+            set { _memory.WriteString(0x2AF4, value); }
         }
 
-        public override int OopNumber
+        public string DefaultWorldName
         {
-            get { return Memory.Read16(0xB97A); }
-            set { Memory.Write16(0xB97A, value); }
+            get { return _memory.ReadString(0x2B70); }
+            set { _memory.WriteString(0x2B70, value); }
         }
 
-        public override string OopWord
+        public ITile EdgeTile => _edgeTile;
+
+        public bool EditorMode
         {
-            get { return Memory.ReadString(0xB964); }
-            set { Memory.WriteString(0xB964, value); }
+            get { return _memory.ReadBool(0xB960); }
+            set { _memory.WriteBool(0xB960, value); }
         }
 
-        public override int PlayerElement
+        public int ForestIndex
         {
-            get { return Memory.Read16(0x7CA0); }
-            set { Memory.Write16(0x7CA0, value); }
+            get { return _memory.Read16(0x2334); }
+            set { _memory.Write16(0x2334, value); }
         }
 
-        public override bool QuitZzt
+        public int GameCycle
         {
-            get { return Memory.ReadBool(0x7C9D); }
-            set { Memory.WriteBool(0x7C9D, value); }
+            get { return _memory.Read16(0xB958); }
+            set { _memory.Write16(0xB958, value); }
         }
 
-        public override IList<int> SoundBuffer
+        public bool GameOver
         {
-            get { return _soundBuffer; }
-            protected set { }
+            get { return _memory.ReadBool(0xCD9B); }
+            set { _memory.WriteBool(0xCD9B, value); }
         }
 
-        public override int SoundBufferLength
+        public bool GamePaused
         {
-            get { return Memory.Read8(0xCF9E); }
-            set { Memory.Write8(0xCF9E, value); }
+            get { return _memory.ReadBool(0xB95C); }
+            set { _memory.WriteBool(0xB95C, value); }
         }
 
-        public override bool SoundPlaying
+        public bool GameQuiet
         {
-            get { return Memory.ReadBool(0xD0A8); }
-            set { Memory.WriteBool(0xD0A8, value); }
+            get { return _memory.ReadBool(0xCD9A); }
+            set { _memory.WriteBool(0xCD9A, value); }
         }
 
-        public override int SoundPriority
+        public int GameSpeed
         {
-            get { return Memory.Read16(0xCD9C); }
-            set { Memory.Write16(0xCD9C, value); }
+            get { return _memory.Read16(0x7CA4); }
+            set { _memory.Write16(0x7CA4, value); }
         }
 
-        public override int SoundTicks
+        public int GameWaitTime
         {
-            get { return Memory.Read8(0xCF9D); }
-            set { Memory.Write8(0xCF9D, value); }
+            get { return _memory.Read16(0xB956); }
+            set { _memory.Write16(0xB956, value); }
         }
 
-        public override IList<int> StarChars
+        public bool Init { get; set; }
+
+        public bool KeyArrow
         {
-            get { return _starChars; }
-            protected set { }
+            get { return _memory.ReadBool(0xCC84); }
+            set { _memory.WriteBool(0xCC84, value); }
         }
 
-        public override int StartBoard
+        public int KeyPressed
         {
-            get { return Memory.Read16(0x7CA2); }
-            set { Memory.Write16(0x7CA2, value); }
+            get { return _memory.Read8(0xCC76); }
+            set { _memory.Write8(0xCC76, value); }
         }
 
-        public override IList<int> TransporterHChars
+        public bool KeyShift
         {
-            get { return _transporterHChars; }
-            protected set { }
+            get { return _memory.ReadBool(0xCC72); }
+            set { _memory.WriteBool(0xCC72, value); }
         }
 
-        public override IList<int> TransporterVChars
+        public IXyPair KeyVector => _keyVector;
+
+        public IList<int> LineChars => _lineChars;
+
+        public int MainTime { get; set; }
+
+        public string Message
         {
-            get { return _transporterVChars; }
-            protected set { }
+            get { return _memory.ReadString(0x7C22); }
+            set { _memory.WriteString(0x7C22, value); }
         }
 
-        public override IList<int> Vector4
+        public string Message2
         {
-            get { return _vector4; }
-            protected set { }
+            get { return _memory.ReadString(0x7C60); }
+            set { _memory.WriteString(0x7C60, value); }
         }
 
-        public override IList<int> Vector8
+        public int OopByte
         {
-            get { return _vector8; }
-            protected set { }
+            get { return _memory.Read8(0xB962); }
+            set { _memory.Write8(0xB962, value); }
         }
 
-        public override int VisibleTileCount
+        public int OopNumber
+        {
+            get { return _memory.Read16(0xB97A); }
+            set { _memory.Write16(0xB97A, value); }
+        }
+
+        public string OopWord
+        {
+            get { return _memory.ReadString(0xB964); }
+            set { _memory.WriteString(0xB964, value); }
+        }
+
+        public int PlayerElement
+        {
+            get { return _memory.Read16(0x7CA0); }
+            set { _memory.Write16(0x7CA0, value); }
+        }
+
+        public int PlayerTime { get; set; }
+
+        public bool QuitZzt
+        {
+            get { return _memory.ReadBool(0x7C9D); }
+            set { _memory.WriteBool(0x7C9D, value); }
+        }
+
+        public IList<int> SoundBuffer => _soundBuffer;
+
+        public int SoundBufferLength
+        {
+            get { return _memory.Read8(0xCF9E); }
+            set { _memory.Write8(0xCF9E, value); }
+        }
+
+        public bool SoundPlaying
+        {
+            get { return _memory.ReadBool(0xD0A8); }
+            set { _memory.WriteBool(0xD0A8, value); }
+        }
+
+        public int SoundPriority
+        {
+            get { return _memory.Read16(0xCD9C); }
+            set { _memory.Write16(0xCD9C, value); }
+        }
+
+        public int SoundTicks
+        {
+            get { return _memory.Read8(0xCF9D); }
+            set { _memory.Write8(0xCF9D, value); }
+        }
+
+        public IList<int> StarChars => _starChars;
+
+        public int StartBoard
+        {
+            get { return _memory.Read16(0x7CA2); }
+            set { _memory.Write16(0x7CA2, value); }
+        }
+
+        public IList<int> TransporterHChars => _transporterHChars;
+
+        public IList<int> TransporterVChars => _transporterVChars;
+
+        public IList<int> Vector4 => _vector4;
+
+        public IList<int> Vector8 => _vector8;
+
+        public int VisibleTileCount
         {
             get { return 96*80; }
             set { }
         }
 
-        public override IList<int> WebChars
+        public IList<int> WebChars => _webChars;
+
+        public string WorldFileName
         {
-            get { return _webChars; }
-            protected set { }
+            get { return _memory.ReadString(0x2AB6); }
+            set { _memory.WriteString(0x2AB6, value); }
         }
 
-        public override string WorldFileName
+        public bool WorldLoaded
         {
-            get { return Memory.ReadString(0x2AB6); }
-            set { Memory.WriteString(0x2AB6, value); }
-        }
-
-        public override bool WorldLoaded
-        {
-            get { return Memory.ReadBool(0xB97C); }
-            set { Memory.WriteBool(0xB97C, value); }
+            get { return _memory.ReadBool(0xB97C); }
+            set { _memory.WriteBool(0xB97C, value); }
         }
     }
 }

@@ -158,7 +158,7 @@ namespace Roton.Core
 
         public void Save(string filename)
         {
-            File.WriteAllBytes(filename, Save());
+            Core.Disk.PutFile(filename, Save());
         }
 
         public void SetBoard(int boardIndex)

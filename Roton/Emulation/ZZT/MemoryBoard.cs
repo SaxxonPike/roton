@@ -9,7 +9,6 @@ namespace Roton.Emulation.ZZT
         public MemoryBoard(IMemory memory)
             : base(memory)
         {
-            Camera = new Location();
         }
 
         public override bool Dark
@@ -18,11 +17,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteBool(0x4568, value); }
         }
 
-        public override IXyPair Enter
-        {
-            get { return new MemoryLocation(Memory, 0x45A9); }
-            set { new MemoryLocation(Memory, 0x45A9).CopyFrom(value); }
-        }
+        public override IXyPair Enter => new MemoryLocation(Memory, 0x45A9);
 
         public override int ExitEast
         {

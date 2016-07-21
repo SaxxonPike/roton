@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Roton.Common.Properties;
 using Roton.Common.Resources;
 using Roton.Core;
 

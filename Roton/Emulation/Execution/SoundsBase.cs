@@ -1,8 +1,8 @@
 ﻿namespace Roton.Emulation.Execution
 {
-    public abstract class SoundsBase : ISounds
+    internal abstract class SoundsBase : ISounds
     {
-        public static readonly byte[] Silence = new byte[0];
+        private static readonly byte[] Silence = new byte[0];
 
         public virtual byte[] Ammo => Silence;
         public virtual byte[] BombActivate => Silence;

@@ -5,7 +5,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryBoardBase : Board
     {
-        public MemoryBoardBase(IMemory memory)
+        protected MemoryBoardBase(IMemory memory)
         {
             Memory = memory;
         }
