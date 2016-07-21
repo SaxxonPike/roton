@@ -7,10 +7,10 @@ namespace Roton.Emulation.Models
         public virtual int Ammo { get; set; }
         public virtual int Board { get; set; }
         public virtual int EnergyCycles { get; set; }
-        public virtual IFlagList Flags { get; protected set; }
+        public virtual IFlagList Flags { get; }
         public virtual int Gems { get; set; }
         public virtual int Health { get; set; }
-        public virtual IKeyList Keys { get; protected set; }
+        public virtual IKeyList Keys { get; }
         public virtual bool Locked { get; set; }
         public virtual string Name { get; set; }
         public virtual int Score { get; set; }

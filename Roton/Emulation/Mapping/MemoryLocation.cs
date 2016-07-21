@@ -10,9 +10,9 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
 
         public override int X
         {

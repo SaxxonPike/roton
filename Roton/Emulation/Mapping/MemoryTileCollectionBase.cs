@@ -28,9 +28,9 @@ namespace Roton.Emulation.Mapping
 
         public int Height { get; }
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
 
         private int TotalHeight => Height + 2;
 

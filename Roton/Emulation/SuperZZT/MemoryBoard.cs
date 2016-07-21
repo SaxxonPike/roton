@@ -4,69 +4,71 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class MemoryBoard : MemoryBoardBase
+    internal sealed class MemoryBoard : IBoard
     {
+        private readonly IMemory _memory;
+
         public MemoryBoard(IMemory memory)
-            : base(memory)
         {
+            _memory = memory;
         }
 
-        public override IXyPair Camera => new MemoryLocation16(Memory, 0x776F);
+        public IXyPair Camera => new MemoryLocation16(_memory, 0x776F);
 
-        public override bool Dark
+        public bool Dark
         {
             get { return false; }
             set { }
         }
 
-        public override IXyPair Enter => new MemoryLocation(Memory, 0x776D);
+        public IXyPair Enter => new MemoryLocation(_memory, 0x776D);
 
-        public override int ExitEast
+        public int ExitEast
         {
-            get { return Memory.Read8(0x776B); }
-            set { Memory.Write8(0x776B, value); }
+            get { return _memory.Read8(0x776B); }
+            set { _memory.Write8(0x776B, value); }
         }
 
-        public override int ExitNorth
+        public int ExitNorth
         {
-            get { return Memory.Read8(0x7768); }
-            set { Memory.Write8(0x7768, value); }
+            get { return _memory.Read8(0x7768); }
+            set { _memory.Write8(0x7768, value); }
         }
 
-        public override int ExitSouth
+        public int ExitSouth
         {
-            get { return Memory.Read8(0x7769); }
-            set { Memory.Write8(0x7769, value); }
+            get { return _memory.Read8(0x7769); }
+            set { _memory.Write8(0x7769, value); }
         }
 
-        public override int ExitWest
+        public int ExitWest
         {
-            get { return Memory.Read8(0x776A); }
-            set { Memory.Write8(0x776A, value); }
+            get { return _memory.Read8(0x776A); }
+            set { _memory.Write8(0x776A, value); }
         }
 
-        public override string Name
+        public string Name
         {
-            get { return Memory.ReadString(0x2BAE); }
-            set { Memory.WriteString(0x2BAE, value); }
+            get { return _memory.ReadString(0x2BAE); }
+            set { _memory.WriteString(0x2BAE, value); }
         }
 
-        public override bool RestartOnZap
+        public bool RestartOnZap
         {
-            get { return Memory.ReadBool(0x776C); }
-            set { Memory.WriteBool(0x776C, value); }
+            get { return _memory.ReadBool(0x776C); }
+            set { _memory.WriteBool(0x776C, value); }
         }
 
-        public override int Shots
+        public int Shots
         {
-            get { return Memory.Read8(0x7767); }
-            set { Memory.Write8(0x7767, value); }
+            get { return _memory.Read8(0x7767); }
+            set { _memory.Write8(0x7767, value); }
         }
 
-        public override int TimeLimit
+        public int TimeLimit
         {
-            get { return Memory.Read16(0x7773); }
-            set { Memory.Write16(0x7773, value); }
+            get { return _memory.Read16(0x7773); }
+            set { _memory.Write16(0x7773, value); }
         }
     }
 }

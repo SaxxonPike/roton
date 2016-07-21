@@ -31,8 +31,8 @@ namespace Roton.Emulation.Mapping
 
         public override int Count => 7;
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
     }
 }

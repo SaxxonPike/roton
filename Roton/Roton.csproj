@@ -83,7 +83,6 @@
     <Compile Include="Core\ICode.cs" />
     <Compile Include="Core\ICodeInstruction.cs" />
     <Compile Include="Emulation\Mapping\MemoryColorArrayBase.cs" />
-    <Compile Include="Emulation\Mapping\MemoryString.cs" />
     <Compile Include="Emulation\SuperZZT\Core.Behavior.cs" />
     <Compile Include="Emulation\SuperZZT\Core.cs" />
     <Compile Include="Emulation\SuperZZT\MemoryColorArray.cs" />
@@ -151,7 +150,6 @@
     </Compile>
     <Compile Include="Emulation\Mapping\MemoryLocation.cs" />
     <Compile Include="Emulation\Mapping\MemoryLocation16.cs" />
-    <Compile Include="Emulation\Mapping\MemoryBoardBase.cs" />
     <Compile Include="Emulation\Mapping\MemoryTile.cs" />
     <Compile Include="Emulation\Mapping\MemoryTileCollectionBase.cs" />
     <Compile Include="Emulation\Mapping\MemoryVector.cs" />

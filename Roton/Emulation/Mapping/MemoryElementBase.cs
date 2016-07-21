@@ -1,36 +1,36 @@
-﻿using Roton.Core;
+﻿using System;
+using Roton.Core;
 using Roton.Emulation.Models;
 
 namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryElementBase : Element
     {
-        public MemoryElementBase(IMemory memory, int offset)
+        protected MemoryElementBase(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
-            Act = DefaultAct;
-            Draw = DefaultDraw;
-            Interact = DefaultInteract;
         }
 
-        internal abstract void CopyFrom(MemoryElementBase other);
+        public override Action<int> Act { get; set; } = DefaultAct;
+        public override Func<IXyPair, AnsiChar> Draw { get; set; } = DefaultDraw;
+        public override Action<IXyPair, int, IXyPair> Interact { get; set; } = DefaultInteract;
 
-        public static void DefaultAct(int index)
+        private static void DefaultAct(int index)
         {
         }
 
-        public static AnsiChar DefaultDraw(IXyPair location)
+        private static AnsiChar DefaultDraw(IXyPair location)
         {
             return new AnsiChar(0x3F, 0x40);
         }
 
-        public static void DefaultInteract(IXyPair location, int index, IXyPair vector)
+        private static void DefaultInteract(IXyPair location, int index, IXyPair vector)
         {
         }
 
-        public IMemory Memory { get; private set; }
+        protected IMemory Memory { get; private set; }
 
-        public int Offset { get; private set; }
+        protected int Offset { get; private set; }
     }
 }

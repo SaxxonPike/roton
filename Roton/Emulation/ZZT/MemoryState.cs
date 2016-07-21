@@ -325,7 +325,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.Write16(0x4ACC, value); }
         }
 
-        public IList<int> WebChars { get; } = null;
+        public IList<int> WebChars { get; } = new List<int>();
 
         public string WorldFileName
         {

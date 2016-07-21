@@ -22,8 +22,8 @@ namespace Roton.Emulation.Mapping
             set { Memory.Write8(Offset + 0x00, value); }
         }
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
     }
 }

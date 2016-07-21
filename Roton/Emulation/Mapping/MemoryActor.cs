@@ -52,7 +52,7 @@ namespace Roton.Emulation.Mapping
 
         public override IXyPair Location => new MemoryLocation(Memory, Offset + 0x00);
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
         public int Offset { get; }
 

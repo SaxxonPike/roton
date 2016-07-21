@@ -42,11 +42,6 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write8(Offset + 0x01, value); }
         }
 
-        internal override void CopyFrom(MemoryElementBase other)
-        {
-            Memory.Write(Offset, other.Memory.Read(other.Offset, 0x00C2));
-        }
-
         public override int Cycle
         {
             get { return Memory.Read16(Offset + 0x0B); }

@@ -4,67 +4,71 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class MemoryBoard : MemoryBoardBase
+    internal sealed class MemoryBoard : IBoard
     {
+        private readonly IMemory _memory;
+
         public MemoryBoard(IMemory memory)
-            : base(memory)
         {
+            _memory = memory;
         }
 
-        public override bool Dark
+        public IXyPair Camera { get; } = new Location();
+
+        public bool Dark
         {
-            get { return Memory.ReadBool(0x4568); }
-            set { Memory.WriteBool(0x4568, value); }
+            get { return _memory.ReadBool(0x4568); }
+            set { _memory.WriteBool(0x4568, value); }
         }
 
-        public override IXyPair Enter => new MemoryLocation(Memory, 0x45A9);
+        public IXyPair Enter => new MemoryLocation(_memory, 0x45A9);
 
-        public override int ExitEast
+        public int ExitEast
         {
-            get { return Memory.Read8(0x456C); }
-            set { Memory.Write8(0x456C, value); }
+            get { return _memory.Read8(0x456C); }
+            set { _memory.Write8(0x456C, value); }
         }
 
-        public override int ExitNorth
+        public int ExitNorth
         {
-            get { return Memory.Read8(0x4569); }
-            set { Memory.Write8(0x4569, value); }
+            get { return _memory.Read8(0x4569); }
+            set { _memory.Write8(0x4569, value); }
         }
 
-        public override int ExitSouth
+        public int ExitSouth
         {
-            get { return Memory.Read8(0x456A); }
-            set { Memory.Write8(0x456A, value); }
+            get { return _memory.Read8(0x456A); }
+            set { _memory.Write8(0x456A, value); }
         }
 
-        public override int ExitWest
+        public int ExitWest
         {
-            get { return Memory.Read8(0x456B); }
-            set { Memory.Write8(0x456B, value); }
+            get { return _memory.Read8(0x456B); }
+            set { _memory.Write8(0x456B, value); }
         }
 
-        public override string Name
+        public string Name
         {
-            get { return Memory.ReadString(0x2486); }
-            set { Memory.WriteString(0x2486, value); }
+            get { return _memory.ReadString(0x2486); }
+            set { _memory.WriteString(0x2486, value); }
         }
 
-        public override bool RestartOnZap
+        public bool RestartOnZap
         {
-            get { return Memory.ReadBool(0x456D); }
-            set { Memory.WriteBool(0x456D, value); }
+            get { return _memory.ReadBool(0x456D); }
+            set { _memory.WriteBool(0x456D, value); }
         }
 
-        public override int Shots
+        public int Shots
         {
-            get { return Memory.Read8(0x4567); }
-            set { Memory.Write8(0x4567, value); }
+            get { return _memory.Read8(0x4567); }
+            set { _memory.Write8(0x4567, value); }
         }
 
-        public override int TimeLimit
+        public int TimeLimit
         {
-            get { return Memory.Read16(0x45AB); }
-            set { Memory.Write16(0x45AB, value); }
+            get { return _memory.Read16(0x45AB); }
+            set { _memory.Write16(0x45AB, value); }
         }
     }
 }

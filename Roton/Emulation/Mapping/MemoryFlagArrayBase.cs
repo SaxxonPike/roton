@@ -5,7 +5,7 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class MemoryFlagArrayBase : FixedList<string>, IFlagList
     {
-        public MemoryFlagArrayBase(IMemory memory, int offset)
+        protected MemoryFlagArrayBase(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
@@ -25,12 +25,12 @@ namespace Roton.Emulation.Mapping
         {
             for (var i = 0; i < Count; i++)
             {
-                this[i] = "";
+                this[i] = string.Empty;
             }
         }
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
     }
 }

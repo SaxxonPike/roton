@@ -22,8 +22,8 @@ namespace Roton.Emulation.Mapping
 
         public override int Count => Memory.Read8(Offset);
 
-        public IMemory Memory { get; }
+        private IMemory Memory { get; }
 
-        public int Offset { get; }
+        private int Offset { get; }
     }
 }

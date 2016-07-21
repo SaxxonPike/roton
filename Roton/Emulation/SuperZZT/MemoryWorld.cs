@@ -41,9 +41,9 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x7857, value); }
         }
 
-        public override IFlagList FlagMemory => new MemoryFlagArray(Memory);
+        public override IFlagList Flags => new MemoryFlagArray(Memory);
 
-        public override IKeyList KeyMemory => new MemoryKeyArray(Memory, 0x7850);
+        public override IKeyList Keys => new MemoryKeyArray(Memory, 0x7850);
 
         public override bool Locked
         {

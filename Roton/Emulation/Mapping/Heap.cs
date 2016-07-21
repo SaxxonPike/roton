@@ -26,7 +26,7 @@ namespace Roton.Emulation.Mapping
             return index;
         }
 
-        public bool Contains(int index) => Entries.ContainsKey(index);
+        private bool Contains(int index) => Entries.ContainsKey(index);
 
         private IDictionary<int, byte[]> Entries { get; }
 

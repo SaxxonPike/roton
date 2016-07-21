@@ -7,7 +7,7 @@ namespace Roton.Emulation.Mapping
         protected MemoryElementCollectionBase(IMemory memory)
         {
             Memory = memory;
-            Cache = new MemoryElementBase[Count];
+            Cache = new IElement[Count];
 
             for (var i = 0; i < Count; i++)
             {
@@ -410,6 +410,6 @@ namespace Roton.Emulation.Mapping
 
         protected abstract IElement GetElement(int index);
 
-        public IMemory Memory { get; private set; }
+        protected IMemory Memory { get; private set; }
     }
 }
