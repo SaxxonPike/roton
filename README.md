@@ -1,5 +1,7 @@
 # Roton
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://raw.githubusercontent.com/SaxxonPike/roton/master/LICENSE)
+
 ##### Description
 Roton is an emulation of the ZZT and Super ZZT game creation engines written in C#. As part of this project, there are also two utlities called Lyon, which is an environment that leverages Roton in order to allow users to play their games, and Torch, which allows users to create and edit game worlds.
 
