@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Roton.Core;
 
-namespace Roton.Core
+namespace Roton.FileIo
 {
     public class DiskFileSystem : IFileSystem
     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Roton.Core;
 using Ionic.Zip;
+using Roton.FileIo;
 
 namespace Roton.Resources
 {

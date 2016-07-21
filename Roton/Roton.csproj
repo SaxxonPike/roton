@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\DiskFileSystem.cs" />
+    <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
     <Compile Include="Core\IFileSystem.cs" />
     <Compile Include="Core\ICheat.cs" />
@@ -54,7 +54,7 @@
     <Compile Include="Core\ISerializer.cs" />
     <Compile Include="Core\ITileGrid.cs" />
     <Compile Include="Core\IOopContext.cs" />
-    <Compile Include="Core\ZipFileSystem.cs" />
+    <Compile Include="FileIo\ZipFileSystem.cs" />
     <Compile Include="Emulation\Execution\GrammarBase.cs" />
     <Compile Include="Emulation\Execution\ISounds.cs" />
     <Compile Include="Emulation\Execution\OopItem.cs" />

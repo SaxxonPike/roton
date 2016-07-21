@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
+using Roton.Core;
 
-namespace Roton.Core
+namespace Roton.FileIo
 {
     public class ZipFileSystem : IFileSystem
     {

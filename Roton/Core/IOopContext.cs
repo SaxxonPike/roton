@@ -1,6 +1,4 @@
-﻿using Roton.Core;
-
-namespace Roton.Emulation.Execution
+﻿namespace Roton.Core
 {
     public interface IOopContext
     {
