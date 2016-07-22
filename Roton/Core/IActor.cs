@@ -13,6 +13,5 @@
         int Pointer { get; set; }
         ITile UnderTile { get; }
         IXyPair Vector { get; }
-        bool IsAttached { get; }
     }
 }

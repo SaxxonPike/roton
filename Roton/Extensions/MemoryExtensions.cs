@@ -11,10 +11,10 @@ namespace Roton.Extensions
 
         public static int Read32(this IMemory memory, int offset)
         {
-            return memory.Read8(offset) | 
-                (memory.Read8(offset + 1) << 8) |
-                (memory.Read8(offset + 2) << 16) |
-                (memory.Read8(offset + 3) << 24);
+            return memory.Read8(offset) |
+                   (memory.Read8(offset + 1) << 8) |
+                   (memory.Read8(offset + 2) << 16) |
+                   (memory.Read8(offset + 3) << 24);
         }
 
         public static bool ReadBool(this IMemory memory, int offset)

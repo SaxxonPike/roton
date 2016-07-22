@@ -26,7 +26,7 @@ namespace Roton.Core
         int BoardCount { get; set; }
         IBoard BoardData { get; }
         string BoardName { get; set; }
-        IList<PackedBoard> Boards { get; }
+        IList<IPackedBoard> Boards { get; }
         ITile BorderTile { get; }
         bool BreakGameLoop { get; set; }
         IXyPair Camera { get; set; }

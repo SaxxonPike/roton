@@ -2,6 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Roton.Core;
+using Roton.Core.Collections;
 
 namespace Roton.Common
 {

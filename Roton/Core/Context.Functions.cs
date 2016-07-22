@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Roton.Emulation.Mapping;
 using Roton.FileIo;
 using Roton.Resources;
 
@@ -58,13 +59,14 @@ namespace Roton.Core
             switch (engine)
             {
                 case ContextEngine.Zzt:
-                    Core = new Emulation.ZZT.Core(resources.GetZztMemoryData(), resources.GetZztElementData());
+                    Core = new Emulation.ZZT.ZztCore(resources.GetZztMemoryData(), resources.GetZztElementData());
                     ScreenWidth = 80;
                     ScreenHeight = 25;
                     ScreenWide = false;
                     break;
                 case ContextEngine.SuperZzt:
-                    Core = new Emulation.SuperZZT.Core(resources.GetSuperZztMemoryData(), resources.GetSuperZztElementData());
+                    Core = new Emulation.SuperZZT.SuperZztCore(resources.GetSuperZztMemoryData(),
+                        resources.GetSuperZztElementData());
                     ScreenWidth = 40;
                     ScreenHeight = 25;
                     ScreenWide = true;

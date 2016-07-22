@@ -105,7 +105,7 @@ namespace Roton.Extensions
         public static IXyPair Product(this IXyPair pair, int value)
         {
             var clone = pair.Clone();
-            clone.SetTo(clone.X * value, clone.Y * value);
+            clone.SetTo(clone.X*value, clone.Y*value);
             return clone;
         }
 
@@ -136,6 +136,6 @@ namespace Roton.Extensions
             var clone = pair.Clone();
             clone.SetTo(pair.Y, pair.X);
             return clone;
-        } 
+        }
     }
 }

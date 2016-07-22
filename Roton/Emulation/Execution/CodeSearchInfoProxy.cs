@@ -28,10 +28,7 @@ namespace Roton.Emulation.Execution
 
         public override int Index
         {
-            get
-            {
-                return _getIndex?.Invoke() ?? _index;
-            }
+            get { return _getIndex?.Invoke() ?? _index; }
             set
             {
                 _setIndex?.Invoke(value);
@@ -41,10 +38,7 @@ namespace Roton.Emulation.Execution
 
         public override string Label
         {
-            get
-            {
-                return _getLabel != null ? _getLabel() : _label;
-            }
+            get { return _getLabel != null ? _getLabel() : _label; }
             set
             {
                 _setLabel?.Invoke(value);
@@ -54,10 +48,7 @@ namespace Roton.Emulation.Execution
 
         public override int Offset
         {
-            get
-            {
-                return _getOffset?.Invoke() ?? _offset;
-            }
+            get { return _getOffset?.Invoke() ?? _offset; }
             set
             {
                 _setOffset?.Invoke(value);

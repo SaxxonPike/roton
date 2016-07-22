@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Roton.Emulation.Models;
 
 namespace Roton.Core
 {
@@ -18,7 +17,7 @@ namespace Roton.Core
 
         public IBoard BoardData => Core.BoardData;
 
-        public IList<PackedBoard> Boards => Core.Boards;
+        public IList<IPackedBoard> Boards => Core.Boards;
 
         public ContextEngine ContextEngine { get; private set; }
 
@@ -26,7 +25,8 @@ namespace Roton.Core
 
         public IActor CreateActor()
         {
-            return new Actor();
+            //return new Actor();
+            return null;
         }
 
         public IElementList Elements => Core.Elements;
@@ -83,10 +83,7 @@ namespace Roton.Core
 
         public int WorldSize
         {
-            get
-            {
-                return Serializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2);
-            }
+            get { return Serializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2); }
         }
     }
 }

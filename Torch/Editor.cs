@@ -48,9 +48,7 @@ namespace Torch
             {
                 _actor = value;
                 actorEditor.Actor = value;
-                actorSourceLabel.Text = _actor.IsAttached
-                    ? "Editing on-board actor"
-                    : "Editing in-buffer actor";
+                actorSourceLabel.Text = "Editing actor";
             }
         }
 

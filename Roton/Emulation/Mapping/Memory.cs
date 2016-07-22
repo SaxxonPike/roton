@@ -65,6 +65,5 @@ namespace Roton.Emulation.Mapping
         {
             Bytes[offset & Mask] = (byte) (value & 0xFF);
         }
-
     }
 }
