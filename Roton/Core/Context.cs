@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roton.Core
 {
-    public sealed partial class Context
+    public sealed partial class Context : IContext
     {
         public int ActorCapacity => Core.Actors.Capacity;
 
@@ -25,8 +25,12 @@ namespace Roton.Core
 
         public IActor CreateActor()
         {
-            //return new Actor();
-            return null;
+            if (Core.ActorCount >= Actors.Capacity - 2)
+            {
+                return null;
+            }
+            Core.ActorCount++;
+            return Actors[Core.ActorCount];
         }
 
         public IElementList Elements => Core.Elements;
@@ -45,7 +49,7 @@ namespace Roton.Core
 
         public int ScreenWidth { get; private set; }
 
-        internal ISerializer Serializer => Core.Serializer;
+        public ISerializer Serializer => Core.Serializer;
 
         public ISpeaker Speaker
         {

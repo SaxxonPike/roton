@@ -6,7 +6,7 @@ namespace Torch
 {
     public partial class BoardEditor : UserControl
     {
-        private Context _context;
+        private IContext _context;
         private int _suppressUpdateCount;
 
         public BoardEditor()
@@ -15,7 +15,7 @@ namespace Torch
             InitializeEvents();
         }
 
-        public Context Context
+        public IContext Context
         {
             get { return _context; }
             set

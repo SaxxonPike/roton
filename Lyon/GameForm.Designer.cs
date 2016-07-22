@@ -19,9 +19,9 @@ namespace Lyon
             {
                 components.Dispose();
             }
-            if (this.Context is Context)
+            if (Context is IContext)
             {
-                this.Context.Stop();
+                Context.Stop();
             }
             base.Dispose(disposing);
         }

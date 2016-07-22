@@ -56,7 +56,7 @@ namespace Lyon
             Initialize(new Context(source, false));
         }
 
-        public Context Context { get; private set; }
+        private IContext Context { get; set; }
 
         private void DumpRam()
         {
@@ -74,7 +74,7 @@ namespace Lyon
                 "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
             ;
 
-        private void Initialize(Context context)
+        private void Initialize(IContext context)
         {
             speaker.Stop();
             _terminal.Keyboard.Clear();

@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\IContext.cs" />
     <Compile Include="Core\IPackedBoard.cs" />
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />

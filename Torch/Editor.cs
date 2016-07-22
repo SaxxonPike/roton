@@ -12,7 +12,7 @@ namespace Torch
     public partial class Editor : Form
     {
         private IActor _actor;
-        private Context _context;
+        private IContext _context;
         private readonly IEditorTerminal _terminal;
 
         public Editor(bool openGl = false)
@@ -356,7 +356,7 @@ namespace Torch
 
         private int Color { get; set; }
 
-        private Context Context
+        private IContext Context
         {
             get { return _context; }
             set
