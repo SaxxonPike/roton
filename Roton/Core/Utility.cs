@@ -7,7 +7,7 @@ namespace Roton.Core
     public static class Utility
     {
         private static readonly Encoding CodePage437 = Encoding.GetEncoding(437);
-        private static readonly string _hexAlphabet = "0123456789ABCDEF";
+        private const string HexAlphabet = "0123456789ABCDEF";
 
         /// <summary>
         /// Return the absolute difference between this value and another specified value.
@@ -118,7 +118,7 @@ namespace Roton.Core
             var result = "";
             while (chars > 0)
             {
-                result = _hexAlphabet[value & 0xF] + result;
+                result = HexAlphabet[value & 0xF] + result;
                 chars--;
                 value >>= 4;
             }

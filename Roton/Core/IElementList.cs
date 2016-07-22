@@ -2,8 +2,11 @@
 
 namespace Roton.Core
 {
-    public interface IElementList : IList<IElement>
+    public interface IElementList : IEnumerable<IElement>
     {
+        IElement this[int index] { get; }
+        int Count { get; }
+
         int AmmoId { get; }
         int BearId { get; }
         int BlinkRayHId { get; }

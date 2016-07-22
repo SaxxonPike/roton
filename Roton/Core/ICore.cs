@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Roton.Emulation.Execution;
 using Roton.FileIo;
 
 namespace Roton.Core

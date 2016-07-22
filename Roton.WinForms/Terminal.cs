@@ -18,9 +18,9 @@ namespace Roton.WinForms
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
-        private RasterFont _terminalFont;
+        private IRasterFont _terminalFont;
         private int _terminalHeight;
-        private Palette _terminalPalette;
+        private IPalette _terminalPalette;
         private bool _terminalWide;
         private int _terminalWidth;
         private bool _updated;
@@ -187,7 +187,7 @@ namespace Roton.WinForms
 
         private void OnLoad(object sender, EventArgs e)
         {
-            _terminalFont = new Common.RasterFont();
+            _terminalFont = new RasterFont();
             _terminalPalette = new Palette();
             SetSize(80, 25, false);
             BlinkEnabled = true;
@@ -253,7 +253,7 @@ namespace Roton.WinForms
             var keyAlt = (keyData & Keys.Alt) != 0;
             var keyControl = (keyData & Keys.Control) != 0;
             var keyRaw = keyData & Keys.KeyCode;
-            _keys.NumLock = IsKeyLocked(Keys.NumLock);
+            IsKeyLocked(Keys.NumLock);
             _keys.CapsLock = IsKeyLocked(Keys.CapsLock);
 
             var result = base.ProcessCmdKey(ref msg, keyData);
@@ -343,7 +343,7 @@ namespace Roton.WinForms
             set { _keys.Shift = value; }
         }
 
-        public Common.RasterFont TerminalFont
+        public IRasterFont TerminalFont
         {
             get { return _terminalFont; }
             set
@@ -353,7 +353,7 @@ namespace Roton.WinForms
             }
         }
 
-        public Palette TerminalPalette
+        public IPalette TerminalPalette
         {
             get { return _terminalPalette; }
             set

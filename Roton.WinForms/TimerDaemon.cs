@@ -16,14 +16,12 @@ namespace Roton.WinForms
             public double Frequency { get; }
             public Action Method { get; }
             public bool Running { get; set; }
-            public Thread Thread { get; set; }
 
             public TimerDaemonInfo(Action m, double f, Thread t)
             {
                 Method = m;
                 Frequency = f;
                 Running = false;
-                Thread = t;
             }
         }
 
@@ -139,7 +137,6 @@ namespace Roton.WinForms
                     next = now;
                 }
             }
-            info.Thread = null;
         }
 
         private int TimerThreadIndex { get; set; }

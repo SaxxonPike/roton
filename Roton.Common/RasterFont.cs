@@ -2,12 +2,11 @@
 using System.Drawing;
 using System.IO;
 using Roton.Common.Resources;
-using Roton.Core;
 using Roton.Core.Collections;
 
 namespace Roton.Common
 {
-    public sealed class RasterFont : FixedList<Glyph>
+    public sealed class RasterFont : FixedList<IGlyph>, IRasterFont
     {
         /// <summary>
         /// Create a font with the default glyphs.

@@ -1110,7 +1110,7 @@ namespace Roton.Emulation.Execution
         public virtual void Interact_BoardEdge(IXyPair location, int index, IXyPair vector)
         {
             var target = location.Clone();
-            var targetBoard = 0;
+            int targetBoard;
             var oldBoard = Board;
 
             switch (vector.Y)

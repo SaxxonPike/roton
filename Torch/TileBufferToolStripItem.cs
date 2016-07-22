@@ -11,7 +11,6 @@ namespace Torch
         public TileBufferToolStripItem()
         {
             InitializeComponent();
-            Buffer = new List<Tile>();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             ImageScaling = ToolStripItemImageScaling.None;
             TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -26,8 +25,6 @@ namespace Torch
 
             InitializeComponent();
         }
-
-        public IList<Tile> Buffer { get; private set; }
 
         public Terminal Terminal { get; set; }
     }

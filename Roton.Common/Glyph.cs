@@ -1,20 +1,20 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using Roton.Core;
 using Roton.Core.Collections;
 
 namespace Roton.Common
 {
-    public sealed class Glyph : FixedList<int>
+    public sealed class Glyph : FixedList<int>, IGlyph
     {
         private const int Black = -1 ^ ColorMask;
         private const int ColorMask = 0xFFFFFF;
         private const int White = -1;
 
-        internal Glyph(byte[] source, int xScale, int yScale)
+        internal Glyph(IList<byte> source, int xScale, int yScale)
         {
-            Height = source.Length;
+            Height = source.Count;
             Width = 8;
             PixelCount = Width*Height*xScale*yScale;
             Data = new int[PixelCount];

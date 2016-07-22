@@ -85,8 +85,6 @@ namespace Roton.WinForms
             }
         }
 
-        public bool NumLock { get; set; }
-
         public bool Press(char data)
         {
             try

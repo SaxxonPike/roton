@@ -2,8 +2,9 @@
 
 namespace Roton.Core
 {
-    public interface ITileGrid : IList<ITile>
+    public interface ITileGrid : IEnumerable<ITile>
     {
+        ITile this[int index] { get; }
         ITile this[IXyPair location] { get; }
         int Height { get; }
         int Width { get; }

@@ -38,77 +38,77 @@ namespace Torch
             // textboxes
             cameraXTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Camera.X = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.Camera.X = int.Parse(((TextBox) sender).Text);
             };
             cameraYTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Camera.Y = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.Camera.Y = int.Parse(((TextBox) sender).Text);
             };
             enteredXTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Enter.X = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.Enter.X = int.Parse(((TextBox) sender).Text);
             };
             enteredYTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Enter.Y = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.Enter.Y = int.Parse(((TextBox) sender).Text);
             };
             exitEastTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) SetComboControlValue(exitEastTextBox, exitEastComboBox, (sender as TextBox).Text);
+                if (!SuppressUpdate) SetComboControlValue(exitEastTextBox, exitEastComboBox, ((TextBox) sender).Text);
             };
             exitNorthTextBox.TextChanged += (sender, e) =>
             {
                 if (!SuppressUpdate)
-                    SetComboControlValue(exitNorthTextBox, exitNorthComboBox, (sender as TextBox).Text);
+                    SetComboControlValue(exitNorthTextBox, exitNorthComboBox, ((TextBox) sender).Text);
             };
             exitSouthTextBox.TextChanged += (sender, e) =>
             {
                 if (!SuppressUpdate)
-                    SetComboControlValue(exitSouthTextBox, exitSouthComboBox, (sender as TextBox).Text);
+                    SetComboControlValue(exitSouthTextBox, exitSouthComboBox, ((TextBox) sender).Text);
             };
             exitWestTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) SetComboControlValue(exitWestTextBox, exitWestComboBox, (sender as TextBox).Text);
+                if (!SuppressUpdate) SetComboControlValue(exitWestTextBox, exitWestComboBox, ((TextBox) sender).Text);
             };
             maxShotsTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Shots = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.Shots = int.Parse(((TextBox) sender).Text);
             };
             timeLimitTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.TimeLimit = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.BoardData.TimeLimit = int.Parse(((TextBox) sender).Text);
             };
 
             // checkboxes
             advancedEditingCheckBox.CheckStateChanged += (sender, e) => { UpdateAdvancedEdit(); };
             zapRestartCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.RestartOnZap = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.BoardData.RestartOnZap = ((CheckBox) sender).Checked;
             };
 
             // comboboxes
             exitNorthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitEast = (sender as ComboBox).SelectedIndex;
+                if (!SuppressUpdate) _context.BoardData.ExitEast = ((ComboBox) sender).SelectedIndex;
             };
             exitSouthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitNorth = (sender as ComboBox).SelectedIndex;
+                if (!SuppressUpdate) _context.BoardData.ExitNorth = ((ComboBox) sender).SelectedIndex;
             };
             exitSouthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitSouth = (sender as ComboBox).SelectedIndex;
+                if (!SuppressUpdate) _context.BoardData.ExitSouth = ((ComboBox) sender).SelectedIndex;
             };
             exitWestComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitWest = (sender as ComboBox).SelectedIndex;
+                if (!SuppressUpdate) _context.BoardData.ExitWest = ((ComboBox) sender).SelectedIndex;
             };
 
             UpdateAdvancedEdit();
             SuppressUpdate = false;
         }
 
-        private int SetComboControlValue(TextBox textbox, ComboBox combobox, string value)
+        private int SetComboControlValue(Control textbox, ComboBox combobox, string value)
         {
             SuppressUpdate = true;
 
@@ -154,7 +154,7 @@ namespace Torch
             enteredYTextBox.Enabled = enabled;
         }
 
-        public void UpdateBoards()
+        private void UpdateBoards()
         {
             SuppressUpdate = true;
 

@@ -2,7 +2,13 @@
 
 namespace Roton.Core
 {
-    public interface IFlagList : IList<string>
+    public interface IFlagList : IEnumerable<string>
     {
+        string this[int index] { get; set; }
+        void Add(string item);
+        void Clear();
+        bool Contains(string item);
+        int IndexOf(string item);
+        bool Remove(string item);
     }
 }

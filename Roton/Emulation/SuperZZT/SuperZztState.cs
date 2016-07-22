@@ -7,8 +7,6 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed class SuperZztState : IState
     {
-        private readonly IList<int> _starChars;
-
         private readonly IMemory _memory;
 
         public SuperZztState(IMemory memory, byte[] memoryBytes)
@@ -23,7 +21,7 @@ namespace Roton.Emulation.SuperZZT
             KeyVector = new MemoryVector(_memory, 0xCC6E);
             LineChars = new ByteString(_memory, 0x22BA);
             SoundBuffer = new Int16List(_memory, 0xCF9F, 127);
-            _starChars = new ByteString(_memory, 0x2064);
+            StarChars = new ByteString(_memory, 0x2064);
             TransporterHChars = new ByteString(_memory, 0x1F64);
             TransporterVChars = new ByteString(_memory, 0x1E64);
             Vector4 = new Int16List(_memory, 0x2250, 8);
@@ -295,7 +293,7 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.Write8(0xCF9D, value); }
         }
 
-        public IList<int> StarChars => _starChars;
+        public IList<int> StarChars { get; }
 
         public int StartBoard
         {

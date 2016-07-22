@@ -2,12 +2,11 @@
 using System.Drawing;
 using System.IO;
 using Roton.Common.Resources;
-using Roton.Core;
 using Roton.Core.Collections;
 
 namespace Roton.Common
 {
-    public sealed class Palette : FixedList<Color>
+    public sealed class Palette : FixedList<Color>, IPalette
     {
         /// <summary>
         /// Create a new palette with the default colors.

@@ -38,84 +38,84 @@ namespace Torch
             // textboxes
             ammoTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Ammo = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Ammo = int.Parse(((TextBox) sender).Text);
             };
             energizerTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.EnergyCycles = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.EnergyCycles = int.Parse(((TextBox) sender).Text);
             };
             filenameTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Name = (sender as TextBox).Text;
+                if (!SuppressUpdate) _context.WorldData.Name = ((TextBox) sender).Text;
             };
             gemsTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Gems = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Gems = int.Parse(((TextBox) sender).Text);
             };
             healthTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Health = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Health = int.Parse(((TextBox) sender).Text);
             };
             scoreTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Score = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Score = int.Parse(((TextBox) sender).Text);
             };
             stonesTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Stones = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Stones = int.Parse(((TextBox) sender).Text);
             };
             timePassedTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.TimePassed = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.TimePassed = int.Parse(((TextBox) sender).Text);
             };
             torchCycleTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.TorchCycles = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.TorchCycles = int.Parse(((TextBox) sender).Text);
             };
             torchesTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Torches = int.Parse((sender as TextBox).Text);
+                if (!SuppressUpdate) _context.WorldData.Torches = int.Parse(((TextBox) sender).Text);
             };
 
             // checkboxes
             advancedEditingCheckBox.CheckStateChanged += (sender, e) => { UpdateAdvancedEdit(); };
             blueKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[0] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[0] = ((CheckBox) sender).Checked;
             };
             cyanKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[2] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[2] = ((CheckBox) sender).Checked;
             };
             greenKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[1] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[1] = ((CheckBox) sender).Checked;
             };
             lockedCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Locked = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Locked = ((CheckBox) sender).Checked;
             };
             purpleKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[4] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[4] = ((CheckBox) sender).Checked;
             };
             redKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[3] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[3] = ((CheckBox) sender).Checked;
             };
             whiteKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[6] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[6] = ((CheckBox) sender).Checked;
             };
             yellowKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Keys[5] = (sender as CheckBox).Checked;
+                if (!SuppressUpdate) _context.WorldData.Keys[5] = ((CheckBox) sender).Checked;
             };
 
             // comboboxes
             startBoardComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Board = (sender as ComboBox).SelectedIndex;
+                if (!SuppressUpdate) _context.WorldData.Board = ((ComboBox) sender).SelectedIndex;
             };
 
             UpdateAdvancedEdit();

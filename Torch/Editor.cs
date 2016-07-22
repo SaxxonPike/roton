@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Roton.Core;
 using Roton.Extensions;
@@ -68,7 +69,7 @@ namespace Torch
                 item.Click +=
                     (sender, e) =>
                     {
-                        SetParameter(parameterIndex, (int) (sender as ToolStripItem).Tag);
+                        SetParameter(parameterIndex, (int) ((ToolStripItem) sender).Tag);
                     };
                 items.Add(item);
                 index++;
@@ -87,7 +88,7 @@ namespace Torch
                 ToolStripItem item = new ToolStripMenuItem();
                 item.Text = "[" + index + "] " + board.Name;
                 item.Tag = index;
-                item.Click += (sender, e) => { SetBoard((int) (sender as ToolStripItem).Tag); };
+                item.Click += (sender, e) => { SetBoard((int) ((ToolStripItem) sender).Tag); };
                 boardsMenu.DropDownItems.Add(item);
                 index++;
             }
@@ -162,7 +163,7 @@ namespace Torch
                         ImageScaling = ToolStripItemImageScaling.None
                     };
                     item.Click +=
-                        (sender, e) => { SelectElement((int) (sender as ToolStripMenuItem).Tag); };
+                        (sender, e) => { SelectElement((int) ((ToolStripMenuItem) sender).Tag); };
                     result.Items.Add(item);
                 }
                 index++;
@@ -518,7 +519,7 @@ namespace Torch
             {
                 if (elementComboBox.SelectedIndex >= 0)
                 {
-                    SelectElement((elementComboBox.SelectedItem as ElementItem).Index);
+                    SelectElement(((ElementItem) elementComboBox.SelectedItem).Index);
                 }
             };
             editBoardButton.Click += (sender, e) => { SelectBoard(3); };
@@ -670,22 +671,15 @@ namespace Torch
             }
         }
 
-        private IElement SelectedElement
-        {
-            get
-            {
-                if (elementComboBox.SelectedIndex < 0)
-                    return null;
-                return (elementComboBox.SelectedItem as ElementItem).Element;
-            }
-        }
+        private IElement SelectedElement => elementComboBox.SelectedIndex < 0
+            ? null
+            : ((ElementItem) elementComboBox.SelectedItem).Element;
 
         private void SelectElement(int index)
         {
-            foreach (var item in elementComboBox.Items)
+            foreach (var item in elementComboBox.Items.OfType<ElementItem>())
             {
-                var eitem = item as ElementItem;
-                if (eitem.Index == index)
+                if (item.Index == index)
                 {
                     elementComboBox.SelectedItem = item;
                 }
@@ -751,17 +745,17 @@ namespace Torch
 
         private void SetParameter(int index, int value)
         {
-            if (index == 1)
+            switch (index)
             {
-                Actor.P1 = value;
-            }
-            else if (index == 2)
-            {
-                Actor.P2 = value;
-            }
-            else if (index == 3)
-            {
-                Actor.P3 = value;
+                case 1:
+                    Actor.P1 = value;
+                    break;
+                case 2:
+                    Actor.P2 = value;
+                    break;
+                case 3:
+                    Actor.P3 = value;
+                    break;
             }
         }
 
@@ -862,7 +856,7 @@ namespace Torch
                 CopyCursorElement();
                 CopyCursorColor();
                 var menu = BuildTileContextMenu(_terminal.CursorX, _terminal.CursorY);
-                menu?.Show(sender as Control, e.Location);
+                menu?.Show((Control) sender, e.Location);
             }
         }
 
@@ -878,7 +872,7 @@ namespace Torch
             }
         }
 
-        private IList<ToolStripButton> Tools => new List<ToolStripButton>(new[]
+        private IEnumerable<ToolStripButton> Tools => new List<ToolStripButton>(new[]
         {
             drawToolButton,
             eraseToolButton,

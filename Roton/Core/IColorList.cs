@@ -2,7 +2,8 @@
 
 namespace Roton.Core
 {
-    public interface IColorList : IList<string>
+    public interface IColorList : IEnumerable<string>
     {
+        string this[int index] { get; }
     }
 }
