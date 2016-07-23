@@ -2,9 +2,6 @@
 {
     public class Location : IXyPair
     {
-        public virtual int X { get; set; }
-        public virtual int Y { get; set; }
-
         public Location()
         {
         }
@@ -19,6 +16,9 @@
         {
             return new Location(X, Y);
         }
+
+        public virtual int X { get; set; }
+        public virtual int Y { get; set; }
 
         public override string ToString()
         {

@@ -21,15 +21,23 @@ namespace Roton.Emulation.Execution
             DeathTile = new Tile(0, 0);
         }
 
+        private ICore Core { get; }
+
+        public int Instruction
+        {
+            get { return _instructionSource.Instruction; }
+            set { _instructionSource.Instruction = value; }
+        }
+
         public IActor Actor => Core.Actors[_index];
 
         public int CommandsExecuted { get; set; }
 
-        private ICore Core { get; }
-
         public ITile DeathTile { get; }
 
         public bool Died { get; set; }
+
+        public IElement ElementAt(IXyPair location) => Core.ElementAt(location);
 
         public IElementList Elements => Core.Elements;
 
@@ -46,12 +54,6 @@ namespace Roton.Emulation.Execution
         public IGrammar Grammar => Core.Grammar;
 
         public int Index { get; set; }
-
-        public int Instruction
-        {
-            get { return _instructionSource.Instruction; }
-            set { _instructionSource.Instruction = value; }
-        }
 
         public string Message { get; set; }
 
@@ -96,7 +98,5 @@ namespace Roton.Emulation.Execution
         public void UpdateBoard(IXyPair location) => Core.UpdateBoard(location);
 
         public IWorld World => Core.WorldData;
-
-        public IElement ElementAt(IXyPair location) => Core.ElementAt(location);
     }
 }

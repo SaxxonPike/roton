@@ -12,15 +12,9 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
-        protected override string GetItem(int index)
-        {
-            return Memory.ReadString(Offset + index*9);
-        }
+        private IMemory Memory { get; }
 
-        protected override void SetItem(int index, string value)
-        {
-            Memory.WriteString(Offset + index*9, value);
-        }
+        private int Offset { get; }
 
         public override void Clear()
         {
@@ -30,8 +24,14 @@ namespace Roton.Emulation.Mapping
             }
         }
 
-        private IMemory Memory { get; }
+        protected override string GetItem(int index)
+        {
+            return Memory.ReadString(Offset + index*9);
+        }
 
-        private int Offset { get; }
+        protected override void SetItem(int index, string value)
+        {
+            Memory.WriteString(Offset + index*9, value);
+        }
     }
 }

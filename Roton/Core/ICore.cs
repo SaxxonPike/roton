@@ -6,48 +6,62 @@ namespace Roton.Core
     public interface ICore
     {
         IActorList Actors { get; }
+        IBoard BoardData { get; }
+        IList<IPackedBoard> Boards { get; }
+        ITile BorderTile { get; }
+        IColorList Colors { get; }
+        IActor DefaultActor { get; }
+        ITile EdgeTile { get; }
+        IElementList Elements { get; }
+        IFlagList Flags { get; }
+        IGrammar Grammar { get; }
+        int Height { get; }
+        IHud Hud { get; }
+        IKeyList Keys { get; }
+        IXyPair KeyVector { get; }
+        IList<int> LineChars { get; }
+        IMemory Memory { get; }
+        IActor Player { get; }
+        ISerializer Serializer { get; }
+        IList<int> SoundBuffer { get; }
+        ISounds Sounds { get; }
+        IList<int> StarChars { get; }
+        IState StateData { get; }
+        bool StonesEnabled { get; }
+        string StoneText { get; }
+        ITileGrid Tiles { get; }
+        bool TitleScreen { get; }
+        bool TorchesEnabled { get; }
+        IList<int> TransporterHChars { get; }
+        IList<int> TransporterVChars { get; }
+        IList<int> Vector4 { get; }
+        IList<int> Vector8 { get; }
+        IList<int> WebChars { get; }
+        int Width { get; }
+        IWorld WorldData { get; }
         bool AboutShown { get; set; }
         int ActIndex { get; set; }
         int ActorCount { get; set; }
-        bool AlertAmmo { get; set; }
-        bool AlertDark { get; set; }
-        bool AlertEnergy { get; set; }
-        bool AlertFake { get; set; }
-        bool AlertForest { get; set; }
-        bool AlertGem { get; set; }
-        bool AlertNoAmmo { get; set; }
-        bool AlertNoShoot { get; set; }
-        bool AlertNotDark { get; set; }
-        bool AlertNoTorch { get; set; }
-        bool AlertTorch { get; set; }
+        IAlerts Alerts { get; }
         int Ammo { get; set; }
         int Board { get; set; }
         int BoardCount { get; set; }
-        IBoard BoardData { get; }
         string BoardName { get; set; }
-        IList<IPackedBoard> Boards { get; }
-        ITile BorderTile { get; }
         bool BreakGameLoop { get; set; }
         IXyPair Camera { get; set; }
         bool CancelScroll { get; set; }
-        IColorList Colors { get; }
         bool Dark { get; set; }
-        IActor DefaultActor { get; }
         string DefaultBoardName { get; set; }
         string DefaultSaveName { get; set; }
         string DefaultWorldName { get; set; }
         IFileSystem Disk { get; set; }
-        IHud Hud { get; }
-        ITile EdgeTile { get; }
         bool EditorMode { get; set; }
-        IElementList Elements { get; }
-        IXyPair Enter { get; set; }
         int EnergyCycles { get; set; }
+        IXyPair Enter { get; set; }
         int ExitEast { get; set; }
         int ExitNorth { get; set; }
         int ExitSouth { get; set; }
         int ExitWest { get; set; }
-        IFlagList Flags { get; }
         int GameCycle { get; set; }
         bool GameOver { get; set; }
         bool GamePaused { get; set; }
@@ -60,13 +74,9 @@ namespace Roton.Core
         bool KeyArrow { get; set; }
         IKeyboard Keyboard { get; set; }
         int KeyPressed { get; set; }
-        IKeyList Keys { get; }
         bool KeyShift { get; set; }
-        IXyPair KeyVector { get; }
-        IList<int> LineChars { get; }
         bool Locked { get; set; }
         int MainTime { get; set; }
-        IMemory Memory { get; }
         string Message { get; set; }
         string Message2 { get; set; }
         int OopByte { get; set; }
@@ -78,91 +88,50 @@ namespace Roton.Core
         bool QuitZzt { get; set; }
         bool RestartOnZap { get; set; }
         int Score { get; set; }
-        ISerializer Serializer { get; }
         int Shots { get; set; }
-        IList<int> SoundBuffer { get; }
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }
-        ISounds Sounds { get; }
         int SoundTicks { get; set; }
         ISpeaker Speaker { get; set; }
-        IList<int> StarChars { get; }
         int StartBoard { get; set; }
-        IState StateData { get; }
         int Stones { get; set; }
-        bool StonesEnabled { get; }
         ITerminal Terminal { get; set; }
-        ITileGrid Tiles { get; }
         int TimeLimit { get; set; }
         int TimePassed { get; set; }
-        bool TitleScreen { get; }
         int TorchCycles { get; set; }
         int Torches { get; set; }
-        bool TorchesEnabled { get; }
-        IList<int> TransporterHChars { get; }
-        IList<int> TransporterVChars { get; }
-        IList<int> Vector4 { get; }
-        IList<int> Vector8 { get; }
         int VisibleTileCount { get; set; }
-        IList<int> WebChars { get; }
-        IWorld WorldData { get; }
         string WorldFileName { get; set; }
         bool WorldLoaded { get; set; }
         string WorldName { get; set; }
-        int Height { get; }
-        IActor Player { get; }
-        int Width { get; }
-        string StoneText { get; }
-        int RandomNumber(int max);
-        int RandomNumberDeterministic(int max);
-        void Act_Bear(int index);
-        void Act_BlinkWall(int index);
-        void Act_Bomb(int index);
-        void Act_Bullet(int index);
-        void Act_Clockwise(int index);
-        void Act_Counter(int index);
-        void Act_DragonPup(int index);
-        void Act_Duplicator(int index);
-        void Act_Head(int index);
-        void Act_Lion(int index);
-        void Act_Messenger(int index);
-        void Act_Monitor(int index);
-        void Act_Object(int index);
-        void Act_Pairer(int index);
-        void Act_Player(int index);
-        void Act_Pusher(int index);
-        void Act_Roton(int index);
-        void Act_Ruffian(int index);
-        void Act_Scroll(int index);
-        void Act_Segment(int index);
-        void Act_Shark(int index);
-        void Act_Slime(int index);
-        void Act_Spider(int index);
-        void Act_SpinningGun(int index);
-        void Act_Star(int index);
-        void Act_Stone(int index);
-        void Act_Tiger(int index);
-        void Act_Transporter(int index);
-        void Interact_Ammo(IXyPair location, int index, IXyPair vector);
-        void Interact_BoardEdge(IXyPair location, int index, IXyPair vector);
-        void Interact_Bomb(IXyPair location, int index, IXyPair vector);
-        void Interact_Door(IXyPair location, int index, IXyPair vector);
-        void Interact_Enemy(IXyPair location, int index, IXyPair vector);
-        void Interact_Energizer(IXyPair location, int index, IXyPair vector);
-        void Interact_Fake(IXyPair location, int index, IXyPair vector);
-        void Interact_Forest(IXyPair location, int index, IXyPair vector);
-        void Interact_Gem(IXyPair location, int index, IXyPair vector);
-        void Interact_Invisible(IXyPair location, int index, IXyPair vector);
-        void Interact_Key(IXyPair location, int index, IXyPair vector);
-        void Interact_Object(IXyPair location, int index, IXyPair vector);
-        void Interact_Passage(IXyPair location, int index, IXyPair vector);
-        void Interact_Pushable(IXyPair location, int index, IXyPair vector);
-        void Interact_Scroll(IXyPair location, int index, IXyPair vector);
-        void Interact_Slime(IXyPair location, int index, IXyPair vector);
-        void Interact_Stone(IXyPair location, int index, IXyPair vector);
-        void Interact_Torch(IXyPair location, int index, IXyPair vector);
-        void Interact_Transporter(IXyPair location, int index, IXyPair vector);
-        void Interact_Water(IXyPair location, int index, IXyPair vector);
+        void ActBear(int index);
+        void ActBlinkWall(int index);
+        void ActBomb(int index);
+        void ActBullet(int index);
+        void ActClockwise(int index);
+        void ActCounter(int index);
+        void ActDragonPup(int index);
+        void ActDuplicator(int index);
+        void ActHead(int index);
+        void ActLion(int index);
+        void ActMessenger(int index);
+        void ActMonitor(int index);
+        void ActObject(int index);
+        void ActPairer(int index);
+        void ActPlayer(int index);
+        void ActPusher(int index);
+        void ActRoton(int index);
+        void ActRuffian(int index);
+        void ActScroll(int index);
+        void ActSegment(int index);
+        void ActShark(int index);
+        void ActSlime(int index);
+        void ActSpider(int index);
+        void ActSpinningGun(int index);
+        void ActStar(int index);
+        void ActStone(int index);
+        void ActTiger(int index);
+        void ActTransporter(int index);
         IActor ActorAt(IXyPair location);
         int ActorIndexAt(IXyPair location);
         void Attack(int index, IXyPair location);
@@ -171,45 +140,66 @@ namespace Roton.Core
         void ClearWorld();
         void Convey(IXyPair center, int direction);
         void Destroy(IXyPair location);
-        void RemoveItem(IXyPair location);
-        void ReadInput();
-        int ReadKey();
-        void WaitForTick();
         AnsiChar Draw(IXyPair location);
-        AnsiChar Draw_BlinkWall(IXyPair location);
-        AnsiChar Draw_Bomb(IXyPair location);
-        AnsiChar Draw_Clockwise(IXyPair location);
-        AnsiChar Draw_Counter(IXyPair location);
-        AnsiChar Draw_DragonPup(IXyPair location);
-        AnsiChar Draw_Duplicator(IXyPair location);
-        AnsiChar Draw_Line(IXyPair location);
-        AnsiChar Draw_Object(IXyPair location);
-        AnsiChar Draw_Pusher(IXyPair location);
-        AnsiChar Draw_SpinningGun(IXyPair location);
-        AnsiChar Draw_Star(IXyPair location);
-        AnsiChar Draw_Stone(IXyPair location);
-        AnsiChar Draw_Transporter(IXyPair location);
-        AnsiChar Draw_Web(IXyPair location);
-        void UpdateBoard(IXyPair location);
-        void UnpackBoard(int boardIndex);
-        void Start();
-        void Stop();
-        void SetBoard(int boardIndex);
+        AnsiChar DrawBlinkWall(IXyPair location);
+        AnsiChar DrawBomb(IXyPair location);
+        AnsiChar DrawClockwise(IXyPair location);
+        AnsiChar DrawCounter(IXyPair location);
+        AnsiChar DrawDragonPup(IXyPair location);
+        AnsiChar DrawDuplicator(IXyPair location);
+        AnsiChar DrawLine(IXyPair location);
+        AnsiChar DrawObject(IXyPair location);
+        AnsiChar DrawPusher(IXyPair location);
+        AnsiChar DrawSpinningGun(IXyPair location);
+        AnsiChar DrawStar(IXyPair location);
+        AnsiChar DrawStone(IXyPair location);
+        AnsiChar DrawTransporter(IXyPair location);
+        AnsiChar DrawWeb(IXyPair location);
+        IElement ElementAt(IXyPair location);
+        IXyPair GetCardinalVector(int index);
+        IXyPair GetConveyorVector(int index);
+        void InteractAmmo(IXyPair location, int index, IXyPair vector);
+        void InteractBoardEdge(IXyPair location, int index, IXyPair vector);
+        void InteractBomb(IXyPair location, int index, IXyPair vector);
+        void InteractDoor(IXyPair location, int index, IXyPair vector);
+        void InteractEnemy(IXyPair location, int index, IXyPair vector);
+        void InteractEnergizer(IXyPair location, int index, IXyPair vector);
+        void InteractFake(IXyPair location, int index, IXyPair vector);
+        void InteractForest(IXyPair location, int index, IXyPair vector);
+        void InteractGem(IXyPair location, int index, IXyPair vector);
+        void InteractInvisible(IXyPair location, int index, IXyPair vector);
+        void InteractKey(IXyPair location, int index, IXyPair vector);
+        void InteractObject(IXyPair location, int index, IXyPair vector);
+        void InteractPassage(IXyPair location, int index, IXyPair vector);
+        void InteractPushable(IXyPair location, int index, IXyPair vector);
+        void InteractScroll(IXyPair location, int index, IXyPair vector);
+        void InteractSlime(IXyPair location, int index, IXyPair vector);
+        void InteractStone(IXyPair location, int index, IXyPair vector);
+        void InteractTorch(IXyPair location, int index, IXyPair vector);
+        void InteractTransporter(IXyPair location, int index, IXyPair vector);
+        void InteractWater(IXyPair location, int index, IXyPair vector);
+        void MoveActor(int index, IXyPair location);
         void PackBoard();
-        IGrammar Grammar { get; }
-        IXyPair Rnd();
-        IXyPair Seek(IXyPair location);
+        void PlaySound(int priority, byte[] sound);
+        void Push(IXyPair location, IXyPair vector);
+        int RandomNumber(int max);
+        int RandomNumberDeterministic(int max);
         int ReadActorCodeByte(int index, ICodeInstruction instructionSource);
         string ReadActorCodeLine(int index, ICodeInstruction instructionSource);
         int ReadActorCodeNumber(int index, ICodeInstruction instructionSource);
         string ReadActorCodeWord(int index, ICodeInstruction instructionSource);
+        void ReadInput();
+        int ReadKey();
         void RedrawBoard();
-        IXyPair GetCardinalVector(int index);
-        IXyPair GetConveyorVector(int index);
-        void PlaySound(int priority, byte[] sound);
+        void RemoveItem(IXyPair location);
+        IXyPair Rnd();
+        IXyPair Seek(IXyPair location);
+        void SetBoard(int boardIndex);
         void SetMessage(int duration, string message, string message2 = "");
-        IElement ElementAt(IXyPair location);
-        void Push(IXyPair location, IXyPair vector);
-        void MoveActor(int index, IXyPair location);
+        void Start();
+        void Stop();
+        void UnpackBoard(int boardIndex);
+        void UpdateBoard(IXyPair location);
+        void WaitForTick();
     }
 }

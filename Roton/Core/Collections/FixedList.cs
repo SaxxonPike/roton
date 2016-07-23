@@ -1,31 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Roton.Core.Collections
 {
     public abstract class FixedList<T> : IList<T>
     {
-        public virtual int IndexOf(T item)
-        {
-            return -1;
-        }
-
-        public virtual void Insert(int index, T item)
-        {
-            throw new InvalidOperationException();
-        }
-
-        public virtual void RemoveAt(int index)
-        {
-            throw new InvalidOperationException();
-        }
-
-        public T this[int index]
-        {
-            get { return GetItem(index); }
-            set { SetItem(index, value); }
-        }
-
         public virtual void Add(T item)
         {
             throw new InvalidOperationException();
@@ -55,14 +35,35 @@ namespace Roton.Core.Collections
             throw new InvalidOperationException();
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new LinearEnumerator<T>(GetItem, Count);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return new LinearEnumerator<T>(GetItem, Count);
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public virtual int IndexOf(T item)
         {
-            return new LinearEnumerator<T>(GetItem, Count);
+            return -1;
+        }
+
+        public virtual void Insert(int index, T item)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public T this[int index]
+        {
+            get { return GetItem(index); }
+            set { SetItem(index, value); }
+        }
+
+        public virtual void RemoveAt(int index)
+        {
+            throw new InvalidOperationException();
         }
 
         protected virtual T GetItem(int index)

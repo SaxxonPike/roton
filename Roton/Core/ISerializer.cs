@@ -12,14 +12,14 @@ namespace Roton.Core
         int BoardDataOffset { get; }
         int BoardNameLength { get; }
         int BoardNameOffset { get; }
+        int WorldDataCapacity { get; }
+        int WorldDataOffset { get; }
+        int WorldDataSize { get; }
         byte[] LoadBoardData(Stream source);
         void LoadWorld(Stream source);
         byte[] PackBoard(ITileGrid tiles);
         void SaveBoardData(Stream target, byte[] data);
         void SaveWorld(Stream target);
         void UnpackBoard(ITileGrid tiles, byte[] data);
-        int WorldDataCapacity { get; }
-        int WorldDataOffset { get; }
-        int WorldDataSize { get; }
     }
 }

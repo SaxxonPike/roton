@@ -28,22 +28,22 @@ namespace Roton.Emulation.ZZT
         public override ISerializer Serializer { get; }
         public override ISounds Sounds { get; }
         public override IState StateData { get; }
-        public override ITileGrid Tiles { get; }
-        public override IWorld WorldData { get; }
 
         public override bool StonesEnabled => false;
+        public override ITileGrid Tiles { get; }
         public override bool TorchesEnabled => true;
+        public override IWorld WorldData { get; }
 
-        public override void Interact_Ammo(IXyPair location, int index, IXyPair vector)
+        public override void InteractAmmo(IXyPair location, int index, IXyPair vector)
         {
             Ammo += 5;
-            base.Interact_Ammo(location, index, vector);
+            base.InteractAmmo(location, index, vector);
         }
 
-        public override void Interact_Gem(IXyPair location, int index, IXyPair vector)
+        public override void InteractGem(IXyPair location, int index, IXyPair vector)
         {
             Health += 1;
-            base.Interact_Gem(location, index, vector);
+            base.InteractGem(location, index, vector);
         }
     }
 }

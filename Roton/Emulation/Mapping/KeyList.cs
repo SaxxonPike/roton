@@ -12,15 +12,11 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
-        protected override bool GetItem(int index)
-        {
-            return Memory.ReadBool(Offset + index);
-        }
+        public override int Count => 7;
 
-        protected override void SetItem(int index, bool value)
-        {
-            Memory.WriteBool(Offset + index, value);
-        }
+        private IMemory Memory { get; }
+
+        private int Offset { get; }
 
         public override void Clear()
         {
@@ -30,10 +26,14 @@ namespace Roton.Emulation.Mapping
             }
         }
 
-        public override int Count => 7;
+        protected override bool GetItem(int index)
+        {
+            return Memory.ReadBool(Offset + index);
+        }
 
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
+        protected override void SetItem(int index, bool value)
+        {
+            Memory.WriteBool(Offset + index, value);
+        }
     }
 }

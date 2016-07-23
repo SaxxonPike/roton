@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Roton.Core.Collections
@@ -14,18 +15,16 @@ namespace Roton.Core.Collections
 
         private int Count { get; }
 
-        public T Current => Getter(Index);
+        private Func<int, T> Getter { get; set; }
 
-        object System.Collections.IEnumerator.Current => Getter(Index);
+        private int Index { get; set; }
 
         public void Dispose()
         {
             Getter = null;
         }
 
-        private Func<int, T> Getter { get; set; }
-
-        private int Index { get; set; }
+        object IEnumerator.Current => Getter(Index);
 
         public bool MoveNext()
         {
@@ -37,5 +36,7 @@ namespace Roton.Core.Collections
         {
             Index = -1;
         }
+
+        public T Current => Getter(Index);
     }
 }

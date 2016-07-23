@@ -13,6 +13,14 @@ namespace Roton.Emulation.ZZT
             FadeMatrix = new Location[ViewportTileCount];
         }
 
+        private Location[] FadeMatrix { get; }
+
+        private int ViewportHeight => 25;
+
+        private int ViewportTileCount => ViewportWidth*ViewportHeight;
+
+        private int ViewportWidth => 60;
+
         public override void ClearPausing()
         {
             DrawStatusLine(5);
@@ -189,8 +197,6 @@ namespace Roton.Emulation.ZZT
             }
         }
 
-        private Location[] FadeMatrix { get; }
-
         private void FadeWait(int i)
         {
             if ((i & 0x3F) == 0)
@@ -338,11 +344,5 @@ namespace Roton.Emulation.ZZT
                 // but that's of no use to us
             }
         }
-
-        private int ViewportHeight => 25;
-
-        private int ViewportTileCount => ViewportWidth*ViewportHeight;
-
-        private int ViewportWidth => 60;
     }
 }

@@ -5,15 +5,15 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class SuperZztCore
     {
-        public override void Act_Monitor(int index)
+        public override void ActMonitor(int index)
         {
-            base.Act_Monitor(index);
+            base.ActMonitor(index);
             MoveActorOnRiver(index);
         }
 
-        public override void Act_Player(int index)
+        public override void ActPlayer(int index)
         {
-            base.Act_Player(index);
+            base.ActPlayer(index);
             MoveActorOnRiver(index);
         }
 
@@ -34,30 +34,30 @@ namespace Roton.Emulation.SuperZZT
             // Do nothing to override the player's color in Super ZZT
         }
 
-        public override void Interact_Ammo(IXyPair location, int index, IXyPair vector)
+        public override void InteractAmmo(IXyPair location, int index, IXyPair vector)
         {
             Ammo += 20;
-            base.Interact_Ammo(location, index, vector);
+            base.InteractAmmo(location, index, vector);
         }
 
-        public override void Interact_Forest(IXyPair location, int index, IXyPair vector)
+        public override void InteractForest(IXyPair location, int index, IXyPair vector)
         {
             TileAt(location).SetTo(Elements.FloorId, 0x02);
             UpdateBoard(location);
 
             // TODO: Implement forest music
 
-            if (AlertForest)
+            if (Alerts.AlertForest)
             {
                 SetMessage(0xC8, ForestMessage);
-                AlertForest = false;
+                Alerts.AlertForest = false;
             }
         }
 
-        public override void Interact_Gem(IXyPair location, int index, IXyPair vector)
+        public override void InteractGem(IXyPair location, int index, IXyPair vector)
         {
             Health += 10;
-            base.Interact_Gem(location, index, vector);
+            base.InteractGem(location, index, vector);
         }
 
         public override void RemoveItem(IXyPair location)

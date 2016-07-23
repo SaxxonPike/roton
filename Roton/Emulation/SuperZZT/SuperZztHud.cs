@@ -12,6 +12,12 @@ namespace Roton.Emulation.SuperZZT
             OldCamera = new Location(int.MinValue, int.MinValue);
         }
 
+        private Location OldCamera { get; }
+
+        private int ViewportHeight => 25;
+
+        private int ViewportWidth => 40;
+
         public override void CreateStatusBar()
         {
             for (var y = 0; y < ViewportHeight; y++)
@@ -36,7 +42,7 @@ namespace Roton.Emulation.SuperZZT
                     0x18.ToChar(),
                     0x19.ToChar(),
                     0x1A.ToChar(),
-                    0x1B.ToChar(),
+                    0x1B.ToChar()
                 });
                 DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
                 DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
@@ -131,8 +137,6 @@ namespace Roton.Emulation.SuperZZT
         {
             return new Vector(0x0F + -DisplayInfo.Camera.X, 0x03 + -DisplayInfo.Camera.Y);
         }
-
-        private Location OldCamera { get; }
 
         public override void RedrawBoard()
         {
@@ -229,9 +233,5 @@ namespace Roton.Emulation.SuperZZT
                 DrawString(0x03, 0x0A, DisplayInfo.Quiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             }
         }
-
-        private int ViewportHeight => 25;
-
-        private int ViewportWidth => 40;
     }
 }

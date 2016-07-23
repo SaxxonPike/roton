@@ -10,6 +10,10 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
+        private IMemory Memory { get; }
+
+        private int Offset { get; }
+
         public override int Color
         {
             get { return Memory.Read8(Offset + 0x01); }
@@ -21,9 +25,5 @@ namespace Roton.Emulation.Mapping
             get { return Memory.Read8(Offset + 0x00); }
             set { Memory.Write8(Offset + 0x00, value); }
         }
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
     }
 }

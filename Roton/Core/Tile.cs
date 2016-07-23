@@ -12,13 +12,13 @@
             Color = color;
         }
 
-        public virtual int Color { get; set; }
-        public virtual int Id { get; set; }
-
         public ITile Clone()
         {
             return new Tile(Id, Color);
         }
+
+        public virtual int Color { get; set; }
+        public virtual int Id { get; set; }
 
         public override string ToString()
         {

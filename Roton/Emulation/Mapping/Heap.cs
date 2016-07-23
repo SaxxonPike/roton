@@ -12,9 +12,9 @@ namespace Roton.Emulation.Mapping
             SetNextEntry();
         }
 
-        public byte[] this[int index] => Entries.ContainsKey(index)
-            ? Entries[index]
-            : null;
+        private IDictionary<int, byte[]> Entries { get; }
+
+        private int NextEntry { get; set; }
 
         public int Allocate(byte[] data)
         {
@@ -26,17 +26,17 @@ namespace Roton.Emulation.Mapping
             return index;
         }
 
-        private bool Contains(int index) => Entries.ContainsKey(index);
-
-        private IDictionary<int, byte[]> Entries { get; }
-
         public void FreeAll()
         {
             Entries.Clear();
             NextEntry = 1;
         }
 
-        private int NextEntry { get; set; }
+        public byte[] this[int index] => Entries.ContainsKey(index)
+            ? Entries[index]
+            : null;
+
+        private bool Contains(int index) => Entries.ContainsKey(index);
 
         private void SetNextEntry()
         {

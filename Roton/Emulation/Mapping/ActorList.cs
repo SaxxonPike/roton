@@ -16,6 +16,14 @@ namespace Roton.Emulation.Mapping
             }
         }
 
+        private IActor[] Cache { get; }
+
+        protected IMemory Memory { get; private set; }
+
+        public int Capacity { get; }
+
+        protected abstract IActor GetActor(int index);
+
         protected sealed override IActor GetItem(int index)
         {
             if (index >= 0 && index < Capacity)
@@ -27,13 +35,5 @@ namespace Roton.Emulation.Mapping
         {
             throw Exceptions.InvalidSet;
         }
-
-        private IActor[] Cache { get; }
-
-        public int Capacity { get; }
-
-        protected abstract IActor GetActor(int index);
-
-        protected IMemory Memory { get; private set; }
     }
 }

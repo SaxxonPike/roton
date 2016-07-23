@@ -9,9 +9,9 @@ namespace Roton.Resources
         {
         }
 
-        public byte[] GetZztElementData()
+        public IEnumerable<string> GetRootFileNames()
         {
-            return GetFile(GetCombinedPath("system", "elements-zzt.bin"));
+            return GetFileNames("root");
         }
 
         public byte[] GetSuperZztElementData()
@@ -19,19 +19,19 @@ namespace Roton.Resources
             return GetFile(GetCombinedPath("system", "elements-szzt.bin"));
         }
 
-        public byte[] GetZztMemoryData()
-        {
-            return GetFile(GetCombinedPath("system", "memory-zzt.bin"));
-        }
-
         public byte[] GetSuperZztMemoryData()
         {
             return GetFile(GetCombinedPath("system", "memory-szzt.bin"));
         }
 
-        public IEnumerable<string> GetRootFileNames()
+        public byte[] GetZztElementData()
         {
-            return GetFileNames("root");
+            return GetFile(GetCombinedPath("system", "elements-zzt.bin"));
+        }
+
+        public byte[] GetZztMemoryData()
+        {
+            return GetFile(GetCombinedPath("system", "memory-zzt.bin"));
         }
     }
 }

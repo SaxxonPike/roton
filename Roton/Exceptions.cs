@@ -24,12 +24,12 @@ namespace Roton
             "Pushing requires a non-zero vector."
             );
 
-        public static readonly Exception UnknownFormat = new Exception(
-            "The data is in an unknown format."
-            );
-
         public static readonly Exception SelfReferenceCentipede = new Exception(
             "Centipede segments must not self-reference."
+            );
+
+        public static readonly Exception UnknownFormat = new Exception(
+            "The data is in an unknown format."
             );
     }
 }

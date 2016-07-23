@@ -3,9 +3,9 @@
     public interface IKeyboard
     {
         bool Alt { get; }
-        void Clear();
         bool Control { get; }
-        int GetKey();
         bool Shift { get; }
+        void Clear();
+        int GetKey();
     }
 }

@@ -4,10 +4,10 @@ namespace Roton.Resources
 {
     public interface IResourceArchive
     {
-        byte[] GetZztElementData();
-        byte[] GetSuperZztElementData();
-        byte[] GetZztMemoryData();
-        byte[] GetSuperZztMemoryData();
         IEnumerable<string> GetRootFileNames();
+        byte[] GetSuperZztElementData();
+        byte[] GetSuperZztMemoryData();
+        byte[] GetZztElementData();
+        byte[] GetZztMemoryData();
     }
 }

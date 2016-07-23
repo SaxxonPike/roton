@@ -38,8 +38,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\IAlerts.cs" />
     <Compile Include="Core\IContext.cs" />
     <Compile Include="Core\IPackedBoard.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztAlerts.cs" />
+    <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
     <Compile Include="FileIo\IFileSystem.cs" />
@@ -67,16 +70,10 @@
     <Compile Include="Core\IElement.cs" />
     <Compile Include="Core\AnsiChar.cs" />
     <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\Context.Functions.cs" />
     <Compile Include="Emulation\Execution\Hud.cs" />
     <Compile Include="Emulation\Execution\ByRefInstruction.cs" />
     <Compile Include="Emulation\Execution\CodeSearchInfo.cs" />
     <Compile Include="Emulation\Execution\CodeSearchInfoProxy.cs" />
-    <Compile Include="Emulation\Execution\Core.Loops.cs" />
-    <Compile Include="Emulation\Execution\Core.Messages.cs" />
-    <Compile Include="Emulation\Execution\Core.Oop.cs" />
-    <Compile Include="Emulation\Execution\Core.Sound.cs" />
-    <Compile Include="Emulation\Execution\Core.Utility.cs" />
     <Compile Include="Emulation\Timing\CoreTimer.cs" />
     <Compile Include="Emulation\Execution\OopContext.cs" />
     <Compile Include="Emulation\Mapping\Heap.cs" />
@@ -93,10 +90,7 @@
     <Compile Include="Core\IActor.cs" />
     <Compile Include="Core\IBoard.cs" />
     <Compile Include="Core\IDisplayInfo.cs" />
-    <Compile Include="Emulation\Execution\Core.Behavior.cs" />
-    <Compile Include="Emulation\Execution\Core.Interface.cs" />
-    <Compile Include="Emulation\Execution\Core.Draw.cs" />
-    <Compile Include="Emulation\Execution\Core.Functions.cs" />
+    <Compile Include="Emulation\Execution\Core.cs" />
     <Compile Include="Emulation\Mapping\FlagList.cs" />
     <Compile Include="Emulation\Mapping\Int16List.cs" />
     <Compile Include="Emulation\Mapping\KeyList.cs" />

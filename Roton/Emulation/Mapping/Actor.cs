@@ -12,38 +12,9 @@ namespace Roton.Emulation.Mapping
             Offset = offset;
         }
 
-        public override string ToString()
-        {
-            var name = string.Empty;
-            if (Code != null)
-            {
-                // walk the code to get the name
-                var data = Code;
-                if (data[0] == 0x40)
-                {
-                    var length = data.Length;
-                    for (var i = 1; i < length; i++)
-                    {
-                        if (data[i] == 0x0D)
-                        {
-                            var nameData = new byte[i - 1];
-                            Array.Copy(data, 1, nameData, 0, nameData.Length);
-                            name = nameData.ToStringValue();
-                            break;
-                        }
-                    }
-                }
-                name = string.IsNullOrWhiteSpace(name) ? string.Empty : $" {name}";
-            }
-            name = Location + name;
-            return name;
-        }
+        private IMemory Memory { get; }
 
-        public byte[] Code
-        {
-            get { return Memory.Heap[Pointer]; }
-            set { }
-        }
+        public int Offset { get; }
 
         public int Cycle
         {
@@ -55,12 +26,6 @@ namespace Roton.Emulation.Mapping
         {
             get { return Memory.Read16(Offset + 0x0B); }
             set { Memory.Write16(Offset + 0x0B, value); }
-        }
-
-        public int Instruction
-        {
-            get { return Memory.Read16(Offset + 0x15); }
-            set { Memory.Write16(Offset + 0x15, value); }
         }
 
         public int Leader
@@ -76,10 +41,6 @@ namespace Roton.Emulation.Mapping
         }
 
         public IXyPair Location => new MemoryLocation(Memory, Offset + 0x00);
-
-        private IMemory Memory { get; }
-
-        public int Offset { get; }
 
         public int P1
         {
@@ -108,5 +69,44 @@ namespace Roton.Emulation.Mapping
         public ITile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
 
         public IXyPair Vector => new MemoryVector(Memory, Offset + 0x02);
+
+        public byte[] Code
+        {
+            get { return Memory.Heap[Pointer]; }
+            set { }
+        }
+
+        public int Instruction
+        {
+            get { return Memory.Read16(Offset + 0x15); }
+            set { Memory.Write16(Offset + 0x15, value); }
+        }
+
+        public override string ToString()
+        {
+            var name = string.Empty;
+            if (Code != null)
+            {
+                // walk the code to get the name
+                var data = Code;
+                if (data[0] == 0x40)
+                {
+                    var length = data.Length;
+                    for (var i = 1; i < length; i++)
+                    {
+                        if (data[i] == 0x0D)
+                        {
+                            var nameData = new byte[i - 1];
+                            Array.Copy(data, 1, nameData, 0, nameData.Length);
+                            name = nameData.ToStringValue();
+                            break;
+                        }
+                    }
+                }
+                name = string.IsNullOrWhiteSpace(name) ? string.Empty : $" {name}";
+            }
+            name = Location + name;
+            return name;
+        }
     }
 }

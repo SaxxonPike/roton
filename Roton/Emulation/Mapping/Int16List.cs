@@ -13,6 +13,12 @@ namespace Roton.Emulation.Mapping
             Count = count;
         }
 
+        public override int Count { get; }
+
+        private IMemory Memory { get; }
+
+        private int Offset { get; }
+
         protected override int GetItem(int index)
         {
             return Memory.Read16(Offset + (index << 1));
@@ -22,11 +28,5 @@ namespace Roton.Emulation.Mapping
         {
             Memory.Write16(Offset + (index << 1), value);
         }
-
-        public override int Count { get; }
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
     }
 }

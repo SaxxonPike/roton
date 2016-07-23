@@ -2,6 +2,7 @@
 {
     public interface IHud
     {
+        ITerminal Terminal { get; set; }
         void ClearPausing();
         void ClearTitleStatus();
         bool Confirm(string message);
@@ -19,7 +20,6 @@
         void GenerateFadeMatrix();
         void RedrawBoard();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);
-        ITerminal Terminal { get; set; }
         void UpdateBorder();
         void UpdateCamera();
         void UpdateStatus();

@@ -10,7 +10,7 @@ namespace Roton.Core
         private const string HexAlphabet = "0123456789ABCDEF";
 
         /// <summary>
-        /// Return the absolute difference between this value and another specified value.
+        ///     Return the absolute difference between this value and another specified value.
         /// </summary>
         internal static int AbsDiff(this int a, int b)
         {
@@ -21,7 +21,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
+        ///     Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
         /// </summary>
         internal static int Polarity(this int value)
         {
@@ -33,7 +33,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Read a pascal-style string using code page 437.
+        ///     Read a pascal-style string using code page 437.
         /// </summary>
         internal static string ReadPascalString(this BinaryReader reader)
         {
@@ -43,7 +43,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Read a pascal-style string using code page 437, assuming padding.
+        ///     Read a pascal-style string using code page 437, assuming padding.
         /// </summary>
         internal static string ReadPascalString(this BinaryReader reader, int maxLength)
         {
@@ -55,7 +55,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Return the squared result of an integer.
+        ///     Return the squared result of an integer.
         /// </summary>
         internal static int Square(this int i)
         {
@@ -63,7 +63,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert an ASCII value to a one-character string.
+        ///     Convert an ASCII value to a one-character string.
         /// </summary>
         internal static string ToAscii(this int value)
         {
@@ -71,7 +71,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a string to a byte array using code page 437.
+        ///     Convert a string to a byte array using code page 437.
         /// </summary>
         internal static byte[] ToBytes(this string value)
         {
@@ -83,7 +83,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a char array to a byte array using code page 437.
+        ///     Convert a char array to a byte array using code page 437.
         /// </summary>
         internal static byte[] ToBytes(this char[] value)
         {
@@ -95,7 +95,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert an integer to a character using code page 437.
+        ///     Convert an integer to a character using code page 437.
         /// </summary>
         internal static char ToChar(this int value)
         {
@@ -103,7 +103,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a byte array to a char array using code page 437.
+        ///     Convert a byte array to a char array using code page 437.
         /// </summary>
         internal static char[] ToChars(this byte[] value)
         {
@@ -111,7 +111,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a value to a hex string.
+        ///     Convert a value to a hex string.
         /// </summary>
         private static string ToHex(int value, int chars)
         {
@@ -126,15 +126,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a value to an 8-bit hex string.
-        /// </summary>
-        public static string ToHex8(this int value)
-        {
-            return ToHex(value, 2);
-        }
-
-        /// <summary>
-        /// Convert a value to a 16-bit hex string.
+        ///     Convert a value to a 16-bit hex string.
         /// </summary>
         public static string ToHex16(this int value)
         {
@@ -142,7 +134,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a value to a 32-bit hex string.
+        ///     Convert a value to a 32-bit hex string.
         /// </summary>
         public static string ToHex32(this int value)
         {
@@ -150,7 +142,15 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the lowercase representation of an ASCII char stored as a byte.
+        ///     Convert a value to an 8-bit hex string.
+        /// </summary>
+        public static string ToHex8(this int value)
+        {
+            return ToHex(value, 2);
+        }
+
+        /// <summary>
+        ///     Get the lowercase representation of an ASCII char stored as a byte.
         /// </summary>
         internal static int ToLowerCase(this byte value)
         {
@@ -162,7 +162,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the lowercase representation of a string using code page 437.
+        ///     Get the lowercase representation of a string using code page 437.
         /// </summary>
         internal static byte[] ToLowerCase(this byte[] value)
         {
@@ -180,7 +180,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the lowercase representation of an ASCII char stored as an integer.
+        ///     Get the lowercase representation of an ASCII char stored as an integer.
         /// </summary>
         internal static int ToLowerCase(this int value)
         {
@@ -192,7 +192,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert an integer to a string using code page 437.
+        ///     Convert an integer to a string using code page 437.
         /// </summary>
         internal static string ToStringValue(this int value)
         {
@@ -200,7 +200,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Convert a byte array to a string using code page 437.
+        ///     Convert a byte array to a string using code page 437.
         /// </summary>
         internal static string ToStringValue(this byte[] value)
         {
@@ -208,7 +208,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the uppercase representation of an ASCII char stored as a byte.
+        ///     Get the uppercase representation of an ASCII char stored as a byte.
         /// </summary>
         internal static int ToUpperCase(this byte value)
         {
@@ -220,7 +220,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the uppercase representation of a string using code page 437.
+        ///     Get the uppercase representation of a string using code page 437.
         /// </summary>
         internal static byte[] ToUpperCase(this byte[] value)
         {
@@ -238,7 +238,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Get the uppercase representation of an ASCII char stored as an integer.
+        ///     Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
         internal static int ToUpperCase(this int value)
         {
@@ -250,7 +250,7 @@ namespace Roton.Core
         }
 
         /// <summary>
-        /// Write a pascal-style string using code page 437.
+        ///     Write a pascal-style string using code page 437.
         /// </summary>
         internal static void WritePascalString(this BinaryWriter writer, string value)
         {

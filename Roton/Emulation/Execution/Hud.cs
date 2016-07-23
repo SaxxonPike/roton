@@ -10,6 +10,8 @@ namespace Roton.Emulation.Execution
         }
 
         protected int Ammo => DisplayInfo.Ammo;
+
+        public IDisplayInfo DisplayInfo { get; }
         protected int Gems => DisplayInfo.Gems;
         protected IKeyList Keys => DisplayInfo.Keys;
         protected int TorchCycles => DisplayInfo.TorchCycles;
@@ -35,8 +37,6 @@ namespace Roton.Emulation.Execution
         public virtual void CreateStatusText()
         {
         }
-
-        public IDisplayInfo DisplayInfo { get; }
 
         public virtual void DrawChar(int x, int y, AnsiChar ac)
         {

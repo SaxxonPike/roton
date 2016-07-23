@@ -11,11 +11,6 @@ namespace Roton.Emulation.SuperZZT
             Memory = memory;
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         private IMemory Memory { get; }
 
         public int Ammo
@@ -36,6 +31,8 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x785D, value); }
         }
 
+        public IFlagList Flags => new SuperZztFlagList(Memory);
+
         public int Gems
         {
             get { return Memory.Read16(0x784E); }
@@ -47,8 +44,6 @@ namespace Roton.Emulation.SuperZZT
             get { return Memory.Read16(0x7857); }
             set { Memory.Write16(0x7857, value); }
         }
-
-        public IFlagList Flags => new SuperZztFlagList(Memory);
 
         public IKeyList Keys => new KeyList(Memory, 0x7850);
 
@@ -95,5 +90,10 @@ namespace Roton.Emulation.SuperZZT
         }
 
         public int WorldType => -2;
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

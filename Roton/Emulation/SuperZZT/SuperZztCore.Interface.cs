@@ -23,11 +23,11 @@ namespace Roton.Emulation.SuperZZT
         public override IActorList Actors { get; }
         public override IBoard BoardData { get; }
 
+        public override IElementList Elements { get; }
+
         public override IGrammar Grammar { get; }
 
         public override IHud Hud { get; }
-
-        public override IElementList Elements { get; }
 
         public override ISerializer Serializer { get; }
 

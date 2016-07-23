@@ -109,266 +109,6 @@ namespace Roton.Emulation.Execution
             return success ? result : null;
         }
 
-        protected virtual IDictionary<string, Action<ICore>> GetCheats()
-        {
-            return new Dictionary<string, Action<ICore>>
-            {
-                {"AMMO", Cheat_Ammo},
-                {"DARK", Cheat_Dark},
-                {"GEMS", Cheat_Gems},
-                {"HEALTH", Cheat_Health},
-                {"KEYS", Cheat_Keys},
-                {"TIME", Cheat_Time},
-                {"TORCHES", Cheat_Torches},
-                {"ZAP", Cheat_Zap}
-            };
-        }
-
-        protected virtual IDictionary<string, Action<IOopContext>> GetCommands()
-        {
-            return new Dictionary<string, Action<IOopContext>>()
-            {
-                {"BECOME", Command_Become},
-                {"BIND", Command_Bind},
-                {"CHANGE", Command_Change},
-                {"CHAR", Command_Char},
-                {"CLEAR", Command_Clear},
-                {"CYCLE", Command_Cycle},
-                {"DIE", Command_Die},
-                {"END", Command_End},
-                {"ENDGAME", Command_Endgame},
-                {"GIVE", Command_Give},
-                {"GO", Command_Go},
-                {"IDLE", Command_Idle},
-                {"IF", Command_If},
-                {"LOCK", Command_Lock},
-                {"PLAY", Command_Play},
-                {"PUT", Command_Put},
-                {"RESTART", Command_Restart},
-                {"RESTORE", Command_Restore},
-                {"SEND", Command_Send},
-                {"SET", Command_Set},
-                {"SHOOT", Command_Shoot},
-                {"TAKE", Command_Take},
-                {"THEN", Command_Then},
-                {"THROWSTAR", Command_Throwstar},
-                {"TRY", Command_Try},
-                {"UNLOCK", Command_Unlock},
-                {"WALK", Command_Walk},
-                {"ZAP", Command_Zap}
-            };
-        }
-
-        protected virtual IDictionary<string, Func<IOopContext, bool?>> GetConditions()
-        {
-            return new Dictionary<string, Func<IOopContext, bool?>>
-            {
-                {"ALLIGNED", Condition_Alligned},
-                {"ANY", Condition_Any},
-                {"BLOCKED", Condition_Blocked},
-                {"CONTACT", Condition_Contact},
-                {"ENERGIZED", Condition_Energized},
-                {"NOT", Condition_Not}
-            };
-        }
-
-        protected virtual IDictionary<string, Func<IOopContext, IXyPair>> GetDirections()
-        {
-            return new Dictionary<string, Func<IOopContext, IXyPair>>
-            {
-                {"CW", Direction_Cw},
-                {"CCW", Direction_Ccw},
-                {"E", Direction_East},
-                {"EAST", Direction_East},
-                {"FLOW", Direction_Flow},
-                {"I", Direction_Idle},
-                {"IDLE", Direction_Idle},
-                {"N", Direction_North},
-                {"NORTH", Direction_North},
-                {"OPP", Direction_Opp},
-                {"RND", Direction_Rnd},
-                {"RNDNE", Direction_RndNe},
-                {"RNDNS", Direction_RndNs},
-                {"RNDP", Direction_RndP},
-                {"S", Direction_South},
-                {"SOUTH", Direction_South},
-                {"SEEK", Direction_Seek},
-                {"W", Direction_West},
-                {"WEST", Direction_West}
-            };
-        }
-
-        protected virtual IDictionary<string, Func<IOopContext, IOopItem>> GetItems()
-        {
-            return new Dictionary<string, Func<IOopContext, IOopItem>>
-            {
-                {"AMMO", Item_Ammo},
-                {"GEMS", Item_Gems},
-                {"HEALTH", Item_Health},
-                {"SCORE", Item_Score},
-                {"TIME", Item_Time},
-                {"TORCHES", Item_Torches}
-            };
-        }
-
-        protected bool? Condition_Alligned(IOopContext context)
-        {
-            return context.Actor.Location.X == context.Player.Location.X ||
-                   context.Actor.Location.Y == context.Player.Location.Y;
-        }
-
-        protected bool? Condition_Any(IOopContext context)
-        {
-            var kind = GetKind(context);
-            return false;
-        }
-
-        protected bool? Condition_Blocked(IOopContext context)
-        {
-            var direction = GetDirection(context);
-            return false;
-        }
-
-        protected bool? Condition_Contact(IOopContext context)
-        {
-            return false;
-        }
-
-        protected bool? Condition_Energized(IOopContext context)
-        {
-            return false;
-        }
-
-        protected bool? Condition_Not(IOopContext context)
-        {
-            return !GetCondition(context);
-        }
-
-        protected IXyPair Direction_Cw(IOopContext context)
-        {
-            return GetDirection(context).Clockwise();
-        }
-
-        protected IXyPair Direction_Ccw(IOopContext context)
-        {
-            return GetDirection(context).CounterClockwise();
-        }
-
-        protected IXyPair Direction_East(IOopContext context)
-        {
-            return Vector.East;
-        }
-
-        protected IXyPair Direction_Flow(IOopContext context)
-        {
-            return context.Actor.Vector.Clone();
-        }
-
-        protected IXyPair Direction_Idle(IOopContext context)
-        {
-            return Vector.Idle;
-        }
-
-        protected IXyPair Direction_North(IOopContext context)
-        {
-            return Vector.North;
-        }
-
-        protected IXyPair Direction_Opp(IOopContext context)
-        {
-            return GetDirection(context).Opposite();
-        }
-
-        protected IXyPair Direction_Rnd(IOopContext context)
-        {
-            return context.GetRandomDirection();
-        }
-
-        protected IXyPair Direction_RndNe(IOopContext context)
-        {
-            return context.GetRandomNumber(2) == 0
-                ? Vector.North
-                : Vector.East;
-        }
-
-        protected IXyPair Direction_RndNs(IOopContext context)
-        {
-            return context.GetRandomNumber(2) == 0
-                ? Vector.North
-                : Vector.South;
-        }
-
-        protected IXyPair Direction_RndP(IOopContext context)
-        {
-            return context.GetRandomNumber(2) == 0
-                ? GetDirection(context).Clockwise()
-                : GetDirection(context).CounterClockwise();
-        }
-
-        protected IXyPair Direction_South(IOopContext context)
-        {
-            return Vector.South;
-        }
-
-        protected IXyPair Direction_Seek(IOopContext context)
-        {
-            return context.GetSeek(context.Actor.Location);
-        }
-
-        protected IXyPair Direction_West(IOopContext context)
-        {
-            return Vector.West;
-        }
-
-        protected IOopItem Item_Ammo(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Ammo,
-                v => context.World.Ammo = v);
-        }
-
-        protected IOopItem Item_Gems(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Gems,
-                v => context.World.Gems = v);
-        }
-
-        protected IOopItem Item_Health(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Health,
-                v => context.World.Health = v);
-        }
-
-        protected IOopItem Item_Score(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Score,
-                v => context.World.Score = v);
-        }
-
-        protected IOopItem Item_Stones(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Stones,
-                v => context.World.Stones = v);
-        }
-
-        protected IOopItem Item_Time(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.TimePassed,
-                v => context.World.TimePassed = v);
-        }
-
-        protected IOopItem Item_Torches(IOopContext context)
-        {
-            return new OopItem(
-                () => context.World.Torches,
-                v => context.World.Torches = v);
-        }
-
         protected void Cheat_Ammo(ICore core)
         {
             core.WorldData.Ammo += 5;
@@ -477,32 +217,6 @@ namespace Roton.Emulation.Execution
         protected void Command_Endgame(IOopContext context)
         {
             context.World.Health = 0;
-        }
-
-        private bool ExecuteTransaction(IOopContext context, bool take)
-        {
-            // Does the item exist?
-            var item = GetItem(context);
-            if (item == null)
-                return true;
-
-            // Do we have a valid amount?
-            var amount = context.ReadNextNumber();
-            if (amount <= 0)
-                return true;
-
-            // Modify value if we are taking.
-            if (take)
-                context.OopNumber = -context.OopNumber;
-
-            // Determine if the result will be in range.
-            var pendingAmount = (item.Value + context.OopNumber);
-            if ((pendingAmount & 0xFFFF) >= 0x8000)
-                return true;
-
-            // Successful transaction.
-            item.Value = pendingAmount;
-            return false;
         }
 
         protected void Command_Give(IOopContext context)
@@ -620,6 +334,292 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Zap(IOopContext context)
         {
+        }
+
+        protected bool? Condition_Alligned(IOopContext context)
+        {
+            return context.Actor.Location.X == context.Player.Location.X ||
+                   context.Actor.Location.Y == context.Player.Location.Y;
+        }
+
+        protected bool? Condition_Any(IOopContext context)
+        {
+            var kind = GetKind(context);
+            return false;
+        }
+
+        protected bool? Condition_Blocked(IOopContext context)
+        {
+            var direction = GetDirection(context);
+            return false;
+        }
+
+        protected bool? Condition_Contact(IOopContext context)
+        {
+            return false;
+        }
+
+        protected bool? Condition_Energized(IOopContext context)
+        {
+            return false;
+        }
+
+        protected bool? Condition_Not(IOopContext context)
+        {
+            return !GetCondition(context);
+        }
+
+        protected IXyPair Direction_Ccw(IOopContext context)
+        {
+            return GetDirection(context).CounterClockwise();
+        }
+
+        protected IXyPair Direction_Cw(IOopContext context)
+        {
+            return GetDirection(context).Clockwise();
+        }
+
+        protected IXyPair Direction_East(IOopContext context)
+        {
+            return Vector.East;
+        }
+
+        protected IXyPair Direction_Flow(IOopContext context)
+        {
+            return context.Actor.Vector.Clone();
+        }
+
+        protected IXyPair Direction_Idle(IOopContext context)
+        {
+            return Vector.Idle;
+        }
+
+        protected IXyPair Direction_North(IOopContext context)
+        {
+            return Vector.North;
+        }
+
+        protected IXyPair Direction_Opp(IOopContext context)
+        {
+            return GetDirection(context).Opposite();
+        }
+
+        protected IXyPair Direction_Rnd(IOopContext context)
+        {
+            return context.GetRandomDirection();
+        }
+
+        protected IXyPair Direction_RndNe(IOopContext context)
+        {
+            return context.GetRandomNumber(2) == 0
+                ? Vector.North
+                : Vector.East;
+        }
+
+        protected IXyPair Direction_RndNs(IOopContext context)
+        {
+            return context.GetRandomNumber(2) == 0
+                ? Vector.North
+                : Vector.South;
+        }
+
+        protected IXyPair Direction_RndP(IOopContext context)
+        {
+            return context.GetRandomNumber(2) == 0
+                ? GetDirection(context).Clockwise()
+                : GetDirection(context).CounterClockwise();
+        }
+
+        protected IXyPair Direction_Seek(IOopContext context)
+        {
+            return context.GetSeek(context.Actor.Location);
+        }
+
+        protected IXyPair Direction_South(IOopContext context)
+        {
+            return Vector.South;
+        }
+
+        protected IXyPair Direction_West(IOopContext context)
+        {
+            return Vector.West;
+        }
+
+        private bool ExecuteTransaction(IOopContext context, bool take)
+        {
+            // Does the item exist?
+            var item = GetItem(context);
+            if (item == null)
+                return true;
+
+            // Do we have a valid amount?
+            var amount = context.ReadNextNumber();
+            if (amount <= 0)
+                return true;
+
+            // Modify value if we are taking.
+            if (take)
+                context.OopNumber = -context.OopNumber;
+
+            // Determine if the result will be in range.
+            var pendingAmount = item.Value + context.OopNumber;
+            if ((pendingAmount & 0xFFFF) >= 0x8000)
+                return true;
+
+            // Successful transaction.
+            item.Value = pendingAmount;
+            return false;
+        }
+
+        protected virtual IDictionary<string, Action<ICore>> GetCheats()
+        {
+            return new Dictionary<string, Action<ICore>>
+            {
+                {"AMMO", Cheat_Ammo},
+                {"DARK", Cheat_Dark},
+                {"GEMS", Cheat_Gems},
+                {"HEALTH", Cheat_Health},
+                {"KEYS", Cheat_Keys},
+                {"TIME", Cheat_Time},
+                {"TORCHES", Cheat_Torches},
+                {"ZAP", Cheat_Zap}
+            };
+        }
+
+        protected virtual IDictionary<string, Action<IOopContext>> GetCommands()
+        {
+            return new Dictionary<string, Action<IOopContext>>
+            {
+                {"BECOME", Command_Become},
+                {"BIND", Command_Bind},
+                {"CHANGE", Command_Change},
+                {"CHAR", Command_Char},
+                {"CLEAR", Command_Clear},
+                {"CYCLE", Command_Cycle},
+                {"DIE", Command_Die},
+                {"END", Command_End},
+                {"ENDGAME", Command_Endgame},
+                {"GIVE", Command_Give},
+                {"GO", Command_Go},
+                {"IDLE", Command_Idle},
+                {"IF", Command_If},
+                {"LOCK", Command_Lock},
+                {"PLAY", Command_Play},
+                {"PUT", Command_Put},
+                {"RESTART", Command_Restart},
+                {"RESTORE", Command_Restore},
+                {"SEND", Command_Send},
+                {"SET", Command_Set},
+                {"SHOOT", Command_Shoot},
+                {"TAKE", Command_Take},
+                {"THEN", Command_Then},
+                {"THROWSTAR", Command_Throwstar},
+                {"TRY", Command_Try},
+                {"UNLOCK", Command_Unlock},
+                {"WALK", Command_Walk},
+                {"ZAP", Command_Zap}
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, bool?>> GetConditions()
+        {
+            return new Dictionary<string, Func<IOopContext, bool?>>
+            {
+                {"ALLIGNED", Condition_Alligned},
+                {"ANY", Condition_Any},
+                {"BLOCKED", Condition_Blocked},
+                {"CONTACT", Condition_Contact},
+                {"ENERGIZED", Condition_Energized},
+                {"NOT", Condition_Not}
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, IXyPair>> GetDirections()
+        {
+            return new Dictionary<string, Func<IOopContext, IXyPair>>
+            {
+                {"CW", Direction_Cw},
+                {"CCW", Direction_Ccw},
+                {"E", Direction_East},
+                {"EAST", Direction_East},
+                {"FLOW", Direction_Flow},
+                {"I", Direction_Idle},
+                {"IDLE", Direction_Idle},
+                {"N", Direction_North},
+                {"NORTH", Direction_North},
+                {"OPP", Direction_Opp},
+                {"RND", Direction_Rnd},
+                {"RNDNE", Direction_RndNe},
+                {"RNDNS", Direction_RndNs},
+                {"RNDP", Direction_RndP},
+                {"S", Direction_South},
+                {"SOUTH", Direction_South},
+                {"SEEK", Direction_Seek},
+                {"W", Direction_West},
+                {"WEST", Direction_West}
+            };
+        }
+
+        protected virtual IDictionary<string, Func<IOopContext, IOopItem>> GetItems()
+        {
+            return new Dictionary<string, Func<IOopContext, IOopItem>>
+            {
+                {"AMMO", Item_Ammo},
+                {"GEMS", Item_Gems},
+                {"HEALTH", Item_Health},
+                {"SCORE", Item_Score},
+                {"TIME", Item_Time},
+                {"TORCHES", Item_Torches}
+            };
+        }
+
+        protected IOopItem Item_Ammo(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Ammo,
+                v => context.World.Ammo = v);
+        }
+
+        protected IOopItem Item_Gems(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Gems,
+                v => context.World.Gems = v);
+        }
+
+        protected IOopItem Item_Health(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Health,
+                v => context.World.Health = v);
+        }
+
+        protected IOopItem Item_Score(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Score,
+                v => context.World.Score = v);
+        }
+
+        protected IOopItem Item_Stones(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Stones,
+                v => context.World.Stones = v);
+        }
+
+        protected IOopItem Item_Time(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.TimePassed,
+                v => context.World.TimePassed = v);
+        }
+
+        protected IOopItem Item_Torches(IOopContext context)
+        {
+            return new OopItem(
+                () => context.World.Torches,
+                v => context.World.Torches = v);
         }
     }
 }

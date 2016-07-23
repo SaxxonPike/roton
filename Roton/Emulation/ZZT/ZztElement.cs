@@ -18,12 +18,6 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteString(Offset + 0x82, value); }
         }
 
-        public override string EditorCategory
-        {
-            get { return Memory.ReadString(Offset + 0x2E); }
-            set { Memory.WriteString(Offset + 0x2E, value); }
-        }
-
         public override int Character
         {
             get { return Memory.Read8(Offset + 0x00); }
@@ -48,16 +42,28 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(Offset + 0x0C, value); }
         }
 
-        public override bool IsDestructible
+        public override string EditorCategory
         {
-            get { return Memory.ReadBool(Offset + 0x02); }
-            set { Memory.WriteBool(Offset + 0x02, value); }
+            get { return Memory.ReadString(Offset + 0x2E); }
+            set { Memory.WriteString(Offset + 0x2E, value); }
         }
 
         public override bool HasDrawCode
         {
             get { return Memory.ReadBool(Offset + 0x07); }
             set { Memory.WriteBool(Offset + 0x07, value); }
+        }
+
+        public override bool IsAlwaysVisible
+        {
+            get { return Memory.ReadBool(Offset + 0x04); }
+            set { Memory.WriteBool(Offset + 0x04, value); }
+        }
+
+        public override bool IsDestructible
+        {
+            get { return Memory.ReadBool(Offset + 0x02); }
+            set { Memory.WriteBool(Offset + 0x02, value); }
         }
 
         public override bool IsEditorFloor
@@ -72,16 +78,22 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteBool(Offset + 0x06, value); }
         }
 
-        public override int MenuKey
+        public override bool IsPushable
         {
-            get { return Memory.Read8(Offset + 0x18); }
-            set { Memory.Write8(Offset + 0x18, value); }
+            get { return Memory.ReadBool(Offset + 0x03); }
+            set { Memory.WriteBool(Offset + 0x03, value); }
         }
 
         public override int MenuIndex
         {
             get { return Memory.Read16(Offset + 0x16); }
             set { Memory.Write16(Offset + 0x16, value); }
+        }
+
+        public override int MenuKey
+        {
+            get { return Memory.Read8(Offset + 0x18); }
+            set { Memory.Write8(Offset + 0x18, value); }
         }
 
         public override string Name
@@ -112,18 +124,6 @@ namespace Roton.Emulation.ZZT
         {
             get { return Memory.Read16(Offset + 0xC1); }
             set { Memory.Write16(Offset + 0xC1, value); }
-        }
-
-        public override bool IsPushable
-        {
-            get { return Memory.ReadBool(Offset + 0x03); }
-            set { Memory.WriteBool(Offset + 0x03, value); }
-        }
-
-        public override bool IsAlwaysVisible
-        {
-            get { return Memory.ReadBool(Offset + 0x04); }
-            set { Memory.WriteBool(Offset + 0x04, value); }
         }
 
         public override string StepEditText

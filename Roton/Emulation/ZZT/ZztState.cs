@@ -13,6 +13,7 @@ namespace Roton.Emulation.ZZT
         {
             _memory = memory;
             memory.Write(0x0000, memoryBytes);
+            Alerts = new ZztAlerts(_memory);
             BorderTile = new MemoryTile(_memory, 0x0072);
             Colors = new ZztColorList(_memory);
             DefaultActor = new Actor(_memory, 0x0076);
@@ -45,71 +46,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.Write16(0x31CD, value); }
         }
 
-        public bool AlertAmmo
-        {
-            get { return _memory.ReadBool(0x4AAB); }
-            set { _memory.WriteBool(0x4AAB, value); }
-        }
-
-        public bool AlertDark
-        {
-            get { return _memory.ReadBool(0x4AB1); }
-            set { _memory.WriteBool(0x4AB1, value); }
-        }
-
-        public bool AlertEnergy
-        {
-            get { return _memory.ReadBool(0x4AB5); }
-            set { _memory.WriteBool(0x4AB5, value); }
-        }
-
-        public bool AlertFake
-        {
-            get { return _memory.ReadBool(0x4AB3); }
-            set { _memory.WriteBool(0x4AB3, value); }
-        }
-
-        public bool AlertForest
-        {
-            get { return _memory.ReadBool(0x4AB2); }
-            set { _memory.WriteBool(0x4AB2, value); }
-        }
-
-        public bool AlertGem
-        {
-            get { return _memory.ReadBool(0x4AB4); }
-            set { _memory.WriteBool(0x4AB4, value); }
-        }
-
-        public bool AlertNoAmmo
-        {
-            get { return _memory.ReadBool(0x4AAC); }
-            set { _memory.WriteBool(0x4AAC, value); }
-        }
-
-        public bool AlertNoShoot
-        {
-            get { return _memory.ReadBool(0x4AAD); }
-            set { _memory.WriteBool(0x4AAD, value); }
-        }
-
-        public bool AlertNotDark
-        {
-            get { return _memory.ReadBool(0x4AB1); }
-            set { _memory.WriteBool(0x4AB1, value); }
-        }
-
-        public bool AlertNoTorch
-        {
-            get { return _memory.ReadBool(0x4AAF); }
-            set { _memory.WriteBool(0x4AAF, value); }
-        }
-
-        public bool AlertTorch
-        {
-            get { return _memory.ReadBool(0x4AAE); }
-            set { _memory.WriteBool(0x4AAE, value); }
-        }
+        public IAlerts Alerts { get; }
 
         public int BoardCount
         {

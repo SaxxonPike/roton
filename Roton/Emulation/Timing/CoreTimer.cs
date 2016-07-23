@@ -6,19 +6,11 @@ namespace Roton.Emulation.Timing
     // this is the master core timer, it'll automatically start and stop when it is queried regularly
     internal static class CoreTimer
     {
-        private static void Initialize()
-        {
-            if (!Initialized)
-            {
-                Initialized = true;
-                var thread = new Thread(ThreadLoop);
-                thread.Start();
-            }
-        }
+        private static int _maxLaggedTicks;
+
+        private static int _tick;
 
         public static bool Initialized { get; private set; }
-
-        private static int _maxLaggedTicks;
 
         public static int MaxLaggedTicks
         {
@@ -31,6 +23,32 @@ namespace Roton.Emulation.Timing
                 return _maxLaggedTicks;
             }
             set { _maxLaggedTicks = value; }
+        }
+
+        public static int Tick
+        {
+            get
+            {
+                if (!Initialized)
+                {
+                    Initialize();
+                }
+                ResetShutdown();
+                return _tick;
+            }
+            set { _tick = value; }
+        }
+
+        private static int TicksUntilShutdown { get; set; }
+
+        private static void Initialize()
+        {
+            if (!Initialized)
+            {
+                Initialized = true;
+                var thread = new Thread(ThreadLoop);
+                thread.Start();
+            }
         }
 
         private static void ResetShutdown()
@@ -66,24 +84,6 @@ namespace Roton.Emulation.Timing
             }
             UnInitialize();
         }
-
-        private static int _tick;
-
-        public static int Tick
-        {
-            get
-            {
-                if (!Initialized)
-                {
-                    Initialize();
-                }
-                ResetShutdown();
-                return _tick;
-            }
-            set { _tick = value; }
-        }
-
-        private static int TicksUntilShutdown { get; set; }
 
         private static void UnInitialize()
         {

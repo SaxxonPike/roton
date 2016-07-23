@@ -13,21 +13,7 @@ namespace Roton.Emulation.Mapping
             Width = width;
         }
 
-        protected override ITile GetItem(int index)
-        {
-            return new MemoryTile(Memory, Offset + index*2);
-        }
-
-        protected override void SetItem(int index, ITile value)
-        {
-            throw Exceptions.InvalidSet;
-        }
-
-        public ITile this[IXyPair location] => this[location.X*TotalHeight + location.Y];
-
         public override int Count => TotalWidth*TotalHeight;
-
-        public int Height { get; }
 
         private IMemory Memory { get; }
 
@@ -37,6 +23,20 @@ namespace Roton.Emulation.Mapping
 
         private int TotalWidth => Width + 2;
 
+        public int Height { get; }
+
+        public ITile this[IXyPair location] => this[location.X*TotalHeight + location.Y];
+
         public int Width { get; }
+
+        protected override ITile GetItem(int index)
+        {
+            return new MemoryTile(Memory, Offset + index*2);
+        }
+
+        protected override void SetItem(int index, ITile value)
+        {
+            throw Exceptions.InvalidSet;
+        }
     }
 }

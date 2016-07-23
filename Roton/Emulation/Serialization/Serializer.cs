@@ -14,6 +14,8 @@ namespace Roton.Emulation.Serialization
             Memory = memory;
         }
 
+        private IMemory Memory { get; }
+
         public abstract int ActorCapacity { get; }
 
         public abstract int ActorDataCountOffset { get; }
@@ -44,7 +46,61 @@ namespace Roton.Emulation.Serialization
             Memory.Write(WorldDataOffset, header, 0, WorldDataSize);
         }
 
-        private IMemory Memory { get; }
+        public byte[] PackBoard(ITileGrid tiles)
+        {
+            using (var mem = new MemoryStream())
+            {
+                var writer = new BinaryWriter(mem);
+                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength));
+                PackTiles(tiles, writer);
+                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength));
+                var actorCount = Memory.Read16(ActorDataCountOffset);
+                writer.Write((short) actorCount);
+                PackActors(writer, actorCount);
+                writer.Flush();
+                return mem.ToArray();
+            }
+        }
+
+        public void SaveBoardData(Stream target, byte[] data)
+        {
+            var writer = new BinaryWriter(target);
+            if (data.Length > short.MaxValue) // 32767 bytes max theoretical
+            {
+                throw Exceptions.DataTooLarge;
+            }
+            writer.Write((short) data.Length);
+            writer.Write(data);
+            writer.Flush();
+        }
+
+        public void SaveWorld(Stream target)
+        {
+            var worldBytes = new byte[WorldDataCapacity - 4];
+            var worldData = Memory.Read(WorldDataOffset, WorldDataSize);
+            Array.Copy(worldData, 0, worldBytes, 0, WorldDataSize);
+            target.Write(worldBytes, 0, worldBytes.Length);
+        }
+
+        public void UnpackBoard(ITileGrid tiles, byte[] data)
+        {
+            using (var mem = new MemoryStream(data))
+            {
+                var reader = new BinaryReader(mem);
+                Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
+                UnpackTiles(tiles, reader); // tiles
+                Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
+                int actorCount = reader.ReadInt16();
+                Memory.Write16(ActorDataCountOffset, actorCount); // actor count
+                UnpackActors(reader, actorCount); // actors
+            }
+        }
+
+        public abstract int WorldDataCapacity { get; }
+
+        public abstract int WorldDataOffset { get; }
+
+        public abstract int WorldDataSize { get; }
 
         private void PackActors(BinaryWriter target, int count)
         {
@@ -88,22 +144,6 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        public byte[] PackBoard(ITileGrid tiles)
-        {
-            using (var mem = new MemoryStream())
-            {
-                var writer = new BinaryWriter(mem);
-                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength));
-                PackTiles(tiles, writer);
-                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength));
-                var actorCount = Memory.Read16(ActorDataCountOffset);
-                writer.Write((short) actorCount);
-                PackActors(writer, actorCount);
-                writer.Flush();
-                return mem.ToArray();
-            }
-        }
-
         private void PackTiles(ITileGrid tiles, BinaryWriter target)
         {
             var firstTile = tiles[new Location(1, 1)];
@@ -135,26 +175,6 @@ namespace Roton.Emulation.Serialization
                 target.Write((byte) (id & 0xFF));
                 target.Write((byte) (color & 0xFF));
             }
-        }
-
-        public void SaveBoardData(Stream target, byte[] data)
-        {
-            var writer = new BinaryWriter(target);
-            if (data.Length > short.MaxValue) // 32767 bytes max theoretical
-            {
-                throw Exceptions.DataTooLarge;
-            }
-            writer.Write((short) data.Length);
-            writer.Write(data);
-            writer.Flush();
-        }
-
-        public void SaveWorld(Stream target)
-        {
-            var worldBytes = new byte[WorldDataCapacity - 4];
-            var worldData = Memory.Read(WorldDataOffset, WorldDataSize);
-            Array.Copy(worldData, 0, worldBytes, 0, WorldDataSize);
-            target.Write(worldBytes, 0, worldBytes.Length);
         }
 
         private void UnpackActors(BinaryReader source, int count)
@@ -198,20 +218,6 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        public void UnpackBoard(ITileGrid tiles, byte[] data)
-        {
-            using (var mem = new MemoryStream(data))
-            {
-                var reader = new BinaryReader(mem);
-                Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
-                UnpackTiles(tiles, reader); // tiles
-                Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
-                int actorCount = reader.ReadInt16();
-                Memory.Write16(ActorDataCountOffset, actorCount); // actor count
-                UnpackActors(reader, actorCount); // actors
-            }
-        }
-
         private void UnpackTiles(ITileGrid tiles, BinaryReader source)
         {
             var count = 0;
@@ -241,11 +247,5 @@ namespace Roton.Emulation.Serialization
                 throw Exceptions.CorruptedData;
             }
         }
-
-        public abstract int WorldDataCapacity { get; }
-
-        public abstract int WorldDataOffset { get; }
-
-        public abstract int WorldDataSize { get; }
     }
 }

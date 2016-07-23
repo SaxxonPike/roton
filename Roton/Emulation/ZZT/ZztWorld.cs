@@ -31,6 +31,8 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x4831, value); }
         }
 
+        public IFlagList Flags => new ZztFlags(Memory);
+
         public int Gems
         {
             get { return Memory.Read16(0x4820); }
@@ -42,8 +44,6 @@ namespace Roton.Emulation.ZZT
             get { return Memory.Read16(0x4829); }
             set { Memory.Write16(0x4829, value); }
         }
-
-        public IFlagList Flags => new ZztFlags(Memory);
 
         public IKeyList Keys => new KeyList(Memory, 0x4822);
 

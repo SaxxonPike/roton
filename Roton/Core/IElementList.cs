@@ -4,125 +4,124 @@ namespace Roton.Core
 {
     public interface IElementList : IEnumerable<IElement>
     {
-        IElement this[int index] { get; }
-        int Count { get; }
+        IElement AmmoElement { get; }
 
         int AmmoId { get; }
-        int BearId { get; }
-        int BlinkRayHId { get; }
-        int BlinkRayVId { get; }
-        int BlinkWallId { get; }
-        int BoardEdgeId { get; }
-        int BombId { get; }
-        int BoulderId { get; }
-        int BreakableId { get; }
-        int BulletId { get; }
-        int ClockwiseId { get; }
-        int CounterId { get; }
-        int DoorId { get; }
-        int DragonPupId { get; }
-        int DuplicatorId { get; }
-        int EmptyId { get; }
-        int EnergizerId { get; }
-        int FakeId { get; }
-        int FloorId { get; }
-        int ForestId { get; }
-        int GemId { get; }
-        int HeadId { get; }
-        int InvisibleId { get; }
-        int KeyId { get; }
-        int LavaId { get; }
-        int LineId { get; }
-        int LionId { get; }
-        int MessengerId { get; }
-        int MonitorId { get; }
-        int NormalId { get; }
-        int ObjectId { get; }
-        int PairerId { get; }
-        int PassageId { get; }
-        int PlayerId { get; }
-        int PusherId { get; }
-        int RicochetId { get; }
-        int RiverEId { get; }
-        int RiverNId { get; }
-        int RiverSId { get; }
-        int RiverWId { get; }
-        int RotonId { get; }
-        int RuffianId { get; }
-        int ScrollId { get; }
-        int SegmentId { get; }
-        int SharkId { get; }
-        int SliderEwId { get; }
-        int SliderNsId { get; }
-        int SlimeId { get; }
-        int SolidId { get; }
-        int SpiderId { get; }
-        int SpinningGunId { get; }
-        int StarId { get; }
-        int StoneId { get; }
-        int TigerId { get; }
-        int TorchId { get; }
-        int TransporterId { get; }
-        int WaterId { get; }
-        int WebId { get; }
-
-        IElement AmmoElement { get; }
         IElement BearElement { get; }
+        int BearId { get; }
         IElement BlinkRayHElement { get; }
+        int BlinkRayHId { get; }
         IElement BlinkRayVElement { get; }
+        int BlinkRayVId { get; }
         IElement BlinkWallElement { get; }
+        int BlinkWallId { get; }
         IElement BoardEdgeElement { get; }
+        int BoardEdgeId { get; }
         IElement BombElement { get; }
+        int BombId { get; }
         IElement BoulderElement { get; }
+        int BoulderId { get; }
         IElement BreakableElement { get; }
+        int BreakableId { get; }
         IElement BulletElement { get; }
+        int BulletId { get; }
         IElement ClockwiseElement { get; }
+        int ClockwiseId { get; }
+        int Count { get; }
         IElement CounterElement { get; }
+        int CounterId { get; }
         IElement DoorElement { get; }
+        int DoorId { get; }
         IElement DragonPupElement { get; }
+        int DragonPupId { get; }
         IElement DuplicatorElement { get; }
+        int DuplicatorId { get; }
         IElement EmptyElement { get; }
+        int EmptyId { get; }
         IElement EnergizerElement { get; }
+        int EnergizerId { get; }
         IElement FakeElement { get; }
+        int FakeId { get; }
         IElement FloorElement { get; }
+        int FloorId { get; }
         IElement ForestElement { get; }
+        int ForestId { get; }
         IElement GemElement { get; }
+        int GemId { get; }
         IElement HeadElement { get; }
+        int HeadId { get; }
         IElement InvisibleElement { get; }
+        int InvisibleId { get; }
+        IElement this[int index] { get; }
         IElement KeyElement { get; }
+        int KeyId { get; }
         IElement LavaElement { get; }
+        int LavaId { get; }
         IElement LineElement { get; }
+        int LineId { get; }
         IElement LionElement { get; }
+        int LionId { get; }
         IElement MessengerElement { get; }
+        int MessengerId { get; }
         IElement MonitorElement { get; }
+        int MonitorId { get; }
         IElement NormalElement { get; }
+        int NormalId { get; }
         IElement ObjectElement { get; }
+        int ObjectId { get; }
         IElement PairerElement { get; }
+        int PairerId { get; }
         IElement PassageElement { get; }
+        int PassageId { get; }
         IElement PlayerElement { get; }
+        int PlayerId { get; }
         IElement PusherElement { get; }
+        int PusherId { get; }
         IElement RicochetElement { get; }
+        int RicochetId { get; }
         IElement RiverEElement { get; }
+        int RiverEId { get; }
         IElement RiverNElement { get; }
+        int RiverNId { get; }
         IElement RiverSElement { get; }
+        int RiverSId { get; }
         IElement RiverWElement { get; }
+        int RiverWId { get; }
         IElement RotonElement { get; }
+        int RotonId { get; }
         IElement RuffianElement { get; }
+        int RuffianId { get; }
         IElement ScrollElement { get; }
+        int ScrollId { get; }
         IElement SegmentElement { get; }
+        int SegmentId { get; }
         IElement SharkElement { get; }
+        int SharkId { get; }
         IElement SliderEwElement { get; }
+        int SliderEwId { get; }
         IElement SliderNsElement { get; }
+        int SliderNsId { get; }
         IElement SlimeElement { get; }
+        int SlimeId { get; }
         IElement SolidElement { get; }
+        int SolidId { get; }
         IElement SpiderElement { get; }
+        int SpiderId { get; }
         IElement SpinningGunElement { get; }
+        int SpinningGunId { get; }
         IElement StarElement { get; }
+        int StarId { get; }
         IElement StoneElement { get; }
+        int StoneId { get; }
         IElement TigerElement { get; }
+        int TigerId { get; }
         IElement TorchElement { get; }
+        int TorchId { get; }
         IElement TransporterElement { get; }
+        int TransporterId { get; }
         IElement WaterElement { get; }
+        int WaterId { get; }
         IElement WebElement { get; }
+        int WebId { get; }
     }
 }

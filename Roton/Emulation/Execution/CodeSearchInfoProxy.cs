@@ -7,12 +7,12 @@ namespace Roton.Emulation.Execution
         private readonly Func<int> _getIndex;
         private readonly Func<string> _getLabel;
         private readonly Func<int> _getOffset;
-        private int _index;
-        private string _label;
-        private int _offset;
         private readonly Action<int> _setIndex;
         private readonly Action<string> _setLabel;
         private readonly Action<int> _setOffset;
+        private int _index;
+        private string _label;
+        private int _offset;
 
         public CodeSearchInfoProxy(Func<int> getIndex, Action<int> setIndex, Func<string> getLabel,
             Action<string> setLabel, Func<int> getOffset, Action<int> setOffset)

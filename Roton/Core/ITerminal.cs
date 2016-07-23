@@ -2,16 +2,15 @@
 {
     public interface ITerminal
     {
+        IKeyboard Keyboard { get; }
+        bool AutoSize { get; set; }
+        int Height { get; set; }
+        int Left { get; set; }
         // WinForm properties included to allow ITerminal implementations to be
         // created and used interchangably with a single ITerminal declaration.
         int Top { get; set; }
-        int Left { get; set; }
-        int Width { get; set; }
-        int Height { get; set; }
-        bool AutoSize { get; set; }
         bool Visible { get; set; }
-
-        IKeyboard Keyboard { get; }
+        int Width { get; set; }
 
         void Clear();
         void Plot(int x, int y, AnsiChar ac);
