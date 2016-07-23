@@ -11,18 +11,18 @@ namespace Roton.Core
         ContextEngine ContextEngine { get; }
         IElementList Elements { get; }
         int Height { get; }
+        IKeyboard Keyboard { get; }
         byte[] Memory { get; }
         int ScreenHeight { get; }
         bool ScreenWide { get; }
         int ScreenWidth { get; }
         ISerializer Serializer { get; }
+        ISpeaker Speaker { get; }
+        ITerminal Terminal { get; }
         int Width { get; }
         IWorld WorldData { get; }
         int WorldSize { get; }
         int Board { get; set; }
-        IKeyboard Keyboard { get; set; }
-        ISpeaker Speaker { get; set; }
-        ITerminal Terminal { get; set; }
 
         IActor CreateActor();
         void ExecuteOnce();

@@ -9,8 +9,6 @@ namespace Torch
     {
         private IActor _actor;
 
-        public event EventHandler Closed;
-
         public CodeEditor()
         {
             InitializeComponent();
@@ -41,6 +39,8 @@ namespace Torch
         {
             Closed?.Invoke(this, EventArgs.Empty);
         }
+
+        public event EventHandler Closed;
 
         private void Initialize()
         {

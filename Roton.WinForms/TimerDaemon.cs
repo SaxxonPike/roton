@@ -11,20 +11,6 @@ namespace Roton.WinForms
         private bool _disposed;
         private bool _paused;
 
-        private class TimerDaemonInfo
-        {
-            public double Frequency { get; }
-            public Action Method { get; }
-            public bool Running { get; set; }
-
-            public TimerDaemonInfo(Action m, double f, Thread t)
-            {
-                Method = m;
-                Frequency = f;
-                Running = false;
-            }
-        }
-
         public TimerDaemon()
         {
             InitializeComponent();
@@ -37,6 +23,26 @@ namespace Roton.WinForms
             InitializeComponent();
             Initialize();
         }
+
+        public bool Paused
+        {
+            get { return _paused; }
+            set
+            {
+                if (value)
+                {
+                    Pause();
+                }
+                else
+                {
+                    Resume();
+                }
+            }
+        }
+
+        private int TimerThreadIndex { get; set; }
+
+        private Dictionary<int, TimerDaemonInfo> TimerThreads { get; set; }
 
         protected override void Dispose(bool disposing)
         {
@@ -57,22 +63,6 @@ namespace Roton.WinForms
         public void Pause()
         {
             _paused = true;
-        }
-
-        public bool Paused
-        {
-            get { return _paused; }
-            set
-            {
-                if (value)
-                {
-                    Pause();
-                }
-                else
-                {
-                    Resume();
-                }
-            }
         }
 
         public void Resume()
@@ -139,8 +129,18 @@ namespace Roton.WinForms
             }
         }
 
-        private int TimerThreadIndex { get; set; }
+        private class TimerDaemonInfo
+        {
+            public TimerDaemonInfo(Action m, double f, Thread t)
+            {
+                Method = m;
+                Frequency = f;
+                Running = false;
+            }
 
-        private Dictionary<int, TimerDaemonInfo> TimerThreads { get; set; }
+            public double Frequency { get; }
+            public Action Method { get; }
+            public bool Running { get; set; }
+        }
     }
 }

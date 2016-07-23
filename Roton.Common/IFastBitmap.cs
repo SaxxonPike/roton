@@ -13,7 +13,6 @@ namespace Roton.Common
         Guid[] FrameDimensionsList { get; }
         int Height { get; }
         float HorizontalResolution { get; }
-        ColorPalette Palette { get; set; }
         SizeF PhysicalDimension { get; }
         int PixelCount { get; }
         PixelFormat PixelFormat { get; }
@@ -21,9 +20,10 @@ namespace Roton.Common
         PropertyItem[] PropertyItems { get; }
         ImageFormat RawFormat { get; }
         Size Size { get; }
-        object Tag { get; set; }
         float VerticalResolution { get; }
         int Width { get; }
+        ColorPalette Palette { get; set; }
+        object Tag { get; set; }
 
         IFastBitmap Clone();
         Bitmap Clone(RectangleF rect, PixelFormat format);
@@ -37,7 +37,10 @@ namespace Roton.Common
         IntPtr GetHicon();
         Color GetPixel(int x, int y);
         PropertyItem GetPropertyItem(int propid);
-        Image GetThumbnailImage(int thumbWidth, int thumbHeight, Image.GetThumbnailImageAbort callback, IntPtr callbackData);
+
+        Image GetThumbnailImage(int thumbWidth, int thumbHeight, Image.GetThumbnailImageAbort callback,
+            IntPtr callbackData);
+
         object InitializeLifetimeService();
         BitmapData LockBits(Rectangle rect, ImageLockMode flags, PixelFormat format);
         BitmapData LockBits(Rectangle rect, ImageLockMode flags, PixelFormat format, BitmapData bitmapData);

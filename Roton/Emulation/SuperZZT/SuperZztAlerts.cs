@@ -14,7 +14,7 @@ namespace Roton.Emulation.SuperZZT
             _colors = colors;
         }
 
-        public string AmmoMessage => "Ammunition:\r20 shots";
+        public IMessage AmmoMessage => new SuperZztMessage("Ammunition:", "20 shots");
 
         public bool AmmoPickup
         {
@@ -22,7 +22,7 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x7C0B, value); }
         }
 
-        public string BombMessage => "Bomb activated!";
+        public IMessage BombMessage => new SuperZztMessage("Bomb activated!");
 
         public bool CantShootHere
         {
@@ -36,19 +36,19 @@ namespace Roton.Emulation.SuperZZT
             set { }
         }
 
-        public string DarkMessage => string.Empty;
+        public IMessage DarkMessage => new SuperZztMessage();
 
-        public string DoorLockedMessage(int color)
+        public IMessage DoorLockedMessage(int color)
         {
-            return $"The {_colors[color]} door\ris locked!";
+            return new SuperZztMessage($"The {_colors[color]} door", "is locked!");
         }
 
-        public string DoorOpenMessage(int color)
+        public IMessage DoorOpenMessage(int color)
         {
-            return $"The {_colors[color]} door \ris now open.";
+            return new SuperZztMessage($"The {_colors[color]} door", "is now open.");
         }
 
-        public string EnergizerMessage => "Shield:\rYou are invincible";
+        public IMessage EnergizerMessage => new SuperZztMessage("Shield:", "You are invincible");
 
         public bool EnergizerPickup
         {
@@ -56,7 +56,7 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x7C11, value); }
         }
 
-        public string FakeMessage => "A fake wall:\rsecret passage!";
+        public IMessage FakeMessage => new SuperZztMessage("A fake wall:", "secret passage!");
 
         public bool FakeWall
         {
@@ -70,9 +70,9 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x7C0E, value); }
         }
 
-        public string ForestMessage => "A path is cleared\rthrough the forest.";
-        public string GameOverMessage => "Game over\r-- Press ESCAPE --";
-        public string GemMessage => "Gems give you health!";
+        public IMessage ForestMessage => new SuperZztMessage("A path is cleared", "through the forest.");
+        public IMessage GameOverMessage => new SuperZztMessage("Game over", "-- Press ESCAPE --");
+        public IMessage GemMessage => new SuperZztMessage("Gems give you health!");
 
         public bool GemPickup
         {
@@ -80,20 +80,20 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x7C10, value); }
         }
 
-        public string InvisibleMessage => "You are blocked\rby an invisible wall.";
+        public IMessage InvisibleMessage => new SuperZztMessage("You are blocked", "by an invisible wall.");
 
-        public string KeyAleadyMessage(int color)
+        public IMessage KeyAlreadyMessage(int color)
         {
-            return $"You already have a\r{_colors[color]} key!";
+            return new SuperZztMessage("You already have a", $"{_colors[color]} key!");
         }
 
-        public string KeyPickupMessage(int color)
+        public IMessage KeyPickupMessage(int color)
         {
-            return $"You now have the\r{_colors[color]} key.";
+            return new SuperZztMessage("You now have the", $"{_colors[color]} key.");
         }
 
-        public string NoAmmoMessage => "You don't have\rany ammo!";
-        public string NoShootMessage => "Can't shoot\rin this place!";
+        public IMessage NoAmmoMessage => new SuperZztMessage("You don't have", "any ammo!");
+        public IMessage NoShootMessage => new SuperZztMessage("Can't shoot", "in this place!");
 
         public bool NotDark
         {
@@ -101,7 +101,7 @@ namespace Roton.Emulation.SuperZZT
             set { }
         }
 
-        public string NotDarkMessage => string.Empty;
+        public IMessage NotDarkMessage => new SuperZztMessage();
 
         public bool NoTorches
         {
@@ -109,7 +109,7 @@ namespace Roton.Emulation.SuperZZT
             set { }
         }
 
-        public string NoTorchMessage => string.Empty;
+        public IMessage NoTorchMessage => new SuperZztMessage();
 
         public bool OutOfAmmo
         {
@@ -117,9 +117,9 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x7C0C, value); }
         }
 
-        public string StoneMessage => "You have found a\rStone of Power!";
-        public string TimeMessage => "Running out of time!";
-        public string TorchMessage => string.Empty;
+        public IMessage StoneMessage => new SuperZztMessage("You have found a", "Stone of Power!");
+        public IMessage TimeMessage => new SuperZztMessage("Running out of time!");
+        public IMessage TorchMessage => new SuperZztMessage();
 
         public bool TorchPickup
         {
@@ -127,6 +127,6 @@ namespace Roton.Emulation.SuperZZT
             set { }
         }
 
-        public string WaterMessage => "Your way is\rblocked by lava.";
+        public IMessage WaterMessage => new SuperZztMessage("Your way is", "blocked by lava.");
     }
 }

@@ -1,16 +1,39 @@
-﻿using Roton.Common;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Roton.Common;
 using Roton.Core;
+using Roton.FileIo;
+using Roton.WinForms;
 
 namespace Lyon
 {
     public partial class GameForm : Form
     {
         private bool _initScaleDisplay = true;
+        private readonly bool _openGl;
         private IGameTerminal _terminal;
-        private bool _openGl;
+
+        public GameForm(bool openGl = false)
+        {
+            _openGl = openGl;
+            CommonSetup();
+            Initialize(new Context(GetCoreConfiguration(), ContextEngine.Zzt));
+        }
+
+        public GameForm(Stream source, bool openGl = false)
+        {
+            _openGl = openGl;
+            CommonSetup();
+            Initialize(new Context(GetCoreConfiguration(), source));
+        }
+
+        private string FileFilters
+            =>
+                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
+            ;
+
+        private IContext Context { get; set; }
 
         private void CommonSetup()
         {
@@ -23,7 +46,7 @@ namespace Lyon
 
             // Load the appropriate terminal.
             if (!_openGl)
-                _terminal = new Roton.WinForms.Terminal();
+                _terminal = new Terminal();
             else
                 _terminal = new Roton.WinForms.OpenGL.Terminal();
 
@@ -42,22 +65,6 @@ namespace Lyon
             Height = _terminal.Height;
         }
 
-        public GameForm(bool openGl = false)
-        {
-            _openGl = openGl;
-            CommonSetup();
-            Initialize(new Context(ContextEngine.Zzt, false));
-        }
-
-        public GameForm(Stream source, bool openGl = false)
-        {
-            _openGl = openGl;
-            CommonSetup();
-            Initialize(new Context(source, false));
-        }
-
-        private IContext Context { get; set; }
-
         private void DumpRam()
         {
             using (var sfd = new SaveFileDialog())
@@ -69,10 +76,17 @@ namespace Lyon
             }
         }
 
-        private string FileFilters
-            =>
-                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
-            ;
+        private ICoreConfiguration GetCoreConfiguration()
+        {
+            return new CoreConfiguration
+            {
+                Disk = new DiskFileSystem(),
+                EditorMode = false,
+                Keyboard = _terminal.Keyboard,
+                Speaker = speaker,
+                Terminal = _terminal
+            };
+        }
 
         private void Initialize(IContext context)
         {
@@ -82,9 +96,6 @@ namespace Lyon
             Context?.Stop();
 
             Context = context;
-            context.Keyboard = _terminal.Keyboard;
-            context.Speaker = speaker;
-            context.Terminal = _terminal;
             UpdateTitle();
 
             if (_initScaleDisplay)
@@ -117,7 +128,7 @@ namespace Lyon
             var ofd = new OpenFileDialog {Filter = FileFilters};
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Initialize(new Context(File.ReadAllBytes(ofd.FileName), false));
+                Initialize(new Context(GetCoreConfiguration(), File.ReadAllBytes(ofd.FileName)));
             }
         }
 

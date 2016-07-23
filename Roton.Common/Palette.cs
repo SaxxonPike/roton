@@ -9,7 +9,7 @@ namespace Roton.Common
     public sealed class Palette : FixedList<Color>, IPalette
     {
         /// <summary>
-        /// Create a new palette with the default colors.
+        ///     Create a new palette with the default colors.
         /// </summary>
         public Palette()
         {
@@ -18,7 +18,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Load a palette from the specified file.
+        ///     Load a palette from the specified file.
         /// </summary>
         public Palette(string filename)
         {
@@ -26,7 +26,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Create a palette from raw data.
+        ///     Create a palette from raw data.
         /// </summary>
         public Palette(IList<byte> source)
         {
@@ -34,7 +34,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Load a palette from the specified stream.
+        ///     Load a palette from the specified stream.
         /// </summary>
         public Palette(Stream source)
         {
@@ -43,22 +43,17 @@ namespace Roton.Common
             Initialize(data);
         }
 
+        public int[] Colors { get; private set; }
+
+        /// <summary>
+        ///     Number of colors in the palette.
+        /// </summary>
+        public override int Count => 16;
+
         protected override Color GetItem(int index)
         {
             return Color.FromArgb(Colors[index & 0xF]);
         }
-
-        protected override void SetItem(int index, Color value)
-        {
-            Colors[index & 0xF] = value.ToArgb();
-        }
-
-        public int[] Colors { get; private set; }
-
-        /// <summary>
-        /// Number of colors in the palette.
-        /// </summary>
-        public override int Count => 16;
 
         private byte ImportColorValue(int source)
         {
@@ -86,6 +81,11 @@ namespace Roton.Common
                 var blue = ImportColorValue(palette[offset++]);
                 Colors[i] = Color.FromArgb(0xFF, red, green, blue).ToArgb();
             }
+        }
+
+        protected override void SetItem(int index, Color value)
+        {
+            Colors[index & 0xF] = value.ToArgb();
         }
     }
 }

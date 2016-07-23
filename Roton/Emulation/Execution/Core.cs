@@ -13,10 +13,12 @@ namespace Roton.Emulation.Execution
 {
     internal abstract class Core : IDisplayInfo, ICore
     {
+        private readonly ICoreConfiguration _config;
         private int _timerTick;
 
-        protected Core()
+        protected Core(ICoreConfiguration config)
         {
+            _config = config;
             Boards = new List<IPackedBoard>();
             Memory = new Memory();
             Random = new Random();
@@ -1844,14 +1846,14 @@ namespace Roton.Emulation.Execution
             var keyIndex = color - 1;
             if (Keys[keyIndex])
             {
-                SetMessage(0xC8, KeyAlreadyMessage(color));
+                SetMessage(0xC8, Alerts.KeyAlreadyMessage(color));
                 PlaySound(2, Sounds.KeyAlready);
             }
             else
             {
                 Keys[keyIndex] = true;
                 RemoveItem(location);
-                SetMessage(0xC8, KeyMessage(color));
+                SetMessage(0xC8, Alerts.KeyPickupMessage(color));
                 PlaySound(2, Sounds.Key);
             }
         }
@@ -1937,7 +1939,7 @@ namespace Roton.Emulation.Execution
             set { StateData.KeyArrow = value; }
         }
 
-        public IKeyboard Keyboard { get; set; }
+        public IKeyboard Keyboard => _config.Keyboard;
 
         public IXyPair KeyVector => StateData.KeyVector;
 
@@ -2247,7 +2249,7 @@ namespace Roton.Emulation.Execution
             UnpackBoard(boardIndex);
         }
 
-        public void SetMessage(int duration, string message)
+        public void SetMessage(int duration, IMessage message)
         {
             var index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)
@@ -2255,12 +2257,18 @@ namespace Roton.Emulation.Execution
                 RemoveActor(index);
                 UpdateBorder();
             }
-            if (!string.IsNullOrEmpty(message))
+
+            var topMessage = message.Text[0];
+            var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
+
+            if (!string.IsNullOrEmpty(topMessage))
             {
                 SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
                 Actors[ActorCount].P2 = duration/(GameWaitTime + 1);
             }
-            Message = message;
+
+            Message = topMessage;
+            Message2 = bottomMessage;
         }
 
         public int Shots
@@ -2291,7 +2299,7 @@ namespace Roton.Emulation.Execution
             set { StateData.SoundTicks = value; }
         }
 
-        public ISpeaker Speaker { get; set; }
+        public ISpeaker Speaker => _config.Speaker;
 
         public IList<int> StarChars => StateData.StarChars;
 
@@ -2545,11 +2553,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public ITerminal Terminal
-        {
-            get { return Hud.Terminal; }
-            set { Hud.Terminal = value; }
-        }
+        public ITerminal Terminal => _config.Terminal;
 
         public int TimeLimit
         {
@@ -2900,7 +2904,7 @@ namespace Roton.Emulation.Execution
                 {
                     Health -= 10;
                     UpdateStatus();
-                    SetMessage(0x64, @"Ouch!");
+                    SetMessage(0x64, new Message(@"Ouch!"));
                     var color = TileAt(actor.Location).Color;
                     color &= 0x0F;
                     color |= 0x70;
@@ -3256,7 +3260,7 @@ namespace Roton.Emulation.Execution
             TileAt(Player.Location).SetTo(element.Id, element.Color);
             if (PlayerElement == Elements.MonitorId)
             {
-                SetMessage(0, @"");
+                SetMessage(0, new Message());
                 Hud.DrawTitleStatus();
             }
 
@@ -3473,127 +3477,6 @@ namespace Roton.Emulation.Execution
                     PlaySound(3, Sounds.Transporter);
                 }
             }
-        }
-
-        internal virtual bool ReadCondition(OopContext context)
-        {
-            var actor = context.Actor;
-            ReadActorCodeWord(context.Index, context);
-            var word = OopWord;
-            switch (word)
-            {
-                case "ALLIGNED":
-                    return Player.Location.X == actor.Location.X || Player.Location.Y == actor.Location.Y;
-                case "ENERGIZED":
-                    return WorldData.EnergyCycles > 0;
-                case "NOT":
-                    return !ReadCondition(context);
-                default:
-                    return Flags.Contains(word);
-            }
-        }
-
-        internal virtual IXyPair ReadDirection(OopContext context)
-        {
-            var actor = context.Actor;
-            ReadActorCodeWord(context.Index, context);
-            var word = OopWord;
-            switch (word)
-            {
-                case "CW":
-                    return ReadDirection(context)?.Clockwise();
-                case "CCW":
-                    return ReadDirection(context)?.CounterClockwise();
-                case "E":
-                case "EAST":
-                    return Vector.East;
-                case "FLOW":
-                    return actor.Vector.Clone();
-                case "I":
-                case "IDLE":
-                    return Vector.Idle;
-                case "N":
-                case "NORTH":
-                    return Vector.North;
-                case "OPP":
-                    return ReadDirection(context)?.Opposite();
-                case "RND":
-                    return Rnd();
-                case "RNDNE":
-                    return RandomNumber(2) == 0
-                        ? Vector.North
-                        : Vector.East;
-                case "RNDNS":
-                    return RandomNumber(2) == 0
-                        ? Vector.North
-                        : Vector.South;
-                case "RNDP":
-                    var rndpDirection = ReadDirection(context);
-                    if (rndpDirection != null)
-                    {
-                        return RandomNumber(2) == 0
-                            ? rndpDirection.Clockwise()
-                            : rndpDirection.CounterClockwise();
-                    }
-                    return null;
-                case "SEEK":
-                    return Seek(actor.Location);
-                case "S":
-                case "SOUTH":
-                    return Vector.South;
-                case "W":
-                case "WEST":
-                    return Vector.West;
-                default:
-                    return null;
-            }
-        }
-
-        internal virtual ITile ReadKind(OopContext context)
-        {
-            var success = false;
-            var result = new Tile(0, 0);
-
-            while (!success)
-            {
-                var valid = false;
-                ReadActorCodeWord(context.Index, context);
-                var word = OopWord;
-
-                if (result.Color == 0)
-                {
-                    for (var i = 1; i <= 8; i++)
-                    {
-                        if (Colors[i].ToUpperInvariant() == word)
-                        {
-                            result.Color = i + 8;
-                            valid = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!valid)
-                {
-                    foreach (var element in Elements)
-                    {
-                        if (string.IsNullOrEmpty(element.Name) || element.Name.ToUpperInvariant() != word)
-                            continue;
-
-                        result.Id = element.Id;
-                        success = true;
-                        valid = true;
-                        break;
-                    }
-                }
-
-                if (valid)
-                    continue;
-
-                break;
-            }
-
-            return success ? result : null;
         }
 
         private void RemoveActor(int index)
@@ -3878,6 +3761,7 @@ namespace Roton.Emulation.Execution
             Init = true;
             StartBoard = 0;
             var gameEnded = true;
+            Hud.Initialize();
             while (ThreadActive)
             {
                 if (!Init)

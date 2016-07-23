@@ -13,9 +13,9 @@ namespace Roton.WinForms
         private readonly Queue<int> _queue = new Queue<int>();
         private readonly object _syncObject = new object();
 
-        public bool Alt { get; set; }
-
         public bool CapsLock { get; set; }
+
+        public bool Alt { get; set; }
 
         public void Clear()
         {
@@ -29,6 +29,20 @@ namespace Roton.WinForms
         }
 
         public bool Control { get; set; }
+
+        public int GetKey()
+        {
+            lock (_syncObject)
+            {
+                if (_queue.Count > 0)
+                {
+                    return _queue.Dequeue();
+                }
+                return -1;
+            }
+        }
+
+        public bool Shift { get; set; }
 
         private void Enqueue(int data)
         {
@@ -73,18 +87,6 @@ namespace Roton.WinForms
             return -1;
         }
 
-        public int GetKey()
-        {
-            lock (_syncObject)
-            {
-                if (_queue.Count > 0)
-                {
-                    return _queue.Dequeue();
-                }
-                return -1;
-            }
-        }
-
         public bool Press(char data)
         {
             try
@@ -114,7 +116,5 @@ namespace Roton.WinForms
                 Enqueue(code);
             return code >= 0;
         }
-
-        public bool Shift { get; set; }
     }
 }

@@ -38,11 +38,17 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CoreConfiguration.cs" />
+    <Compile Include="Core\ICoreConfiguration.cs" />
     <Compile Include="Core\IAlerts.cs" />
     <Compile Include="Core\IContext.cs" />
+    <Compile Include="Core\IMessage.cs" />
     <Compile Include="Core\IPackedBoard.cs" />
+    <Compile Include="Core\Message.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztAlerts.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztMessage.cs" />
     <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
+    <Compile Include="Emulation\ZZT\ZztMessage.cs" />
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
     <Compile Include="FileIo\IFileSystem.cs" />

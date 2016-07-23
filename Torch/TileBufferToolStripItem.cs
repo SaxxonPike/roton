@@ -1,8 +1,7 @@
-﻿using Roton.WinForms;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
-using Roton.Core;
+using Roton.WinForms;
 
 namespace Torch
 {
@@ -13,7 +12,7 @@ namespace Torch
             InitializeComponent();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             ImageScaling = ToolStripItemImageScaling.None;
-            TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            TextAlign = ContentAlignment.MiddleLeft;
             TextImageRelation = TextImageRelation.TextBeforeImage;
             Text = "Buffer";
             AutoSize = true;

@@ -8,9 +8,9 @@ namespace Roton.Common.Resources
         {
         }
 
-        public byte[] GetPalette()
+        public byte[] GetDrumAudio(int index)
         {
-            return GetFile(GetCombinedPath("system", "palette.bin"));
+            return GetFile(GetCombinedPath("audio", $"{index}.bin"));
         }
 
         public byte[] GetFont()
@@ -18,9 +18,9 @@ namespace Roton.Common.Resources
             return GetFile(GetCombinedPath("system", "font.bin"));
         }
 
-        public byte[] GetDrumAudio(int index)
+        public byte[] GetPalette()
         {
-            return GetFile(GetCombinedPath("audio", $"{index}.bin"));
+            return GetFile(GetCombinedPath("system", "palette.bin"));
         }
 
         public byte[] GetPlayerStepAudio()

@@ -4,7 +4,6 @@ using System.Linq;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
-using Roton.FileIo;
 using Roton.Resources;
 
 namespace Roton.Core
@@ -12,23 +11,27 @@ namespace Roton.Core
     public sealed class Context : IContext
     {
         private const int MaxGameCycle = 420;
+        private readonly ICoreConfiguration _config;
 
-        public Context(byte[] data, bool editor)
+        public Context(ICoreConfiguration config, byte[] data)
         {
+            _config = config;
             using (var mem = new MemoryStream(data))
             {
-                Initialize(mem, editor);
+                Initialize(mem);
             }
         }
 
-        public Context(ContextEngine engine, bool editor)
+        public Context(ICoreConfiguration config, ContextEngine engine)
         {
-            Initialize(engine, editor);
+            _config = config;
+            Initialize(engine);
         }
 
-        public Context(Stream stream, bool editor)
+        public Context(ICoreConfiguration config, Stream stream)
         {
-            Initialize(stream, editor);
+            _config = config;
+            Initialize(stream);
         }
 
         private ICore Core { get; set; }
@@ -87,8 +90,7 @@ namespace Roton.Core
 
         public IKeyboard Keyboard
         {
-            get { return Core.Keyboard; }
-            set { Core.Keyboard = value; }
+            get { return _config.Keyboard; }
         }
 
         public byte[] Memory => Core.Memory.Dump();
@@ -139,11 +141,7 @@ namespace Roton.Core
             Core.SetBoard(boardIndex);
         }
 
-        public ISpeaker Speaker
-        {
-            get { return Core.Speaker; }
-            set { Core.Speaker = value; }
-        }
+        public ISpeaker Speaker => _config.Speaker;
 
         public void Start()
         {
@@ -155,16 +153,7 @@ namespace Roton.Core
             Core.Stop();
         }
 
-        public ITerminal Terminal
-        {
-            get { return Core.Terminal; }
-            set
-            {
-                Core.Terminal = value;
-                Core.Terminal.SetSize(ScreenWidth, ScreenHeight, ScreenWide);
-                Core.Terminal.Write(0, 0, "Terminal initialized.", 0x0F);
-            }
-        }
+        public ITerminal Terminal => Core.Terminal;
 
         public ITile TileAt(int x, int y)
         {
@@ -185,20 +174,20 @@ namespace Roton.Core
             get { return Serializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2); }
         }
 
-        private void Initialize(ContextEngine engine, bool editor)
+        private void Initialize(ContextEngine engine)
         {
             var resources = new ResourceZipFileSystem(Properties.Resources.resources);
             ContextEngine = engine;
             switch (engine)
             {
                 case ContextEngine.Zzt:
-                    Core = new ZztCore(resources.GetZztMemoryData(), resources.GetZztElementData());
+                    Core = new ZztCore(_config, resources.GetZztMemoryData(), resources.GetZztElementData());
                     ScreenWidth = 80;
                     ScreenHeight = 25;
                     ScreenWide = false;
                     break;
                 case ContextEngine.SuperZzt:
-                    Core = new SuperZztCore(resources.GetSuperZztMemoryData(),
+                    Core = new SuperZztCore(_config, resources.GetSuperZztMemoryData(),
                         resources.GetSuperZztElementData());
                     ScreenWidth = 40;
                     ScreenHeight = 25;
@@ -208,7 +197,7 @@ namespace Roton.Core
                     throw Exceptions.InvalidFormat;
             }
 
-            if (editor)
+            if (_config.EditorMode)
             {
                 // editor mode will always show the full board
                 ScreenWidth = Width;
@@ -216,11 +205,10 @@ namespace Roton.Core
             }
 
             Core.ClearWorld();
-            Core.EditorMode = editor;
-            Core.Disk = new DiskFileSystem();
+            Core.EditorMode = _config.EditorMode;
         }
 
-        private void Initialize(Stream stream, bool editor)
+        private void Initialize(Stream stream)
         {
             ContextEngine engine;
             var reader = new BinaryReader(stream);
@@ -235,7 +223,7 @@ namespace Roton.Core
                 default:
                     throw Exceptions.UnknownFormat;
             }
-            Initialize(engine, editor);
+            Initialize(engine);
             LoadAfterType(stream);
         }
 

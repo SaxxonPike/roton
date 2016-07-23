@@ -14,7 +14,7 @@ namespace Roton.Emulation.ZZT
             _colors = colors;
         }
 
-        public string AmmoMessage => "Ammunition - 5 shots per container.";
+        public IMessage AmmoMessage { get; } = new ZztMessage("Ammunition - 5 shots per container.");
 
         public bool AmmoPickup
         {
@@ -22,7 +22,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AAB, value); }
         }
 
-        public string BombMessage => "Bomb activated!";
+        public IMessage BombMessage { get; } = new ZztMessage("Bomb activated!");
 
         public bool CantShootHere
         {
@@ -36,19 +36,19 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AB1, value); }
         }
 
-        public string DarkMessage => "Room is dark - you need to light a torch!";
+        public IMessage DarkMessage { get; } = new ZztMessage("Room is dark - you need to light a torch!");
 
-        public string DoorLockedMessage(int color)
+        public IMessage DoorLockedMessage(int color)
         {
-            return $"The {_colors[color]} door is locked!";
+            return new ZztMessage($"The {_colors[color]} door is locked!");
         }
 
-        public string DoorOpenMessage(int color)
+        public IMessage DoorOpenMessage(int color)
         {
-            return $"The {_colors[color]} door is now open.";
+            return new ZztMessage($"The {_colors[color]} door is now open.");
         }
 
-        public string EnergizerMessage => "Energizer - You are invincible";
+        public IMessage EnergizerMessage { get; } = new ZztMessage("Energizer - You are invincible");
 
         public bool EnergizerPickup
         {
@@ -56,7 +56,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AB5, value); }
         }
 
-        public string FakeMessage => "A fake wall - secret passage!";
+        public IMessage FakeMessage { get; } = new ZztMessage("A fake wall - secret passage!");
 
         public bool FakeWall
         {
@@ -70,9 +70,9 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AB2, value); }
         }
 
-        public string ForestMessage => "A path is cleared through the forest.";
-        public string GameOverMessage => "Game over  -  Press ESCAPE";
-        public string GemMessage => "Gems give you health!";
+        public IMessage ForestMessage { get; } = new ZztMessage("A path is cleared through the forest.");
+        public IMessage GameOverMessage { get; } = new ZztMessage("Game over  -  Press ESCAPE");
+        public IMessage GemMessage { get; } = new ZztMessage("Gems give you health!");
 
         public bool GemPickup
         {
@@ -80,20 +80,20 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AB4, value); }
         }
 
-        public string InvisibleMessage => "You are blocked by an invisible wall.";
+        public IMessage InvisibleMessage { get; } = new ZztMessage("You are blocked by an invisible wall.");
 
-        public string KeyAleadyMessage(int color)
+        public IMessage KeyAlreadyMessage(int color)
         {
-            return $"You already have a {_colors[color]} key!";
+            return new ZztMessage($"You already have a {_colors[color]} key!");
         }
 
-        public string KeyPickupMessage(int color)
+        public IMessage KeyPickupMessage(int color)
         {
-            return $"You now have the {_colors[color]} key.";
+            return new ZztMessage($"You now have the {_colors[color]} key.");
         }
 
-        public string NoAmmoMessage => "You don't have any ammo!";
-        public string NoShootMessage => "Can't shoot in this place!";
+        public IMessage NoAmmoMessage { get; } = new ZztMessage("You don't have any ammo!");
+        public IMessage NoShootMessage { get; } = new ZztMessage("Can't shoot in this place!");
 
         public bool NotDark
         {
@@ -101,7 +101,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AB1, value); }
         }
 
-        public string NotDarkMessage => "Don't need torch - room is not dark!";
+        public IMessage NotDarkMessage { get; } = new ZztMessage("Don't need torch - room is not dark!");
 
         public bool NoTorches
         {
@@ -109,7 +109,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AAF, value); }
         }
 
-        public string NoTorchMessage => "You don't have any torches!";
+        public IMessage NoTorchMessage { get; } = new ZztMessage("You don't have any torches!");
 
         public bool OutOfAmmo
         {
@@ -117,9 +117,9 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AAC, value); }
         }
 
-        public string StoneMessage => string.Empty;
-        public string TimeMessage => "Running out of time!";
-        public string TorchMessage => "Torch - used for lighting in the underground.";
+        public IMessage StoneMessage { get; } = new ZztMessage();
+        public IMessage TimeMessage { get; } = new ZztMessage("Running out of time!");
+        public IMessage TorchMessage { get; } = new ZztMessage("Torch - used for lighting in the underground.");
 
         public bool TorchPickup
         {
@@ -127,6 +127,6 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x4AAE, value); }
         }
 
-        public string WaterMessage => "Your way is blocked by water.";
+        public IMessage WaterMessage { get; } = new ZztMessage("Your way is blocked by water.");
     }
 }

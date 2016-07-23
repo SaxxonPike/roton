@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Roton.Common
 {
     public interface IRasterFont
     {
-        IGlyph this[int index] { get; }
         int Count { get; }
         int Height { get; }
+        IGlyph this[int index] { get; }
         int OriginalHeight { get; }
         int OriginalWidth { get; }
         int Width { get; }

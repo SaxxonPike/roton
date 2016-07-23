@@ -1,6 +1,6 @@
-﻿using Roton.Common;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Roton.Common;
 
 namespace Roton.WinForms
 {
@@ -11,8 +11,8 @@ namespace Roton.WinForms
         int CursorY { get; set; }
 
         void AttachKeyHandler(Form form);
-        Bitmap RenderSingle(int character, int color);
 
         event MouseEventHandler MouseDown;
+        Bitmap RenderSingle(int character, int color);
     }
 }

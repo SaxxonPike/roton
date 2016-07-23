@@ -227,6 +227,11 @@ namespace Roton.Emulation.ZZT
             }
         }
 
+        public override void Initialize()
+        {
+            Terminal.SetSize(80, 25, false);
+        }
+
         private string IntToString(int i)
         {
             return i + " ";

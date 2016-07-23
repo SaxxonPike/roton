@@ -1,25 +1,38 @@
-﻿using Roton.WinForms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Lyon;
+using Roton.Common;
 using Roton.Core;
 using Roton.Extensions;
+using Roton.FileIo;
+using Roton.WinForms;
+using Message = System.Windows.Forms.Message;
 
 namespace Torch
 {
     public partial class Editor : Form
     {
+        private static readonly string FileFilters = string.Join("|",
+            "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
+            "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
+            "Super ZZT Worlds (*.szt)", "*.szt;*.SZT",
+            "Saved Games (*.sav)", "*.sav;*.SAV",
+            "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
+            "All Files (*.*)", "*.*"
+            );
+
+        private readonly IEditorTerminal _terminal;
         private IActor _actor;
         private IContext _context;
-        private readonly IEditorTerminal _terminal;
 
         public Editor(bool openGl = false)
         {
-            var font1 = new Roton.Common.RasterFont();
-            var palette1 = new Roton.Common.Palette();
+            var font1 = new RasterFont();
+            var palette1 = new Palette();
 
             InitializeComponent();
             Load += (sender, e) => { OnLoad(); };
@@ -42,6 +55,18 @@ namespace Torch
             mainPanel.Controls.Add((UserControl) _terminal);
         }
 
+        private IElement SelectedElement => elementComboBox.SelectedIndex < 0
+            ? null
+            : ((ElementItem) elementComboBox.SelectedItem).Element;
+
+        private IEnumerable<ToolStripButton> Tools => new List<ToolStripButton>(new[]
+        {
+            drawToolButton,
+            eraseToolButton,
+            inspectToolButton,
+            randomToolButton
+        });
+
         private IActor Actor
         {
             get { return _actor; }
@@ -52,6 +77,20 @@ namespace Torch
                 actorSourceLabel.Text = "Editing actor";
             }
         }
+
+        private int Color { get; set; }
+
+        private IContext Context
+        {
+            get { return _context; }
+            set
+            {
+                _context = value;
+                LoadContext();
+            }
+        }
+
+        private string WorldFileName { get; set; }
 
         private ContextMenuStrip BuildBoardContextMenu(int parameterIndex)
         {
@@ -67,10 +106,7 @@ namespace Torch
                     Tag = index
                 };
                 item.Click +=
-                    (sender, e) =>
-                    {
-                        SetParameter(parameterIndex, (int) ((ToolStripItem) sender).Tag);
-                    };
+                    (sender, e) => { SetParameter(parameterIndex, (int) ((ToolStripItem) sender).Tag); };
                 items.Add(item);
                 index++;
             }
@@ -109,10 +145,7 @@ namespace Torch
                     Tag = i
                 };
                 item.Click +=
-                    (sender, e) =>
-                    {
-                        SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag);
-                    };
+                    (sender, e) => { SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag); };
                 items.Add(item);
             }
 
@@ -127,10 +160,7 @@ namespace Torch
             {
                 return new ToolStripSeparator();
             }
-            return new ToolStripMenuItem(text, null, (sender, e) =>
-            {
-                click?.Invoke();
-            });
+            return new ToolStripMenuItem(text, null, (sender, e) => { click?.Invoke(); });
         }
 
         private ContextMenuStrip BuildElementContextMenu(int menuNumber)
@@ -228,10 +258,7 @@ namespace Torch
                     Tag = i - 1
                 };
                 item.Click +=
-                    (sender, e) =>
-                    {
-                        SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag);
-                    };
+                    (sender, e) => { SetParameter(parameterIndex, (int) ((ToolStripMenuItem) sender).Tag); };
                 result.Items.Add(item);
             }
 
@@ -355,18 +382,6 @@ namespace Torch
             return result.Items.Count > 0 ? result : null;
         }
 
-        private int Color { get; set; }
-
-        private IContext Context
-        {
-            get { return _context; }
-            set
-            {
-                _context = value;
-                LoadContext();
-            }
-        }
-
         private void CopyCursorColor()
         {
             var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
@@ -420,15 +435,6 @@ namespace Torch
             codeEditor.Visible = true;
             codeEditor.Actor = Actor;
         }
-
-        private static readonly string FileFilters = string.Join("|",
-            "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
-            "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
-            "Super ZZT Worlds (*.szt)", "*.szt;*.SZT",
-            "Saved Games (*.sav)", "*.sav;*.SAV",
-            "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
-            "All Files (*.*)", "*.*"
-            );
 
         private void GetCursorActor()
         {
@@ -498,10 +504,7 @@ namespace Torch
             UpdateColor();
             SelectElement(0);
             UpdateElement();
-            Actor = Context.CreateActor();
-            Context.Terminal = _terminal;
-            Context.Keyboard = keyboard;
-            Context.Speaker = speaker;
+            Actor = new Actor();
             BuildElementList();
             BuildBoardList();
             UpdateInfo();
@@ -671,10 +674,6 @@ namespace Torch
             }
         }
 
-        private IElement SelectedElement => elementComboBox.SelectedIndex < 0
-            ? null
-            : ((ElementItem) elementComboBox.SelectedItem).Element;
-
         private void SelectElement(int index)
         {
             foreach (var item in elementComboBox.Items.OfType<ElementItem>())
@@ -783,7 +782,17 @@ namespace Torch
             var ofd = new OpenFileDialog {Filter = FileFilters};
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
-            Context = new Context(File.ReadAllBytes(ofd.FileName), true);
+
+            var config = new CoreConfiguration
+            {
+                Disk = new DiskFileSystem(),
+                EditorMode = true,
+                Keyboard = keyboard,
+                Speaker = speaker,
+                Terminal = _terminal
+            };
+
+            Context = new Context(config, File.ReadAllBytes(ofd.FileName));
             WorldFileName = ofd.FileName;
         }
 
@@ -866,19 +875,11 @@ namespace Torch
             {
                 using (var mem = new MemoryStream(Context.Save()))
                 {
-                    var gameForm = new Lyon.GameForm(mem);
+                    var gameForm = new GameForm(mem);
                     gameForm.Show();
                 }
             }
         }
-
-        private IEnumerable<ToolStripButton> Tools => new List<ToolStripButton>(new[]
-        {
-            drawToolButton,
-            eraseToolButton,
-            inspectToolButton,
-            randomToolButton
-        });
 
         private void UpdateActors()
         {
@@ -958,7 +959,5 @@ namespace Torch
             worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
         }
-
-        private string WorldFileName { get; set; }
     }
 }

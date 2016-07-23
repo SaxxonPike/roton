@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Roton.Core;
 
 namespace Torch
@@ -11,27 +12,6 @@ namespace Torch
         }
 
         private List<ITile> InnerList { get; }
-
-        public int IndexOf(ITile item)
-        {
-            return InnerList.IndexOf(item);
-        }
-
-        public void Insert(int index, ITile item)
-        {
-            InnerList.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            InnerList.RemoveAt(index);
-        }
-
-        public ITile this[int index]
-        {
-            get { return InnerList[index]; }
-            set { InnerList[index] = value; }
-        }
 
         public void Add(ITile item)
         {
@@ -62,14 +42,35 @@ namespace Torch
             return InnerList.Remove(item);
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         public IEnumerator<ITile> GetEnumerator()
         {
             return InnerList.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public int IndexOf(ITile item)
         {
-            return GetEnumerator();
+            return InnerList.IndexOf(item);
+        }
+
+        public void Insert(int index, ITile item)
+        {
+            InnerList.Insert(index, item);
+        }
+
+        public ITile this[int index]
+        {
+            get { return InnerList[index]; }
+            set { InnerList[index] = value; }
+        }
+
+        public void RemoveAt(int index)
+        {
+            InnerList.RemoveAt(index);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed class ZztCore : Execution.Core
     {
-        public ZztCore(byte[] memoryBytes, byte[] elementBytes)
+        public ZztCore(ICoreConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
             Actors = new ZztActorList(Memory);
             BoardData = new ZztBoard(Memory);

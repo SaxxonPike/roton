@@ -31,6 +31,17 @@ namespace Torch
             }
         }
 
+        private bool SuppressUpdate
+        {
+            get { return _suppressUpdateCount > 0 || _context == null; }
+            set
+            {
+                _suppressUpdateCount += value ? 1 : -1;
+                if (_suppressUpdateCount < 0)
+                    _suppressUpdateCount = 0;
+            }
+        }
+
         private void InitializeEvents()
         {
             SuppressUpdate = true;
@@ -122,15 +133,12 @@ namespace Torch
             SuppressUpdate = false;
         }
 
-        private bool SuppressUpdate
+        private void UpdateAdvancedEdit()
         {
-            get { return _suppressUpdateCount > 0 || _context == null; }
-            set
-            {
-                _suppressUpdateCount += value ? 1 : -1;
-                if (_suppressUpdateCount < 0)
-                    _suppressUpdateCount = 0;
-            }
+            var enabled = advancedEditingCheckBox.Checked;
+            filenameTextBox.Enabled = enabled;
+            lockedCheckBox.Enabled = enabled;
+            startBoardComboBox.Enabled = enabled;
         }
 
         public void UpdateBoards()
@@ -142,14 +150,6 @@ namespace Torch
             startBoardComboBox.Items.AddRange(_context.Boards.ToArray());
 
             SuppressUpdate = false;
-        }
-
-        private void UpdateAdvancedEdit()
-        {
-            var enabled = advancedEditingCheckBox.Checked;
-            filenameTextBox.Enabled = enabled;
-            lockedCheckBox.Enabled = enabled;
-            startBoardComboBox.Enabled = enabled;
         }
 
         public void UpdateData()

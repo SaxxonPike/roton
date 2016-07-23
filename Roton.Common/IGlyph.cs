@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Roton.Common
 {
     public interface IGlyph
     {
-        int this[int index] { get; }
         int[] Data { get; }
         int Height { get; }
+        int this[int index] { get; }
         int Width { get; }
 
         int[] Render(int foreColor, int backColor);

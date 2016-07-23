@@ -10,14 +10,18 @@ namespace Roton.Core
         IBoard BoardData { get; }
         IList<IPackedBoard> Boards { get; }
         ITile BorderTile { get; }
+        IXyPair Camera { get; }
         IColorList Colors { get; }
         IActor DefaultActor { get; }
+        IFileSystem Disk { get; }
         ITile EdgeTile { get; }
         IElementList Elements { get; }
+        IXyPair Enter { get; }
         IFlagList Flags { get; }
         IGrammar Grammar { get; }
         int Height { get; }
         IHud Hud { get; }
+        IKeyboard Keyboard { get; }
         IKeyList Keys { get; }
         IXyPair KeyVector { get; }
         IList<int> LineChars { get; }
@@ -26,10 +30,12 @@ namespace Roton.Core
         ISerializer Serializer { get; }
         IList<int> SoundBuffer { get; }
         ISounds Sounds { get; }
+        ISpeaker Speaker { get; }
         IList<int> StarChars { get; }
         IState StateData { get; }
         bool StonesEnabled { get; }
         string StoneText { get; }
+        ITerminal Terminal { get; }
         ITileGrid Tiles { get; }
         bool TitleScreen { get; }
         bool TorchesEnabled { get; }
@@ -48,16 +54,13 @@ namespace Roton.Core
         int BoardCount { get; set; }
         string BoardName { get; set; }
         bool BreakGameLoop { get; set; }
-        IXyPair Camera { get; set; }
         bool CancelScroll { get; set; }
         bool Dark { get; set; }
         string DefaultBoardName { get; set; }
         string DefaultSaveName { get; set; }
         string DefaultWorldName { get; set; }
-        IFileSystem Disk { get; set; }
         bool EditorMode { get; set; }
         int EnergyCycles { get; set; }
-        IXyPair Enter { get; set; }
         int ExitEast { get; set; }
         int ExitNorth { get; set; }
         int ExitSouth { get; set; }
@@ -72,7 +75,6 @@ namespace Roton.Core
         int Health { get; set; }
         bool Init { get; set; }
         bool KeyArrow { get; set; }
-        IKeyboard Keyboard { get; set; }
         int KeyPressed { get; set; }
         bool KeyShift { get; set; }
         bool Locked { get; set; }
@@ -92,10 +94,8 @@ namespace Roton.Core
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }
         int SoundTicks { get; set; }
-        ISpeaker Speaker { get; set; }
         int StartBoard { get; set; }
         int Stones { get; set; }
-        ITerminal Terminal { get; set; }
         int TimeLimit { get; set; }
         int TimePassed { get; set; }
         int TorchCycles { get; set; }
@@ -195,7 +195,7 @@ namespace Roton.Core
         IXyPair Rnd();
         IXyPair Seek(IXyPair location);
         void SetBoard(int boardIndex);
-        void SetMessage(int duration, string message);
+        void SetMessage(int duration, IMessage message);
         void Start();
         void Stop();
         void UnpackBoard(int boardIndex);

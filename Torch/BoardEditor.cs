@@ -31,6 +31,17 @@ namespace Torch
             }
         }
 
+        private bool SuppressUpdate
+        {
+            get { return _suppressUpdateCount > 0 || _context == null; }
+            set
+            {
+                _suppressUpdateCount += value ? 1 : -1;
+                if (_suppressUpdateCount < 0)
+                    _suppressUpdateCount = 0;
+            }
+        }
+
         private void InitializeEvents()
         {
             SuppressUpdate = true;
@@ -134,17 +145,6 @@ namespace Torch
             return index;
         }
 
-        private bool SuppressUpdate
-        {
-            get { return _suppressUpdateCount > 0 || _context == null; }
-            set
-            {
-                _suppressUpdateCount += value ? 1 : -1;
-                if (_suppressUpdateCount < 0)
-                    _suppressUpdateCount = 0;
-            }
-        }
-
         private void UpdateAdvancedEdit()
         {
             var enabled = advancedEditingCheckBox.Checked;
@@ -152,6 +152,16 @@ namespace Torch
             cameraYTextBox.Enabled = enabled;
             enteredXTextBox.Enabled = enabled;
             enteredYTextBox.Enabled = enabled;
+        }
+
+        private void UpdateBoardComboBoxes()
+        {
+            SuppressUpdate = true;
+            SetComboControlValue(exitEastTextBox, exitEastComboBox, _context.BoardData.ExitEast.ToString());
+            SetComboControlValue(exitNorthTextBox, exitNorthComboBox, _context.BoardData.ExitNorth.ToString());
+            SetComboControlValue(exitSouthTextBox, exitSouthComboBox, _context.BoardData.ExitSouth.ToString());
+            SetComboControlValue(exitWestTextBox, exitWestComboBox, _context.BoardData.ExitWest.ToString());
+            SuppressUpdate = false;
         }
 
         private void UpdateBoards()
@@ -177,16 +187,6 @@ namespace Torch
             exitWestComboBox.Items.AddRange(boards.ToArray());
 
             UpdateBoardComboBoxes();
-            SuppressUpdate = false;
-        }
-
-        private void UpdateBoardComboBoxes()
-        {
-            SuppressUpdate = true;
-            SetComboControlValue(exitEastTextBox, exitEastComboBox, _context.BoardData.ExitEast.ToString());
-            SetComboControlValue(exitNorthTextBox, exitNorthComboBox, _context.BoardData.ExitNorth.ToString());
-            SetComboControlValue(exitSouthTextBox, exitSouthComboBox, _context.BoardData.ExitSouth.ToString());
-            SetComboControlValue(exitWestTextBox, exitWestComboBox, _context.BoardData.ExitWest.ToString());
             SuppressUpdate = false;
         }
 

@@ -7,6 +7,14 @@ namespace Roton.Common
     {
         private const int HeaderLength = 44;
 
+        private byte[] _buffer;
+
+        private int _frequency;
+
+        private int _length;
+
+        private int _position;
+
         public SoundStream()
         {
             Initialize();
@@ -18,7 +26,12 @@ namespace Roton.Common
             Buffer = buffer;
         }
 
-        private byte[] _buffer;
+        public override bool CanRead => true;
+
+        public override bool CanSeek => true;
+
+        public override bool CanWrite => false;
+        public override long Length => _length;
 
         public byte[] Buffer
         {
@@ -41,20 +54,7 @@ namespace Roton.Common
             }
         }
 
-        public override bool CanRead => true;
-
-        public override bool CanSeek => true;
-
-        public override bool CanWrite => false;
-
         protected byte[] Data { get; set; }
-
-        public override void Flush()
-        {
-            // do nothing
-        }
-
-        private int _frequency;
 
         public int Frequency
         {
@@ -74,6 +74,17 @@ namespace Roton.Common
             }
         }
 
+        public override long Position
+        {
+            get { return _position; }
+            set { _position = (int) value; }
+        }
+
+        public override void Flush()
+        {
+            // do nothing
+        }
+
         private void Initialize()
         {
             Data = new byte[]
@@ -90,17 +101,6 @@ namespace Roton.Common
                 0x64, 0x61, 0x74, 0x61,
                 0x00, 0x00, 0x00, 0x00
             };
-        }
-
-        private int _length;
-        public override long Length => _length;
-
-        private int _position;
-
-        public override long Position
-        {
-            get { return _position; }
-            set { _position = (int) value; }
         }
 
         public override int Read(byte[] buffer, int offset, int count)

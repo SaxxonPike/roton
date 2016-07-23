@@ -138,6 +138,11 @@ namespace Roton.Emulation.SuperZZT
             return new Vector(0x0F + -DisplayInfo.Camera.X, 0x03 + -DisplayInfo.Camera.Y);
         }
 
+        public override void Initialize()
+        {
+            Terminal.SetSize(40, 25, true);
+        }
+
         public override void RedrawBoard()
         {
             for (var x = 0; x < DisplayInfo.Width; x++)

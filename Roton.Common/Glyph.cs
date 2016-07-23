@@ -46,26 +46,16 @@ namespace Roton.Common
             Height *= yScale;
         }
 
-        protected override int GetItem(int index)
-        {
-            return Data[index];
-        }
-
-        protected override void SetItem(int index, int value)
-        {
-            Data[index] = Black | (value & ColorMask);
-        }
-
         public override int Count => PixelCount;
+
+        private int PixelCount { get; }
 
         public int[] Data { get; }
 
         public int Height { get; }
 
-        private int PixelCount { get; }
-
         /// <summary>
-        /// Render the glyph using the specified raw color data.
+        ///     Render the glyph using the specified raw color data.
         /// </summary>
         public int[] Render(int foreColor, int backColor)
         {
@@ -82,7 +72,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Render the glyph to a bitmap using the specified colors.
+        ///     Render the glyph to a bitmap using the specified colors.
         /// </summary>
         public Bitmap Render(Color foreColor, Color backColor)
         {
@@ -95,7 +85,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Render the glyph to a FastBitmap using the specified color data and coordinates.
+        ///     Render the glyph to a FastBitmap using the specified color data and coordinates.
         /// </summary>
         public void Render(IFastBitmap bitmap, int x, int y, int foreColor, int backColor)
         {
@@ -123,8 +113,18 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Width of the glyph.
+        ///     Width of the glyph.
         /// </summary>
         public int Width { get; }
+
+        protected override int GetItem(int index)
+        {
+            return Data[index];
+        }
+
+        protected override void SetItem(int index, int value)
+        {
+            Data[index] = Black | (value & ColorMask);
+        }
     }
 }

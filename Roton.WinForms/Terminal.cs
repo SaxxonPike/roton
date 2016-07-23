@@ -1,9 +1,11 @@
-﻿using Roton.Common;
-using System;
+﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
+using Roton.Common;
 using Roton.Core;
+using Message = System.Windows.Forms.Message;
 
 namespace Roton.WinForms
 {
@@ -11,7 +13,6 @@ namespace Roton.WinForms
     {
         private static readonly Encoding CodePage437 = Encoding.GetEncoding(437);
 
-        private bool _cursorEnabled;
         private int _cursorX;
         private int _cursorY;
         private KeysBuffer _keys;
@@ -33,30 +34,158 @@ namespace Roton.WinForms
             Initialize();
         }
 
-        private void Initialize()
-        {
-            _keys = new KeysBuffer();
-            _cursorEnabled = false;
-            InitializeComponent();
-            Load += OnLoad;
-            ScaleX = 1;
-            ScaleY = 1;
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.Opaque, true);
-        }
-
         private bool Alt
         {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
         }
 
+        private IFastBitmap Bitmap { get; set; }
+
+        public bool BlinkEnabled { get; set; }
+
+        private bool Blinking { get; set; }
+
+        private bool Control
+        {
+            get { return _keys.Control; }
+            set { _keys.Control = value; }
+        }
+
+        public int ScaleX { get; private set; }
+
+        public int ScaleY { get; private set; }
+
+        private bool Shift
+        {
+            get { return _keys.Shift; }
+            set { _keys.Shift = value; }
+        }
+
         public void AttachKeyHandler(Form form)
         {
             form.KeyDown += (sender, e) => { OnKey(e); };
             form.KeyUp += (sender, e) => { OnKey(e); };
+        }
+
+        public bool CursorEnabled { get; set; }
+
+        public int CursorX
+        {
+            get { return _cursorX; }
+            set
+            {
+                _cursorX = value;
+                UpdateCursor(_cursorX, _cursorY);
+            }
+        }
+
+        public int CursorY
+        {
+            get { return _cursorY; }
+            set
+            {
+                _cursorY = value;
+                UpdateCursor(_cursorX, _cursorY);
+            }
+        }
+
+        public Bitmap RenderSingle(int character, int color)
+        {
+            color = TranslateColorIndex(color);
+            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
+                _terminalPalette[(color >> 4) & 0xF]);
+            if (_terminalWide)
+            {
+                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
+                using (var g = Graphics.FromImage(wideResult))
+                {
+                    g.PixelOffsetMode = PixelOffsetMode.Half;
+                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
+                }
+                result.Dispose();
+                return wideResult;
+            }
+            return result;
+        }
+
+        public IRasterFont TerminalFont
+        {
+            get { return _terminalFont; }
+            set
+            {
+                _terminalFont = value;
+                Redraw();
+            }
+        }
+
+        public IPalette TerminalPalette
+        {
+            get { return _terminalPalette; }
+            set
+            {
+                _terminalPalette = value;
+                Redraw();
+            }
+        }
+
+        public void Clear()
+        {
+            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
+            if (Bitmap != null)
+            {
+                Redraw();
+            }
+        }
+
+        public IKeyboard Keyboard => _keys;
+
+        public void Plot(int x, int y, AnsiChar ac)
+        {
+            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
+            {
+                var index = x + y*_terminalWidth;
+                _terminalBuffer[index] = ac;
+                Draw(x, y, ac);
+            }
+        }
+
+        public void SetScale(int xScale, int yScale)
+        {
+            ScaleX = xScale;
+            ScaleY = yScale;
+            SetSize(_terminalWidth, _terminalHeight, _terminalWide);
+        }
+
+        void ITerminal.SetSize(int width, int height, bool wide)
+        {
+            Invoke(new SetSizeDelegate(SetSize), width, height, wide);
+        }
+
+        public void Write(int x, int y, string value, int color)
+        {
+            var ac = new AnsiChar {Color = color};
+            var characters = CodePage437.GetBytes(value);
+            var count = characters.Length;
+
+            while (x < 0)
+            {
+                x += _terminalWidth;
+                y--;
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                ac.Char = characters[index];
+                Plot(x, y, ac);
+                x++;
+                if (x >= _terminalWidth)
+                {
+                    x -= _terminalWidth;
+                    y++;
+                }
+            }
         }
 
         private void Blink()
@@ -81,50 +210,12 @@ namespace Roton.WinForms
             ResumeLayout();
         }
 
-        private IFastBitmap Bitmap { get; set; }
-
-        public bool BlinkEnabled { get; set; }
-
-        private bool Blinking { get; set; }
-
-        public void Clear()
+        private void displayTimer_Tick(object sender, EventArgs e)
         {
-            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
-            if (Bitmap != null)
+            if (_updated)
             {
-                Redraw();
-            }
-        }
-
-        private bool Control
-        {
-            get { return _keys.Control; }
-            set { _keys.Control = value; }
-        }
-
-        public bool CursorEnabled
-        {
-            get { return _cursorEnabled; }
-            set { _cursorEnabled = value; }
-        }
-
-        public int CursorX
-        {
-            get { return _cursorX; }
-            set
-            {
-                _cursorX = value;
-                UpdateCursor(_cursorX, _cursorY);
-            }
-        }
-
-        public int CursorY
-        {
-            get { return _cursorY; }
-            set
-            {
-                _cursorY = value;
-                UpdateCursor(_cursorX, _cursorY);
+                _updated = false;
+                Invalidate();
             }
         }
 
@@ -155,7 +246,19 @@ namespace Roton.WinForms
             }
         }
 
-        public IKeyboard Keyboard => _keys;
+        private void Initialize()
+        {
+            _keys = new KeysBuffer();
+            CursorEnabled = false;
+            InitializeComponent();
+            Load += OnLoad;
+            ScaleX = 1;
+            ScaleY = 1;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.Opaque, true);
+        }
 
         private void OnKey(KeyEventArgs e)
         {
@@ -191,7 +294,7 @@ namespace Roton.WinForms
 
         private void OnMouse(object sender, MouseEventArgs e)
         {
-            if (_cursorEnabled)
+            if (CursorEnabled)
             {
                 var newX = e.X/_terminalFont.Width;
                 var newY = e.Y/_terminalFont.Height;
@@ -215,26 +318,16 @@ namespace Roton.WinForms
         {
             if (Bitmap != null)
             {
-                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                e.Graphics.DrawImageUnscaled((FastBitmap)Bitmap, 0, 0);
+                e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
+                e.Graphics.SmoothingMode = SmoothingMode.None;
+                e.Graphics.DrawImageUnscaled((FastBitmap) Bitmap, 0, 0);
                 UpdateCursor();
             }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-        }
-
-        public void Plot(int x, int y, AnsiChar ac)
-        {
-            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
-            {
-                var index = x + y*_terminalWidth;
-                _terminalBuffer[index] = ac;
-                Draw(x, y, ac);
-            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -266,39 +359,11 @@ namespace Roton.WinForms
             }
         }
 
-        public Bitmap RenderSingle(int character, int color)
-        {
-            color = TranslateColorIndex(color);
-            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
-                _terminalPalette[(color >> 4) & 0xF]);
-            if (_terminalWide)
-            {
-                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
-                using (var g = Graphics.FromImage(wideResult))
-                {
-                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
-                }
-                result.Dispose();
-                return wideResult;
-            }
-            return result;
-        }
-
-        public int ScaleX { get; private set; }
-
-        public int ScaleY { get; private set; }
-
-        public void SetScale(int xScale, int yScale)
-        {
-            ScaleX = xScale;
-            ScaleY = yScale;
-            SetSize(_terminalWidth, _terminalHeight, _terminalWide);
-        }
-
         public void SetSize(int width, int height, bool wide)
         {
+            if (width == 0 || height == 0)
+                return;
+
             var oldWidth = _terminalWidth;
             var oldHeight = _terminalHeight;
             _terminalWidth = width;
@@ -326,32 +391,6 @@ namespace Roton.WinForms
             Redraw();
         }
 
-        private bool Shift
-        {
-            get { return _keys.Shift; }
-            set { _keys.Shift = value; }
-        }
-
-        public IRasterFont TerminalFont
-        {
-            get { return _terminalFont; }
-            set
-            {
-                _terminalFont = value;
-                Redraw();
-            }
-        }
-
-        public IPalette TerminalPalette
-        {
-            get { return _terminalPalette; }
-            set
-            {
-                _terminalPalette = value;
-                Redraw();
-            }
-        }
-
         private int TranslateColorIndex(int color)
         {
             // if blinking is enabled, we only get the first 8 colors for background
@@ -364,7 +403,7 @@ namespace Roton.WinForms
 
         private void UpdateCursor()
         {
-            if (_cursorEnabled)
+            if (CursorEnabled)
             {
                 using (var g = CreateGraphics())
                 {
@@ -420,38 +459,6 @@ namespace Roton.WinForms
             }
         }
 
-        public void Write(int x, int y, string value, int color)
-        {
-            var ac = new AnsiChar {Color = color};
-            var characters = CodePage437.GetBytes(value);
-            var count = characters.Length;
-
-            while (x < 0)
-            {
-                x += _terminalWidth;
-                y--;
-            }
-
-            for (var index = 0; index < count; index++)
-            {
-                ac.Char = characters[index];
-                Plot(x, y, ac);
-                x++;
-                if (x >= _terminalWidth)
-                {
-                    x -= _terminalWidth;
-                    y++;
-                }
-            }
-        }
-
-        private void displayTimer_Tick(object sender, EventArgs e)
-        {
-            if (_updated)
-            {
-                _updated = false;
-                Invalidate();
-            }
-        }
+        private delegate void SetSizeDelegate(int width, int height, bool wide);
     }
 }

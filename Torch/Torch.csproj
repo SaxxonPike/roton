@@ -41,6 +41,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actor.cs" />
     <Compile Include="ActorEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

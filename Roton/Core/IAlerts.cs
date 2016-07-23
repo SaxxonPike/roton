@@ -2,23 +2,23 @@
 {
     public interface IAlerts
     {
-        string AmmoMessage { get; }
-        string BombMessage { get; }
-        string DarkMessage { get; }
-        string EnergizerMessage { get; }
-        string FakeMessage { get; }
-        string ForestMessage { get; }
-        string GameOverMessage { get; }
-        string GemMessage { get; }
-        string InvisibleMessage { get; }
-        string NoAmmoMessage { get; }
-        string NoShootMessage { get; }
-        string NotDarkMessage { get; }
-        string NoTorchMessage { get; }
-        string StoneMessage { get; }
-        string TimeMessage { get; }
-        string TorchMessage { get; }
-        string WaterMessage { get; }
+        IMessage AmmoMessage { get; }
+        IMessage BombMessage { get; }
+        IMessage DarkMessage { get; }
+        IMessage EnergizerMessage { get; }
+        IMessage FakeMessage { get; }
+        IMessage ForestMessage { get; }
+        IMessage GameOverMessage { get; }
+        IMessage GemMessage { get; }
+        IMessage InvisibleMessage { get; }
+        IMessage NoAmmoMessage { get; }
+        IMessage NoShootMessage { get; }
+        IMessage NotDarkMessage { get; }
+        IMessage NoTorchMessage { get; }
+        IMessage StoneMessage { get; }
+        IMessage TimeMessage { get; }
+        IMessage TorchMessage { get; }
+        IMessage WaterMessage { get; }
         bool AmmoPickup { get; set; }
         bool CantShootHere { get; set; }
         bool Dark { get; set; }
@@ -31,9 +31,9 @@
         bool OutOfAmmo { get; set; }
         bool TorchPickup { get; set; }
 
-        string DoorLockedMessage(int color);
-        string DoorOpenMessage(int color);
-        string KeyAleadyMessage(int color);
-        string KeyPickupMessage(int color);
+        IMessage DoorLockedMessage(int color);
+        IMessage DoorOpenMessage(int color);
+        IMessage KeyAlreadyMessage(int color);
+        IMessage KeyPickupMessage(int color);
     }
 }

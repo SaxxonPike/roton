@@ -79,6 +79,8 @@ namespace Roton.Emulation.Execution
         {
         }
 
+        public abstract void Initialize();
+
         public virtual void RedrawBoard()
         {
         }
@@ -88,7 +90,7 @@ namespace Roton.Emulation.Execution
             return currentValue;
         }
 
-        public virtual ITerminal Terminal { get; set; }
+        public virtual ITerminal Terminal => DisplayInfo.Terminal;
 
         public virtual void UpdateBorder()
         {

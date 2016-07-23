@@ -1,23 +1,25 @@
-﻿using Roton.Common;
-using System;
+﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Text;
-using OpenTK.Graphics.OpenGL;
-using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Windows.Forms;
+using OpenTK.Graphics.OpenGL;
+using Roton.Common;
 using Roton.Core;
+using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
+using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using Message = System.Windows.Forms.Message;
 
 namespace Roton.WinForms.OpenGL
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
+        private int _glLastTexture = -1;
 
         private bool _glReady;
-        private int _glLastTexture = -1;
-        private KeysBuffer _keys;
+        private readonly KeysBuffer _keys;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
@@ -26,17 +28,6 @@ namespace Roton.WinForms.OpenGL
         private IPalette _terminalPalette;
         private int _terminalWidth;
         private bool _wideMode;
-
-        // Auto-properties.
-        public bool BlinkEnabled { get; set; }
-        private bool Blinking { get; set; }
-        public int ScaleX { get; private set; }
-        public int ScaleY { get; private set; }
-
-        // Editor-specific properties.
-        public bool CursorEnabled { get; set; }
-        public int CursorX { get; set; }
-        public int CursorY { get; set; }
 
         public Terminal()
         {
@@ -53,23 +44,31 @@ namespace Roton.WinForms.OpenGL
             ScaleY = 1;
         }
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                components?.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         public bool Alt
         {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
+        }
+
+        private IFastBitmap Bitmap { get; set; }
+
+        // Auto-properties.
+        public bool BlinkEnabled { get; set; }
+        private bool Blinking { get; set; }
+
+        public bool Control
+        {
+            get { return _keys.Control; }
+            set { _keys.Control = value; }
+        }
+
+        public int ScaleX { get; private set; }
+        public int ScaleY { get; private set; }
+
+        public bool Shift
+        {
+            get { return _keys.Shift; }
+            set { _keys.Shift = value; }
         }
 
         public void AttachKeyHandler(Form form)
@@ -78,25 +77,134 @@ namespace Roton.WinForms.OpenGL
             form.KeyUp += (sender, e) => { OnKey(e); };
         }
 
-        public void ClearKeys()
+        // Editor-specific properties.
+        public bool CursorEnabled { get; set; }
+        public int CursorX { get; set; }
+        public int CursorY { get; set; }
+
+        public Bitmap RenderSingle(int character, int color)
         {
-            _keys.Clear();
+            color = TranslateColorIndex(color);
+            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
+                _terminalPalette[(color >> 4) & 0xF]);
+            if (_wideMode)
+            {
+                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
+                using (var g = Graphics.FromImage(wideResult))
+                {
+                    g.PixelOffsetMode = PixelOffsetMode.Half;
+                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
+                }
+                result.Dispose();
+                return wideResult;
+            }
+            return result;
         }
 
-        private IFastBitmap Bitmap { get; set; }
+        public IRasterFont TerminalFont
+        {
+            get { return _terminalFont; }
+            set
+            {
+                _terminalFont = value;
+                Redraw();
+            }
+        }
+
+        public IPalette TerminalPalette
+        {
+            get { return _terminalPalette; }
+            set
+            {
+                _terminalPalette = value;
+                Redraw();
+            }
+        }
+
+        public void Clear()
+        {
+            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
+        }
 
         public IKeyboard Keyboard => _keys as IKeyboard;
 
-        public bool Shift
+        public void Plot(int x, int y, AnsiChar ac)
         {
-            get { return _keys.Shift; }
-            set { _keys.Shift = value; }
+            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
+            {
+                var index = x + y*_terminalWidth;
+                _terminalBuffer[index] = ac;
+                Draw(x, y, ac);
+            }
         }
 
-        public bool Control
+        public void SetScale(int xScale, int yScale)
         {
-            get { return _keys.Control; }
-            set { _keys.Control = value; }
+            ScaleX = xScale;
+            ScaleY = yScale;
+
+            if (AutoSize)
+            {
+                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
+                Height = _terminalHeight*_terminalFont.Height*yScale;
+            }
+
+            SetViewport();
+        }
+
+        public void SetSize(int width, int height, bool wide)
+        {
+            if (width == 0 || height == 0)
+                return;
+
+            var oldWidth = _terminalWidth;
+            var oldHeight = _terminalHeight;
+            _terminalWidth = width;
+            _terminalHeight = height;
+            _wideMode = wide;
+
+            // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
+            var oldBitmap = Bitmap;
+            Bitmap = new FastBitmap(_terminalWidth*_terminalFont.Width, _terminalHeight*_terminalFont.Height);
+            oldBitmap?.Dispose();
+
+            if (width != oldWidth || height != oldHeight)
+                Clear();
+
+            if (AutoSize)
+            {
+                Width = _terminalWidth*_terminalFont.Width*ScaleX*(wide ? 2 : 1);
+                Height = _terminalHeight*_terminalFont.Height*ScaleY;
+            }
+
+            // Reconfigure OpenGL viewport.
+            SetViewport();
+        }
+
+        public void Write(int x, int y, string value, int color)
+        {
+            var ac = new AnsiChar {Color = color};
+            var characters = DosEncoding.GetBytes(value);
+            var count = characters.Length;
+
+            while (x < 0)
+            {
+                x += _terminalWidth;
+                y--;
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                ac.Char = characters[index];
+                Plot(x, y, ac);
+                x++;
+                if (x >= _terminalWidth)
+                {
+                    x -= _terminalWidth;
+                    y++;
+                }
+            }
         }
 
         private void Blink()
@@ -121,15 +229,28 @@ namespace Roton.WinForms.OpenGL
             //ResumeLayout();
         }
 
-        public void Clear()
+        public void ClearKeys()
         {
-            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
+            _keys.Clear();
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
         {
             Redraw();
             GlRender();
+        }
+
+        /// <summary>
+        ///     Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         private void Draw(int x, int y, AnsiChar ac)
@@ -268,16 +389,6 @@ namespace Roton.WinForms.OpenGL
             }
         }
 
-        public void Plot(int x, int y, AnsiChar ac)
-        {
-            if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
-            {
-                var index = x + y*_terminalWidth;
-                _terminalBuffer[index] = ac;
-                Draw(x, y, ac);
-            }
-        }
-
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             var keyAlt = (keyData & Keys.Alt) != 0;
@@ -304,7 +415,7 @@ namespace Roton.WinForms.OpenGL
 
             // Update the cursor if it's enabled and the bitmap is valid.
             if (!CursorEnabled || Bitmap == null) return;
-            using (var g = Graphics.FromImage((FastBitmap)Bitmap))
+            using (var g = Graphics.FromImage((FastBitmap) Bitmap))
             {
                 using (
                     Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
@@ -328,66 +439,6 @@ namespace Roton.WinForms.OpenGL
             }
         }
 
-        public Bitmap RenderSingle(int character, int color)
-        {
-            color = TranslateColorIndex(color);
-            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
-                _terminalPalette[(color >> 4) & 0xF]);
-            if (_wideMode)
-            {
-                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
-                using (var g = Graphics.FromImage(wideResult))
-                {
-                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
-                }
-                result.Dispose();
-                return wideResult;
-            }
-            return result;
-        }
-
-        public void SetScale(int xScale, int yScale)
-        {
-            ScaleX = xScale;
-            ScaleY = yScale;
-
-            if (AutoSize)
-            {
-                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
-                Height = _terminalHeight*_terminalFont.Height*yScale;
-            }
-
-            SetViewport();
-        }
-
-        public void SetSize(int width, int height, bool wide)
-        {
-            var oldWidth = _terminalWidth;
-            var oldHeight = _terminalHeight;
-            _terminalWidth = width;
-            _terminalHeight = height;
-            _wideMode = wide;
-
-            // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
-            var oldBitmap = Bitmap;
-            Bitmap = new FastBitmap(_terminalWidth*_terminalFont.Width, _terminalHeight*_terminalFont.Height);
-            oldBitmap?.Dispose();
-
-            if (width != oldWidth || height != oldHeight)
-                Clear();
-
-            if (AutoSize)
-            {
-                Width = _terminalWidth*_terminalFont.Width*ScaleX*(wide ? 2 : 1);
-                Height = _terminalHeight*_terminalFont.Height*ScaleY;
-            }
-
-            // Reconfigure OpenGL viewport.
-            SetViewport();
-        }
-
         private void SetViewport()
         {
             if (!_glReady) return;
@@ -397,26 +448,6 @@ namespace Roton.WinForms.OpenGL
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
-        }
-
-        public IRasterFont TerminalFont
-        {
-            get { return _terminalFont; }
-            set
-            {
-                _terminalFont = value;
-                Redraw();
-            }
-        }
-
-        public IPalette TerminalPalette
-        {
-            get { return _terminalPalette; }
-            set
-            {
-                _terminalPalette = value;
-                Redraw();
-            }
         }
 
         internal int TranslateColorIndex(int color)
@@ -453,31 +484,6 @@ namespace Roton.WinForms.OpenGL
             {
                 CursorX = newX;
                 CursorY = newY;
-            }
-        }
-
-        public void Write(int x, int y, string value, int color)
-        {
-            var ac = new AnsiChar {Color = color};
-            var characters = DosEncoding.GetBytes(value);
-            var count = characters.Length;
-
-            while (x < 0)
-            {
-                x += _terminalWidth;
-                y--;
-            }
-
-            for (var index = 0; index < count; index++)
-            {
-                ac.Char = characters[index];
-                Plot(x, y, ac);
-                x++;
-                if (x >= _terminalWidth)
-                {
-                    x -= _terminalWidth;
-                    y++;
-                }
             }
         }
     }

@@ -85,7 +85,7 @@ namespace Roton.Emulation.Execution
 
         public void RaiseError(string error)
         {
-            Core.SetMessage(0xC8, $"ERR: {error}");
+            Core.SetMessage(0xC8, new Message($"ERR: {error}"));
             Core.PlaySound(5, Core.Sounds.Error);
         }
 

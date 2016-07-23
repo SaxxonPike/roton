@@ -9,7 +9,7 @@ namespace Roton.Common
     public sealed class RasterFont : FixedList<IGlyph>, IRasterFont
     {
         /// <summary>
-        /// Create a font with the default glyphs.
+        ///     Create a font with the default glyphs.
         /// </summary>
         public RasterFont()
         {
@@ -18,7 +18,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Load a font from the specified file.
+        ///     Load a font from the specified file.
         /// </summary>
         public RasterFont(string filename)
         {
@@ -26,7 +26,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Create a font from raw data.
+        ///     Create a font from raw data.
         /// </summary>
         public RasterFont(byte[] font)
         {
@@ -34,7 +34,7 @@ namespace Roton.Common
         }
 
         /// <summary>
-        /// Load a font from the specified stream. The length must be specified because raw data may lack a header.
+        ///     Load a font from the specified stream. The length must be specified because raw data may lack a header.
         /// </summary>
         public RasterFont(Stream source, int length)
         {
@@ -43,15 +43,41 @@ namespace Roton.Common
             Initialize(font);
         }
 
-        public override int Count => 256;
-
         private byte[] Data { get; set; }
 
         private Glyph[] Glyphs { get; set; }
 
         private Glyph[] GlyphsUnscaled { get; set; }
 
+        public override int Count => 256;
+
         public int Height { get; private set; }
+
+        public int OriginalHeight { get; private set; }
+
+        public int OriginalWidth { get; private set; }
+
+        public Bitmap Render(int character, Color foreground, Color background)
+        {
+            return Glyphs[character & 0xFF].Render(foreground, background);
+        }
+
+        public void Render(IFastBitmap bitmap, int x, int y, int character, int foreColor, int backColor)
+        {
+            Glyphs[character & 0xFF].Render(bitmap, x, y, foreColor, backColor);
+        }
+
+        public Bitmap RenderUnscaled(int character, Color foreground, Color background)
+        {
+            return GlyphsUnscaled[character & 0xFF].Render(foreground, background);
+        }
+
+        public void SetScale(int xScale, int yScale)
+        {
+            Rasterize(xScale, yScale);
+        }
+
+        public int Width { get; private set; }
 
         private void Initialize(byte[] font)
         {
@@ -114,10 +140,6 @@ namespace Roton.Common
             }
         }
 
-        public int OriginalHeight { get; private set; }
-
-        public int OriginalWidth { get; private set; }
-
         private void Rasterize(int xScale, int yScale)
         {
             var glyphData = new byte[OriginalHeight];
@@ -131,27 +153,5 @@ namespace Roton.Common
             Width = OriginalWidth*xScale;
             Height = OriginalHeight*yScale;
         }
-
-        public Bitmap Render(int character, Color foreground, Color background)
-        {
-            return Glyphs[character & 0xFF].Render(foreground, background);
-        }
-
-        public void Render(IFastBitmap bitmap, int x, int y, int character, int foreColor, int backColor)
-        {
-            Glyphs[character & 0xFF].Render(bitmap, x, y, foreColor, backColor);
-        }
-
-        public Bitmap RenderUnscaled(int character, Color foreground, Color background)
-        {
-            return GlyphsUnscaled[character & 0xFF].Render(foreground, background);
-        }
-
-        public void SetScale(int xScale, int yScale)
-        {
-            Rasterize(xScale, yScale);
-        }
-
-        public int Width { get; private set; }
     }
 }

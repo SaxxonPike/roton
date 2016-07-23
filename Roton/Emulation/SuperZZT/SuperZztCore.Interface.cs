@@ -5,7 +5,7 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed partial class SuperZztCore : Execution.Core
     {
-        public SuperZztCore(byte[] memoryBytes, byte[] elementBytes)
+        public SuperZztCore(ICoreConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
             Actors = new SuperZztActorList(Memory);
             BoardData = new SuperZztBoard(Memory);

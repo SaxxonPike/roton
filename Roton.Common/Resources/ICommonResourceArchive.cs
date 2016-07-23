@@ -3,8 +3,8 @@
     public interface ICommonResourceArchive
     {
         byte[] GetDrumAudio(int index);
-        byte[] GetPlayerStepAudio();
-        byte[] GetPalette();
         byte[] GetFont();
+        byte[] GetPalette();
+        byte[] GetPlayerStepAudio();
     }
 }
