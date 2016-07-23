@@ -14,7 +14,6 @@ namespace Roton.Emulation.SuperZZT
             _memory = memory;
             memory.Write(0x0000, memoryBytes);
 
-            Alerts = new SuperZztAlerts(_memory);
             BorderTile = new Tile(0, 0); //Super ZZT doesn't keep this in game memory; it's in code
             Colors = new SuperZztColorList(_memory);
             DefaultActor = new Actor(_memory, 0x2262);
@@ -28,6 +27,7 @@ namespace Roton.Emulation.SuperZZT
             Vector4 = new Int16List(_memory, 0x2250, 8);
             Vector8 = new Int16List(_memory, 0x2230, 16);
             WebChars = new ByteString(_memory, 0x227C);
+            Alerts = new SuperZztAlerts(_memory, Colors);
         }
 
         public bool AboutShown { get; set; }

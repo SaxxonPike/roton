@@ -47,10 +47,10 @@ namespace Roton.Emulation.SuperZZT
 
             // TODO: Implement forest music
 
-            if (Alerts.AlertForest)
+            if (Alerts.Forest)
             {
-                SetMessage(0xC8, ForestMessage);
-                Alerts.AlertForest = false;
+                SetMessage(0xC8, Alerts.ForestMessage);
+                Alerts.Forest = false;
             }
         }
 

@@ -23,43 +23,11 @@ namespace Roton.Emulation.Execution
             RandomDeterministic = new Random(0);
         }
 
-        internal virtual string AmmoMessage => @"Ammunition - 5 shots per container.";
-
-        internal virtual string BombMessage => @"Bomb activated!";
-
-        internal virtual string DarkMessage => @"Room is dark - you need to light a torch!";
-
-        internal virtual string EnergizerMessage => @"Energizer - You are invincible";
-
-        internal virtual string FakeMessage => @"A fake wall - secret passage!";
-
-        internal virtual string ForestMessage => @"A path is cleared through the forest.";
-
-        internal virtual string GameOverMessage => @" Game over  -  Press ESCAPE";
-
-        internal virtual string GemMessage => @"Gems give you Health!";
-
-        internal virtual string InvisibleMessage => @"You are blocked by an invisible wall.";
-
-        internal virtual string NoAmmoMessage => @"You don't have any ammo!";
-
-        internal virtual string NoShootMessage => @"Can't shoot in this place!";
-
-        internal virtual string NotDarkMessage => @"Don't need torch - room is not dark!";
-
-        internal virtual string NoTorchMessage => @"You don't have any torches!";
-
         private Random Random { get; }
 
         private Random RandomDeterministic { get; }
 
-        internal virtual string TimeMessage => @"Running out of time!";
-
         private int TimerBase => CoreTimer.Tick & 0x7FFF;
-
-        internal virtual string TorchMessage => @"Torch - used for lighting in the underground.";
-
-        internal virtual string WaterMessage => @"Your way is blocked by water.";
 
         private Thread Thread { get; set; }
 
@@ -648,7 +616,7 @@ namespace Roton.Emulation.Execution
                 KeyShift = false;
                 if (ActorIndexAt(new Location(0, 0)) == -1)
                 {
-                    SetMessage(0x7D00, GameOverMessage);
+                    SetMessage(0x7D00, Alerts.GameOverMessage);
                 }
                 GameWaitTime = 0;
                 GameOver = true;
@@ -677,19 +645,19 @@ namespace Roton.Emulation.Execution
                         }
                         else
                         {
-                            if (Alerts.AlertNoAmmo)
+                            if (Alerts.OutOfAmmo)
                             {
-                                SetMessage(0xC8, NoAmmoMessage);
-                                Alerts.AlertNoAmmo = false;
+                                SetMessage(0xC8, Alerts.NoAmmoMessage);
+                                Alerts.OutOfAmmo = false;
                             }
                         }
                     }
                     else
                     {
-                        if (Alerts.AlertNoShoot)
+                        if (Alerts.CantShootHere)
                         {
-                            SetMessage(0xC8, NoShootMessage);
-                            Alerts.AlertNoShoot = false;
+                            SetMessage(0xC8, Alerts.NoShootMessage);
+                            Alerts.CantShootHere = false;
                         }
                     }
                 }
@@ -723,18 +691,18 @@ namespace Roton.Emulation.Execution
                         {
                             if (Torches <= 0)
                             {
-                                if (Alerts.AlertNoTorch)
+                                if (Alerts.NoTorches)
                                 {
-                                    SetMessage(0xC8, NoTorchMessage);
-                                    Alerts.AlertNoTorch = false;
+                                    SetMessage(0xC8, Alerts.NoTorchMessage);
+                                    Alerts.NoTorches = false;
                                 }
                             }
                             else if (!Dark)
                             {
-                                if (Alerts.AlertNotDark)
+                                if (Alerts.NotDark)
                                 {
-                                    SetMessage(0xC8, NotDarkMessage);
-                                    Alerts.AlertNotDark = false;
+                                    SetMessage(0xC8, Alerts.NotDarkMessage);
+                                    Alerts.NotDark = false;
                                 }
                             }
                             else
@@ -817,7 +785,7 @@ namespace Roton.Emulation.Execution
                         TimePassed++;
                         if (TimeLimit - 10 == TimePassed)
                         {
-                            SetMessage(0xC8, TimeMessage);
+                            SetMessage(0xC8, Alerts.TimeMessage);
                             PlaySound(3, Sounds.TimeLow);
                         }
                         else if (TimePassed >= TimeLimit)
@@ -1712,10 +1680,10 @@ namespace Roton.Emulation.Execution
             RemoveItem(location);
             UpdateStatus();
             PlaySound(2, Sounds.Ammo);
-            if (Alerts.AlertAmmo)
+            if (Alerts.AmmoPickup)
             {
-                SetMessage(0xC8, AmmoMessage);
-                Alerts.AlertAmmo = false;
+                SetMessage(0xC8, Alerts.AmmoMessage);
+                Alerts.AmmoPickup = false;
             }
         }
 
@@ -1780,7 +1748,7 @@ namespace Roton.Emulation.Execution
             {
                 actor.P1 = 9;
                 UpdateBoard(location);
-                SetMessage(0xC8, BombMessage);
+                SetMessage(0xC8, Alerts.BombMessage);
                 PlaySound(4, Sounds.BombActivate);
             }
             else
@@ -1795,14 +1763,14 @@ namespace Roton.Emulation.Execution
             var keyIndex = color - 1;
             if (!Keys[keyIndex])
             {
-                SetMessage(0xC8, DoorClosedMessage(color));
+                SetMessage(0xC8, Alerts.DoorLockedMessage(color));
                 PlaySound(3, Sounds.DoorLocked);
             }
             else
             {
                 Keys[keyIndex] = false;
                 RemoveItem(location);
-                SetMessage(0xC8, DoorOpenMessage(color));
+                SetMessage(0xC8, Alerts.DoorOpenMessage(color));
                 PlaySound(3, Sounds.DoorOpen);
             }
         }
@@ -1819,20 +1787,20 @@ namespace Roton.Emulation.Execution
             EnergyCycles = 0x4B;
             UpdateStatus();
             UpdateBoard(location);
-            if (Alerts.AlertEnergy)
+            if (Alerts.EnergizerPickup)
             {
-                Alerts.AlertEnergy = false;
-                SetMessage(0xC8, EnergizerMessage);
+                Alerts.EnergizerPickup = false;
+                SetMessage(0xC8, Alerts.EnergizerMessage);
             }
             BroadcastLabel(0, @"ALL:ENERGIZE", false);
         }
 
         public void InteractFake(IXyPair location, int index, IXyPair vector)
         {
-            if (!Alerts.AlertFake) return;
+            if (!Alerts.FakeWall) return;
 
-            Alerts.AlertFake = false;
-            SetMessage(0xC8, FakeMessage);
+            Alerts.FakeWall = false;
+            SetMessage(0xC8, Alerts.FakeMessage);
         }
 
         public virtual void InteractForest(IXyPair location, int index, IXyPair vector)
@@ -1840,10 +1808,10 @@ namespace Roton.Emulation.Execution
             RemoveItem(location);
             UpdateBoard(location);
             PlaySound(3, Sounds.Forest);
-            if (Alerts.AlertForest)
+            if (Alerts.Forest)
             {
-                SetMessage(0xC8, ForestMessage);
-                Alerts.AlertForest = false;
+                SetMessage(0xC8, Alerts.ForestMessage);
+                Alerts.Forest = false;
             }
         }
 
@@ -1855,10 +1823,10 @@ namespace Roton.Emulation.Execution
             RemoveItem(location);
             UpdateStatus();
             PlaySound(2, Sounds.Gem);
-            if (Alerts.AlertGem)
+            if (Alerts.GemPickup)
             {
-                SetMessage(0xC8, GemMessage);
-                Alerts.AlertGem = false;
+                SetMessage(0xC8, Alerts.GemMessage);
+                Alerts.GemPickup = false;
             }
         }
 
@@ -1867,7 +1835,7 @@ namespace Roton.Emulation.Execution
             TileAt(location).Id = Elements.NormalId;
             UpdateBoard(location);
             PlaySound(3, Sounds.Invisible);
-            SetMessage(0x64, InvisibleMessage);
+            SetMessage(0x64, Alerts.InvisibleMessage);
         }
 
         public void InteractKey(IXyPair location, int index, IXyPair vector)
@@ -1935,7 +1903,7 @@ namespace Roton.Emulation.Execution
             Stones++;
             Destroy(location);
             UpdateStatus();
-            SetMessage(0xC8, @"You have found a", @"Stone of Power!");
+            SetMessage(0xC8, Alerts.StoneMessage);
         }
 
         public void InteractTorch(IXyPair location, int index, IXyPair vector)
@@ -1943,10 +1911,10 @@ namespace Roton.Emulation.Execution
             Torches++;
             RemoveItem(location);
             UpdateStatus();
-            if (Alerts.AlertTorch)
+            if (Alerts.TorchPickup)
             {
-                SetMessage(0xC8, TorchMessage);
-                Alerts.AlertTorch = false;
+                SetMessage(0xC8, Alerts.TorchMessage);
+                Alerts.TorchPickup = false;
             }
             PlaySound(3, Sounds.Torch);
         }
@@ -1960,7 +1928,7 @@ namespace Roton.Emulation.Execution
         public void InteractWater(IXyPair location, int index, IXyPair vector)
         {
             PlaySound(3, Sounds.Water);
-            SetMessage(0x64, WaterMessage);
+            SetMessage(0x64, Alerts.WaterMessage);
         }
 
         public bool KeyArrow
@@ -2279,7 +2247,7 @@ namespace Roton.Emulation.Execution
             UnpackBoard(boardIndex);
         }
 
-        public void SetMessage(int duration, string message, string message2 = "")
+        public void SetMessage(int duration, string message)
         {
             var index = ActorIndexAt(new Location(0, 0));
             if (index >= 0)
@@ -2287,13 +2255,12 @@ namespace Roton.Emulation.Execution
                 RemoveActor(index);
                 UpdateBorder();
             }
-            if (!string.IsNullOrEmpty(message) || !string.IsNullOrEmpty(message2))
+            if (!string.IsNullOrEmpty(message))
             {
                 SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, DefaultActor);
                 Actors[ActorCount].P2 = duration/(GameWaitTime + 1);
             }
             Message = message;
-            Message2 = message2;
         }
 
         public int Shots
@@ -2724,16 +2691,6 @@ namespace Roton.Emulation.Execution
             return (a.Y - b.Y).Square()*2 + (a.X - b.X).Square();
         }
 
-        internal virtual string DoorClosedMessage(int color)
-        {
-            return @"The " + Colors[color] + " door is locked!";
-        }
-
-        internal virtual string DoorOpenMessage(int color)
-        {
-            return @"The " + Colors[color] + " door is now open.";
-        }
-
         protected void DrawChar(IXyPair location, AnsiChar ac)
         {
             Hud.DrawChar(location.X, location.Y, ac);
@@ -2757,10 +2714,10 @@ namespace Roton.Emulation.Execution
         protected virtual void EnterBoard()
         {
             Enter.CopyFrom(Player.Location);
-            if (Dark && Alerts.AlertDark)
+            if (Dark && Alerts.Dark)
             {
-                SetMessage(0xC8, DarkMessage);
-                Alerts.AlertDark = false;
+                SetMessage(0xC8, Alerts.DarkMessage);
+                Alerts.Dark = false;
             }
             TimePassed = 0;
             UpdateStatus();
@@ -3694,17 +3651,17 @@ namespace Roton.Emulation.Execution
 
         private void ResetAlerts()
         {
-            Alerts.AlertAmmo = true;
-            Alerts.AlertDark = true;
-            Alerts.AlertEnergy = true;
-            Alerts.AlertFake = true;
-            Alerts.AlertForest = true;
-            Alerts.AlertGem = true;
-            Alerts.AlertNoAmmo = true;
-            Alerts.AlertNoShoot = true;
-            Alerts.AlertNotDark = true;
-            Alerts.AlertNoTorch = true;
-            Alerts.AlertTorch = true;
+            Alerts.AmmoPickup = true;
+            Alerts.Dark = true;
+            Alerts.EnergizerPickup = true;
+            Alerts.FakeWall = true;
+            Alerts.Forest = true;
+            Alerts.GemPickup = true;
+            Alerts.OutOfAmmo = true;
+            Alerts.CantShootHere = true;
+            Alerts.NotDark = true;
+            Alerts.NoTorches = true;
+            Alerts.TorchPickup = true;
         }
 
         private void Rnd(IXyPair result)

@@ -4,6 +4,7 @@ namespace Roton.Core
 {
     public interface IState
     {
+        IAlerts Alerts { get; }
         ITile BorderTile { get; }
         IColorList Colors { get; }
         IActor DefaultActor { get; }
@@ -20,7 +21,6 @@ namespace Roton.Core
         bool AboutShown { get; set; }
         int ActIndex { get; set; }
         int ActorCount { get; set; }
-        IAlerts Alerts { get; }
         int BoardCount { get; set; }
         bool BreakGameLoop { get; set; }
         bool CancelScroll { get; set; }

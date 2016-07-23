@@ -13,7 +13,6 @@ namespace Roton.Emulation.ZZT
         {
             _memory = memory;
             memory.Write(0x0000, memoryBytes);
-            Alerts = new ZztAlerts(_memory);
             BorderTile = new MemoryTile(_memory, 0x0072);
             Colors = new ZztColorList(_memory);
             DefaultActor = new Actor(_memory, 0x0076);
@@ -26,6 +25,7 @@ namespace Roton.Emulation.ZZT
             TransporterVChars = new ByteString(_memory, 0x0136);
             Vector4 = new Int16List(_memory, 0x0062, 8);
             Vector8 = new Int16List(_memory, 0x0042, 16);
+            Alerts = new ZztAlerts(_memory, Colors);
         }
 
         public bool AboutShown

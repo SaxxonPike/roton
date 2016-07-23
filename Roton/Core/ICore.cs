@@ -6,6 +6,7 @@ namespace Roton.Core
     public interface ICore
     {
         IActorList Actors { get; }
+        IAlerts Alerts { get; }
         IBoard BoardData { get; }
         IList<IPackedBoard> Boards { get; }
         ITile BorderTile { get; }
@@ -42,7 +43,6 @@ namespace Roton.Core
         bool AboutShown { get; set; }
         int ActIndex { get; set; }
         int ActorCount { get; set; }
-        IAlerts Alerts { get; }
         int Ammo { get; set; }
         int Board { get; set; }
         int BoardCount { get; set; }
@@ -117,6 +117,8 @@ namespace Roton.Core
         void ActMessenger(int index);
         void ActMonitor(int index);
         void ActObject(int index);
+        IActor ActorAt(IXyPair location);
+        int ActorIndexAt(IXyPair location);
         void ActPairer(int index);
         void ActPlayer(int index);
         void ActPusher(int index);
@@ -132,8 +134,6 @@ namespace Roton.Core
         void ActStone(int index);
         void ActTiger(int index);
         void ActTransporter(int index);
-        IActor ActorAt(IXyPair location);
-        int ActorIndexAt(IXyPair location);
         void Attack(int index, IXyPair location);
         void ClearBoard();
         void ClearSound();
@@ -195,7 +195,7 @@ namespace Roton.Core
         IXyPair Rnd();
         IXyPair Seek(IXyPair location);
         void SetBoard(int boardIndex);
-        void SetMessage(int duration, string message, string message2 = "");
+        void SetMessage(int duration, string message);
         void Start();
         void Stop();
         void UnpackBoard(int boardIndex);
