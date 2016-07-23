@@ -110,6 +110,15 @@ namespace Roton.WinForms
             return result;
         }
 
+        public IKeyboard Keyboard => _keys;
+
+        public void SetScale(int xScale, int yScale)
+        {
+            ScaleX = xScale;
+            ScaleY = yScale;
+            SetSize(_terminalWidth, _terminalHeight, _terminalWide);
+        }
+
         public IRasterFont TerminalFont
         {
             get { return _terminalFont; }
@@ -139,8 +148,6 @@ namespace Roton.WinForms
             }
         }
 
-        public IKeyboard Keyboard => _keys;
-
         public void Plot(int x, int y, AnsiChar ac)
         {
             if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
@@ -149,13 +156,6 @@ namespace Roton.WinForms
                 _terminalBuffer[index] = ac;
                 Draw(x, y, ac);
             }
-        }
-
-        public void SetScale(int xScale, int yScale)
-        {
-            ScaleX = xScale;
-            ScaleY = yScale;
-            SetSize(_terminalWidth, _terminalHeight, _terminalWide);
         }
 
         void ITerminal.SetSize(int width, int height, bool wide)

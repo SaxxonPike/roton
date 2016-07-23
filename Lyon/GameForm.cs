@@ -10,8 +10,8 @@ namespace Lyon
 {
     public partial class GameForm : Form
     {
-        private bool _initScaleDisplay = true;
         private readonly bool _openGl;
+        private bool _initScaleDisplay = true;
         private IGameTerminal _terminal;
 
         public GameForm(bool openGl = false)

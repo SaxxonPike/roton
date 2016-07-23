@@ -16,10 +16,10 @@ namespace Roton.WinForms.OpenGL
     public partial class Terminal : UserControl, IEditorTerminal
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
+        private readonly KeysBuffer _keys;
         private int _glLastTexture = -1;
 
         private bool _glReady;
-        private readonly KeysBuffer _keys;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
@@ -102,6 +102,22 @@ namespace Roton.WinForms.OpenGL
             return result;
         }
 
+        public IKeyboard Keyboard => _keys as IKeyboard;
+
+        public void SetScale(int xScale, int yScale)
+        {
+            ScaleX = xScale;
+            ScaleY = yScale;
+
+            if (AutoSize)
+            {
+                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
+                Height = _terminalHeight*_terminalFont.Height*yScale;
+            }
+
+            SetViewport();
+        }
+
         public IRasterFont TerminalFont
         {
             get { return _terminalFont; }
@@ -127,8 +143,6 @@ namespace Roton.WinForms.OpenGL
             _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
         }
 
-        public IKeyboard Keyboard => _keys as IKeyboard;
-
         public void Plot(int x, int y, AnsiChar ac)
         {
             if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
@@ -137,20 +151,6 @@ namespace Roton.WinForms.OpenGL
                 _terminalBuffer[index] = ac;
                 Draw(x, y, ac);
             }
-        }
-
-        public void SetScale(int xScale, int yScale)
-        {
-            ScaleX = xScale;
-            ScaleY = yScale;
-
-            if (AutoSize)
-            {
-                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
-                Height = _terminalHeight*_terminalFont.Height*yScale;
-            }
-
-            SetViewport();
         }
 
         public void SetSize(int width, int height, bool wide)
