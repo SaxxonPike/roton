@@ -12,6 +12,6 @@ namespace Roton.Common
 
         int[] Render(int foreColor, int backColor);
         Bitmap Render(Color foreColor, Color backColor);
-        void Render(FastBitmap bitmap, int x, int y, int foreColor, int backColor);
+        void Render(IFastBitmap bitmap, int x, int y, int foreColor, int backColor);
     }
 }

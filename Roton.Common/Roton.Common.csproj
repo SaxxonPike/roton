@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Exceptions.cs" />
     <Compile Include="FastBitmap.cs" />
+    <Compile Include="IFastBitmap.cs" />
     <Compile Include="IGlyph.cs" />
     <Compile Include="IPalette.cs" />
     <Compile Include="IRasterFont.cs" />

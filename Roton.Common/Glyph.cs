@@ -97,7 +97,7 @@ namespace Roton.Common
         /// <summary>
         /// Render the glyph to a FastBitmap using the specified color data and coordinates.
         /// </summary>
-        public void Render(FastBitmap bitmap, int x, int y, int foreColor, int backColor)
+        public void Render(IFastBitmap bitmap, int x, int y, int foreColor, int backColor)
         {
             var bits = bitmap.Bits;
             var data = Data;

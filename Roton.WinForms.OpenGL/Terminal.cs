@@ -83,7 +83,7 @@ namespace Roton.WinForms.OpenGL
             _keys.Clear();
         }
 
-        private FastBitmap Bitmap { get; set; }
+        private IFastBitmap Bitmap { get; set; }
 
         public IKeyboard Keyboard => _keys as IKeyboard;
 
@@ -304,7 +304,7 @@ namespace Roton.WinForms.OpenGL
 
             // Update the cursor if it's enabled and the bitmap is valid.
             if (!CursorEnabled || Bitmap == null) return;
-            using (var g = Graphics.FromImage(Bitmap))
+            using (var g = Graphics.FromImage((FastBitmap)Bitmap))
             {
                 using (
                     Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),

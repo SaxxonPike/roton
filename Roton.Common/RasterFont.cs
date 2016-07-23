@@ -137,7 +137,7 @@ namespace Roton.Common
             return Glyphs[character & 0xFF].Render(foreground, background);
         }
 
-        public void Render(FastBitmap bitmap, int x, int y, int character, int foreColor, int backColor)
+        public void Render(IFastBitmap bitmap, int x, int y, int character, int foreColor, int backColor)
         {
             Glyphs[character & 0xFF].Render(bitmap, x, y, foreColor, backColor);
         }

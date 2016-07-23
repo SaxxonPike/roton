@@ -47,7 +47,7 @@ namespace Roton.WinForms
             SetStyle(ControlStyles.Opaque, true);
         }
 
-        public bool Alt
+        private bool Alt
         {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
@@ -65,7 +65,6 @@ namespace Roton.WinForms
             Blinking = !Blinking;
             if (_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null))
             {
-                var total = _terminalWidth*_terminalHeight;
                 var i = 0;
                 for (var y = 0; y < _terminalHeight; y++)
                 {
@@ -82,7 +81,7 @@ namespace Roton.WinForms
             ResumeLayout();
         }
 
-        private FastBitmap Bitmap { get; set; }
+        private IFastBitmap Bitmap { get; set; }
 
         public bool BlinkEnabled { get; set; }
 
@@ -97,12 +96,7 @@ namespace Roton.WinForms
             }
         }
 
-        public void ClearKeys()
-        {
-            _keys.Clear();
-        }
-
-        public bool Control
+        private bool Control
         {
             get { return _keys.Control; }
             set { _keys.Control = value; }
@@ -161,7 +155,7 @@ namespace Roton.WinForms
             }
         }
 
-        public IKeyboard Keyboard => _keys as IKeyboard;
+        public IKeyboard Keyboard => _keys;
 
         private void OnKey(KeyEventArgs e)
         {
@@ -224,18 +218,13 @@ namespace Roton.WinForms
                 e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                e.Graphics.DrawImageUnscaled(Bitmap, 0, 0);
+                e.Graphics.DrawImageUnscaled((FastBitmap)Bitmap, 0, 0);
                 UpdateCursor();
             }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
         }
 
         public void Plot(int x, int y, AnsiChar ac)
@@ -337,7 +326,7 @@ namespace Roton.WinForms
             Redraw();
         }
 
-        public bool Shift
+        private bool Shift
         {
             get { return _keys.Shift; }
             set { _keys.Shift = value; }
@@ -363,7 +352,7 @@ namespace Roton.WinForms
             }
         }
 
-        internal int TranslateColorIndex(int color)
+        private int TranslateColorIndex(int color)
         {
             // if blinking is enabled, we only get the first 8 colors for background
             if (BlinkEnabled)
