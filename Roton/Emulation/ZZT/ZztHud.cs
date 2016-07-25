@@ -12,6 +12,7 @@ namespace Roton.Emulation.ZZT
             : base(engine, terminal)
         {
             FadeMatrix = new Location[ViewportTileCount];
+            GenerateFadeMatrix();
         }
 
         private Location[] FadeMatrix { get; }
@@ -210,7 +211,7 @@ namespace Roton.Emulation.ZZT
             }
         }
 
-        public override void GenerateFadeMatrix()
+        private void GenerateFadeMatrix()
         {
             // use deterministic randomization here - just as a precaution
             var rnd = new Random(0);

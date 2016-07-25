@@ -11,7 +11,6 @@ namespace Roton.Emulation.SuperZZT
             StateData.DefaultSaveName = "SAVED";
             StateData.DefaultBoardName = "TEMP";
             StateData.DefaultWorldName = "MONSTER";
-            Hud.GenerateFadeMatrix();
             if (!StateData.WorldLoaded)
             {
                 ClearWorld();

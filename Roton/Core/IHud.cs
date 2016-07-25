@@ -16,7 +16,6 @@
         void DrawTitleStatus();
         bool EndGameConfirmation();
         void FadeBoard(AnsiChar ac);
-        void GenerateFadeMatrix();
         void Initialize();
         void RedrawBoard();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);

@@ -1579,7 +1579,6 @@ namespace Roton.Emulation.Execution
             StateData.DefaultSaveName = "SAVED";
             StateData.DefaultBoardName = "TEMP";
             StateData.DefaultWorldName = "TOWN";
-            Hud.GenerateFadeMatrix();
             if (!StateData.WorldLoaded)
             {
                 ClearWorld();

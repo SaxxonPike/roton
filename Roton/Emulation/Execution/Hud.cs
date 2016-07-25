@@ -70,10 +70,6 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        public virtual void GenerateFadeMatrix()
-        {
-        }
-
         public abstract void Initialize();
 
         public virtual void RedrawBoard()
