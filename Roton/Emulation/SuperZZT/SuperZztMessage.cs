@@ -11,7 +11,7 @@ namespace Roton.Emulation.SuperZZT
 
         public SuperZztMessage(string message)
         {
-            Text = new[] {message};
+            Text = new[] {string.Empty, message};
         }
 
         public SuperZztMessage(string message, string message2)

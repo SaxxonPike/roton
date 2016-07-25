@@ -22,28 +22,28 @@ namespace Roton.Emulation.Execution
             Items = GetItems();
         }
 
-        private IDictionary<string, Action<ICore>> Cheats { get; }
+        private IDictionary<string, Action<IEngine>> Cheats { get; }
         private IDictionary<string, Action<IOopContext>> Commands { get; }
         private IDictionary<string, Func<IOopContext, bool?>> Conditions { get; }
         private IDictionary<string, Func<IOopContext, IXyPair>> Directions { get; }
         private IDictionary<string, Func<IOopContext, IOopItem>> Items { get; }
 
-        public void Cheat(ICore core, string input)
+        public void Cheat(IEngine engine, string input)
         {
             if (input == null)
                 return;
 
-            Action<ICore> func;
+            Action<IEngine> func;
             Cheats.TryGetValue(input.ToUpperInvariant(), out func);
-            func?.Invoke(core);
+            func?.Invoke(engine);
 
             if (input.Length < 2)
                 return;
 
             if (input.StartsWith("+"))
-                core.Flags.Add(input.Substring(1));
+                engine.WorldData.Flags.Add(input.Substring(1));
             else if (input.StartsWith("-"))
-                core.Flags.Remove(input.Substring(1));
+                engine.WorldData.Flags.Remove(input.Substring(1));
         }
 
         public void Execute(IOopContext oopContext)
@@ -109,50 +109,50 @@ namespace Roton.Emulation.Execution
             return success ? result : null;
         }
 
-        protected void Cheat_Ammo(ICore core)
+        protected void Cheat_Ammo(IEngine engine)
         {
-            core.WorldData.Ammo += 5;
+            engine.WorldData.Ammo += 5;
         }
 
-        protected void Cheat_Dark(ICore core)
+        protected void Cheat_Dark(IEngine engine)
         {
-            core.BoardData.Dark = true;
-            core.RedrawBoard();
+            engine.Board.Dark = true;
+            engine.RedrawBoard();
         }
 
-        protected void Cheat_Gems(ICore core)
+        protected void Cheat_Gems(IEngine engine)
         {
-            core.WorldData.Gems += 5;
+            engine.WorldData.Gems += 5;
         }
 
-        protected void Cheat_Health(ICore core)
+        protected void Cheat_Health(IEngine engine)
         {
-            core.WorldData.Health += 50;
+            engine.WorldData.Health += 50;
         }
 
-        protected void Cheat_Keys(ICore core)
+        protected void Cheat_Keys(IEngine engine)
         {
             for (var i = 1; i < 8; i++)
             {
-                core.Keys[i] = true;
+                engine.WorldData.Keys[i] = true;
             }
         }
 
-        protected void Cheat_Time(ICore core)
+        protected void Cheat_Time(IEngine engine)
         {
-            core.WorldData.TimePassed -= 30;
+            engine.WorldData.TimePassed -= 30;
         }
 
-        protected void Cheat_Torches(ICore core)
+        protected void Cheat_Torches(IEngine engine)
         {
-            core.WorldData.Torches += 3;
+            engine.WorldData.Torches += 3;
         }
 
-        protected void Cheat_Zap(ICore core)
+        protected void Cheat_Zap(IEngine engine)
         {
             for (var i = 0; i < 4; i++)
             {
-                core.Destroy(core.Player.Location.Sum(core.GetCardinalVector(i)));
+                engine.Destroy(engine.Player.Location.Sum(engine.GetCardinalVector(i)));
             }
         }
 
@@ -471,9 +471,9 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        protected virtual IDictionary<string, Action<ICore>> GetCheats()
+        protected virtual IDictionary<string, Action<IEngine>> GetCheats()
         {
-            return new Dictionary<string, Action<ICore>>
+            return new Dictionary<string, Action<IEngine>>
             {
                 {"AMMO", Cheat_Ammo},
                 {"DARK", Cheat_Dark},

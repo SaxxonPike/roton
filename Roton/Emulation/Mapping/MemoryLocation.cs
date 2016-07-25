@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryLocation : Location
+    internal sealed class MemoryLocation : IXyPair
     {
         public MemoryLocation(IMemory memory, int offset)
         {
@@ -14,16 +14,21 @@ namespace Roton.Emulation.Mapping
 
         private int Offset { get; }
 
-        public override int X
+        public int X
         {
             get { return Memory.Read8(Offset + 0x00); }
             set { Memory.Write8(Offset + 0x00, value); }
         }
 
-        public override int Y
+        public int Y
         {
             get { return Memory.Read8(Offset + 0x01); }
             set { Memory.Write8(Offset + 0x01, value); }
+        }
+
+        public IXyPair Clone()
+        {
+            return new Location(X, Y);
         }
     }
 }

@@ -76,9 +76,9 @@ namespace Lyon
             }
         }
 
-        private ICoreConfiguration GetCoreConfiguration()
+        private IEngineConfiguration GetCoreConfiguration()
         {
-            return new CoreConfiguration
+            return new EngineConfiguration
             {
                 Disk = new DiskFileSystem(),
                 EditorMode = false,
@@ -153,7 +153,7 @@ namespace Lyon
         private void UpdateTitle()
         {
             Text = "Lyon" +
-                   (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? "" : " [" + Context.WorldData.Name + "]");
+                   (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? string.Empty : " [" + Context.WorldData.Name + "]");
         }
     }
 }

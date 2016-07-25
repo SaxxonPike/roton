@@ -19,7 +19,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x784C, value); }
         }
 
-        public int Board
+        public int BoardIndex
         {
             get { return Memory.Read16(0x7859); }
             set { Memory.Write16(0x7859, value); }

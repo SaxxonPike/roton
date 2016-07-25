@@ -11,9 +11,9 @@ namespace Roton.Core
     public sealed class Context : IContext
     {
         private const int MaxGameCycle = 420;
-        private readonly ICoreConfiguration _config;
+        private readonly IEngineConfiguration _config;
 
-        public Context(ICoreConfiguration config, byte[] data)
+        public Context(IEngineConfiguration config, byte[] data)
         {
             _config = config;
             using (var mem = new MemoryStream(data))
@@ -22,82 +22,63 @@ namespace Roton.Core
             }
         }
 
-        public Context(ICoreConfiguration config, ContextEngine engine)
+        public Context(IEngineConfiguration config, ContextEngine engine)
         {
             _config = config;
             Initialize(engine);
         }
 
-        public Context(ICoreConfiguration config, Stream stream)
+        public Context(IEngineConfiguration config, Stream stream)
         {
             _config = config;
             Initialize(stream);
         }
 
-        private ICore Core { get; set; }
-        public int ActorCapacity => Core.Actors.Capacity;
+        private IEngine Engine { get; set; }
+        public int ActorCapacity => Engine.Actors.Capacity;
 
-        public IActorList Actors => Core.Actors;
+        public IActorList Actors => Engine.Actors;
 
-        public int Board
+        public int BoardIndex
         {
-            get { return Core.Board; }
-            set { Core.SetBoard(value); }
+            get { return Engine.WorldData.BoardIndex; }
+            set { Engine.SetBoard(value); }
         }
 
-        public IBoard BoardData => Core.BoardData;
+        public IBoard BoardData => Engine.Board;
 
-        public IList<IPackedBoard> Boards => Core.Boards;
+        public IList<IPackedBoard> Boards => Engine.Boards;
 
-        public ContextEngine ContextEngine { get; private set; }
-
-        public IActor CreateActor()
-        {
-            if (Core.ActorCount >= Actors.Capacity - 2)
-            {
-                return null;
-            }
-            Core.ActorCount++;
-            return Actors[Core.ActorCount];
-        }
-
-        public IElementList Elements => Core.Elements;
+        public IElementList Elements => Engine.Elements;
 
         public void ExecuteOnce()
         {
-            if (Core.EditorMode)
+            if (Engine.StateData.EditorMode)
             {
                 // simulate a game cycle for visuals only
-                Core.ActIndex = 0;
-                Core.GameCycle++;
-                if (Core.GameCycle >= MaxGameCycle)
+                Engine.StateData.ActIndex = 0;
+                Engine.StateData.GameCycle++;
+                if (Engine.StateData.GameCycle >= MaxGameCycle)
                 {
-                    Core.GameCycle = 0;
+                    Engine.StateData.GameCycle = 0;
                 }
 
                 foreach (var actor in Actors)
                 {
-                    if (actor.Cycle > 0 && Core.ActIndex%actor.Cycle == Core.GameCycle%actor.Cycle)
+                    if (actor.Cycle > 0 && Engine.StateData.ActIndex % actor.Cycle == Engine.StateData.GameCycle %actor.Cycle)
                     {
-                        Core.UpdateBoard(actor.Location);
+                        Engine.UpdateBoard(actor.Location);
                     }
-                    Core.ActIndex++;
+                    Engine.StateData.ActIndex++;
                 }
             }
         }
 
-        public int Height => Core.Height;
-
-        public IKeyboard Keyboard
-        {
-            get { return _config.Keyboard; }
-        }
-
-        public byte[] Memory => Core.Memory.Dump();
+        public byte[] Memory => Engine.Memory.Dump();
 
         public void PackBoard()
         {
-            Core.PackBoard();
+            Engine.PackBoard();
         }
 
         public void Refresh()
@@ -109,7 +90,7 @@ namespace Roton.Core
             using (var mem = new MemoryStream())
             {
                 var writer = new BinaryWriter(mem);
-                Core.PackBoard();
+                Engine.PackBoard();
                 writer.Write((short) WorldData.WorldType);
                 writer.Write((short) (Boards.Count - 1));
                 writer.Flush();
@@ -125,49 +106,37 @@ namespace Roton.Core
 
         public void Save(string filename)
         {
-            Core.Disk.PutFile(filename, Save());
+            Engine.Disk.PutFile(filename, Save());
         }
 
-        public int ScreenHeight { get; private set; }
-
-        public bool ScreenWide { get; private set; }
-
-        public int ScreenWidth { get; private set; }
-
-        public ISerializer Serializer => Core.Serializer;
+        private ISerializer Serializer => Engine.Serializer;
 
         public void SetBoard(int boardIndex)
         {
-            Core.SetBoard(boardIndex);
+            Engine.SetBoard(boardIndex);
         }
-
-        public ISpeaker Speaker => _config.Speaker;
 
         public void Start()
         {
-            Core.Start();
+            Engine.Start();
         }
 
         public void Stop()
         {
-            Core.Stop();
+            Engine.Stop();
         }
-
-        public ITerminal Terminal => Core.Terminal;
 
         public ITile TileAt(int x, int y)
         {
-            return Core.Tiles[new Location(x, y)];
+            return Engine.Tiles[new Location(x, y)];
         }
 
         public void UnpackBoard()
         {
-            Core.UnpackBoard(Core.Board);
+            Engine.UnpackBoard(Engine.WorldData.BoardIndex);
         }
 
-        public int Width => Core.Width;
-
-        public IWorld WorldData => Core.WorldData;
+        public IWorld WorldData => Engine.WorldData;
 
         public int WorldSize
         {
@@ -177,21 +146,14 @@ namespace Roton.Core
         private void Initialize(ContextEngine engine)
         {
             var resources = new ResourceZipFileSystem(Properties.Resources.resources);
-            ContextEngine = engine;
             switch (engine)
             {
                 case ContextEngine.Zzt:
-                    Core = new ZztCore(_config, resources.GetZztMemoryData(), resources.GetZztElementData());
-                    ScreenWidth = 80;
-                    ScreenHeight = 25;
-                    ScreenWide = false;
+                    Engine = new ZztEngine(_config, resources.GetZztMemoryData(), resources.GetZztElementData());
                     break;
                 case ContextEngine.SuperZzt:
-                    Core = new SuperZztCore(_config, resources.GetSuperZztMemoryData(),
+                    Engine = new SuperZztEngine(_config, resources.GetSuperZztMemoryData(),
                         resources.GetSuperZztElementData());
-                    ScreenWidth = 40;
-                    ScreenHeight = 25;
-                    ScreenWide = true;
                     break;
                 default:
                     throw Exceptions.InvalidFormat;
@@ -200,12 +162,10 @@ namespace Roton.Core
             if (_config.EditorMode)
             {
                 // editor mode will always show the full board
-                ScreenWidth = Width;
-                ScreenHeight = Height;
             }
 
-            Core.ClearWorld();
-            Core.EditorMode = _config.EditorMode;
+            Engine.ClearWorld();
+            Engine.StateData.EditorMode = _config.EditorMode;
         }
 
         private void Initialize(Stream stream)
@@ -227,16 +187,6 @@ namespace Roton.Core
             LoadAfterType(stream);
         }
 
-        internal void Load(Stream stream)
-        {
-            var reader = new BinaryReader(stream);
-            if (reader.ReadInt16() != WorldData.WorldType)
-            {
-                throw Exceptions.InvalidFormat;
-            }
-            LoadAfterType(stream);
-        }
-
         private void LoadAfterType(Stream stream)
         {
             var reader = new BinaryReader(stream);
@@ -247,8 +197,8 @@ namespace Roton.Core
             {
                 Boards.Add(new PackedBoard(Serializer.LoadBoardData(stream)));
             }
-            Serializer.UnpackBoard(Core.Tiles, Core.Boards[Core.Board].Data);
-            Core.WorldLoaded = true;
+            Serializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.WorldData.BoardIndex].Data);
+            Engine.StateData.WorldLoaded = true;
         }
     }
 }

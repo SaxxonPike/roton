@@ -3,14 +3,14 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztCore : Execution.Core
+    internal sealed class ZztEngine : Engine
     {
-        public ZztCore(ICoreConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
+        public ZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
             Actors = new ZztActorList(Memory);
-            BoardData = new ZztBoard(Memory);
+            Board = new ZztBoard(Memory);
             Serializer = new ZztSerializer(Memory);
-            Hud = new ZztHud(this);
+            Hud = new ZztHud(this, config.Terminal);
             Elements = new ZztElementList(Memory, elementBytes);
             Sounds = new Sounds();
             StateData = new ZztState(Memory, memoryBytes);
@@ -21,29 +21,15 @@ namespace Roton.Emulation.ZZT
         }
 
         public override IActorList Actors { get; }
-        public override IBoard BoardData { get; }
+        public override IBoard Board { get; }
         public override IElementList Elements { get; }
         public override IGrammar Grammar { get; }
         public override IHud Hud { get; }
         public override ISerializer Serializer { get; }
         public override ISounds Sounds { get; }
         public override IState StateData { get; }
-
-        public override bool StonesEnabled => false;
         public override ITileGrid Tiles { get; }
         public override bool TorchesEnabled => true;
         public override IWorld WorldData { get; }
-
-        public override void InteractAmmo(IXyPair location, int index, IXyPair vector)
-        {
-            Ammo += 5;
-            base.InteractAmmo(location, index, vector);
-        }
-
-        public override void InteractGem(IXyPair location, int index, IXyPair vector)
-        {
-            Health += 1;
-            base.InteractGem(location, index, vector);
-        }
     }
 }

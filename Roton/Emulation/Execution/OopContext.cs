@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
@@ -11,17 +12,17 @@ namespace Roton.Emulation.Execution
             int index,
             ICodeInstruction instructionSource,
             string name,
-            ICore core)
+            IEngine engine)
         {
             _instructionSource = instructionSource;
             _index = index;
             Index = index;
             Name = name;
-            Core = core;
+            Engine = engine;
             DeathTile = new Tile(0, 0);
         }
 
-        private ICore Core { get; }
+        private IEngine Engine { get; }
 
         public int Instruction
         {
@@ -29,7 +30,7 @@ namespace Roton.Emulation.Execution
             set { _instructionSource.Instruction = value; }
         }
 
-        public IActor Actor => Core.Actors[_index];
+        public IActor Actor => Engine.Actors[_index];
 
         public int CommandsExecuted { get; set; }
 
@@ -37,27 +38,27 @@ namespace Roton.Emulation.Execution
 
         public bool Died { get; set; }
 
-        public IElement ElementAt(IXyPair location) => Core.ElementAt(location);
+        public IElement ElementAt(IXyPair location) => Engine.ElementAt(location);
 
-        public IElementList Elements => Core.Elements;
+        public IElementList Elements => Engine.Elements;
 
         public bool Finished { get; set; }
 
-        public IFlagList Flags => Core.Flags;
+        public IFlagList Flags => Engine.WorldData.Flags;
 
-        public IXyPair GetRandomDirection() => Core.Rnd();
+        public IXyPair GetRandomDirection() => Engine.Rnd();
 
-        public int GetRandomNumber(int max) => Core.RandomNumber(max);
+        public int GetRandomNumber(int max) => Engine.RandomNumber(max);
 
-        public IXyPair GetSeek(IXyPair location) => Core.Seek(location);
+        public IXyPair GetSeek(IXyPair location) => Engine.Seek(location);
 
-        public IGrammar Grammar => Core.Grammar;
+        public IGrammar Grammar => Engine.Grammar;
 
         public int Index { get; set; }
 
         public string Message { get; set; }
 
-        public void MoveActor(int index, IXyPair location) => Core.MoveActor(index, location);
+        public void MoveActor(int index, IXyPair location) => Engine.MoveActor(index, location);
 
         public bool Moved { get; set; }
 
@@ -67,36 +68,32 @@ namespace Roton.Emulation.Execution
 
         public int OopByte
         {
-            get { return Core.OopByte; }
-            set { Core.OopByte = value; }
+            get { return Engine.StateData.OopByte; }
+            set { Engine.StateData.OopByte = value; }
         }
 
         public int OopNumber
         {
-            get { return Core.OopNumber; }
-            set { Core.OopNumber = value; }
+            get { return Engine.StateData.OopNumber; }
+            set { Engine.StateData.OopNumber = value; }
         }
 
-        public IActor Player => Core.Player;
+        public IActor Player => Engine.Player;
 
         public int PreviousInstruction { get; set; }
 
-        public void Push(IXyPair location, IXyPair vector) => Core.Push(location, vector);
+        public void Push(IXyPair location, IXyPair vector) => Engine.Push(location, vector);
 
-        public void RaiseError(string error)
-        {
-            Core.SetMessage(0xC8, new Message($"ERR: {error}"));
-            Core.PlaySound(5, Core.Sounds.Error);
-        }
+        public void RaiseError(string error) => Engine.RaiseError(error);
 
-        public int ReadNextNumber() => Core.ReadActorCodeNumber(Index, _instructionSource);
+        public int ReadNextNumber() => Engine.ReadActorCodeNumber(Index, _instructionSource);
 
-        public string ReadNextWord() => Core.ReadActorCodeWord(Index, _instructionSource);
+        public string ReadNextWord() => Engine.ReadActorCodeWord(Index, _instructionSource);
 
         public bool Repeat { get; set; }
 
-        public void UpdateBoard(IXyPair location) => Core.UpdateBoard(location);
+        public void UpdateBoard(IXyPair location) => Engine.UpdateBoard(location);
 
-        public IWorld World => Core.WorldData;
+        public IWorld World => Engine.WorldData;
     }
 }

@@ -2,7 +2,7 @@
 {
     public interface IGrammar
     {
-        void Cheat(ICore core, string input);
+        void Cheat(IEngine engine, string input);
         void Execute(IOopContext oopContext);
         bool? GetCondition(IOopContext oopContext);
         IXyPair GetDirection(IOopContext oopContext);

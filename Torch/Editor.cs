@@ -438,7 +438,7 @@ namespace Torch
 
         private void GetCursorActor()
         {
-            Actor = Context.CreateActor();
+            Actor = new Actor();
 
             var x = _terminal.CursorX + 1;
             var y = _terminal.CursorY + 1;
@@ -705,7 +705,7 @@ namespace Torch
         private void SetBoard(int index)
         {
             // make a backup copy of the current actor
-            var actor = Context.CreateActor();
+            var actor = new Actor();
             actor.CopyFrom(Actor);
             actor.Code = Actor.Code;
             Actor = actor;
@@ -783,7 +783,7 @@ namespace Torch
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            var config = new CoreConfiguration
+            var config = new EngineConfiguration
             {
                 Disk = new DiskFileSystem(),
                 EditorMode = true,
@@ -955,7 +955,7 @@ namespace Torch
         private void UpdateInfo()
         {
             Context.PackBoard();
-            boardInfoLabel.Text = $"{Context.Boards[Context.Board].Data.Length + 2}/20000";
+            boardInfoLabel.Text = $"{Context.Boards[Context.BoardIndex].Data.Length + 2}/20000";
             worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
         }

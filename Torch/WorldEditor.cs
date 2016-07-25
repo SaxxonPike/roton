@@ -126,7 +126,7 @@ namespace Torch
             // comboboxes
             startBoardComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Board = ((ComboBox) sender).SelectedIndex;
+                if (!SuppressUpdate) _context.WorldData.BoardIndex = ((ComboBox) sender).SelectedIndex;
             };
 
             UpdateAdvancedEdit();
@@ -179,7 +179,7 @@ namespace Torch
             yellowKeyCheckBox.Checked = _context.WorldData.Keys[5];
 
             // comboboxes
-            startBoardComboBox.SelectedIndex = _context.WorldData.Board;
+            startBoardComboBox.SelectedIndex = _context.WorldData.BoardIndex;
 
             SuppressUpdate = false;
         }

@@ -2,14 +2,13 @@
 {
     public interface IHud
     {
-        ITerminal Terminal { get; }
         void ClearPausing();
         void ClearTitleStatus();
         bool Confirm(string message);
         void CreateStatusBar();
         void CreateStatusText();
         void DrawChar(int x, int y, AnsiChar ac);
-        void DrawMessage(string message, int color);
+        void DrawMessage(IMessage message, int color);
         void DrawPausing();
         void DrawStatusLine(int y);
         void DrawString(int x, int y, string text, int color);

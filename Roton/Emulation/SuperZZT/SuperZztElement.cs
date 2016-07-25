@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
 
@@ -6,8 +7,8 @@ namespace Roton.Emulation.SuperZZT
 {
     internal sealed class SuperZztElement : Element
     {
-        public SuperZztElement(IMemory memory, int index)
-            : base(memory, 0x7CAA + index*0x00C2)
+        public SuperZztElement(IMemory memory, int index, IBehavior behavior)
+            : base(memory, 0x7CAA + index*0x00C2, behavior)
         {
             Id = index;
         }

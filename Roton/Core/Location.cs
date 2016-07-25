@@ -1,7 +1,13 @@
 ﻿namespace Roton.Core
 {
+    /// <summary>
+    /// An unsigned 8-bit (X,Y) pair.
+    /// </summary>
     public class Location : IXyPair
     {
+        private int _x;
+        private int _y;
+
         public Location()
         {
         }
@@ -17,8 +23,17 @@
             return new Location(X, Y);
         }
 
-        public virtual int X { get; set; }
-        public virtual int Y { get; set; }
+        public int X
+        {
+            get { return _x; }
+            set { _x = value & 0xFF; }
+        }
+
+        public int Y
+        {
+            get { return _y; }
+            set { _y = value & 0xFF; }
+        }
 
         public override string ToString()
         {

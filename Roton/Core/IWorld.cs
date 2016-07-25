@@ -6,7 +6,7 @@
         IKeyList Keys { get; }
         int WorldType { get; }
         int Ammo { get; set; }
-        int Board { get; set; }
+        int BoardIndex { get; set; }
         int EnergyCycles { get; set; }
         int Gems { get; set; }
         int Health { get; set; }

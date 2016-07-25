@@ -174,7 +174,7 @@ namespace Torch
             {
                 boards.Add(board.ToString());
             }
-            boards[0] = "";
+            boards[0] = string.Empty;
 
             // comboboxes
             exitEastComboBox.Items.Clear();

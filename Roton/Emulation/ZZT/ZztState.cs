@@ -25,7 +25,7 @@ namespace Roton.Emulation.ZZT
             TransporterVChars = new ByteString(_memory, 0x0136);
             Vector4 = new Int16List(_memory, 0x0062, 8);
             Vector8 = new Int16List(_memory, 0x0042, 16);
-            Alerts = new ZztAlerts(_memory, Colors);
+            Alerts = new ZztAlerts(_memory, Colors, 5);
         }
 
         public bool AboutShown

@@ -115,7 +115,7 @@ namespace Roton.Core
         /// </summary>
         private static string ToHex(int value, int chars)
         {
-            var result = "";
+            var result = string.Empty;
             while (chars > 0)
             {
                 result = HexAlphabet[value & 0xF] + result;

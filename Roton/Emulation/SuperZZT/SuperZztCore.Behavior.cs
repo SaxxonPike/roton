@@ -3,61 +3,17 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed partial class SuperZztCore
+    internal sealed partial class SuperZztEngine
     {
-        public override void ActMonitor(int index)
-        {
-            base.ActMonitor(index);
-            MoveActorOnRiver(index);
-        }
-
-        public override void ActPlayer(int index)
-        {
-            base.ActPlayer(index);
-            MoveActorOnRiver(index);
-        }
-
-        protected override void EnterBoard()
+        public override void EnterBoard()
         {
             BroadcastLabel(0, @"ENTER", false);
             base.EnterBoard();
         }
 
-        protected override void ExecutePassageCleanup()
-        {
-            // Passage holes were fixed in Super ZZT
-            TileAt(Player.Location).CopyFrom(Player.UnderTile);
-        }
-
-        protected override void ForcePlayerColor(int index)
+        public override void ForcePlayerColor(int index)
         {
             // Do nothing to override the player's color in Super ZZT
-        }
-
-        public override void InteractAmmo(IXyPair location, int index, IXyPair vector)
-        {
-            Ammo += 20;
-            base.InteractAmmo(location, index, vector);
-        }
-
-        public override void InteractForest(IXyPair location, int index, IXyPair vector)
-        {
-            TileAt(location).SetTo(Elements.FloorId, 0x02);
-            UpdateBoard(location);
-
-            // TODO: Implement forest music
-
-            if (Alerts.Forest)
-            {
-                SetMessage(0xC8, Alerts.ForestMessage);
-                Alerts.Forest = false;
-            }
-        }
-
-        public override void InteractGem(IXyPair location, int index, IXyPair vector)
-        {
-            Health += 10;
-            base.InteractGem(location, index, vector);
         }
 
         public override void RemoveItem(IXyPair location)
@@ -71,7 +27,7 @@ namespace Roton.Emulation.SuperZZT
                 var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
                 var adjacentTile = TileAt(targetLocation);
                 if (Elements[adjacentTile.Id].Cycle >= 0)
-                    adjacentTile = ActorAt(targetLocation).UnderTile;
+                    adjacentTile = this.ActorAt(targetLocation).UnderTile;
                 var adjacentElement = adjacentTile.Id;
 
                 if (adjacentElement == Elements.EmptyId ||
@@ -101,7 +57,7 @@ namespace Roton.Emulation.SuperZZT
             TileAt(location).CopyFrom(result);
         }
 
-        protected override void ShowInGameHelp()
+        public override void ShowInGameHelp()
         {
             // Super ZZT doesn't have in-game help, but it does have hints
             BroadcastLabel(0, @"HINT", false);

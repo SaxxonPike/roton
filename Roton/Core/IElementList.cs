@@ -123,5 +123,7 @@ namespace Roton.Core
         int WaterId { get; }
         IElement WebElement { get; }
         int WebId { get; }
+
+        string GetKnownName(int index);
     }
 }

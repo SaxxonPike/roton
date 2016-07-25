@@ -1,5 +1,8 @@
-﻿using Roton.Core;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Roton.Core;
 using Roton.Core.Collections;
+using Roton.Emulation.Behavior;
 
 namespace Roton.Emulation.Mapping
 {
@@ -9,276 +12,13 @@ namespace Roton.Emulation.Mapping
         {
             Count = count;
             Memory = memory;
-            Cache = new IElement[Count];
-
-            for (var i = 0; i < Count; i++)
-            {
-                var element = GetElement(i);
-                if (i == AmmoId)
-                {
-                    element.KnownName = "Ammo";
-                }
-                else if (i == BearId)
-                {
-                    element.KnownName = "Bear";
-                }
-                else if (i == BlinkRayHId)
-                {
-                    element.KnownName = "Blink Ray (H)";
-                }
-                else if (i == BlinkRayVId)
-                {
-                    element.KnownName = "Blink Ray (V)";
-                }
-                else if (i == BlinkWallId)
-                {
-                    element.KnownName = "Blink Wall";
-                }
-                else if (i == BoardEdgeId)
-                {
-                    element.KnownName = "Board Edge";
-                }
-                else if (i == BombId)
-                {
-                    element.KnownName = "Bomb";
-                }
-                else if (i == BoulderId)
-                {
-                    element.KnownName = "Boulder";
-                }
-                else if (i == BreakableId)
-                {
-                    element.KnownName = "Breakable Wall";
-                }
-                else if (i == BulletId)
-                {
-                    element.KnownName = "Bullet";
-                }
-                else if (i == ClockwiseId)
-                {
-                    element.KnownName = "Conveyor (Clockwise)";
-                }
-                else if (i == CounterId)
-                {
-                    element.KnownName = "Conveyor (Counter-Clockwise)";
-                }
-                else if (i == DoorId)
-                {
-                    element.KnownName = "Door";
-                }
-                else if (i == DragonPupId)
-                {
-                    element.KnownName = "Dragon Pup";
-                }
-                else if (i == DuplicatorId)
-                {
-                    element.KnownName = "Duplicator";
-                }
-                else if (i == EmptyId)
-                {
-                    element.KnownName = "Empty";
-                }
-                else if (i == EnergizerId)
-                {
-                    element.KnownName = "Energizer";
-                }
-                else if (i == FakeId)
-                {
-                    element.KnownName = "Fake Wall";
-                }
-                else if (i == FloorId)
-                {
-                    element.KnownName = "Floor";
-                }
-                else if (i == ForestId)
-                {
-                    element.KnownName = "Forest";
-                }
-                else if (i == GemId)
-                {
-                    element.KnownName = "Gem";
-                }
-                else if (i == HeadId)
-                {
-                    element.KnownName = "Centipede Head";
-                }
-                else if (i == InvisibleId)
-                {
-                    element.KnownName = "Invisible Wall";
-                }
-                else if (i == KeyId)
-                {
-                    element.KnownName = "Key";
-                }
-                else if (i == LavaId)
-                {
-                    element.KnownName = "Lava";
-                }
-                else if (i == LineId)
-                {
-                    element.KnownName = "Line";
-                }
-                else if (i == LionId)
-                {
-                    element.KnownName = "Lion";
-                }
-                else if (i == MessengerId)
-                {
-                    element.KnownName = "Messenger";
-                }
-                else if (i == MonitorId)
-                {
-                    element.KnownName = "Monitor";
-                }
-                else if (i == NormalId)
-                {
-                    element.KnownName = "Normal";
-                }
-                else if (i == ObjectId)
-                {
-                    element.KnownName = "Object";
-                }
-                else if (i == PairerId)
-                {
-                    element.KnownName = "Pairer";
-                }
-                else if (i == PassageId)
-                {
-                    element.KnownName = "Passage";
-                }
-                else if (i == PlayerId)
-                {
-                    element.KnownName = "Player";
-                }
-                else if (i == PusherId)
-                {
-                    element.KnownName = "Pusher";
-                }
-                else if (i == RicochetId)
-                {
-                    element.KnownName = "Ricochet";
-                }
-                else if (i == RiverEId)
-                {
-                    element.KnownName = "River (E)";
-                }
-                else if (i == RiverNId)
-                {
-                    element.KnownName = "River (N)";
-                }
-                else if (i == RiverSId)
-                {
-                    element.KnownName = "River (S)";
-                }
-                else if (i == RiverWId)
-                {
-                    element.KnownName = "River (W)";
-                }
-                else if (i == RotonId)
-                {
-                    element.KnownName = "Roton";
-                }
-                else if (i == RuffianId)
-                {
-                    element.KnownName = "Ruffian";
-                }
-                else if (i == ScrollId)
-                {
-                    element.KnownName = "Scroll";
-                }
-                else if (i == SegmentId)
-                {
-                    element.KnownName = "Centipede Segment";
-                }
-                else if (i == SharkId)
-                {
-                    element.KnownName = "Shark";
-                }
-                else if (i == SliderEwId)
-                {
-                    element.KnownName = "Slider (EW)";
-                }
-                else if (i == SliderNsId)
-                {
-                    element.KnownName = "Slider (NS)";
-                }
-                else if (i == SlimeId)
-                {
-                    element.KnownName = "Slime";
-                }
-                else if (i == SolidId)
-                {
-                    element.KnownName = "Solid";
-                }
-                else if (i == SpiderId)
-                {
-                    element.KnownName = "Spider";
-                }
-                else if (i == SpinningGunId)
-                {
-                    element.KnownName = "Spinning Gun";
-                }
-                else if (i == StarId)
-                {
-                    element.KnownName = "Star";
-                }
-                else if (i == StoneId)
-                {
-                    element.KnownName = "Stone";
-                }
-                else if (i == TigerId)
-                {
-                    element.KnownName = "Tiger";
-                }
-                else if (i == TorchId)
-                {
-                    element.KnownName = "Torch";
-                }
-                else if (i == TransporterId)
-                {
-                    element.KnownName = "Transporter";
-                }
-                else if (i == WaterId)
-                {
-                    element.KnownName = "Water";
-                }
-                else if (i == WebId)
-                {
-                    element.KnownName = "Web";
-                }
-                else if (i == Count - 7)
-                {
-                    element.KnownName = "Text (Blue)";
-                }
-                else if (i == Count - 6)
-                {
-                    element.KnownName = "Text (Green)";
-                }
-                else if (i == Count - 5)
-                {
-                    element.KnownName = "Text (Cyan)";
-                }
-                else if (i == Count - 4)
-                {
-                    element.KnownName = "Text (Red)";
-                }
-                else if (i == Count - 3)
-                {
-                    element.KnownName = "Text (Purple)";
-                }
-                else if (i == Count - 2)
-                {
-                    element.KnownName = "Text (Brown)";
-                }
-                else if (i == Count - 1)
-                {
-                    element.KnownName = "Text (Black)";
-                }
-                Cache[i] = element;
-            }
+            BehaviorMap = new BehaviorMap(this);
+            Cache = new Dictionary<int, IElement>();
         }
 
-        private IElement[] Cache { get; }
+        protected IBehaviorMap BehaviorMap { get; }
+
+        private IDictionary<int, IElement> Cache { get; }
 
         protected IMemory Memory { get; private set; }
 
@@ -402,13 +142,283 @@ namespace Roton.Emulation.Mapping
         public IElement WebElement => this[WebId];
         public virtual int WebId => -1;
 
+        public string GetKnownName(int index)
+        {
+            if (index == AmmoId)
+            {
+                return "Ammo";
+            }
+            if (index == BearId)
+            {
+                return "Bear";
+            }
+            if (index == BlinkRayHId)
+            {
+                return "Blink Ray (H)";
+            }
+            if (index == BlinkRayVId)
+            {
+                return "Blink Ray (V)";
+            }
+            if (index == BlinkWallId)
+            {
+                return "Blink Wall";
+            }
+            if (index == BoardEdgeId)
+            {
+                return "Board Edge";
+            }
+            if (index == BombId)
+            {
+                return "Bomb";
+            }
+            if (index == BoulderId)
+            {
+                return "Boulder";
+            }
+            if (index == BreakableId)
+            {
+                return "Breakable Wall";
+            }
+            if (index == BulletId)
+            {
+                return "Bullet";
+            }
+            if (index == ClockwiseId)
+            {
+                return "Conveyor (Clockwise)";
+            }
+            if (index == CounterId)
+            {
+                return "Conveyor (Counter-Clockwise)";
+            }
+            if (index == DoorId)
+            {
+                return "Door";
+            }
+            if (index == DragonPupId)
+            {
+                return "Dragon Pup";
+            }
+            if (index == DuplicatorId)
+            {
+                return "Duplicator";
+            }
+            if (index == EmptyId)
+            {
+                return "Empty";
+            }
+            if (index == EnergizerId)
+            {
+                return "Energizer";
+            }
+            if (index == FakeId)
+            {
+                return "Fake Wall";
+            }
+            if (index == FloorId)
+            {
+                return "Floor";
+            }
+            if (index == ForestId)
+            {
+                return "Forest";
+            }
+            if (index == GemId)
+            {
+                return "Gem";
+            }
+            if (index == HeadId)
+            {
+                return "Centipede Head";
+            }
+            if (index == InvisibleId)
+            {
+                return "Invisible Wall";
+            }
+            if (index == KeyId)
+            {
+                return "Key";
+            }
+            if (index == LavaId)
+            {
+                return "Lava";
+            }
+            if (index == LineId)
+            {
+                return "Line";
+            }
+            if (index == LionId)
+            {
+                return "Lion";
+            }
+            if (index == MessengerId)
+            {
+                return "Messenger";
+            }
+            if (index == MonitorId)
+            {
+                return "Monitor";
+            }
+            if (index == NormalId)
+            {
+                return "Normal";
+            }
+            if (index == ObjectId)
+            {
+                return "Object";
+            }
+            if (index == PairerId)
+            {
+                return "Pairer";
+            }
+            if (index == PassageId)
+            {
+                return "Passage";
+            }
+            if (index == PlayerId)
+            {
+                return "Player";
+            }
+            if (index == PusherId)
+            {
+                return "Pusher";
+            }
+            if (index == RicochetId)
+            {
+                return "Ricochet";
+            }
+            if (index == RiverEId)
+            {
+                return "River (E)";
+            }
+            if (index == RiverNId)
+            {
+                return "River (N)";
+            }
+            if (index == RiverSId)
+            {
+                return "River (S)";
+            }
+            if (index == RiverWId)
+            {
+                return "River (W)";
+            }
+            if (index == RotonId)
+            {
+                return "Roton";
+            }
+            if (index == RuffianId)
+            {
+                return "Ruffian";
+            }
+            if (index == ScrollId)
+            {
+                return "Scroll";
+            }
+            if (index == SegmentId)
+            {
+                return "Centipede Segment";
+            }
+            if (index == SharkId)
+            {
+                return "Shark";
+            }
+            if (index == SliderEwId)
+            {
+                return "Slider (EW)";
+            }
+            if (index == SliderNsId)
+            {
+                return "Slider (NS)";
+            }
+            if (index == SlimeId)
+            {
+                return "Slime";
+            }
+            if (index == SolidId)
+            {
+                return "Solid";
+            }
+            if (index == SpiderId)
+            {
+                return "Spider";
+            }
+            if (index == SpinningGunId)
+            {
+                return "Spinning Gun";
+            }
+            if (index == StarId)
+            {
+                return "Star";
+            }
+            if (index == StoneId)
+            {
+                return "Stone";
+            }
+            if (index == TigerId)
+            {
+                return "Tiger";
+            }
+            if (index == TorchId)
+            {
+                return "Torch";
+            }
+            if (index == TransporterId)
+            {
+                return "Transporter";
+            }
+            if (index == WaterId)
+            {
+                return "Water";
+            }
+            if (index == WebId)
+            {
+                return "Web";
+            }
+            if (index == Count - 7)
+            {
+                return "Text (Blue)";
+            }
+            if (index == Count - 6)
+            {
+                return "Text (Green)";
+            }
+            if (index == Count - 5)
+            {
+                return "Text (Cyan)";
+            }
+            if (index == Count - 4)
+            {
+                return "Text (Red)";
+            }
+            if (index == Count - 3)
+            {
+                return "Text (Purple)";
+            }
+            if (index == Count - 2)
+            {
+                return "Text (Brown)";
+            }
+            if (index == Count - 1)
+            {
+                return "Text (Black)";
+            }
+            return $"Element {index}";
+        }
+
         protected abstract IElement GetElement(int index);
 
         protected sealed override IElement GetItem(int index)
         {
-            if (index >= 0 && index < Count)
-                return Cache[index];
-            return GetElement(index);
+            IElement element;
+            Cache.TryGetValue(index, out element);
+            if (element != null)
+                return element;
+
+            element = GetElement(index);
+            Cache[index] = element;
+            return element;
         }
 
         protected sealed override void SetItem(int index, IElement value)

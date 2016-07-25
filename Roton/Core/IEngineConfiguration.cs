@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public interface ICoreConfiguration
+    public interface IEngineConfiguration
     {
         IFileSystem Disk { get; }
         bool EditorMode { get; }

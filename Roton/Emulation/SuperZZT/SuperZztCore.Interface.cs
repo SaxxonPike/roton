@@ -3,14 +3,14 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed partial class SuperZztCore : Execution.Core
+    internal sealed partial class SuperZztEngine : Engine
     {
-        public SuperZztCore(ICoreConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
+        public SuperZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
             Actors = new SuperZztActorList(Memory);
-            BoardData = new SuperZztBoard(Memory);
+            Board = new SuperZztBoard(Memory);
             Serializer = new SuperZztSerializer(Memory);
-            Hud = new SuperZztHud(this);
+            Hud = new SuperZztHud(this, config.Terminal);
             Elements = new SuperZztElementList(Memory, elementBytes);
             Sounds = new SuperZztSounds();
             StateData = new SuperZztState(Memory, memoryBytes);
@@ -21,7 +21,7 @@ namespace Roton.Emulation.SuperZZT
         }
 
         public override IActorList Actors { get; }
-        public override IBoard BoardData { get; }
+        public override IBoard Board { get; }
 
         public override IElementList Elements { get; }
 
@@ -34,8 +34,6 @@ namespace Roton.Emulation.SuperZZT
         public override ISounds Sounds { get; }
 
         public override IState StateData { get; }
-
-        public override bool StonesEnabled => true;
 
         public override ITileGrid Tiles { get; }
 

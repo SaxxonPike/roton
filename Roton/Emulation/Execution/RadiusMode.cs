@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Execution
 {
-    internal enum RadiusMode
+    public enum RadiusMode
     {
         Update = 0,
         Explode = 1,

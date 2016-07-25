@@ -27,7 +27,7 @@ namespace Roton.Emulation.SuperZZT
             Vector4 = new Int16List(_memory, 0x2250, 8);
             Vector8 = new Int16List(_memory, 0x2230, 16);
             WebChars = new ByteString(_memory, 0x227C);
-            Alerts = new SuperZztAlerts(_memory, Colors);
+            Alerts = new SuperZztAlerts(_memory, Colors, 20);
         }
 
         public bool AboutShown { get; set; }

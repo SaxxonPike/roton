@@ -4,18 +4,13 @@ namespace Roton.Emulation.Execution
 {
     internal abstract class Hud : IHud
     {
-        protected Hud(IDisplayInfo infoSource)
+        protected Hud(IEngine engine, ITerminal terminal)
         {
-            DisplayInfo = infoSource;
+            Engine = engine;
+            Terminal = terminal;
         }
 
-        protected int Ammo => DisplayInfo.Ammo;
-
-        public IDisplayInfo DisplayInfo { get; }
-        protected int Gems => DisplayInfo.Gems;
-        protected IKeyList Keys => DisplayInfo.Keys;
-        protected int TorchCycles => DisplayInfo.TorchCycles;
-        protected int Torches => DisplayInfo.Torches;
+        protected IEngine Engine { get; set; }
 
         public virtual void ClearPausing()
         {
@@ -42,7 +37,7 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        public virtual void DrawMessage(string message, int color)
+        public virtual void DrawMessage(IMessage message, int color)
         {
         }
 
@@ -90,7 +85,7 @@ namespace Roton.Emulation.Execution
             return currentValue;
         }
 
-        public virtual ITerminal Terminal => DisplayInfo.Terminal;
+        protected ITerminal Terminal { get; }
 
         public virtual void UpdateBorder()
         {

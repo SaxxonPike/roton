@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryVector : Vector
+    internal sealed class MemoryVector : IXyPair
     {
         public MemoryVector(IMemory memory, int offset)
         {
@@ -15,16 +15,21 @@ namespace Roton.Emulation.Mapping
 
         private int Offset { get; }
 
-        public override int X
+        public int X
         {
             get { return Memory.Read16(Offset + 0x00); }
             set { Memory.Write16(Offset + 0x00, value); }
         }
 
-        public override int Y
+        public int Y
         {
             get { return Memory.Read16(Offset + 0x02); }
             set { Memory.Write16(Offset + 0x02, value); }
+        }
+
+        public IXyPair Clone()
+        {
+            return new Vector(X, Y);
         }
     }
 }

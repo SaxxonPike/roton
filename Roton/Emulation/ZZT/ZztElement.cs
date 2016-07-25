@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
 
@@ -6,8 +7,8 @@ namespace Roton.Emulation.ZZT
 {
     internal sealed class ZztElement : Element
     {
-        public ZztElement(IMemory memory, int index)
-            : base(memory, 0x4AD4 + index*0x00C3)
+        public ZztElement(IMemory memory, int index, IBehavior behavior)
+            : base(memory, 0x4AD4 + index*0x00C3, behavior)
         {
             Id = index;
         }

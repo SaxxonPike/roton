@@ -1,7 +1,13 @@
 ﻿namespace Roton.Core
 {
+    /// <summary>
+    /// A signed 16-bit (X,Y) pair.
+    /// </summary>
     public class Vector : IXyPair
     {
+        private int _x;
+        private int _y;
+
         public Vector()
         {
         }
@@ -23,8 +29,17 @@
             return new Vector(X, Y);
         }
 
-        public virtual int X { get; set; }
-        public virtual int Y { get; set; }
+        public int X
+        {
+            get { return _x; }
+            set { _x = (value << 16) >> 16; }
+        }
+
+        public int Y
+        {
+            get { return _y; }
+            set { _y = (value << 16) >> 16; }
+        }
 
         public override string ToString()
         {

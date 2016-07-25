@@ -19,7 +19,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x481E, value); }
         }
 
-        public int Board
+        public int BoardIndex
         {
             get { return Memory.Read16(0x482B); }
             set { Memory.Write16(0x482B, value); }

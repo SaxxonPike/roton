@@ -15,6 +15,7 @@
         IMessage NoShootMessage { get; }
         IMessage NotDarkMessage { get; }
         IMessage NoTorchMessage { get; }
+        IMessage OuchMessage { get; }
         IMessage StoneMessage { get; }
         IMessage TimeMessage { get; }
         IMessage TorchMessage { get; }
@@ -33,6 +34,7 @@
 
         IMessage DoorLockedMessage(int color);
         IMessage DoorOpenMessage(int color);
+        IMessage ErrorMessage(string error);
         IMessage KeyAlreadyMessage(int color);
         IMessage KeyPickupMessage(int color);
     }

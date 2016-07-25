@@ -6,15 +6,17 @@ namespace Roton.Emulation.ZZT
     internal class ZztAlerts : IAlerts
     {
         private readonly IColorList _colors;
+        private readonly int _ammoPerPickup;
         private readonly IMemory _memory;
 
-        public ZztAlerts(IMemory memory, IColorList colors)
+        public ZztAlerts(IMemory memory, IColorList colors, int ammoPerPickup)
         {
             _memory = memory;
             _colors = colors;
+            _ammoPerPickup = ammoPerPickup;
         }
 
-        public IMessage AmmoMessage { get; } = new ZztMessage("Ammunition - 5 shots per container.");
+        public IMessage AmmoMessage => new ZztMessage($"Ammunition - {_ammoPerPickup} shots per container.");
 
         public bool AmmoPickup
         {
@@ -46,6 +48,11 @@ namespace Roton.Emulation.ZZT
         public IMessage DoorOpenMessage(int color)
         {
             return new ZztMessage($"The {_colors[color]} door is now open.");
+        }
+
+        public IMessage ErrorMessage(string error)
+        {
+            return new ZztMessage($"ERR: {error}");
         }
 
         public IMessage EnergizerMessage { get; } = new ZztMessage("Energizer - You are invincible");
@@ -110,6 +117,8 @@ namespace Roton.Emulation.ZZT
         }
 
         public IMessage NoTorchMessage { get; } = new ZztMessage("You don't have any torches!");
+
+        public IMessage OuchMessage { get; } = new ZztMessage("Ouch!");
 
         public bool OutOfAmmo
         {
