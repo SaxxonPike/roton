@@ -39,13 +39,7 @@ namespace Roton.Core
 
         public IActorList Actors => Engine.Actors;
 
-        public int BoardIndex
-        {
-            get { return Engine.WorldData.BoardIndex; }
-            set { Engine.SetBoard(value); }
-        }
-
-        public IBoard BoardData => Engine.Board;
+        public IBoard Board => Engine.Board;
 
         public IList<IPackedBoard> Boards => Engine.Boards;
 
@@ -74,7 +68,9 @@ namespace Roton.Core
             }
         }
 
-        public byte[] Memory => Engine.Memory.Dump();
+        public byte[] DumpMemory() => Engine.Memory.Dump();
+
+        public ITileGrid Tiles => Engine.Tiles;
 
         public void PackBoard()
         {
@@ -83,6 +79,7 @@ namespace Roton.Core
 
         public void Refresh()
         {
+            Engine.RedrawBoard();
         }
 
         public byte[] Save()
@@ -124,11 +121,6 @@ namespace Roton.Core
         public void Stop()
         {
             Engine.Stop();
-        }
-
-        public ITile TileAt(int x, int y)
-        {
-            return Engine.Tiles[new Location(x, y)];
         }
 
         public void UnpackBoard()

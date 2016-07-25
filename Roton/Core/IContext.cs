@@ -6,14 +6,14 @@ namespace Roton.Core
     {
         int ActorCapacity { get; }
         IActorList Actors { get; }
-        IBoard BoardData { get; }
+        IBoard Board { get; }
         IList<IPackedBoard> Boards { get; }
         IElementList Elements { get; }
-        byte[] Memory { get; }
+        ITileGrid Tiles { get; }
         IWorld WorldData { get; }
         int WorldSize { get; }
-        int BoardIndex { get; set; }
 
+        byte[] DumpMemory();
         void ExecuteOnce();
         void PackBoard();
         void Refresh();
@@ -22,7 +22,6 @@ namespace Roton.Core
         void SetBoard(int boardIndex);
         void Start();
         void Stop();
-        ITile TileAt(int x, int y);
         void UnpackBoard();
     }
 }

@@ -71,7 +71,7 @@ namespace Lyon
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, Context.Memory);
+                    File.WriteAllBytes(sfd.FileName, Context.DumpMemory());
                 }
             }
         }

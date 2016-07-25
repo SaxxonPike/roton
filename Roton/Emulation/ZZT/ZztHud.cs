@@ -135,9 +135,12 @@ namespace Roton.Emulation.ZZT
 
         public override void DrawMessage(IMessage message, int color)
         {
-            var text = message.Text.FirstOrDefault() ?? string.Empty;
-            var x = (60 - text.Length)/2;
-            DrawString(x, 24, $" {text} ", color);
+            var text = message.Text.FirstOrDefault();
+            if (!string.IsNullOrEmpty(text))
+            {
+                var x = (60 - text.Length) / 2;
+                DrawString(x, 24, $" {text} ", color);
+            }
         }
 
         public override void DrawPausing()

@@ -49,19 +49,19 @@ namespace Torch
             // textboxes
             cameraXTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Camera.X = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Camera.X = int.Parse(((TextBox) sender).Text);
             };
             cameraYTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Camera.Y = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Camera.Y = int.Parse(((TextBox) sender).Text);
             };
             enteredXTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Enter.X = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Enter.X = int.Parse(((TextBox) sender).Text);
             };
             enteredYTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Enter.Y = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Enter.Y = int.Parse(((TextBox) sender).Text);
             };
             exitEastTextBox.TextChanged += (sender, e) =>
             {
@@ -83,36 +83,36 @@ namespace Torch
             };
             maxShotsTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.Shots = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Shots = int.Parse(((TextBox) sender).Text);
             };
             timeLimitTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.TimeLimit = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.TimeLimit = int.Parse(((TextBox) sender).Text);
             };
 
             // checkboxes
             advancedEditingCheckBox.CheckStateChanged += (sender, e) => { UpdateAdvancedEdit(); };
             zapRestartCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.RestartOnZap = ((CheckBox) sender).Checked;
+                if (!SuppressUpdate) _context.Board.RestartOnZap = ((CheckBox) sender).Checked;
             };
 
             // comboboxes
             exitNorthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitEast = ((ComboBox) sender).SelectedIndex;
+                if (!SuppressUpdate) _context.Board.ExitEast = ((ComboBox) sender).SelectedIndex;
             };
             exitSouthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitNorth = ((ComboBox) sender).SelectedIndex;
+                if (!SuppressUpdate) _context.Board.ExitNorth = ((ComboBox) sender).SelectedIndex;
             };
             exitSouthComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitSouth = ((ComboBox) sender).SelectedIndex;
+                if (!SuppressUpdate) _context.Board.ExitSouth = ((ComboBox) sender).SelectedIndex;
             };
             exitWestComboBox.SelectedIndexChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.BoardData.ExitWest = ((ComboBox) sender).SelectedIndex;
+                if (!SuppressUpdate) _context.Board.ExitWest = ((ComboBox) sender).SelectedIndex;
             };
 
             UpdateAdvancedEdit();
@@ -157,10 +157,10 @@ namespace Torch
         private void UpdateBoardComboBoxes()
         {
             SuppressUpdate = true;
-            SetComboControlValue(exitEastTextBox, exitEastComboBox, _context.BoardData.ExitEast.ToString());
-            SetComboControlValue(exitNorthTextBox, exitNorthComboBox, _context.BoardData.ExitNorth.ToString());
-            SetComboControlValue(exitSouthTextBox, exitSouthComboBox, _context.BoardData.ExitSouth.ToString());
-            SetComboControlValue(exitWestTextBox, exitWestComboBox, _context.BoardData.ExitWest.ToString());
+            SetComboControlValue(exitEastTextBox, exitEastComboBox, _context.Board.ExitEast.ToString());
+            SetComboControlValue(exitNorthTextBox, exitNorthComboBox, _context.Board.ExitNorth.ToString());
+            SetComboControlValue(exitSouthTextBox, exitSouthComboBox, _context.Board.ExitSouth.ToString());
+            SetComboControlValue(exitWestTextBox, exitWestComboBox, _context.Board.ExitWest.ToString());
             SuppressUpdate = false;
         }
 
@@ -195,15 +195,15 @@ namespace Torch
             SuppressUpdate = true;
 
             // textboxes
-            cameraXTextBox.Text = _context.BoardData.Camera.X.ToString();
-            cameraYTextBox.Text = _context.BoardData.Camera.Y.ToString();
-            enteredXTextBox.Text = _context.BoardData.Enter.X.ToString();
-            enteredYTextBox.Text = _context.BoardData.Enter.Y.ToString();
-            maxShotsTextBox.Text = _context.BoardData.Shots.ToString();
-            timeLimitTextBox.Text = _context.BoardData.TimeLimit.ToString();
+            cameraXTextBox.Text = _context.Board.Camera.X.ToString();
+            cameraYTextBox.Text = _context.Board.Camera.Y.ToString();
+            enteredXTextBox.Text = _context.Board.Enter.X.ToString();
+            enteredYTextBox.Text = _context.Board.Enter.Y.ToString();
+            maxShotsTextBox.Text = _context.Board.Shots.ToString();
+            timeLimitTextBox.Text = _context.Board.TimeLimit.ToString();
 
             // checkboxes
-            zapRestartCheckBox.Checked = _context.BoardData.RestartOnZap;
+            zapRestartCheckBox.Checked = _context.Board.RestartOnZap;
 
             UpdateBoardComboBoxes();
             SuppressUpdate = false;

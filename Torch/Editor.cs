@@ -319,7 +319,7 @@ namespace Torch
         {
             var result = new ContextMenuStrip();
             var actorPresent = false;
-            var tile = Context.TileAt(x + 1, y + 1);
+            var tile = Context.Tiles[new Location(x + 1, y + 1)];
 
             foreach (var actor in Context.Actors)
             {
@@ -384,14 +384,14 @@ namespace Torch
 
         private void CopyCursorColor()
         {
-            var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
+            var tile = Context.Tiles[new Location(_terminal.CursorX + 1, _terminal.CursorY + 1)];
             Color = tile.Color;
             UpdateColor();
         }
 
         private void CopyCursorElement()
         {
-            var tile = Context.TileAt(_terminal.CursorX + 1, _terminal.CursorY + 1);
+            var tile = Context.Tiles[new Location(_terminal.CursorX + 1, _terminal.CursorY + 1)];
             {
                 SelectElement(tile.Id);
             }
@@ -955,7 +955,7 @@ namespace Torch
         private void UpdateInfo()
         {
             Context.PackBoard();
-            boardInfoLabel.Text = $"{Context.Boards[Context.BoardIndex].Data.Length + 2}/20000";
+            boardInfoLabel.Text = $"{Context.Boards[Context.WorldData.BoardIndex].Data.Length + 2}/20000";
             worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
         }
