@@ -3,9 +3,9 @@ using Roton.Emulation.Serialization;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztSerializer : Serializer
+    internal sealed class ZztGameSerializer : GameSerializer
     {
-        public ZztSerializer(IMemory memory)
+        public ZztGameSerializer(IMemory memory)
             : base(memory)
         {
         }

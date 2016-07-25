@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public interface ISerializer
+    public interface IGameSerializer
     {
         int ActorCapacity { get; }
         int ActorDataCountOffset { get; }

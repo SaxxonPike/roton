@@ -16,7 +16,7 @@ namespace Roton.Core
         IHud Hud { get; }
         IMemory Memory { get; }
         IActor Player { get; }
-        ISerializer Serializer { get; }
+        IGameSerializer GameSerializer { get; }
         ISounds Sounds { get; }
         IState StateData { get; }
         string StoneText { get; }

@@ -9,7 +9,7 @@ namespace Roton.Emulation.SuperZZT
         {
             Actors = new SuperZztActorList(Memory);
             Board = new SuperZztBoard(Memory);
-            Serializer = new SuperZztSerializer(Memory);
+            GameSerializer = new SuperZztGameSerializer(Memory);
             Hud = new SuperZztHud(this, config.Terminal);
             Elements = new SuperZztElementList(Memory, elementBytes);
             Sounds = new SuperZztSounds();
@@ -29,7 +29,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override IHud Hud { get; }
 
-        public override ISerializer Serializer { get; }
+        public override IGameSerializer GameSerializer { get; }
 
         public override ISounds Sounds { get; }
 

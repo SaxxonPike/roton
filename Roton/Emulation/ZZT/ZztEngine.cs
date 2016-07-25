@@ -9,7 +9,7 @@ namespace Roton.Emulation.ZZT
         {
             Actors = new ZztActorList(Memory);
             Board = new ZztBoard(Memory);
-            Serializer = new ZztSerializer(Memory);
+            GameSerializer = new ZztGameSerializer(Memory);
             Hud = new ZztHud(this, config.Terminal);
             Elements = new ZztElementList(Memory, elementBytes);
             Sounds = new Sounds();
@@ -25,7 +25,7 @@ namespace Roton.Emulation.ZZT
         public override IElementList Elements { get; }
         public override IGrammar Grammar { get; }
         public override IHud Hud { get; }
-        public override ISerializer Serializer { get; }
+        public override IGameSerializer GameSerializer { get; }
         public override ISounds Sounds { get; }
         public override IState StateData { get; }
         public override ITileGrid Tiles { get; }

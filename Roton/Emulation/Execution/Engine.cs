@@ -173,7 +173,7 @@ namespace Roton.Emulation.Execution
             Boards.Clear();
             ResetAlerts();
             ClearBoard();
-            Boards.Add(new PackedBoard(Serializer.PackBoard(Tiles)));
+            Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
             WorldData.BoardIndex = 0;
             WorldData.Ammo = 0;
             WorldData.Gems = 0;
@@ -402,7 +402,7 @@ namespace Roton.Emulation.Execution
 
         public void PackBoard()
         {
-            var board = new PackedBoard(Serializer.PackBoard(Tiles));
+            var board = new PackedBoard(GameSerializer.PackBoard(Tiles));
             Boards[WorldData.BoardIndex] = board;
         }
 
@@ -605,7 +605,7 @@ namespace Roton.Emulation.Execution
             return result;
         }
 
-        public abstract ISerializer Serializer { get; }
+        public abstract IGameSerializer GameSerializer { get; }
 
         public void SetBoard(int boardIndex)
         {
@@ -664,7 +664,7 @@ namespace Roton.Emulation.Execution
 
         public void UnpackBoard(int boardIndex)
         {
-            Serializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
+            GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             WorldData.BoardIndex = boardIndex;
         }
 

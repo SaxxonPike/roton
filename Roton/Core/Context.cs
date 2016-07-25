@@ -94,10 +94,10 @@ namespace Roton.Core
                 writer.Write((short) WorldData.WorldType);
                 writer.Write((short) (Boards.Count - 1));
                 writer.Flush();
-                Serializer.SaveWorld(mem);
+                GameSerializer.SaveWorld(mem);
                 foreach (var board in Boards)
                 {
-                    Serializer.SaveBoardData(mem, board.Data);
+                    GameSerializer.SaveBoardData(mem, board.Data);
                 }
                 mem.Flush();
                 return mem.ToArray();
@@ -109,7 +109,7 @@ namespace Roton.Core
             Engine.Disk.PutFile(filename, Save());
         }
 
-        private ISerializer Serializer => Engine.Serializer;
+        private IGameSerializer GameSerializer => Engine.GameSerializer;
 
         public void SetBoard(int boardIndex)
         {
@@ -140,7 +140,7 @@ namespace Roton.Core
 
         public int WorldSize
         {
-            get { return Serializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2); }
+            get { return GameSerializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2); }
         }
 
         private void Initialize(ContextEngine engine)
@@ -191,13 +191,13 @@ namespace Roton.Core
         {
             var reader = new BinaryReader(stream);
             int boardCount = reader.ReadInt16();
-            Serializer.LoadWorld(stream);
+            GameSerializer.LoadWorld(stream);
             Boards.Clear();
             for (var i = 0; i <= boardCount; i++)
             {
-                Boards.Add(new PackedBoard(Serializer.LoadBoardData(stream)));
+                Boards.Add(new PackedBoard(GameSerializer.LoadBoardData(stream)));
             }
-            Serializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.WorldData.BoardIndex].Data);
+            GameSerializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.WorldData.BoardIndex].Data);
             Engine.StateData.WorldLoaded = true;
         }
     }
