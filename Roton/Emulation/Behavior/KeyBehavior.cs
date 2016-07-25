@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -17,14 +18,14 @@ namespace Roton.Emulation.Behavior
             if (engine.WorldData.Keys[keyIndex])
             {
                 engine.SetMessage(0xC8, engine.Alerts.KeyAlreadyMessage(color));
-                engine.PlaySound(2, engine.Sounds.KeyAlready);
+                engine.PlaySound(2, engine.SoundSet.KeyAlready);
             }
             else
             {
                 engine.WorldData.Keys[keyIndex] = true;
                 engine.RemoveItem(location);
                 engine.SetMessage(0xC8, engine.Alerts.KeyPickupMessage(color));
-                engine.PlaySound(2, engine.Sounds.Key);
+                engine.PlaySound(2, engine.SoundSet.Key);
             }
         }
     }

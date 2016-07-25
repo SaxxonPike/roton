@@ -2,61 +2,61 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class Sounds : ISounds
+    internal class SoundSet : ISoundSet
     {
-        public byte[] Ammo => new byte[]
-        {
+        public ISound Ammo => new Sound
+        (
             0x30, 0x01,
             0x31, 0x01,
             0x32, 0x01
-        };
+        );
 
-        public byte[] BombActivate => new byte[]
-        {
+        public ISound BombActivate => new Sound
+        (
             0x30, 0x01,
             0x35, 0x01,
             0x40, 0x01,
             0x45, 0x01,
             0x50, 0x01
-        };
+        );
 
-        public byte[] BombExplode => new byte[]
-        {
+        public ISound BombExplode => new Sound
+        (
             0x60, 0x01,
             0x50, 0x01,
             0x40, 0x01,
             0x30, 0x01,
             0x20, 0x01
-        };
+        );
 
-        public byte[] BombTick => new byte[]
-        {
+        public ISound BombTick => new Sound
+        (
             0xF8, 0x01
-        };
+        );
 
-        public byte[] BombTock => new byte[]
-        {
+        public ISound BombTock => new Sound
+        (
             0xF5, 0x01
-        };
+        );
 
-        public byte[] BulletDie => new byte[]
-        {
+        public ISound BulletDie => new Sound
+        (
             0x20, 0x01
-        };
+        );
 
-        public byte[] Cheat => new byte[]
-        {
+        public ISound Cheat => new Sound
+        (
             0x27, 0x04
-        };
+        );
 
-        public byte[] DoorLocked => new byte[]
-        {
+        public ISound DoorLocked => new Sound
+        (
             0x17, 0x01,
             0x10, 0x01
-        };
+        );
 
-        public byte[] DoorOpen => new byte[]
-        {
+        public ISound DoorOpen => new Sound
+        (
             0x30, 0x01,
             0x37, 0x01,
             0x3B, 0x01,
@@ -64,44 +64,44 @@ namespace Roton.Emulation.Execution
             0x37, 0x01,
             0x3B, 0x01,
             0x40, 0x04
-        };
+        );
 
-        public byte[] Duplicate => new byte[]
-        {
+        public ISound Duplicate => new Sound
+        (
             0x30, 0x02,
             0x32, 0x02,
             0x34, 0x02,
             0x35, 0x02,
             0x37, 0x02
-        };
+        );
 
-        public byte[] DuplicateFail => new byte[]
-        {
+        public ISound DuplicateFail => new Sound
+        (
             0x18, 0x01,
             0x16, 0x01
-        };
+        );
 
-        public byte[] EnemyDie => new byte[]
-        {
+        public ISound EnemyDie => new Sound
+        (
             0x40, 0x01,
             0x10, 0x01,
             0x50, 0x01,
             0x30, 0x01
-        };
+        );
 
-        public byte[] EnemyShoot => new byte[]
-        {
+        public ISound EnemyShoot => new Sound
+        (
             0x30, 0x01,
             0x26, 0x01
-        };
+        );
 
-        public byte[] EnemySuicide => new byte[]
-        {
+        public ISound EnemySuicide => new Sound
+        (
             0x10, 0x01
-        };
+        );
 
-        public byte[] Energizer => new byte[]
-        {
+        public ISound Energizer => new Sound
+        (
             0x20, 0x03,
             0x23, 0x03,
             0x24, 0x03,
@@ -158,10 +158,10 @@ namespace Roton.Emulation.Execution
             0x25, 0x03,
             0x23, 0x03,
             0x20, 0x03
-        };
+        );
 
-        public byte[] EnergyOut => new byte[]
-        {
+        public ISound EnergyOut => new Sound
+        (
             0x20, 0x03,
             0x1A, 0x03,
             0x17, 0x03,
@@ -169,20 +169,20 @@ namespace Roton.Emulation.Execution
             0x15, 0x03,
             0x13, 0x03,
             0x10, 0x03
-        };
+        );
 
-        public byte[] Error => new byte[]
-        {
+        public ISound Error => new Sound
+        (
             0x50, 0x0A
-        };
+        );
 
-        public virtual byte[] Forest => new byte[]
-        {
+        public virtual ISound Forest => new Sound
+        (
             0x39, 0x01
-        };
+        );
 
-        public byte[] GameOver => new byte[]
-        {
+        public ISound GameOver => new Sound
+        (
             0x20, 0x03,
             0x23, 0x03,
             0x27, 0x03,
@@ -196,24 +196,24 @@ namespace Roton.Emulation.Execution
             0x40, 0x03,
             0x45, 0x03,
             0x10, 0x0A
-        };
+        );
 
-        public byte[] Gem => new byte[]
-        {
+        public ISound Gem => new Sound
+        (
             0x40, 0x01,
             0x37, 0x01,
             0x34, 0x01,
             0x30, 0x01
-        };
+        );
 
-        public byte[] Invisible => new byte[]
-        {
+        public ISound Invisible => new Sound
+        (
             0x12, 0x01,
             0x10, 0x01
-        };
+        );
 
-        public byte[] Key => new byte[]
-        {
+        public ISound Key => new Sound
+        (
             0x40, 0x01,
             0x44, 0x01,
             0x47, 0x01,
@@ -224,24 +224,24 @@ namespace Roton.Emulation.Execution
             0x44, 0x01,
             0x47, 0x01,
             0x50, 0x02
-        };
+        );
 
-        public byte[] KeyAlready => new byte[]
-        {
+        public ISound KeyAlready => new Sound
+        (
             0x30, 0x02,
             0x20, 0x02
-        };
+        );
 
-        public byte[] Ouch => new byte[]
-        {
+        public ISound Ouch => new Sound
+        (
             0x10, 0x01,
             0x20, 0x01,
             0x13, 0x01,
             0x23, 0x01
-        };
+        );
 
-        public byte[] Passage => new byte[]
-        {
+        public ISound Passage => new Sound
+        (
             0x30, 0x01,
             0x34, 0x01,
             0x37, 0x01,
@@ -257,33 +257,33 @@ namespace Roton.Emulation.Execution
             0x34, 0x01,
             0x38, 0x01,
             0x40, 0x01
-        };
+        );
 
-        public byte[] Push => new byte[]
-        {
+        public ISound Push => new Sound
+        (
             0x15, 0x01
-        };
+        );
 
-        public byte[] Ricochet => new byte[]
-        {
+        public ISound Ricochet => new Sound
+        (
             0xF9, 0x01
-        };
+        );
 
-        public byte[] Shoot => new byte[]
-        {
+        public ISound Shoot => new Sound
+        (
             0x40, 0x01,
             0x30, 0x01,
             0x20, 0x01
-        };
+        );
 
-        public byte[] SlimeDie => new byte[]
-        {
+        public ISound SlimeDie => new Sound
+        (
             0x20, 0x01,
             0x23, 0x01
-        };
+        );
 
-        public byte[] TimeLow => new byte[]
-        {
+        public ISound TimeLow => new Sound
+        (
             0x40, 0x06,
             0x45, 0x06,
             0x40, 0x06,
@@ -291,33 +291,33 @@ namespace Roton.Emulation.Execution
             0x40, 0x06,
             0x45, 0x06,
             0x40, 0x0A
-        };
+        );
 
-        public byte[] TimeOut => new byte[]
-        {
+        public ISound TimeOut => new Sound
+        (
             0x20, 0x01,
             0x23, 0x01,
             0x27, 0x01,
             0x30, 0x01,
             0x10, 0x01
-        };
+        );
 
-        public byte[] Torch => new byte[]
-        {
+        public ISound Torch => new Sound
+        (
             0x30, 0x01,
             0x39, 0x01,
             0x34, 0x02
-        };
+        );
 
-        public byte[] TorchOut => new byte[]
-        {
+        public ISound TorchOut => new Sound
+        (
             0x30, 0x01,
             0x20, 0x01,
             0x10, 0x01
-        };
+        );
 
-        public byte[] Transporter => new byte[]
-        {
+        public ISound Transporter => new Sound
+        (
             0x30, 0x01,
             0x42, 0x01,
             0x34, 0x01,
@@ -326,12 +326,12 @@ namespace Roton.Emulation.Execution
             0x4A, 0x01,
             0x40, 0x01,
             0x52, 0x01
-        };
+        );
 
-        public byte[] Water => new byte[]
-        {
+        public ISound Water => new Sound
+        (
             0x40, 0x01,
             0x50, 0x01
-        };
+        );
     }
 }

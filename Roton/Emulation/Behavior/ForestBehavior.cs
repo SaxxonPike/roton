@@ -26,7 +26,11 @@ namespace Roton.Emulation.Behavior
                 engine.RemoveItem(location);
 
             engine.UpdateBoard(location);
-            engine.PlaySound(3, engine.Sounds.Forest);
+
+            var forestIndex = engine.StateData.ForestIndex;
+            var forestSongLength = engine.SoundSet.Forest.Length;
+            engine.StateData.ForestIndex = (forestIndex + 2) % forestSongLength;
+            engine.PlaySound(3, engine.SoundSet.Forest, forestIndex, 2);
 
             if (!engine.Alerts.Forest)
                 return;

@@ -44,6 +44,7 @@
     <Compile Include="Core\IContext.cs" />
     <Compile Include="Core\IMessage.cs" />
     <Compile Include="Core\IPackedBoard.cs" />
+    <Compile Include="Core\ISound.cs" />
     <Compile Include="Core\Location16.cs" />
     <Compile Include="Core\Message.cs" />
     <Compile Include="Emulation\Behavior\AmmoBehavior.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Emulation\Behavior\PuzzleBehavior.cs" />
     <Compile Include="Emulation\Behavior\WaterBehavior.cs" />
     <Compile Include="Emulation\Behavior\WebBehavior.cs" />
+    <Compile Include="Core\Sound.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztForestSound.cs" />
     <Compile Include="Emulation\Serialization\ArtSerializer.cs" />
     <Compile Include="Core\IArtSerializer.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztAlerts.cs" />
@@ -143,7 +146,7 @@
     <Compile Include="Core\IOopContext.cs" />
     <Compile Include="FileIo\ZipFileSystem.cs" />
     <Compile Include="Emulation\Execution\Grammar.cs" />
-    <Compile Include="Core\ISounds.cs" />
+    <Compile Include="Core\ISoundSet.cs" />
     <Compile Include="Emulation\Execution\OopItem.cs" />
     <Compile Include="Emulation\ZZT\ZztGrammar.cs" />
     <Compile Include="Extensions\MemoryExtensions.cs" />
@@ -181,7 +184,7 @@
     <Compile Include="Core\Collections\LinearEnumerator.cs" />
     <Compile Include="Emulation\Mapping\Element.cs" />
     <Compile Include="Emulation\Mapping\ElementList.cs" />
-    <Compile Include="Emulation\Execution\Sounds.cs" />
+    <Compile Include="Emulation\Execution\SoundSet.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztCore.Interface.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztActorList.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztFlagList.cs" />
@@ -190,7 +193,7 @@
     <Compile Include="Emulation\SuperZZT\SuperZztElementList.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztState.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztTileGrid.cs" />
-    <Compile Include="Emulation\SuperZZT\SuperZztSounds.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztSoundSet.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztHud.cs" />
     <Compile Include="Emulation\ZZT\ZztFlags.cs" />
     <Compile Include="Emulation\ZZT\ZztGameSerializer.cs" />

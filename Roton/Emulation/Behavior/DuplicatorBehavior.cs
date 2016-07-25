@@ -47,11 +47,11 @@ namespace Roton.Emulation.Behavior
                             engine.TileAt(target).CopyFrom(engine.TileAt(source));
                             engine.UpdateBoard(target);
                         }
-                        engine.PlaySound(3, engine.Sounds.Duplicate);
+                        engine.PlaySound(3, engine.SoundSet.Duplicate);
                     }
                     else
                     {
-                        engine.PlaySound(3, engine.Sounds.DuplicateFail);
+                        engine.PlaySound(3, engine.SoundSet.DuplicateFail);
                     }
                 }
                 actor.P1 = 0;

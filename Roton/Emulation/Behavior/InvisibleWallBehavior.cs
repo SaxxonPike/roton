@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -14,7 +15,7 @@ namespace Roton.Emulation.Behavior
         {
             engine.Tiles[location].Id = engine.Elements.NormalId;
             engine.UpdateBoard(location);
-            engine.PlaySound(3, engine.Sounds.Invisible);
+            engine.PlaySound(3, engine.SoundSet.Invisible);
             engine.SetMessage(0x64, engine.Alerts.InvisibleMessage);
         }
     }

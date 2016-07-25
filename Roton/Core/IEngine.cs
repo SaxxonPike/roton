@@ -17,7 +17,7 @@ namespace Roton.Core
         IMemory Memory { get; }
         IActor Player { get; }
         IGameSerializer GameSerializer { get; }
-        ISounds Sounds { get; }
+        ISoundSet SoundSet { get; }
         IState StateData { get; }
         string StoneText { get; }
         ITileGrid Tiles { get; }
@@ -44,8 +44,8 @@ namespace Roton.Core
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
         void PackBoard();
-        byte[] EncodeMusic(string music);
-        void PlaySound(int priority, byte[] sound);
+        ISound EncodeMusic(string music);
+        void PlaySound(int priority, ISound sound, int offset, int length);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);

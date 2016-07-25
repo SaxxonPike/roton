@@ -88,7 +88,7 @@ namespace Roton.Emulation.Execution
             else
             {
                 Destroy(location);
-                PlaySound(2, Sounds.EnemySuicide);
+                this.PlaySound(2, SoundSet.EnemySuicide);
             }
         }
 
@@ -406,7 +406,7 @@ namespace Roton.Emulation.Execution
             Boards[WorldData.BoardIndex] = board;
         }
 
-        public void PlaySound(int priority, byte[] sound)
+        public void PlaySound(int priority, ISound sound, int offset, int length)
         {
         }
 
@@ -450,7 +450,7 @@ namespace Roton.Emulation.Execution
         public void RaiseError(string error)
         {
             SetMessage(0xC8, Alerts.ErrorMessage(error));
-            PlaySound(5, Sounds.Error);
+            this.PlaySound(5, SoundSet.Error);
         }
 
         public int RandomNumber(int max)
@@ -633,7 +633,7 @@ namespace Roton.Emulation.Execution
             StateData.Message2 = bottomMessage;
         }
 
-        public abstract ISounds Sounds { get; }
+        public abstract ISoundSet SoundSet { get; }
 
         private ISpeaker Speaker => _config.Speaker;
 
@@ -994,7 +994,7 @@ namespace Roton.Emulation.Execution
                         WorldData.TimePassed = 0;
                         if (RestartOnZap)
                         {
-                            PlaySound(4, Sounds.TimeOut);
+                            this.PlaySound(4, SoundSet.TimeOut);
                             TileAt(actor.Location).Id = Elements.EmptyId;
                             UpdateBoard(actor.Location);
                             var oldLocation = actor.Location.Clone();
@@ -1003,11 +1003,11 @@ namespace Roton.Emulation.Execution
                             UpdateRadius(actor.Location, 0);
                             StateData.GamePaused = true;
                         }
-                        PlaySound(4, Sounds.Ouch);
+                        this.PlaySound(4, SoundSet.Ouch);
                     }
                     else
                     {
-                        PlaySound(5, Sounds.GameOver);
+                        this.PlaySound(5, SoundSet.GameOver);
                     }
                 }
             }
@@ -1016,11 +1016,11 @@ namespace Roton.Emulation.Execution
                 var element = TileAt(actor.Location).Id;
                 if (element == Elements.BulletId)
                 {
-                    PlaySound(3, Sounds.BulletDie);
+                    this.PlaySound(3, SoundSet.BulletDie);
                 }
                 else if (element != Elements.ObjectId)
                 {
-                    PlaySound(3, Sounds.EnemyDie);
+                    this.PlaySound(3, SoundSet.EnemyDie);
                 }
                 RemoveActor(index);
             }
@@ -1278,9 +1278,9 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public byte[] EncodeMusic(string music)
+        public ISound EncodeMusic(string music)
         {
-            return new byte[0];
+            return new Sound();
         }
 
         public void PushThroughTransporter(IXyPair location, IXyPair vector)
@@ -1336,7 +1336,7 @@ namespace Roton.Emulation.Execution
                 if (target.X > 0)
                 {
                     MoveTile(actor.Location.Difference(vector), target);
-                    PlaySound(3, Sounds.Transporter);
+                    this.PlaySound(3, SoundSet.Transporter);
                 }
             }
         }
@@ -1567,7 +1567,7 @@ namespace Roton.Emulation.Execution
                     return false;
                 }
                 Destroy(target);
-                PlaySound(2, Sounds.BulletDie);
+                this.PlaySound(2, SoundSet.BulletDie);
                 return true;
             }
             return false;

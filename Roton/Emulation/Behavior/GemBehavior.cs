@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -24,7 +25,7 @@ namespace Roton.Emulation.Behavior
             engine.WorldData.Score += 10;
             engine.RemoveItem(location);
             engine.UpdateStatus();
-            engine.PlaySound(2, engine.Sounds.Gem);
+            engine.PlaySound(2, engine.SoundSet.Gem);
 
             if (!engine.Alerts.GemPickup)
                 return;

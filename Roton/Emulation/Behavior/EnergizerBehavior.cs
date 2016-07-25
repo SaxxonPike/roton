@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -12,7 +13,7 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {
-            engine.PlaySound(9, engine.Sounds.Energizer);
+            engine.PlaySound(9, engine.SoundSet.Energizer);
             engine.RemoveItem(location);
             engine.WorldData.EnergyCycles = 0x4B;
             engine.UpdateStatus();

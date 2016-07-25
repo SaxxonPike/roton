@@ -70,7 +70,7 @@ namespace Roton.Emulation.Behavior
                                 {
                                     engine.WorldData.Ammo--;
                                     engine.UpdateStatus();
-                                    engine.PlaySound(2, engine.Sounds.Shoot);
+                                    engine.PlaySound(2, engine.SoundSet.Shoot);
                                 }
                             }
                         }
@@ -181,7 +181,7 @@ namespace Roton.Emulation.Behavior
                 if (engine.WorldData.TorchCycles <= 0)
                 {
                     engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                    engine.PlaySound(3, engine.Sounds.TorchOut);
+                    engine.PlaySound(3, engine.SoundSet.TorchOut);
                 }
 
                 if (engine.WorldData.TorchCycles % 40 == 0)
@@ -197,7 +197,7 @@ namespace Roton.Emulation.Behavior
                 engine.WorldData.EnergyCycles--;
                 if (engine.WorldData.EnergyCycles == 10)
                 {
-                    engine.PlaySound(9, engine.Sounds.EnergyOut);
+                    engine.PlaySound(9, engine.SoundSet.EnergyOut);
                 }
                 else if (engine.WorldData.EnergyCycles <= 0)
                 {
@@ -217,7 +217,7 @@ namespace Roton.Emulation.Behavior
                         if (engine.Board.TimeLimit - 10 == engine.WorldData.TimePassed)
                         {
                             engine.SetMessage(0xC8, engine.Alerts.TimeMessage);
-                            engine.PlaySound(3, engine.Sounds.TimeLow);
+                            engine.PlaySound(3, engine.SoundSet.TimeLow);
                         }
                         else if (engine.WorldData.TimePassed >= engine.Board.TimeLimit)
                         {

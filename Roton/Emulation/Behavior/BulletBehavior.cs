@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
                 {
                     canRicochet = false;
                     actor.Vector.SetOpposite();
-                    engine.PlaySound(1, engine.Sounds.Ricochet);
+                    engine.PlaySound(1, engine.SoundSet.Ricochet);
                     continue;
                 }
                 if (element.Id == engine.Elements.BreakableId ||
@@ -47,7 +47,7 @@ namespace Roton.Emulation.Behavior
                 {
                     canRicochet = false;
                     actor.Vector.SetCounterClockwise();
-                    engine.PlaySound(1, engine.Sounds.Ricochet);
+                    engine.PlaySound(1, engine.SoundSet.Ricochet);
                     continue;
                 }
                 if (canRicochet &&
@@ -55,7 +55,7 @@ namespace Roton.Emulation.Behavior
                 {
                     canRicochet = false;
                     actor.Vector.SetClockwise();
-                    engine.PlaySound(1, engine.Sounds.Ricochet);
+                    engine.PlaySound(1, engine.SoundSet.Ricochet);
                     continue;
                 }
                 engine.RemoveActor(index);

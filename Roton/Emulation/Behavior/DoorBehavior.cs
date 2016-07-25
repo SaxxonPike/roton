@@ -18,14 +18,14 @@ namespace Roton.Emulation.Behavior
             if (!engine.WorldData.Keys[keyIndex])
             {
                 engine.SetMessage(0xC8, engine.Alerts.DoorLockedMessage(color));
-                engine.PlaySound(3, engine.Sounds.DoorLocked);
+                engine.PlaySound(3, engine.SoundSet.DoorLocked);
             }
             else
             {
                 engine.WorldData.Keys[keyIndex] = false;
                 engine.RemoveItem(location);
                 engine.SetMessage(0xC8, engine.Alerts.DoorOpenMessage(color));
-                engine.PlaySound(3, engine.Sounds.DoorOpen);
+                engine.PlaySound(3, engine.SoundSet.DoorOpen);
             }
         }
     }

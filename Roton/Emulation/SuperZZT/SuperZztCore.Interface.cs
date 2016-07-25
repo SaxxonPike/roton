@@ -12,7 +12,7 @@ namespace Roton.Emulation.SuperZZT
             GameSerializer = new SuperZztGameSerializer(Memory);
             Hud = new SuperZztHud(this, config.Terminal);
             Elements = new SuperZztElementList(Memory, elementBytes);
-            Sounds = new SuperZztSounds();
+            SoundSet = new SuperZztSoundSet(Memory);
             StateData = new SuperZztState(Memory, memoryBytes);
             Tiles = new SuperZztTileGrid(Memory);
             WorldData = new SuperZztWorld(Memory);
@@ -31,7 +31,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override IGameSerializer GameSerializer { get; }
 
-        public override ISounds Sounds { get; }
+        public override ISoundSet SoundSet { get; }
 
         public override IState StateData { get; }
 

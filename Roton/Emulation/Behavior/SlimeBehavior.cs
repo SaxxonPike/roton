@@ -64,7 +64,7 @@ namespace Roton.Emulation.Behavior
             engine.Harm(slimeIndex);
             engine.Tiles[location].SetTo(engine.Elements.BreakableId, color);
             engine.UpdateBoard(location);
-            engine.PlaySound(2, engine.Sounds.SlimeDie);
+            engine.PlaySound(2, engine.SoundSet.SlimeDie);
         }
     }
 }

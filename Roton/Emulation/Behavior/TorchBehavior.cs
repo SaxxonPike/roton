@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -20,7 +21,7 @@ namespace Roton.Emulation.Behavior
                 engine.SetMessage(0xC8, engine.Alerts.TorchMessage);
                 engine.Alerts.TorchPickup = false;
             }
-            engine.PlaySound(3, engine.Sounds.Torch);
+            engine.PlaySound(3, engine.SoundSet.Torch);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -21,7 +22,7 @@ namespace Roton.Emulation.Behavior
             engine.WorldData.Ammo += _ammoPerPickup;
             engine.RemoveItem(location);
             engine.UpdateStatus();
-            engine.PlaySound(2, engine.Sounds.Ammo);
+            engine.PlaySound(2, engine.SoundSet.Ammo);
             if (engine.Alerts.AmmoPickup)
             {
                 engine.SetMessage(0xC8, engine.Alerts.AmmoMessage);

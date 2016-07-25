@@ -56,7 +56,7 @@ namespace Roton.Emulation.Behavior
                 engine.Player.Location.CopyFrom(target);
             }
             engine.StateData.GamePaused = true;
-            engine.PlaySound(4, engine.Sounds.Passage);
+            engine.PlaySound(4, engine.SoundSet.Passage);
             engine.FadePurple();
             engine.EnterBoard();
             vector.SetTo(0, 0);

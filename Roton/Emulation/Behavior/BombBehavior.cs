@@ -20,7 +20,7 @@ namespace Roton.Emulation.Behavior
             switch (actor.P1)
             {
                 case 1:
-                    engine.PlaySound(1, engine.Sounds.BombExplode);
+                    engine.PlaySound(1, engine.SoundSet.BombExplode);
                     engine.UpdateRadius(actor.Location, RadiusMode.Explode);
                     break;
                 case 0:
@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
                     engine.UpdateRadius(location, RadiusMode.Clear);
                     break;
                 default:
-                    engine.PlaySound(1, (actor.P1 & 0x01) == 0 ? engine.Sounds.BombTock : engine.Sounds.BombTick);
+                    engine.PlaySound(1, (actor.P1 & 0x01) == 0 ? engine.SoundSet.BombTock : engine.SoundSet.BombTick);
                     break;
             }
         }
@@ -50,7 +50,7 @@ namespace Roton.Emulation.Behavior
                 actor.P1 = 9;
                 engine.UpdateBoard(location);
                 engine.SetMessage(0xC8, engine.Alerts.BombMessage);
-                engine.PlaySound(4, engine.Sounds.BombActivate);
+                engine.PlaySound(4, engine.SoundSet.BombActivate);
             }
             else
             {

@@ -12,7 +12,7 @@ namespace Roton.Emulation.ZZT
             GameSerializer = new ZztGameSerializer(Memory);
             Hud = new ZztHud(this, config.Terminal);
             Elements = new ZztElementList(Memory, elementBytes);
-            Sounds = new Sounds();
+            SoundSet = new SoundSet();
             StateData = new ZztState(Memory, memoryBytes);
             Tiles = new ZztTileGrid(Memory);
             WorldData = new ZztWorld(Memory);
@@ -26,7 +26,7 @@ namespace Roton.Emulation.ZZT
         public override IGrammar Grammar { get; }
         public override IHud Hud { get; }
         public override IGameSerializer GameSerializer { get; }
-        public override ISounds Sounds { get; }
+        public override ISoundSet SoundSet { get; }
         public override IState StateData { get; }
         public override ITileGrid Tiles { get; }
         public override bool TorchesEnabled => true;

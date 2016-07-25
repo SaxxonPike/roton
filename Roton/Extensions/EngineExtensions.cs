@@ -23,6 +23,11 @@ namespace Roton.Extensions
             return engine.Elements[engine.Tiles[location].Id];
         }
 
+        public static void PlaySound(this IEngine engine, int priority, ISound sound)
+        {
+            engine.PlaySound(priority, sound, 0, sound.Length);
+        }
+
         public static ITile TileAt(this IEngine engine, IXyPair location)
         {
             return engine.Tiles[location];
