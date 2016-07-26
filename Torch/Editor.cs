@@ -906,11 +906,10 @@ namespace Torch
         {
             if (Context != null)
             {
-                using (var mem = new MemoryStream(Context.Save()))
-                {
-                    var gameForm = new GameForm(mem);
-                    gameForm.Show();
-                }
+                var mem = new MemoryStream(Context.Save());
+                var gameForm = new GameForm(mem);
+                gameForm.Shown += (sender, e) => { mem.Dispose(); };
+                gameForm.Show();
             }
         }
 
