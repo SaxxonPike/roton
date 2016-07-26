@@ -361,6 +361,8 @@ namespace Roton.Emulation.Execution
             return result;
         }
 
+        public abstract void HandlePlayerInput(IActor actor, int hotkey);
+
         public abstract IGrammar Grammar { get; }
 
         public void Harm(int index)
@@ -952,8 +954,6 @@ namespace Roton.Emulation.Execution
         public abstract ITileGrid Tiles { get; }
 
         public bool TitleScreen => State.PlayerElement != Elements.PlayerId;
-
-        public abstract bool TorchesEnabled { get; }
 
         public void UnpackBoard(int boardIndex)
         {
@@ -1660,7 +1660,6 @@ namespace Roton.Emulation.Execution
                 while (ThreadActive)
                 {
                     State.PlayerElement = Elements.MonitorId;
-                    var gameIsActive = false;
                     State.GamePaused = false;
                     MainLoop(gameEnded);
                     if (!ThreadActive)
@@ -1669,50 +1668,11 @@ namespace Roton.Emulation.Execution
                         break;
                     }
 
-                    switch (State.KeyPressed.ToUpperCase())
+                    var hotkey = State.KeyPressed.ToUpperCase();
+                    var startPlaying = HandleTitleInput(hotkey);
+                    if (startPlaying)
                     {
-                        case 0x57: // W
-                            break;
-                        case 0x50: // P
-                            if (World.IsLocked)
-                            {
-                                // reload world here
-                                gameIsActive = State.WorldLoaded;
-                                State.StartBoard = World.BoardIndex;
-                            }
-                            else
-                            {
-                                gameIsActive = true;
-                            }
-                            if (gameIsActive)
-                            {
-                                SetBoard(State.StartBoard);
-                                EnterBoard();
-                            }
-                            break;
-                        case 0x41: // A
-                            break;
-                        case 0x45: // E
-                            break;
-                        case 0x53: // S
-                            break;
-                        case 0x52: // R
-                            break;
-                        case 0x48: // H
-                            break;
-                        case 0x7C: // ?
-                            break;
-                        case 0x1B: // esc
-                        case 0x51: // Q
-                            break;
-                    }
-
-                    if (gameIsActive)
-                    {
-                        State.PlayerElement = Elements.PlayerId;
-                        State.GamePaused = true;
-                        MainLoop(true);
-                        gameEnded = true;
+                        gameEnded = PlayWorld();
                     }
 
                     if (gameEnded || State.QuitZzt)
@@ -1725,6 +1685,35 @@ namespace Roton.Emulation.Execution
                     break;
                 }
             }
+        }
+
+        public abstract bool HandleTitleInput(int hotkey);
+
+        public bool PlayWorld()
+        {
+            bool gameIsActive;
+
+            if (World.IsLocked)
+            {
+                // reload world here
+                gameIsActive = State.WorldLoaded;
+                State.StartBoard = World.BoardIndex;
+            }
+            else
+            {
+                gameIsActive = true;
+            }
+
+            if (gameIsActive)
+            {
+                SetBoard(State.StartBoard);
+                EnterBoard();
+                State.PlayerElement = Elements.PlayerId;
+                State.GamePaused = true;
+                MainLoop(true);
+            }
+
+            return gameIsActive;
         }
     }
 }

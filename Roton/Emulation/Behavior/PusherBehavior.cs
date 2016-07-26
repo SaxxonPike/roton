@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class PusherBehavior : ElementBehavior
+    internal sealed class PusherBehavior : ElementBehavior
     {
         public override string KnownName => "Pusher";
 

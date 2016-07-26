@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal class BoulderBehavior : PuzzleBehavior
+    internal sealed class BoulderBehavior : PuzzleBehavior
     {
         public override string KnownName => "Boulder";
     }

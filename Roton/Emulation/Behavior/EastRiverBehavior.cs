@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal class EastRiverBehavior : ElementBehavior
+    internal sealed class EastRiverBehavior : ElementBehavior
     {
         public override string KnownName => "River (East)";
     }

@@ -15,9 +15,11 @@
         void DrawTile(int x, int y, AnsiChar ac);
         void DrawTitleStatus();
         bool EndGameConfirmation();
+        string EnterCheat();
         void FadeBoard(AnsiChar ac);
         void Initialize();
         void RedrawBoard();
+        string SaveGame();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);
         void UpdateBorder();
         void UpdateCamera();

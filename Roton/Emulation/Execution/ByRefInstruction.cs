@@ -2,11 +2,10 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class ByRefInstruction : IExecutable
+    internal sealed class ByRefInstruction : IExecutable
     {
-        public ByRefInstruction()
+        public ByRefInstruction() : this(0)
         {
-            Instruction = 0;
         }
 
         public ByRefInstruction(int initialValue)

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class BoardEdgeBehavior : ElementBehavior
+    internal sealed class BoardEdgeBehavior : ElementBehavior
     {
         public override string KnownName => "Board Edge";
 

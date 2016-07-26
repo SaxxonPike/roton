@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.SuperZZT
 {
-    public class SuperZztMessage : IMessage
+    internal sealed class SuperZztMessage : IMessage
     {
         public SuperZztMessage()
         {

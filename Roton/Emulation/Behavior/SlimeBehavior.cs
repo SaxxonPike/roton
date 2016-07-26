@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class SlimeBehavior : ElementBehavior
+    internal sealed class SlimeBehavior : ElementBehavior
     {
         public override string KnownName => "Slime";
 

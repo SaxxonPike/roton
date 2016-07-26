@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class PassageBehavior : ElementBehavior
+    internal sealed class PassageBehavior : ElementBehavior
     {
         private readonly bool _enableUnderTileBug;
 

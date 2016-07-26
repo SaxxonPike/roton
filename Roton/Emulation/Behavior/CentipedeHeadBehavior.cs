@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class CentipedeHeadBehavior : ElementBehavior
+    internal sealed class CentipedeHeadBehavior : ElementBehavior
     {
         public override string KnownName => "Centipede (Head)";
 

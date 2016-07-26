@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class ObjectBehavior : ElementBehavior
+    internal sealed class ObjectBehavior : ElementBehavior
     {
         private readonly bool _extendedMovement;
 

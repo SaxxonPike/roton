@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class EnergizerBehavior : ElementBehavior
+    internal sealed class EnergizerBehavior : ElementBehavior
     {
         public override string KnownName => "Energizer";
 

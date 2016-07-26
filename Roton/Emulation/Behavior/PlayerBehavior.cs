@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class PlayerBehavior : ElementBehavior
+    internal sealed class PlayerBehavior : ElementBehavior
     {
         public override string KnownName => "Player";
 
@@ -114,44 +114,15 @@ namespace Roton.Emulation.Behavior
 
             // Hotkey logic
 
-            switch (engine.State.KeyPressed.ToUpperCase())
+            var hotkey = engine.State.KeyPressed.ToUpperCase();
+            switch (hotkey)
             {
-                case 0x54: // T
-                    if (engine.TorchesEnabled)
-                    {
-                        if (engine.World.TorchCycles <= 0)
-                        {
-                            if (engine.World.Torches <= 0)
-                            {
-                                if (engine.Alerts.NoTorches)
-                                {
-                                    engine.SetMessage(0xC8, engine.Alerts.NoTorchMessage);
-                                    engine.Alerts.NoTorches = false;
-                                }
-                            }
-                            else if (!engine.Board.IsDark)
-                            {
-                                if (engine.Alerts.NotDark)
-                                {
-                                    engine.SetMessage(0xC8, engine.Alerts.NotDarkMessage);
-                                    engine.Alerts.NotDark = false;
-                                }
-                            }
-                            else
-                            {
-                                engine.World.Torches--;
-                                engine.World.TorchCycles = 0xC8;
-                                engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                                engine.UpdateStatus();
-                            }
-                        }
-                    }
-                    break;
                 case 0x51: // Q
                 case 0x1B: // escape
                     engine.State.BreakGameLoop = engine.State.GameOver || engine.Hud.EndGameConfirmation();
                     break;
                 case 0x53: // S
+                    engine.Hud.SaveGame();
                     break;
                 case 0x50: // P
                     if (engine.World.Health > 0)
@@ -168,9 +139,11 @@ namespace Roton.Emulation.Behavior
                 case 0x48: // H
                     engine.ShowInGameHelp();
                     break;
-                case 0x46: // F
-                    break;
                 case 0x3F: // ?
+                    engine.Hud.EnterCheat();
+                    break;
+                default:
+                    engine.HandlePlayerInput(actor, hotkey);
                     break;
             }
 

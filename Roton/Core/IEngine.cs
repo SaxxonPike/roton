@@ -22,7 +22,6 @@ namespace Roton.Core
         string StoneText { get; }
         ITileGrid Tiles { get; }
         bool TitleScreen { get; }
-        bool TorchesEnabled { get; }
         IWorld World { get; }
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
@@ -41,11 +40,14 @@ namespace Roton.Core
         void ForcePlayerColor(int index);
         IXyPair GetCardinalVector(int index);
         bool GetPlayerTimeElapsed(int interval);
+        void HandlePlayerInput(IActor actor, int hotkey);
+        bool HandleTitleInput(int hotkey);
         void Harm(int index);
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
         void PackBoard();
         void PlaySound(int priority, ISound sound, int offset, int length);
+        bool PlayWorld();
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);

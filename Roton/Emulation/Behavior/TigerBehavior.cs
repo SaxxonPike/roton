@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class TigerBehavior : LionBehavior
+    internal sealed class TigerBehavior : LionBehavior
     {
         public override string KnownName => "Tiger";
 

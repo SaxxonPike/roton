@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class MonitorBehavior : ElementBehavior
+    internal sealed class MonitorBehavior : ElementBehavior
     {
         public override string KnownName => "Monitor";
 

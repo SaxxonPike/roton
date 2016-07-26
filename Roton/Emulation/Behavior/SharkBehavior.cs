@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class SharkBehavior : ElementBehavior
+    internal sealed class SharkBehavior : ElementBehavior
     {
         public override string KnownName => "Shark";
 

@@ -12,7 +12,7 @@ namespace Roton.Emulation.Execution
 
         protected ITerminal Terminal { get; }
 
-        protected IEngine Engine { get; set; }
+        protected IEngine Engine { get; }
 
         public virtual void ClearPausing()
         {
@@ -68,6 +68,12 @@ namespace Roton.Emulation.Execution
             return true;
         }
 
+        public virtual string EnterCheat()
+        {
+            // TODO: cheat hud
+            return string.Empty;
+        }
+
         public virtual void FadeBoard(AnsiChar ac)
         {
         }
@@ -76,6 +82,12 @@ namespace Roton.Emulation.Execution
 
         public virtual void RedrawBoard()
         {
+        }
+
+        public virtual string SaveGame()
+        {
+            // TODO: Save game hud
+            return string.Empty;
         }
 
         public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue)

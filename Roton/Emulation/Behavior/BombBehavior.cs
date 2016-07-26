@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class BombBehavior : ElementBehavior
+    internal sealed class BombBehavior : ElementBehavior
     {
         public override string KnownName => "Bomb";
 

@@ -125,6 +125,7 @@
     <Compile Include="Emulation\Serialization\ArtSerializer.cs" />
     <Compile Include="Core\IArtSerializer.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztAlerts.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztGrammar.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztMessage.cs" />
     <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
     <Compile Include="Emulation\ZZT\ZztMessage.cs" />

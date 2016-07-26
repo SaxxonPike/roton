@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class SpinningGunBehavior : ElementBehavior
+    internal sealed class SpinningGunBehavior : ElementBehavior
     {
         public override string KnownName => "Spinning Gun";
 

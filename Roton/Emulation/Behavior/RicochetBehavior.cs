@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal class RicochetBehavior : ElementBehavior
+    internal sealed class RicochetBehavior : ElementBehavior
     {
         public override string KnownName => "Ricochet";
     }

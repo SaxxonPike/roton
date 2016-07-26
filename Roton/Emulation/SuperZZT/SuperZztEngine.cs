@@ -18,7 +18,7 @@ namespace Roton.Emulation.SuperZZT
             SoundSet = new SuperZztSoundSet(Memory);
             Tiles = new SuperZztTileGrid(Memory);
             World = new SuperZztWorld(Memory);
-            Grammar = new Grammar(new SuperZztColorList(Memory), Elements);
+            Grammar = new SuperZztGrammar(State.Colors, Elements);
 
             Hud.Initialize();
         }
@@ -30,6 +30,33 @@ namespace Roton.Emulation.SuperZZT
 
         public override IGameSerializer GameSerializer { get; }
 
+        public override void HandlePlayerInput(IActor actor, int hotkey)
+        {
+        }
+
+        public override bool HandleTitleInput(int hotkey)
+        {
+            switch (hotkey)
+            {
+                case 0x0D: // Enter
+                    return true;
+                case 0x57: // W
+                    break;
+                case 0x52: // R
+                    break;
+                case 0x48: // H
+                    ShowInGameHelp();
+                    break;
+                case 0x7C: // ?
+                    break;
+                case 0x1B: // esc
+                case 0x51: // Q
+                    State.QuitZzt = Hud.Confirm("Quit ZZT?");
+                    break;
+            }
+            return false;
+        }
+
         public override IGrammar Grammar { get; }
 
         public override IHud Hud { get; }
@@ -39,8 +66,6 @@ namespace Roton.Emulation.SuperZZT
         public override IState State { get; }
 
         public override ITileGrid Tiles { get; }
-
-        public override bool TorchesEnabled => false;
 
         public override IWorld World { get; }
 

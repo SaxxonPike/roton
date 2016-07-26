@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class BlinkWallBehavior : ElementBehavior
+    internal sealed class BlinkWallBehavior : ElementBehavior
     {
         public override string KnownName => "Blink Wall";
 

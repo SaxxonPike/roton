@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal class NorthSouthSliderBehavior : ElementBehavior
+    internal sealed class NorthSouthSliderBehavior : ElementBehavior
     {
         public override string KnownName => "Slider (North-South)";
     }

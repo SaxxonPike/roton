@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class DragonPupBehavior : ElementBehavior
+    internal sealed class DragonPupBehavior : ElementBehavior
     {
         public override string KnownName => "Dragon Pup";
 

@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class LineWallBehavior : ElementBehavior
+    internal sealed class LineWallBehavior : ElementBehavior
     {
         public override string KnownName => "Line Wall";
 

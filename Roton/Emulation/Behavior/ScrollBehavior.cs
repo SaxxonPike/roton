@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class ScrollBehavior : ElementBehavior
+    internal sealed class ScrollBehavior : ElementBehavior
     {
         public override string KnownName => "Scroll";
 

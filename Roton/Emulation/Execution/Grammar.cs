@@ -6,12 +6,12 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
-    internal class Grammar : IGrammar
+    internal abstract class Grammar : IGrammar
     {
         private readonly IColorList _colors;
         private readonly IElementList _elements;
 
-        public Grammar(IColorList colors, IElementList elements)
+        protected Grammar(IColorList colors, IElementList elements)
         {
             _colors = colors;
             _elements = elements;

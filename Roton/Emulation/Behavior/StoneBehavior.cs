@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class StoneBehavior : ElementBehavior
+    internal sealed class StoneBehavior : ElementBehavior
     {
         public override string KnownName => "Stone of Power";
 
