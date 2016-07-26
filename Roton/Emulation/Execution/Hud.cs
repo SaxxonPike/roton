@@ -22,9 +22,21 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        public virtual bool Confirm(string message)
+        protected virtual bool Confirm(string message)
         {
-            return true;
+            while (true)
+            {
+                Engine.WaitForTick();
+                var key = Engine.ReadKey().ToUpperCase();
+                switch (key)
+                {
+                    case 0x59:
+                        return true;
+                    case 0x4E:
+                    case 0x1B:
+                        return false;
+                }
+            }
         }
 
         public virtual void CreateStatusBar()
@@ -65,7 +77,7 @@ namespace Roton.Emulation.Execution
 
         public virtual bool EndGameConfirmation()
         {
-            return true;
+            return Confirm("End this game? ");
         }
 
         public virtual string EnterCheat()
@@ -79,6 +91,11 @@ namespace Roton.Emulation.Execution
         }
 
         public abstract void Initialize();
+
+        public virtual bool QuitZztConfirmation()
+        {
+            return Confirm("Quit ZZT? ");
+        }
 
         public virtual void RedrawBoard()
         {

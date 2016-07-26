@@ -4,7 +4,6 @@
     {
         void ClearPausing();
         void ClearTitleStatus();
-        bool Confirm(string message);
         void CreateStatusBar();
         void CreateStatusText();
         void DrawChar(int x, int y, AnsiChar ac);
@@ -18,6 +17,7 @@
         string EnterCheat();
         void FadeBoard(AnsiChar ac);
         void Initialize();
+        bool QuitZztConfirmation();
         void RedrawBoard();
         string SaveGame();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);

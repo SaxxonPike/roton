@@ -19,17 +19,12 @@ namespace Roton.Emulation.SuperZZT
 
         private int ViewportWidth => 40;
 
-        public override bool Confirm(string message)
+        protected override bool Confirm(string message)
         {
             DrawString(0x10, 0x18, message, 0x1F);
             DrawChar(0x10 + message.Length, 0x18, new AnsiChar(0x5F, 0x9E));
-            var key = 0;
-            while (key == 0)
-            {
-                Engine.WaitForTick();
-                key = Engine.ReadKey().ToUpperCase();
-            }
-            var result = key.ToAscii() == @"Y";
+            var result = base.Confirm(message);
+            UpdateBorder();
             return result;
         }
 
@@ -162,17 +157,6 @@ namespace Roton.Emulation.SuperZZT
                     Terminal.Plot(x, y, ac);
                 }
             }
-        }
-
-        public override bool EndGameConfirmation()
-        {
-            var result = Confirm(@"End this game? ");
-            if (Engine.State.KeyPressed == 0x1B)
-            {
-                result = false;
-            }
-            UpdateBorder();
-            return result;
         }
 
         private Vector GetTranslation()

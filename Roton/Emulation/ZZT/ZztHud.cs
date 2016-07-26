@@ -33,20 +33,14 @@ namespace Roton.Emulation.ZZT
             DrawStatusLine(6);
         }
 
-        public override bool Confirm(string message)
+        protected override bool Confirm(string message)
         {
             DrawStatusLine(3);
             DrawStatusLine(4);
             DrawStatusLine(5);
             DrawString(0x3F, 0x05, message, 0x1F);
             DrawChar(0x3F + message.Length, 0x05, new AnsiChar(0x5F, 0x9E));
-            var key = 0;
-            while (key == 0)
-            {
-                Engine.WaitForTick();
-                key = Engine.ReadKey().ToUpperCase();
-            }
-            var result = key.ToAscii() == @"Y";
+            var result = base.Confirm(message);
             DrawStatusLine(5);
             return result;
         }
@@ -181,16 +175,6 @@ namespace Roton.Emulation.ZZT
         public override void DrawTitleStatus()
         {
             DrawString(0x3E, 0x05, @"Pick a command:", 0x1B);
-        }
-
-        public override bool EndGameConfirmation()
-        {
-            var result = Confirm(@"End this game? ");
-            if (Engine.State.KeyPressed == 0x1B)
-            {
-                result = false;
-            }
-            return result;
         }
 
         public override void FadeBoard(AnsiChar ac)

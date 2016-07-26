@@ -86,7 +86,7 @@ namespace Roton.Emulation.ZZT
                     break;
                 case 0x1B: // esc
                 case 0x51: // Q
-                    State.QuitZzt = Hud.Confirm("Quit ZZT? ");
+                    State.QuitZzt = Hud.QuitZztConfirmation();
                     break;
             }
             return false;
