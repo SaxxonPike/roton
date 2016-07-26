@@ -22,7 +22,7 @@ namespace Roton.Emulation.Execution
             Boards = new List<IPackedBoard>();
             Memory = new Memory();
             Random = new Random();
-            SyncRandom = new Random(0);
+            SyncRandom = new Random(config.RandomSeed);
         }
 
         private ITile BorderTile => State.BorderTile;

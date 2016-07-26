@@ -3,6 +3,7 @@ using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
+using Random = Roton.Emulation.Execution.Random;
 
 namespace Roton.Emulation.ZZT
 {

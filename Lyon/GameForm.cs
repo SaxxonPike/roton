@@ -83,6 +83,7 @@ namespace Lyon
                 Disk = new DiskFileSystem(),
                 EditorMode = false,
                 Keyboard = _terminal.Keyboard,
+                RandomSeed = 0,
                 Speaker = speaker,
                 Terminal = _terminal
             };
