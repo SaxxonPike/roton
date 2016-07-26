@@ -38,5 +38,10 @@ namespace Roton.Emulation.Mapping
         {
             throw Exceptions.InvalidSet;
         }
+
+        public override string ToString()
+        {
+            return $"TileGrid ({Width}x{Height})";
+        }
     }
 }

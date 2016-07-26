@@ -5,11 +5,6 @@ namespace Roton.Emulation.Mapping
 {
     internal sealed class PackedBoard : IPackedBoard
     {
-        public PackedBoard()
-        {
-            Data = new byte[0];
-        }
-
         public PackedBoard(byte[] data)
         {
             Data = new byte[data.Length];

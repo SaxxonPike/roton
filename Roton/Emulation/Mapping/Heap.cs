@@ -14,13 +14,13 @@ namespace Roton.Emulation.Mapping
 
         private IDictionary<int, byte[]> Entries { get; }
 
-        private int NextEntry { get; set; }
+        private int _nextEntry;
 
         public int Allocate(byte[] data)
         {
             var dataCopy = new byte[data.Length];
             Array.Copy(data, dataCopy, dataCopy.Length);
-            var index = NextEntry;
+            var index = _nextEntry;
             Entries[index] = dataCopy;
             SetNextEntry();
             return index;
@@ -29,7 +29,7 @@ namespace Roton.Emulation.Mapping
         public void FreeAll()
         {
             Entries.Clear();
-            NextEntry = 1;
+            _nextEntry = 1;
         }
 
         public byte[] this[int index] => Entries.ContainsKey(index)
@@ -40,9 +40,9 @@ namespace Roton.Emulation.Mapping
 
         private void SetNextEntry()
         {
-            while (NextEntry == 0 || Contains(NextEntry))
+            while (_nextEntry == 0 || Contains(_nextEntry))
             {
-                NextEntry++;
+                _nextEntry++;
             }
         }
     }

@@ -30,5 +30,10 @@ namespace Roton.Emulation.Mapping
             get { return Memory.Read8(Offset + 0x01); }
             set { Memory.Write8(Offset + 0x01, value); }
         }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
     }
 }
