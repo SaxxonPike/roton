@@ -139,7 +139,7 @@ namespace Roton.Emulation.ZZT
             var text = message.Text.FirstOrDefault();
             if (!string.IsNullOrEmpty(text))
             {
-                var x = (60 - text.Length) / 2;
+                var x = (60 - text.Length)/2;
                 DrawString(x, 24, $" {text} ", color);
             }
         }

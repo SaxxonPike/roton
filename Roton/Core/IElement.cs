@@ -5,16 +5,16 @@ namespace Roton.Core
     public interface IElement
     {
         Action<IEngine, int> Act { get; }
+        Func<IEngine, IXyPair, AnsiChar> Draw { get; }
+        Action<IEngine, IXyPair, int, IXyPair> Interact { get; }
         string BoardEditText { get; set; }
         int Character { get; set; }
         string CodeEditText { get; set; }
         int Color { get; set; }
         int Cycle { get; set; }
-        Func<IEngine, IXyPair, AnsiChar> Draw { get; }
         string EditorCategory { get; set; }
         bool HasDrawCode { get; set; }
         int Id { get; set; }
-        Action<IEngine, IXyPair, int, IXyPair> Interact { get; }
         bool IsAlwaysVisible { get; set; }
         bool IsDestructible { get; set; }
         bool IsEditorFloor { get; set; }

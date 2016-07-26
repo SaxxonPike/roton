@@ -10,6 +10,8 @@ namespace Roton.Emulation.Execution
             Terminal = terminal;
         }
 
+        protected ITerminal Terminal { get; }
+
         protected IEngine Engine { get; set; }
 
         public virtual void ClearPausing()
@@ -80,8 +82,6 @@ namespace Roton.Emulation.Execution
         {
             return currentValue;
         }
-
-        protected ITerminal Terminal { get; }
 
         public virtual void UpdateBorder()
         {

@@ -13,7 +13,7 @@ namespace Roton.Emulation.SuperZZT
             _offset = offset;
             Length = length << 1;
         }
-        
+
         public int this[int index] => (index & 1) == 1 ? 0x01 : _memory.Read8(_offset + (index >> 1));
 
         public int Length { get; }

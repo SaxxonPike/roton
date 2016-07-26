@@ -1,7 +1,7 @@
 ﻿namespace Roton.Core
 {
     /// <summary>
-    /// A signed 16-bit (X,Y) pair.
+    ///     A signed 16-bit (X,Y) pair.
     /// </summary>
     public class Vector : IXyPair
     {

@@ -6,6 +6,8 @@ namespace Roton.Emulation.Behavior
 {
     internal class BombBehavior : ElementBehavior
     {
+        public override string KnownName => "Bomb";
+
         public override void Act(IEngine engine, int index)
         {
             var actor = engine.Actors[index];
@@ -35,8 +37,6 @@ namespace Roton.Emulation.Behavior
             var p1 = engine.Actors[engine.ActorIndexAt(location)].P1;
             return new AnsiChar(p1 > 1 ? 0x30 + p1 : 0x0B, engine.Tiles[location].Color);
         }
-
-        public override string KnownName => "Bomb";
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {

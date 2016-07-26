@@ -33,7 +33,8 @@ namespace Roton.Emulation.Behavior
                             if (engine.State.ActorCount < engine.Actors.Capacity - 2)
                             {
                                 var sourceTile = engine.TileAt(source);
-                                engine.SpawnActor(target, sourceTile, engine.Elements[sourceTile.Id].Cycle, engine.Actors[sourceIndex]);
+                                engine.SpawnActor(target, sourceTile, engine.Elements[sourceTile.Id].Cycle,
+                                    engine.Actors[sourceIndex]);
                                 engine.UpdateBoard(target);
                             }
                         }
@@ -57,7 +58,7 @@ namespace Roton.Emulation.Behavior
             }
 
             engine.UpdateBoard(actor.Location);
-            actor.Cycle = (9 - actor.P2) * 3;
+            actor.Cycle = (9 - actor.P2)*3;
         }
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)

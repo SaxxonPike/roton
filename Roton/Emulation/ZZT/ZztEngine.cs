@@ -25,9 +25,9 @@ namespace Roton.Emulation.ZZT
         public override IActorList Actors { get; }
         public override IBoard Board { get; }
         public override IElementList Elements { get; }
+        public override IGameSerializer GameSerializer { get; }
         public override IGrammar Grammar { get; }
         public override IHud Hud { get; }
-        public override IGameSerializer GameSerializer { get; }
         public override ISoundSet SoundSet { get; }
         public override IState State { get; }
         public override ITileGrid Tiles { get; }

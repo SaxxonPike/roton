@@ -14,6 +14,11 @@ namespace Roton.Emulation.Mapping
 
         private int Offset { get; }
 
+        public IXyPair Clone()
+        {
+            return new Location(X, Y);
+        }
+
         public int X
         {
             get { return Memory.Read8(Offset + 0x00); }
@@ -24,11 +29,6 @@ namespace Roton.Emulation.Mapping
         {
             get { return Memory.Read8(Offset + 0x01); }
             set { Memory.Write8(Offset + 0x01, value); }
-        }
-
-        public IXyPair Clone()
-        {
-            return new Location(X, Y);
         }
     }
 }

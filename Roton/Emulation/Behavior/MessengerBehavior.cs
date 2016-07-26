@@ -11,7 +11,7 @@ namespace Roton.Emulation.Behavior
             var actor = engine.Actors[index];
             if (actor.Location.X == 0)
             {
-                engine.Hud.DrawMessage(new Message(engine.State.Message, engine.State.Message2), actor.P2 % 7 + 9);
+                engine.Hud.DrawMessage(new Message(engine.State.Message, engine.State.Message2), actor.P2%7 + 9);
                 actor.P2--;
                 if (actor.P2 > 0) return;
 

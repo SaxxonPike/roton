@@ -34,6 +34,8 @@ namespace Roton.Core
             Initialize(stream);
         }
 
+        private IGameSerializer GameSerializer => Engine.GameSerializer;
+
         private IEngine Engine { get; set; }
         public int ActorCapacity => Engine.Actors.Capacity;
 
@@ -42,6 +44,8 @@ namespace Roton.Core
         public IBoard Board => Engine.Board;
 
         public IList<IPackedBoard> Boards => Engine.Boards;
+
+        public byte[] DumpMemory() => Engine.Memory.Dump();
 
         public IElementList Elements => Engine.Elements;
 
@@ -59,7 +63,7 @@ namespace Roton.Core
 
                 foreach (var actor in Actors)
                 {
-                    if (actor.Cycle > 0 && Engine.State.ActIndex % actor.Cycle == Engine.State.GameCycle %actor.Cycle)
+                    if (actor.Cycle > 0 && Engine.State.ActIndex%actor.Cycle == Engine.State.GameCycle%actor.Cycle)
                     {
                         Engine.UpdateBoard(actor.Location);
                     }
@@ -67,10 +71,6 @@ namespace Roton.Core
                 }
             }
         }
-
-        public byte[] DumpMemory() => Engine.Memory.Dump();
-
-        public ITileGrid Tiles => Engine.Tiles;
 
         public void PackBoard()
         {
@@ -106,8 +106,6 @@ namespace Roton.Core
             Engine.Disk.PutFile(filename, Save());
         }
 
-        private IGameSerializer GameSerializer => Engine.GameSerializer;
-
         public void SetBoard(int boardIndex)
         {
             Engine.SetBoard(boardIndex);
@@ -122,6 +120,8 @@ namespace Roton.Core
         {
             Engine.Stop();
         }
+
+        public ITileGrid Tiles => Engine.Tiles;
 
         public void UnpackBoard()
         {

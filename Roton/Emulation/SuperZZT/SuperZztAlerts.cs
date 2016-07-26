@@ -5,8 +5,8 @@ namespace Roton.Emulation.SuperZZT
 {
     internal class SuperZztAlerts : IAlerts
     {
-        private readonly IColorList _colors;
         private readonly int _ammoPerPickup;
+        private readonly IColorList _colors;
         private readonly IMemory _memory;
 
         public SuperZztAlerts(IMemory memory, IColorList colors, int ammoPerPickup)
@@ -50,17 +50,17 @@ namespace Roton.Emulation.SuperZZT
             return new SuperZztMessage($"The {_colors[color]} door", "is now open.");
         }
 
-        public IMessage ErrorMessage(string error)
-        {
-            return new SuperZztMessage($"ERR: {error}");
-        }
-
         public IMessage EnergizerMessage => new SuperZztMessage("Shield:", "You are invincible");
 
         public bool EnergizerPickup
         {
             get { return _memory.ReadBool(0x7C11); }
             set { _memory.WriteBool(0x7C11, value); }
+        }
+
+        public IMessage ErrorMessage(string error)
+        {
+            return new SuperZztMessage($"ERR: {error}");
         }
 
         public IMessage FakeMessage { get; } = new SuperZztMessage("A fake wall:", "secret passage!");

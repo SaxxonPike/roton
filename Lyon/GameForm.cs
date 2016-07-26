@@ -153,7 +153,9 @@ namespace Lyon
         private void UpdateTitle()
         {
             Text = "Lyon" +
-                   (string.IsNullOrWhiteSpace(Context.WorldData.Name) ? string.Empty : " [" + Context.WorldData.Name + "]");
+                   (string.IsNullOrWhiteSpace(Context.WorldData.Name)
+                       ? string.Empty
+                       : " [" + Context.WorldData.Name + "]");
         }
     }
 }

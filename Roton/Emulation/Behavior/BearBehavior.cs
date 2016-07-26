@@ -5,12 +5,15 @@ namespace Roton.Emulation.Behavior
 {
     internal class BearBehavior : ElementBehavior
     {
+        public override string KnownName => "Bear";
+
         public override void Act(IEngine engine, int index)
         {
             var actor = engine.Actors[index];
             var vector = new Vector();
 
-            if (engine.Player.Location.X == actor.Location.X || (8 - actor.P1 < engine.Player.Location.Y.AbsDiff(actor.Location.Y)))
+            if (engine.Player.Location.X == actor.Location.X ||
+                (8 - actor.P1 < engine.Player.Location.Y.AbsDiff(actor.Location.Y)))
             {
                 if (8 - actor.P1 < engine.Player.Location.X.AbsDiff(actor.Location.X))
                 {
@@ -38,7 +41,5 @@ namespace Roton.Emulation.Behavior
                 engine.Attack(index, target);
             }
         }
-
-        public override string KnownName => "Bear";
     }
 }

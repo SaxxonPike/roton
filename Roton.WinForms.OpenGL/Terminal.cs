@@ -82,6 +82,11 @@ namespace Roton.WinForms.OpenGL
         public int CursorX { get; set; }
         public int CursorY { get; set; }
 
+        public Bitmap RenderAll()
+        {
+            return Bitmap.CloneAsBitmap();
+        }
+
         public Bitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
@@ -100,11 +105,6 @@ namespace Roton.WinForms.OpenGL
                 return wideResult;
             }
             return result;
-        }
-
-        public Bitmap RenderAll()
-        {
-            return Bitmap.CloneAsBitmap();
         }
 
         public IKeyboard Keyboard => _keys as IKeyboard;

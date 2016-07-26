@@ -22,7 +22,7 @@ namespace Roton.Emulation.Behavior
 
                 if ((engine.State.GameCycle & 0x01) == 0)
                 {
-                    engine.Tiles[actor.Location].Color = ((engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
+                    engine.Tiles[actor.Location].Color = ((engine.State.GameCycle%7 + 1) << 4) | 0x0F;
                 }
                 else
                 {
@@ -60,10 +60,13 @@ namespace Roton.Emulation.Behavior
                     {
                         if (engine.World.Ammo > 0)
                         {
-                            var bulletCount = engine.Actors.Count(a => a.P1 == 0 && engine.Tiles[a.Location].Id == engine.Elements.BulletId);
+                            var bulletCount =
+                                engine.Actors.Count(
+                                    a => a.P1 == 0 && engine.Tiles[a.Location].Id == engine.Elements.BulletId);
                             if (bulletCount < engine.Board.MaximumShots)
                             {
-                                if (engine.SpawnProjectile(engine.Elements.BulletId, actor.Location, engine.State.KeyVector, false))
+                                if (engine.SpawnProjectile(engine.Elements.BulletId, actor.Location,
+                                    engine.State.KeyVector, false))
                                 {
                                     engine.World.Ammo--;
                                     engine.UpdateStatus();
@@ -93,7 +96,8 @@ namespace Roton.Emulation.Behavior
                 {
                     // Movement logic
 
-                    engine.ElementAt(actor.Location.Sum(engine.State.KeyVector)).Interact(engine, actor.Location.Sum(engine.State.KeyVector), 0, engine.State.KeyVector);
+                    engine.ElementAt(actor.Location.Sum(engine.State.KeyVector))
+                        .Interact(engine, actor.Location.Sum(engine.State.KeyVector), 0, engine.State.KeyVector);
                     if (!engine.State.KeyVector.IsZero())
                     {
                         if (!engine.State.SoundPlaying)
@@ -181,7 +185,7 @@ namespace Roton.Emulation.Behavior
                     engine.PlaySound(3, engine.SoundSet.TorchOut);
                 }
 
-                if (engine.World.TorchCycles % 40 == 0)
+                if (engine.World.TorchCycles%40 == 0)
                 {
                     engine.UpdateStatus();
                 }
@@ -224,7 +228,7 @@ namespace Roton.Emulation.Behavior
                     }
                 }
             }
-            
+
             engine.MoveActorOnRiver(index);
         }
     }

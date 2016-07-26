@@ -15,7 +15,7 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
         {
-            switch ((engine.State.GameCycle / engine.Elements[engine.Elements.CounterId].Cycle) & 0x3)
+            switch ((engine.State.GameCycle/engine.Elements[engine.Elements.CounterId].Cycle) & 0x3)
             {
                 case 3:
                     return new AnsiChar(0xB3, engine.Tiles[location].Color);

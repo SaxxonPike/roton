@@ -5,6 +5,8 @@ namespace Roton.Emulation.Behavior
 {
     internal class BlinkWallBehavior : ElementBehavior
     {
+        public override string KnownName => "Blink Wall";
+
         public override void Act(IEngine engine, int index)
         {
             var actor = engine.Actors[index];
@@ -14,7 +16,7 @@ namespace Roton.Emulation.Behavior
 
             if (actor.P3 == 1)
             {
-                actor.P3 = actor.P2 * 2 + 1;
+                actor.P3 = actor.P2*2 + 1;
 
                 var erasedRay = false;
                 var target = actor.Location.Sum(actor.Vector);
@@ -106,7 +108,5 @@ namespace Roton.Emulation.Behavior
         {
             return new AnsiChar(0xCE, engine.Tiles[location].Color);
         }
-
-        public override string KnownName => "Blink Wall";
     }
 }

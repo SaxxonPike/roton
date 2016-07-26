@@ -70,16 +70,16 @@ namespace Roton.Emulation.Mapping
 
         public IXyPair Vector => new MemoryVector(Memory, Offset + 0x02);
 
-        public byte[] Code
-        {
-            get { return Memory.Heap[Pointer]; }
-            set { }
-        }
-
         public int Instruction
         {
             get { return Memory.Read16(Offset + 0x15); }
             set { Memory.Write16(Offset + 0x15, value); }
+        }
+
+        public byte[] Code
+        {
+            get { return Memory.Heap[Pointer]; }
+            set { }
         }
 
         public override string ToString()

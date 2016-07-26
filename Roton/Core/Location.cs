@@ -1,7 +1,7 @@
 ﻿namespace Roton.Core
 {
     /// <summary>
-    /// An unsigned 8-bit (X,Y) pair.
+    ///     An unsigned 8-bit (X,Y) pair.
     /// </summary>
     public class Location : IXyPair
     {

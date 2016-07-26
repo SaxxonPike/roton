@@ -15,7 +15,7 @@ namespace Torch
         public int Pointer { get; set; }
         public ITile UnderTile { get; } = new Tile();
         public IXyPair Vector { get; } = new Vector();
-        public byte[] Code { get; set; }
         public int Instruction { get; set; }
+        public byte[] Code { get; set; }
     }
 }

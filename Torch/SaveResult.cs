@@ -4,7 +4,7 @@ namespace Torch
 {
     public class SaveResult
     {
-        public DialogResult Result { get; set; }
         public string FileName { get; set; }
+        public DialogResult Result { get; set; }
     }
 }

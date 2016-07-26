@@ -16,6 +16,10 @@ namespace Torch
 {
     public partial class Editor : Form
     {
+        private static readonly string ScreenshotFileFilters = string.Join("|",
+            "PNG Images (*.png)", "*.png;*.PNG"
+            );
+
         private static readonly string WorldFileFilters = string.Join("|",
             "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
             "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
@@ -23,10 +27,6 @@ namespace Torch
             "Saved Games (*.sav)", "*.sav;*.SAV",
             "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
             "All Files (*.*)", "*.*"
-            );
-
-        private static readonly string ScreenshotFileFilters = string.Join("|",
-            "PNG Images (*.png)", "*.png;*.PNG"
             );
 
         private readonly IEditorTerminal _terminal;
@@ -836,7 +836,7 @@ namespace Torch
         private SaveResult ShowSaveScreenshot()
         {
             if (Context == null)
-                return new SaveResult { Result = DialogResult.Cancel };
+                return new SaveResult {Result = DialogResult.Cancel};
 
             var sfd = new SaveFileDialog
             {
@@ -845,7 +845,7 @@ namespace Torch
             };
 
             var result = sfd.ShowDialog();
-            return new SaveResult { FileName = sfd.FileName, Result = result };
+            return new SaveResult {FileName = sfd.FileName, Result = result};
         }
 
         private DialogResult ShowSaveWorld()

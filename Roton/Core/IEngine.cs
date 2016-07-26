@@ -12,18 +12,18 @@ namespace Roton.Core
         IList<IPackedBoard> Boards { get; }
         IFileSystem Disk { get; }
         IElementList Elements { get; }
+        IGameSerializer GameSerializer { get; }
         IGrammar Grammar { get; }
         IHud Hud { get; }
         IMemory Memory { get; }
         IActor Player { get; }
-        IGameSerializer GameSerializer { get; }
         ISoundSet SoundSet { get; }
         IState State { get; }
         string StoneText { get; }
         ITileGrid Tiles { get; }
         bool TitleScreen { get; }
-        IWorld World { get; }
         bool TorchesEnabled { get; }
+        IWorld World { get; }
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
@@ -33,6 +33,7 @@ namespace Roton.Core
         void Convey(IXyPair center, int direction);
         void Destroy(IXyPair location);
         AnsiChar Draw(IXyPair location);
+        ISound EncodeMusic(string music);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         void FadePurple();
@@ -44,13 +45,11 @@ namespace Roton.Core
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
         void PackBoard();
-        ISound EncodeMusic(string music);
         void PlaySound(int priority, ISound sound, int offset, int length);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);
         int RandomNumber(int max);
-        int SyncRandomNumber(int max);
         int ReadActorCodeNumber(int index, IExecutable instructionSource);
         string ReadActorCodeWord(int index, IExecutable instructionSource);
         int ReadKey();
@@ -67,6 +66,7 @@ namespace Roton.Core
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
         void Start();
         void Stop();
+        int SyncRandomNumber(int max);
         void UnpackBoard(int boardIndex);
         void UpdateBoard(IXyPair location);
         void UpdateRadius(IXyPair location, RadiusMode mode);

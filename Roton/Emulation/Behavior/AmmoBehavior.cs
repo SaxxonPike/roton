@@ -6,12 +6,13 @@ namespace Roton.Emulation.Behavior
     internal class AmmoBehavior : ElementBehavior
     {
         private readonly int _ammoPerPickup;
-        public override string KnownName => "Ammo";
 
         public AmmoBehavior(int ammoPerPickup)
         {
             _ammoPerPickup = ammoPerPickup;
         }
+
+        public override string KnownName => "Ammo";
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {

@@ -5,8 +5,8 @@ namespace Roton.Emulation.ZZT
 {
     internal class ZztAlerts : IAlerts
     {
-        private readonly IColorList _colors;
         private readonly int _ammoPerPickup;
+        private readonly IColorList _colors;
         private readonly IMemory _memory;
 
         public ZztAlerts(IMemory memory, IColorList colors, int ammoPerPickup)
@@ -50,17 +50,17 @@ namespace Roton.Emulation.ZZT
             return new ZztMessage($"The {_colors[color]} door is now open.");
         }
 
-        public IMessage ErrorMessage(string error)
-        {
-            return new ZztMessage($"ERR: {error}");
-        }
-
         public IMessage EnergizerMessage { get; } = new ZztMessage("Energizer - You are invincible");
 
         public bool EnergizerPickup
         {
             get { return _memory.ReadBool(0x4AB5); }
             set { _memory.WriteBool(0x4AB5, value); }
+        }
+
+        public IMessage ErrorMessage(string error)
+        {
+            return new ZztMessage($"ERR: {error}");
         }
 
         public IMessage FakeMessage { get; } = new ZztMessage("A fake wall - secret passage!");

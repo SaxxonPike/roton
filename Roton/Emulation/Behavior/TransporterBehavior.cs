@@ -20,14 +20,14 @@ namespace Roton.Emulation.Behavior
             if (actor.Vector.X == 0)
             {
                 if (actor.Cycle > 0)
-                    index = (engine.State.GameCycle / actor.Cycle) & 0x3;
+                    index = (engine.State.GameCycle/actor.Cycle) & 0x3;
                 else
                     index = 0;
                 index += (actor.Vector.Y << 1) + 2;
                 return new AnsiChar(engine.State.TransporterVChars[index], engine.Tiles[location].Color);
             }
             if (actor.Cycle > 0)
-                index = (engine.State.GameCycle / actor.Cycle) & 0x3;
+                index = (engine.State.GameCycle/actor.Cycle) & 0x3;
             else
                 index = 0;
             index += (actor.Vector.X << 1) + 2;

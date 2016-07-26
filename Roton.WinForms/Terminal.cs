@@ -90,6 +90,11 @@ namespace Roton.WinForms
             }
         }
 
+        public Bitmap RenderAll()
+        {
+            return Bitmap.CloneAsBitmap();
+        }
+
         public Bitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
@@ -108,11 +113,6 @@ namespace Roton.WinForms
                 return wideResult;
             }
             return result;
-        }
-
-        public Bitmap RenderAll()
-        {
-            return Bitmap.CloneAsBitmap();
         }
 
         public IKeyboard Keyboard => _keys;

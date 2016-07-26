@@ -13,10 +13,11 @@ namespace Roton.Emulation.Mapping
             Behavior = behavior;
         }
 
+        private IBehavior Behavior { get; }
+
         protected IMemory Memory { get; private set; }
 
         protected int Offset { get; private set; }
-        private IBehavior Behavior { get; }
         public virtual Action<IEngine, int> Act => Behavior.Act;
         public virtual string BoardEditText { get; set; }
         public virtual int Character { get; set; }

@@ -25,7 +25,7 @@ namespace Roton.Emulation.Behavior
 
             var forestIndex = engine.State.ForestIndex;
             var forestSongLength = engine.SoundSet.Forest.Length;
-            engine.State.ForestIndex = (forestIndex + 2) % forestSongLength;
+            engine.State.ForestIndex = (forestIndex + 2)%forestSongLength;
             engine.PlaySound(3, engine.SoundSet.Forest, forestIndex, 2);
 
             if (!engine.Alerts.Forest)

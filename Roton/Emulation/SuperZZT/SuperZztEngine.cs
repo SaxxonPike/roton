@@ -28,11 +28,11 @@ namespace Roton.Emulation.SuperZZT
 
         public override IElementList Elements { get; }
 
+        public override IGameSerializer GameSerializer { get; }
+
         public override IGrammar Grammar { get; }
 
         public override IHud Hud { get; }
-
-        public override IGameSerializer GameSerializer { get; }
 
         public override ISoundSet SoundSet { get; }
 
@@ -43,25 +43,6 @@ namespace Roton.Emulation.SuperZZT
         public override bool TorchesEnabled => false;
 
         public override IWorld World { get; }
-
-        protected override void StartMain()
-        {
-            State.GameSpeed = 4;
-            State.DefaultSaveName = "SAVED";
-            State.DefaultBoardName = "TEMP";
-            State.DefaultWorldName = "MONSTER";
-            if (!State.WorldLoaded)
-            {
-                ClearWorld();
-            }
-
-            if (State.EditorMode)
-                SetEditorMode();
-            else
-                SetGameMode();
-
-            TitleScreenLoop();
-        }
 
         public override void EnterBoard()
         {
@@ -119,6 +100,25 @@ namespace Roton.Emulation.SuperZZT
         {
             // Super ZZT doesn't have in-game help, but it does have hints
             BroadcastLabel(0, @"HINT", false);
+        }
+
+        protected override void StartMain()
+        {
+            State.GameSpeed = 4;
+            State.DefaultSaveName = "SAVED";
+            State.DefaultBoardName = "TEMP";
+            State.DefaultWorldName = "MONSTER";
+            if (!State.WorldLoaded)
+            {
+                ClearWorld();
+            }
+
+            if (State.EditorMode)
+                SetEditorMode();
+            else
+                SetGameMode();
+
+            TitleScreenLoop();
         }
     }
 }

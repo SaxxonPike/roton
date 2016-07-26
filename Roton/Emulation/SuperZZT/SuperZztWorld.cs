@@ -45,13 +45,13 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x7857, value); }
         }
 
-        public IKeyList Keys => new KeyList(Memory, 0x7850);
-
         public bool IsLocked
         {
             get { return Memory.ReadBool(0x79CC); }
             set { Memory.WriteBool(0x79CC, value); }
         }
+
+        public IKeyList Keys => new KeyList(Memory, 0x7850);
 
         public string Name
         {

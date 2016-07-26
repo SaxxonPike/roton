@@ -13,7 +13,7 @@ namespace Roton.WinForms
         void AttachKeyHandler(Form form);
 
         event MouseEventHandler MouseDown;
-        Bitmap RenderSingle(int character, int color);
         Bitmap RenderAll();
+        Bitmap RenderSingle(int character, int color);
     }
 }

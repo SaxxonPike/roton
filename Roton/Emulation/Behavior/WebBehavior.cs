@@ -8,7 +8,8 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
         {
-            return new AnsiChar(engine.State.WebChars[engine.Adjacent(location, engine.Elements.WebId)], engine.Tiles[location].Color);
+            return new AnsiChar(engine.State.WebChars[engine.Adjacent(location, engine.Elements.WebId)],
+                engine.Tiles[location].Color);
         }
     }
 }

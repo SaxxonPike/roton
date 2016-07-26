@@ -38,7 +38,8 @@ namespace Roton.Emulation.Behavior
                     engine.Attack(index, target);
                     break;
                 }
-                if (canRicochet && engine.TileAt(actor.Location.Sum(actor.Vector.Clockwise())).Id == engine.Elements.RicochetId)
+                if (canRicochet &&
+                    engine.TileAt(actor.Location.Sum(actor.Vector.Clockwise())).Id == engine.Elements.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetCounterClockwise();

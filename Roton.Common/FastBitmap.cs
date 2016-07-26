@@ -231,17 +231,17 @@ namespace Roton.Common
             return Bitmap.Clone(rect, format);
         }
 
-        public Bitmap CloneAsBitmap()
-        {
-            return Bitmap.Clone(new Rectangle(0, 0, Width, Height), PixelFormat.Format32bppPArgb);
-        }
-
         /// <summary>
         ///     Creates a copy of the section of this Bitmap defined with a specified PixelFormat enumeration.
         /// </summary>
         public Bitmap Clone(RectangleF rect, PixelFormat format)
         {
             return Bitmap.Clone(rect, format);
+        }
+
+        public Bitmap CloneAsBitmap()
+        {
+            return Bitmap.Clone(new Rectangle(0, 0, Width, Height), PixelFormat.Format32bppPArgb);
         }
 
         /// <summary>
