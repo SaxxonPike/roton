@@ -14,5 +14,6 @@ namespace Roton.WinForms
 
         event MouseEventHandler MouseDown;
         Bitmap RenderSingle(int character, int color);
+        Bitmap RenderAll();
     }
 }

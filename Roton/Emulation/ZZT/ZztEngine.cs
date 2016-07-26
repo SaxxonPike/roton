@@ -7,17 +7,19 @@ namespace Roton.Emulation.ZZT
     {
         public ZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
+            StateData = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
+
             Actors = new ZztActorList(Memory);
             Board = new ZztBoard(Memory);
             GameSerializer = new ZztGameSerializer(Memory);
             Hud = new ZztHud(this, config.Terminal);
             Elements = new ZztElementList(Memory, elementBytes);
             SoundSet = new SoundSet();
-            StateData = new ZztState(Memory, memoryBytes);
             Tiles = new ZztTileGrid(Memory);
             WorldData = new ZztWorld(Memory);
             Grammar = new ZztGrammar(StateData.Colors, Elements);
-            InitializeElementDelegates();
+
+            Hud.Initialize();
         }
 
         public override IActorList Actors { get; }

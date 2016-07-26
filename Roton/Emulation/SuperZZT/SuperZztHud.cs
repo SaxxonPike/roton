@@ -128,20 +128,25 @@ namespace Roton.Emulation.SuperZZT
             DrawTileCommon(x, y, ac);
         }
 
-        private void DrawTileAt(IXyPair location)
-        {
-            DrawTileCommon(location.X, location.Y, Engine.Draw(location));
-        }
-
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            x += 0x0E + 1;
-            y += 0x02 + 1;
-            x -= Engine.Board.Camera.X;
-            y -= Engine.Board.Camera.Y;
-            if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
+            if (Engine.StateData.EditorMode)
             {
-                Terminal.Plot(x, y, ac);
+                if (x >= 0 && x < 96 && y >= 0 && y < 80)
+                {
+                    Terminal.Plot(x, y, ac);
+                }
+            }
+            else
+            {
+                x += 0x0E + 1;
+                y += 0x02 + 1;
+                x -= Engine.Board.Camera.X;
+                y -= Engine.Board.Camera.Y;
+                if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
+                {
+                    Terminal.Plot(x, y, ac);
+                }
             }
         }
 
@@ -152,7 +157,14 @@ namespace Roton.Emulation.SuperZZT
 
         public override void Initialize()
         {
-            Terminal.SetSize(40, 25, true);
+            if (Engine.StateData.EditorMode)
+            {
+                Terminal.SetSize(96, 80, true);
+            }
+            else
+            {
+                Terminal.SetSize(40, 25, true);
+            }
         }
 
         public override void RedrawBoard()

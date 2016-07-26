@@ -16,7 +16,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,7 +47,9 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.codeEditor = new Torch.CodeEditor();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.mainPanel = new Torch.ScrollPanel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.refreshInfoButton = new System.Windows.Forms.ToolStripButton();
             this.boardInfoLabel = new System.Windows.Forms.ToolStripLabel();
@@ -76,23 +78,22 @@
             this.editP2Button = new System.Windows.Forms.Button();
             this.editP1Button = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.boardTab = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.worldTab = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.actorSourceLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.actorEditor = new Torch.ActorEditor();
+            this.boardTab = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.boardEditor = new Torch.BoardEditor();
+            this.worldTab = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.worldEditor = new Torch.WorldEditor();
             this.keyboard = new Roton.WinForms.Keyboard(this.components);
             this.speaker = new Roton.WinForms.Speaker(this.components);
             this.timerDaemon = new Roton.WinForms.TimerDaemon(this.components);
-            this.codeEditor = new Torch.CodeEditor();
-            this.mainPanel = new Torch.ScrollPanel();
-            this.actorEditor = new Torch.ActorEditor();
-            this.boardEditor = new Torch.BoardEditor();
-            this.worldEditor = new Torch.WorldEditor();
+            this.saveScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
@@ -106,15 +107,14 @@
             this.editTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.boardTab.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.worldTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -148,6 +148,7 @@
             this.toolStripMenuItem1,
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem,
+            this.saveScreenshotToolStripMenuItem,
             this.toolStripMenuItem2,
             this.exitToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
@@ -163,7 +164,7 @@
             this.zZTWorldToolStripMenuItem,
             this.superZZTWorldToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.testToolStripMenuItem.Text = "&New";
             // 
             // zZTWorldToolStripMenuItem
@@ -181,47 +182,47 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(120, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(156, 6);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.importToolStripMenuItem.Text = "&Import";
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exportToolStripMenuItem.Text = "&Export";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(120, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(156, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // toolStripDropDownButton2
@@ -309,7 +310,7 @@
             this.testMenuButton.Image = ((System.Drawing.Image)(resources.GetObject("testMenuButton.Image")));
             this.testMenuButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.testMenuButton.Name = "testMenuButton";
-            this.testMenuButton.Size = new System.Drawing.Size(49, 22);
+            this.testMenuButton.Size = new System.Drawing.Size(48, 22);
             this.testMenuButton.Text = "&Test";
             // 
             // toolStripDropDownButton5
@@ -328,24 +329,24 @@
             // zZTHelpToolStripMenuItem
             // 
             this.zZTHelpToolStripMenuItem.Name = "zZTHelpToolStripMenuItem";
-            this.zZTHelpToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.zZTHelpToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.zZTHelpToolStripMenuItem.Text = "&ZZT Help";
             // 
             // torchHelpToolStripMenuItem
             // 
             this.torchHelpToolStripMenuItem.Name = "torchHelpToolStripMenuItem";
-            this.torchHelpToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.torchHelpToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.torchHelpToolStripMenuItem.Text = "&Torch Help";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(130, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             // 
             // mainSplitContainer
@@ -369,6 +370,16 @@
             this.mainSplitContainer.SplitterDistance = 680;
             this.mainSplitContainer.TabIndex = 3;
             // 
+            // codeEditor
+            // 
+            this.codeEditor.Actor = null;
+            this.codeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.codeEditor.Location = new System.Drawing.Point(100, 50);
+            this.codeEditor.Name = "codeEditor";
+            this.codeEditor.Size = new System.Drawing.Size(276, 176);
+            this.codeEditor.TabIndex = 6;
+            this.codeEditor.Visible = false;
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
@@ -387,6 +398,17 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(679, 535);
             this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // mainPanel
+            // 
+            this.mainPanel.AutoScroll = true;
+            this.mainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainPanel.Location = new System.Drawing.Point(3, 28);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(673, 454);
+            this.mainPanel.TabIndex = 0;
             // 
             // toolStrip2
             // 
@@ -558,7 +580,7 @@
             this.textEnabledButton.Margin = new System.Windows.Forms.Padding(0, 1, 3, 2);
             this.textEnabledButton.Name = "textEnabledButton";
             this.textEnabledButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.textEnabledButton.Size = new System.Drawing.Size(49, 22);
+            this.textEnabledButton.Size = new System.Drawing.Size(48, 22);
             this.textEnabledButton.Text = "Text";
             this.textEnabledButton.ToolTipText = "If enabled, typed text will be written to the board.";
             // 
@@ -746,78 +768,6 @@
             this.panel1.Size = new System.Drawing.Size(286, 330);
             this.panel1.TabIndex = 8;
             // 
-            // boardTab
-            // 
-            this.boardTab.Controls.Add(this.tableLayoutPanel3);
-            this.boardTab.Location = new System.Drawing.Point(4, 22);
-            this.boardTab.Name = "boardTab";
-            this.boardTab.Size = new System.Drawing.Size(292, 510);
-            this.boardTab.TabIndex = 1;
-            this.boardTab.Text = "Board";
-            this.boardTab.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.panel2, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(292, 510);
-            this.tableLayoutPanel3.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            this.panel2.AutoScroll = true;
-            this.panel2.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.boardEditor);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(286, 504);
-            this.panel2.TabIndex = 0;
-            // 
-            // worldTab
-            // 
-            this.worldTab.Controls.Add(this.tableLayoutPanel4);
-            this.worldTab.Location = new System.Drawing.Point(4, 22);
-            this.worldTab.Name = "worldTab";
-            this.worldTab.Size = new System.Drawing.Size(292, 510);
-            this.worldTab.TabIndex = 2;
-            this.worldTab.Text = "World";
-            this.worldTab.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 510F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 510F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(292, 510);
-            this.tableLayoutPanel4.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            this.panel3.AutoScroll = true;
-            this.panel3.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.worldEditor);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(286, 504);
-            this.panel3.TabIndex = 0;
-            // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
@@ -859,31 +809,6 @@
             this.panel4.Size = new System.Drawing.Size(284, 306);
             this.panel4.TabIndex = 1;
             // 
-            // timerDaemon
-            // 
-            this.timerDaemon.Paused = false;
-            // 
-            // codeEditor
-            // 
-            this.codeEditor.Actor = null;
-            this.codeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.codeEditor.Location = new System.Drawing.Point(100, 50);
-            this.codeEditor.Name = "codeEditor";
-            this.codeEditor.Size = new System.Drawing.Size(276, 176);
-            this.codeEditor.TabIndex = 6;
-            this.codeEditor.Visible = false;
-            // 
-            // mainPanel
-            // 
-            this.mainPanel.AutoScroll = true;
-            this.mainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanel.Location = new System.Drawing.Point(3, 28);
-            this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(673, 454);
-            this.mainPanel.TabIndex = 0;
-            // 
             // actorEditor
             // 
             this.actorEditor.Actor = null;
@@ -896,6 +821,41 @@
             this.actorEditor.Size = new System.Drawing.Size(284, 278);
             this.actorEditor.TabIndex = 3;
             // 
+            // boardTab
+            // 
+            this.boardTab.Controls.Add(this.tableLayoutPanel3);
+            this.boardTab.Location = new System.Drawing.Point(4, 22);
+            this.boardTab.Name = "boardTab";
+            this.boardTab.Size = new System.Drawing.Size(292, 510);
+            this.boardTab.TabIndex = 1;
+            this.boardTab.Text = "Board";
+            this.boardTab.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.panel2, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(292, 510);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.AutoScroll = true;
+            this.panel2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.boardEditor);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(286, 504);
+            this.panel2.TabIndex = 0;
+            // 
             // boardEditor
             // 
             this.boardEditor.AutoSize = true;
@@ -907,6 +867,43 @@
             this.boardEditor.Size = new System.Drawing.Size(284, 367);
             this.boardEditor.TabIndex = 0;
             // 
+            // worldTab
+            // 
+            this.worldTab.Controls.Add(this.tableLayoutPanel4);
+            this.worldTab.Location = new System.Drawing.Point(4, 22);
+            this.worldTab.Name = "worldTab";
+            this.worldTab.Size = new System.Drawing.Size(292, 510);
+            this.worldTab.TabIndex = 2;
+            this.worldTab.Text = "World";
+            this.worldTab.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 74F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 74F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(292, 510);
+            this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            this.panel3.AutoScroll = true;
+            this.panel3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.worldEditor);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(286, 504);
+            this.panel3.TabIndex = 0;
+            // 
             // worldEditor
             // 
             this.worldEditor.AutoSize = true;
@@ -917,6 +914,16 @@
             this.worldEditor.Name = "worldEditor";
             this.worldEditor.Size = new System.Drawing.Size(267, 507);
             this.worldEditor.TabIndex = 0;
+            // 
+            // timerDaemon
+            // 
+            this.timerDaemon.Paused = false;
+            // 
+            // saveScreenshotToolStripMenuItem
+            // 
+            this.saveScreenshotToolStripMenuItem.Name = "saveScreenshotToolStripMenuItem";
+            this.saveScreenshotToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.saveScreenshotToolStripMenuItem.Text = "Save Screens&hot";
             // 
             // Editor
             // 
@@ -947,6 +954,10 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.boardTab.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -955,12 +966,6 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.mainPanel.ResumeLayout(false);
-            this.mainPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1044,7 +1049,7 @@
         private System.Windows.Forms.Label actorSourceLabel;
         private System.Windows.Forms.Panel panel4;
         private ActorEditor actorEditor;
-
+        private System.Windows.Forms.ToolStripMenuItem saveScreenshotToolStripMenuItem;
     }
 }
 

@@ -165,8 +165,6 @@
     <Compile Include="Core\ICode.cs" />
     <Compile Include="Core\ICodeInstruction.cs" />
     <Compile Include="Emulation\Mapping\ColorList.cs" />
-    <Compile Include="Emulation\SuperZZT\SuperZztCore.Behavior.cs" />
-    <Compile Include="Emulation\SuperZZT\SuperZztEngine.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztColorList.cs" />
     <Compile Include="Emulation\ZZT\ZztEngine.cs" />
     <Compile Include="Emulation\ZZT\ZztColorList.cs" />
@@ -185,7 +183,7 @@
     <Compile Include="Emulation\Mapping\Element.cs" />
     <Compile Include="Emulation\Mapping\ElementList.cs" />
     <Compile Include="Emulation\Execution\SoundSet.cs" />
-    <Compile Include="Emulation\SuperZZT\SuperZztCore.Interface.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztEngine.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztActorList.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztFlagList.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztGameSerializer.cs" />

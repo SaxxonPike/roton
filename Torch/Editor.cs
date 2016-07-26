@@ -16,13 +16,17 @@ namespace Torch
 {
     public partial class Editor : Form
     {
-        private static readonly string FileFilters = string.Join("|",
+        private static readonly string WorldFileFilters = string.Join("|",
             "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
             "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
             "Super ZZT Worlds (*.szt)", "*.szt;*.SZT",
             "Saved Games (*.sav)", "*.sav;*.SAV",
             "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
             "All Files (*.*)", "*.*"
+            );
+
+        private static readonly string ScreenshotFileFilters = string.Join("|",
+            "PNG Images (*.png)", "*.png;*.PNG"
             );
 
         private readonly IEditorTerminal _terminal;
@@ -534,6 +538,8 @@ namespace Torch
             openToolStripMenuItem.Click += (sender, e) => { ShowOpenWorld(); };
             saveToolStripMenuItem.Click += (sender, e) => { SaveWorld(); };
             saveAsToolStripMenuItem.Click += (sender, e) => { SaveWorldAs(); };
+            saveScreenshotToolStripMenuItem.Click += (sender, e) => { SaveScreenshot(); };
+
             scale2xButton.Click += (sender, e) =>
             {
                 var scale = scale2xButton.Checked ? 2 : 1;
@@ -641,6 +647,18 @@ namespace Torch
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void SaveScreenshot()
+        {
+            var result = ShowSaveScreenshot();
+            if (result.Result == DialogResult.OK)
+            {
+                using (var bitmap = _terminal.RenderAll())
+                {
+                    bitmap.Save(result.FileName);
+                }
+            }
         }
 
         private void SaveWorld()
@@ -779,7 +797,7 @@ namespace Torch
 
         private void ShowOpenWorld()
         {
-            var ofd = new OpenFileDialog {Filter = FileFilters};
+            var ofd = new OpenFileDialog {Filter = WorldFileFilters};
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -815,6 +833,21 @@ namespace Torch
             }
         }
 
+        private SaveResult ShowSaveScreenshot()
+        {
+            if (Context == null)
+                return new SaveResult { Result = DialogResult.Cancel };
+
+            var sfd = new SaveFileDialog
+            {
+                AddExtension = true,
+                Filter = ScreenshotFileFilters
+            };
+
+            var result = sfd.ShowDialog();
+            return new SaveResult { FileName = sfd.FileName, Result = result };
+        }
+
         private DialogResult ShowSaveWorld()
         {
             if (Context == null)
@@ -823,7 +856,7 @@ namespace Torch
             var sfd = new SaveFileDialog
             {
                 AddExtension = true,
-                Filter = FileFilters
+                Filter = WorldFileFilters
             };
 
             if (Context.WorldData.Locked)

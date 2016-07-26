@@ -1026,10 +1026,6 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        protected virtual void InitializeElementDelegates()
-        {
-        }
-
         protected virtual void InitializeElements(bool showInvisibles)
         {
             // this isn't all the initializations.

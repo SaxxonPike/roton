@@ -10,6 +10,21 @@ using System.Runtime.Remoting;
 
 namespace Roton.Common
 {
+    /* 1) Implementation copied from http://msdn.microsoft.com/en-us/library/system.drawing.bitmap%28v=vs.110%29.aspx
+          because we can't subclass Image for some reason... but we want a decent drop-in replacement.
+
+       2) We use Sealed for speed; this class doesn't really NEED to be so if you need to subclass it,
+          just remove the "sealed" keyword and you should be fine.
+
+       3) While we wrap Bitmap, it is not 100% compatible if somehow the pixel dimensions change. You should
+          render it out to another bitmap, do your modifications, then render back into FastBitmap first.
+
+       4) We do not implement ISerializable because we do not have access to Bitmap's GetObjectData method.
+          If you really need this future, simply (implicitly) convert to Bitmap.
+
+       5) Pixel format is frozen to Format32bppPArgb. Maybe in the future we'll support indexed modes...
+    */
+
     /// <summary>
     ///     A replacement for the .NET Bitmap class that allows fast direct bit access.
     /// </summary>
@@ -164,7 +179,7 @@ namespace Roton.Common
         /// <summary>
         ///     Internal Bitmap object.
         /// </summary>
-        private Bitmap Bitmap { get; set; }
+        public Bitmap Bitmap { get; set; }
 
         /// <summary>
         ///     If true, Dispose() was called already.
@@ -214,6 +229,11 @@ namespace Roton.Common
         public Bitmap Clone(Rectangle rect, PixelFormat format)
         {
             return Bitmap.Clone(rect, format);
+        }
+
+        public Bitmap CloneAsBitmap()
+        {
+            return Bitmap.Clone(new Rectangle(0, 0, Width, Height), PixelFormat.Format32bppPArgb);
         }
 
         /// <summary>
@@ -587,21 +607,6 @@ namespace Roton.Common
             // clean up
             tempBitmap.Dispose();
         }
-
-        /* 1) Implementation copied from http://msdn.microsoft.com/en-us/library/system.drawing.bitmap%28v=vs.110%29.aspx
-              because we can't subclass Image for some reason... but we want a decent drop-in replacement.
-
-           2) We use Sealed for speed; this class doesn't really NEED to be so if you need to subclass it,
-              just remove the "sealed" keyword and you should be fine.
-         
-           3) While we wrap Bitmap, it is not 100% compatible if somehow the pixel dimensions change. You should
-              render it out to another bitmap, do your modifications, then render back into FastBitmap first.
-         
-           4) We do not implement ISerializable because we do not have access to Bitmap's GetObjectData method.
-              If you really need this future, simply (implicitly) convert to Bitmap.
-         
-           5) Pixel format is frozen to Format32bppPArgb. Maybe in the future we'll support indexed modes...
-        */
 
         /// <summary>
         ///     Retrieve the FastBitmap's internal Bitmap object.

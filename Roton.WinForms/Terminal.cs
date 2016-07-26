@@ -110,6 +110,11 @@ namespace Roton.WinForms
             return result;
         }
 
+        public Bitmap RenderAll()
+        {
+            return Bitmap.CloneAsBitmap();
+        }
+
         public IKeyboard Keyboard => _keys;
 
         public void SetScale(int xScale, int yScale)
@@ -376,6 +381,7 @@ namespace Roton.WinForms
             Bitmap = new FastBitmap(_terminalFont.Width*_terminalWidth*(_terminalWide ? 2 : 1),
                 _terminalFont.Height*_terminalHeight);
             oldBitmap?.Dispose();
+            Array.Resize(ref _terminalBuffer, _terminalWidth*_terminalHeight);
 
             if (width != oldWidth || height != oldHeight)
             {

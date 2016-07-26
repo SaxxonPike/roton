@@ -102,6 +102,11 @@ namespace Roton.WinForms.OpenGL
             return result;
         }
 
+        public Bitmap RenderAll()
+        {
+            return Bitmap.CloneAsBitmap();
+        }
+
         public IKeyboard Keyboard => _keys as IKeyboard;
 
         public void SetScale(int xScale, int yScale)

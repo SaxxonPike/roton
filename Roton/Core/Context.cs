@@ -151,13 +151,7 @@ namespace Roton.Core
                     throw Exceptions.InvalidFormat;
             }
 
-            if (_config.EditorMode)
-            {
-                // editor mode will always show the full board
-            }
-
             Engine.ClearWorld();
-            Engine.StateData.EditorMode = _config.EditorMode;
         }
 
         private void Initialize(Stream stream)

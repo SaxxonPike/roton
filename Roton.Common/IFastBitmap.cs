@@ -28,6 +28,7 @@ namespace Roton.Common
         IFastBitmap Clone();
         Bitmap Clone(RectangleF rect, PixelFormat format);
         Bitmap Clone(Rectangle rect, PixelFormat format);
+        Bitmap CloneAsBitmap();
         ObjRef CreateObjRef(Type requestedType);
         RectangleF GetBounds(ref GraphicsUnit pageUnit);
         EncoderParameters GetEncoderParameterList(Guid encoder);
