@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface ICodeInstruction
+    public interface IExecutable
     {
         int Instruction { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface ICode
+    public interface IProgrammable
     {
         byte[] Code { get; set; }
     }

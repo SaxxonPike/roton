@@ -130,7 +130,7 @@ namespace Roton.Emulation.SuperZZT
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            if (Engine.StateData.EditorMode)
+            if (Engine.State.EditorMode)
             {
                 if (x >= 0 && x < 96 && y >= 0 && y < 80)
                 {
@@ -157,7 +157,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override void Initialize()
         {
-            if (Engine.StateData.EditorMode)
+            if (Engine.State.EditorMode)
             {
                 Terminal.SetSize(96, 80, true);
             }
@@ -224,12 +224,12 @@ namespace Roton.Emulation.SuperZZT
         {
             if (!Engine.TitleScreen)
             {
-                if (Engine.WorldData.Health < 0)
+                if (Engine.World.Health < 0)
                 {
-                    Engine.WorldData.Health = 0;
+                    Engine.World.Health = 0;
                 }
 
-                var healthRemaining = Engine.WorldData.Health;
+                var healthRemaining = Engine.World.Health;
                 for (var x = 7; x < 12; x++)
                 {
                     if (healthRemaining >= 20)
@@ -247,9 +247,9 @@ namespace Roton.Emulation.SuperZZT
                     healthRemaining -= 20;
                 }
 
-                DrawNumber(0x11, Engine.WorldData.Gems);
-                DrawNumber(0x12, Engine.WorldData.Ammo);
-                DrawNumber(0x15, Engine.WorldData.Score);
+                DrawNumber(0x11, Engine.World.Gems);
+                DrawNumber(0x12, Engine.World.Ammo);
+                DrawNumber(0x15, Engine.World.Score);
                 DrawString(0x00, 0x16, @"            ", 0x6F);
 
                 if (!string.IsNullOrWhiteSpace(Engine.StoneText))
@@ -257,20 +257,20 @@ namespace Roton.Emulation.SuperZZT
                     DrawString(0x01, 0x16, Engine.StoneText, 0x6F);
                 }
 
-                if (Engine.WorldData.Stones >= 0)
+                if (Engine.World.Stones >= 0)
                 {
-                    DrawNumber(0x16, Engine.WorldData.Stones);
+                    DrawNumber(0x16, Engine.World.Stones);
                 }
 
                 for (var i = 0; i < 7; i++)
                 {
-                    var keyChar = Engine.WorldData.Keys[i] ? Engine.Elements[0x08].Character : 0x20;
+                    var keyChar = Engine.World.Keys[i] ? Engine.Elements[0x08].Character : 0x20;
                     var x = i & 0x3;
                     var y = x >> 2;
                     DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
                 }
 
-                DrawString(0x03, 0x0A, Engine.StateData.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
+                DrawString(0x03, 0x0A, Engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             }
         }
     }

@@ -10,7 +10,7 @@
         int EnergyCycles { get; set; }
         int Gems { get; set; }
         int Health { get; set; }
-        bool Locked { get; set; }
+        bool IsLocked { get; set; }
         string Name { get; set; }
         int Score { get; set; }
         int Stones { get; set; }

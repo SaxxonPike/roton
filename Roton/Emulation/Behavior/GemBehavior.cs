@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -20,9 +16,9 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {
-            engine.WorldData.Health += _healthPerGem;
-            engine.WorldData.Gems += 1;
-            engine.WorldData.Score += 10;
+            engine.World.Health += _healthPerGem;
+            engine.World.Gems += 1;
+            engine.World.Score += 10;
             engine.RemoveItem(location);
             engine.UpdateStatus();
             engine.PlaySound(2, engine.SoundSet.Gem);

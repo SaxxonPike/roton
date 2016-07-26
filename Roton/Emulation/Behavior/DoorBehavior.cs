@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -15,14 +11,14 @@ namespace Roton.Emulation.Behavior
         {
             var color = (engine.TileAt(location).Color & 0x70) >> 4;
             var keyIndex = color - 1;
-            if (!engine.WorldData.Keys[keyIndex])
+            if (!engine.World.Keys[keyIndex])
             {
                 engine.SetMessage(0xC8, engine.Alerts.DoorLockedMessage(color));
                 engine.PlaySound(3, engine.SoundSet.DoorLocked);
             }
             else
             {
-                engine.WorldData.Keys[keyIndex] = false;
+                engine.World.Keys[keyIndex] = false;
                 engine.RemoveItem(location);
                 engine.SetMessage(0xC8, engine.Alerts.DoorOpenMessage(color));
                 engine.PlaySound(3, engine.SoundSet.DoorOpen);

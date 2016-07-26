@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -18,15 +14,15 @@ namespace Roton.Emulation.Behavior
 
             // The centipede can randomly change direction towards the player if aligned
 
-            if (player.Location.X == actor.Location.X && actor.P1 > engine.RandomNumberDeterministic(10))
+            if (player.Location.X == actor.Location.X && actor.P1 > engine.SyncRandomNumber(10))
             {
                 actor.Vector.CopyFrom(engine.Seek(actor.Location));
             }
-            else if (player.Location.Y == actor.Location.Y && actor.P1 > engine.RandomNumberDeterministic(10))
+            else if (player.Location.Y == actor.Location.Y && actor.P1 > engine.SyncRandomNumber(10))
             {
                 actor.Vector.CopyFrom(engine.Seek(actor.Location));
             }
-            else if (actor.Vector.IsZero() || actor.P2 > engine.RandomNumberDeterministic(10) << 2)
+            else if (actor.Vector.IsZero() || actor.P2 > engine.SyncRandomNumber(10) << 2)
             {
                 actor.Vector.CopyFrom(engine.Rnd());
             }

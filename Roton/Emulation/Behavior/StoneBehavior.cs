@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -22,11 +18,11 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {
-            if (engine.WorldData.Stones < 0)
+            if (engine.World.Stones < 0)
             {
-                engine.WorldData.Stones = 0;
+                engine.World.Stones = 0;
             }
-            engine.WorldData.Stones++;
+            engine.World.Stones++;
             engine.Destroy(location);
             engine.UpdateStatus();
             engine.SetMessage(0xC8, engine.Alerts.StoneMessage);

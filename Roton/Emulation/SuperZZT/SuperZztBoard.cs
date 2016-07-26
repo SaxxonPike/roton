@@ -15,13 +15,13 @@ namespace Roton.Emulation.SuperZZT
 
         public IXyPair Camera => new MemoryLocation16(_memory, 0x776F);
 
-        public bool Dark
+        public bool IsDark
         {
             get { return false; }
             set { }
         }
 
-        public IXyPair Enter => new MemoryLocation(_memory, 0x776D);
+        public IXyPair Entrance => new MemoryLocation(_memory, 0x776D);
 
         public int ExitEast
         {
@@ -59,7 +59,7 @@ namespace Roton.Emulation.SuperZZT
             set { _memory.WriteBool(0x776C, value); }
         }
 
-        public int Shots
+        public int MaximumShots
         {
             get { return _memory.Read8(0x7767); }
             set { _memory.Write8(0x7767, value); }

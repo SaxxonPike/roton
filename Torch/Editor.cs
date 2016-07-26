@@ -859,7 +859,7 @@ namespace Torch
                 Filter = WorldFileFilters
             };
 
-            if (Context.WorldData.Locked)
+            if (Context.WorldData.IsLocked)
             {
                 sfd.FilterIndex = 4; // saved game
             }

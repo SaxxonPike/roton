@@ -8,7 +8,7 @@ namespace Roton.Emulation.SuperZZT
     {
         public SuperZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
-            StateData = new SuperZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
+            State = new SuperZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
             Actors = new SuperZztActorList(Memory);
             Board = new SuperZztBoard(Memory);
@@ -17,7 +17,7 @@ namespace Roton.Emulation.SuperZZT
             Elements = new SuperZztElementList(Memory, elementBytes);
             SoundSet = new SuperZztSoundSet(Memory);
             Tiles = new SuperZztTileGrid(Memory);
-            WorldData = new SuperZztWorld(Memory);
+            World = new SuperZztWorld(Memory);
             Grammar = new Grammar(new SuperZztColorList(Memory), Elements);
 
             Hud.Initialize();
@@ -36,25 +36,30 @@ namespace Roton.Emulation.SuperZZT
 
         public override ISoundSet SoundSet { get; }
 
-        public override IState StateData { get; }
+        public override IState State { get; }
 
         public override ITileGrid Tiles { get; }
 
         public override bool TorchesEnabled => false;
 
-        public override IWorld WorldData { get; }
+        public override IWorld World { get; }
 
         protected override void StartMain()
         {
-            StateData.GameSpeed = 4;
-            StateData.DefaultSaveName = "SAVED";
-            StateData.DefaultBoardName = "TEMP";
-            StateData.DefaultWorldName = "MONSTER";
-            if (!StateData.WorldLoaded)
+            State.GameSpeed = 4;
+            State.DefaultSaveName = "SAVED";
+            State.DefaultBoardName = "TEMP";
+            State.DefaultWorldName = "MONSTER";
+            if (!State.WorldLoaded)
             {
                 ClearWorld();
             }
-            SetGameMode();
+
+            if (State.EditorMode)
+                SetEditorMode();
+            else
+                SetGameMode();
+
             TitleScreenLoop();
         }
 
@@ -71,7 +76,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override void RemoveItem(IXyPair location)
         {
-            var result = new Tile(Elements.FloorElement.Id, 0x00);
+            var result = new Tile(Elements.FloorId, 0x00);
             var finished = false;
 
             for (var i = 0; i < 4; i++)

@@ -22,12 +22,12 @@ namespace Roton.Emulation.Execution
             Boards = new List<IPackedBoard>();
             Memory = new Memory();
             Random = new Random();
-            RandomDeterministic = new Random(0);
+            SyncRandom = new Random(0);
         }
 
         private Random Random { get; }
 
-        private Random RandomDeterministic { get; }
+        private Random SyncRandom { get; }
 
         private int TimerBase => CoreTimer.Tick & 0x7FFF;
 
@@ -39,12 +39,6 @@ namespace Roton.Emulation.Execution
         {
             get { return _timerTick; }
             set { _timerTick = value & 0x7FFF; }
-        }
-
-        private bool AboutShown
-        {
-            get { return StateData.AboutShown; }
-            set { StateData.AboutShown = value; }
         }
 
         public int ActorIndexAt(IXyPair location)
@@ -61,13 +55,13 @@ namespace Roton.Emulation.Execution
 
         public abstract IActorList Actors { get; }
 
-        public IAlerts Alerts => StateData.Alerts;
+        public IAlerts Alerts => State.Alerts;
 
         public void Attack(int index, IXyPair location)
         {
-            if (index == 0 && WorldData.EnergyCycles > 0)
+            if (index == 0 && World.EnergyCycles > 0)
             {
-                WorldData.Score += this.ElementAt(location).Points;
+                World.Score += this.ElementAt(location).Points;
                 UpdateStatus();
             }
             else
@@ -75,14 +69,14 @@ namespace Roton.Emulation.Execution
                 Harm(index);
             }
 
-            if (index > 0 && index <= StateData.ActIndex)
+            if (index > 0 && index <= State.ActIndex)
             {
-                StateData.ActIndex--;
+                State.ActIndex--;
             }
 
-            if (Tiles[location].Id == Elements.PlayerId && WorldData.EnergyCycles > 0)
+            if (Tiles[location].Id == Elements.PlayerId && World.EnergyCycles > 0)
             {
-                WorldData.Score += this.ElementAt(Actors[index].Location).Points;
+                World.Score += this.ElementAt(Actors[index].Location).Points;
                 UpdateStatus();
             }
             else
@@ -96,20 +90,20 @@ namespace Roton.Emulation.Execution
 
         public IList<IPackedBoard> Boards { get; }
 
-        private ITile BorderTile => StateData.BorderTile;
+        private ITile BorderTile => State.BorderTile;
 
         private void ClearBoard()
         {
             var emptyId = Elements.EmptyId;
-            var boardEdgeId = StateData.EdgeTile.Id;
+            var boardEdgeId = State.EdgeTile.Id;
             var boardBorderId = BorderTile.Id;
             var boardBorderColor = BorderTile.Color;
 
             // board properties
             Board.Name = string.Empty;
-            StateData.Message = string.Empty;
-            Board.Shots = 0xFF;
-            Board.Dark = false;
+            State.Message = string.Empty;
+            Board.MaximumShots = 0xFF;
+            Board.IsDark = false;
             Board.RestartOnZap = false;
             Board.TimeLimit = 0;
             Board.ExitEast = 0;
@@ -151,8 +145,8 @@ namespace Roton.Emulation.Execution
             }
 
             // generate player actor
-            var element = Elements.PlayerElement;
-            StateData.ActorCount = 0;
+            var element = Elements[Elements.PlayerId];
+            State.ActorCount = 0;
             Player.Location.SetTo(Tiles.Width /2, Tiles.Height /2);
             TileAt(Player.Location).SetTo(element.Id, element.Color);
             Player.Cycle = 1;
@@ -163,33 +157,33 @@ namespace Roton.Emulation.Execution
 
         public void ClearSound()
         {
-            StateData.SoundPlaying = false;
+            State.SoundPlaying = false;
             StopSound();
         }
 
         public void ClearWorld()
         {
-            StateData.BoardCount = 0;
+            State.BoardCount = 0;
             Boards.Clear();
             ResetAlerts();
             ClearBoard();
             Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
-            WorldData.BoardIndex = 0;
-            WorldData.Ammo = 0;
-            WorldData.Gems = 0;
-            WorldData.Health = 100;
-            WorldData.EnergyCycles = 0;
-            WorldData.Torches = 0;
-            WorldData.TorchCycles = 0;
-            WorldData.Score = 0;
-            WorldData.TimePassed = 0;
-            WorldData.Stones = -1;
-            WorldData.Keys.Clear();
-            WorldData.Flags.Clear();
+            World.BoardIndex = 0;
+            World.Ammo = 0;
+            World.Gems = 0;
+            World.Health = 100;
+            World.EnergyCycles = 0;
+            World.Torches = 0;
+            World.TorchCycles = 0;
+            World.Score = 0;
+            World.TimePassed = 0;
+            World.Stones = -1;
+            World.Keys.Clear();
+            World.Flags.Clear();
             SetBoard(0);
             Board.Name = "Introduction screen";
-            WorldData.Name = string.Empty;
-            StateData.WorldFileName = string.Empty;
+            World.Name = string.Empty;
+            State.WorldFileName = string.Empty;
         }
 
         public void Convey(IXyPair center, int direction)
@@ -282,20 +276,14 @@ namespace Roton.Emulation.Execution
 
         public IFileSystem Disk { get; set; }
 
-        private IXyPair Enter
-        {
-            get { return Board.Enter; }
-            set { Board.Enter.CopyFrom(value); }
-        }
-
         public IXyPair GetCardinalVector(int index)
         {
-            return new Vector(StateData.Vector4[index], StateData.Vector4[index + 4]);
+            return new Vector(State.Vector4[index], State.Vector4[index + 4]);
         }
 
         private IXyPair GetConveyorVector(int index)
         {
-            return new Vector(StateData.Vector8[index], StateData.Vector8[index + 8]);
+            return new Vector(State.Vector8[index], State.Vector8[index + 8]);
         }
 
         public abstract IGrammar Grammar { get; }
@@ -331,7 +319,7 @@ namespace Roton.Emulation.Execution
             }
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
-            if (index == 0 && Board.Dark)
+            if (index == 0 && Board.IsDark)
             {
                 var squareDistanceX = (target.X - sourceLocation.X).Square();
                 var squareDistanceY = (target.Y - sourceLocation.Y).Square();
@@ -403,7 +391,7 @@ namespace Roton.Emulation.Execution
         public void PackBoard()
         {
             var board = new PackedBoard(GameSerializer.PackBoard(Tiles));
-            Boards[WorldData.BoardIndex] = board;
+            Boards[World.BoardIndex] = board;
         }
 
         public void PlaySound(int priority, ISound sound, int offset, int length)
@@ -458,42 +446,42 @@ namespace Roton.Emulation.Execution
             return Random.Next(max);
         }
 
-        public int RandomNumberDeterministic(int max)
+        public int SyncRandomNumber(int max)
         {
-            return RandomDeterministic.Next(max);
+            return SyncRandom.Next(max);
         }
 
-        private int ReadActorCodeByte(int index, ICodeInstruction instructionSource)
+        private int ReadActorCodeByte(int index, IExecutable instructionSource)
         {
             var actor = Actors[index];
             var value = 0;
 
             if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
             {
-                StateData.OopByte = 0;
+                State.OopByte = 0;
             }
             else
             {
                 value = actor.Code[instructionSource.Instruction];
-                StateData.OopByte = value;
+                State.OopByte = value;
                 instructionSource.Instruction++;
             }
             return value;
         }
 
-        public string ReadActorCodeLine(int index, ICodeInstruction instructionSource)
+        public string ReadActorCodeLine(int index, IExecutable instructionSource)
         {
             var result = new StringBuilder();
             ReadActorCodeByte(index, instructionSource);
-            while (StateData.OopByte != 0x00 && StateData.OopByte != 0x0D)
+            while (State.OopByte != 0x00 && State.OopByte != 0x0D)
             {
-                result.Append(StateData.OopByte.ToChar());
+                result.Append(State.OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
             return result.ToString();
         }
 
-        public int ReadActorCodeNumber(int index, ICodeInstruction instructionSource)
+        public int ReadActorCodeNumber(int index, IExecutable instructionSource)
         {
             var result = new StringBuilder();
             var success = false;
@@ -502,11 +490,11 @@ namespace Roton.Emulation.Execution
             {
             }
 
-            StateData.OopByte = StateData.OopByte.ToUpperCase();
-            while (StateData.OopByte >= 0x30 && StateData.OopByte <= 0x39)
+            State.OopByte = State.OopByte.ToUpperCase();
+            while (State.OopByte >= 0x30 && State.OopByte <= 0x39)
             {
                 success = true;
-                result.Append(StateData.OopByte.ToChar());
+                result.Append(State.OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
 
@@ -517,41 +505,41 @@ namespace Roton.Emulation.Execution
 
             if (!success)
             {
-                StateData.OopNumber = -1;
+                State.OopNumber = -1;
             }
             else
             {
-                var resultInt = -1;
+                int resultInt;
                 int.TryParse(result.ToString(), out resultInt);
-                StateData.OopNumber = resultInt;
+                State.OopNumber = resultInt;
             }
 
-            return StateData.OopNumber;
+            return State.OopNumber;
         }
 
-        public string ReadActorCodeWord(int index, ICodeInstruction instructionSource)
+        public string ReadActorCodeWord(int index, IExecutable instructionSource)
         {
             var result = new StringBuilder();
 
             while (true)
             {
                 ReadActorCodeByte(index, instructionSource);
-                if (StateData.OopByte != 0x20)
+                if (State.OopByte != 0x20)
                 {
                     break;
                 }
             }
 
-            StateData.OopByte = StateData.OopByte.ToUpperCase();
+            State.OopByte = State.OopByte.ToUpperCase();
 
-            if (!(StateData.OopByte >= 0x30 && StateData.OopByte <= 0x39))
+            if (!(State.OopByte >= 0x30 && State.OopByte <= 0x39))
             {
-                while ((StateData.OopByte >= 0x41 && StateData.OopByte <= 0x5A) || (StateData.OopByte >= 0x30 && StateData.OopByte <= 0x39) || (StateData.OopByte == 0x3A) ||
-                       (StateData.OopByte == 0x5F))
+                while ((State.OopByte >= 0x41 && State.OopByte <= 0x5A) || (State.OopByte >= 0x30 && State.OopByte <= 0x39) || (State.OopByte == 0x3A) ||
+                       (State.OopByte == 0x5F))
                 {
-                    result.Append(StateData.OopByte.ToChar());
+                    result.Append(State.OopByte.ToChar());
                     ReadActorCodeByte(index, instructionSource);
-                    StateData.OopByte = StateData.OopByte.ToUpperCase();
+                    State.OopByte = State.OopByte.ToUpperCase();
                 }
             }
 
@@ -560,8 +548,8 @@ namespace Roton.Emulation.Execution
                 instructionSource.Instruction--;
             }
 
-            StateData.OopWord = result.ToString();
-            return StateData.OopWord;
+            State.OopWord = result.ToString();
+            return State.OopWord;
         }
 
         public void RedrawBoard()
@@ -574,12 +562,6 @@ namespace Roton.Emulation.Execution
             TileAt(location).Id = Elements.EmptyId;
         }
 
-        private bool RestartOnZap
-        {
-            get { return Board.RestartOnZap; }
-            set { Board.RestartOnZap = value; }
-        }
-
         public IXyPair Rnd()
         {
             var result = new Vector();
@@ -590,7 +572,7 @@ namespace Roton.Emulation.Execution
         public IXyPair Seek(IXyPair location)
         {
             var result = new Vector();
-            if (RandomNumberDeterministic(2) == 0 || Player.Location.Y == location.Y)
+            if (SyncRandomNumber(2) == 0 || Player.Location.Y == location.Y)
             {
                 result.X = (Player.Location.X - location.X).Polarity();
             }
@@ -598,7 +580,7 @@ namespace Roton.Emulation.Execution
             {
                 result.Y = (Player.Location.Y - location.Y).Polarity();
             }
-            if (WorldData.EnergyCycles > 0)
+            if (World.EnergyCycles > 0)
             {
                 result.SetOpposite();
             }
@@ -609,7 +591,7 @@ namespace Roton.Emulation.Execution
 
         public void SetBoard(int boardIndex)
         {
-            var element = Elements.PlayerElement;
+            var element = Elements[Elements.PlayerId];
             TileAt(Player.Location).SetTo(element.Id, element.Color);
             PackBoard();
             UnpackBoard(boardIndex);
@@ -627,10 +609,10 @@ namespace Roton.Emulation.Execution
             var topMessage = message.Text[0];
             var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
 
-            SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, StateData.DefaultActor);
-            Actors[StateData.ActorCount].P2 = duration / (StateData.GameWaitTime + 1);
-            StateData.Message = topMessage;
-            StateData.Message2 = bottomMessage;
+            SpawnActor(new Location(0, 0), new Tile(Elements.MessengerId, 0), 1, State.DefaultActor);
+            Actors[State.ActorCount].P2 = duration / (State.GameWaitTime + 1);
+            State.Message = topMessage;
+            State.Message2 = bottomMessage;
         }
 
         public abstract ISoundSet SoundSet { get; }
@@ -648,7 +630,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public abstract IState StateData { get; }
+        public abstract IState State { get; }
 
         public void Stop()
         {
@@ -665,7 +647,7 @@ namespace Roton.Emulation.Execution
         public void UnpackBoard(int boardIndex)
         {
             GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
-            WorldData.BoardIndex = boardIndex;
+            World.BoardIndex = boardIndex;
         }
 
         public void UpdateBoard(IXyPair location)
@@ -673,12 +655,12 @@ namespace Roton.Emulation.Execution
             DrawTile(location, Draw(location));
         }
 
-        public abstract IWorld WorldData { get; }
+        public abstract IWorld World { get; }
 
         public virtual AnsiChar Draw(IXyPair location)
         {
-            if (Board.Dark && !this.ElementAt(location).IsAlwaysVisible &&
-                (WorldData.TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !StateData.EditorMode)
+            if (Board.IsDark && !this.ElementAt(location).IsAlwaysVisible &&
+                (World.TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !State.EditorMode)
             {
                 return new AnsiChar(0xB0, 0x07);
             }
@@ -712,33 +694,33 @@ namespace Roton.Emulation.Execution
 
         protected virtual void ReadInput()
         {
-            StateData.KeyShift = false;
-            StateData.KeyArrow = false;
-            StateData.KeyPressed = 0;
-            StateData.KeyVector.SetTo(0, 0);
+            State.KeyShift = false;
+            State.KeyArrow = false;
+            State.KeyPressed = 0;
+            State.KeyVector.SetTo(0, 0);
 
             var key = Keyboard.GetKey();
             if (key >= 0)
             {
-                StateData.KeyPressed = key;
-                StateData.KeyShift = Keyboard.Shift;
+                State.KeyPressed = key;
+                State.KeyShift = Keyboard.Shift;
                 switch (key)
                 {
                     case 0xCB:
-                        StateData.KeyVector.CopyFrom(Vector.West);
-                        StateData.KeyArrow = true;
+                        State.KeyVector.CopyFrom(Vector.West);
+                        State.KeyArrow = true;
                         break;
                     case 0xCD:
-                        StateData.KeyVector.CopyFrom(Vector.East);
-                        StateData.KeyArrow = true;
+                        State.KeyVector.CopyFrom(Vector.East);
+                        State.KeyArrow = true;
                         break;
                     case 0xC8:
-                        StateData.KeyVector.CopyFrom(Vector.North);
-                        StateData.KeyArrow = true;
+                        State.KeyVector.CopyFrom(Vector.North);
+                        State.KeyArrow = true;
                         break;
                     case 0xD0:
-                        StateData.KeyVector.CopyFrom(Vector.South);
-                        StateData.KeyArrow = true;
+                        State.KeyVector.CopyFrom(Vector.South);
+                        State.KeyArrow = true;
                         break;
                 }
             }
@@ -747,15 +729,15 @@ namespace Roton.Emulation.Execution
         public virtual int ReadKey()
         {
             var key = Keyboard.GetKey();
-            StateData.KeyPressed = key > 0 ? key : 0;
-            return StateData.KeyPressed;
+            State.KeyPressed = key > 0 ? key : 0;
+            return State.KeyPressed;
         }
 
         public string StoneText
         {
             get
             {
-                foreach (var flag in WorldData.Flags.Select(f => f.ToUpperInvariant()))
+                foreach (var flag in World.Flags.Select(f => f.ToUpperInvariant()))
                 {
                     if (flag.Length > 0 && flag.StartsWith("Z"))
                     {
@@ -766,7 +748,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public bool TitleScreen => StateData.PlayerElement != Elements.PlayerId;
+        public bool TitleScreen => State.PlayerElement != Elements.PlayerId;
 
         public virtual void WaitForTick()
         {
@@ -851,13 +833,13 @@ namespace Roton.Emulation.Execution
 
         public virtual void EnterBoard()
         {
-            Enter.CopyFrom(Player.Location);
-            if (Board.Dark && Alerts.Dark)
+            Board.Entrance.CopyFrom(Player.Location);
+            if (Board.IsDark && Alerts.Dark)
             {
                 SetMessage(0xC8, Alerts.DarkMessage);
                 Alerts.Dark = false;
             }
-            WorldData.TimePassed = 0;
+            World.TimePassed = 0;
             UpdateStatus();
         }
 
@@ -865,7 +847,7 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        public virtual void ExecuteCode(int index, ICodeInstruction instructionSource, string name)
+        public virtual void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
             var context = new OopContext(index, instructionSource, name, this);
         }
@@ -936,11 +918,12 @@ namespace Roton.Emulation.Execution
         public virtual void ForcePlayerColor(int index)
         {
             var actor = Actors[index];
-            if (TileAt(actor.Location).Color != Elements.PlayerElement.Color ||
-                Elements.PlayerElement.Character != 0x02)
+            var playerElement = Elements[Elements.PlayerId];
+            if (TileAt(actor.Location).Color != playerElement.Color ||
+                playerElement.Character != 0x02)
             {
-                Elements.PlayerElement.Character = 2;
-                TileAt(actor.Location).Color = Elements.PlayerElement.Color;
+                playerElement.Character = 2;
+                TileAt(actor.Location).Color = playerElement.Color;
                 UpdateBoard(actor.Location);
             }
         }
@@ -956,10 +939,10 @@ namespace Roton.Emulation.Execution
         public bool GetPlayerTimeElapsed(int interval)
         {
             var result = false;
-            while (GetTimeDifference(TimerTick, StateData.PlayerTime) > 0)
+            while (GetTimeDifference(TimerTick, State.PlayerTime) > 0)
             {
                 result = true;
-                StateData.PlayerTime = (StateData.PlayerTime + interval) & 0x7FFF;
+                State.PlayerTime = (State.PlayerTime + interval) & 0x7FFF;
             }
             return result;
         }
@@ -980,28 +963,28 @@ namespace Roton.Emulation.Execution
             var actor = Actors[index];
             if (index == 0)
             {
-                if (WorldData.Health > 0)
+                if (World.Health > 0)
                 {
-                    WorldData.Health -= 10;
+                    World.Health -= 10;
                     UpdateStatus();
                     SetMessage(0x64, Alerts.OuchMessage);
                     var color = TileAt(actor.Location).Color;
                     color &= 0x0F;
                     color |= 0x70;
                     TileAt(actor.Location).Color = color;
-                    if (WorldData.Health > 0)
+                    if (World.Health > 0)
                     {
-                        WorldData.TimePassed = 0;
-                        if (RestartOnZap)
+                        World.TimePassed = 0;
+                        if (Board.RestartOnZap)
                         {
                             this.PlaySound(4, SoundSet.TimeOut);
                             TileAt(actor.Location).Id = Elements.EmptyId;
                             UpdateBoard(actor.Location);
                             var oldLocation = actor.Location.Clone();
-                            actor.Location.CopyFrom(Enter);
+                            actor.Location.CopyFrom(Board.Entrance);
                             UpdateRadius(oldLocation, 0);
                             UpdateRadius(actor.Location, 0);
-                            StateData.GamePaused = true;
+                            State.GamePaused = true;
                         }
                         this.PlaySound(4, SoundSet.Ouch);
                     }
@@ -1030,9 +1013,9 @@ namespace Roton.Emulation.Execution
         {
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
-            Elements.InvisibleElement.Character = showInvisibles ? 0xB0 : 0x20;
-            Elements.InvisibleElement.Color = 0xFF;
-            Elements.PlayerElement.Character = 0x02;
+            Elements[Elements.InvisibleId].Character = showInvisibles ? 0xB0 : 0x20;
+            Elements[Elements.InvisibleId].Color = 0xFF;
+            Elements[Elements.PlayerId].Character = 0x02;
         }
 
         internal virtual bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
@@ -1041,10 +1024,10 @@ namespace Roton.Emulation.Execution
             switch (target.ToUpperInvariant())
             {
                 case @"ALL":
-                    success = info.Index <= StateData.ActorCount;
+                    success = info.Index <= State.ActorCount;
                     break;
                 case @"OTHERS":
-                    if (info.Index <= StateData.ActorCount)
+                    if (info.Index <= State.ActorCount)
                     {
                         if (info.Index != sender)
                         {
@@ -1053,7 +1036,7 @@ namespace Roton.Emulation.Execution
                         else
                         {
                             info.Index++;
-                            success = info.Index <= StateData.ActorCount;
+                            success = info.Index <= State.ActorCount;
                         }
                     }
                     break;
@@ -1098,25 +1081,25 @@ namespace Roton.Emulation.Execution
             Hud.CreateStatusText();
             Hud.UpdateStatus();
 
-            if (StateData.Init)
+            if (State.Init)
             {
-                if (!AboutShown)
+                if (!State.AboutShown)
                 {
                     ShowAbout();
                 }
-                if (StateData.DefaultWorldName.Length <= 0)
+                if (State.DefaultWorldName.Length <= 0)
                 {
                     // normally we would load the world here,
                     // however it will have already been loaded in the context
                 }
-                StateData.StartBoard = WorldData.BoardIndex;
+                State.StartBoard = World.BoardIndex;
                 SetBoard(0);
-                StateData.Init = false;
+                State.Init = false;
             }
 
-            var element = Elements[StateData.PlayerElement];
+            var element = Elements[State.PlayerElement];
             TileAt(Player.Location).SetTo(element.Id, element.Color);
-            if (StateData.PlayerElement == Elements.MonitorId)
+            if (State.PlayerElement == Elements.MonitorId)
             {
                 SetMessage(0, new Message());
                 Hud.DrawTitleStatus();
@@ -1127,38 +1110,38 @@ namespace Roton.Emulation.Execution
                 FadePurple();
             }
 
-            StateData.GameWaitTime = StateData.GameSpeed << 1;
-            StateData.BreakGameLoop = false;
-            StateData.GameCycle = RandomNumberDeterministic(0x64);
-            StateData.ActIndex = StateData.ActorCount + 1;
+            State.GameWaitTime = State.GameSpeed << 1;
+            State.BreakGameLoop = false;
+            State.GameCycle = SyncRandomNumber(0x64);
+            State.ActIndex = State.ActorCount + 1;
 
             while (ThreadActive)
             {
-                if (!StateData.GamePaused)
+                if (!State.GamePaused)
                 {
-                    if (StateData.ActIndex <= StateData.ActorCount)
+                    if (State.ActIndex <= State.ActorCount)
                     {
-                        var actorData = Actors[StateData.ActIndex];
+                        var actorData = Actors[State.ActIndex];
                         if (actorData.Cycle != 0)
                         {
-                            if (StateData.ActIndex % actorData.Cycle == StateData.GameCycle %actorData.Cycle)
+                            if (State.ActIndex % actorData.Cycle == State.GameCycle %actorData.Cycle)
                             {
-                                Elements[TileAt(actorData.Location).Id].Act(this, StateData.ActIndex);
+                                Elements[TileAt(actorData.Location).Id].Act(this, State.ActIndex);
                             }
                         }
-                        StateData.ActIndex++;
+                        State.ActIndex++;
                     }
                 }
                 else
                 {
-                    StateData.ActIndex = StateData.ActorCount + 1;
+                    State.ActIndex = State.ActorCount + 1;
                     if (GetMainTimeElapsed(25))
                     {
                         alternating = !alternating;
                     }
                     if (alternating)
                     {
-                        var playerElement = Elements.PlayerElement;
+                        var playerElement = Elements[Elements.PlayerId];
                         DrawTile(Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                     }
                     else
@@ -1174,27 +1157,27 @@ namespace Roton.Emulation.Execution
                     }
                     Hud.DrawPausing();
                     ReadInput();
-                    if (StateData.KeyPressed == 0x1B)
+                    if (State.KeyPressed == 0x1B)
                     {
-                        if (WorldData.Health > 0)
+                        if (World.Health > 0)
                         {
-                            StateData.BreakGameLoop = Hud.EndGameConfirmation();
+                            State.BreakGameLoop = Hud.EndGameConfirmation();
                         }
                         else
                         {
-                            StateData.BreakGameLoop = true;
+                            State.BreakGameLoop = true;
                             Hud.UpdateBorder();
                         }
-                        StateData.KeyPressed = 0;
+                        State.KeyPressed = 0;
                     }
-                    if (!StateData.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero())
                     {
-                        var target = Player.Location.Sum(StateData.KeyVector);
-                        this.ElementAt(target).Interact(this, target, 0, StateData.KeyVector);
+                        var target = Player.Location.Sum(State.KeyVector);
+                        this.ElementAt(target).Interact(this, target, 0, State.KeyVector);
                     }
-                    if (!StateData.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero())
                     {
-                        var target = Player.Location.Sum(StateData.KeyVector);
+                        var target = Player.Location.Sum(State.KeyVector);
                         if (this.ElementAt(target).IsFloor)
                         {
                             if (this.ElementAt(Player.Location).Id == Elements.PlayerId)
@@ -1204,55 +1187,55 @@ namespace Roton.Emulation.Execution
                             else
                             {
                                 UpdateBoard(Player.Location);
-                                Player.Location.Add(StateData.KeyVector);
-                                TileAt(Player.Location).SetTo(Elements.PlayerId, Elements.PlayerElement.Color);
+                                Player.Location.Add(State.KeyVector);
+                                TileAt(Player.Location).SetTo(Elements.PlayerId, Elements[Elements.PlayerId].Color);
                                 UpdateBoard(Player.Location);
                                 UpdateRadius(Player.Location, RadiusMode.Update);
-                                UpdateRadius(Player.Location.Difference(StateData.KeyVector), RadiusMode.Update);
+                                UpdateRadius(Player.Location.Difference(State.KeyVector), RadiusMode.Update);
                             }
-                            StateData.GamePaused = false;
+                            State.GamePaused = false;
                             Hud.ClearPausing();
-                            StateData.GameCycle = RandomNumberDeterministic(100);
-                            WorldData.Locked = true;
+                            State.GameCycle = SyncRandomNumber(100);
+                            World.IsLocked = true;
                         }
                     }
                 }
 
-                if (StateData.ActIndex > StateData.ActorCount)
+                if (State.ActIndex > State.ActorCount)
                 {
-                    if (!StateData.BreakGameLoop)
+                    if (!State.BreakGameLoop)
                     {
-                        if (StateData.GameWaitTime <= 0 || GetMainTimeElapsed(StateData.GameWaitTime))
+                        if (State.GameWaitTime <= 0 || GetMainTimeElapsed(State.GameWaitTime))
                         {
-                            StateData.GameCycle++;
-                            if (StateData.GameCycle > 420)
+                            State.GameCycle++;
+                            if (State.GameCycle > 420)
                             {
-                                StateData.GameCycle = 1;
+                                State.GameCycle = 1;
                             }
-                            StateData.ActIndex = 0;
+                            State.ActIndex = 0;
                             ReadInput();
                         }
                     }
                     WaitForTick();
                 }
 
-                if (StateData.BreakGameLoop)
+                if (State.BreakGameLoop)
                 {
                     ClearSound();
-                    if (StateData.PlayerElement == Elements.PlayerId)
+                    if (State.PlayerElement == Elements.PlayerId)
                     {
-                        if (WorldData.Health <= 0)
+                        if (World.Health <= 0)
                         {
-                            EnterHighScore(WorldData.Score);
+                            EnterHighScore(World.Score);
                         }
                     }
-                    else if (StateData.PlayerElement == Elements.MonitorId)
+                    else if (State.PlayerElement == Elements.MonitorId)
                     {
                         Hud.ClearTitleStatus();
                     }
-                    element = Elements.PlayerElement;
+                    element = Elements[Elements.PlayerId];
                     TileAt(Player.Location).SetTo(element.Id, element.Color);
-                    StateData.GameOver = false;
+                    State.GameOver = false;
                     break;
                 }
             }
@@ -1340,9 +1323,9 @@ namespace Roton.Emulation.Execution
         public void RemoveActor(int index)
         {
             var actor = Actors[index];
-            if (index < StateData.ActIndex)
+            if (index < State.ActIndex)
             {
-                StateData.ActIndex--;
+                State.ActIndex--;
             }
 
             TileAt(actor.Location).CopyFrom(actor.UnderTile);
@@ -1351,7 +1334,7 @@ namespace Roton.Emulation.Execution
                 UpdateBoard(actor.Location);
             }
 
-            for (var i = 1; i <= StateData.ActorCount; i++)
+            for (var i = 1; i <= State.ActorCount; i++)
             {
                 var a = Actors[i];
                 if (a.Follower >= index)
@@ -1379,15 +1362,15 @@ namespace Roton.Emulation.Execution
                 }
             }
 
-            if (index < StateData.ActorCount)
+            if (index < State.ActorCount)
             {
-                for (var i = index; i < StateData.ActorCount; i++)
+                for (var i = index; i < State.ActorCount; i++)
                 {
                     Actors[i].CopyFrom(Actors[i + 1]);
                 }
             }
 
-            StateData.ActorCount--;
+            State.ActorCount--;
         }
 
         private void ResetAlerts()
@@ -1407,10 +1390,10 @@ namespace Roton.Emulation.Execution
 
         private void Rnd(IXyPair result)
         {
-            result.X = RandomNumberDeterministic(3) - 1;
+            result.X = SyncRandomNumber(3) - 1;
             if (result.X == 0)
             {
-                result.Y = (RandomNumberDeterministic(2) << 1) - 1;
+                result.Y = (SyncRandomNumber(2) << 1) - 1;
             }
             else
             {
@@ -1422,7 +1405,7 @@ namespace Roton.Emulation.Execution
         {
             var result = new Vector();
             result.CopyFrom(
-                RandomNumberDeterministic(2) == 0
+                SyncRandomNumber(2) == 0
                     ? vector.Clockwise()
                     : vector.CounterClockwise());
             return result;
@@ -1444,7 +1427,7 @@ namespace Roton.Emulation.Execution
                 while (true)
                 {
                     ReadActorCodeByte(index, offset);
-                    if (termBytes[termOffset].ToUpperCase() != StateData.OopByte.ToUpperCase())
+                    if (termBytes[termOffset].ToUpperCase() != State.OopByte.ToUpperCase())
                     {
                         success = false;
                         break;
@@ -1460,8 +1443,8 @@ namespace Roton.Emulation.Execution
                 if (success)
                 {
                     ReadActorCodeByte(index, offset);
-                    StateData.OopByte = StateData.OopByte.ToUpperCase();
-                    if (!((StateData.OopByte >= 0x41 && StateData.OopByte <= 0x5A) || StateData.OopByte == 0x5F))
+                    State.OopByte = State.OopByte.ToUpperCase();
+                    if (!((State.OopByte >= 0x41 && State.OopByte <= 0x5A) || State.OopByte == 0x5F))
                     {
                         result = oldOffset;
                         break;
@@ -1478,13 +1461,13 @@ namespace Roton.Emulation.Execution
         protected void SetEditorMode()
         {
             InitializeElements(true);
-            StateData.EditorMode = true;
+            State.EditorMode = true;
         }
 
         protected void SetGameMode()
         {
             InitializeElements(false);
-            StateData.EditorMode = false;
+            State.EditorMode = false;
         }
 
         private void ShowAbout()
@@ -1504,14 +1487,14 @@ namespace Roton.Emulation.Execution
         public void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
         {
             // must reserve one actor for player, and one for messenger
-            if (StateData.ActorCount < Actors.Capacity - 2)
+            if (State.ActorCount < Actors.Capacity - 2)
             {
-                StateData.ActorCount++;
-                var actor = Actors[StateData.ActorCount];
+                State.ActorCount++;
+                var actor = Actors[State.ActorCount];
 
                 if (source == null)
                 {
-                    source = StateData.DefaultActor;
+                    source = State.DefaultActor;
                 }
                 actor.CopyFrom(source);
                 actor.Location.CopyFrom(location);
@@ -1542,8 +1525,8 @@ namespace Roton.Emulation.Execution
 
             if (element.IsFloor || element.Id == Elements.WaterId)
             {
-                SpawnActor(target, new Tile(id, Elements[id].Color), 1, StateData.DefaultActor);
-                var actor = Actors[StateData.ActorCount];
+                SpawnActor(target, new Tile(id, Elements[id].Color), 1, State.DefaultActor);
+                var actor = Actors[State.ActorCount];
                 actor.P1 = enemyOwned ? 1 : 0;
                 actor.Vector.CopyFrom(vector);
                 actor.P2 = 0x64;
@@ -1553,7 +1536,7 @@ namespace Roton.Emulation.Execution
             {
                 if (element.IsDestructible)
                 {
-                    if (enemyOwned != (element.Id == Elements.PlayerId) || WorldData.EnergyCycles > 0)
+                    if (enemyOwned != (element.Id == Elements.PlayerId) || World.EnergyCycles > 0)
                     {
                         return false;
                     }
@@ -1571,15 +1554,20 @@ namespace Roton.Emulation.Execution
 
         protected virtual void StartMain()
         {
-            StateData.GameSpeed = 4;
-            StateData.DefaultSaveName = "SAVED";
-            StateData.DefaultBoardName = "TEMP";
-            StateData.DefaultWorldName = "TOWN";
-            if (!StateData.WorldLoaded)
+            State.GameSpeed = 4;
+            State.DefaultSaveName = "SAVED";
+            State.DefaultBoardName = "TEMP";
+            State.DefaultWorldName = "TOWN";
+            if (!State.WorldLoaded)
             {
                 ClearWorld();
             }
-            SetGameMode();
+
+            if (State.EditorMode)
+                SetEditorMode();
+            else
+                SetGameMode();
+
             TitleScreenLoop();
         }
 
@@ -1599,22 +1587,22 @@ namespace Roton.Emulation.Execution
 
         internal virtual void TitleScreenLoop()
         {
-            StateData.QuitZzt = false;
-            StateData.Init = true;
-            StateData.StartBoard = 0;
+            State.QuitZzt = false;
+            State.Init = true;
+            State.StartBoard = 0;
             var gameEnded = true;
             Hud.Initialize();
             while (ThreadActive)
             {
-                if (!StateData.Init)
+                if (!State.Init)
                 {
                     SetBoard(0);
                 }
                 while (ThreadActive)
                 {
-                    StateData.PlayerElement = Elements.MonitorId;
+                    State.PlayerElement = Elements.MonitorId;
                     var gameIsActive = false;
-                    StateData.GamePaused = false;
+                    State.GamePaused = false;
                     MainLoop(gameEnded);
                     if (!ThreadActive)
                     {
@@ -1622,16 +1610,16 @@ namespace Roton.Emulation.Execution
                         break;
                     }
 
-                    switch (StateData.KeyPressed.ToUpperCase())
+                    switch (State.KeyPressed.ToUpperCase())
                     {
                         case 0x57: // W
                             break;
                         case 0x50: // P
-                            if (WorldData.Locked)
+                            if (World.IsLocked)
                             {
                                 // reload world here
-                                gameIsActive = StateData.WorldLoaded;
-                                StateData.StartBoard = WorldData.BoardIndex;
+                                gameIsActive = State.WorldLoaded;
+                                State.StartBoard = World.BoardIndex;
                             }
                             else
                             {
@@ -1639,7 +1627,7 @@ namespace Roton.Emulation.Execution
                             }
                             if (gameIsActive)
                             {
-                                SetBoard(StateData.StartBoard);
+                                SetBoard(State.StartBoard);
                                 EnterBoard();
                             }
                             break;
@@ -1662,18 +1650,18 @@ namespace Roton.Emulation.Execution
 
                     if (gameIsActive)
                     {
-                        StateData.PlayerElement = Elements.PlayerId;
-                        StateData.GamePaused = true;
+                        State.PlayerElement = Elements.PlayerId;
+                        State.GamePaused = true;
                         MainLoop(true);
                         gameEnded = true;
                     }
 
-                    if (gameEnded || StateData.QuitZzt)
+                    if (gameEnded || State.QuitZzt)
                     {
                         break;
                     }
                 }
-                if (StateData.QuitZzt)
+                if (State.QuitZzt)
                 {
                     break;
                 }
@@ -1715,7 +1703,7 @@ namespace Roton.Emulation.Execution
                                     }
                                     if (element.Id == Elements.EmptyId || element.Id == Elements.BreakableId)
                                     {
-                                        TileAt(target).SetTo(Elements.BreakableId, RandomNumberDeterministic(7) + 9);
+                                        TileAt(target).SetTo(Elements.BreakableId, SyncRandomNumber(7) + 9);
                                     }
                                 }
                                 else

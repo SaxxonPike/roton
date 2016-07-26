@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -19,7 +15,7 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {
-            engine.WorldData.Ammo += _ammoPerPickup;
+            engine.World.Ammo += _ammoPerPickup;
             engine.RemoveItem(location);
             engine.UpdateStatus();
             engine.PlaySound(2, engine.SoundSet.Ammo);

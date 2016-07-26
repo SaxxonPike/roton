@@ -127,6 +127,7 @@
     <Compile Include="Emulation\SuperZZT\SuperZztMessage.cs" />
     <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
     <Compile Include="Emulation\ZZT\ZztMessage.cs" />
+    <Compile Include="Extensions\ElementListExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />
@@ -162,8 +163,8 @@
     <Compile Include="Emulation\Timing\CoreTimer.cs" />
     <Compile Include="Emulation\Execution\OopContext.cs" />
     <Compile Include="Emulation\Mapping\Heap.cs" />
-    <Compile Include="Core\ICode.cs" />
-    <Compile Include="Core\ICodeInstruction.cs" />
+    <Compile Include="Core\IProgrammable.cs" />
+    <Compile Include="Core\IExecutable.cs" />
     <Compile Include="Emulation\Mapping\ColorList.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztColorList.cs" />
     <Compile Include="Emulation\ZZT\ZztEngine.cs" />

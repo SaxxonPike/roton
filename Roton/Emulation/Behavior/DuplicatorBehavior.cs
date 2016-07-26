@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
-using Roton.Emulation.Execution;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -22,7 +17,7 @@ namespace Roton.Emulation.Behavior
             {
                 if (engine.TileAt(target).Id == engine.Elements.PlayerId)
                 {
-                    engine.ElementAt(source).Interact(engine, source, 0, engine.StateData.KeyVector);
+                    engine.ElementAt(source).Interact(engine, source, 0, engine.State.KeyVector);
                 }
                 else
                 {
@@ -35,7 +30,7 @@ namespace Roton.Emulation.Behavior
                         var sourceIndex = engine.ActorIndexAt(source);
                         if (sourceIndex > 0)
                         {
-                            if (engine.StateData.ActorCount < engine.Actors.Capacity - 2)
+                            if (engine.State.ActorCount < engine.Actors.Capacity - 2)
                             {
                                 var sourceTile = engine.TileAt(source);
                                 engine.SpawnActor(target, sourceTile, engine.Elements[sourceTile.Id].Cycle, engine.Actors[sourceIndex]);

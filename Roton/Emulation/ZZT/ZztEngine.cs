@@ -7,7 +7,7 @@ namespace Roton.Emulation.ZZT
     {
         public ZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
-            StateData = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
+            State = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
             Actors = new ZztActorList(Memory);
             Board = new ZztBoard(Memory);
@@ -16,8 +16,8 @@ namespace Roton.Emulation.ZZT
             Elements = new ZztElementList(Memory, elementBytes);
             SoundSet = new SoundSet();
             Tiles = new ZztTileGrid(Memory);
-            WorldData = new ZztWorld(Memory);
-            Grammar = new ZztGrammar(StateData.Colors, Elements);
+            World = new ZztWorld(Memory);
+            Grammar = new ZztGrammar(State.Colors, Elements);
 
             Hud.Initialize();
         }
@@ -29,9 +29,9 @@ namespace Roton.Emulation.ZZT
         public override IHud Hud { get; }
         public override IGameSerializer GameSerializer { get; }
         public override ISoundSet SoundSet { get; }
-        public override IState StateData { get; }
+        public override IState State { get; }
         public override ITileGrid Tiles { get; }
         public override bool TorchesEnabled => true;
-        public override IWorld WorldData { get; }
+        public override IWorld World { get; }
     }
 }

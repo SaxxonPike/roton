@@ -47,23 +47,23 @@ namespace Roton.Core
 
         public void ExecuteOnce()
         {
-            if (Engine.StateData.EditorMode)
+            if (Engine.State.EditorMode)
             {
                 // simulate a game cycle for visuals only
-                Engine.StateData.ActIndex = 0;
-                Engine.StateData.GameCycle++;
-                if (Engine.StateData.GameCycle >= MaxGameCycle)
+                Engine.State.ActIndex = 0;
+                Engine.State.GameCycle++;
+                if (Engine.State.GameCycle >= MaxGameCycle)
                 {
-                    Engine.StateData.GameCycle = 0;
+                    Engine.State.GameCycle = 0;
                 }
 
                 foreach (var actor in Actors)
                 {
-                    if (actor.Cycle > 0 && Engine.StateData.ActIndex % actor.Cycle == Engine.StateData.GameCycle %actor.Cycle)
+                    if (actor.Cycle > 0 && Engine.State.ActIndex % actor.Cycle == Engine.State.GameCycle %actor.Cycle)
                     {
                         Engine.UpdateBoard(actor.Location);
                     }
-                    Engine.StateData.ActIndex++;
+                    Engine.State.ActIndex++;
                 }
             }
         }
@@ -125,10 +125,10 @@ namespace Roton.Core
 
         public void UnpackBoard()
         {
-            Engine.UnpackBoard(Engine.WorldData.BoardIndex);
+            Engine.UnpackBoard(Engine.World.BoardIndex);
         }
 
-        public IWorld WorldData => Engine.WorldData;
+        public IWorld WorldData => Engine.World;
 
         public int WorldSize
         {
@@ -183,8 +183,8 @@ namespace Roton.Core
             {
                 Boards.Add(new PackedBoard(GameSerializer.LoadBoardData(stream)));
             }
-            GameSerializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.WorldData.BoardIndex].Data);
-            Engine.StateData.WorldLoaded = true;
+            GameSerializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.World.BoardIndex].Data);
+            Engine.State.WorldLoaded = true;
         }
     }
 }

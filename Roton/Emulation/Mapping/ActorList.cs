@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System.Collections.Generic;
+using Roton.Core;
 using Roton.Core.Collections;
 
 namespace Roton.Emulation.Mapping
@@ -9,14 +10,9 @@ namespace Roton.Emulation.Mapping
         {
             Memory = memory;
             Capacity = capacity;
-            Cache = new IActor[capacity];
-            for (var i = 0; i < capacity; i++)
-            {
-                Cache[i] = GetActor(i);
-            }
         }
 
-        private IActor[] Cache { get; }
+        private IDictionary<int, IActor> Cache { get; } = new Dictionary<int, IActor>();
 
         protected IMemory Memory { get; private set; }
 
@@ -26,9 +22,14 @@ namespace Roton.Emulation.Mapping
 
         protected sealed override IActor GetItem(int index)
         {
-            if (index >= 0 && index < Capacity)
-                return Cache[index];
-            return GetActor(index);
+            IActor actor;
+            Cache.TryGetValue(index, out actor);
+            if (actor == null)
+            {
+                actor = GetActor(index);
+                Cache[index] = actor;
+            }
+            return actor;
         }
 
         protected sealed override void SetItem(int index, IActor value)

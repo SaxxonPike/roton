@@ -41,9 +41,9 @@ namespace Roton.Emulation.Execution
                 return;
 
             if (input.StartsWith("+"))
-                engine.WorldData.Flags.Add(input.Substring(1));
+                engine.World.Flags.Add(input.Substring(1));
             else if (input.StartsWith("-"))
-                engine.WorldData.Flags.Remove(input.Substring(1));
+                engine.World.Flags.Remove(input.Substring(1));
         }
 
         public void Execute(IOopContext oopContext)
@@ -111,41 +111,41 @@ namespace Roton.Emulation.Execution
 
         protected void Cheat_Ammo(IEngine engine)
         {
-            engine.WorldData.Ammo += 5;
+            engine.World.Ammo += 5;
         }
 
         protected void Cheat_Dark(IEngine engine)
         {
-            engine.Board.Dark = true;
+            engine.Board.IsDark = true;
             engine.RedrawBoard();
         }
 
         protected void Cheat_Gems(IEngine engine)
         {
-            engine.WorldData.Gems += 5;
+            engine.World.Gems += 5;
         }
 
         protected void Cheat_Health(IEngine engine)
         {
-            engine.WorldData.Health += 50;
+            engine.World.Health += 50;
         }
 
         protected void Cheat_Keys(IEngine engine)
         {
             for (var i = 1; i < 8; i++)
             {
-                engine.WorldData.Keys[i] = true;
+                engine.World.Keys[i] = true;
             }
         }
 
         protected void Cheat_Time(IEngine engine)
         {
-            engine.WorldData.TimePassed -= 30;
+            engine.World.TimePassed -= 30;
         }
 
         protected void Cheat_Torches(IEngine engine)
         {
-            engine.WorldData.Torches += 3;
+            engine.World.Torches += 3;
         }
 
         protected void Cheat_Zap(IEngine engine)

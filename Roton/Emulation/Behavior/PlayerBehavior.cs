@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
@@ -15,17 +12,17 @@ namespace Roton.Emulation.Behavior
         public override void Act(IEngine engine, int index)
         {
             var actor = engine.Actors[index];
-            var playerElement = engine.Elements.PlayerElement;
+            var playerElement = engine.Elements[engine.Elements.PlayerId];
 
             // Energizer graphics
 
-            if (engine.WorldData.EnergyCycles > 0)
+            if (engine.World.EnergyCycles > 0)
             {
                 playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
-                if ((engine.StateData.GameCycle & 0x01) == 0)
+                if ((engine.State.GameCycle & 0x01) == 0)
                 {
-                    engine.Tiles[actor.Location].Color = ((engine.StateData.GameCycle % 7 + 1) << 4) | 0x0F;
+                    engine.Tiles[actor.Location].Color = ((engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
                 }
                 else
                 {
@@ -41,34 +38,34 @@ namespace Roton.Emulation.Behavior
 
             // Health logic
 
-            if (engine.WorldData.Health <= 0)
+            if (engine.World.Health <= 0)
             {
-                engine.StateData.KeyVector.SetTo(0, 0);
-                engine.StateData.KeyShift = false;
+                engine.State.KeyVector.SetTo(0, 0);
+                engine.State.KeyShift = false;
                 if (engine.ActorIndexAt(new Location(0, 0)) == -1)
                 {
                     engine.SetMessage(0x7D00, engine.Alerts.GameOverMessage);
                 }
-                engine.StateData.GameWaitTime = 0;
-                engine.StateData.GameOver = true;
+                engine.State.GameWaitTime = 0;
+                engine.State.GameOver = true;
             }
 
-            if (engine.StateData.KeyVector.IsNonZero())
+            if (engine.State.KeyVector.IsNonZero())
             {
-                if (engine.StateData.KeyShift || engine.StateData.KeyPressed == 0x20)
+                if (engine.State.KeyShift || engine.State.KeyPressed == 0x20)
                 {
                     // Shooting logic
 
-                    if (engine.Board.Shots > 0)
+                    if (engine.Board.MaximumShots > 0)
                     {
-                        if (engine.WorldData.Ammo > 0)
+                        if (engine.World.Ammo > 0)
                         {
                             var bulletCount = engine.Actors.Count(a => a.P1 == 0 && engine.Tiles[a.Location].Id == engine.Elements.BulletId);
-                            if (bulletCount < engine.Board.Shots)
+                            if (bulletCount < engine.Board.MaximumShots)
                             {
-                                if (engine.SpawnProjectile(engine.Elements.BulletId, actor.Location, engine.StateData.KeyVector, false))
+                                if (engine.SpawnProjectile(engine.Elements.BulletId, actor.Location, engine.State.KeyVector, false))
                                 {
-                                    engine.WorldData.Ammo--;
+                                    engine.World.Ammo--;
                                     engine.UpdateStatus();
                                     engine.PlaySound(2, engine.SoundSet.Shoot);
                                 }
@@ -96,16 +93,16 @@ namespace Roton.Emulation.Behavior
                 {
                     // Movement logic
 
-                    engine.ElementAt(actor.Location.Sum(engine.StateData.KeyVector)).Interact(engine, actor.Location.Sum(engine.StateData.KeyVector), 0, engine.StateData.KeyVector);
-                    if (!engine.StateData.KeyVector.IsZero())
+                    engine.ElementAt(actor.Location.Sum(engine.State.KeyVector)).Interact(engine, actor.Location.Sum(engine.State.KeyVector), 0, engine.State.KeyVector);
+                    if (!engine.State.KeyVector.IsZero())
                     {
-                        if (!engine.StateData.SoundPlaying)
+                        if (!engine.State.SoundPlaying)
                         {
                             // TODO: player step sound plays here
                         }
-                        if (engine.ElementAt(actor.Location.Sum(engine.StateData.KeyVector)).IsFloor)
+                        if (engine.ElementAt(actor.Location.Sum(engine.State.KeyVector)).IsFloor)
                         {
-                            engine.MoveActor(0, actor.Location.Sum(engine.StateData.KeyVector));
+                            engine.MoveActor(0, actor.Location.Sum(engine.State.KeyVector));
                         }
                     }
                 }
@@ -113,14 +110,14 @@ namespace Roton.Emulation.Behavior
 
             // Hotkey logic
 
-            switch (engine.StateData.KeyPressed.ToUpperCase())
+            switch (engine.State.KeyPressed.ToUpperCase())
             {
                 case 0x54: // T
                     if (engine.TorchesEnabled)
                     {
-                        if (engine.WorldData.TorchCycles <= 0)
+                        if (engine.World.TorchCycles <= 0)
                         {
-                            if (engine.WorldData.Torches <= 0)
+                            if (engine.World.Torches <= 0)
                             {
                                 if (engine.Alerts.NoTorches)
                                 {
@@ -128,7 +125,7 @@ namespace Roton.Emulation.Behavior
                                     engine.Alerts.NoTorches = false;
                                 }
                             }
-                            else if (!engine.Board.Dark)
+                            else if (!engine.Board.IsDark)
                             {
                                 if (engine.Alerts.NotDark)
                                 {
@@ -138,8 +135,8 @@ namespace Roton.Emulation.Behavior
                             }
                             else
                             {
-                                engine.WorldData.Torches--;
-                                engine.WorldData.TorchCycles = 0xC8;
+                                engine.World.Torches--;
+                                engine.World.TorchCycles = 0xC8;
                                 engine.UpdateRadius(actor.Location, RadiusMode.Update);
                                 engine.UpdateStatus();
                             }
@@ -148,21 +145,21 @@ namespace Roton.Emulation.Behavior
                     break;
                 case 0x51: // Q
                 case 0x1B: // escape
-                    engine.StateData.BreakGameLoop = engine.StateData.GameOver || engine.Hud.EndGameConfirmation();
+                    engine.State.BreakGameLoop = engine.State.GameOver || engine.Hud.EndGameConfirmation();
                     break;
                 case 0x53: // S
                     break;
                 case 0x50: // P
-                    if (engine.WorldData.Health > 0)
+                    if (engine.World.Health > 0)
                     {
-                        engine.StateData.GamePaused = true;
+                        engine.State.GamePaused = true;
                     }
                     break;
                 case 0x42: // B
-                    engine.StateData.GameQuiet = !engine.StateData.GameQuiet;
+                    engine.State.GameQuiet = !engine.State.GameQuiet;
                     engine.ClearSound();
                     engine.UpdateStatus();
-                    engine.StateData.KeyPressed = 0x20;
+                    engine.State.KeyPressed = 0x20;
                     break;
                 case 0x48: // H
                     engine.ShowInGameHelp();
@@ -175,16 +172,16 @@ namespace Roton.Emulation.Behavior
 
             // Torch logic
 
-            if (engine.WorldData.TorchCycles > 0)
+            if (engine.World.TorchCycles > 0)
             {
-                engine.WorldData.TorchCycles--;
-                if (engine.WorldData.TorchCycles <= 0)
+                engine.World.TorchCycles--;
+                if (engine.World.TorchCycles <= 0)
                 {
                     engine.UpdateRadius(actor.Location, RadiusMode.Update);
                     engine.PlaySound(3, engine.SoundSet.TorchOut);
                 }
 
-                if (engine.WorldData.TorchCycles % 40 == 0)
+                if (engine.World.TorchCycles % 40 == 0)
                 {
                     engine.UpdateStatus();
                 }
@@ -192,14 +189,14 @@ namespace Roton.Emulation.Behavior
 
             // Energizer logic
 
-            if (engine.WorldData.EnergyCycles > 0)
+            if (engine.World.EnergyCycles > 0)
             {
-                engine.WorldData.EnergyCycles--;
-                if (engine.WorldData.EnergyCycles == 10)
+                engine.World.EnergyCycles--;
+                if (engine.World.EnergyCycles == 10)
                 {
                     engine.PlaySound(9, engine.SoundSet.EnergyOut);
                 }
-                else if (engine.WorldData.EnergyCycles <= 0)
+                else if (engine.World.EnergyCycles <= 0)
                 {
                     engine.ForcePlayerColor(index);
                 }
@@ -209,17 +206,17 @@ namespace Roton.Emulation.Behavior
 
             if (engine.Board.TimeLimit > 0)
             {
-                if (engine.WorldData.Health > 0)
+                if (engine.World.Health > 0)
                 {
                     if (engine.GetPlayerTimeElapsed(100))
                     {
-                        engine.WorldData.TimePassed++;
-                        if (engine.Board.TimeLimit - 10 == engine.WorldData.TimePassed)
+                        engine.World.TimePassed++;
+                        if (engine.Board.TimeLimit - 10 == engine.World.TimePassed)
                         {
                             engine.SetMessage(0xC8, engine.Alerts.TimeMessage);
                             engine.PlaySound(3, engine.SoundSet.TimeLow);
                         }
-                        else if (engine.WorldData.TimePassed >= engine.Board.TimeLimit)
+                        else if (engine.World.TimePassed >= engine.Board.TimeLimit)
                         {
                             engine.Harm(0);
                         }

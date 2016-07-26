@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -81,7 +77,7 @@ namespace Roton.Emulation.Behavior
                         }
                         if (engine.TileAt(target).Id == engine.Elements.PlayerId)
                         {
-                            while (engine.WorldData.Health > 0)
+                            while (engine.World.Health > 0)
                             {
                                 engine.Harm(0);
                             }

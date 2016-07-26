@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -12,9 +8,9 @@ namespace Roton.Emulation.Behavior
 
         public override void Act(IEngine engine, int index)
         {
-            if (engine.StateData.KeyPressed != 0)
+            if (engine.State.KeyPressed != 0)
             {
-                engine.StateData.BreakGameLoop = true;
+                engine.State.BreakGameLoop = true;
             }
             engine.MoveActorOnRiver(index);
         }

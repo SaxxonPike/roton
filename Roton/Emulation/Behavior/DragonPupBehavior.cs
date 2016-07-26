@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -17,7 +13,7 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
         {
-            switch (engine.StateData.GameCycle & 0x3)
+            switch (engine.State.GameCycle & 0x3)
             {
                 case 0:
                 case 2:

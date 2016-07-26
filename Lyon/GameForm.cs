@@ -18,14 +18,14 @@ namespace Lyon
         {
             _openGl = openGl;
             CommonSetup();
-            Initialize(new Context(GetCoreConfiguration(), ContextEngine.Zzt));
+            Shown += (sender, e) => { Initialize(new Context(GetCoreConfiguration(), ContextEngine.Zzt)); };
         }
 
         public GameForm(Stream source, bool openGl = false)
         {
             _openGl = openGl;
             CommonSetup();
-            Initialize(new Context(GetCoreConfiguration(), source));
+            Shown += (sender, e) => { Initialize(new Context(GetCoreConfiguration(), source)); };
         }
 
         private string FileFilters

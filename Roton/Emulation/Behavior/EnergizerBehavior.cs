@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -15,7 +11,7 @@ namespace Roton.Emulation.Behavior
         {
             engine.PlaySound(9, engine.SoundSet.Energizer);
             engine.RemoveItem(location);
-            engine.WorldData.EnergyCycles = 0x4B;
+            engine.World.EnergyCycles = 0x4B;
             engine.UpdateStatus();
             engine.UpdateBoard(location);
             if (engine.Alerts.EnergizerPickup)

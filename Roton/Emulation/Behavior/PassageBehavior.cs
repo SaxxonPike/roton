@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -55,7 +51,7 @@ namespace Roton.Emulation.Behavior
             {
                 engine.Player.Location.CopyFrom(target);
             }
-            engine.StateData.GamePaused = true;
+            engine.State.GamePaused = true;
             engine.PlaySound(4, engine.SoundSet.Passage);
             engine.FadePurple();
             engine.EnterBoard();

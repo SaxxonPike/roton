@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
-using Roton.Emulation.Execution;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -35,7 +30,7 @@ namespace Roton.Emulation.Behavior
             var behindActor = engine.Actors[behindIndex];
             if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
             {
-                engine.Elements.PusherElement.Act(engine, behindIndex);
+                engine.Elements[engine.Elements.PusherId].Act(engine, behindIndex);
             }
         }
 

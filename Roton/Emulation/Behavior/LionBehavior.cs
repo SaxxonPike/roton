@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -15,7 +11,7 @@ namespace Roton.Emulation.Behavior
         {
             var actor = engine.Actors[index];
             var vector = new Vector();
-            if (actor.P1 >= engine.RandomNumberDeterministic(10))
+            if (actor.P1 >= engine.SyncRandomNumber(10))
             {
                 vector.CopyFrom(engine.Seek(actor.Location));
             }

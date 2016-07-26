@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
-using Roton.Emulation.Execution;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -37,7 +32,7 @@ namespace Roton.Emulation.Behavior
                 {
                     if (element.Points != 0)
                     {
-                        engine.WorldData.Score += element.Points;
+                        engine.World.Score += element.Points;
                         engine.UpdateStatus();
                     }
                     engine.Attack(index, target);
@@ -59,7 +54,7 @@ namespace Roton.Emulation.Behavior
                     continue;
                 }
                 engine.RemoveActor(index);
-                engine.StateData.ActIndex--;
+                engine.State.ActIndex--;
                 if (element.Id == engine.Elements.ObjectId || element.Id == engine.Elements.ScrollId)
                 {
                     engine.BroadcastLabel(-engine.ActorIndexAt(target), @"SHOT", false);

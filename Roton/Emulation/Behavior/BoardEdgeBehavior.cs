@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -15,7 +11,7 @@ namespace Roton.Emulation.Behavior
         {
             var target = location.Clone();
             int targetBoard;
-            var oldBoard = engine.WorldData.BoardIndex;
+            var oldBoard = engine.World.BoardIndex;
 
             switch (vector.Y)
             {
@@ -46,7 +42,7 @@ namespace Roton.Emulation.Behavior
                 engine.SetBoard(targetBoard);
                 if (engine.TileAt(target).Id != engine.Elements.PlayerId)
                 {
-                    engine.ElementAt(target).Interact(engine, target, index, engine.StateData.KeyVector);
+                    engine.ElementAt(target).Interact(engine, target, index, engine.State.KeyVector);
                 }
                 if (engine.ElementAt(target).IsFloor || engine.ElementAt(target).Id == engine.Elements.PlayerId)
                 {

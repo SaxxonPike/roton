@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryTile : Tile
+    internal sealed class MemoryTile : ITile
     {
         public MemoryTile(IMemory memory, int offset)
         {
@@ -14,16 +14,26 @@ namespace Roton.Emulation.Mapping
 
         private int Offset { get; }
 
-        public override int Color
+        public int Color
         {
             get { return Memory.Read8(Offset + 0x01); }
             set { Memory.Write8(Offset + 0x01, value); }
         }
 
-        public override int Id
+        public int Id
         {
             get { return Memory.Read8(Offset + 0x00); }
             set { Memory.Write8(Offset + 0x00, value); }
+        }
+
+        public ITile Clone()
+        {
+            return new Tile(Id, Color);
+        }
+
+        public override string ToString()
+        {
+            return $"Id: {Id:x2}, Color: {Color:x2}";
         }
     }
 }

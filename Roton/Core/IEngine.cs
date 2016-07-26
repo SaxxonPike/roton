@@ -18,11 +18,11 @@ namespace Roton.Core
         IActor Player { get; }
         IGameSerializer GameSerializer { get; }
         ISoundSet SoundSet { get; }
-        IState StateData { get; }
+        IState State { get; }
         string StoneText { get; }
         ITileGrid Tiles { get; }
         bool TitleScreen { get; }
-        IWorld WorldData { get; }
+        IWorld World { get; }
         bool TorchesEnabled { get; }
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
@@ -34,7 +34,7 @@ namespace Roton.Core
         void Destroy(IXyPair location);
         AnsiChar Draw(IXyPair location);
         void EnterBoard();
-        void ExecuteCode(int index, ICodeInstruction instructionSource, string name);
+        void ExecuteCode(int index, IExecutable instructionSource, string name);
         void FadePurple();
         void FadeRed();
         void ForcePlayerColor(int index);
@@ -50,9 +50,9 @@ namespace Roton.Core
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);
         int RandomNumber(int max);
-        int RandomNumberDeterministic(int max);
-        int ReadActorCodeNumber(int index, ICodeInstruction instructionSource);
-        string ReadActorCodeWord(int index, ICodeInstruction instructionSource);
+        int SyncRandomNumber(int max);
+        int ReadActorCodeNumber(int index, IExecutable instructionSource);
+        string ReadActorCodeWord(int index, IExecutable instructionSource);
         int ReadKey();
         void RedrawBoard();
         void RemoveActor(int index);

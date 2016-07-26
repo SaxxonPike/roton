@@ -47,7 +47,7 @@ namespace Roton.Emulation.SuperZZT
 
         public IKeyList Keys => new KeyList(Memory, 0x7850);
 
-        public bool Locked
+        public bool IsLocked
         {
             get { return Memory.ReadBool(0x79CC); }
             set { Memory.WriteBool(0x79CC, value); }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -12,7 +8,7 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
         {
-            return new AnsiChar(engine.StateData.LineChars[engine.Adjacent(location, engine.Elements.LineId)], engine.Tiles[location].Color);
+            return new AnsiChar(engine.State.LineChars[engine.Adjacent(location, engine.Elements.LineId)], engine.Tiles[location].Color);
         }
     }
 }

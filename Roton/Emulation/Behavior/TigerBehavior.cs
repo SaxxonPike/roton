@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -20,7 +16,7 @@ namespace Roton.Emulation.Behavior
                 firingElement = engine.Elements.StarId;
             }
 
-            if ((actor.P2 & 0x7F) > 3 * engine.RandomNumberDeterministic(10))
+            if ((actor.P2 & 0x7F) > 3 * engine.SyncRandomNumber(10))
             {
                 var shot = actor.Location.X.AbsDiff(engine.Player.Location.X) <= 2 &&
                            engine.SpawnProjectile(firingElement, actor.Location,

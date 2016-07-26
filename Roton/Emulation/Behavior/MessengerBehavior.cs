@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Behavior
 {
@@ -15,14 +11,14 @@ namespace Roton.Emulation.Behavior
             var actor = engine.Actors[index];
             if (actor.Location.X == 0)
             {
-                engine.Hud.DrawMessage(new Message(engine.StateData.Message, engine.StateData.Message2), actor.P2 % 7 + 9);
+                engine.Hud.DrawMessage(new Message(engine.State.Message, engine.State.Message2), actor.P2 % 7 + 9);
                 actor.P2--;
                 if (actor.P2 > 0) return;
 
                 engine.RemoveActor(index);
-                engine.StateData.ActIndex--;
+                engine.State.ActIndex--;
                 engine.Hud.UpdateBorder();
-                engine.StateData.Message = string.Empty;
+                engine.State.Message = string.Empty;
             }
         }
     }

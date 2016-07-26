@@ -57,11 +57,11 @@ namespace Torch
             };
             enteredXTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.Board.Enter.X = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Entrance.X = int.Parse(((TextBox) sender).Text);
             };
             enteredYTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.Board.Enter.Y = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.Entrance.Y = int.Parse(((TextBox) sender).Text);
             };
             exitEastTextBox.TextChanged += (sender, e) =>
             {
@@ -83,7 +83,7 @@ namespace Torch
             };
             maxShotsTextBox.TextChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.Board.Shots = int.Parse(((TextBox) sender).Text);
+                if (!SuppressUpdate) _context.Board.MaximumShots = int.Parse(((TextBox) sender).Text);
             };
             timeLimitTextBox.TextChanged += (sender, e) =>
             {
@@ -197,9 +197,9 @@ namespace Torch
             // textboxes
             cameraXTextBox.Text = _context.Board.Camera.X.ToString();
             cameraYTextBox.Text = _context.Board.Camera.Y.ToString();
-            enteredXTextBox.Text = _context.Board.Enter.X.ToString();
-            enteredYTextBox.Text = _context.Board.Enter.Y.ToString();
-            maxShotsTextBox.Text = _context.Board.Shots.ToString();
+            enteredXTextBox.Text = _context.Board.Entrance.X.ToString();
+            enteredYTextBox.Text = _context.Board.Entrance.Y.ToString();
+            maxShotsTextBox.Text = _context.Board.MaximumShots.ToString();
             timeLimitTextBox.Text = _context.Board.TimeLimit.ToString();
 
             // checkboxes

@@ -104,7 +104,7 @@ namespace Torch
             };
             lockedCheckBox.CheckStateChanged += (sender, e) =>
             {
-                if (!SuppressUpdate) _context.WorldData.Locked = ((CheckBox) sender).Checked;
+                if (!SuppressUpdate) _context.WorldData.IsLocked = ((CheckBox) sender).Checked;
             };
             purpleKeyCheckBox.CheckStateChanged += (sender, e) =>
             {
@@ -172,7 +172,7 @@ namespace Torch
             blueKeyCheckBox.Checked = _context.WorldData.Keys[0];
             cyanKeyCheckBox.Checked = _context.WorldData.Keys[2];
             greenKeyCheckBox.Checked = _context.WorldData.Keys[1];
-            lockedCheckBox.Checked = _context.WorldData.Locked;
+            lockedCheckBox.Checked = _context.WorldData.IsLocked;
             purpleKeyCheckBox.Checked = _context.WorldData.Keys[4];
             redKeyCheckBox.Checked = _context.WorldData.Keys[3];
             whiteKeyCheckBox.Checked = _context.WorldData.Keys[6];

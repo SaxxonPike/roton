@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -17,9 +13,9 @@ namespace Roton.Emulation.Behavior
 
             if (actor.Vector.IsZero())
             {
-                if (actor.P2 + 8 <= engine.RandomNumberDeterministic(17))
+                if (actor.P2 + 8 <= engine.SyncRandomNumber(17))
                 {
-                    if (actor.P1 >= engine.RandomNumberDeterministic(9))
+                    if (actor.P1 >= engine.SyncRandomNumber(9))
                     {
                         actor.Vector.CopyFrom(engine.Seek(actor.Location));
                     }
@@ -33,7 +29,7 @@ namespace Roton.Emulation.Behavior
             {
                 if (actor.Location.X == engine.Player.Location.X || actor.Location.Y == engine.Player.Location.Y)
                 {
-                    if (actor.P1 >= engine.RandomNumberDeterministic(9))
+                    if (actor.P1 >= engine.SyncRandomNumber(9))
                     {
                         actor.Vector.CopyFrom(engine.Seek(actor.Location));
                     }
@@ -47,7 +43,7 @@ namespace Roton.Emulation.Behavior
                 else if (engine.ElementAt(target).IsFloor)
                 {
                     engine.MoveActor(index, target);
-                    if (actor.P2 + 8 <= engine.RandomNumberDeterministic(17))
+                    if (actor.P2 + 8 <= engine.SyncRandomNumber(17))
                     {
                         actor.Vector.SetTo(0, 0);
                     }

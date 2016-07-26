@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface IActor : ICodeInstruction, ICode
+    public interface IActor : IExecutable, IProgrammable
     {
         IXyPair Location { get; }
         ITile UnderTile { get; }

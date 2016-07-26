@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class ByRefInstruction : ICodeInstruction
+    internal class ByRefInstruction : IExecutable
     {
         public ByRefInstruction()
         {

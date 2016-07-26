@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -27,9 +23,9 @@ namespace Roton.Emulation.Behavior
 
             engine.UpdateBoard(location);
 
-            var forestIndex = engine.StateData.ForestIndex;
+            var forestIndex = engine.State.ForestIndex;
             var forestSongLength = engine.SoundSet.Forest.Length;
-            engine.StateData.ForestIndex = (forestIndex + 2) % forestSongLength;
+            engine.State.ForestIndex = (forestIndex + 2) % forestSongLength;
             engine.PlaySound(3, engine.SoundSet.Forest, forestIndex, 2);
 
             if (!engine.Alerts.Forest)

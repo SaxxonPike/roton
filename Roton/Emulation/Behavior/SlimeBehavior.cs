@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -19,7 +15,7 @@ namespace Roton.Emulation.Behavior
             {
                 var spawnCount = 0;
                 var color = engine.Tiles[actor.Location].Color;
-                var slimeElement = engine.Elements.SlimeElement;
+                var slimeElement = engine.Elements[engine.Elements.SlimeId];
                 var slimeTrailTile = new Tile(engine.Elements.BreakableId, color);
                 var source = actor.Location.Clone();
                 actor.P1 = 0;
@@ -38,7 +34,7 @@ namespace Roton.Emulation.Behavior
                         else
                         {
                             engine.SpawnActor(target, new Tile(engine.Elements.SlimeId, color), slimeElement.Cycle, null);
-                            engine.Actors[engine.StateData.ActorCount].P2 = actor.P2;
+                            engine.Actors[engine.State.ActorCount].P2 = actor.P2;
                         }
                         spawnCount++;
                     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -57,7 +53,7 @@ namespace Roton.Emulation.Behavior
             tile.Color++;
             if (tile.Color > 15)
                 tile.Color = 9;
-            return new AnsiChar(engine.StateData.StarChars[engine.StateData.GameCycle & 0x3], tile.Color);
+            return new AnsiChar(engine.State.StarChars[engine.State.GameCycle & 0x3], tile.Color);
         }
     }
 }

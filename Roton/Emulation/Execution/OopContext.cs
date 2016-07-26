@@ -3,14 +3,14 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
-    internal class OopContext : ICodeInstruction, IOopContext
+    internal class OopContext : IExecutable, IOopContext
     {
         private readonly int _index;
-        private readonly ICodeInstruction _instructionSource;
+        private readonly IExecutable _instructionSource;
 
         public OopContext(
             int index,
-            ICodeInstruction instructionSource,
+            IExecutable instructionSource,
             string name,
             IEngine engine)
         {
@@ -44,7 +44,7 @@ namespace Roton.Emulation.Execution
 
         public bool Finished { get; set; }
 
-        public IFlagList Flags => Engine.WorldData.Flags;
+        public IFlagList Flags => Engine.World.Flags;
 
         public IXyPair GetRandomDirection() => Engine.Rnd();
 
@@ -68,14 +68,14 @@ namespace Roton.Emulation.Execution
 
         public int OopByte
         {
-            get { return Engine.StateData.OopByte; }
-            set { Engine.StateData.OopByte = value; }
+            get { return Engine.State.OopByte; }
+            set { Engine.State.OopByte = value; }
         }
 
         public int OopNumber
         {
-            get { return Engine.StateData.OopNumber; }
-            set { Engine.StateData.OopNumber = value; }
+            get { return Engine.State.OopNumber; }
+            set { Engine.State.OopNumber = value; }
         }
 
         public IActor Player => Engine.Player;
@@ -94,6 +94,6 @@ namespace Roton.Emulation.Execution
 
         public void UpdateBoard(IXyPair location) => Engine.UpdateBoard(location);
 
-        public IWorld World => Engine.WorldData;
+        public IWorld World => Engine.World;
     }
 }
