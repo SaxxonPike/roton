@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using Roton.Core;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
@@ -49,12 +50,62 @@ namespace Roton.Emulation.Execution
                 engine.World.Flags.Remove(input.Substring(1));
         }
 
-        public void Execute(IOopContext oopContext)
+        public void Execute(IOopContext context)
         {
-            var command = oopContext.ReadWord();
-            Action<IOopContext> func;
-            Commands.TryGetValue(command, out func);
-            func?.Invoke(oopContext);
+            while (true)
+            {
+                context.Resume = false;
+                context.Executed = true;
+
+                var command = context.ReadWord();
+                Console.WriteLine(command);
+                if (command.Length == 0)
+                    break;
+
+                Action<IOopContext> func;
+                Commands.TryGetValue(command, out func);
+
+                if (func != null)
+                {
+                    func.Invoke(context);
+                }
+                else
+                {
+                    if (!context.Engine.BroadcastLabel(context.Index, command, false))
+                    {
+                        if (!command.Contains(':'))
+                        {
+                            context.Engine.RaiseError($"Bad command {command}");
+                        }
+                    }
+                    else
+                    {
+                        context.NextLine = false;
+                    }
+                }
+
+                if (context.Executed)
+                {
+                    context.CommandsExecuted++;
+                    context.Executed = false;
+                }
+                else
+                {
+                    context.Resume = true;
+                }
+
+                if (context.Resume)
+                {
+                    context.Resume = false;
+                }
+                else
+                {
+                    if (context.NextLine && context.Instruction > 0)
+                    {
+                        context.ReadLine();
+                    }
+                }
+            }
         }
 
         public bool? GetCondition(IOopContext oopContext)

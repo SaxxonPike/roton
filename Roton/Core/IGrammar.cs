@@ -5,7 +5,7 @@ namespace Roton.Core
     public interface IGrammar
     {
         void Cheat(IEngine engine, string input);
-        void Execute(IOopContext oopContext);
+        void Execute(IOopContext context);
         bool? GetCondition(IOopContext oopContext);
         IXyPair GetDirection(IOopContext oopContext);
         IOopItem GetItem(IOopContext oopContext);

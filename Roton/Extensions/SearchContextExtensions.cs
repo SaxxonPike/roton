@@ -25,6 +25,11 @@ namespace Roton.Extensions
             return context.Engine.ReadActorCodeByte(context.Index, context);
         }
 
+        public static string ReadLine(this IOopContext context)
+        {
+            return context.Engine.ReadActorCodeLine(context.Index, context);
+        }
+
         public static IFlagList GetFlags(this ISearchContext context)
         {
             return context.Engine.World.Flags;

@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System.Collections.Generic;
+using Roton.Core;
 using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.Execution
@@ -20,6 +21,7 @@ namespace Roton.Emulation.Execution
             Name = name;
             Engine = engine;
             DeathTile = new Tile(0, 0);
+            Message = new List<string>();
         }
 
         public IEngine Engine { get; }
@@ -38,13 +40,15 @@ namespace Roton.Emulation.Execution
 
         public bool Died { get; set; }
 
+        public bool Executed { get; set; }
+
         public bool Finished { get; set; }
 
         public IGrammar Grammar => Engine.Grammar;
 
         public int Index { get; set; }
 
-        public string Message { get; set; }
+        public IList<string> Message { get; }
 
         public bool Moved { get; set; }
 
@@ -55,6 +59,8 @@ namespace Roton.Emulation.Execution
         public int PreviousInstruction { get; set; }
 
         public bool Repeat { get; set; }
+
+        public bool Resume { get; set; }
 
         public int SearchIndex { get; set; }
 

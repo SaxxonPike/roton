@@ -106,11 +106,8 @@ namespace Roton.Emulation.Execution
 
         public virtual bool BroadcastLabel(int sender, string label, bool force)
         {
-            var target = label;
             var external = false;
             var success = false;
-            var index = 0;
-            var offset = 0;
 
             if (sender < 0)
             {
@@ -122,7 +119,7 @@ namespace Roton.Emulation.Execution
             {
                 SearchIndex = 0,
                 SearchOffset = 0,
-                SearchTarget = target
+                SearchTarget = label
             };
 
             while (ExecuteLabel(sender, info, "\x000D:"))
@@ -133,7 +130,7 @@ namespace Roton.Emulation.Execution
                     {
                         success = true;
                     }
-                    Actors[index].Instruction = info.SearchOffset;
+                    Actors[info.SearchIndex].Instruction = info.SearchOffset;
                 }
             }
 
@@ -314,6 +311,123 @@ namespace Roton.Emulation.Execution
         public virtual void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
             var context = new OopContext(index, instructionSource, name, this);
+
+            context.PreviousInstruction = context.Instruction;
+            context.Moved = false;
+            context.Repeat = false;
+            context.Died = false;
+            context.Finished = false;
+            context.CommandsExecuted = 0;
+
+            while (true)
+            {
+                if (context.Instruction < 0)
+                    break;
+
+                context.NextLine = true;
+                context.PreviousInstruction = context.Instruction;
+
+                var command = ReadActorCodeByte(index, context);
+                switch (command)
+                {
+                    case 0x3A: // :
+                    case 0x27: // '
+                    case 0x40: // @
+                        ReadActorCodeLine(index, context);
+                        break;
+                    case 0x2F: // /
+                    case 0x3F: // ?
+                        if (command == 0x2F)
+                            context.Repeat = true;
+
+                        var vector = Grammar.GetDirection(context);
+                        if (vector == null)
+                        {
+                            RaiseError("Bad direction");
+                        }
+                        else
+                        {
+                            ExecuteDirection(context, vector);
+                            ReadActorCodeByte(index, context);
+                            if (State.OopByte != 0x0D)
+                                context.Instruction--;
+                            context.Moved = true;
+                        }
+                        break;
+                    case 0x23: // #
+                        Grammar.Execute(context);
+                        break;
+                    case 0x0D: // enter
+                        if (context.Message.Count > 0)
+                            context.Message.Add(string.Empty);
+                        break;
+                    case 0x00:
+                        context.Finished = true;
+                        break;
+                    default:
+                        context.Message.Add(command.ToStringValue() + ReadActorCodeLine(context.Index, context));
+                        break;
+                }
+
+                if (context.Finished ||
+                    context.Moved ||
+                    context.Repeat ||
+                    context.Died ||
+                    context.CommandsExecuted > 32)
+                    break;
+            }
+
+            if (context.Repeat)
+                context.Instruction = context.PreviousInstruction;
+
+            if (State.OopByte == 0)
+                context.Instruction = -1;
+
+            if (context.Message.Count > 0)
+                ExecuteMessage(context);
+
+            if (context.Died)
+                ExecuteDeath(context);
+        }
+
+        protected virtual void ExecuteDeath(IOopContext context)
+        {
+            
+        }
+
+        protected virtual void ExecuteMessage(IOopContext context)
+        {
+            if (context.Message.Count == 1)
+            {
+                SetMessage(0xC8, new Message(context.Message.ToArray()));
+            }
+            else
+            {
+                // TODO: display scroll
+            }
+        }
+
+        protected virtual void ExecuteDirection(IOopContext context, IXyPair vector)
+        {
+            if (vector.IsZero())
+            {
+                context.Repeat = false;
+            }
+            else
+            {
+                var target = context.Actor.Location.Sum(vector);
+                if (!this.ElementAt(target).IsFloor)
+                {
+                    Push(target, vector);
+                }
+                if (this.ElementAt(target).IsFloor)
+                {
+                    MoveActor(context.Index, target);
+                    context.Repeat = false;
+                }
+            }
+
+
         }
 
         public void FadePurple()
@@ -1425,6 +1539,7 @@ namespace Roton.Emulation.Execution
                 result.Append(State.OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
+            instructionSource.Instruction--;
             return result.ToString();
         }
 
