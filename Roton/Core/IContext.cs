@@ -4,7 +4,6 @@ namespace Roton.Core
 {
     public interface IContext
     {
-        int ActorCapacity { get; }
         IActorList Actors { get; }
         IBoard Board { get; }
         IList<IPackedBoard> Boards { get; }

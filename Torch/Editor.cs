@@ -916,7 +916,7 @@ namespace Torch
         private void UpdateActors()
         {
             // we subtract 1 from the capacity because there must always be room for the messenger object
-            actorInfoLabel.Text = $"{Context.Actors.Count}/{Context.ActorCapacity - 1}";
+            actorInfoLabel.Text = $"{Context.Actors.Count}/{Context.Actors.Capacity - 1}";
         }
 
         private void UpdateColor()

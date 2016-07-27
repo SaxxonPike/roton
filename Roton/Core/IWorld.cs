@@ -4,6 +4,7 @@
     {
         IFlagList Flags { get; }
         IKeyList Keys { get; }
+        ITimer TimeLimitTimer { get; }
         int WorldType { get; }
         int Ammo { get; set; }
         int BoardIndex { get; set; }

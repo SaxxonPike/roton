@@ -9,6 +9,7 @@ namespace Roton.Emulation.ZZT
         public ZztWorld(IMemory memory)
         {
             Memory = memory;
+            TimeLimitTimer = new MemoryTimer(memory, 0x4920);
         }
 
         private IMemory Memory { get; }
@@ -52,6 +53,8 @@ namespace Roton.Emulation.ZZT
         }
 
         public IKeyList Keys => new KeyList(Memory, 0x4822);
+
+        public ITimer TimeLimitTimer { get; }
 
         public string Name
         {

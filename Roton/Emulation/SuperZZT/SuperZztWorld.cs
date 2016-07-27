@@ -9,6 +9,7 @@ namespace Roton.Emulation.SuperZZT
         public SuperZztWorld(IMemory memory)
         {
             Memory = memory;
+            TimeLimitTimer = new MemoryTimer(memory, 0x79CA);
         }
 
         private IMemory Memory { get; }
@@ -52,6 +53,8 @@ namespace Roton.Emulation.SuperZZT
         }
 
         public IKeyList Keys => new KeyList(Memory, 0x7850);
+
+        public ITimer TimeLimitTimer { get; }
 
         public string Name
         {

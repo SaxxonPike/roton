@@ -1184,14 +1184,6 @@ namespace Roton.Emulation.Execution
             return new Vector(State.Vector8[index], State.Vector8[index + 8]);
         }
 
-        private bool GetMainTimeElapsed(int interval)
-        {
-            return TimerTick%interval == 0;
-            // TODO: Fix this for real.
-            // This should say if it's been [interval] ticks since last checked
-            // We could run into issues if TimerTick overflows
-        }
-
         private int GetTimeDifference(int now, int then)
         {
             now &= 0x7FFF;
@@ -1329,7 +1321,7 @@ namespace Roton.Emulation.Execution
                 else
                 {
                     State.ActIndex = State.ActorCount + 1;
-                    if (GetMainTimeElapsed(25))
+                    if (State.PlayerTimer.Clock(25))
                     {
                         alternating = !alternating;
                     }
@@ -1397,9 +1389,9 @@ namespace Roton.Emulation.Execution
 
                 if (State.ActIndex > State.ActorCount)
                 {
-                    if (!State.BreakGameLoop)
+                    if (!State.BreakGameLoop && !State.GamePaused)
                     {
-                        if (State.GameWaitTime <= 0 || GetMainTimeElapsed(State.GameWaitTime))
+                        if (State.GameWaitTime <= 0 || State.PlayerTimer.Clock(State.GameWaitTime))
                         {
                             State.GameCycle++;
                             if (State.GameCycle > 420)

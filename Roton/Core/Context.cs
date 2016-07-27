@@ -37,7 +37,6 @@ namespace Roton.Core
         private IGameSerializer GameSerializer => Engine.GameSerializer;
 
         private IEngine Engine { get; set; }
-        public int ActorCapacity => Engine.Actors.Capacity;
 
         public IActorList Actors => Engine.Actors;
 
@@ -72,15 +71,9 @@ namespace Roton.Core
             }
         }
 
-        public void PackBoard()
-        {
-            Engine.PackBoard();
-        }
+        public void PackBoard() => Engine.PackBoard();
 
-        public void Refresh()
-        {
-            Engine.RedrawBoard();
-        }
+        public void Refresh() => Engine.RedrawBoard();
 
         public byte[] Save()
         {
@@ -106,27 +99,15 @@ namespace Roton.Core
             Engine.Disk.PutFile(filename, Save());
         }
 
-        public void SetBoard(int boardIndex)
-        {
-            Engine.SetBoard(boardIndex);
-        }
+        public void SetBoard(int boardIndex) => Engine.SetBoard(boardIndex);
 
-        public void Start()
-        {
-            Engine.Start();
-        }
+        public void Start() => Engine.Start();
 
-        public void Stop()
-        {
-            Engine.Stop();
-        }
+        public void Stop() => Engine.Stop();
 
         public ITileGrid Tiles => Engine.Tiles;
 
-        public void UnpackBoard()
-        {
-            Engine.UnpackBoard(Engine.World.BoardIndex);
-        }
+        public void UnpackBoard() => Engine.UnpackBoard(Engine.World.BoardIndex);
 
         public IWorld WorldData => Engine.World;
 

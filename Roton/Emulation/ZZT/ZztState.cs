@@ -26,6 +26,7 @@ namespace Roton.Emulation.ZZT
             Vector4 = new Int16List(_memory, 0x0062, 8);
             Vector8 = new Int16List(_memory, 0x0042, 16);
             Alerts = new ZztAlerts(_memory, Colors, 5);
+            PlayerTimer = new MemoryTimer(_memory, 0x740A);
         }
 
         public bool AboutShown
@@ -241,6 +242,8 @@ namespace Roton.Emulation.ZZT
         }
 
         public IList<int> StarChars { get; }
+
+        public ITimer PlayerTimer { get; }
 
         public int StartBoard
         {

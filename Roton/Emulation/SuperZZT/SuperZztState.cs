@@ -28,6 +28,7 @@ namespace Roton.Emulation.SuperZZT
             Vector8 = new Int16List(_memory, 0x2230, 16);
             WebChars = new ByteString(_memory, 0x227C);
             Alerts = new SuperZztAlerts(_memory, Colors, 20);
+            PlayerTimer = new MemoryTimer(_memory, 0xB95E);
         }
 
         public bool AboutShown { get; set; }
@@ -231,6 +232,8 @@ namespace Roton.Emulation.SuperZZT
         }
 
         public IList<int> StarChars { get; }
+
+        public ITimer PlayerTimer { get; }
 
         public int StartBoard
         {

@@ -13,6 +13,7 @@ namespace Roton.Core
         IList<int> LineChars { get; }
         IList<int> SoundBuffer { get; }
         IList<int> StarChars { get; }
+        ITimer PlayerTimer { get; }
         IList<int> TransporterHChars { get; }
         IList<int> TransporterVChars { get; }
         IList<int> Vector4 { get; }
