@@ -1,4 +1,6 @@
-﻿namespace Roton.Core
+﻿using Roton.Emulation.Mapping;
+
+namespace Roton.Core
 {
     public interface IGrammar
     {
@@ -8,5 +10,6 @@
         IXyPair GetDirection(IOopContext oopContext);
         IOopItem GetItem(IOopContext oopContext);
         ITile GetKind(IOopContext oopContext);
+        bool GetTarget(string target, ISearchContext context);
     }
 }

@@ -52,6 +52,8 @@ namespace Roton.Core
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);
         int RandomNumber(int max);
+        int ReadActorCodeByte(int index, IExecutable instructionSource);
+        string ReadActorCodeLine(int index, IExecutable instructionSource);
         int ReadActorCodeNumber(int index, IExecutable instructionSource);
         string ReadActorCodeWord(int index, IExecutable instructionSource);
         int ReadKey();
@@ -60,6 +62,7 @@ namespace Roton.Core
         void RemoveItem(IXyPair location);
         IXyPair Rnd();
         IXyPair RndP(IXyPair vector);
+        int SearchActorCode(int index, string term);
         IXyPair Seek(IXyPair location);
         void SetBoard(int boardIndex);
         void SetMessage(int duration, IMessage message);

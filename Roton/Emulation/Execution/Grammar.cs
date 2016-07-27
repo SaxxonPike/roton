@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Roton.Core;
+using Roton.Emulation.Mapping;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
@@ -20,6 +21,7 @@ namespace Roton.Emulation.Execution
             Conditions = GetConditions();
             Directions = GetDirections();
             Items = GetItems();
+            Targets = GetTargets();
         }
 
         private IDictionary<string, Action<IEngine>> Cheats { get; }
@@ -27,6 +29,7 @@ namespace Roton.Emulation.Execution
         private IDictionary<string, Func<IOopContext, bool?>> Conditions { get; }
         private IDictionary<string, Func<IOopContext, IXyPair>> Directions { get; }
         private IDictionary<string, Func<IOopContext, IOopItem>> Items { get; }
+        private IDictionary<string, Func<ISearchContext, bool>> Targets { get; }
 
         public void Cheat(IEngine engine, string input)
         {
@@ -48,7 +51,7 @@ namespace Roton.Emulation.Execution
 
         public void Execute(IOopContext oopContext)
         {
-            var command = oopContext.ReadNextWord();
+            var command = oopContext.ReadWord();
             Action<IOopContext> func;
             Commands.TryGetValue(command, out func);
             func?.Invoke(oopContext);
@@ -56,17 +59,17 @@ namespace Roton.Emulation.Execution
 
         public bool? GetCondition(IOopContext oopContext)
         {
-            var condition = oopContext.ReadNextWord();
+            var condition = oopContext.ReadWord();
             Func<IOopContext, bool?> func;
             Conditions.TryGetValue(condition, out func);
             return func != null
                 ? func(oopContext)
-                : oopContext.Flags.Contains(condition);
+                : oopContext.GetFlags().Contains(condition);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
-            var direction = oopContext.ReadNextWord();
+            var direction = oopContext.ReadWord();
             Func<IOopContext, IXyPair> func;
             Directions.TryGetValue(direction, out func);
             return func?.Invoke(oopContext);
@@ -74,7 +77,7 @@ namespace Roton.Emulation.Execution
 
         public IOopItem GetItem(IOopContext oopContext)
         {
-            var item = oopContext.ReadNextWord();
+            var item = oopContext.ReadWord();
             Func<IOopContext, IOopItem> func;
             Items.TryGetValue(item, out func);
             return func?.Invoke(oopContext);
@@ -82,7 +85,7 @@ namespace Roton.Emulation.Execution
 
         public ITile GetKind(IOopContext oopContext)
         {
-            var word = oopContext.ReadNextWord();
+            var word = oopContext.ReadWord();
             var result = new Tile(0, 0);
             var success = false;
 
@@ -92,7 +95,7 @@ namespace Roton.Emulation.Execution
                     continue;
 
                 result.Color = i + 8;
-                word = oopContext.ReadNextWord();
+                word = oopContext.ReadWord();
                 break;
             }
 
@@ -107,6 +110,13 @@ namespace Roton.Emulation.Execution
             }
 
             return success ? result : null;
+        }
+
+        public bool GetTarget(string target, ISearchContext context)
+        {
+            Func<ISearchContext, bool> func;
+            Targets.TryGetValue(target, out func);
+            return func?.Invoke(context) ?? Target_Default(context);
         }
 
         protected void Cheat_Ammo(IEngine engine)
@@ -161,7 +171,7 @@ namespace Roton.Emulation.Execution
             var kind = GetKind(context);
             if (kind == null)
             {
-                context.RaiseError("Bad #BECOME");
+                context.Engine.RaiseError("Bad #BECOME");
                 return;
             }
 
@@ -179,23 +189,23 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Char(IOopContext context)
         {
-            var value = context.ReadNextNumber();
+            var value = context.ReadNumber();
             if (value >= 0)
             {
                 context.Actor.P1 = value;
-                context.UpdateBoard(context.Actor.Location);
+                context.Engine.UpdateBoard(context.Actor.Location);
             }
         }
 
         protected void Command_Clear(IOopContext context)
         {
-            var flag = context.ReadNextWord();
-            context.Flags.Remove(flag);
+            var flag = context.ReadWord();
+            context.GetFlags().Remove(flag);
         }
 
         protected void Command_Cycle(IOopContext context)
         {
-            var value = context.ReadNextNumber();
+            var value = context.ReadNumber();
             if (value > 0)
             {
                 context.Actor.Cycle = value;
@@ -205,18 +215,18 @@ namespace Roton.Emulation.Execution
         protected void Command_Die(IOopContext context)
         {
             context.Died = true;
-            context.DeathTile.SetTo(context.Elements.EmptyId, 0);
+            context.DeathTile.SetTo(context.Engine.Elements.EmptyId, 0);
         }
 
         protected void Command_End(IOopContext context)
         {
-            context.OopByte = 0;
+            context.SetByte(0);
             context.Instruction = -1;
         }
 
         protected void Command_Endgame(IOopContext context)
         {
-            context.World.Health = 0;
+            context.GetWorld().Health = 0;
         }
 
         protected void Command_Give(IOopContext context)
@@ -230,13 +240,13 @@ namespace Roton.Emulation.Execution
             if (vector != null)
             {
                 var target = context.Actor.Location.Sum(vector);
-                if (!context.ElementAt(target).IsFloor)
+                if (!context.Engine.ElementAt(target).IsFloor)
                 {
-                    context.Push(target, vector);
+                    context.Engine.Push(target, vector);
                 }
-                if (context.ElementAt(target).IsFloor)
+                if (context.Engine.ElementAt(target).IsFloor)
                 {
-                    context.MoveActor(context.Index, target);
+                    context.Engine.MoveActor(context.Index, target);
                     context.Moved = true;
                 }
                 else
@@ -289,8 +299,8 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Set(IOopContext context)
         {
-            var flag = context.ReadNextWord();
-            context.Flags.Add(flag);
+            var flag = context.ReadWord();
+            context.GetFlags().Add(flag);
         }
 
         protected void Command_Shoot(IOopContext context)
@@ -338,8 +348,8 @@ namespace Roton.Emulation.Execution
 
         protected bool? Condition_Alligned(IOopContext context)
         {
-            return context.Actor.Location.X == context.Player.Location.X ||
-                   context.Actor.Location.Y == context.Player.Location.Y;
+            return context.Actor.Location.X == context.Engine.Player.Location.X ||
+                   context.Actor.Location.Y == context.Engine.Player.Location.Y;
         }
 
         protected bool? Condition_Any(IOopContext context)
@@ -406,33 +416,33 @@ namespace Roton.Emulation.Execution
 
         protected IXyPair Direction_Rnd(IOopContext context)
         {
-            return context.GetRandomDirection();
+            return context.Engine.Rnd();
         }
 
         protected IXyPair Direction_RndNe(IOopContext context)
         {
-            return context.GetRandomNumber(2) == 0
+            return context.Engine.SyncRandomNumber(2) == 0
                 ? Vector.North
                 : Vector.East;
         }
 
         protected IXyPair Direction_RndNs(IOopContext context)
         {
-            return context.GetRandomNumber(2) == 0
+            return context.Engine.SyncRandomNumber(2) == 0
                 ? Vector.North
                 : Vector.South;
         }
 
         protected IXyPair Direction_RndP(IOopContext context)
         {
-            return context.GetRandomNumber(2) == 0
+            return context.Engine.SyncRandomNumber(2) == 0
                 ? GetDirection(context).Clockwise()
                 : GetDirection(context).CounterClockwise();
         }
 
         protected IXyPair Direction_Seek(IOopContext context)
         {
-            return context.GetSeek(context.Actor.Location);
+            return context.Engine.Seek(context.Actor.Location);
         }
 
         protected IXyPair Direction_South(IOopContext context)
@@ -453,16 +463,16 @@ namespace Roton.Emulation.Execution
                 return true;
 
             // Do we have a valid amount?
-            var amount = context.ReadNextNumber();
+            var amount = context.ReadNumber();
             if (amount <= 0)
                 return true;
 
             // Modify value if we are taking.
             if (take)
-                context.OopNumber = -context.OopNumber;
+                context.SetNumber(-context.GetNumber());
 
             // Determine if the result will be in range.
-            var pendingAmount = item.Value + context.OopNumber;
+            var pendingAmount = item.Value + context.GetNumber();
             if ((pendingAmount & 0xFFFF) >= 0x8000)
                 return true;
 
@@ -573,53 +583,115 @@ namespace Roton.Emulation.Execution
             };
         }
 
+        protected virtual IDictionary<string, Func<ISearchContext, bool>> GetTargets()
+        {
+            return new Dictionary<string, Func<ISearchContext, bool>>
+            {
+                {"ALL", Target_All},
+                {"OTHERS", Target_Others},
+                {"SELF", Target_Self}
+            };
+        }
+
         protected IOopItem Item_Ammo(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Ammo,
-                v => context.World.Ammo = v);
+                () => context.GetWorld().Ammo,
+                v => context.GetWorld().Ammo = v);
         }
 
         protected IOopItem Item_Gems(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Gems,
-                v => context.World.Gems = v);
+                () => context.GetWorld().Gems,
+                v => context.GetWorld().Gems = v);
         }
 
         protected IOopItem Item_Health(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Health,
-                v => context.World.Health = v);
+                () => context.GetWorld().Health,
+                v => context.GetWorld().Health = v);
         }
 
         protected IOopItem Item_Score(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Score,
-                v => context.World.Score = v);
+                () => context.GetWorld().Score,
+                v => context.GetWorld().Score = v);
         }
 
         protected IOopItem Item_Stones(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Stones,
-                v => context.World.Stones = v);
+                () => context.GetWorld().Stones,
+                v => context.GetWorld().Stones = v);
         }
 
         protected IOopItem Item_Time(IOopContext context)
         {
             return new OopItem(
-                () => context.World.TimePassed,
-                v => context.World.TimePassed = v);
+                () => context.GetWorld().TimePassed,
+                v => context.GetWorld().TimePassed = v);
         }
 
         protected IOopItem Item_Torches(IOopContext context)
         {
             return new OopItem(
-                () => context.World.Torches,
-                v => context.World.Torches = v);
+                () => context.GetWorld().Torches,
+                v => context.GetWorld().Torches = v);
         }
+
+        protected bool Target_All(ISearchContext context)
+        {
+            return context.SearchIndex < context.Engine.Actors.Count;
+        }
+
+        protected bool Target_Others(ISearchContext context)
+        {
+            if (context.SearchIndex >= context.Engine.Actors.Count)
+                return false;
+
+            if (context.SearchIndex == context.SearchOffset)
+                context.SearchIndex++;
+
+            return context.SearchIndex < context.Engine.Actors.Count;
+        }
+
+        protected bool Target_Self(ISearchContext context)
+        {
+            if (context.SearchOffset <= 0)
+                return false;
+
+            if (context.SearchIndex > context.SearchOffset)
+                return false;
+
+            context.SearchIndex = context.SearchOffset;
+            return true;
+        }
+
+        private bool Target_Default(ISearchContext context)
+        {
+            while (context.SearchIndex < context.Engine.Actors.Count)
+            {
+                if (context.Engine.Actors[context.SearchIndex].Pointer != 0)
+                {
+                    var instruction = new Executable();
+                    var firstByte = context.Engine.ReadActorCodeByte(context.SearchIndex, instruction);
+                    if (firstByte == 0x40)
+                    {
+                        var name = context.Engine.ReadActorCodeWord(context.SearchIndex, instruction);
+                        if (name == context.SearchTarget)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                context.SearchIndex++;
+            }
+            return false;
+        }
+
+        
     }
 }

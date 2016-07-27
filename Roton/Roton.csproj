@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EngineConfiguration.cs" />
+    <Compile Include="Core\IByRefValue.cs" />
     <Compile Include="Core\IEngineConfiguration.cs" />
     <Compile Include="Core\IAlerts.cs" />
     <Compile Include="Core\IContext.cs" />
@@ -122,6 +123,9 @@
     <Compile Include="Emulation\Behavior\WebBehavior.cs" />
     <Compile Include="Core\Sound.cs" />
     <Compile Include="Emulation\Execution\Random.cs" />
+    <Compile Include="Emulation\Mapping\SearchContext.cs" />
+    <Compile Include="Emulation\Mapping\Executable.cs" />
+    <Compile Include="Emulation\Mapping\ISearchContext.cs" />
     <Compile Include="Emulation\Mapping\MemoryTimer.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztForestSound.cs" />
     <Compile Include="Emulation\Serialization\ArtSerializer.cs" />
@@ -133,6 +137,7 @@
     <Compile Include="Emulation\ZZT\ZztMessage.cs" />
     <Compile Include="Extensions\ElementListExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
+    <Compile Include="Extensions\SearchContextExtensions.cs" />
     <Compile Include="Extensions\TimerExtensions.cs" />
     <Compile Include="FileIo\DiskFileSystem.cs" />
     <Compile Include="Core\IActorList.cs" />

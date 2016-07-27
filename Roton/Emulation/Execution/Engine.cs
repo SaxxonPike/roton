@@ -118,24 +118,22 @@ namespace Roton.Emulation.Execution
                 sender = -sender;
             }
 
-            var info = new CodeSearchInfoProxy(
-                () => index,
-                value => { index = value; },
-                () => target,
-                value => { target = value; },
-                () => offset,
-                value => { offset = value; }
-                );
+            var info = new SearchContext(this)
+            {
+                SearchIndex = 0,
+                SearchOffset = 0,
+                SearchTarget = target
+            };
 
             while (ExecuteLabel(sender, info, "\x000D:"))
             {
-                if (!ActorIsLocked(index) || force || (sender == index && !external))
+                if (!ActorIsLocked(info.SearchIndex) || force || (sender == info.SearchIndex && !external))
                 {
-                    if (sender == index)
+                    if (sender == info.SearchIndex)
                     {
                         success = true;
                     }
-                    Actors[index].Instruction = offset;
+                    Actors[index].Instruction = info.SearchOffset;
                 }
             }
 
@@ -1128,9 +1126,9 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        protected virtual bool ExecuteLabel(int sender, CodeSearchInfo search, string prefix)
+        protected virtual bool ExecuteLabel(int sender, ISearchContext context, string prefix)
         {
-            var label = search.Label;
+            var label = context.SearchTarget;
             var target = string.Empty;
             var success = false;
             var split = label.IndexOf(':');
@@ -1139,11 +1137,11 @@ namespace Roton.Emulation.Execution
             {
                 target = label.Substring(0, split);
                 label = label.Substring(split + 1);
-                success = IsActorTargeted(sender, search, target);
+                success = Grammar.GetTarget(target, context);
             }
-            else if (search.Index < sender)
+            else if (context.SearchIndex < sender)
             {
-                search.Index = sender;
+                context.SearchIndex = sender;
                 split = 0;
                 success = true;
             }
@@ -1156,19 +1154,19 @@ namespace Roton.Emulation.Execution
 
                 if (label.ToUpper() == @"RESTART")
                 {
-                    search.Offset = 0;
+                    context.SearchOffset = 0;
                 }
                 else
                 {
-                    search.Offset = SearchActorCode(search.Index, prefix + label);
-                    if (search.Offset < 0 && split > 0)
+                    context.SearchOffset = SearchActorCode(context.SearchIndex, prefix + label);
+                    if (context.SearchOffset < 0 && split > 0)
                     {
-                        success = IsActorTargeted(sender, search, target);
+                        success = Grammar.GetTarget(target, context);
                         continue;
                     }
                 }
 
-                success = search.Offset >= 0;
+                success = context.SearchOffset >= 0;
                 break;
             }
             return success;
@@ -1202,49 +1200,6 @@ namespace Roton.Emulation.Execution
             Elements[Elements.InvisibleId].Character = showInvisibles ? 0xB0 : 0x20;
             Elements[Elements.InvisibleId].Color = 0xFF;
             Elements[Elements.PlayerId].Character = 0x02;
-        }
-
-        internal virtual bool IsActorTargeted(int sender, CodeSearchInfo info, string target)
-        {
-            var success = false;
-            switch (target.ToUpperInvariant())
-            {
-                case @"ALL":
-                    success = info.Index <= State.ActorCount;
-                    break;
-                case @"OTHERS":
-                    if (info.Index <= State.ActorCount)
-                    {
-                        if (info.Index != sender)
-                        {
-                            success = true;
-                        }
-                        else
-                        {
-                            info.Index++;
-                            success = info.Index <= State.ActorCount;
-                        }
-                    }
-                    break;
-                case @"SELF":
-                    if (info.Index > 0)
-                    {
-                        if (info.Index <= sender)
-                        {
-                            info.Index = sender;
-                            success = true;
-                        }
-                    }
-                    break;
-                default:
-                    while (true)
-                    {
-                        // todo: targeted labels
-                        break;
-                    }
-                    break;
-            }
-            return false;
         }
 
         protected virtual byte[] LoadFile(string filename)
@@ -1443,7 +1398,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        private int ReadActorCodeByte(int index, IExecutable instructionSource)
+        public int ReadActorCodeByte(int index, IExecutable instructionSource)
         {
             var actor = Actors[index];
             var value = 0;
@@ -1535,7 +1490,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        internal virtual int SearchActorCode(int index, string term)
+        public virtual int SearchActorCode(int index, string term)
         {
             var result = -1;
             var termBytes = term.ToBytes();
