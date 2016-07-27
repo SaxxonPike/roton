@@ -103,6 +103,7 @@ namespace Roton.Emulation.Execution
                     if (context.NextLine && context.Instruction > 0)
                     {
                         context.ReadLine();
+                        break;
                     }
                 }
             }

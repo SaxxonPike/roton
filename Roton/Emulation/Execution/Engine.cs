@@ -1539,7 +1539,6 @@ namespace Roton.Emulation.Execution
                 result.Append(State.OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
-            instructionSource.Instruction--;
             return result.ToString();
         }
 
