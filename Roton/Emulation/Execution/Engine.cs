@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
@@ -444,6 +445,30 @@ namespace Roton.Emulation.Execution
         {
             FadeBoard(new AnsiChar(0xDB, 0x04));
             RedrawBoard();
+        }
+
+        public bool FindTile(ITile kind, IXyPair location)
+        {
+            location.X++;
+            while (location.Y <= Tiles.Height)
+            {
+                while (location.X <= Tiles.Width)
+                {
+                    var tile = TileAt(location);
+                    if (tile.Id == kind.Id)
+                    {
+                        if (kind.Color == 0 || ColorMatch(TileAt(location)) == kind.Color)
+                        {
+                            return true;
+                        }
+                    }
+                    location.X++;
+                }
+                location.X = 1;
+                location.Y++;
+            }
+
+            return false;
         }
 
         public virtual void ForcePlayerColor(int index)
@@ -1569,6 +1594,7 @@ namespace Roton.Emulation.Execution
             }
             else
             {
+                Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
                 value = actor.Code[instructionSource.Instruction];
                 State.OopByte = value;
                 instructionSource.Instruction++;

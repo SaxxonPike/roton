@@ -114,30 +114,33 @@ namespace Roton.Emulation.Serialization
 
             for (var i = 0; i <= count; i++)
             {
-                var writeCode = false;
                 var actor = new Actor(mem, ActorDataOffset + ActorDataLength*i);
-                var code = heap[actor.Pointer];
+                byte[] code = null;
 
-                // check to see if the code needs to be stored
-                if (code != null)
+                if (actor.Pointer != 0)
                 {
-                    if (savedCode.ContainsKey(actor.Pointer))
+                    code = heap[actor.Pointer];
+
+                    // check to see if the code needs to be stored
+                    if (code != null)
                     {
-                        actor.Length = -savedCode[actor.Pointer];
+                        if (savedCode.ContainsKey(actor.Pointer))
+                        {
+                            actor.Length = -savedCode[actor.Pointer];
+                        }
+                        else
+                        {
+                            savedCode[actor.Pointer] = i;
+                        }
                     }
-                    else
-                    {
-                        savedCode[actor.Pointer] = i;
-                        writeCode = true;
-                    }
+                    actor.Pointer = 0;
                 }
-                actor.Pointer = 0;
 
                 // write memory to stream
                 target.Write(Memory.Read(actor.Offset, ActorDataLength));
 
                 // write code if applicable
-                if (writeCode)
+                if (code != null)
                 {
                     target.Write(code);
                 }

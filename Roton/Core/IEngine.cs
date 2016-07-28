@@ -37,6 +37,7 @@ namespace Roton.Core
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         void FadePurple();
         void FadeRed();
+        bool FindTile(ITile kind, IXyPair location);
         void ForcePlayerColor(int index);
         IXyPair GetCardinalVector(int index);
         bool GetPlayerTimeElapsed(int interval);

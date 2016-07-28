@@ -58,7 +58,6 @@ namespace Roton.Emulation.Execution
                 context.Executed = true;
 
                 var command = context.ReadWord();
-                Console.WriteLine(command);
                 if (command.Length == 0)
                     break;
 
@@ -248,6 +247,31 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Change(IOopContext context)
         {
+            var success = false;
+            var source = GetKind(context);
+            if (source != null)
+            {
+                var target = GetKind(context);
+                if (target != null)
+                {
+                    var targetElement = context.Engine.Elements[target.Id];
+                    success = true;
+                    if (target.Color == 0 && targetElement.Color < 0xF0)
+                    {
+                        target.Color = targetElement.Color;
+                    }
+                    var location = new Location();
+                    while (context.Engine.FindTile(source, location))
+                    {
+                        context.Engine.PlotTile(location, target);
+                    }
+                }
+            }
+
+            if (!success)
+            {
+                context.Engine.RaiseError("Bad #CHANGE");
+            }
         }
 
         protected void Command_Char(IOopContext context)
