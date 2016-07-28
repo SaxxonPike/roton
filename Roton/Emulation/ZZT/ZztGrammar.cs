@@ -12,7 +12,7 @@ namespace Roton.Emulation.ZZT
         protected override void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
         {
             // ZZT does not allow #put on the bottom row
-            if (location.Y == 24)
+            if (location.Y == 25)
                 return;
             base.PutTile(engine, location, vector, kind);
         }
