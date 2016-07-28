@@ -365,7 +365,7 @@ namespace Roton.Emulation.Execution
                 context.Engine.RaiseError("Bad #PUT");
         }
 
-        protected void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
+        protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
         {
             if (location.X >= 1 && location.X <= engine.Tiles.Width && location.Y >= 1 &&
                 location.Y <= engine.Tiles.Height)
