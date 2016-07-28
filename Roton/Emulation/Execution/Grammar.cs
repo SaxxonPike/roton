@@ -237,7 +237,7 @@ namespace Roton.Emulation.Execution
             search.SearchTarget = target;
             if (GetTarget(search))
             {
-                var targetActor = context.GetActors()[search.SearchIndex];
+                var targetActor = context.GetActor(search.SearchIndex);
                 context.Actor.Pointer = targetActor.Pointer;
                 context.Actor.Length = targetActor.Length;
                 context.Instruction = 0;
@@ -253,7 +253,7 @@ namespace Roton.Emulation.Execution
                 var target = GetKind(context);
                 if (target != null)
                 {
-                    var targetElement = context.Engine.Elements[target.Id];
+                    var targetElement = context.GetElement(target);
                     success = true;
                     if (target.Color == 0 && targetElement.Color < 0xF0)
                     {
@@ -415,7 +415,7 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = context.Engine.Elements[context.Engine.Elements.BulletId];
+                var projectile = context.Engine.Elements.Bullet();
                 var success = context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
@@ -443,7 +443,7 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = context.Engine.Elements[context.Engine.Elements.StarId];
+                var projectile = context.Engine.Elements.Star();
                 context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
             }
             context.Moved = true;

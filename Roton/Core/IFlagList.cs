@@ -8,7 +8,6 @@ namespace Roton.Core
         void Add(string item);
         void Clear();
         bool Contains(string item);
-        int IndexOf(string item);
         bool Remove(string item);
     }
 }

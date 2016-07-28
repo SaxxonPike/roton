@@ -5,19 +5,24 @@ namespace Roton.Extensions
 {
     public static class SearchContextExtensions
     {
-        public static IActorList GetActors(this ISearchContext context)
+        public static IActor GetActor(this ISearchContext context, int index)
         {
-            return context.Engine.Actors;
-        }
-
-        public static IBoard GetBoard(this ISearchContext context)
-        {
-            return context.Engine.Board;
+            return context.Engine.Actors[index];
         }
 
         public static int GetByte(this ISearchContext context)
         {
             return context.Engine.State.OopByte;
+        }
+
+        public static IElement GetElement(this ISearchContext context, int index)
+        {
+            return context.Engine.Elements[index];
+        }
+
+        public static IElement GetElement(this ISearchContext context, ITile tile)
+        {
+            return context.Engine.Elements[tile.Id];
         }
 
         public static IFlagList GetFlags(this ISearchContext context)

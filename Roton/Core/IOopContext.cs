@@ -7,7 +7,6 @@ namespace Roton.Core
     {
         IActor Actor { get; }
         ITile DeathTile { get; }
-        IGrammar Grammar { get; }
         IList<string> Message { get; }
         int CommandsExecuted { get; set; }
         bool Died { get; set; }

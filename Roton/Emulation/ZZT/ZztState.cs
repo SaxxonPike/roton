@@ -29,6 +29,18 @@ namespace Roton.Emulation.ZZT
             PlayerTimer = new MemoryTimer(_memory, 0x740A);
         }
 
+        public int MainTime
+        {
+            get { return _memory.Read16(0x740A); }
+            set { _memory.Write16(0x740A, value); }
+        }
+
+        public int VisibleTileCount
+        {
+            get { return _memory.Read16(0x4ACC); }
+            set { _memory.Write16(0x4ACC, value); }
+        }
+
         public bool AboutShown
         {
             get { return _memory.ReadBool(0x7A60); }
@@ -165,12 +177,6 @@ namespace Roton.Emulation.ZZT
 
         public IList<int> LineChars { get; }
 
-        public int MainTime
-        {
-            get { return _memory.Read16(0x740A); }
-            set { _memory.Write16(0x740A, value); }
-        }
-
         public string Message
         {
             get { return _memory.ReadString(0x456E); }
@@ -258,12 +264,6 @@ namespace Roton.Emulation.ZZT
         public IList<int> Vector4 { get; }
 
         public IList<int> Vector8 { get; }
-
-        public int VisibleTileCount
-        {
-            get { return _memory.Read16(0x4ACC); }
-            set { _memory.Write16(0x4ACC, value); }
-        }
 
         public IList<int> WebChars { get; } = new List<int>();
 

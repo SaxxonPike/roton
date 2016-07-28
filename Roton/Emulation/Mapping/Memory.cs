@@ -14,6 +14,8 @@ namespace Roton.Emulation.Mapping
 
         private byte[] Bytes { get; }
 
+        public int Length => 0x1 << 16;
+
         private int Mask => Length - 1;
 
         public byte[] Dump()
@@ -24,8 +26,6 @@ namespace Roton.Emulation.Mapping
         }
 
         public IHeap Heap { get; }
-
-        public int Length => 0x1 << 16;
 
         public byte[] Read(int offset, int length)
         {
@@ -44,14 +44,6 @@ namespace Roton.Emulation.Mapping
             return result;
         }
 
-        public void Reset()
-        {
-            for (var i = 0; i < Bytes.Length; i++)
-            {
-                Bytes[i] = 0x00;
-            }
-        }
-
         public void Write(int offset, byte[] data)
         {
             var length = data.Length;
@@ -64,6 +56,14 @@ namespace Roton.Emulation.Mapping
         public void Write8(int offset, int value)
         {
             Bytes[offset & Mask] = (byte) (value & 0xFF);
+        }
+
+        public void Reset()
+        {
+            for (var i = 0; i < Bytes.Length; i++)
+            {
+                Bytes[i] = 0x00;
+            }
         }
     }
 }

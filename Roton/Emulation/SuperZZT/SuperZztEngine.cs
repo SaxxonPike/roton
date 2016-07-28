@@ -54,6 +54,11 @@ namespace Roton.Emulation.SuperZZT
 
         public override IWorld World { get; }
 
+        protected override bool ActorIsLocked(int index)
+        {
+            return Actors[index].P3 != 0;
+        }
+
         public override void EnterBoard()
         {
             BroadcastLabel(0, @"ENTER", false);
@@ -117,7 +122,7 @@ namespace Roton.Emulation.SuperZZT
             {
                 var targetVector = GetCardinalVector(i);
                 var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
-                var adjacentTile = TileAt(targetLocation);
+                var adjacentTile = this.TileAt(targetLocation);
                 if (Elements[adjacentTile.Id].Cycle >= 0)
                     adjacentTile = this.ActorAt(targetLocation).UnderTile;
                 var adjacentElement = adjacentTile.Id;
@@ -146,7 +151,7 @@ namespace Roton.Emulation.SuperZZT
             {
                 result.Id = Elements.EmptyId;
             }
-            TileAt(location).CopyFrom(result);
+            this.TileAt(location).CopyFrom(result);
         }
 
         public override void ShowInGameHelp()

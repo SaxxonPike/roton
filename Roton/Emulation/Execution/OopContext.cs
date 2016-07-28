@@ -23,6 +23,8 @@ namespace Roton.Emulation.Execution
             Message = new List<string>();
         }
 
+        public IGrammar Grammar => Engine.Grammar;
+
         public int Instruction
         {
             get { return _instructionSource.Instruction; }
@@ -40,8 +42,6 @@ namespace Roton.Emulation.Execution
         public bool Executed { get; set; }
 
         public bool Finished { get; set; }
-
-        public IGrammar Grammar => Engine.Grammar;
 
         public int Index { get; set; }
 

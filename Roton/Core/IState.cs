@@ -40,7 +40,6 @@ namespace Roton.Core
         bool KeyArrow { get; set; }
         int KeyPressed { get; set; }
         bool KeyShift { get; set; }
-        int MainTime { get; set; }
         string Message { get; set; }
         string Message2 { get; set; }
         int OopByte { get; set; }
@@ -54,7 +53,6 @@ namespace Roton.Core
         int SoundPriority { get; set; }
         int SoundTicks { get; set; }
         int StartBoard { get; set; }
-        int VisibleTileCount { get; set; }
         string WorldFileName { get; set; }
         bool WorldLoaded { get; set; }
     }

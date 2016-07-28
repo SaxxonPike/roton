@@ -31,6 +31,14 @@ namespace Roton.Emulation.SuperZZT
             PlayerTimer = new MemoryTimer(_memory, 0xB95E);
         }
 
+        public int MainTime { get; set; }
+
+        public int VisibleTileCount
+        {
+            get { return 96*80; }
+            set { }
+        }
+
         public bool AboutShown { get; set; }
 
         public int ActIndex
@@ -159,8 +167,6 @@ namespace Roton.Emulation.SuperZZT
 
         public IList<int> LineChars { get; }
 
-        public int MainTime { get; set; }
-
         public string Message
         {
             get { return _memory.ReadString(0x7C22); }
@@ -248,12 +254,6 @@ namespace Roton.Emulation.SuperZZT
         public IList<int> Vector4 { get; }
 
         public IList<int> Vector8 { get; }
-
-        public int VisibleTileCount
-        {
-            get { return 96*80; }
-            set { }
-        }
 
         public IList<int> WebChars { get; }
 

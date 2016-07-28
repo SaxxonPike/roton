@@ -39,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EngineConfiguration.cs" />
-    <Compile Include="Core\IByRefValue.cs" />
     <Compile Include="Core\IEngineConfiguration.cs" />
     <Compile Include="Core\IAlerts.cs" />
     <Compile Include="Core\IContext.cs" />
@@ -169,9 +168,6 @@
     <Compile Include="Core\AnsiChar.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Emulation\Execution\Hud.cs" />
-    <Compile Include="Emulation\Execution\ByRefInstruction.cs" />
-    <Compile Include="Emulation\Execution\CodeSearchInfo.cs" />
-    <Compile Include="Emulation\Execution\CodeSearchInfoProxy.cs" />
     <Compile Include="Emulation\Timing\CoreTimer.cs" />
     <Compile Include="Emulation\Execution\OopContext.cs" />
     <Compile Include="Emulation\Mapping\Heap.cs" />
@@ -254,6 +250,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
