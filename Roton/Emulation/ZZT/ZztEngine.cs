@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.ZZT
@@ -7,13 +8,23 @@ namespace Roton.Emulation.ZZT
     {
         public ZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
+            var behaviorConfig = new BehaviorMapConfiguration
+            {
+                AmmoPerContainer = 5,
+                BuggyPassages = true,
+                ForestToFloor = false,
+                HealthPerGem = 1,
+                MultiMovement = false,
+                ScorePerGem = 10
+            };
+
             State = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
             Actors = new ZztActorList(Memory);
             Board = new ZztBoard(Memory);
             GameSerializer = new ZztGameSerializer(Memory);
             Hud = new ZztHud(this, config.Terminal);
-            Elements = new ZztElementList(Memory, elementBytes);
+            Elements = new ZztElementList(Memory, elementBytes, behaviorConfig);
             SoundSet = new SoundSet();
             Tiles = new ZztTileGrid(Memory);
             World = new ZztWorld(Memory);

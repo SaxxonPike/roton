@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -9,13 +10,23 @@ namespace Roton.Emulation.SuperZZT
     {
         public SuperZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {
+            var behaviorConfig = new BehaviorMapConfiguration
+            {
+                AmmoPerContainer = 20,
+                BuggyPassages = true,
+                ForestToFloor = false,
+                HealthPerGem = 1,
+                MultiMovement = false,
+                ScorePerGem = 10
+            };
+
             State = new SuperZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
             Actors = new SuperZztActorList(Memory);
             Board = new SuperZztBoard(Memory);
             GameSerializer = new SuperZztGameSerializer(Memory);
             Hud = new SuperZztHud(this, config.Terminal);
-            Elements = new SuperZztElementList(Memory, elementBytes);
+            Elements = new SuperZztElementList(Memory, elementBytes, behaviorConfig);
             SoundSet = new SuperZztSoundSet(Memory);
             Tiles = new SuperZztTileGrid(Memory);
             World = new SuperZztWorld(Memory);

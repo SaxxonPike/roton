@@ -1,12 +1,13 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {
     internal sealed class ZztElementList : ElementList
     {
-        public ZztElementList(IMemory memory, byte[] elementBytes)
-            : base(memory, 54)
+        public ZztElementList(IMemory memory, byte[] elementBytes, IBehaviorMapConfiguration config)
+            : base(memory, 54, config)
         {
             memory.Write(0x4AD4, elementBytes);
         }

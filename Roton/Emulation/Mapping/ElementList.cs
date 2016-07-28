@@ -7,11 +7,11 @@ namespace Roton.Emulation.Mapping
 {
     internal abstract class ElementList : FixedList<IElement>, IElementList
     {
-        protected ElementList(IMemory memory, int count)
+        protected ElementList(IMemory memory, int count, IBehaviorMapConfiguration config)
         {
             Count = count;
             Memory = memory;
-            BehaviorMap = new BehaviorMap(this);
+            BehaviorMap = new BehaviorMap(this, config);
             Cache = new Dictionary<int, IElement>();
         }
 

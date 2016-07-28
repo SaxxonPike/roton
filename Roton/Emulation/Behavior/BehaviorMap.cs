@@ -5,16 +5,18 @@ namespace Roton.Emulation.Behavior
     internal class BehaviorMap : IBehaviorMap
     {
         private readonly IElementList _elementList;
+        private readonly IBehaviorMapConfiguration _config;
 
-        public BehaviorMap(IElementList elementList)
+        public BehaviorMap(IElementList elementList, IBehaviorMapConfiguration config)
         {
             _elementList = elementList;
+            _config = config;
         }
 
         public IBehavior Map(int id)
         {
             if (id == _elementList.AmmoId)
-                return new AmmoBehavior(5);
+                return new AmmoBehavior(_config.AmmoPerContainer);
             if (id == _elementList.BearId)
                 return new BearBehavior();
             if (id == _elementList.BlinkRayHId)
@@ -52,9 +54,9 @@ namespace Roton.Emulation.Behavior
             if (id == _elementList.FloorId)
                 return new FloorBehavior();
             if (id == _elementList.ForestId)
-                return new ForestBehavior(false);
+                return new ForestBehavior(_config.ForestToFloor);
             if (id == _elementList.GemId)
-                return new GemBehavior(1);
+                return new GemBehavior(_config.HealthPerGem, _config.ScorePerGem);
             if (id == _elementList.HeadId)
                 return new CentipedeHeadBehavior();
             if (id == _elementList.InvisibleId)
@@ -74,11 +76,11 @@ namespace Roton.Emulation.Behavior
             if (id == _elementList.NormalId)
                 return new NormalWallBehavior();
             if (id == _elementList.ObjectId)
-                return new ObjectBehavior(false);
+                return new ObjectBehavior(_config.MultiMovement);
             if (id == _elementList.PairerId)
                 return new PairerBehavior();
             if (id == _elementList.PassageId)
-                return new PassageBehavior(true);
+                return new PassageBehavior(_config.BuggyPassages);
             if (id == _elementList.PlayerId)
                 return new PlayerBehavior();
             if (id == _elementList.PusherId)

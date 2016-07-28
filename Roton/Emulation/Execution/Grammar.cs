@@ -143,7 +143,7 @@ namespace Roton.Emulation.Execution
 
             for (var i = 1; i < 8; i++)
             {
-                if (_colors[i] != word)
+                if (_colors[i].ToUpperInvariant() != word)
                     continue;
 
                 result.Color = i + 8;
@@ -348,6 +348,34 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Put(IOopContext context)
         {
+            var vector = GetDirection(context);
+            var success = false;
+
+            if (vector != null)
+            {
+                var kind = GetKind(context);
+                if (kind != null)
+                {
+                    success = true;
+                    PutTile(context.Engine, context.Actor.Location.Sum(vector), vector, kind);
+                }
+            }
+
+            if (!success)
+                context.Engine.RaiseError("Bad #PUT");
+        }
+
+        protected void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
+        {
+            if (location.X >= 1 && location.X <= engine.Tiles.Width && location.Y >= 1 &&
+                location.Y <= engine.Tiles.Height)
+            {
+                if (!engine.ElementAt(location).IsFloor)
+                {
+                    engine.Push(location, vector);
+                }
+                engine.PlotTile(location, kind);
+            }
         }
 
         protected void Command_Restart(IOopContext context)

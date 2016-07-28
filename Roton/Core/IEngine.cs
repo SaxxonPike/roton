@@ -48,6 +48,7 @@ namespace Roton.Core
         void PackBoard();
         void PlaySound(int priority, ISound sound, int offset, int length);
         bool PlayWorld();
+        void PlotTile(IXyPair location, ITile tile);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);

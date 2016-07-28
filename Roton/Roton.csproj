@@ -51,6 +51,7 @@
     <Compile Include="Core\Message.cs" />
     <Compile Include="Emulation\Behavior\AmmoBehavior.cs" />
     <Compile Include="Emulation\Behavior\BearBehavior.cs" />
+    <Compile Include="Emulation\Behavior\BehaviorMapConfiguration.cs" />
     <Compile Include="Emulation\Behavior\BlackTextBehavior.cs" />
     <Compile Include="Emulation\Behavior\BlueTextBehavior.cs" />
     <Compile Include="Emulation\Behavior\BrownTextBehavior.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Emulation\Behavior\GemBehavior.cs" />
     <Compile Include="Emulation\Behavior\GreenTextBehavior.cs" />
     <Compile Include="Emulation\Behavior\HorizontalBlinkRayBehavior.cs" />
+    <Compile Include="Emulation\Behavior\IBehaviorMapConfiguration.cs" />
     <Compile Include="Emulation\Behavior\InvisibleWallBehavior.cs" />
     <Compile Include="Emulation\Behavior\KeyBehavior.cs" />
     <Compile Include="Emulation\Behavior\LavaBehavior.cs" />

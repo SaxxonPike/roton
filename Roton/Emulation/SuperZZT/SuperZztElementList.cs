@@ -1,12 +1,13 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.SuperZZT
 {
     internal sealed class SuperZztElementList : ElementList
     {
-        public SuperZztElementList(IMemory memory, byte[] elementBytes)
-            : base(memory, 80)
+        public SuperZztElementList(IMemory memory, byte[] elementBytes, IBehaviorMapConfiguration config)
+            : base(memory, 80, config)
         {
             memory.Write(0x7CAA, elementBytes);
         }

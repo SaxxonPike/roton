@@ -6,10 +6,12 @@ namespace Roton.Emulation.Behavior
     internal sealed class GemBehavior : ElementBehavior
     {
         private readonly int _healthPerGem;
+        private readonly int _scorePerGem;
 
-        public GemBehavior(int healthPerGem)
+        public GemBehavior(int healthPerGem, int scorePerGem)
         {
             _healthPerGem = healthPerGem;
+            _scorePerGem = scorePerGem;
         }
 
         public override string KnownName => "Gem";
@@ -18,7 +20,7 @@ namespace Roton.Emulation.Behavior
         {
             engine.World.Health += _healthPerGem;
             engine.World.Gems += 1;
-            engine.World.Score += 10;
+            engine.World.Score += _scorePerGem;
             engine.RemoveItem(location);
             engine.UpdateStatus();
             engine.PlaySound(2, engine.SoundSet.Gem);
