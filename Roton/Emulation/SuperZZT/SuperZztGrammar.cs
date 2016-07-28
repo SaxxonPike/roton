@@ -25,5 +25,15 @@ namespace Roton.Emulation.SuperZZT
                 {"Z", Item_Stones}
             };
         }
+
+        protected override void Command_Lock(IOopContext context)
+        {
+            context.Actor.P3 = 1;
+        }
+
+        protected override void Command_Unlock(IOopContext context)
+        {
+            context.Actor.P3 = 0;
+        }
     }
 }
