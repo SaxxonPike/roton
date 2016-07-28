@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using Roton.Core;
@@ -132,6 +133,7 @@ namespace Roton.Emulation.Execution
                     }
                     Actors[info.SearchIndex].Instruction = info.SearchOffset;
                 }
+                info.SearchTarget = label;
             }
 
             return success;
@@ -392,7 +394,9 @@ namespace Roton.Emulation.Execution
 
         protected virtual void ExecuteDeath(IOopContext context)
         {
-            
+            var location = context.Actor.Location.Clone();
+            Harm(context.Index);
+            PlotTile(location, context.DeathTile);
         }
 
         protected virtual void ExecuteMessage(IOopContext context)
@@ -636,6 +640,47 @@ namespace Roton.Emulation.Execution
 
         public void PlaySound(int priority, ISound sound, int offset, int length)
         {
+        }
+
+        public void PlotTile(IXyPair location, ITile tile)
+        {
+            if (this.ElementAt(location).Id == Elements.PlayerId)
+                return;
+
+            var targetElement = Elements[tile.Id];
+            var existingTile = Tiles[location];
+            var targetColor = tile.Color;
+            if (targetElement.Color >= 0xF0)
+            {
+                if (targetColor == 0)
+                    targetColor = existingTile.Color;
+                if (targetColor == 0)
+                    targetColor = 0x0F;
+                if (targetElement.Color == 0xFE)
+                    targetColor = ((targetColor - 8) << 4) + 0x0F;
+            }
+            else
+            {
+                targetColor = targetElement.Color;
+            }
+
+            if (targetElement.Id == existingTile.Id)
+            {
+                existingTile.Color = targetColor;
+            }
+            else
+            {
+                Destroy(location);
+                if (targetElement.Cycle < 0)
+                {
+                    existingTile.SetTo(targetElement.Id, targetColor);
+                }
+                else
+                {
+                    SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle, State.DefaultActor);
+                }
+            }
+            UpdateBoard(location);
         }
 
         public void Push(IXyPair location, IXyPair vector)
@@ -1251,7 +1296,8 @@ namespace Roton.Emulation.Execution
             {
                 target = label.Substring(0, split);
                 label = label.Substring(split + 1);
-                success = Grammar.GetTarget(target, context);
+                context.SearchTarget = target;
+                success = Grammar.GetTarget(context);
             }
             else if (context.SearchIndex < sender)
             {
@@ -1275,7 +1321,7 @@ namespace Roton.Emulation.Execution
                     context.SearchOffset = SearchActorCode(context.SearchIndex, prefix + label);
                     if (context.SearchOffset < 0 && split > 0)
                     {
-                        success = Grammar.GetTarget(target, context);
+                        success = Grammar.GetTarget(context);
                         continue;
                     }
                 }

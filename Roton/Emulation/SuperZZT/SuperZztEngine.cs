@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System.Linq;
+using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -144,6 +145,22 @@ namespace Roton.Emulation.SuperZZT
                 SetGameMode();
 
             TitleScreenLoop();
+        }
+
+        protected override void ExecuteMessage(IOopContext context)
+        {
+            switch (context.Message.Count)
+            {
+                case 1:
+                case 2:
+                    SetMessage(0xC8, new Message(context.Message.ToArray()));
+                    break;
+                case 0:
+                    break;
+                default:
+                    // todo: show scroll
+                    break;
+            }
         }
     }
 }

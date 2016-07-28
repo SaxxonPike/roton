@@ -10,6 +10,6 @@ namespace Roton.Core
         IXyPair GetDirection(IOopContext oopContext);
         IOopItem GetItem(IOopContext oopContext);
         ITile GetKind(IOopContext oopContext);
-        bool GetTarget(string target, ISearchContext context);
+        bool GetTarget(ISearchContext context);
     }
 }

@@ -164,10 +164,11 @@ namespace Roton.Emulation.Execution
             return success ? result : null;
         }
 
-        public bool GetTarget(string target, ISearchContext context)
+        public bool GetTarget(ISearchContext context)
         {
+            context.SearchIndex++;
             Func<ISearchContext, bool> func;
-            Targets.TryGetValue(target, out func);
+            Targets.TryGetValue(context.SearchTarget, out func);
             return func?.Invoke(context) ?? Target_Default(context);
         }
 
@@ -233,6 +234,16 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Bind(IOopContext context)
         {
+            var search = new SearchContext(context.Engine);
+            var target = context.ReadWord();
+            search.SearchTarget = target;
+            if (GetTarget(search))
+            {
+                var targetActor = context.GetActors()[search.SearchIndex];
+                context.Actor.Pointer = targetActor.Pointer;
+                context.Actor.Length = targetActor.Length;
+                context.Instruction = 0;
+            }
         }
 
         protected void Command_Change(IOopContext context)
@@ -329,6 +340,10 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Play(IOopContext context)
         {
+            var notes = context.ReadLine();
+            var sound = context.Engine.EncodeMusic(notes);
+            context.Engine.PlaySound(-1, sound);
+            context.NextLine = false;
         }
 
         protected void Command_Put(IOopContext context)
@@ -347,6 +362,8 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Send(IOopContext context)
         {
+            var target = context.ReadWord();
+            context.NextLine = context.Engine.BroadcastLabel(context.Index, target, false);
         }
 
         protected void Command_Set(IOopContext context)
@@ -357,6 +374,17 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Shoot(IOopContext context)
         {
+            var vector = GetDirection(context);
+            if (vector != null)
+            {
+                var projectile = context.Engine.Elements[context.Engine.Elements.BulletId];
+                var success = context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+                if (success)
+                {
+                    context.Engine.PlaySound(2, context.Engine.SoundSet.EnemyShoot);
+                }
+                context.Moved = true;
+            }
         }
 
         protected void Command_Take(IOopContext context)
@@ -367,13 +395,20 @@ namespace Roton.Emulation.Execution
         protected void Command_Then(IOopContext context)
         {
             // The actual code doesn't work this way.
-            // TODO: Actually implement it without this hack.
+            // We cheat a little by not advancing the execution counter.
             context.NextLine = false;
             context.CommandsExecuted--;
         }
 
         protected void Command_Throwstar(IOopContext context)
         {
+            var vector = GetDirection(context);
+            if (vector != null)
+            {
+                var projectile = context.Engine.Elements[context.Engine.Elements.StarId];
+                context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+            }
+            context.Moved = true;
         }
 
         protected void Command_Try(IOopContext context)
