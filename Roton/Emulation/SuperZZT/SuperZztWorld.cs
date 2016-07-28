@@ -54,8 +54,6 @@ namespace Roton.Emulation.SuperZZT
 
         public IKeyList Keys => new KeyList(Memory, 0x7850);
 
-        public ITimer TimeLimitTimer { get; }
-
         public string Name
         {
             get { return Memory.ReadString(0x7863); }
@@ -73,6 +71,8 @@ namespace Roton.Emulation.SuperZZT
             get { return Memory.Read16(0x79CD); }
             set { Memory.Write16(0x79CD, value); }
         }
+
+        public ITimer TimeLimitTimer { get; }
 
         public int TimePassed
         {

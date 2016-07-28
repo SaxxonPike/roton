@@ -54,8 +54,6 @@ namespace Roton.Emulation.ZZT
 
         public IKeyList Keys => new KeyList(Memory, 0x4822);
 
-        public ITimer TimeLimitTimer { get; }
-
         public string Name
         {
             get { return Memory.ReadString(0x4837); }
@@ -73,6 +71,8 @@ namespace Roton.Emulation.ZZT
             get { return 0; }
             set { }
         }
+
+        public ITimer TimeLimitTimer { get; }
 
         public int TimePassed
         {

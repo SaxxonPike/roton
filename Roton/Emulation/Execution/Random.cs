@@ -14,10 +14,10 @@ namespace Roton.Emulation.Execution
         //
         private const int MBig = int.MaxValue;
         private const int MSeed = 161803398;
+        private readonly int[] _seedArray = new int[56];
 
         private int _iNext;
         private int _iNextP;
-        private readonly int[] _seedArray = new int[56];
 
         public Random()
             : this(Environment.TickCount)
@@ -53,11 +53,24 @@ namespace Roton.Emulation.Execution
             _iNextP = 21;
         }
 
-        private double Sample()
+        private double GetSampleForLargeRange()
         {
-            //Including this division at the end gives us significantly improved
-            //random number distribution.
-            return InternalSample()*(1.0/MBig);
+            // The distribution of double value returned by Sample 
+            // is not distributed well enough for a large range.
+            // If we use Sample for a range [Int32.MinValue..Int32.MaxValue)
+            // We will end up getting even numbers only.
+
+            var result = InternalSample();
+            // Note we can't use addition here. The distribution will be bad if we do that.
+            var negative = InternalSample()%2 == 0; // decide the sign based on second sample
+            if (negative)
+            {
+                result = -result;
+            }
+            double d = result;
+            d += int.MaxValue - 1; // get a number in range [0 .. 2 * Int32MaxValue - 1)
+            d /= 2*(uint) int.MaxValue - 1;
+            return d;
         }
 
         private int InternalSample()
@@ -86,26 +99,6 @@ namespace Roton.Emulation.Execution
             return InternalSample();
         }
 
-        private double GetSampleForLargeRange()
-        {
-            // The distribution of double value returned by Sample 
-            // is not distributed well enough for a large range.
-            // If we use Sample for a range [Int32.MinValue..Int32.MaxValue)
-            // We will end up getting even numbers only.
-
-            var result = InternalSample();
-            // Note we can't use addition here. The distribution will be bad if we do that.
-            var negative = InternalSample()%2 == 0; // decide the sign based on second sample
-            if (negative)
-            {
-                result = -result;
-            }
-            double d = result;
-            d += int.MaxValue - 1; // get a number in range [0 .. 2 * Int32MaxValue - 1)
-            d /= 2*(uint) int.MaxValue - 1;
-            return d;
-        }
-
         public int Next(int minValue, int maxValue)
         {
             if (minValue > maxValue)
@@ -130,11 +123,6 @@ namespace Roton.Emulation.Execution
             return (int) (Sample()*maxValue);
         }
 
-        public double NextDouble()
-        {
-            return Sample();
-        }
-
         public void NextBytes(byte[] buffer)
         {
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
@@ -142,6 +130,18 @@ namespace Roton.Emulation.Execution
             {
                 buffer[i] = (byte) (InternalSample()%(byte.MaxValue + 1));
             }
+        }
+
+        public double NextDouble()
+        {
+            return Sample();
+        }
+
+        private double Sample()
+        {
+            //Including this division at the end gives us significantly improved
+            //random number distribution.
+            return InternalSample()*(1.0/MBig);
         }
     }
 }

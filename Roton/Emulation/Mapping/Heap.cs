@@ -6,6 +6,8 @@ namespace Roton.Emulation.Mapping
 {
     internal sealed class Heap : IHeap
     {
+        private int _nextEntry;
+
         public Heap()
         {
             Entries = new Dictionary<int, byte[]>();
@@ -13,8 +15,6 @@ namespace Roton.Emulation.Mapping
         }
 
         private IDictionary<int, byte[]> Entries { get; }
-
-        private int _nextEntry;
 
         public int Allocate(byte[] data)
         {

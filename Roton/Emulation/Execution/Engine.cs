@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using Roton.Core;
@@ -393,48 +392,6 @@ namespace Roton.Emulation.Execution
                 ExecuteDeath(context);
         }
 
-        protected virtual void ExecuteDeath(IOopContext context)
-        {
-            var location = context.Actor.Location.Clone();
-            Harm(context.Index);
-            PlotTile(location, context.DeathTile);
-        }
-
-        protected virtual void ExecuteMessage(IOopContext context)
-        {
-            if (context.Message.Count == 1)
-            {
-                SetMessage(0xC8, new Message(context.Message.ToArray()));
-            }
-            else
-            {
-                // TODO: display scroll
-            }
-        }
-
-        protected virtual void ExecuteDirection(IOopContext context, IXyPair vector)
-        {
-            if (vector.IsZero())
-            {
-                context.Repeat = false;
-            }
-            else
-            {
-                var target = context.Actor.Location.Sum(vector);
-                if (!this.ElementAt(target).IsFloor)
-                {
-                    Push(target, vector);
-                }
-                if (this.ElementAt(target).IsFloor)
-                {
-                    MoveActor(context.Index, target);
-                    context.Repeat = false;
-                }
-            }
-
-
-        }
-
         public void FadePurple()
         {
             FadeBoard(new AnsiChar(0xDB, 0x05));
@@ -502,9 +459,11 @@ namespace Roton.Emulation.Execution
             return result;
         }
 
+        public abstract IGrammar Grammar { get; }
+
         public abstract void HandlePlayerInput(IActor actor, int hotkey);
 
-        public abstract IGrammar Grammar { get; }
+        public abstract bool HandleTitleInput(int hotkey);
 
         public void Harm(int index)
         {
@@ -667,6 +626,33 @@ namespace Roton.Emulation.Execution
         {
         }
 
+        public bool PlayWorld()
+        {
+            bool gameIsActive;
+
+            if (World.IsLocked)
+            {
+                // reload world here
+                gameIsActive = State.WorldLoaded;
+                State.StartBoard = World.BoardIndex;
+            }
+            else
+            {
+                gameIsActive = true;
+            }
+
+            if (gameIsActive)
+            {
+                SetBoard(State.StartBoard);
+                EnterBoard();
+                State.PlayerElement = Elements.PlayerId;
+                State.GamePaused = true;
+                MainLoop(true);
+            }
+
+            return gameIsActive;
+        }
+
         public void PlotTile(IXyPair location, ITile tile)
         {
             if (this.ElementAt(location).Id == Elements.PlayerId)
@@ -702,7 +688,8 @@ namespace Roton.Emulation.Execution
                 }
                 else
                 {
-                    SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle, State.DefaultActor);
+                    SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
+                        State.DefaultActor);
                 }
             }
             UpdateBoard(location);
@@ -812,6 +799,37 @@ namespace Roton.Emulation.Execution
         public int RandomNumber(int max)
         {
             return Random.Next(max);
+        }
+
+        public int ReadActorCodeByte(int index, IExecutable instructionSource)
+        {
+            var actor = Actors[index];
+            var value = 0;
+
+            if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
+            {
+                State.OopByte = 0;
+            }
+            else
+            {
+                Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
+                value = actor.Code[instructionSource.Instruction];
+                State.OopByte = value;
+                instructionSource.Instruction++;
+            }
+            return value;
+        }
+
+        public string ReadActorCodeLine(int index, IExecutable instructionSource)
+        {
+            var result = new StringBuilder();
+            ReadActorCodeByte(index, instructionSource);
+            while (State.OopByte != 0x00 && State.OopByte != 0x0D)
+            {
+                result.Append(State.OopByte.ToChar());
+                ReadActorCodeByte(index, instructionSource);
+            }
+            return result.ToString();
         }
 
         public int ReadActorCodeNumber(int index, IExecutable instructionSource)
@@ -970,6 +988,53 @@ namespace Roton.Emulation.Execution
                 SyncRandomNumber(2) == 0
                     ? vector.Clockwise()
                     : vector.CounterClockwise());
+            return result;
+        }
+
+        public virtual int SearchActorCode(int index, string term)
+        {
+            var result = -1;
+            var termBytes = term.ToBytes();
+            var actor = Actors[index];
+            var offset = new ByRefInstruction(0);
+
+            while (offset.Instruction < actor.Length)
+            {
+                var oldOffset = offset.Instruction;
+                var termOffset = 0;
+                var success = false;
+
+                while (true)
+                {
+                    ReadActorCodeByte(index, offset);
+                    if (termBytes[termOffset].ToUpperCase() != State.OopByte.ToUpperCase())
+                    {
+                        success = false;
+                        break;
+                    }
+                    termOffset++;
+                    if (termOffset >= termBytes.Length)
+                    {
+                        success = true;
+                        break;
+                    }
+                }
+
+                if (success)
+                {
+                    ReadActorCodeByte(index, offset);
+                    State.OopByte = State.OopByte.ToUpperCase();
+                    if (!((State.OopByte >= 0x41 && State.OopByte <= 0x5A) || State.OopByte == 0x5F))
+                    {
+                        result = oldOffset;
+                        break;
+                    }
+                }
+
+                oldOffset++;
+                offset.Instruction = oldOffset;
+            }
+
             return result;
         }
 
@@ -1310,6 +1375,34 @@ namespace Roton.Emulation.Execution
         {
         }
 
+        protected virtual void ExecuteDeath(IOopContext context)
+        {
+            var location = context.Actor.Location.Clone();
+            Harm(context.Index);
+            PlotTile(location, context.DeathTile);
+        }
+
+        protected virtual void ExecuteDirection(IOopContext context, IXyPair vector)
+        {
+            if (vector.IsZero())
+            {
+                context.Repeat = false;
+            }
+            else
+            {
+                var target = context.Actor.Location.Sum(vector);
+                if (!this.ElementAt(target).IsFloor)
+                {
+                    Push(target, vector);
+                }
+                if (this.ElementAt(target).IsFloor)
+                {
+                    MoveActor(context.Index, target);
+                    context.Repeat = false;
+                }
+            }
+        }
+
         protected virtual bool ExecuteLabel(int sender, ISearchContext context, string prefix)
         {
             var label = context.SearchTarget;
@@ -1355,6 +1448,14 @@ namespace Roton.Emulation.Execution
                 break;
             }
             return success;
+        }
+
+        protected virtual void ExecuteMessage(IOopContext context)
+        {
+            if (context.Message.Count == 1)
+            {
+                SetMessage(0xC8, new Message(context.Message.ToArray()));
+            }
         }
 
         private void FadeBoard(AnsiChar ac)
@@ -1583,37 +1684,6 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public int ReadActorCodeByte(int index, IExecutable instructionSource)
-        {
-            var actor = Actors[index];
-            var value = 0;
-
-            if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
-            {
-                State.OopByte = 0;
-            }
-            else
-            {
-                Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
-                value = actor.Code[instructionSource.Instruction];
-                State.OopByte = value;
-                instructionSource.Instruction++;
-            }
-            return value;
-        }
-
-        public string ReadActorCodeLine(int index, IExecutable instructionSource)
-        {
-            var result = new StringBuilder();
-            ReadActorCodeByte(index, instructionSource);
-            while (State.OopByte != 0x00 && State.OopByte != 0x0D)
-            {
-                result.Append(State.OopByte.ToChar());
-                ReadActorCodeByte(index, instructionSource);
-            }
-            return result.ToString();
-        }
-
         protected virtual void ReadInput()
         {
             State.KeyShift = false;
@@ -1674,53 +1744,6 @@ namespace Roton.Emulation.Execution
             {
                 result.Y = 0;
             }
-        }
-
-        public virtual int SearchActorCode(int index, string term)
-        {
-            var result = -1;
-            var termBytes = term.ToBytes();
-            var actor = Actors[index];
-            var offset = new ByRefInstruction(0);
-
-            while (offset.Instruction < actor.Length)
-            {
-                var oldOffset = offset.Instruction;
-                var termOffset = 0;
-                var success = false;
-
-                while (true)
-                {
-                    ReadActorCodeByte(index, offset);
-                    if (termBytes[termOffset].ToUpperCase() != State.OopByte.ToUpperCase())
-                    {
-                        success = false;
-                        break;
-                    }
-                    termOffset++;
-                    if (termOffset >= termBytes.Length)
-                    {
-                        success = true;
-                        break;
-                    }
-                }
-
-                if (success)
-                {
-                    ReadActorCodeByte(index, offset);
-                    State.OopByte = State.OopByte.ToUpperCase();
-                    if (!((State.OopByte >= 0x41 && State.OopByte <= 0x5A) || State.OopByte == 0x5F))
-                    {
-                        result = oldOffset;
-                        break;
-                    }
-                }
-
-                oldOffset++;
-                offset.Instruction = oldOffset;
-            }
-
-            return result;
         }
 
         protected void SetEditorMode()
@@ -1818,35 +1841,6 @@ namespace Roton.Emulation.Execution
                     break;
                 }
             }
-        }
-
-        public abstract bool HandleTitleInput(int hotkey);
-
-        public bool PlayWorld()
-        {
-            bool gameIsActive;
-
-            if (World.IsLocked)
-            {
-                // reload world here
-                gameIsActive = State.WorldLoaded;
-                State.StartBoard = World.BoardIndex;
-            }
-            else
-            {
-                gameIsActive = true;
-            }
-
-            if (gameIsActive)
-            {
-                SetBoard(State.StartBoard);
-                EnterBoard();
-                State.PlayerElement = Elements.PlayerId;
-                State.GamePaused = true;
-                MainLoop(true);
-            }
-
-            return gameIsActive;
         }
     }
 }

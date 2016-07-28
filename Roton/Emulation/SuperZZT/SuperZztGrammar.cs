@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Roton.Core;
 using Roton.Emulation.Execution;
 
@@ -11,6 +9,16 @@ namespace Roton.Emulation.SuperZZT
     {
         public SuperZztGrammar(IColorList colors, IElementList elements) : base(colors, elements)
         {
+        }
+
+        protected override void Command_Lock(IOopContext context)
+        {
+            context.Actor.P3 = 1;
+        }
+
+        protected override void Command_Unlock(IOopContext context)
+        {
+            context.Actor.P3 = 0;
         }
 
         protected override IDictionary<string, Func<IOopContext, IOopItem>> GetItems()
@@ -24,16 +32,6 @@ namespace Roton.Emulation.SuperZZT
                 {"TIME", Item_Time},
                 {"Z", Item_Stones}
             };
-        }
-
-        protected override void Command_Lock(IOopContext context)
-        {
-            context.Actor.P3 = 1;
-        }
-
-        protected override void Command_Unlock(IOopContext context)
-        {
-            context.Actor.P3 = 0;
         }
     }
 }

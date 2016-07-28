@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using Roton.Core;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
@@ -389,19 +388,6 @@ namespace Roton.Emulation.Execution
                 context.Engine.RaiseError("Bad #PUT");
         }
 
-        protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
-        {
-            if (location.X >= 1 && location.X <= engine.Tiles.Width && location.Y >= 1 &&
-                location.Y <= engine.Tiles.Height)
-            {
-                if (!engine.ElementAt(location).IsFloor)
-                {
-                    engine.Push(location, vector);
-                }
-                engine.PlotTile(location, kind);
-            }
-        }
-
         protected void Command_Restart(IOopContext context)
         {
             context.Instruction = 0;
@@ -781,32 +767,22 @@ namespace Roton.Emulation.Execution
                 v => context.GetWorld().Torches = v);
         }
 
+        protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
+        {
+            if (location.X >= 1 && location.X <= engine.Tiles.Width && location.Y >= 1 &&
+                location.Y <= engine.Tiles.Height)
+            {
+                if (!engine.ElementAt(location).IsFloor)
+                {
+                    engine.Push(location, vector);
+                }
+                engine.PlotTile(location, kind);
+            }
+        }
+
         protected bool Target_All(ISearchContext context)
         {
             return context.SearchIndex < context.Engine.Actors.Count;
-        }
-
-        protected bool Target_Others(ISearchContext context)
-        {
-            if (context.SearchIndex >= context.Engine.Actors.Count)
-                return false;
-
-            if (context.SearchIndex == context.SearchOffset)
-                context.SearchIndex++;
-
-            return context.SearchIndex < context.Engine.Actors.Count;
-        }
-
-        protected bool Target_Self(ISearchContext context)
-        {
-            if (context.SearchOffset <= 0)
-                return false;
-
-            if (context.SearchIndex > context.SearchOffset)
-                return false;
-
-            context.SearchIndex = context.SearchOffset;
-            return true;
         }
 
         private bool Target_Default(ISearchContext context)
@@ -831,6 +807,27 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        
+        protected bool Target_Others(ISearchContext context)
+        {
+            if (context.SearchIndex >= context.Engine.Actors.Count)
+                return false;
+
+            if (context.SearchIndex == context.SearchOffset)
+                context.SearchIndex++;
+
+            return context.SearchIndex < context.Engine.Actors.Count;
+        }
+
+        protected bool Target_Self(ISearchContext context)
+        {
+            if (context.SearchOffset <= 0)
+                return false;
+
+            if (context.SearchIndex > context.SearchOffset)
+                return false;
+
+            context.SearchIndex = context.SearchOffset;
+            return true;
+        }
     }
 }

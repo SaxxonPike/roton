@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using Roton.Core;
 
 namespace Roton.Emulation.Mapping
 {
@@ -13,9 +9,10 @@ namespace Roton.Emulation.Mapping
             Engine = engine;
         }
 
-        public int SearchOffset { get; set; }
         public IEngine Engine { get; }
         public int SearchIndex { get; set; }
+
+        public int SearchOffset { get; set; }
         public string SearchTarget { get; set; }
     }
 }

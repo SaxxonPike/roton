@@ -38,6 +38,13 @@ namespace Roton.Emulation.ZZT
         public override IElementList Elements { get; }
         public override IGameSerializer GameSerializer { get; }
 
+        public override IGrammar Grammar { get; }
+        public override IHud Hud { get; }
+        public override ISoundSet SoundSet { get; }
+        public override IState State { get; }
+        public override ITileGrid Tiles { get; }
+        public override IWorld World { get; }
+
         public override void HandlePlayerInput(IActor actor, int hotkey)
         {
             switch (hotkey)
@@ -102,12 +109,5 @@ namespace Roton.Emulation.ZZT
             }
             return false;
         }
-
-        public override IGrammar Grammar { get; }
-        public override IHud Hud { get; }
-        public override ISoundSet SoundSet { get; }
-        public override IState State { get; }
-        public override ITileGrid Tiles { get; }
-        public override IWorld World { get; }
     }
 }

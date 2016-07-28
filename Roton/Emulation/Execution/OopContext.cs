@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Roton.Core;
-using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.Execution
 {
@@ -23,8 +22,6 @@ namespace Roton.Emulation.Execution
             DeathTile = new Tile(0, 0);
             Message = new List<string>();
         }
-
-        public IEngine Engine { get; }
 
         public int Instruction
         {
@@ -61,6 +58,8 @@ namespace Roton.Emulation.Execution
         public bool Repeat { get; set; }
 
         public bool Resume { get; set; }
+
+        public IEngine Engine { get; }
 
         public int SearchIndex { get; set; }
 

@@ -199,6 +199,8 @@ namespace Roton.Emulation.SuperZZT
 
         public int PlayerTime { get; set; }
 
+        public ITimer PlayerTimer { get; }
+
         public bool QuitZzt
         {
             get { return _memory.ReadBool(0x7C9D); }
@@ -232,8 +234,6 @@ namespace Roton.Emulation.SuperZZT
         }
 
         public IList<int> StarChars { get; }
-
-        public ITimer PlayerTimer { get; }
 
         public int StartBoard
         {

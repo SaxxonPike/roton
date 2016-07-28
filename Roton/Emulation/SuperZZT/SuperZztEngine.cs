@@ -42,6 +42,45 @@ namespace Roton.Emulation.SuperZZT
 
         public override IGameSerializer GameSerializer { get; }
 
+        public override IGrammar Grammar { get; }
+
+        public override IHud Hud { get; }
+
+        public override ISoundSet SoundSet { get; }
+
+        public override IState State { get; }
+
+        public override ITileGrid Tiles { get; }
+
+        public override IWorld World { get; }
+
+        public override void EnterBoard()
+        {
+            BroadcastLabel(0, @"ENTER", false);
+            base.EnterBoard();
+        }
+
+        protected override void ExecuteMessage(IOopContext context)
+        {
+            switch (context.Message.Count)
+            {
+                case 1:
+                case 2:
+                    SetMessage(0xC8, new Message(context.Message.ToArray()));
+                    break;
+                case 0:
+                    break;
+                default:
+                    // todo: show scroll
+                    break;
+            }
+        }
+
+        public override void ForcePlayerColor(int index)
+        {
+            // Do nothing to override the player's color in Super ZZT
+        }
+
         public override void HandlePlayerInput(IActor actor, int hotkey)
         {
         }
@@ -67,29 +106,6 @@ namespace Roton.Emulation.SuperZZT
                     break;
             }
             return false;
-        }
-
-        public override IGrammar Grammar { get; }
-
-        public override IHud Hud { get; }
-
-        public override ISoundSet SoundSet { get; }
-
-        public override IState State { get; }
-
-        public override ITileGrid Tiles { get; }
-
-        public override IWorld World { get; }
-
-        public override void EnterBoard()
-        {
-            BroadcastLabel(0, @"ENTER", false);
-            base.EnterBoard();
-        }
-
-        public override void ForcePlayerColor(int index)
-        {
-            // Do nothing to override the player's color in Super ZZT
         }
 
         public override void RemoveItem(IXyPair location)
@@ -156,22 +172,6 @@ namespace Roton.Emulation.SuperZZT
                 SetGameMode();
 
             TitleScreenLoop();
-        }
-
-        protected override void ExecuteMessage(IOopContext context)
-        {
-            switch (context.Message.Count)
-            {
-                case 1:
-                case 2:
-                    SetMessage(0xC8, new Message(context.Message.ToArray()));
-                    break;
-                case 0:
-                    break;
-                default:
-                    // todo: show scroll
-                    break;
-            }
         }
     }
 }

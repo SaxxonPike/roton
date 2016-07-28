@@ -8,12 +8,12 @@ namespace Roton.Core
         IActor Actor { get; }
         ITile DeathTile { get; }
         IGrammar Grammar { get; }
+        IList<string> Message { get; }
         int CommandsExecuted { get; set; }
         bool Died { get; set; }
         bool Executed { get; set; }
         bool Finished { get; set; }
         int Index { get; set; }
-        IList<string> Message { get; }
         bool Moved { get; set; }
         string Name { get; set; }
         bool NextLine { get; set; }

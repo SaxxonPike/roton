@@ -11,9 +11,9 @@ namespace Roton.Core
         ITile EdgeTile { get; }
         IXyPair KeyVector { get; }
         IList<int> LineChars { get; }
+        ITimer PlayerTimer { get; }
         IList<int> SoundBuffer { get; }
         IList<int> StarChars { get; }
-        ITimer PlayerTimer { get; }
         IList<int> TransporterHChars { get; }
         IList<int> TransporterVChars { get; }
         IList<int> Vector4 { get; }

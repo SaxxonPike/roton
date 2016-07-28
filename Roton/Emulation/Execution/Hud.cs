@@ -10,9 +10,9 @@ namespace Roton.Emulation.Execution
             Terminal = terminal;
         }
 
-        protected ITerminal Terminal { get; }
-
         protected IEngine Engine { get; }
+
+        protected ITerminal Terminal { get; }
 
         public virtual void ClearPausing()
         {
@@ -20,23 +20,6 @@ namespace Roton.Emulation.Execution
 
         public virtual void ClearTitleStatus()
         {
-        }
-
-        protected virtual bool Confirm(string message)
-        {
-            while (true)
-            {
-                Engine.WaitForTick();
-                var key = Engine.ReadKey().ToUpperCase();
-                switch (key)
-                {
-                    case 0x59:
-                        return true;
-                    case 0x4E:
-                    case 0x1B:
-                        return false;
-                }
-            }
         }
 
         public virtual void CreateStatusBar()
@@ -122,6 +105,23 @@ namespace Roton.Emulation.Execution
 
         public virtual void UpdateStatus()
         {
+        }
+
+        protected virtual bool Confirm(string message)
+        {
+            while (true)
+            {
+                Engine.WaitForTick();
+                var key = Engine.ReadKey().ToUpperCase();
+                switch (key)
+                {
+                    case 0x59:
+                        return true;
+                    case 0x4E:
+                    case 0x1B:
+                        return false;
+                }
+            }
         }
     }
 }

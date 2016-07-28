@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Emulation.Behavior
+﻿namespace Roton.Emulation.Behavior
 {
     public class BehaviorMapConfiguration : IBehaviorMapConfiguration
     {
