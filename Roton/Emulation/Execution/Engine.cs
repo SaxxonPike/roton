@@ -392,6 +392,53 @@ namespace Roton.Emulation.Execution
                 ExecuteDeath(context);
         }
 
+        public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
+        {
+            var label = context.SearchTarget;
+            var target = string.Empty;
+            var success = false;
+            var split = label.IndexOf(':');
+
+            if (split > 0)
+            {
+                target = label.Substring(0, split);
+                label = label.Substring(split + 1);
+                context.SearchTarget = target;
+                success = Grammar.GetTarget(context);
+            }
+            else if (context.SearchIndex < sender)
+            {
+                context.SearchIndex = sender;
+                split = 0;
+                success = true;
+            }
+            while (true)
+            {
+                if (!success)
+                {
+                    break;
+                }
+
+                if (label.ToUpper() == @"RESTART")
+                {
+                    context.SearchOffset = 0;
+                }
+                else
+                {
+                    context.SearchOffset = SearchActorCode(context.SearchIndex, prefix + label);
+                    if (context.SearchOffset < 0 && split > 0)
+                    {
+                        success = Grammar.GetTarget(context);
+                        continue;
+                    }
+                }
+
+                success = context.SearchOffset >= 0;
+                break;
+            }
+            return success;
+        }
+
         public void FadePurple()
         {
             FadeBoard(new AnsiChar(0xDB, 0x05));
@@ -1366,53 +1413,6 @@ namespace Roton.Emulation.Execution
                     context.Repeat = false;
                 }
             }
-        }
-
-        public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
-        {
-            var label = context.SearchTarget;
-            var target = string.Empty;
-            var success = false;
-            var split = label.IndexOf(':');
-
-            if (split > 0)
-            {
-                target = label.Substring(0, split);
-                label = label.Substring(split + 1);
-                context.SearchTarget = target;
-                success = Grammar.GetTarget(context);
-            }
-            else if (context.SearchIndex < sender)
-            {
-                context.SearchIndex = sender;
-                split = 0;
-                success = true;
-            }
-            while (true)
-            {
-                if (!success)
-                {
-                    break;
-                }
-
-                if (label.ToUpper() == @"RESTART")
-                {
-                    context.SearchOffset = 0;
-                }
-                else
-                {
-                    context.SearchOffset = SearchActorCode(context.SearchIndex, prefix + label);
-                    if (context.SearchOffset < 0 && split > 0)
-                    {
-                        success = Grammar.GetTarget(context);
-                        continue;
-                    }
-                }
-
-                success = context.SearchOffset >= 0;
-                break;
-            }
-            return success;
         }
 
         protected virtual void ExecuteMessage(IOopContext context)

@@ -407,7 +407,8 @@ namespace Roton.Emulation.Execution
                 while (context.SearchOffset >= 0)
                 {
                     context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x3A;
-                    context.SearchOffset = context.Engine.SearchActorCode(context.SearchIndex, $"\xD\x27{context.GetWord()}");
+                    context.SearchOffset = context.Engine.SearchActorCode(context.SearchIndex,
+                        $"\xD\x27{context.GetWord()}");
                 }
             }
         }
@@ -541,7 +542,7 @@ namespace Roton.Emulation.Execution
         {
             var player = context.GetActor(0);
             var distance = context.Actor.Location.Difference(player.Location);
-            return distance.X * distance.X + distance.Y * distance.Y == 1;
+            return distance.X*distance.X + distance.Y*distance.Y == 1;
         }
 
         protected bool? Condition_Energized(IOopContext context)
