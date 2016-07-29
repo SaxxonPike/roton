@@ -396,6 +396,20 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Restore(IOopContext context)
         {
+            context.ReadWord();
+            while (true)
+            {
+                context.SearchTarget = context.GetWord();
+                var result = context.Engine.ExecuteLabel(context.Index, context, "\xD\x27");
+                if (!result)
+                    break;
+
+                while (context.SearchOffset >= 0)
+                {
+                    context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x3A;
+                    context.SearchOffset = context.Engine.SearchActorCode(context.SearchIndex, $"\xD\x27{context.GetWord()}");
+                }
+            }
         }
 
         protected void Command_Send(IOopContext context)
@@ -469,6 +483,15 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Zap(IOopContext context)
         {
+            context.ReadWord();
+            while (true)
+            {
+                context.SearchTarget = context.GetWord();
+                var result = context.Engine.ExecuteLabel(context.Index, context, "\xD\x3A");
+                if (!result)
+                    break;
+                context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x27;
+            }
         }
 
         protected bool? Condition_Alligned(IOopContext context)

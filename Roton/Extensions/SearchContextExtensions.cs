@@ -35,6 +35,11 @@ namespace Roton.Extensions
             return context.Engine.State.OopNumber;
         }
 
+        public static string GetWord(this ISearchContext context)
+        {
+            return context.Engine.State.OopWord;
+        }
+
         public static IWorld GetWorld(this ISearchContext context)
         {
             return context.Engine.World;

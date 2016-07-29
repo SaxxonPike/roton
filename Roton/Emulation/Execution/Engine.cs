@@ -1368,7 +1368,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        protected virtual bool ExecuteLabel(int sender, ISearchContext context, string prefix)
+        public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
         {
             var label = context.SearchTarget;
             var target = string.Empty;

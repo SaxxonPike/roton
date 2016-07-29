@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Roton.Emulation.Execution;
+using Roton.Emulation.Mapping;
 using Roton.FileIo;
 
 namespace Roton.Core
@@ -35,6 +36,7 @@ namespace Roton.Core
         ISound EncodeMusic(string music);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
+        bool ExecuteLabel(int sender, ISearchContext context, string prefix);
         void FadePurple();
         bool FindTile(ITile kind, IXyPair location);
         void ForcePlayerColor(int index);
