@@ -448,7 +448,7 @@ namespace Roton.Emulation.Execution
         {
             // The actual code doesn't work this way.
             // We cheat a little by not advancing the execution counter.
-            context.NextLine = false;
+            context.Resume = true;
             context.CommandsExecuted--;
         }
 
