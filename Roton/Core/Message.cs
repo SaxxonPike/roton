@@ -9,6 +9,11 @@ namespace Roton.Core
             Text = new[] {string.Empty};
         }
 
+        public Message(IEnumerable<string> message)
+        {
+            Text = new List<string>(message).ToArray();
+        }
+
         public Message(params string[] message)
         {
             Text = new List<string>(message).ToArray();

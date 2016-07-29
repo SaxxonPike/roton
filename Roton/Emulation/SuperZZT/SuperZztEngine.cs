@@ -70,13 +70,16 @@ namespace Roton.Emulation.SuperZZT
             switch (context.Message.Count)
             {
                 case 1:
+                    SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
+                    break;
                 case 2:
-                    SetMessage(0xC8, new Message(context.Message.ToArray()));
+                    SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
                     break;
                 case 0:
                     break;
                 default:
-                    // todo: show scroll
+                    context.Engine.State.KeyVector.SetTo(0, 0);
+                    Hud.ShowScroll(context.Message);
                     break;
             }
         }

@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EngineConfiguration.cs" />
@@ -44,10 +45,12 @@
     <Compile Include="Core\IContext.cs" />
     <Compile Include="Core\IMessage.cs" />
     <Compile Include="Core\IPackedBoard.cs" />
+    <Compile Include="Core\IScrollResult.cs" />
     <Compile Include="Core\ISound.cs" />
     <Compile Include="Core\ITimer.cs" />
     <Compile Include="Core\Location16.cs" />
     <Compile Include="Core\Message.cs" />
+    <Compile Include="Core\ScrollResult.cs" />
     <Compile Include="Emulation\Behavior\AmmoBehavior.cs" />
     <Compile Include="Emulation\Behavior\BearBehavior.cs" />
     <Compile Include="Emulation\Behavior\BehaviorMapConfiguration.cs" />

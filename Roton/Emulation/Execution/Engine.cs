@@ -1419,7 +1419,12 @@ namespace Roton.Emulation.Execution
         {
             if (context.Message.Count == 1)
             {
-                SetMessage(0xC8, new Message(context.Message.ToArray()));
+                SetMessage(0xC8, new Message(context.Message));
+            }
+            else
+            {
+                context.Engine.State.KeyVector.SetTo(0, 0);
+                Hud.ShowScroll(context.Message);
             }
         }
 

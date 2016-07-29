@@ -1,4 +1,7 @@
-﻿using Roton.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
@@ -93,6 +96,13 @@ namespace Roton.Emulation.Execution
         public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue)
         {
             return currentValue;
+        }
+
+        public virtual IScrollResult ShowScroll(IEnumerable<string> lines)
+        {
+            // Fallback scroll implementation
+            MessageBox.Show(string.Join(Environment.NewLine, lines));
+            return new ScrollResult {SelectedLine = -1};
         }
 
         public virtual void UpdateBorder()
