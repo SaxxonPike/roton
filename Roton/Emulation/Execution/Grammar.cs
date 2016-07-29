@@ -259,7 +259,7 @@ namespace Roton.Emulation.Execution
                     {
                         target.Color = targetElement.Color;
                     }
-                    var location = new Location();
+                    var location = new Location(0, 1);
                     while (context.Engine.FindTile(source, location))
                     {
                         context.Engine.PlotTile(location, target);
@@ -522,23 +522,31 @@ namespace Roton.Emulation.Execution
         protected bool? Condition_Any(IOopContext context)
         {
             var kind = GetKind(context);
-            return false;
+            if (kind == null)
+                return null;
+
+            return context.Engine.FindTile(kind, new Location(0, 1));
         }
 
         protected bool? Condition_Blocked(IOopContext context)
         {
             var direction = GetDirection(context);
-            return false;
+            if (direction == null)
+                return null;
+
+            return !context.Engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
         }
 
         protected bool? Condition_Contact(IOopContext context)
         {
-            return false;
+            var player = context.GetActor(0);
+            var distance = context.Actor.Location.Difference(player.Location);
+            return distance.X * distance.X + distance.Y * distance.Y == 1;
         }
 
         protected bool? Condition_Energized(IOopContext context)
         {
-            return false;
+            return context.GetWorld().EnergyCycles > 0;
         }
 
         protected bool? Condition_Not(IOopContext context)
