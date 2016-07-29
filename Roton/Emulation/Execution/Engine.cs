@@ -22,19 +22,19 @@ namespace Roton.Emulation.Execution
             _config = config;
             Boards = new List<IPackedBoard>();
             Memory = new Memory();
-            Random = new Random();
-            SyncRandom = new Random(config.RandomSeed);
+            Random = new Randomizer(new RandomState());
+            SyncRandom = new Randomizer(new RandomState(config.RandomSeed));
         }
 
         private ITile BorderTile => State.BorderTile;
 
         private IKeyboard Keyboard => _config.Keyboard;
 
-        private Random Random { get; }
+        private IRandomizer Random { get; }
 
         private ISpeaker Speaker => _config.Speaker;
 
-        private Random SyncRandom { get; }
+        private IRandomizer SyncRandom { get; }
 
         private int TimerBase => CoreTimer.Tick & 0x7FFF;
 
@@ -763,7 +763,7 @@ namespace Roton.Emulation.Execution
 
         public int RandomNumber(int max)
         {
-            return Random.Next(max);
+            return Random.GetNext(max);
         }
 
         public int ReadActorCodeByte(int index, IExecutable instructionSource)
@@ -1160,7 +1160,7 @@ namespace Roton.Emulation.Execution
 
         public int SyncRandomNumber(int max)
         {
-            return SyncRandom.Next(max);
+            return SyncRandom.GetNext(max);
         }
 
         public abstract ITileGrid Tiles { get; }

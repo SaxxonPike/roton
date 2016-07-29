@@ -126,7 +126,11 @@
     <Compile Include="Emulation\Behavior\WaterBehavior.cs" />
     <Compile Include="Emulation\Behavior\WebBehavior.cs" />
     <Compile Include="Core\Sound.cs" />
+    <Compile Include="Core\IRandomizer.cs" />
+    <Compile Include="Emulation\Execution\IRandomState.cs" />
     <Compile Include="Emulation\Execution\Random.cs" />
+    <Compile Include="Emulation\Execution\Randomizer.cs" />
+    <Compile Include="Emulation\Execution\RandomState.cs" />
     <Compile Include="Emulation\Mapping\SearchContext.cs" />
     <Compile Include="Emulation\Mapping\Executable.cs" />
     <Compile Include="Emulation\Mapping\ISearchContext.cs" />
