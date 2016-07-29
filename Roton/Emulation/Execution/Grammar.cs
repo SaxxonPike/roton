@@ -352,7 +352,7 @@ namespace Roton.Emulation.Execution
             var condition = GetCondition(context);
             if (condition.HasValue)
             {
-                context.Repeat = condition.Value;
+                context.Resume = condition.Value;
             }
         }
 
@@ -465,6 +465,25 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Try(IOopContext context)
         {
+            var vector = GetDirection(context);
+            if (vector == null)
+                return;
+
+            var target = vector.Sum(context.Actor.Location);
+            if (!context.Engine.ElementAt(target).IsFloor)
+            {
+                context.Engine.Push(target, vector);
+            }
+            if (context.Engine.ElementAt(target).IsFloor)
+            {
+                context.Engine.MoveActor(context.Index, target);
+                context.Moved = true;
+                context.Resume = false;
+            }
+            else
+            {
+                context.Resume = true;
+            }
         }
 
         protected virtual void Command_Unlock(IOopContext context)
