@@ -42,7 +42,7 @@ namespace Roton.Core
         /// </summary>
         internal static byte[] ToBytes(this string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return new byte[0];
             }

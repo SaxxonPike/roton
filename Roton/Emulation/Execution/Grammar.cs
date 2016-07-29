@@ -611,9 +611,10 @@ namespace Roton.Emulation.Execution
 
         protected IXyPair Direction_RndP(IOopContext context)
         {
+            var direction = GetDirection(context);
             return context.Engine.SyncRandomNumber(2) == 0
-                ? GetDirection(context).Clockwise()
-                : GetDirection(context).CounterClockwise();
+                ? direction.Clockwise()
+                : direction.CounterClockwise();
         }
 
         protected IXyPair Direction_Seek(IOopContext context)

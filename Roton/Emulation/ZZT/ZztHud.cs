@@ -196,8 +196,7 @@ namespace Roton.Emulation.ZZT
 
         private void GenerateFadeMatrix()
         {
-            // use deterministic randomization here - just as a precaution
-            var rnd = new Random(0);
+            var rnd = new Randomizer(new RandomState());
             var index = 0;
             for (var x = 0; x < ViewportWidth; x++)
             {
@@ -209,7 +208,7 @@ namespace Roton.Emulation.ZZT
             for (var i = 0; i < ViewportTileCount; i++)
             {
                 var sourceIndex = i;
-                var targetIndex = rnd.Next(FadeMatrix.Length);
+                var targetIndex = rnd.GetNext(FadeMatrix.Length);
                 var temp = FadeMatrix[sourceIndex].Clone();
                 FadeMatrix[sourceIndex].CopyFrom(FadeMatrix[targetIndex]);
                 FadeMatrix[targetIndex].CopyFrom(temp);

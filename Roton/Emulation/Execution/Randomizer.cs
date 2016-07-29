@@ -20,7 +20,7 @@
             if (exclusiveUpperBound == 0)
                 return 0;
 
-            return (_state.State & 0xFFFF)%exclusiveUpperBound;
+            return ((_state.State >> 16) & 0xFFFF) % exclusiveUpperBound;
         }
     }
 }
