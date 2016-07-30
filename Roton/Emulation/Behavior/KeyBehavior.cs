@@ -20,6 +20,7 @@ namespace Roton.Emulation.Behavior
             {
                 engine.World.Keys[keyIndex] = true;
                 engine.RemoveItem(location);
+                engine.UpdateStatus();
                 engine.SetMessage(0xC8, engine.Alerts.KeyPickupMessage(color));
                 engine.PlaySound(2, engine.SoundSet.Key);
             }

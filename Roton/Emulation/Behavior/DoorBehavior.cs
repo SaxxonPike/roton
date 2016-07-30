@@ -20,6 +20,7 @@ namespace Roton.Emulation.Behavior
             {
                 engine.World.Keys[keyIndex] = false;
                 engine.RemoveItem(location);
+                engine.UpdateStatus();
                 engine.SetMessage(0xC8, engine.Alerts.DoorOpenMessage(color));
                 engine.PlaySound(3, engine.SoundSet.DoorOpen);
             }
