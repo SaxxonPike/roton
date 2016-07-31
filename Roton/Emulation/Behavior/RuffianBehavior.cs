@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class RuffianBehavior : ElementBehavior
+    internal sealed class RuffianBehavior : EnemyBehavior
     {
         public override string KnownName => "Ruffian";
 
