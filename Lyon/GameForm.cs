@@ -127,7 +127,7 @@ namespace Lyon
 
         private void OpenWorld()
         {
-            var ofd = new OpenFileDialog {Filter = FileFilters};
+            var ofd = new OpenWorldDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Initialize(new Context(GetCoreConfiguration(), File.ReadAllBytes(ofd.FileName)));
@@ -138,10 +138,9 @@ namespace Lyon
         {
             if (Context != null)
             {
-                var sfd = new SaveFileDialog {Filter = FileFilters};
-                if (sfd.ShowDialog() == DialogResult.OK)
+                var sfd = new SaveWorldDialog();
+                if (sfd.ShowDialog(Context.WorldData) == DialogResult.OK)
                 {
-                    //Initialize(new Context(sfd.FileName, false));
                     Context.Save(sfd.FileName);
                 }
             }

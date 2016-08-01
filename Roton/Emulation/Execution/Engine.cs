@@ -24,6 +24,7 @@ namespace Roton.Emulation.Execution
             Memory = new Memory();
             Random = new Randomizer(new RandomState());
             SyncRandom = new Randomizer(new RandomState(config.RandomSeed));
+            Disk = config.Disk;
         }
 
         private ITile BorderTile => State.BorderTile;

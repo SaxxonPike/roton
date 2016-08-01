@@ -45,7 +45,9 @@
       <DependentUpon>Keyboard.cs</DependentUpon>
     </Compile>
     <Compile Include="KeysBuffer.cs" />
+    <Compile Include="OpenWorldDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveWorldDialog.cs" />
     <Compile Include="Speaker.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -21,15 +21,6 @@ namespace Torch
             "PNG Images (*.png)", "*.png;*.PNG"
             );
 
-        private static readonly string WorldFileFilters = string.Join("|",
-            "Game Worlds (*.zzt;*.szt)", "*.zzt;*.szt;*.ZZT;*.SZT",
-            "ZZT Worlds (*.zzt)", "*.zzt;*.ZZT",
-            "Super ZZT Worlds (*.szt)", "*.szt;*.SZT",
-            "Saved Games (*.sav)", "*.sav;*.SAV",
-            "All Openable Files (*.zzt;*.szt;*.sav)", "*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV",
-            "All Files (*.*)", "*.*"
-            );
-
         private readonly IEditorTerminal _terminal;
         private IActor _actor;
         private IContext _context;
@@ -798,7 +789,7 @@ namespace Torch
 
         private void ShowOpenWorld()
         {
-            var ofd = new OpenFileDialog {Filter = WorldFileFilters};
+            var ofd = new OpenWorldDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -854,30 +845,8 @@ namespace Torch
             if (Context == null)
                 return DialogResult.Cancel;
 
-            var sfd = new SaveFileDialog
-            {
-                AddExtension = true,
-                Filter = WorldFileFilters
-            };
-
-            if (Context.WorldData.IsLocked)
-            {
-                sfd.FilterIndex = 4; // saved game
-            }
-            else
-            {
-                switch (Context.WorldData.WorldType)
-                {
-                    case -1: // ZZT
-                        sfd.FilterIndex = 2;
-                        break;
-                    case -2: // Super ZZT
-                        sfd.FilterIndex = 3;
-                        break;
-                }
-            }
-
-            var result = sfd.ShowDialog();
+            var sfd = new SaveWorldDialog();
+            var result = sfd.ShowDialog(Context.WorldData);
             if (result == DialogResult.OK)
             {
                 WorldFileName = sfd.FileName;
