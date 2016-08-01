@@ -543,7 +543,7 @@ namespace Roton.Emulation.Execution
         protected bool? Condition_Contact(IOopContext context)
         {
             var player = context.GetActor(0);
-            var distance = context.Actor.Location.Difference(player.Location);
+            var distance = new Location16(context.Actor.Location).Difference(player.Location);
             return distance.X*distance.X + distance.Y*distance.Y == 1;
         }
 

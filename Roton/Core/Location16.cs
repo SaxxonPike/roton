@@ -12,6 +12,12 @@
         {
         }
 
+        public Location16(IXyPair source)
+        {
+            X = source.X;
+            Y = source.Y;
+        }
+
         public Location16(int x, int y)
         {
             X = x;
