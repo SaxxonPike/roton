@@ -984,6 +984,8 @@ namespace Roton.Emulation.Execution
         public virtual void RemoveItem(IXyPair location)
         {
             this.TileAt(location).Id = Elements.EmptyId;
+            UpdateBoard(location);
+
         }
 
         public IXyPair Rnd()
@@ -1149,24 +1151,17 @@ namespace Roton.Emulation.Execution
                 actor.P2 = 0x64;
                 return true;
             }
-            if (element.Id != Elements.BreakableId)
+
+            if ((element.Id != Elements.BreakableId) &&
+                (!element.IsDestructible ||
+                 (((element.Id != Elements.PlayerId) || (World.EnergyCycles != 0)) && enemyOwned)))
             {
-                if (element.IsDestructible)
-                {
-                    if (enemyOwned != (element.Id == Elements.PlayerId) || World.EnergyCycles > 0)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-                Destroy(target);
-                this.PlaySound(2, SoundSet.BulletDie);
-                return true;
+                return false;
             }
-            return false;
+
+            Destroy(target);
+            this.PlaySound(2, SoundSet.BulletDie);
+            return true;
         }
 
         public void Start()
