@@ -317,7 +317,8 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Give(IOopContext context)
         {
-            context.Repeat = ExecuteTransaction(context, false);
+            context.Resume = ExecuteTransaction(context, false);
+            context.Engine.UpdateStatus();
         }
 
         protected void Command_Go(IOopContext context)
@@ -442,7 +443,8 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Take(IOopContext context)
         {
-            context.Repeat = ExecuteTransaction(context, true);
+            context.Resume = ExecuteTransaction(context, true);
+            context.Engine.UpdateStatus();
         }
 
         protected void Command_Then(IOopContext context)
@@ -637,7 +639,7 @@ namespace Roton.Emulation.Execution
             // Does the item exist?
             var item = GetItem(context);
             if (item == null)
-                return true;
+                return false;
 
             // Do we have a valid amount?
             var amount = context.ReadNumber();
