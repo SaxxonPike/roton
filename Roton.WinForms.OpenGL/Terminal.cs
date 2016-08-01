@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
-using OpenTK.Graphics.OpenGL;
 using Roton.Common;
 using Roton.Core;
-using WinPixelFormat = System.Drawing.Imaging.PixelFormat;
-using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using Roton.WinForms.OpenGL.Renderer;
 using Message = System.Windows.Forms.Message;
 
 namespace Roton.WinForms.OpenGL
@@ -17,9 +14,9 @@ namespace Roton.WinForms.OpenGL
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
         private readonly KeysBuffer _keys;
-        private int _glLastTexture = -1;
 
-        private bool _glReady;
+        private IFastBitmap _bitmap;
+        private readonly IRenderer _renderer;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private AnsiChar[] _terminalBuffer;
@@ -29,7 +26,7 @@ namespace Roton.WinForms.OpenGL
         private int _terminalWidth;
         private bool _wideMode;
 
-        public Terminal()
+        public Terminal(IRenderer renderer)
         {
             _keys = new KeysBuffer();
 
@@ -42,6 +39,9 @@ namespace Roton.WinForms.OpenGL
             // Set default scale.
             ScaleX = 1;
             ScaleY = 1;
+
+            // Set renderer.
+            _renderer = renderer;
         }
 
         public bool Alt
@@ -50,7 +50,10 @@ namespace Roton.WinForms.OpenGL
             set { _keys.Alt = value; }
         }
 
-        private IFastBitmap Bitmap { get; set; }
+        private IFastBitmap Bitmap {
+            get { return _bitmap; }
+            set { _bitmap = value; }
+        }
 
         // Auto-properties.
         public bool BlinkEnabled { get; set; }
@@ -120,7 +123,7 @@ namespace Roton.WinForms.OpenGL
                 Height = _terminalHeight*_terminalFont.Height*yScale;
             }
 
-            SetViewport();
+            _renderer.UpdateViewport();
         }
 
         public IRasterFont TerminalFont
@@ -165,8 +168,8 @@ namespace Roton.WinForms.OpenGL
 
             var oldWidth = _terminalWidth;
             var oldHeight = _terminalHeight;
-            _terminalWidth = width;
-            _terminalHeight = height;
+            _renderer.TerminalWidth = _terminalWidth = width;
+            _renderer.TerminalHeight = _terminalHeight = height;
             _wideMode = wide;
 
             // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
@@ -184,7 +187,7 @@ namespace Roton.WinForms.OpenGL
             }
 
             // Reconfigure OpenGL viewport.
-            SetViewport();
+            _renderer.UpdateViewport();
         }
 
         public void Write(int x, int y, string value, int color)
@@ -234,15 +237,10 @@ namespace Roton.WinForms.OpenGL
             //ResumeLayout();
         }
 
-        public void ClearKeys()
-        {
-            _keys.Clear();
-        }
-
         private void displayTimer_Tick(object sender, EventArgs e)
         {
             Redraw();
-            GlRender();
+            _renderer.Render(ref _bitmap);
         }
 
         /// <summary>
@@ -284,18 +282,16 @@ namespace Roton.WinForms.OpenGL
             glControl.KeyPress += glControl_KeyPress;
             glControl.MouseMove += glControl_MouseMove;
             glControl.MouseDown += glControl_MouseDown;
+            
+            // Initialize the Bitmap to make sure that the renderer doesn't explode.
+            Bitmap = new FastBitmap(glControl.Width, glControl.Height);
 
-            // Set GLControl to be the active GL context.
-            glControl.MakeCurrent();
-
-            // Initialize OpenGL.
-            GL.ClearColor(Color.Black);
-            GL.Disable(EnableCap.Lighting); // unnecessary
-            GL.Disable(EnableCap.DepthTest); // unnecessary
-            GL.Enable(EnableCap.Texture2D); // required for FBOs to work
-
-            _glReady = true;
-            SetViewport();
+            // Initialize and configure the renderer.
+            _renderer.FormControl = glControl;
+            _renderer.TerminalWidth = _terminalWidth;
+            _renderer.TerminalHeight = _terminalHeight;
+            _renderer.Init();
+            _renderer.UpdateViewport();
 
             // Enable blinking by default; set timer for it.
             BlinkEnabled = true;
@@ -315,57 +311,6 @@ namespace Roton.WinForms.OpenGL
         {
             OnMouse(this, e);
             OnMouseMove(e);
-        }
-
-        private void GlGenerateTexture()
-        {
-            if (Bitmap == null) return;
-
-            var glNewTexture = GL.GenTexture();
-
-            var fbData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly,
-                WinPixelFormat.Format32bppArgb);
-            GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0,
-                GLPixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
-            Bitmap.UnlockBits(fbData);
-
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int) TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int) TextureMagFilter.Nearest);
-
-            if (_glLastTexture != -1)
-                GL.DeleteTexture(_glLastTexture);
-            _glLastTexture = glNewTexture;
-        }
-
-        private void GlRender()
-        {
-            if (!_glReady) return;
-
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            // Don't draw anything if the Bitmap is null.
-            if (Bitmap == null) return;
-
-            GlGenerateTexture();
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            GL.Begin(BeginMode.Quads);
-            GL.TexCoord2(0.0f, 0.0f);
-            GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f);
-            GL.Vertex2(_terminalWidth, 0.0f);
-            GL.TexCoord2(1.0f, 1.0f);
-            GL.Vertex2(_terminalWidth, _terminalHeight);
-            GL.TexCoord2(0.0f, 1.0f);
-            GL.Vertex2(0.0f, _terminalHeight);
-            GL.End();
-
-            glControl.SwapBuffers();
         }
 
         private void OnKey(KeyEventArgs e)
@@ -442,17 +387,6 @@ namespace Roton.WinForms.OpenGL
                     });
                 }
             }
-        }
-
-        private void SetViewport()
-        {
-            if (!_glReady) return;
-
-            GL.Viewport(0, 0, Width, Height);
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0.0, _terminalWidth, _terminalHeight, 0.0, -1.0, 1.0);
         }
 
         internal int TranslateColorIndex(int color)

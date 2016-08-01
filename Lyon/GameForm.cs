@@ -5,6 +5,7 @@ using Roton.Common;
 using Roton.Core;
 using Roton.FileIo;
 using Roton.WinForms;
+using Roton.WinForms.OpenGL.Renderer;
 
 namespace Lyon
 {
@@ -48,7 +49,7 @@ namespace Lyon
             if (!_openGl)
                 _terminal = new Terminal();
             else
-                _terminal = new Roton.WinForms.OpenGL.Terminal();
+                _terminal = new Roton.WinForms.OpenGL.Terminal(new OpenGl3());
 
             _terminal.Top = 0;
             _terminal.Left = 0;

@@ -10,6 +10,7 @@ using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
 using Roton.WinForms;
+using Roton.WinForms.OpenGL.Renderer;
 using Message = System.Windows.Forms.Message;
 
 namespace Torch
@@ -47,7 +48,7 @@ namespace Torch
             if (!openGl)
                 _terminal = new Terminal();
             else
-                _terminal = new Roton.WinForms.OpenGL.Terminal();
+                _terminal = new Roton.WinForms.OpenGL.Terminal(new OpenGl3());
 
             _terminal.Top = 0;
             _terminal.Left = 0;
