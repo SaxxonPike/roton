@@ -984,6 +984,8 @@ namespace Roton.Emulation.Execution
         public virtual void RemoveItem(IXyPair location)
         {
             this.TileAt(location).Id = Elements.EmptyId;
+            UpdateBoard(location);
+
         }
 
         public IXyPair Rnd()
