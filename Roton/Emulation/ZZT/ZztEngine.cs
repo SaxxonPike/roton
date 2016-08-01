@@ -1,6 +1,7 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
+using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {
@@ -29,12 +30,14 @@ namespace Roton.Emulation.ZZT
             Tiles = new ZztTileGrid(Memory);
             World = new ZztWorld(Memory);
             Grammar = new ZztGrammar(State.Colors, Elements);
+            DrumBank = new ZztDrumBank(Memory);
 
             Hud.Initialize();
         }
 
         public override IActorList Actors { get; }
         public override IBoard Board { get; }
+        public override IDrumBank DrumBank { get; }
         public override IElementList Elements { get; }
         public override IGameSerializer GameSerializer { get; }
 

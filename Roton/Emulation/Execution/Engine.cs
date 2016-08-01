@@ -291,6 +291,8 @@ namespace Roton.Emulation.Execution
             return new AnsiChar(tile.Color, 0x0F);
         }
 
+        public abstract IDrumBank DrumBank { get; }
+
         public abstract IElementList Elements { get; }
 
         public ISound EncodeMusic(string music)

@@ -12,6 +12,7 @@ namespace Roton.Core
         IBoard Board { get; }
         IList<IPackedBoard> Boards { get; }
         IFileSystem Disk { get; }
+        IDrumBank DrumBank { get; }
         IElementList Elements { get; }
         IGameSerializer GameSerializer { get; }
         IGrammar Grammar { get; }

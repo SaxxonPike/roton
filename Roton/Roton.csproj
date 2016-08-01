@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EngineConfiguration.cs" />
+    <Compile Include="Core\IDrumBank.cs" />
+    <Compile Include="Core\IDrumSound.cs" />
     <Compile Include="Core\IEngineConfiguration.cs" />
     <Compile Include="Core\IAlerts.cs" />
     <Compile Include="Core\IContext.cs" />
@@ -130,10 +132,13 @@
     <Compile Include="Emulation\Execution\IRandomState.cs" />
     <Compile Include="Emulation\Execution\Randomizer.cs" />
     <Compile Include="Emulation\Execution\RandomState.cs" />
+    <Compile Include="Emulation\Mapping\MemoryDrumBank.cs" />
+    <Compile Include="Emulation\Mapping\MemoryDrumSound.cs" />
     <Compile Include="Emulation\Mapping\SearchContext.cs" />
     <Compile Include="Emulation\Mapping\Executable.cs" />
     <Compile Include="Emulation\Mapping\ISearchContext.cs" />
     <Compile Include="Emulation\Mapping\MemoryTimer.cs" />
+    <Compile Include="Emulation\SuperZZT\SuperZztDrumBank.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztForestSound.cs" />
     <Compile Include="Emulation\Serialization\ArtSerializer.cs" />
     <Compile Include="Core\IArtSerializer.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="Emulation\SuperZZT\SuperZztGrammar.cs" />
     <Compile Include="Emulation\SuperZZT\SuperZztMessage.cs" />
     <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
+    <Compile Include="Emulation\ZZT\ZztDrumBank.cs" />
     <Compile Include="Emulation\ZZT\ZztMessage.cs" />
     <Compile Include="Extensions\ElementListExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />

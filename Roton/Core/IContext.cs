@@ -7,6 +7,7 @@ namespace Roton.Core
         IActorList Actors { get; }
         IBoard Board { get; }
         IList<IPackedBoard> Boards { get; }
+        IDrumBank Drums { get; }
         IElementList Elements { get; }
         ITileGrid Tiles { get; }
         IWorld WorldData { get; }

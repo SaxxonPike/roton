@@ -30,6 +30,7 @@ namespace Roton.Emulation.SuperZZT
             Tiles = new SuperZztTileGrid(Memory);
             World = new SuperZztWorld(Memory);
             Grammar = new SuperZztGrammar(State.Colors, Elements);
+            DrumBank = new SuperZztDrumBank(Memory);
 
             Hud.Initialize();
         }
@@ -37,6 +38,7 @@ namespace Roton.Emulation.SuperZZT
         public override IActorList Actors { get; }
         public override IBoard Board { get; }
 
+        public override IDrumBank DrumBank { get; }
         public override IElementList Elements { get; }
 
         public override IGameSerializer GameSerializer { get; }

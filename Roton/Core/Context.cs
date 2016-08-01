@@ -44,6 +44,8 @@ namespace Roton.Core
 
         public IList<IPackedBoard> Boards => Engine.Boards;
 
+        public IDrumBank Drums => Engine.DrumBank;
+
         public byte[] DumpMemory() => Engine.Memory.Dump();
 
         public IElementList Elements => Engine.Elements;
