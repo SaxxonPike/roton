@@ -10,20 +10,17 @@ namespace Lyon
 {
     public partial class GameForm : Form
     {
-        private readonly bool _openGl;
         private bool _initScaleDisplay = true;
         private IGameTerminal _terminal;
 
-        public GameForm(bool openGl = false)
+        public GameForm()
         {
-            _openGl = openGl;
             CommonSetup();
             Shown += (sender, e) => { Initialize(new Context(GetCoreConfiguration(), ContextEngine.Zzt)); };
         }
 
-        public GameForm(Stream source, bool openGl = false)
+        public GameForm(Stream source)
         {
-            _openGl = openGl;
             CommonSetup();
             Shown += (sender, e) => { Initialize(new Context(GetCoreConfiguration(), source)); };
         }
@@ -44,19 +41,17 @@ namespace Lyon
             InitializeComponent();
             InitializeEvents();
 
-            // Load the appropriate terminal.
-            if (!_openGl)
-                _terminal = new Terminal();
-            else
-                _terminal = new Roton.WinForms.OpenGL.Terminal();
+            _terminal = new Roton.WinForms.OpenGL.Terminal
+            {
+                Top = 0,
+                Left = 0,
+                Width = 640,
+                Height = 350,
+                AutoSize = true,
+                TerminalFont = font1,
+                TerminalPalette = palette1
+            };
 
-            _terminal.Top = 0;
-            _terminal.Left = 0;
-            _terminal.Width = 640;
-            _terminal.Height = 350;
-            _terminal.AutoSize = true;
-            _terminal.TerminalFont = font1;
-            _terminal.TerminalPalette = palette1;
             mainPanel.Controls.Add((UserControl) _terminal);
 
             // Used to help Mono's WinForm implementation set the correct window size
@@ -121,6 +116,8 @@ namespace Lyon
             scale1xMenuItem.Click += (sender, e) => { SetScale(1); };
             scale2xMenuItem.Click += (sender, e) => { SetScale(2); };
             scale3xMenuItem.Click += (sender, e) => { SetScale(3); };
+            scale4xToolStripMenuItem.Click += (sender, e) => { SetScale(4); };
+            scale5xToolStripMenuItem.Click += (sender, e) => { SetScale(5); };
             dumpRAMToolStripMenuItem.Click += (sender, e) => { DumpRam(); };
         }
 
