@@ -26,11 +26,6 @@ namespace Lyon
             Shown += (sender, e) => { Initialize(new Context(GetCoreConfiguration(), source)); };
         }
 
-        private string FileFilters
-            =>
-                "Game Worlds (*.zzt;*.szt)|*.zzt;*.szt;*.ZZT;*.SZT|ZZT Worlds (*.zzt)|*.zzt;*.ZZT|Super ZZT Worlds (*.SZT)|*.szt;*.SZT|Saved Games (*.sav)|*.sav;*.SAV|All Openable Files (*.zzt;*.szt;*.sav)|*.zzt;*.szt;*.sav;*.ZZT;*.SZT;*.SAV|All Files (*.*)|*.*"
-            ;
-
         private IContext Context { get; set; }
 
         private void CommonSetup()
@@ -124,7 +119,7 @@ namespace Lyon
 
         private void OpenWorld()
         {
-            var ofd = new OpenFileDialog {Filter = FileFilters};
+            var ofd = new OpenWorldDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Initialize(new Context(GetCoreConfiguration(), File.ReadAllBytes(ofd.FileName)));
@@ -135,8 +130,8 @@ namespace Lyon
         {
             if (Context != null)
             {
-                var sfd = new SaveFileDialog {Filter = FileFilters};
-                if (sfd.ShowDialog() == DialogResult.OK)
+                var sfd = new SaveWorldDialog();
+                if (sfd.ShowDialog(Context.WorldData) == DialogResult.OK)
                 {
                     //Initialize(new Context(sfd.FileName, false));
                     Context.Save(sfd.FileName);
