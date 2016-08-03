@@ -112,6 +112,8 @@ namespace Lyon
             scale1xMenuItem.Click += (sender, e) => { SetScale(1); };
             scale2xMenuItem.Click += (sender, e) => { SetScale(2); };
             scale3xMenuItem.Click += (sender, e) => { SetScale(3); };
+            scale4xMenuItem.Click += (sender, e) => { SetScale(4); };
+            scale5xMenuItem.Click += (sender, e) => { SetScale(5); };
             dumpRAMToolStripMenuItem.Click += (sender, e) => { DumpRam(); };
         }
 

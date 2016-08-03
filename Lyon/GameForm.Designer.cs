@@ -53,10 +53,10 @@ namespace Lyon
             this.scale1xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale2xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.speaker = new Speaker(this.components);
+            this.scale4xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scale5xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.speaker = new Roton.Interface.Audio.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.scale4xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.scale5xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -149,8 +149,8 @@ namespace Lyon
             this.scale1xMenuItem,
             this.scale2xMenuItem,
             this.scale3xMenuItem,
-            this.scale4xToolStripMenuItem,
-            this.scale5xToolStripMenuItem});
+            this.scale4xMenuItem,
+            this.scale5xMenuItem});
             this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
@@ -175,6 +175,18 @@ namespace Lyon
             this.scale3xMenuItem.Size = new System.Drawing.Size(152, 22);
             this.scale3xMenuItem.Text = "Scale &3x";
             // 
+            // scale4xMenuItem
+            // 
+            this.scale4xMenuItem.Name = "scale4xMenuItem";
+            this.scale4xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale4xMenuItem.Text = "Scale &4x";
+            // 
+            // scale5xMenuItem
+            // 
+            this.scale5xMenuItem.Name = "scale5xMenuItem";
+            this.scale5xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale5xMenuItem.Text = "Scale &5x";
+            // 
             // mainPanel
             // 
             this.mainPanel.AutoSize = true;
@@ -184,18 +196,6 @@ namespace Lyon
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(330, 275);
             this.mainPanel.TabIndex = 1;
-            // 
-            // scale4xToolStripMenuItem
-            // 
-            this.scale4xToolStripMenuItem.Name = "scale4xToolStripMenuItem";
-            this.scale4xToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.scale4xToolStripMenuItem.Text = "Scale &4x";
-            // 
-            // scale5xToolStripMenuItem
-            // 
-            this.scale5xToolStripMenuItem.Name = "scale5xToolStripMenuItem";
-            this.scale5xToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.scale5xToolStripMenuItem.Text = "Scale &5x";
             // 
             // GameForm
             // 
@@ -235,8 +235,8 @@ namespace Lyon
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem scale4xToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem scale5xToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scale4xMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scale5xMenuItem;
     }
 }
 
