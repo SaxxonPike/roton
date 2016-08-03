@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torch", "Torch\Torch.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyon", "Lyon\Lyon.csproj", "{39AC7CC9-5A64-441E-BFF8-5BB501957FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Interface", "Roton.WinForms.OpenGL\Roton.Interface.csproj", "{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Interface", "Roton.Interface\Roton.Interface.csproj", "{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Test", "Roton.Test\Roton.Test.csproj", "{F87DC9C8-B22C-4A29-AB64-D529828950DE}"
 EndProject
