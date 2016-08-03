@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace Roton.Interface.Renderer
+namespace Roton.Interface.Video.Renderer
 {
     /// <summary>
     /// Basic OpenGL 3.0 renderer. This renderer does not support shaders or

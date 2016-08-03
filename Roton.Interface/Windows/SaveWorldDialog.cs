@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Roton.Core;
 
-namespace Roton.Interface
+namespace Roton.Interface.Windows
 {
     public class SaveWorldDialog
     {

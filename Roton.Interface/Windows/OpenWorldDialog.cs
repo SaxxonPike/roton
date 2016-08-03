@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Roton.Interface
+namespace Roton.Interface.Windows
 {
     public class OpenWorldDialog
     {

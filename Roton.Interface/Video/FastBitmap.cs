@@ -8,7 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 
-namespace Roton.Interface
+namespace Roton.Interface.Video
 {
     /* 1) Implementation copied from http://msdn.microsoft.com/en-us/library/system.drawing.bitmap%28v=vs.110%29.aspx
           because we can't subclass Image for some reason... but we want a decent drop-in replacement.

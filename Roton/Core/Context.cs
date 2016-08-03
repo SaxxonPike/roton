@@ -4,7 +4,6 @@ using System.Linq;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
-using Roton.FileIo;
 using Roton.Resources;
 
 namespace Roton.Core

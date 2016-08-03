@@ -8,8 +8,9 @@ using Lyon;
 using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
-using Roton.Interface;
-using Roton.Interface.Renderer;
+using Roton.Interface.Video;
+using Roton.Interface.Video.Renderer;
+using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;
 
 namespace Torch

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Roton.Interface
+namespace Roton.Interface.Video
 {
     public interface IGlyph
     {

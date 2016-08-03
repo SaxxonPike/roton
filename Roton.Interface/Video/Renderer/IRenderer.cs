@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace Roton.Interface.Renderer
+namespace Roton.Interface.Video.Renderer
 {
     /// <summary>
     /// The OpenGL rendering interface.

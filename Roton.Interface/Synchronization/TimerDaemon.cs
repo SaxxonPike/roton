@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Roton.Interface
+namespace Roton.Interface.Synchronization
 {
     public partial class TimerDaemon : Component
     {

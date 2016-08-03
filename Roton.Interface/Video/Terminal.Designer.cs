@@ -1,4 +1,6 @@
-﻿namespace Roton.Interface {
+﻿using Roton.Interface.Synchronization;
+
+namespace Roton.Interface.Video {
     partial class Terminal {
         /// <summary> 
         /// Required designer variable.

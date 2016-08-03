@@ -4,10 +4,11 @@ using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 using Roton.Core;
-using Roton.Interface.Renderer;
+using Roton.Interface.Input;
+using Roton.Interface.Video.Renderer;
 using Message = System.Windows.Forms.Message;
 
-namespace Roton.Interface
+namespace Roton.Interface.Video
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {

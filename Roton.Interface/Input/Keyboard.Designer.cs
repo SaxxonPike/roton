@@ -1,4 +1,4 @@
-﻿namespace Roton.Interface
+﻿namespace Roton.Interface.Input
 {
     partial class Keyboard
     {

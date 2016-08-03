@@ -4,7 +4,7 @@ using System.IO;
 using Roton.Core.Collections;
 using Roton.Interface.Resources;
 
-namespace Roton.Interface
+namespace Roton.Interface.Video
 {
     public sealed class RasterFont : FixedList<IGlyph>, IRasterFont
     {

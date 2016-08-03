@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Roton.Interface;
+using Roton.Interface.Video;
 
 namespace Torch
 {

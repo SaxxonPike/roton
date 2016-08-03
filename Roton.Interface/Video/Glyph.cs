@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Roton.Core.Collections;
 
-namespace Roton.Interface
+namespace Roton.Interface.Video
 {
     public sealed class Glyph : FixedList<int>, IGlyph
     {

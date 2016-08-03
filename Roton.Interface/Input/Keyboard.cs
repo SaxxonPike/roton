@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Roton.Core;
 
-namespace Roton.Interface
+namespace Roton.Interface.Input
 {
     public partial class Keyboard : Component, IKeyboard
     {
