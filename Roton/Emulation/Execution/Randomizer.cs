@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Execution
+﻿using Roton.Core;
+
+namespace Roton.Emulation.Execution
 {
     internal class Randomizer : IRandomizer
     {

@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Lyon;
-using Roton.Common;
 using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
-using Roton.WinForms;
-using Roton.WinForms.OpenGL.Renderer;
+using Roton.Interface.Video;
+using Roton.Interface.Video.Renderer;
+using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;
 
 namespace Torch
@@ -36,18 +36,17 @@ namespace Torch
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            if (!openGl)
-                _terminal = new Terminal();
-            else
-                _terminal = new Roton.WinForms.OpenGL.Terminal(new OpenGl3());
+            _terminal = new Terminal(new OpenGl3())
+            {
+                Top = 0,
+                Left = 0,
+                Width = 640,
+                Height = 350,
+                AutoSize = true,
+                TerminalFont = font1,
+                TerminalPalette = palette1
+            };
 
-            _terminal.Top = 0;
-            _terminal.Left = 0;
-            _terminal.Width = 640;
-            _terminal.Height = 350;
-            _terminal.AutoSize = true;
-            _terminal.TerminalFont = font1;
-            _terminal.TerminalPalette = palette1;
             mainPanel.Controls.Add((UserControl) _terminal);
         }
 

@@ -129,17 +129,9 @@
       <Project>{39ac7cc9-5a64-441e-bff8-5bb501957fc6}</Project>
       <Name>Lyon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
-      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
-      <Name>Roton.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roton.WinForms.OpenGL\Roton.WinForms.OpenGL.csproj">
+    <ProjectReference Include="..\Roton.Interface\Roton.Interface.csproj">
       <Project>{7bf0d5a0-a20d-4cd3-9674-cbe6f2f92ddd}</Project>
-      <Name>Roton.WinForms.OpenGL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roton.WinForms\Roton.WinForms.csproj">
-      <Project>{7911261b-025e-4ca0-b82c-32bba1426ee2}</Project>
-      <Name>Roton.WinForms</Name>
+      <Name>Roton.Interface</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

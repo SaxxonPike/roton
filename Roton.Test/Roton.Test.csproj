@@ -62,10 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roton.Common\Roton.Common.csproj">
-      <Project>{af3de1e8-0883-4429-9e23-182a95693c18}</Project>
-      <Name>Roton.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roton\Roton.csproj">
       <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
       <Name>Roton</Name>

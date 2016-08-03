@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{39AC7CC9-5A64-441E-BFF8-5BB501957FC6}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{7BF0D5A0-A20D-4CD3-9674-CBE6F2F92DDD}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lyon</RootNamespace>
-    <AssemblyName>Lyon</AssemblyName>
+    <RootNamespace>Roton.Interface</RootNamespace>
+    <AssemblyName>Roton.Interface</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -46,46 +45,75 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Video\FastBitmap.cs" />
+    <Compile Include="Video\Glyph.cs" />
+    <Compile Include="Video\IEditorTerminal.cs" />
+    <Compile Include="Video\IFastBitmap.cs" />
+    <Compile Include="Video\IGameTerminal.cs" />
+    <Compile Include="Video\IGlyph.cs" />
+    <Compile Include="Video\IPalette.cs" />
+    <Compile Include="Video\IRasterFont.cs" />
+    <Compile Include="Input\Keyboard.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GameForm.Designer.cs">
-      <DependentUpon>GameForm.cs</DependentUpon>
+    <Compile Include="Input\Keyboard.Designer.cs">
+      <DependentUpon>Keyboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Input\KeysBuffer.cs" />
+    <Compile Include="Windows\OpenWorldDialog.cs" />
+    <Compile Include="Video\Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GameForm.resx">
-      <DependentUpon>GameForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    <Compile Include="Video\RasterFont.cs" />
+    <Compile Include="Video\Renderer\IRenderer.cs" />
+    <Compile Include="Video\Renderer\OpenGl3.cs" />
+    <Compile Include="Video\Renderer\Renderer.cs" />
+    <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
+    <Compile Include="Resources\ICommonResourceArchive.cs" />
+    <Compile Include="Windows\SaveWorldDialog.cs" />
+    <Compile Include="Audio\SoundStream.cs" />
+    <Compile Include="Audio\Speaker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Audio\Speaker.Designer.cs">
+      <DependentUpon>Speaker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Video\Terminal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Video\Terminal.Designer.cs">
+      <DependentUpon>Terminal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Synchronization\TimerDaemon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Synchronization\TimerDaemon.Designer.cs">
+      <DependentUpon>TimerDaemon.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roton.Interface\Roton.Interface.csproj">
-      <Project>{7bf0d5a0-a20d-4cd3-9674-cbe6f2f92ddd}</Project>
-      <Name>Roton.Interface</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roton\Roton.csproj">
-      <Project>{A93864EF-3C61-4654-8598-BC49D822187C}</Project>
+      <Project>{a93864ef-3c61-4654-8598-bc49d822187c}</Project>
       <Name>Roton</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Video\Terminal.resx">
+      <DependentUpon>Terminal.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\resources.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
