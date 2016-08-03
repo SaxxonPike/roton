@@ -129,7 +129,7 @@
       <Project>{39ac7cc9-5a64-441e-bff8-5bb501957fc6}</Project>
       <Name>Lyon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Roton.WinForms.OpenGL\Roton.Interface.csproj">
+    <ProjectReference Include="..\Roton.Interface\Roton.Interface.csproj">
       <Project>{7bf0d5a0-a20d-4cd3-9674-cbe6f2f92ddd}</Project>
       <Name>Roton.Interface</Name>
     </ProjectReference>
