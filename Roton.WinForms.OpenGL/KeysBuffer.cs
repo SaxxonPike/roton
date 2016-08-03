@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Roton.Core;
 
-namespace Roton.WinForms
+namespace Roton.Interface
 {
     public class KeysBuffer : IKeyboard
     {

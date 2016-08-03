@@ -1,6 +1,6 @@
 ﻿using Roton.FileIo;
 
-namespace Roton.Common.Resources
+namespace Roton.Interface.Resources
 {
     public class CommonResourceZipFileSystem : ZipFileSystem, ICommonResourceArchive
     {

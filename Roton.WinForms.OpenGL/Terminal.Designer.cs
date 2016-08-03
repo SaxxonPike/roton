@@ -1,4 +1,4 @@
-﻿namespace Roton.WinForms.OpenGL {
+﻿namespace Roton.Interface {
     partial class Terminal {
         /// <summary> 
         /// Required designer variable.
@@ -13,7 +13,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.timerDaemon = new Roton.WinForms.TimerDaemon(this.components);
+            this.timerDaemon = new TimerDaemon(this.components);
             this.displayTimer = new System.Windows.Forms.Timer(this.components);
             this.glControl = new OpenTK.GLControl();
             this.SuspendLayout();
@@ -52,7 +52,7 @@
 
         #endregion
 
-        private WinForms.TimerDaemon timerDaemon;
+        private TimerDaemon timerDaemon;
         private System.Windows.Forms.Timer displayTimer;
         private OpenTK.GLControl glControl;
     }

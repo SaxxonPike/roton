@@ -3,12 +3,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
-using Roton.Common;
 using Roton.Core;
-using Roton.WinForms.OpenGL.Renderer;
+using Roton.Interface.Renderer;
 using Message = System.Windows.Forms.Message;
 
-namespace Roton.WinForms.OpenGL
+namespace Roton.Interface
 {
     public partial class Terminal : UserControl, IEditorTerminal
     {

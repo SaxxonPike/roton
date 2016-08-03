@@ -1,4 +1,6 @@
-﻿namespace Torch
+﻿using Roton.Interface;
+
+namespace Torch
 {
     partial class Editor
     {
@@ -90,9 +92,9 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.worldEditor = new Torch.WorldEditor();
-            this.keyboard = new Roton.WinForms.Keyboard(this.components);
-            this.speaker = new Roton.WinForms.Speaker(this.components);
-            this.timerDaemon = new Roton.WinForms.TimerDaemon(this.components);
+            this.keyboard = new Keyboard(this.components);
+            this.speaker = new Speaker(this.components);
+            this.timerDaemon = new TimerDaemon(this.components);
             this.saveScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
@@ -1023,8 +1025,8 @@
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStripButton refreshInfoButton;
         private System.Windows.Forms.ToolStripComboBox elementComboBox;
-        private Roton.WinForms.Keyboard keyboard;
-        private Roton.WinForms.Speaker speaker;
+        private Keyboard keyboard;
+        private Speaker speaker;
         private System.Windows.Forms.ToolStripButton showUndefinedElementsButton;
         private System.Windows.Forms.ToolStripButton statsEnabledButton;
         private System.Windows.Forms.ToolStripButton defaultElementPropertiesButton;
@@ -1044,7 +1046,7 @@
         private System.Windows.Forms.ToolStripButton eraseToolButton;
         private System.Windows.Forms.ToolStripButton randomToolButton;
         private System.Windows.Forms.ToolStripButton testMenuButton;
-        private Roton.WinForms.TimerDaemon timerDaemon;
+        private TimerDaemon timerDaemon;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Label actorSourceLabel;
         private System.Windows.Forms.Panel panel4;

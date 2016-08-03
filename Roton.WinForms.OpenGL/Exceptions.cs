@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     internal static class Exceptions
     {

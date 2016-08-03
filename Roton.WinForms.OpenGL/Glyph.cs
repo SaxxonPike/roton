@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Roton.Core.Collections;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public sealed class Glyph : FixedList<int>, IGlyph
     {
@@ -54,9 +54,6 @@ namespace Roton.Common
 
         public int Height { get; }
 
-        /// <summary>
-        ///     Render the glyph using the specified raw color data.
-        /// </summary>
         public int[] Render(int foreColor, int backColor)
         {
             var length = PixelCount;
@@ -71,9 +68,6 @@ namespace Roton.Common
             return result;
         }
 
-        /// <summary>
-        ///     Render the glyph to a bitmap using the specified colors.
-        /// </summary>
         public Bitmap Render(Color foreColor, Color backColor)
         {
             var result = new Bitmap(Width, Height, PixelFormat.Format32bppPArgb);
@@ -84,9 +78,6 @@ namespace Roton.Common
             return result;
         }
 
-        /// <summary>
-        ///     Render the glyph to a FastBitmap using the specified color data and coordinates.
-        /// </summary>
         public void Render(IFastBitmap bitmap, int x, int y, int foreColor, int backColor)
         {
             var bits = bitmap.Bits;
@@ -112,9 +103,6 @@ namespace Roton.Common
             }
         }
 
-        /// <summary>
-        ///     Width of the glyph.
-        /// </summary>
         public int Width { get; }
 
         protected override int GetItem(int index)

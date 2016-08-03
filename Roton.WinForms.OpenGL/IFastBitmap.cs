@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Remoting;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public interface IFastBitmap : IDisposable
     {

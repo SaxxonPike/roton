@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public class SoundStream : Stream
     {

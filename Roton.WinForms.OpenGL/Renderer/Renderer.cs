@@ -1,7 +1,6 @@
 ﻿using OpenTK;
-using Roton.Common;
 
-namespace Roton.WinForms.OpenGL.Renderer
+namespace Roton.Interface.Renderer
 {
     /// <summary>
     /// A base renderer class. This class must be inherited.

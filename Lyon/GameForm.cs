@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Roton.Common;
 using Roton.Core;
 using Roton.FileIo;
-using Roton.WinForms;
-using Roton.WinForms.OpenGL.Renderer;
+using Roton.Interface;
+using Roton.Interface.Renderer;
 
 namespace Lyon
 {
@@ -37,7 +36,7 @@ namespace Lyon
             InitializeComponent();
             InitializeEvents();
 
-            _terminal = new Roton.WinForms.OpenGL.Terminal(new OpenGl3())
+            _terminal = new Terminal(new OpenGl3())
             {
                 Top = 0,
                 Left = 0,

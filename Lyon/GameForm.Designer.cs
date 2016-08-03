@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Interface;
 
 namespace Lyon
 {
@@ -51,7 +52,7 @@ namespace Lyon
             this.scale1xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale2xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.speaker = new Roton.WinForms.Speaker(this.components);
+            this.speaker = new Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
             this.scale4xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale5xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -229,7 +230,7 @@ namespace Lyon
         private System.Windows.Forms.ToolStripMenuItem scale1xMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale2xMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale3xMenuItem;
-        private Roton.WinForms.Speaker speaker;
+        private Speaker speaker;
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripMenuItem dumpRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;

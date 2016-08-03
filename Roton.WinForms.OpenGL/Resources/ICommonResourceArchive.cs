@@ -1,4 +1,4 @@
-﻿namespace Roton.Common.Resources
+﻿namespace Roton.Interface.Resources
 {
     public interface ICommonResourceArchive
     {

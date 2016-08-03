@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using Roton.Common.Resources;
 using Roton.Core.Collections;
+using Roton.Interface.Resources;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public sealed class RasterFont : FixedList<IGlyph>, IRasterFont
     {
@@ -45,9 +45,9 @@ namespace Roton.Common
 
         private byte[] Data { get; set; }
 
-        private Glyph[] Glyphs { get; set; }
+        private IGlyph[] Glyphs { get; set; }
 
-        private Glyph[] GlyphsUnscaled { get; set; }
+        private IGlyph[] GlyphsUnscaled { get; set; }
 
         public override int Count => 256;
 
@@ -127,12 +127,12 @@ namespace Roton.Common
             }
 
             // convert the font to a faster format (int+mask)
-            Glyphs = new Glyph[256];
+            Glyphs = new IGlyph[256];
             OriginalHeight = rawFont.Length/256;
             OriginalWidth = 8;
             Data = rawFont;
             Rasterize(1, 1);
-            GlyphsUnscaled = new Glyph[256];
+            GlyphsUnscaled = new IGlyph[256];
             for (var i = 0; i < 256; i++)
             {
                 GlyphsUnscaled[i] = new Glyph(new byte[OriginalHeight], 1, 1);

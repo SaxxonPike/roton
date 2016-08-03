@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public interface IPalette
     {

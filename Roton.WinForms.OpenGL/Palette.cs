@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Roton.Common.Resources;
 using Roton.Core.Collections;
+using Roton.Interface.Resources;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public sealed class Palette : FixedList<Color>, IPalette
     {

@@ -1,6 +1,6 @@
 ﻿using Roton.Core;
 
-namespace Roton.Common
+namespace Roton.Interface
 {
     public interface IGameTerminal : ITerminal
     {

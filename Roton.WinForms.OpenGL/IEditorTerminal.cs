@@ -1,8 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using Roton.Common;
 
-namespace Roton.WinForms
+namespace Roton.Interface
 {
     public interface IEditorTerminal : IGameTerminal
     {
