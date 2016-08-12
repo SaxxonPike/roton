@@ -46,12 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Video\Glyphs\GlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\IComposedGlyph.cs" />
     <Compile Include="Video\FastBitmap.cs" />
     <Compile Include="Video\Glyph.cs" />
     <Compile Include="Video\IEditorTerminal.cs" />
     <Compile Include="Video\IFastBitmap.cs" />
     <Compile Include="Video\IGameTerminal.cs" />
     <Compile Include="Video\IGlyph.cs" />
+    <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Video\IPalette.cs" />
     <Compile Include="Video\IRasterFont.cs" />
     <Compile Include="Input\Keyboard.cs">
