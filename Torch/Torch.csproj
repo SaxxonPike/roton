@@ -119,6 +119,9 @@
     <EmbeddedResource Include="WorldEditor.resx">
       <DependentUpon>WorldEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\Deploy\Config.json">
+      <Link>Config.json</Link>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
