@@ -46,8 +46,12 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\Composers\AudioComposer.cs" />
+    <Compile Include="Audio\IAudioComposer.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Video\Glyphs\GlyphComposer.cs" />
+    <Compile Include="Extensions\GlyphComposerExtensions.cs" />
+    <Compile Include="Extensions\PaletteComposerExtensions.cs" />
+    <Compile Include="Video\Glyphs\Composers\VgaGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\IComposedGlyph.cs" />
     <Compile Include="Video\FastBitmap.cs" />
     <Compile Include="Video\Glyph.cs" />
@@ -65,6 +69,9 @@
       <DependentUpon>Keyboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\KeysBuffer.cs" />
+    <Compile Include="Video\Palettes\IPaletteComposer.cs" />
+    <Compile Include="Video\Palettes\Composers\VgaPaletteComposer.cs" />
+    <Compile Include="Video\Scenes\ISceneComposer.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Video\Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +125,13 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\resources.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Audio\Presenters\" />
+    <Folder Include="Video\Glyphs\Presenters\" />
+    <Folder Include="Video\Palettes\Presenters\" />
+    <Folder Include="Video\Scenes\Composers\" />
+    <Folder Include="Video\Scenes\Presenters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
