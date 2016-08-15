@@ -5,9 +5,9 @@ namespace Roton.Interface.Video.Glyphs.Composers
 {
     public class VgaGlyphComposer : IGlyphComposer
     {
-        private class VgaGlyph : IComposedGlyph
+        private class Glyph : IComposedGlyph
         {
-            public VgaGlyph(int index, int width, int height, IEnumerable<int> data)
+            public Glyph(int index, int width, int height, IEnumerable<int> data)
             {
                 Index = index;
                 Width = width;
@@ -26,9 +26,8 @@ namespace Roton.Interface.Video.Glyphs.Composers
         private readonly int _offValue;
         private readonly int _height;
 
-        public VgaGlyphComposer(byte[] data)
+        public VgaGlyphComposer(byte[] data) : this(data, -1, 0)
         {
-            
         }
 
         public VgaGlyphComposer(byte[] data, int onValue, int offValue)
@@ -41,17 +40,19 @@ namespace Roton.Interface.Video.Glyphs.Composers
 
         public IComposedGlyph ComposeGlyph(int index)
         {
-            var output = new int[]
-            var offset = (index & 0xFF)*_height;
+            var output = new int[_height*8];
+            var outputOffset = 0;
+            var inputOffset = (index & 0xFF)*_height;
             for (var y = 0; y < _height; y++)
             {
-                var bits = _data[offset];
+                var bits = _data[inputOffset++];
                 for (var x = 0; x < 8; x++)
                 {
-                    
+                    output[outputOffset++] = (bits & 0x80) != 0 ? _onValue : _offValue;
+                    bits <<= 1;
                 }
-                offset++;
             }
+            return new Glyph(index, 8, _height, output);
         }
     }
 }
