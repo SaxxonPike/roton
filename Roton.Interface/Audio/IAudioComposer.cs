@@ -4,7 +4,7 @@ namespace Roton.Interface.Audio
 {
     public interface IAudioComposer
     {
-        IEnumerable<int> ComposeAudio(int numberOfSamples);
+        IEnumerable<int> ComposeAudio();
         void PlayDrum(int index);
         void PlayNote(int note);
     }
