@@ -6,6 +6,6 @@ namespace Roton.Interface.Audio
     {
         IEnumerable<int> ComposeAudio(int numberOfSamples);
         void PlayDrum(int index);
-        void PlayTone(int note);
+        void PlayNote(int note);
     }
 }

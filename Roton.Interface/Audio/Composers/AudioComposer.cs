@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Roton.Core;
 
-namespace Roton.Interface.Audio
+namespace Roton.Interface.Audio.Composers
 {
     public class AudioComposer : IAudioComposer
     {
@@ -22,7 +22,7 @@ namespace Roton.Interface.Audio
             throw new System.NotImplementedException();
         }
 
-        public void PlayTone(int note)
+        public void PlayNote(int note)
         {
             throw new System.NotImplementedException();
         }
