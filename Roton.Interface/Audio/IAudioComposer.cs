@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Roton.Core;
+﻿using System.Collections.Generic;
 
 namespace Roton.Interface.Audio
 {
-    public interface IToneComposer
+    public interface IAudioComposer
     {
         IEnumerable<int> ComposeAudio(int numberOfSamples);
         void PlayDrum(int index);

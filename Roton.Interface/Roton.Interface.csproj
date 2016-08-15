@@ -46,7 +46,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\IToneComposer.cs" />
+    <Compile Include="Audio\AudioComposer.cs" />
+    <Compile Include="Audio\IAudioComposer.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
