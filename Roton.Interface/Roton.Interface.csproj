@@ -51,13 +51,14 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
+    <Compile Include="Video\Glyphs\Composers\CachedGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\Composers\VgaGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\IComposedGlyph.cs" />
     <Compile Include="Video\FastBitmap.cs" />
     <Compile Include="Video\Glyph.cs" />
-    <Compile Include="Video\IEditorTerminal.cs" />
+    <Compile Include="Video\Controls\IEditorTerminal.cs" />
     <Compile Include="Video\IFastBitmap.cs" />
-    <Compile Include="Video\IGameTerminal.cs" />
+    <Compile Include="Video\Controls\IGameTerminal.cs" />
     <Compile Include="Video\IGlyph.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Video\IPalette.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Input\KeysBuffer.cs" />
     <Compile Include="Video\Palettes\IPaletteComposer.cs" />
     <Compile Include="Video\Palettes\Composers\VgaPaletteComposer.cs" />
+    <Compile Include="Video\Scenes\Composers\BitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\ISceneComposer.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Video\Palette.cs" />
@@ -87,7 +89,6 @@
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />
-    <Compile Include="Audio\SoundStream.cs" />
     <Compile Include="Audio\Speaker.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -130,7 +131,6 @@
     <Folder Include="Audio\Presenters\" />
     <Folder Include="Video\Glyphs\Presenters\" />
     <Folder Include="Video\Palettes\Presenters\" />
-    <Folder Include="Video\Scenes\Composers\" />
     <Folder Include="Video\Scenes\Presenters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

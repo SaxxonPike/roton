@@ -93,5 +93,10 @@ namespace Roton.Interface.Audio.Composers
             _accumulatorAmount = _frequencyDutyCycleTable[note];
             _generating = true;
         }
+
+        public void Stop()
+        {
+            _generating = false;
+        }
     }
 }
