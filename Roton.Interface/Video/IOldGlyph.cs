@@ -2,7 +2,7 @@
 
 namespace Roton.Interface.Video
 {
-    public interface IGlyph
+    public interface IOldGlyph
     {
         int[] Data { get; }
         int Height { get; }

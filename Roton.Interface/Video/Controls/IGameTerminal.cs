@@ -1,6 +1,6 @@
 ﻿using Roton.Core;
 
-namespace Roton.Interface.Video
+namespace Roton.Interface.Video.Controls
 {
     public interface IGameTerminal : ITerminal
     {

@@ -2,11 +2,11 @@
 
 namespace Roton.Interface.Video.Glyphs
 {
-    public interface IComposedGlyph
+    public interface IGlyph
     {
         int Index { get; }
         int Width { get; }
         int Height { get; }
-        IEnumerable<int> Data { get; }
+        IList<int> Data { get; }
     }
 }

@@ -9,6 +9,7 @@ using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
 using Roton.Interface.Video;
+using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Renderer;
 using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;

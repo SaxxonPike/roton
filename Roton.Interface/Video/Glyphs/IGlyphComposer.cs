@@ -8,6 +8,6 @@
         /// <summary>
         /// Render a glyph bitmap.
         /// </summary>
-        IComposedGlyph ComposeGlyph(int index);
+        IGlyph ComposeGlyph(int index);
     }
 }

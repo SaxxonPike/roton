@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Roton.Core;
 using Roton.Interface.Input;
+using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Renderer;
 using Message = System.Windows.Forms.Message;
 

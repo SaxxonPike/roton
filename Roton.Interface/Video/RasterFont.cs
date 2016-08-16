@@ -6,7 +6,7 @@ using Roton.Interface.Resources;
 
 namespace Roton.Interface.Video
 {
-    public sealed class RasterFont : FixedList<IGlyph>, IRasterFont
+    public sealed class RasterFont : FixedList<IOldGlyph>, IRasterFont
     {
         /// <summary>
         ///     Create a font with the default glyphs.
@@ -45,9 +45,9 @@ namespace Roton.Interface.Video
 
         private byte[] Data { get; set; }
 
-        private IGlyph[] Glyphs { get; set; }
+        private IOldGlyph[] OldGlyphs { get; set; }
 
-        private IGlyph[] GlyphsUnscaled { get; set; }
+        private IOldGlyph[] OldGlyphsUnscaled { get; set; }
 
         public override int Count => 256;
 
@@ -59,17 +59,17 @@ namespace Roton.Interface.Video
 
         public Bitmap Render(int character, Color foreground, Color background)
         {
-            return Glyphs[character & 0xFF].Render(foreground, background);
+            return OldGlyphs[character & 0xFF].Render(foreground, background);
         }
 
         public void Render(IFastBitmap bitmap, int x, int y, int character, int foreColor, int backColor)
         {
-            Glyphs[character & 0xFF].Render(bitmap, x, y, foreColor, backColor);
+            OldGlyphs[character & 0xFF].Render(bitmap, x, y, foreColor, backColor);
         }
 
         public Bitmap RenderUnscaled(int character, Color foreground, Color background)
         {
-            return GlyphsUnscaled[character & 0xFF].Render(foreground, background);
+            return OldGlyphsUnscaled[character & 0xFF].Render(foreground, background);
         }
 
         public void SetScale(int xScale, int yScale)
@@ -127,16 +127,16 @@ namespace Roton.Interface.Video
             }
 
             // convert the font to a faster format (int+mask)
-            Glyphs = new IGlyph[256];
+            OldGlyphs = new IOldGlyph[256];
             OriginalHeight = rawFont.Length/256;
             OriginalWidth = 8;
             Data = rawFont;
             Rasterize(1, 1);
-            GlyphsUnscaled = new IGlyph[256];
+            OldGlyphsUnscaled = new IOldGlyph[256];
             for (var i = 0; i < 256; i++)
             {
-                GlyphsUnscaled[i] = new Glyph(new byte[OriginalHeight], 1, 1);
-                Glyphs[i].Data.CopyTo(GlyphsUnscaled[i].Data, 0);
+                OldGlyphsUnscaled[i] = new OldGlyph(new byte[OriginalHeight], 1, 1);
+                OldGlyphs[i].Data.CopyTo(OldGlyphsUnscaled[i].Data, 0);
             }
         }
 
@@ -148,7 +148,7 @@ namespace Roton.Interface.Video
             {
                 Array.Copy(Data, glyphDataOffset, glyphData, 0, OriginalHeight);
                 glyphDataOffset += OriginalHeight;
-                Glyphs[i] = new Glyph(glyphData, xScale, yScale);
+                OldGlyphs[i] = new OldGlyph(glyphData, xScale, yScale);
             }
             Width = OriginalWidth*xScale;
             Height = OriginalHeight*yScale;

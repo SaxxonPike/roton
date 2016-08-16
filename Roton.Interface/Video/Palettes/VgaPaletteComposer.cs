@@ -1,7 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
-namespace Roton.Interface.Video.Palettes.Composers
+namespace Roton.Interface.Video.Palettes
 {
     public class VgaPaletteComposer : IPaletteComposer
     {

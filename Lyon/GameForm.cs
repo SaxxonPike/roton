@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Roton.Core;
 using Roton.FileIo;
 using Roton.Interface.Video;
+using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Renderer;
 using Roton.Interface.Windows;
 

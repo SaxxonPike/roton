@@ -6,7 +6,7 @@ namespace Roton.Interface.Video
     {
         int Count { get; }
         int Height { get; }
-        IGlyph this[int index] { get; }
+        IOldGlyph this[int index] { get; }
         int OriginalHeight { get; }
         int OriginalWidth { get; }
         int Width { get; }

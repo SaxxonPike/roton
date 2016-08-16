@@ -51,15 +51,18 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
-    <Compile Include="Video\Glyphs\Composers\CachedGlyphComposer.cs" />
-    <Compile Include="Video\Glyphs\Composers\VgaGlyphComposer.cs" />
-    <Compile Include="Video\Glyphs\IComposedGlyph.cs" />
+    <Compile Include="Video\Glyphs\CachedGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\Glyph.cs" />
+    <Compile Include="Video\Glyphs\ScaledGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\BitmapFont.cs" />
+    <Compile Include="Video\Glyphs\VgaGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\IGlyph.cs" />
     <Compile Include="Video\FastBitmap.cs" />
-    <Compile Include="Video\Glyph.cs" />
+    <Compile Include="Video\OldGlyph.cs" />
     <Compile Include="Video\Controls\IEditorTerminal.cs" />
     <Compile Include="Video\IFastBitmap.cs" />
     <Compile Include="Video\Controls\IGameTerminal.cs" />
-    <Compile Include="Video\IGlyph.cs" />
+    <Compile Include="Video\IOldGlyph.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Video\IPalette.cs" />
     <Compile Include="Video\IRasterFont.cs" />
@@ -70,9 +73,10 @@
       <DependentUpon>Keyboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\KeysBuffer.cs" />
+    <Compile Include="Video\Palettes\CachedPaletteComposer.cs" />
     <Compile Include="Video\Palettes\IPaletteComposer.cs" />
-    <Compile Include="Video\Palettes\Composers\VgaPaletteComposer.cs" />
-    <Compile Include="Video\Scenes\Composers\BitmapSceneComposer.cs" />
+    <Compile Include="Video\Palettes\VgaPaletteComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\BitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\ISceneComposer.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Video\Palette.cs" />
@@ -129,9 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Audio\Presenters\" />
-    <Folder Include="Video\Glyphs\Presenters\" />
-    <Folder Include="Video\Palettes\Presenters\" />
-    <Folder Include="Video\Scenes\Presenters\" />
+    <Folder Include="Video\Scenes\Presentation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

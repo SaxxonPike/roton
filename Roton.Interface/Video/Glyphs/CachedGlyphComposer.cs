@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Roton.Interface.Extensions;
 
-namespace Roton.Interface.Video.Glyphs.Composers
+namespace Roton.Interface.Video.Glyphs
 {
     public class CachedGlyphComposer : IGlyphComposer
     {
-        private readonly IList<IComposedGlyph> _glyphs;
+        private readonly IList<IGlyph> _glyphs;
 
         public CachedGlyphComposer(IGlyphComposer source)
         {
             _glyphs = source.ComposeAllGlyphs();
         }
 
-        public IComposedGlyph ComposeGlyph(int index)
+        public IGlyph ComposeGlyph(int index)
         {
             return _glyphs[index];
         }

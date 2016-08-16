@@ -6,13 +6,13 @@ using Roton.Core.Collections;
 
 namespace Roton.Interface.Video
 {
-    public sealed class Glyph : FixedList<int>, IGlyph
+    public sealed class OldGlyph : FixedList<int>, IOldGlyph
     {
         private const int Black = -1 ^ ColorMask;
         private const int ColorMask = 0xFFFFFF;
         private const int White = -1;
 
-        internal Glyph(IList<byte> source, int xScale, int yScale)
+        internal OldGlyph(IList<byte> source, int xScale, int yScale)
         {
             Height = source.Count;
             Width = 8;
