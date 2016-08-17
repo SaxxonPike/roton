@@ -50,6 +50,7 @@
     <Compile Include="Audio\IAudioComposer.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
+    <Compile Include="Extensions\GlyphExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
     <Compile Include="Video\Glyphs\CachedGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\Glyph.cs" />
@@ -57,10 +58,10 @@
     <Compile Include="Video\Glyphs\BitmapFont.cs" />
     <Compile Include="Video\Glyphs\VgaGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\IGlyph.cs" />
-    <Compile Include="Video\FastBitmap.cs" />
+    <Compile Include="Video\Scenes\Composition\FastBitmap.cs" />
     <Compile Include="Video\OldGlyph.cs" />
     <Compile Include="Video\Controls\IEditorTerminal.cs" />
-    <Compile Include="Video\IFastBitmap.cs" />
+    <Compile Include="Video\Scenes\Composition\IFastBitmap.cs" />
     <Compile Include="Video\Controls\IGameTerminal.cs" />
     <Compile Include="Video\IOldGlyph.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
