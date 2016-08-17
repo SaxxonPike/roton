@@ -32,7 +32,7 @@ namespace Roton.Interface.Video.Scenes.Composition
             _chars = new AnsiChar[charTotal];
             _stride = Columns * glyphComposer.MaxWidth;
             _offsetLookUpTable = Enumerable.Range(0, charTotal)
-                .Select(i => glyphComposer.MaxWidth * (i % Columns) + glyphComposer.MaxHeight * (i / Columns))
+                .Select(i => glyphComposer.MaxWidth * (i % Columns) + glyphComposer.MaxHeight * _stride * (i / Columns))
                 .ToArray();
             Bitmap = new FastBitmap(_stride, Rows * glyphComposer.MaxHeight);
             _colors = paletteComposer.ComposeAllColors().Select(c => c.ToArgb()).ToArray();
