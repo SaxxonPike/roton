@@ -13,6 +13,8 @@ namespace Roton.Interface.Video.Glyphs
             _glyphComposer = glyphComposer;
             _scaleX = scaleX;
             _scaleY = scaleY;
+            MaxWidth = glyphComposer.MaxWidth*scaleX;
+            MaxHeight = glyphComposer.MaxHeight*scaleY;
         }
 
         public IGlyph ComposeGlyph(int index)
@@ -22,5 +24,8 @@ namespace Roton.Interface.Video.Glyphs
             var scaledY = scaledXScan.SelectMany(scan => Enumerable.Repeat(scan, _scaleY));
             return new Glyph(index, glyph.Width * _scaleX, glyph.Height * _scaleY, scaledY);
         }
+
+        public int MaxWidth { get; }
+        public int MaxHeight { get; }
     }
 }

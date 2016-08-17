@@ -50,7 +50,7 @@ namespace Torch
                 AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Editor(useOpenGl));
+            Application.Run(new Editor());
         }
 
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)

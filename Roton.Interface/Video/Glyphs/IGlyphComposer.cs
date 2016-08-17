@@ -9,5 +9,9 @@
         /// Render a glyph bitmap.
         /// </summary>
         IGlyph ComposeGlyph(int index);
+
+        int MaxWidth { get; }
+
+        int MaxHeight { get; }
     }
 }

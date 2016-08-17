@@ -48,18 +48,18 @@ namespace Roton.Interface.Video.Renderer
         /// buffer will be swapped on each render call.
         /// </summary>
         /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        public virtual void Render(ref IFastBitmap gameBitmap)
+        public virtual void Render(IFastBitmap gameBitmap)
         {
             if (!_glReady) return;
 
-            RenderImplementation(ref gameBitmap);
+            RenderImplementation(gameBitmap);
             FormControl?.SwapBuffers();
         }
 
         /// <summary>
         /// Renders the scene. This method must be implemented.
         /// </summary>
-        protected abstract void RenderImplementation(ref IFastBitmap gameBitmap);
+        protected abstract void RenderImplementation(IFastBitmap gameBitmap);
 
         /// <summary>
         /// 

@@ -31,7 +31,7 @@ namespace Roton.Interface.Video.Renderer
         /// Renders the scene.
         /// </summary>
         /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        void Render(ref IFastBitmap gameBitmap);
+        void Render(IFastBitmap gameBitmap);
 
         /// <summary>
         /// Updates the viewport of the renderer. This should be called when

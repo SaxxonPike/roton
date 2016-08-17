@@ -13,7 +13,7 @@ namespace Roton.Interface.Video.Renderer
     {
         private int _glLastTexture = -1;
 
-        private void GenerateTexture(ref IFastBitmap gameBitmap) {
+        private void GenerateTexture(IFastBitmap gameBitmap) {
             if(gameBitmap == null) return;
 
             var glNewTexture = GL.GenTexture();
@@ -46,14 +46,14 @@ namespace Roton.Interface.Video.Renderer
             GL.Enable(EnableCap.Texture2D); // required for FBOs to work
         }
 
-        protected override void RenderImplementation(ref IFastBitmap gameBitmap)
+        protected override void RenderImplementation(IFastBitmap gameBitmap)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             // Don't draw anything if the Bitmap is null.
             if(gameBitmap == null) return;
 
-            GenerateTexture(ref gameBitmap);
+            GenerateTexture(gameBitmap);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();

@@ -8,8 +8,11 @@ using Lyon;
 using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
+using Roton.Interface.Resources;
 using Roton.Interface.Video;
 using Roton.Interface.Video.Controls;
+using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Renderer;
 using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;
@@ -26,10 +29,10 @@ namespace Torch
         private IActor _actor;
         private IContext _context;
 
-        public Editor(bool openGl = false)
+        public Editor()
         {
-            var font1 = new RasterFont();
-            var palette1 = new Palette();
+            var font1 = new AutoDetectBinaryGlyphComposer(CommonResourceZipFileSystem.Default.GetFont());
+            var palette1 = new VgaPaletteComposer(CommonResourceZipFileSystem.Default.GetPalette());
 
             InitializeComponent();
             Load += (sender, e) => { OnLoad(); };
@@ -44,8 +47,8 @@ namespace Torch
                 Width = 640,
                 Height = 350,
                 AutoSize = true,
-                TerminalFont = font1,
-                TerminalPalette = palette1
+                GlyphComposer = font1,
+                PaletteComposer = palette1
             };
 
             mainPanel.Controls.Add((UserControl) _terminal);
@@ -891,8 +894,8 @@ namespace Torch
 
         private void UpdateColor()
         {
-            UpdateColorButton(foregroundColorButton, _terminal.TerminalPalette[Color & 0x0F]);
-            UpdateColorButton(backgroundColorButton, _terminal.TerminalPalette[(Color >> 4) & 0x0F]);
+            UpdateColorButton(foregroundColorButton, _terminal.PaletteComposer.ComposeColor(Color & 0x0F));
+            UpdateColorButton(backgroundColorButton, _terminal.PaletteComposer.ComposeColor((Color >> 4) & 0x0F));
         }
 
         private void UpdateColorButton(ToolStripButton button, Color backgroundColor)

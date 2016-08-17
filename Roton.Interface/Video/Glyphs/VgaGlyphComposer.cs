@@ -11,6 +11,8 @@ namespace Roton.Interface.Video.Glyphs
         {
             _data = font.Data.Select(i => (int)i).ToArray();
             _height = font.Height;
+            MaxWidth = font.Width;
+            MaxHeight = font.Height;
         }
 
         public IGlyph ComposeGlyph(int index)
@@ -29,5 +31,8 @@ namespace Roton.Interface.Video.Glyphs
             }
             return new Glyph(index, 8, _height, output);
         }
+
+        public int MaxWidth { get; }
+        public int MaxHeight { get; }
     }
 }

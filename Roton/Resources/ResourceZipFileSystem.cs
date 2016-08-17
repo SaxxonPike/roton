@@ -5,6 +5,8 @@ namespace Roton.Resources
 {
     public class ResourceZipFileSystem : ZipFileSystem, IResourceArchive
     {
+        public static readonly IResourceArchive Default = new ResourceZipFileSystem(Properties.Resources.resources);
+
         public ResourceZipFileSystem(byte[] file) : base(file)
         {
         }

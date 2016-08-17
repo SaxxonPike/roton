@@ -4,9 +4,14 @@ using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 using Roton.Core;
+using Roton.Interface.Extensions;
 using Roton.Interface.Input;
+using Roton.Interface.Resources;
 using Roton.Interface.Video.Controls;
+using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Renderer;
+using Roton.Interface.Video.Scenes.Composition;
 using Message = System.Windows.Forms.Message;
 
 namespace Roton.Interface.Video
@@ -16,26 +21,27 @@ namespace Roton.Interface.Video
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
         private readonly KeysBuffer _keys;
 
-        private IFastBitmap _bitmap;
+        private BitmapSceneComposer _sceneComposer;
         private readonly IRenderer _renderer;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
-        private AnsiChar[] _terminalBuffer;
-        private IRasterFont _terminalFont;
+        private IGlyphComposer _glyphComposer;
         private int _terminalHeight;
-        private IPalette _terminalPalette;
+        private IPaletteComposer _paletteComposer;
         private int _terminalWidth;
         private bool _wideMode;
 
         public Terminal(IRenderer renderer)
         {
+            _terminalWidth = 80;
+            _terminalHeight = 25;
             _keys = new KeysBuffer();
 
             InitializeComponent();
 
             // Initialize font and palette.
-            _terminalFont = new RasterFont();
-            _terminalPalette = new Palette();
+            _glyphComposer = new AutoDetectBinaryGlyphComposer(CommonResourceZipFileSystem.Default.GetFont());
+            _paletteComposer = new VgaPaletteComposer(CommonResourceZipFileSystem.Default.GetPalette());
 
             // Set default scale.
             ScaleX = 1;
@@ -49,11 +55,6 @@ namespace Roton.Interface.Video
         {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
-        }
-
-        private IFastBitmap Bitmap {
-            get { return _bitmap; }
-            set { _bitmap = value; }
         }
 
         // Auto-properties.
@@ -88,14 +89,16 @@ namespace Roton.Interface.Video
 
         public Bitmap RenderAll()
         {
-            return Bitmap.CloneAsBitmap();
+            return _sceneComposer.Bitmap.CloneAsBitmap();
         }
 
         public Bitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
-            var result = _terminalFont.RenderUnscaled(character, _terminalPalette[color & 0xF],
-                _terminalPalette[(color >> 4) & 0xF]);
+            var result = _glyphComposer
+                .ComposeGlyph(character)
+                .RenderToFastBitmap(_paletteComposer.ComposeColor(color & 0xF), _paletteComposer.ComposeColor(color >> 4))
+                .CloneAsBitmap();
             if (_wideMode)
             {
                 var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
@@ -120,44 +123,43 @@ namespace Roton.Interface.Video
 
             if (AutoSize)
             {
-                Width = _terminalWidth*_terminalFont.Width*xScale*(_wideMode ? 2 : 1);
-                Height = _terminalHeight*_terminalFont.Height*yScale;
+                Width = _terminalWidth*_glyphComposer.MaxWidth*xScale*(_wideMode ? 2 : 1);
+                Height = _terminalHeight*_glyphComposer.MaxHeight * yScale;
             }
 
             _renderer.UpdateViewport();
         }
 
-        public IRasterFont TerminalFont
+        public IGlyphComposer GlyphComposer
         {
-            get { return _terminalFont; }
+            get { return _glyphComposer; }
             set
             {
-                _terminalFont = value;
+                _glyphComposer = value;
                 Redraw();
             }
         }
 
-        public IPalette TerminalPalette
+        public IPaletteComposer PaletteComposer
         {
-            get { return _terminalPalette; }
+            get { return _paletteComposer; }
             set
             {
-                _terminalPalette = value;
+                _paletteComposer = value;
                 Redraw();
             }
         }
 
         public void Clear()
         {
-            _terminalBuffer = new AnsiChar[_terminalWidth*_terminalHeight];
+            _sceneComposer.Clear();
         }
 
         public void Plot(int x, int y, AnsiChar ac)
         {
             if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
             {
-                var index = x + y*_terminalWidth;
-                _terminalBuffer[index] = ac;
+                _sceneComposer.SetChar(x, y, ac);
                 Draw(x, y, ac);
             }
         }
@@ -174,17 +176,17 @@ namespace Roton.Interface.Video
             _wideMode = wide;
 
             // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
-            var oldBitmap = Bitmap;
-            Bitmap = new FastBitmap(_terminalWidth*_terminalFont.Width, _terminalHeight*_terminalFont.Height);
-            oldBitmap?.Dispose();
+            var oldComposer = _sceneComposer;
+            _sceneComposer = new BitmapSceneComposer(_glyphComposer, _paletteComposer, _terminalWidth, _terminalHeight);
+            oldComposer?.Dispose();
 
             if (width != oldWidth || height != oldHeight)
                 Clear();
 
             if (AutoSize)
             {
-                Width = _terminalWidth*_terminalFont.Width*ScaleX*(wide ? 2 : 1);
-                Height = _terminalHeight*_terminalFont.Height*ScaleY;
+                Width = _terminalWidth*_glyphComposer.MaxWidth * ScaleX*(wide ? 2 : 1);
+                Height = _terminalHeight*_glyphComposer.MaxHeight * ScaleY;
             }
 
             // Reconfigure OpenGL viewport.
@@ -220,16 +222,17 @@ namespace Roton.Interface.Video
         {
             //SuspendLayout();
             Blinking = !Blinking;
-            if (_terminalWidth > 0 && _terminalHeight > 0 && (Bitmap != null))
+            if (_terminalWidth > 0 && _terminalHeight > 0 && (_sceneComposer != null))
             {
                 var i = 0;
                 for (var y = 0; y < _terminalHeight; y++)
                 {
                     for (var x = 0; x < _terminalWidth; x++)
                     {
-                        if ((_terminalBuffer[i].Color & 0x80) != 0)
+                        var existingChar = _sceneComposer.GetChar(x, y);
+                        if ((existingChar.Color & 0x80) != 0)
                         {
-                            Draw(x, y, _terminalBuffer[i]);
+                            Draw(x, y, existingChar);
                         }
                         i++;
                     }
@@ -241,7 +244,7 @@ namespace Roton.Interface.Video
         private void displayTimer_Tick(object sender, EventArgs e)
         {
             Redraw();
-            _renderer.Render(ref _bitmap);
+            _renderer.Render(_sceneComposer.Bitmap);
         }
 
         /// <summary>
@@ -261,13 +264,16 @@ namespace Roton.Interface.Video
         {
             if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
             {
-                var drawX = x*_terminalFont.Width;
-                var drawY = y*_terminalFont.Height;
-                var bgColor = _terminalPalette.Colors[(ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF)];
+                var drawX = x*_glyphComposer.MaxWidth;
+                var drawY = y*_glyphComposer.MaxHeight;
+                var bgColor = _paletteComposer.ComposeColor((ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF));
                 var fgColor = BlinkEnabled && Blinking && (ac.Color & 0x80) != 0
                     ? bgColor
-                    : _terminalPalette.Colors[ac.Color & 0xF];
-                _terminalFont.Render(Bitmap, drawX, drawY, ac.Char, fgColor, bgColor);
+                    : _paletteComposer.ComposeColor(ac.Color & 0xF);
+                using (var renderedGlyph = _glyphComposer.ComposeGlyph(ac.Char).RenderToFastBitmap(fgColor, bgColor))
+                {
+                    
+                }
             }
         }
 
@@ -285,7 +291,7 @@ namespace Roton.Interface.Video
             glControl.MouseDown += glControl_MouseDown;
             
             // Initialize the Bitmap to make sure that the renderer doesn't explode.
-            Bitmap = new FastBitmap(glControl.Width, glControl.Height);
+            _sceneComposer = new BitmapSceneComposer(_glyphComposer, _paletteComposer, _terminalWidth, _terminalHeight);
 
             // Initialize and configure the renderer.
             _renderer.FormControl = glControl;
@@ -334,8 +340,8 @@ namespace Roton.Interface.Video
         {
             if (CursorEnabled)
             {
-                var newX = (int) (e.X/_terminalFont.Width*(_wideMode ? 0.5 : 1));
-                var newY = e.Y/_terminalFont.Height;
+                var newX = (int) (e.X/_glyphComposer.MaxWidth * (_wideMode ? 0.5 : 1));
+                var newY = e.Y/_glyphComposer.MaxHeight;
                 UpdateCursor(newX, newY);
             }
         }
@@ -359,21 +365,23 @@ namespace Roton.Interface.Video
 
         private void Redraw()
         {
-            var index = 0;
+            if (_sceneComposer == null)
+                return;
+
             for (var y = 0; y < _terminalHeight; y++)
                 for (var x = 0; x < _terminalWidth; x++)
-                    Draw(x, y, _terminalBuffer[index++]);
+                    Draw(x, y, _sceneComposer.GetChar(x, y));
 
             // Update the cursor if it's enabled and the bitmap is valid.
-            if (!CursorEnabled || Bitmap == null) return;
-            using (var g = Graphics.FromImage((FastBitmap) Bitmap))
+            if (!CursorEnabled || _sceneComposer == null) return;
+            using (var g = Graphics.FromImage((FastBitmap) _sceneComposer.Bitmap))
             {
                 using (
                     Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
                         dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
                 {
-                    var outerRect = new Rectangle(CursorX*_terminalFont.Width, CursorY*_terminalFont.Height,
-                        _terminalFont.Width - 1, _terminalFont.Height - 1);
+                    var outerRect = new Rectangle(CursorX*_glyphComposer.MaxWidth, CursorY*_glyphComposer.MaxHeight,
+                        _glyphComposer.MaxWidth - 1, _glyphComposer.MaxHeight - 1);
                     g.DrawLines(dark, new[]
                     {
                         new Point(outerRect.Left, outerRect.Bottom),
