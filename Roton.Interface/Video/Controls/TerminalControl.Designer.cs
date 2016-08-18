@@ -1,7 +1,7 @@
 ﻿using Roton.Interface.Synchronization;
 
-namespace Roton.Interface.Video {
-    partial class Terminal {
+namespace Roton.Interface.Video.Controls {
+    partial class TerminalControl {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -40,13 +40,13 @@ namespace Roton.Interface.Video {
             this.glControl.VSync = false;
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
-            // Terminal
+            // TerminalControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.glControl);
-            this.Name = "Terminal";
+            this.Name = "TerminalControl";
             this.Size = new System.Drawing.Size(640, 350);
             this.ResumeLayout(false);
 

@@ -60,10 +60,10 @@
     <Compile Include="Video\Glyphs\BitmapFont.cs" />
     <Compile Include="Video\Glyphs\VgaGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\IGlyph.cs" />
-    <Compile Include="Video\Scenes\Composition\FastBitmap.cs" />
+    <Compile Include="Video\Scenes\Composition\DirectAccessBitmap.cs" />
     <Compile Include="Video\Controls\IEditorTerminal.cs" />
     <Compile Include="Video\Scenes\Composition\IBitmapSceneComposer.cs" />
-    <Compile Include="Video\Scenes\Composition\IFastBitmap.cs" />
+    <Compile Include="Video\Scenes\Composition\IDirectAccessBitmap.cs" />
     <Compile Include="Video\Controls\IGameTerminal.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Input\Keyboard.cs">
@@ -77,6 +77,7 @@
     <Compile Include="Video\Palettes\IPaletteComposer.cs" />
     <Compile Include="Video\Palettes\VgaPaletteComposer.cs" />
     <Compile Include="Video\Scenes\Composition\BitmapSceneComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\SceneComposer.cs" />
     <Compile Include="Video\Scenes\ISceneComposer.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,9 +86,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Video\Renderer\IRenderer.cs" />
-    <Compile Include="Video\Renderer\OpenGlRenderer.cs" />
-    <Compile Include="Video\Renderer\Renderer.cs" />
+    <Compile Include="Video\Scenes\Presentation\IScenePresenter.cs" />
+    <Compile Include="Video\Scenes\Presentation\OpenGlScenePresenter.cs" />
+    <Compile Include="Video\Scenes\Presentation\ScenePresenter.cs" />
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />
@@ -97,11 +98,11 @@
     <Compile Include="Audio\Speaker.Designer.cs">
       <DependentUpon>Speaker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Video\Terminal.cs">
+    <Compile Include="Video\Controls\TerminalControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Video\Terminal.Designer.cs">
-      <DependentUpon>Terminal.cs</DependentUpon>
+    <Compile Include="Video\Controls\TerminalControl.Designer.cs">
+      <DependentUpon>TerminalControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Synchronization\TimerDaemon.cs">
       <SubType>Component</SubType>
@@ -121,8 +122,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Video\Terminal.resx">
-      <DependentUpon>Terminal.cs</DependentUpon>
+    <EmbeddedResource Include="Video\Controls\TerminalControl.resx">
+      <DependentUpon>TerminalControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -131,7 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Audio\Presenters\" />
-    <Folder Include="Video\Scenes\Presentation\" />
+    <Folder Include="Video\Renderer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

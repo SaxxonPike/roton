@@ -7,22 +7,21 @@ using Roton.Core;
 using Roton.Interface.Extensions;
 using Roton.Interface.Input;
 using Roton.Interface.Resources;
-using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
-using Roton.Interface.Video.Renderer;
 using Roton.Interface.Video.Scenes.Composition;
+using Roton.Interface.Video.Scenes.Presentation;
 using Message = System.Windows.Forms.Message;
 
-namespace Roton.Interface.Video
+namespace Roton.Interface.Video.Controls
 {
-    public partial class Terminal : UserControl, IEditorTerminal
+    public partial class TerminalControl : UserControl, IEditorTerminal
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
         private readonly KeysBuffer _keys;
 
         private IBitmapSceneComposer _sceneComposer;
-        private readonly IRenderer _renderer;
+        private readonly IScenePresenter _scenePresenter;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private IGlyphComposer _glyphComposer;
@@ -31,7 +30,7 @@ namespace Roton.Interface.Video
         private int _terminalWidth;
         private bool _wideMode;
 
-        public Terminal(IRenderer renderer)
+        public TerminalControl(IScenePresenter scenePresenter)
         {
             _terminalWidth = 80;
             _terminalHeight = 25;
@@ -48,7 +47,7 @@ namespace Roton.Interface.Video
             ScaleY = 1;
 
             // Set renderer.
-            _renderer = renderer;
+            _scenePresenter = scenePresenter;
         }
 
         private bool Alt
@@ -60,10 +59,10 @@ namespace Roton.Interface.Video
         // Auto-properties.
         private bool BlinkEnabled { get; set; }
 
-        public int ScaleX { get; private set; }
-        public int ScaleY { get; private set; }
+        private int ScaleX { get; set; }
+        private int ScaleY { get; set; }
 
-        public bool Shift
+        private bool Shift
         {
             get { return _keys.Shift; }
             set { _keys.Shift = value; }
@@ -82,16 +81,16 @@ namespace Roton.Interface.Video
 
         public Bitmap RenderAll()
         {
-            return _sceneComposer.Bitmap.CloneAsBitmap();
+            return new Bitmap(_sceneComposer.DirectAccessBitmap.InnerBitmap);
         }
 
         public Bitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
-            var result = _glyphComposer
+            var result = new Bitmap(_glyphComposer
                 .ComposeGlyph(character)
                 .RenderToFastBitmap(_paletteComposer.ComposeColor(color & 0xF), _paletteComposer.ComposeColor(color >> 4))
-                .CloneAsBitmap();
+                .InnerBitmap);
             if (_wideMode)
             {
                 var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
@@ -120,7 +119,7 @@ namespace Roton.Interface.Video
                 Height = _terminalHeight*_glyphComposer.MaxHeight * yScale;
             }
 
-            _renderer.UpdateViewport();
+            _scenePresenter.UpdateViewport();
         }
 
         public IGlyphComposer GlyphComposer
@@ -164,8 +163,8 @@ namespace Roton.Interface.Video
 
             var oldWidth = _terminalWidth;
             var oldHeight = _terminalHeight;
-            _renderer.TerminalWidth = _terminalWidth = width;
-            _renderer.TerminalHeight = _terminalHeight = height;
+            _scenePresenter.TerminalWidth = _terminalWidth = width;
+            _scenePresenter.TerminalHeight = _terminalHeight = height;
             _wideMode = wide;
 
             // Ignore wide mode with bitmaps; all scaling will be handled by the GPU.
@@ -183,7 +182,7 @@ namespace Roton.Interface.Video
             }
 
             // Reconfigure OpenGL viewport.
-            _renderer.UpdateViewport();
+            _scenePresenter.UpdateViewport();
         }
 
         public void Write(int x, int y, string value, int color)
@@ -235,7 +234,7 @@ namespace Roton.Interface.Video
         private void displayTimer_Tick(object sender, EventArgs e)
         {
             Redraw();
-            _renderer.Render(_sceneComposer.Bitmap);
+            _scenePresenter.Render(_sceneComposer.DirectAccessBitmap);
         }
 
         /// <summary>
@@ -276,11 +275,11 @@ namespace Roton.Interface.Video
             _sceneComposer = new BitmapSceneComposer(_glyphComposer, _paletteComposer, _terminalWidth, _terminalHeight);
 
             // Initialize and configure the renderer.
-            _renderer.FormControl = glControl;
-            _renderer.TerminalWidth = _terminalWidth;
-            _renderer.TerminalHeight = _terminalHeight;
-            _renderer.Init();
-            _renderer.UpdateViewport();
+            _scenePresenter.FormControl = glControl;
+            _scenePresenter.TerminalWidth = _terminalWidth;
+            _scenePresenter.TerminalHeight = _terminalHeight;
+            _scenePresenter.Init();
+            _scenePresenter.UpdateViewport();
 
             // Enable blinking by default; set timer for it.
             BlinkEnabled = true;
@@ -355,7 +354,7 @@ namespace Roton.Interface.Video
 
             // Update the cursor if it's enabled and the bitmap is valid.
             if (!CursorEnabled || _sceneComposer == null) return;
-            using (var g = Graphics.FromImage((FastBitmap) _sceneComposer.Bitmap))
+            using (var g = Graphics.FromImage(_sceneComposer.DirectAccessBitmap.InnerBitmap))
             {
                 using (
                     Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
@@ -379,7 +378,7 @@ namespace Roton.Interface.Video
             }
         }
 
-        internal int TranslateColorIndex(int color)
+        private int TranslateColorIndex(int color)
         {
             // if blinking is enabled, we only get the first 8 colors for background
             if (BlinkEnabled)

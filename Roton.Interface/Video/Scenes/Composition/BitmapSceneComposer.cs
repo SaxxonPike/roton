@@ -6,76 +6,32 @@ using Roton.Interface.Video.Palettes;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
-    public class BitmapSceneComposer : IBitmapSceneComposer
+    public class BitmapSceneComposer : SceneComposer, IBitmapSceneComposer
     {
         private readonly IGlyphComposer _glyphComposer;
-        private readonly AnsiChar[] _chars;
         private readonly int _stride;
         private readonly int[] _offsetLookUpTable;
-        private readonly AnsiChar _blankCharacter;
         private readonly int[] _colors;
 
         public BitmapSceneComposer(
             IGlyphComposer glyphComposer, 
             IPaletteComposer paletteComposer,
             int columns, 
-            int rows)
+            int rows) : base(rows, columns)
         {
-            Columns = columns;
-            Rows = rows;
             var charTotal = Columns * Rows;
-
             _glyphComposer = new CachedGlyphComposer(glyphComposer);
-            _blankCharacter = new AnsiChar();
-
-            _chars = new AnsiChar[charTotal];
             _stride = Columns * glyphComposer.MaxWidth;
             _offsetLookUpTable = Enumerable.Range(0, charTotal)
                 .Select(i => glyphComposer.MaxWidth * (i % Columns) + glyphComposer.MaxHeight * _stride * (i / Columns))
                 .ToArray();
-            Bitmap = new FastBitmap(_stride, Rows * glyphComposer.MaxHeight);
+            DirectAccessBitmap = new DirectAccessBitmap(_stride, Rows * glyphComposer.MaxHeight);
             _colors = paletteComposer.ComposeAllColors().Select(c => c.ToArgb()).ToArray();
         }
 
-        private bool IsOutOfBounds(int x, int y)
+        protected override void OnGlyphUpdated(int index, AnsiChar ac)
         {
-            return (x < 0 || x >= Columns || y < 0 || y >= Rows);
-        }
-
-        private int GetBufferOffset(int x, int y)
-        {
-            return x + y* Columns;
-        }
-
-        public AnsiChar GetChar(int x, int y)
-        {
-            return IsOutOfBounds(x, y)
-                ? _blankCharacter
-                : _chars[GetBufferOffset(x, y)];
-        }
-
-        public int Rows { get; }
-
-        public void RefreshChar(int x, int y)
-        {
-            var index = GetBufferOffset(x, y);
-            DrawGlyphAtIndex(_chars[index], index);
-        }
-
-        public void SetChar(int x, int y, AnsiChar ac)
-        {
-            if (IsOutOfBounds(x, y))
-                return;
-
-            var index = GetBufferOffset(x, y);
-            _chars[index] = ac;
-            DrawGlyphAtIndex(ac, index);
-        }
-
-        public int Columns { get; }
-
-        private void DrawGlyphAtIndex(AnsiChar ac, int index)
-        {
+            base.OnGlyphUpdated(index, ac);
             DrawGlyph(ac, _offsetLookUpTable[index]);
         }
 
@@ -83,7 +39,7 @@ namespace Roton.Interface.Video.Scenes.Composition
         {
             var glyph = _glyphComposer.ComposeGlyph(ac.Char);
             var inputBits = glyph.Data;
-            var outputBits = Bitmap.Bits;
+            var outputBits = DirectAccessBitmap.Bits;
             var width = glyph.Width;
             var height = glyph.Height;
             var baseOffset = offset;
@@ -103,11 +59,11 @@ namespace Roton.Interface.Video.Scenes.Composition
             }
         }
 
-        public IFastBitmap Bitmap { get; }
+        public IDirectAccessBitmap DirectAccessBitmap { get; }
 
         public void Dispose()
         {
-            Bitmap?.Dispose();
+            DirectAccessBitmap?.Dispose();
         }
 
         public bool HideBlinkingCharacters { get; set; }

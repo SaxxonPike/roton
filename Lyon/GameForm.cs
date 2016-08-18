@@ -8,7 +8,7 @@ using Roton.Interface.Video;
 using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
-using Roton.Interface.Video.Renderer;
+using Roton.Interface.Video.Scenes.Presentation;
 using Roton.Interface.Windows;
 
 namespace Lyon
@@ -41,7 +41,7 @@ namespace Lyon
             InitializeComponent();
             InitializeEvents();
 
-            _terminal = new Terminal(new OpenGlRenderer())
+            _terminal = new TerminalControl(new OpenGlScenePresenter())
             {
                 Top = 0,
                 Left = 0,

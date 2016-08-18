@@ -1,11 +1,12 @@
 ﻿using OpenTK;
+using Roton.Interface.Video.Scenes.Composition;
 
-namespace Roton.Interface.Video.Renderer
+namespace Roton.Interface.Video.Scenes.Presentation
 {
     /// <summary>
     /// The OpenGL rendering interface.
     /// </summary>
-    public interface IRenderer
+    public interface IScenePresenter
     {
         /// <summary>
         /// The <see cref="GLControl" /> that the renderer should use.
@@ -31,7 +32,7 @@ namespace Roton.Interface.Video.Renderer
         /// Renders the scene.
         /// </summary>
         /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        void Render(IFastBitmap gameBitmap);
+        void Render(IDirectAccessBitmap gameBitmap);
 
         /// <summary>
         /// Updates the viewport of the renderer. This should be called when

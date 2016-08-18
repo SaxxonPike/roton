@@ -10,11 +10,6 @@ namespace Roton.Interface.Resources
         {
         }
 
-        public byte[] GetDrumAudio(int index)
-        {
-            return GetFile(GetCombinedPath("audio", $"{index}.bin"));
-        }
-
         public byte[] GetFont()
         {
             return GetFile(GetCombinedPath("system", "font.bin"));
@@ -23,11 +18,6 @@ namespace Roton.Interface.Resources
         public byte[] GetPalette()
         {
             return GetFile(GetCombinedPath("system", "palette.bin"));
-        }
-
-        public byte[] GetPlayerStepAudio()
-        {
-            return GetFile(GetCombinedPath("audio", "player.bin"));
         }
     }
 }

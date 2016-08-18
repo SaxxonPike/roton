@@ -1,14 +1,15 @@
 ﻿using System.Drawing;
 using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Scenes.Composition;
 
 namespace Roton.Interface.Extensions
 {
     public static class GlyphExtensions
     {
-        public static IFastBitmap RenderToFastBitmap(this IGlyph glyph, Color foregroundColor, Color backgroundColor)
+        public static IDirectAccessBitmap RenderToFastBitmap(this IGlyph glyph, Color foregroundColor, Color backgroundColor)
         {
-            var output = new FastBitmap(glyph.Width, glyph.Height);
+            var output = new DirectAccessBitmap(glyph.Width, glyph.Height);
             var count = output.Bits.Length;
             var foregroundBits = foregroundColor.ToArgb();
             var backgroundBits = backgroundColor.ToArgb();

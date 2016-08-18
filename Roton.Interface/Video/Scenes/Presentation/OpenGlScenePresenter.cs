@@ -1,29 +1,30 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
+using Roton.Interface.Video.Scenes.Composition;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace Roton.Interface.Video.Renderer
+namespace Roton.Interface.Video.Scenes.Presentation
 {
     /// <summary>
-    /// Basic OpenGL 3.0 renderer. This renderer does not support shaders or
+    /// Basic OpenGL 3.0 renderer. This sceneComposer does not support shaders or
     /// anything as long as it supports frame buffer objects (FBOs).
     /// </summary>
-    public class OpenGlRenderer : Renderer
+    public class OpenGlScenePresenter : ScenePresenter
     {
         private int _glLastTexture = -1;
 
-        private void GenerateTexture(IFastBitmap gameBitmap) {
+        private void GenerateTexture(IDirectAccessBitmap gameBitmap) {
             if(gameBitmap == null) return;
 
             var glNewTexture = GL.GenTexture();
 
-            var fbData = gameBitmap.LockBits(new Rectangle(0, 0, gameBitmap.Width, gameBitmap.Height), ImageLockMode.ReadOnly,
-                PixelFormat.Format32bppArgb);
+            //var fbData = gameBitmap.LockBits(new Rectangle(0, 0, gameBitmap.Width, gameBitmap.Height), ImageLockMode.ReadOnly,
+            //    PixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, gameBitmap.Width, gameBitmap.Height, 0,
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, fbData.Scan0);
-            gameBitmap.UnlockBits(fbData);
+                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, gameBitmap.BitsPointer);
+            //gameBitmap.UnlockBits(fbData);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                 (int)TextureMinFilter.Nearest);
@@ -36,7 +37,7 @@ namespace Roton.Interface.Video.Renderer
         }
 
         /// <summary>
-        /// Initializes the <see cref="OpenGlRenderer" /> Rrnderer.
+        /// Initializes the <see cref="OpenGlScenePresenter" /> Rrnderer.
         /// </summary>
         protected override void InitImplementation()
         {
@@ -46,7 +47,7 @@ namespace Roton.Interface.Video.Renderer
             GL.Enable(EnableCap.Texture2D); // required for FBOs to work
         }
 
-        protected override void RenderImplementation(IFastBitmap gameBitmap)
+        protected override void RenderImplementation(IDirectAccessBitmap gameBitmap)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 

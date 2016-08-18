@@ -1,11 +1,12 @@
 ﻿using OpenTK;
+using Roton.Interface.Video.Scenes.Composition;
 
-namespace Roton.Interface.Video.Renderer
+namespace Roton.Interface.Video.Scenes.Presentation
 {
     /// <summary>
     /// A base renderer class. This class must be inherited.
     /// </summary>
-    public abstract class Renderer : IRenderer
+    public abstract class ScenePresenter : IScenePresenter
     {
         private bool _glReady;
 
@@ -48,7 +49,7 @@ namespace Roton.Interface.Video.Renderer
         /// buffer will be swapped on each render call.
         /// </summary>
         /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        public virtual void Render(IFastBitmap gameBitmap)
+        public virtual void Render(IDirectAccessBitmap gameBitmap)
         {
             if (!_glReady) return;
 
@@ -59,7 +60,7 @@ namespace Roton.Interface.Video.Renderer
         /// <summary>
         /// Renders the scene. This method must be implemented.
         /// </summary>
-        protected abstract void RenderImplementation(IFastBitmap gameBitmap);
+        protected abstract void RenderImplementation(IDirectAccessBitmap gameBitmap);
 
         /// <summary>
         /// 

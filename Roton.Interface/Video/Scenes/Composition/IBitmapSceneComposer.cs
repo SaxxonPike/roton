@@ -4,6 +4,7 @@ namespace Roton.Interface.Video.Scenes.Composition
 {
     public interface IBitmapSceneComposer : ISceneComposer, IDisposable
     {
-        IFastBitmap Bitmap { get; }
+        IDirectAccessBitmap DirectAccessBitmap { get; }
+        bool HideBlinkingCharacters { get; set; }
     }
 }
