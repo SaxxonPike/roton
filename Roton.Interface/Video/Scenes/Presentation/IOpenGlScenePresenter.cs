@@ -6,7 +6,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
     /// <summary>
     /// The OpenGL rendering interface.
     /// </summary>
-    public interface IScenePresenter
+    public interface IOpenGlScenePresenter
     {
         /// <summary>
         /// The <see cref="GLControl" /> that the renderer should use.

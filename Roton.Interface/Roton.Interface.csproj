@@ -86,9 +86,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Video\Scenes\Presentation\IScenePresenter.cs" />
+    <Compile Include="Video\Scenes\Presentation\IOpenGlScenePresenter.cs" />
     <Compile Include="Video\Scenes\Presentation\OpenGlScenePresenter.cs" />
-    <Compile Include="Video\Scenes\Presentation\ScenePresenter.cs" />
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />

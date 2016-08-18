@@ -21,7 +21,7 @@ namespace Roton.Interface.Video.Controls
         private readonly KeysBuffer _keys;
 
         private IBitmapSceneComposer _sceneComposer;
-        private readonly IScenePresenter _scenePresenter;
+        private readonly IOpenGlScenePresenter _scenePresenter;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private IGlyphComposer _glyphComposer;
@@ -30,7 +30,7 @@ namespace Roton.Interface.Video.Controls
         private int _terminalWidth;
         private bool _wideMode;
 
-        public TerminalControl(IScenePresenter scenePresenter)
+        public TerminalControl(IOpenGlScenePresenter scenePresenter)
         {
             _terminalWidth = 80;
             _terminalHeight = 25;

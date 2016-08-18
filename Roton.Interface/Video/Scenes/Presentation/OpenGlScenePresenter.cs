@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Roton.Interface.Video.Scenes.Composition;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -10,9 +11,72 @@ namespace Roton.Interface.Video.Scenes.Presentation
     /// Basic OpenGL 3.0 renderer. This sceneComposer does not support shaders or
     /// anything as long as it supports frame buffer objects (FBOs).
     /// </summary>
-    public class OpenGlScenePresenter : ScenePresenter
+    public class OpenGlScenePresenter : IOpenGlScenePresenter
     {
         private int _glLastTexture = -1;
+        private bool _glReady;
+        public GLControl FormControl { get; set; }
+        public double TerminalHeight { get; set; }
+        public double TerminalWidth { get; set; }
+
+        /// <summary>
+        /// Initializes the OpenGL renderer.
+        /// </summary>
+        public void Init()
+        {
+            // If a GLControl is assigned, it must be set as the current context
+            // before anything happens.
+            FormControl?.MakeCurrent();
+
+            GL.ClearColor(Color.Black);
+            GL.Disable(EnableCap.Lighting); // unnecessary
+            GL.Disable(EnableCap.DepthTest); // unnecessary
+            GL.Enable(EnableCap.Texture2D); // required for FBOs to work
+            _glReady = true;
+        }
+
+        /// <summary>
+        /// Renders the scene. If <see cref="FormControl" /> is assigned, its
+        /// buffer will be swapped on each render call.
+        /// </summary>
+        /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
+        public void Render(IDirectAccessBitmap gameBitmap)
+        {
+            if (!_glReady) return;
+
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            // Don't draw anything if the Bitmap is null.
+            if (gameBitmap == null) return;
+
+            GenerateTexture(gameBitmap);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.Begin(BeginMode.Quads);
+            GL.TexCoord2(0.0f, 0.0f);
+            GL.Vertex2(0.0f, 0.0f);
+            GL.TexCoord2(1.0f, 0.0f);
+            GL.Vertex2(TerminalWidth, 0.0f);
+            GL.TexCoord2(1.0f, 1.0f);
+            GL.Vertex2(TerminalWidth, TerminalHeight);
+            GL.TexCoord2(0.0f, 1.0f);
+            GL.Vertex2(0.0f, TerminalHeight);
+            GL.End();
+
+            FormControl?.SwapBuffers();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateViewport()
+        {
+            if (!_glReady) return;
+
+            UpdateViewportImplementation();
+        }
 
         private void GenerateTexture(IDirectAccessBitmap gameBitmap) {
             if(gameBitmap == null) return;
@@ -32,42 +96,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
             _glLastTexture = glNewTexture;
         }
 
-        /// <summary>
-        /// Initializes the <see cref="OpenGlScenePresenter" /> Rrnderer.
-        /// </summary>
-        protected override void InitImplementation()
-        {
-            GL.ClearColor(Color.Black);
-            GL.Disable(EnableCap.Lighting); // unnecessary
-            GL.Disable(EnableCap.DepthTest); // unnecessary
-            GL.Enable(EnableCap.Texture2D); // required for FBOs to work
-        }
-
-        protected override void RenderImplementation(IDirectAccessBitmap gameBitmap)
-        {
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            // Don't draw anything if the Bitmap is null.
-            if(gameBitmap == null) return;
-
-            GenerateTexture(gameBitmap);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            GL.Begin(BeginMode.Quads);
-            GL.TexCoord2(0.0f, 0.0f);
-            GL.Vertex2(0.0f, 0.0f);
-            GL.TexCoord2(1.0f, 0.0f);
-            GL.Vertex2(TerminalWidth, 0.0f);
-            GL.TexCoord2(1.0f, 1.0f);
-            GL.Vertex2(TerminalWidth, TerminalHeight);
-            GL.TexCoord2(0.0f, 1.0f);
-            GL.Vertex2(0.0f, TerminalHeight);
-            GL.End();
-        }
-
-        protected override void UpdateViewportImplementation()
+        private void UpdateViewportImplementation()
         {
             GL.Viewport(0, 0, FormControl.Width, FormControl.Height);
 
