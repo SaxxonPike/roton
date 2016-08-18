@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Interface.Audio
+namespace Roton.Interface.Audio.Composition
 {
     public interface IAudioComposer
     {

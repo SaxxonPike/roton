@@ -1,6 +1,7 @@
 ﻿using Roton.Core;
 using Roton.Interface;
 using Roton.Interface.Audio;
+using Roton.Interface.Audio.Controls;
 
 namespace Lyon
 {
@@ -55,7 +56,7 @@ namespace Lyon
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale4xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale5xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.speaker = new Roton.Interface.Audio.Speaker(this.components);
+            this.speaker = new Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();

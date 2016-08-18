@@ -1,4 +1,4 @@
-﻿namespace Roton.Interface.Audio
+﻿namespace Roton.Interface.Audio.Controls
 {
     partial class Speaker
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Roton.Core;
 
-namespace Roton.Interface.Audio
+namespace Roton.Interface.Audio.Controls
 {
     public partial class Speaker : Component, ISpeaker
     {

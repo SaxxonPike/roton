@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Roton.Core;
 
-namespace Roton.Interface.Audio.Composers
+namespace Roton.Interface.Audio.Composition
 {
     public class AudioComposer : IAudioComposer
     {

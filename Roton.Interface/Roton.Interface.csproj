@@ -46,8 +46,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\Composers\AudioComposer.cs" />
-    <Compile Include="Audio\IAudioComposer.cs" />
+    <Compile Include="Audio\Composition\AudioComposer.cs" />
+    <Compile Include="Audio\Composition\IAudioComposer.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\GlyphExtensions.cs" />
@@ -91,10 +91,10 @@
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />
-    <Compile Include="Audio\Speaker.cs">
+    <Compile Include="Audio\Controls\Speaker.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Audio\Speaker.Designer.cs">
+    <Compile Include="Audio\Controls\Speaker.Designer.cs">
       <DependentUpon>Speaker.cs</DependentUpon>
     </Compile>
     <Compile Include="Video\Controls\TerminalControl.cs">
@@ -130,8 +130,7 @@
     <None Include="Resources\resources.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Audio\Presenters\" />
-    <Folder Include="Video\Renderer\" />
+    <Folder Include="Audio\Presentation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
