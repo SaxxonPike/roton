@@ -1,6 +1,6 @@
 ﻿using Roton.Core;
 
-namespace Roton.Interface.Video.Scenes
+namespace Roton.Interface.Video.Scenes.Composition
 {
     public interface ISceneComposer
     {

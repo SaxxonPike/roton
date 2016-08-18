@@ -1,5 +1,6 @@
 ﻿using Roton.Core;
 using Roton.Interface.Video.Scenes;
+using Roton.Interface.Video.Scenes.Composition;
 
 namespace Roton.Interface.Extensions
 {
