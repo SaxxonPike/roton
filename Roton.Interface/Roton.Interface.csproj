@@ -86,7 +86,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Video\Renderer\IRenderer.cs" />
-    <Compile Include="Video\Renderer\OpenGl3.cs" />
+    <Compile Include="Video\Renderer\OpenGlRenderer.cs" />
     <Compile Include="Video\Renderer\Renderer.cs" />
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />

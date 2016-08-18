@@ -51,21 +51,14 @@ namespace Roton.Interface.Video
             _renderer = renderer;
         }
 
-        public bool Alt
+        private bool Alt
         {
             get { return _keys.Alt; }
             set { _keys.Alt = value; }
         }
 
         // Auto-properties.
-        public bool BlinkEnabled { get; set; }
-        private bool Blinking { get; set; }
-
-        public bool Control
-        {
-            get { return _keys.Control; }
-            set { _keys.Control = value; }
-        }
+        private bool BlinkEnabled { get; set; }
 
         public int ScaleX { get; private set; }
         public int ScaleY { get; private set; }
@@ -322,15 +315,14 @@ namespace Roton.Interface.Video
                 Shift = true;
             }
             Alt = e.Alt;
-            Control = e.Control;
         }
 
         private void OnMouse(object sender, MouseEventArgs e)
         {
             if (CursorEnabled)
             {
-                var newX = (int) (e.X/_glyphComposer.MaxWidth * (_wideMode ? 0.5 : 1));
-                var newY = e.Y/_glyphComposer.MaxHeight;
+                var newX = e.X / ScaleX / _glyphComposer.MaxWidth;
+                var newY = e.Y / ScaleY / _glyphComposer.MaxHeight;
                 UpdateCursor(newX, newY);
             }
         }

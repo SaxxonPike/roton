@@ -9,7 +9,7 @@ namespace Roton.Interface.Video.Renderer
     /// Basic OpenGL 3.0 renderer. This renderer does not support shaders or
     /// anything as long as it supports frame buffer objects (FBOs).
     /// </summary>
-    public class OpenGl3 : Renderer
+    public class OpenGlRenderer : Renderer
     {
         private int _glLastTexture = -1;
 
@@ -36,7 +36,7 @@ namespace Roton.Interface.Video.Renderer
         }
 
         /// <summary>
-        /// Initializes the <see cref="OpenGl3" /> Rrnderer.
+        /// Initializes the <see cref="OpenGlRenderer" /> Rrnderer.
         /// </summary>
         protected override void InitImplementation()
         {

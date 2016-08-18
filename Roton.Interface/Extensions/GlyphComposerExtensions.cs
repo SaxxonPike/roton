@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
 
 namespace Roton.Interface.Extensions

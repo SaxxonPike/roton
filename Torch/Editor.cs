@@ -40,7 +40,7 @@ namespace Torch
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            _terminal = new Terminal(new OpenGl3())
+            _terminal = new Terminal(new OpenGlRenderer())
             {
                 Top = 0,
                 Left = 0,

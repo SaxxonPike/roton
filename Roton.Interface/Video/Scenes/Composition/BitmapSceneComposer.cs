@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Roton.Core;
 using Roton.Interface.Extensions;
 using Roton.Interface.Video.Glyphs;
