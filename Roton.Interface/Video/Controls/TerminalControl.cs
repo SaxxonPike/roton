@@ -213,27 +213,14 @@ namespace Roton.Interface.Video.Controls
         private void Blink()
         {
             _sceneComposer.HideBlinkingCharacters = !_sceneComposer.HideBlinkingCharacters;
-            if (_terminalWidth > 0 && _terminalHeight > 0 && (_sceneComposer != null))
-            {
-                var i = 0;
-                for (var y = 0; y < _terminalHeight; y++)
-                {
-                    for (var x = 0; x < _terminalWidth; x++)
-                    {
-                        var existingChar = _sceneComposer.GetChar(x, y);
-                        if ((existingChar.Color & 0x80) != 0)
-                        {
-                            Draw(x, y, existingChar);
-                        }
-                        i++;
-                    }
-                }
-            }
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
         {
             Redraw();
+            if (ParentForm?.WindowState == FormWindowState.Minimized)
+                return;
+
             _scenePresenter.Render(_sceneComposer.DirectAccessBitmap);
         }
 

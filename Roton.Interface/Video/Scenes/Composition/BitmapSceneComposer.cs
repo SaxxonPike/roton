@@ -12,6 +12,8 @@ namespace Roton.Interface.Video.Scenes.Composition
         private readonly int _stride;
         private readonly int[] _offsetLookUpTable;
         private readonly int[] _colors;
+        private bool _hideBlinkingCharacters;
+        private bool _useFullBrightBackgrounds;
 
         public BitmapSceneComposer(
             IGlyphComposer glyphComposer, 
@@ -29,7 +31,7 @@ namespace Roton.Interface.Video.Scenes.Composition
             _colors = paletteComposer.ComposeAllColors().Select(c => c.ToArgb()).ToArray();
         }
 
-        protected override void OnGlyphUpdated(int index, AnsiChar ac)
+        protected sealed override void OnGlyphUpdated(int index, AnsiChar ac)
         {
             base.OnGlyphUpdated(index, ac);
             DrawGlyph(ac, _offsetLookUpTable[index]);
@@ -44,9 +46,12 @@ namespace Roton.Interface.Video.Scenes.Composition
             var height = glyph.Height;
             var baseOffset = offset;
             var inputOffset = 0;
-            var foregroundColor = _colors[ac.Color & 0x0F];
-            var backgroundColor = _colors[ac.Color >> 4];
-
+            var backgroundColor = _useFullBrightBackgrounds
+                ? _colors[ac.Color >> 4]
+                : _colors[(ac.Color >> 4) & 0x7];
+            var foregroundColor = !_hideBlinkingCharacters || (ac.Color & 0x80) == 0
+                ? _colors[ac.Color & 0x0F]
+                : backgroundColor;
             for (var y = 0; y < height; y++)
             {
                 var outputOffset = baseOffset;
@@ -66,6 +71,39 @@ namespace Roton.Interface.Video.Scenes.Composition
             DirectAccessBitmap?.Dispose();
         }
 
-        public bool HideBlinkingCharacters { get; set; }
+        private void UpdateAllBlinkingCharacters()
+        {
+            for (var y = 0; y < Rows; y++)
+            {
+                for (var x = 0; x < Columns; x++)
+                {
+                    var index = GetBufferOffset(x, y);
+                    var c = Chars[index];
+                    if ((c.Color & 0x80) != 0)
+                        OnGlyphUpdated(index, Chars[index]);
+                }
+            }
+        }
+
+        public bool HideBlinkingCharacters
+        {
+            get { return _hideBlinkingCharacters; }
+            set
+            {
+                _hideBlinkingCharacters = value;
+                if (!UseFullBrightBackgrounds)
+                    UpdateAllBlinkingCharacters();
+            }
+        }
+
+        public bool UseFullBrightBackgrounds
+        {
+            get { return _useFullBrightBackgrounds; }
+            set
+            {
+                _useFullBrightBackgrounds = value;
+                UpdateAllBlinkingCharacters();
+            }
+        }
     }
 }

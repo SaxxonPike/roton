@@ -19,13 +19,9 @@ namespace Roton.Interface.Video.Scenes.Presentation
 
             var glNewTexture = GL.GenTexture();
 
-            //var fbData = gameBitmap.LockBits(new Rectangle(0, 0, gameBitmap.Width, gameBitmap.Height), ImageLockMode.ReadOnly,
-            //    PixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, glNewTexture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, gameBitmap.Width, gameBitmap.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, gameBitmap.BitsPointer);
-            //gameBitmap.UnlockBits(fbData);
-
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                 (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,

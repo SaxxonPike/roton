@@ -53,7 +53,7 @@ namespace Roton.Interface.Video.Scenes.Composition
             return (x < 0 || x >= Columns || y < 0 || y >= Rows);
         }
 
-        private int GetBufferOffset(int x, int y)
+        protected int GetBufferOffset(int x, int y)
         {
             return x + y * Columns;
         }
