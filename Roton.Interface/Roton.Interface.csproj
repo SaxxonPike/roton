@@ -62,6 +62,7 @@
     <Compile Include="Video\Glyphs\IGlyph.cs" />
     <Compile Include="Video\Scenes\Composition\FastBitmap.cs" />
     <Compile Include="Video\Controls\IEditorTerminal.cs" />
+    <Compile Include="Video\Scenes\Composition\IBitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\IFastBitmap.cs" />
     <Compile Include="Video\Controls\IGameTerminal.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />

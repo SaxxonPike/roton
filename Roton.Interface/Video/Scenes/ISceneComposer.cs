@@ -6,7 +6,9 @@ namespace Roton.Interface.Video.Scenes
     {
         AnsiChar GetChar(int x, int y);
         int Rows { get; }
+        void RefreshChar(int x, int y);
         void SetChar(int x, int y, AnsiChar ac);
         int Columns { get; }
+        bool HideBlinkingCharacters { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Roton.Interface.Video.Palettes;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
-    public class BitmapSceneComposer : ISceneComposer, IDisposable
+    public class BitmapSceneComposer : IBitmapSceneComposer
     {
         private readonly IGlyphComposer _glyphComposer;
         private readonly AnsiChar[] _chars;
@@ -57,6 +57,12 @@ namespace Roton.Interface.Video.Scenes.Composition
 
         public int Rows { get; }
 
+        public void RefreshChar(int x, int y)
+        {
+            var index = GetBufferOffset(x, y);
+            DrawGlyphAtIndex(_chars[index], index);
+        }
+
         public void SetChar(int x, int y, AnsiChar ac)
         {
             if (IsOutOfBounds(x, y))
@@ -64,10 +70,15 @@ namespace Roton.Interface.Video.Scenes.Composition
 
             var index = GetBufferOffset(x, y);
             _chars[index] = ac;
-            DrawGlyph(ac, _offsetLookUpTable[index]);
+            DrawGlyphAtIndex(ac, index);
         }
 
         public int Columns { get; }
+
+        private void DrawGlyphAtIndex(AnsiChar ac, int index)
+        {
+            DrawGlyph(ac, _offsetLookUpTable[index]);
+        }
 
         private void DrawGlyph(AnsiChar ac, int offset)
         {
@@ -99,5 +110,7 @@ namespace Roton.Interface.Video.Scenes.Composition
         {
             Bitmap?.Dispose();
         }
+
+        public bool HideBlinkingCharacters { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Roton.Interface.Video
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
         private readonly KeysBuffer _keys;
 
-        private BitmapSceneComposer _sceneComposer;
+        private IBitmapSceneComposer _sceneComposer;
         private readonly IRenderer _renderer;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
@@ -220,8 +220,7 @@ namespace Roton.Interface.Video
 
         private void Blink()
         {
-            //SuspendLayout();
-            Blinking = !Blinking;
+            _sceneComposer.HideBlinkingCharacters = !_sceneComposer.HideBlinkingCharacters;
             if (_terminalWidth > 0 && _terminalHeight > 0 && (_sceneComposer != null))
             {
                 var i = 0;
@@ -238,7 +237,6 @@ namespace Roton.Interface.Video
                     }
                 }
             }
-            //ResumeLayout();
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -264,16 +262,7 @@ namespace Roton.Interface.Video
         {
             if (x >= 0 && x < _terminalWidth && y >= 0 && y < _terminalHeight)
             {
-                var drawX = x*_glyphComposer.MaxWidth;
-                var drawY = y*_glyphComposer.MaxHeight;
-                var bgColor = _paletteComposer.ComposeColor((ac.Color >> 4) & (BlinkEnabled ? 0x7 : 0xF));
-                var fgColor = BlinkEnabled && Blinking && (ac.Color & 0x80) != 0
-                    ? bgColor
-                    : _paletteComposer.ComposeColor(ac.Color & 0xF);
-                using (var renderedGlyph = _glyphComposer.ComposeGlyph(ac.Char).RenderToFastBitmap(fgColor, bgColor))
-                {
-                    
-                }
+                _sceneComposer.SetChar(x, y, ac);
             }
         }
 
