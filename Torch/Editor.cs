@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace Torch
         private readonly IEditorTerminal _terminal;
         private IActor _actor;
         private IContext _context;
+        private bool _unsavedChanges;
 
         public Editor()
         {
@@ -419,16 +421,6 @@ namespace Torch
             UpdateColor();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                components?.Dispose();
-            }
-            timerDaemon.Dispose();
-            base.Dispose(disposing);
-        }
-
         private void EditCode()
         {
             codeEditor.Visible = true;
@@ -656,24 +648,24 @@ namespace Torch
             }
         }
 
-        private void SaveWorld()
+        private DialogResult SaveWorld()
         {
             if (string.IsNullOrWhiteSpace(WorldFileName))
             {
-                SaveWorldAs();
+                return SaveWorldAs();
             }
-            else
-            {
-                Context.Save(WorldFileName);
-            }
+            Context.Save(WorldFileName);
+            return DialogResult.OK;
         }
 
-        private void SaveWorldAs()
+        private DialogResult SaveWorldAs()
         {
-            if (ShowSaveWorld() == DialogResult.OK)
+            var result = ShowSaveWorld();
+            if (result == DialogResult.OK)
             {
                 Context.Save(WorldFileName);
             }
+            return result;
         }
 
         private void SelectBoard(int parameterIndex)
@@ -963,6 +955,33 @@ namespace Torch
             boardInfoLabel.Text = $"{Context.Boards[Context.WorldData.BoardIndex].Data.Length + 2}/20000";
             worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (_unsavedChanges)
+            {
+                switch (
+                    MessageBox.Show(this, "There are unsaved changes. Save them?", "Confirmation",
+                        MessageBoxButtons.YesNoCancel))
+                {
+                    case DialogResult.Yes:
+                        if (SaveWorld() != DialogResult.OK)
+                            e.Cancel = true;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
+
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            timerDaemon.StopAll();
+            base.OnClosed(e);
         }
     }
 }

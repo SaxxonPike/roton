@@ -155,5 +155,11 @@ namespace Lyon
                        ? string.Empty
                        : " [" + Context.WorldData.Name + "]");
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            timerDaemon.StopAll();
+            base.OnClosed(e);
+        }
     }
 }
