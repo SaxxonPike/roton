@@ -10,10 +10,10 @@ using Roton.Extensions;
 using Roton.FileIo;
 using Roton.Interface.Resources;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Controls;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Scenes.Presentation;
+using Roton.Interface.Video.Terminals;
 using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;
 
@@ -40,7 +40,7 @@ namespace Torch
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            _terminal = new TerminalControl(new OpenGlScenePresenter())
+            _terminal = new OpenGlTerminal(new OpenGlScenePresenter())
             {
                 Top = 0,
                 Left = 0,

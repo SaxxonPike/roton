@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Roton.Interface.Video.Controls
+namespace Roton.Interface.Video.Terminals
 {
     public interface IEditorTerminal : IGameTerminal
     {

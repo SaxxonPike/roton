@@ -2,7 +2,7 @@
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 
-namespace Roton.Interface.Video.Controls
+namespace Roton.Interface.Video.Terminals
 {
     public interface IGameTerminal : ITerminal
     {

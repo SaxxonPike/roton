@@ -39,17 +39,17 @@ namespace Roton.Interface.Video.Scenes.Presentation
         /// Renders the scene. If <see cref="FormControl" /> is assigned, its
         /// buffer will be swapped on each render call.
         /// </summary>
-        /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        public void Render(IDirectAccessBitmap gameBitmap)
+        /// <param name="composer">Composer to obtain the bitmap data from.</param>
+        public void Render(IBitmapSceneComposer composer)
         {
             if (!_glReady) return;
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             // Don't draw anything if the Bitmap is null.
-            if (gameBitmap == null) return;
+            if (composer == null) return;
 
-            GenerateTexture(gameBitmap);
+            GenerateTexture(composer.DirectAccessBitmap);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();

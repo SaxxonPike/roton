@@ -31,8 +31,8 @@ namespace Roton.Interface.Video.Scenes.Presentation
         /// <summary>
         /// Renders the scene.
         /// </summary>
-        /// <param name="gameBitmap">A reference to the frame that should be rendered.</param>
-        void Render(IDirectAccessBitmap gameBitmap);
+        /// <param name="composer">The composer to pull bitmap data from.</param>
+        void Render(IBitmapSceneComposer composer);
 
         /// <summary>
         /// Updates the viewport of the renderer. This should be called when

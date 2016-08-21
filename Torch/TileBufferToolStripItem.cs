@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Controls;
+using Roton.Interface.Video.Terminals;
 
 namespace Torch
 {
@@ -26,6 +26,6 @@ namespace Torch
             InitializeComponent();
         }
 
-        public TerminalControl TerminalControl { get; set; }
+        public OpenGlTerminal OpenGlTerminal { get; set; }
     }
 }

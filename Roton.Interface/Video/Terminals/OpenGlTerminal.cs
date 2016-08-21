@@ -13,9 +13,9 @@ using Roton.Interface.Video.Scenes.Composition;
 using Roton.Interface.Video.Scenes.Presentation;
 using Message = System.Windows.Forms.Message;
 
-namespace Roton.Interface.Video.Controls
+namespace Roton.Interface.Video.Terminals
 {
-    public partial class TerminalControl : UserControl, IEditorTerminal
+    public partial class OpenGlTerminal : UserControl, IEditorTerminal
     {
         private static readonly Encoding DosEncoding = Encoding.GetEncoding(437);
         private readonly KeysBuffer _keys;
@@ -30,7 +30,7 @@ namespace Roton.Interface.Video.Controls
         private int _terminalWidth;
         private bool _wideMode;
 
-        public TerminalControl(IOpenGlScenePresenter scenePresenter)
+        public OpenGlTerminal(IOpenGlScenePresenter scenePresenter)
         {
             _terminalWidth = 80;
             _terminalHeight = 25;
@@ -156,6 +156,11 @@ namespace Roton.Interface.Video.Controls
             }
         }
 
+        public AnsiChar Read(int x, int y)
+        {
+            return _sceneComposer.GetChar(x, y);
+        }
+
         public void SetSize(int width, int height, bool wide)
         {
             if (width == 0 || height == 0)
@@ -221,7 +226,7 @@ namespace Roton.Interface.Video.Controls
             if (ParentForm?.WindowState == FormWindowState.Minimized)
                 return;
 
-            _scenePresenter.Render(_sceneComposer.DirectAccessBitmap);
+            _scenePresenter.Render(_sceneComposer);
         }
 
         /// <summary>
