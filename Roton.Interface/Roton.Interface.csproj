@@ -53,6 +53,10 @@
     <Compile Include="Extensions\GlyphExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
     <Compile Include="Extensions\SceneComposerExtensions.cs" />
+    <Compile Include="Extensions\TimerDaemonExtensions.cs" />
+    <Compile Include="Synchronization\ITimedEvent.cs" />
+    <Compile Include="Synchronization\ITimerDaemon.cs" />
+    <Compile Include="Synchronization\TimedEvent.cs" />
     <Compile Include="Video\Glyphs\AutoDetectBinaryGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\CachedGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\Glyph.cs" />

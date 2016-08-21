@@ -41,7 +41,7 @@ namespace Lyon
             InitializeComponent();
             InitializeEvents();
 
-            _terminal = new OpenGlTerminal(new OpenGlScenePresenter())
+            _terminal = new OpenGlTerminal(new OpenGlScenePresenter(), timerDaemon)
             {
                 Top = 0,
                 Left = 0,

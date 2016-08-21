@@ -7,6 +7,7 @@ using Roton.Core;
 using Roton.Interface.Extensions;
 using Roton.Interface.Input;
 using Roton.Interface.Resources;
+using Roton.Interface.Synchronization;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Scenes.Composition;
@@ -22,6 +23,7 @@ namespace Roton.Interface.Video.Terminals
 
         private IBitmapSceneComposer _sceneComposer;
         private readonly IOpenGlScenePresenter _scenePresenter;
+        private readonly ITimerDaemon _timerDaemon;
         private bool _shiftHoldX;
         private bool _shiftHoldY;
         private IGlyphComposer _glyphComposer;
@@ -30,7 +32,7 @@ namespace Roton.Interface.Video.Terminals
         private int _terminalWidth;
         private bool _wideMode;
 
-        public OpenGlTerminal(IOpenGlScenePresenter scenePresenter)
+        public OpenGlTerminal(IOpenGlScenePresenter scenePresenter, ITimerDaemon timerDaemon)
         {
             _terminalWidth = 80;
             _terminalHeight = 25;
@@ -48,6 +50,7 @@ namespace Roton.Interface.Video.Terminals
 
             // Set renderer.
             _scenePresenter = scenePresenter;
+            _timerDaemon = timerDaemon;
         }
 
         private bool Alt

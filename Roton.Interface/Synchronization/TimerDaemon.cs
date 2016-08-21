@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Roton.Interface.Synchronization
 {
-    public partial class TimerDaemon : Component
+    public partial class TimerDaemon : Component, ITimerDaemon
     {
         private bool _disposed;
         private bool _paused;
