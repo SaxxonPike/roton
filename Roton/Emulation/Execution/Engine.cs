@@ -240,8 +240,6 @@ namespace Roton.Emulation.Execution
                 {
                     if (element.Id == Elements.EmptyId)
                         pushable = true;
-                    else if (!element.IsPushable)
-                        pushable = false;
                 }
             }
         }

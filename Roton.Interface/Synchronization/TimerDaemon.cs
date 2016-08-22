@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Roton.Interface.Synchronization
 {
-    public partial class TimerDaemon : Component
+    public partial class TimerDaemon : Component, ITimerDaemon
     {
         private bool _disposed;
         private bool _paused;
@@ -73,7 +73,7 @@ namespace Roton.Interface.Synchronization
         public int Start(Action executionMethod, double frequency)
         {
             var thread = new Thread(TimerThreadMethod);
-            var info = new TimerDaemonInfo(executionMethod, frequency, thread);
+            var info = new TimerDaemonInfo(executionMethod, frequency);
             TimerThreads[TimerThreadIndex++] = info;
             thread.Start(info);
             return TimerThreadIndex - 1;
@@ -131,7 +131,7 @@ namespace Roton.Interface.Synchronization
 
         private class TimerDaemonInfo
         {
-            public TimerDaemonInfo(Action m, double f, Thread t)
+            public TimerDaemonInfo(Action m, double f)
             {
                 Method = m;
                 Frequency = f;

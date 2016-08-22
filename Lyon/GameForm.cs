@@ -3,8 +3,12 @@ using System.IO;
 using System.Windows.Forms;
 using Roton.Core;
 using Roton.FileIo;
+using Roton.Interface.Resources;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Renderer;
+using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Palettes;
+using Roton.Interface.Video.Scenes.Presentation;
+using Roton.Interface.Video.Terminals;
 using Roton.Interface.Windows;
 
 namespace Lyon
@@ -31,21 +35,21 @@ namespace Lyon
         private void CommonSetup()
         {
             // Set up default font and palette.
-            var font1 = new RasterFont();
-            var palette1 = new Palette();
+            var font1 = new AutoDetectBinaryGlyphComposer(CommonResourceZipFileSystem.Default.GetFont());
+            var palette1 = new VgaPaletteComposer(CommonResourceZipFileSystem.Default.GetPalette());
 
             InitializeComponent();
             InitializeEvents();
 
-            _terminal = new Terminal(new OpenGl3())
+            _terminal = new OpenGlTerminal(new OpenGlScenePresenter(), timerDaemon)
             {
                 Top = 0,
                 Left = 0,
                 Width = 640,
                 Height = 350,
                 AutoSize = true,
-                TerminalFont = font1,
-                TerminalPalette = palette1
+                GlyphComposer = font1,
+                PaletteComposer = palette1
             };
 
             mainPanel.Controls.Add((UserControl) _terminal);
@@ -150,6 +154,12 @@ namespace Lyon
                    (string.IsNullOrWhiteSpace(Context.WorldData.Name)
                        ? string.Empty
                        : " [" + Context.WorldData.Name + "]");
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            timerDaemon.StopAll();
+            base.OnClosed(e);
         }
     }
 }

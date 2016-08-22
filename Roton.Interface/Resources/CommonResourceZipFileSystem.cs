@@ -4,13 +4,10 @@ namespace Roton.Interface.Resources
 {
     public class CommonResourceZipFileSystem : ZipFileSystem, ICommonResourceArchive
     {
+        public static readonly ICommonResourceArchive Default = new CommonResourceZipFileSystem(Properties.Resources.resources);
+
         public CommonResourceZipFileSystem(byte[] file) : base(file)
         {
-        }
-
-        public byte[] GetDrumAudio(int index)
-        {
-            return GetFile(GetCombinedPath("audio", $"{index}.bin"));
         }
 
         public byte[] GetFont()
@@ -21,11 +18,6 @@ namespace Roton.Interface.Resources
         public byte[] GetPalette()
         {
             return GetFile(GetCombinedPath("system", "palette.bin"));
-        }
-
-        public byte[] GetPlayerStepAudio()
-        {
-            return GetFile(GetCombinedPath("audio", "player.bin"));
         }
     }
 }

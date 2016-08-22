@@ -17,10 +17,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Deploy\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,15 +46,31 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\Composition\AudioComposer.cs" />
+    <Compile Include="Audio\Composition\IAudioComposer.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Video\FastBitmap.cs" />
-    <Compile Include="Video\Glyph.cs" />
-    <Compile Include="Video\IEditorTerminal.cs" />
-    <Compile Include="Video\IFastBitmap.cs" />
-    <Compile Include="Video\IGameTerminal.cs" />
-    <Compile Include="Video\IGlyph.cs" />
-    <Compile Include="Video\IPalette.cs" />
-    <Compile Include="Video\IRasterFont.cs" />
+    <Compile Include="Extensions\GlyphComposerExtensions.cs" />
+    <Compile Include="Extensions\GlyphExtensions.cs" />
+    <Compile Include="Extensions\PaletteComposerExtensions.cs" />
+    <Compile Include="Extensions\SceneComposerExtensions.cs" />
+    <Compile Include="Extensions\TimerDaemonExtensions.cs" />
+    <Compile Include="Synchronization\ITimedEvent.cs" />
+    <Compile Include="Synchronization\ITimerDaemon.cs" />
+    <Compile Include="Synchronization\TimedEvent.cs" />
+    <Compile Include="Video\Glyphs\AutoDetectBinaryGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\CachedGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\Glyph.cs" />
+    <Compile Include="Video\Glyphs\ScaledGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\BitmapFont.cs" />
+    <Compile Include="Video\Glyphs\VgaGlyphComposer.cs" />
+    <Compile Include="Video\Glyphs\IGlyph.cs" />
+    <Compile Include="Video\Scenes\Composition\CallbackSceneComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\DirectAccessBitmap.cs" />
+    <Compile Include="Video\Terminals\IEditorTerminal.cs" />
+    <Compile Include="Video\Scenes\Composition\IBitmapSceneComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\IDirectAccessBitmap.cs" />
+    <Compile Include="Video\Terminals\IGameTerminal.cs" />
+    <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Input\Keyboard.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -61,33 +78,36 @@
       <DependentUpon>Keyboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\KeysBuffer.cs" />
+    <Compile Include="Video\Palettes\CachedPaletteComposer.cs" />
+    <Compile Include="Video\Palettes\IPaletteComposer.cs" />
+    <Compile Include="Video\Palettes\VgaPaletteComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\BitmapSceneComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\SceneComposer.cs" />
+    <Compile Include="Video\Scenes\Composition\ISceneComposer.cs" />
+    <Compile Include="Video\Terminals\Vt100Terminal.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
-    <Compile Include="Video\Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Video\RasterFont.cs" />
-    <Compile Include="Video\Renderer\IRenderer.cs" />
-    <Compile Include="Video\Renderer\OpenGl3.cs" />
-    <Compile Include="Video\Renderer\Renderer.cs" />
+    <Compile Include="Video\Scenes\Presentation\IOpenGlScenePresenter.cs" />
+    <Compile Include="Video\Scenes\Presentation\OpenGlScenePresenter.cs" />
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />
-    <Compile Include="Audio\SoundStream.cs" />
-    <Compile Include="Audio\Speaker.cs">
+    <Compile Include="Audio\Controls\Speaker.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Audio\Speaker.Designer.cs">
+    <Compile Include="Audio\Controls\Speaker.Designer.cs">
       <DependentUpon>Speaker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Video\Terminal.cs">
+    <Compile Include="Video\Terminals\OpenGlTerminal.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Video\Terminal.Designer.cs">
-      <DependentUpon>Terminal.cs</DependentUpon>
+    <Compile Include="Video\Terminals\OpenGlTerminal.Designer.cs">
+      <DependentUpon>OpenGlTerminal.cs</DependentUpon>
     </Compile>
     <Compile Include="Synchronization\TimerDaemon.cs">
       <SubType>Component</SubType>
@@ -107,13 +127,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Video\Terminal.resx">
-      <DependentUpon>Terminal.cs</DependentUpon>
+    <EmbeddedResource Include="Video\Terminals\OpenGlTerminal.resx">
+      <DependentUpon>OpenGlTerminal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\resources.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Audio\Presentation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

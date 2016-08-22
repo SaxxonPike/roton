@@ -1,6 +1,7 @@
 ﻿using Roton.Core;
 using Roton.Interface;
 using Roton.Interface.Audio;
+using Roton.Interface.Audio.Controls;
 
 namespace Lyon
 {
@@ -55,8 +56,9 @@ namespace Lyon
             this.scale3xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale4xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scale5xMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.speaker = new Roton.Interface.Audio.Speaker(this.components);
+            this.speaker = new Roton.Interface.Audio.Controls.Speaker(this.components);
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.timerDaemon = new Roton.Interface.Synchronization.TimerDaemon(this.components);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -160,31 +162,31 @@ namespace Lyon
             // scale1xMenuItem
             // 
             this.scale1xMenuItem.Name = "scale1xMenuItem";
-            this.scale1xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale1xMenuItem.Size = new System.Drawing.Size(115, 22);
             this.scale1xMenuItem.Text = "Scale &1x";
             // 
             // scale2xMenuItem
             // 
             this.scale2xMenuItem.Name = "scale2xMenuItem";
-            this.scale2xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale2xMenuItem.Size = new System.Drawing.Size(115, 22);
             this.scale2xMenuItem.Text = "Scale &2x";
             // 
             // scale3xMenuItem
             // 
             this.scale3xMenuItem.Name = "scale3xMenuItem";
-            this.scale3xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale3xMenuItem.Size = new System.Drawing.Size(115, 22);
             this.scale3xMenuItem.Text = "Scale &3x";
             // 
             // scale4xMenuItem
             // 
             this.scale4xMenuItem.Name = "scale4xMenuItem";
-            this.scale4xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale4xMenuItem.Size = new System.Drawing.Size(115, 22);
             this.scale4xMenuItem.Text = "Scale &4x";
             // 
             // scale5xMenuItem
             // 
             this.scale5xMenuItem.Name = "scale5xMenuItem";
-            this.scale5xMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scale5xMenuItem.Size = new System.Drawing.Size(115, 22);
             this.scale5xMenuItem.Text = "Scale &5x";
             // 
             // mainPanel
@@ -196,6 +198,10 @@ namespace Lyon
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(330, 275);
             this.mainPanel.TabIndex = 1;
+            // 
+            // timerDaemon
+            // 
+            this.timerDaemon.Paused = false;
             // 
             // GameForm
             // 
@@ -237,6 +243,7 @@ namespace Lyon
         private System.Windows.Forms.ToolStripMenuItem saveWorldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale4xMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scale5xMenuItem;
+        private Roton.Interface.Synchronization.TimerDaemon timerDaemon;
     }
 }
 

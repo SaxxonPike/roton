@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -8,8 +9,12 @@ using Lyon;
 using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
+using Roton.Interface.Resources;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Renderer;
+using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Palettes;
+using Roton.Interface.Video.Scenes.Presentation;
+using Roton.Interface.Video.Terminals;
 using Roton.Interface.Windows;
 using Message = System.Windows.Forms.Message;
 
@@ -24,11 +29,12 @@ namespace Torch
         private readonly IEditorTerminal _terminal;
         private IActor _actor;
         private IContext _context;
+        private bool _unsavedChanges;
 
-        public Editor(bool openGl = false)
+        public Editor()
         {
-            var font1 = new RasterFont();
-            var palette1 = new Palette();
+            var font1 = new AutoDetectBinaryGlyphComposer(CommonResourceZipFileSystem.Default.GetFont());
+            var palette1 = new VgaPaletteComposer(CommonResourceZipFileSystem.Default.GetPalette());
 
             InitializeComponent();
             Load += (sender, e) => { OnLoad(); };
@@ -36,15 +42,15 @@ namespace Torch
             toolStrip3.Items.Add(new TileBufferToolStripItem());
 
             // Select and initialize the appropriate terminal.
-            _terminal = new Terminal(new OpenGl3())
+            _terminal = new OpenGlTerminal(new OpenGlScenePresenter(), timerDaemon)
             {
                 Top = 0,
                 Left = 0,
                 Width = 640,
                 Height = 350,
                 AutoSize = true,
-                TerminalFont = font1,
-                TerminalPalette = palette1
+                GlyphComposer = font1,
+                PaletteComposer = palette1
             };
 
             mainPanel.Controls.Add((UserControl) _terminal);
@@ -415,16 +421,6 @@ namespace Torch
             UpdateColor();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                components?.Dispose();
-            }
-            timerDaemon.Dispose();
-            base.Dispose(disposing);
-        }
-
         private void EditCode()
         {
             codeEditor.Visible = true;
@@ -652,24 +648,24 @@ namespace Torch
             }
         }
 
-        private void SaveWorld()
+        private DialogResult SaveWorld()
         {
             if (string.IsNullOrWhiteSpace(WorldFileName))
             {
-                SaveWorldAs();
+                return SaveWorldAs();
             }
-            else
-            {
-                Context.Save(WorldFileName);
-            }
+            Context.Save(WorldFileName);
+            return DialogResult.OK;
         }
 
-        private void SaveWorldAs()
+        private DialogResult SaveWorldAs()
         {
-            if (ShowSaveWorld() == DialogResult.OK)
+            var result = ShowSaveWorld();
+            if (result == DialogResult.OK)
             {
                 Context.Save(WorldFileName);
             }
+            return result;
         }
 
         private void SelectBoard(int parameterIndex)
@@ -890,8 +886,8 @@ namespace Torch
 
         private void UpdateColor()
         {
-            UpdateColorButton(foregroundColorButton, _terminal.TerminalPalette[Color & 0x0F]);
-            UpdateColorButton(backgroundColorButton, _terminal.TerminalPalette[(Color >> 4) & 0x0F]);
+            UpdateColorButton(foregroundColorButton, _terminal.PaletteComposer.ComposeColor(Color & 0x0F));
+            UpdateColorButton(backgroundColorButton, _terminal.PaletteComposer.ComposeColor((Color >> 4) & 0x0F));
         }
 
         private void UpdateColorButton(ToolStripButton button, Color backgroundColor)
@@ -959,6 +955,33 @@ namespace Torch
             boardInfoLabel.Text = $"{Context.Boards[Context.WorldData.BoardIndex].Data.Length + 2}/20000";
             worldInfoLabel.Text = $"{Context.WorldSize}/360000";
             UpdateActors();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (_unsavedChanges)
+            {
+                switch (
+                    MessageBox.Show(this, "There are unsaved changes. Save them?", "Confirmation",
+                        MessageBoxButtons.YesNoCancel))
+                {
+                    case DialogResult.Yes:
+                        if (SaveWorld() != DialogResult.OK)
+                            e.Cancel = true;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
+
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            timerDaemon.StopAll();
+            base.OnClosed(e);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Roton.Interface;
 using Roton.Interface.Audio;
+using Roton.Interface.Audio.Controls;
 using Roton.Interface.Input;
 using Roton.Interface.Synchronization;
 
