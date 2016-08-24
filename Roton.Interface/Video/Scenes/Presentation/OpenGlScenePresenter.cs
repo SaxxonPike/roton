@@ -14,7 +14,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
     public class OpenGlScenePresenter : IOpenGlScenePresenter
     {
         private int _glLastTexture = -1;
-        private bool _glReady;
+        private bool _glReady => OpenTK.Graphics.GraphicsContext.CurrentContext != null;
         public GLControl FormControl { get; set; }
         public double TerminalHeight { get; set; }
         public double TerminalWidth { get; set; }
@@ -32,7 +32,6 @@ namespace Roton.Interface.Video.Scenes.Presentation
             GL.Disable(EnableCap.Lighting); // unnecessary
             GL.Disable(EnableCap.DepthTest); // unnecessary
             GL.Enable(EnableCap.Texture2D); // required for FBOs to work
-            _glReady = true;
         }
 
         /// <summary>
