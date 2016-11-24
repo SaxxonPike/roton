@@ -2,7 +2,7 @@
 using Roton.Core;
 using Roton.Interface.Windows;
 
-namespace Lyon
+namespace Lyon.Dialogs
 {
     public class SaveWorldDialog : IFileDialog
     {

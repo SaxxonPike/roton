@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Lyon.Dialogs;
 
 namespace Lyon
 {

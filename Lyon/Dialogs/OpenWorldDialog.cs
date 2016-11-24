@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Roton.Interface.Windows;
 
-namespace Lyon
+namespace Lyon.Dialogs
 {
     public class OpenWorldDialog : IFileDialog
     {
