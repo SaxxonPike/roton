@@ -2,12 +2,10 @@
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
-    public interface ISceneComposer
+    public interface ISceneComposer : ITerminal
     {
-        AnsiChar GetChar(int x, int y);
         int Rows { get; }
-        void RefreshChar(int x, int y);
-        void SetChar(int x, int y, AnsiChar ac);
+        void Update(int x, int y);
         int Columns { get; }
     }
 }

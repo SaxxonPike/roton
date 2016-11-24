@@ -31,14 +31,6 @@ namespace Roton.Emulation.SuperZZT
             PlayerTimer = new MemoryTimer(_memory, 0xB95E);
         }
 
-        public int MainTime { get; set; }
-
-        public int VisibleTileCount
-        {
-            get { return 96*80; }
-            set { }
-        }
-
         public bool AboutShown { get; set; }
 
         public int ActIndex

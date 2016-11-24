@@ -11,14 +11,11 @@ namespace Roton.Emulation.Behavior
         {
             var actor = engine.Actors[index];
             var vector = new Vector();
-            if (actor.P1 >= engine.SyncRandomNumber(10))
-            {
-                vector.CopyFrom(engine.Seek(actor.Location));
-            }
-            else
-            {
-                vector.CopyFrom(engine.Rnd());
-            }
+
+            vector.CopyFrom(actor.P1 >= engine.SyncRandomNumber(10)
+                ? engine.Seek(actor.Location)
+                : engine.Rnd());
+
             var target = actor.Location.Sum(vector);
             var element = engine.ElementAt(target);
             if (element.IsFloor)

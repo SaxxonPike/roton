@@ -19,7 +19,7 @@ namespace Roton.Interface.Video.Scenes.Composition
             IGlyphComposer glyphComposer, 
             IPaletteComposer paletteComposer,
             int columns, 
-            int rows) : base(rows, columns)
+            int rows) : base(columns, rows)
         {
             var charTotal = Columns * Rows;
             _glyphComposer = new CachedGlyphComposer(glyphComposer);

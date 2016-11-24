@@ -9,7 +9,7 @@ namespace Roton.Interface.Audio.Composition
     {
         private const double AccumulatorMultiplier = 1000;
 
-        private readonly IDrumBank _drumBank;
+        private readonly Func<IDrumBank> _getDrumBank;
         private readonly int _samplesPerDrumFrequency;
         private readonly int[] _frequencyDutyCycleTable;
         private readonly int _accumulatorLimit;
@@ -24,8 +24,13 @@ namespace Roton.Interface.Audio.Composition
         private int _accumulator;
 
         public AudioComposer(IDrumBank drumBank, int outputSampleRate, int samplesPerDrumFrequency)
+            : this(() => drumBank, outputSampleRate, samplesPerDrumFrequency)
         {
-            _drumBank = drumBank;
+        }
+
+        public AudioComposer(Func<IDrumBank> getDrumBank, int outputSampleRate, int samplesPerDrumFrequency)
+        {
+            _getDrumBank = getDrumBank;
             _samplesPerDrumFrequency = samplesPerDrumFrequency;
             _accumulatorLimit = (int)(outputSampleRate * AccumulatorMultiplier);
 
@@ -80,7 +85,10 @@ namespace Roton.Interface.Audio.Composition
         public void PlayDrum(int index)
         {
             _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-            _currentDrumSound = _drumBank[index];
+            _currentDrumSound = _getDrumBank()?[index];
+            if (_currentDrumSound == null)
+                return;
+
             _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
             _drumSoundFrequencyIndex = 0;
             _accumulatorAmount = _currentDrumSound[0];

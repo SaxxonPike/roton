@@ -36,10 +36,6 @@
       <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.GLControl.1.1.2349.61993\lib\NET40\OpenTK.GLControl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Audio\Composition\AudioComposer.cs" />
     <Compile Include="Audio\Composition\IAudioComposer.cs" />
-    <Compile Include="Exceptions.cs" />
+    <Compile Include="Audio\Presentation\OpenAlAudioPresenter.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\GlyphExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />
@@ -64,12 +60,10 @@
     <Compile Include="Video\Glyphs\BitmapFont.cs" />
     <Compile Include="Video\Glyphs\VgaGlyphComposer.cs" />
     <Compile Include="Video\Glyphs\IGlyph.cs" />
-    <Compile Include="Video\Scenes\Composition\CallbackSceneComposer.cs" />
+    <Compile Include="Video\IOpenGlScenePresenterWindow.cs" />
     <Compile Include="Video\Scenes\Composition\DirectAccessBitmap.cs" />
-    <Compile Include="Video\Terminals\IEditorTerminal.cs" />
     <Compile Include="Video\Scenes\Composition\IBitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\IDirectAccessBitmap.cs" />
-    <Compile Include="Video\Terminals\IGameTerminal.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
     <Compile Include="Input\Keyboard.cs">
       <SubType>Component</SubType>
@@ -84,6 +78,7 @@
     <Compile Include="Video\Scenes\Composition\BitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\SceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\ISceneComposer.cs" />
+    <Compile Include="Windows\IFileDialog.cs" />
     <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -96,18 +91,6 @@
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
     <Compile Include="Windows\SaveWorldDialog.cs" />
-    <Compile Include="Audio\Controls\Speaker.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Audio\Controls\Speaker.Designer.cs">
-      <DependentUpon>Speaker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Video\Terminals\OpenGlTerminal.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Video\Terminals\OpenGlTerminal.Designer.cs">
-      <DependentUpon>OpenGlTerminal.cs</DependentUpon>
-    </Compile>
     <Compile Include="Synchronization\TimerDaemon.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -126,9 +109,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Video\Terminals\OpenGlTerminal.resx">
-      <DependentUpon>OpenGlTerminal.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -136,9 +116,7 @@
     <None Include="packages.config" />
     <None Include="Resources\resources.zip" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Audio\Presentation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
