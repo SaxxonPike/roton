@@ -1,9 +1,10 @@
 ﻿using System.Windows.Forms;
 using Roton.Core;
+using Roton.Interface.Windows;
 
-namespace Roton.Interface.Windows
+namespace Lyon
 {
-    public class SaveWorldDialog
+    public class SaveWorldDialog : IFileDialog
     {
         private static string UnknownFilter
             => string.Join("|",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Lyon
@@ -11,8 +12,16 @@ namespace Lyon
         [STAThread]
         private static void Main()
         {
-            var game = new Game();
-            game.Run();
+            var openWorldDialog = new OpenWorldDialog();
+            if (openWorldDialog.ShowDialog() == DialogResult.OK)
+            {
+                var game = new Game();
+                var data = File.ReadAllBytes(openWorldDialog.FileName);
+                using (var stream = new MemoryStream(data))
+                {
+                    game.Run(stream);
+                }
+            }
         }
     }
 }

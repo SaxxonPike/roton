@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Roton.Interface.Audio.Presentation
+﻿namespace Roton.Interface.Audio.Presentation
 {
     public class OpenAlAudioPresenter
     {

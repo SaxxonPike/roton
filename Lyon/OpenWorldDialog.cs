@@ -1,8 +1,9 @@
 ﻿using System.Windows.Forms;
+using Roton.Interface.Windows;
 
-namespace Roton.Interface.Windows
+namespace Lyon
 {
-    public class OpenWorldDialog
+    public class OpenWorldDialog : IFileDialog
     {
         private static string Filter
             => string.Join("|",

@@ -39,7 +39,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\Composition\AudioComposer.cs" />
@@ -65,13 +64,7 @@
     <Compile Include="Video\Scenes\Composition\IBitmapSceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\IDirectAccessBitmap.cs" />
     <Compile Include="Video\Glyphs\IGlyphComposer.cs" />
-    <Compile Include="Input\Keyboard.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Input\Keyboard.Designer.cs">
-      <DependentUpon>Keyboard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Input\KeysBuffer.cs" />
+    <Compile Include="Input\OpenTkKeyBuffer.cs" />
     <Compile Include="Video\Palettes\CachedPaletteComposer.cs" />
     <Compile Include="Video\Palettes\IPaletteComposer.cs" />
     <Compile Include="Video\Palettes\VgaPaletteComposer.cs" />
@@ -79,7 +72,6 @@
     <Compile Include="Video\Scenes\Composition\SceneComposer.cs" />
     <Compile Include="Video\Scenes\Composition\ISceneComposer.cs" />
     <Compile Include="Windows\IFileDialog.cs" />
-    <Compile Include="Windows\OpenWorldDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -90,7 +82,6 @@
     <Compile Include="Video\Scenes\Presentation\OpenGlScenePresenter.cs" />
     <Compile Include="Resources\CommonResourceZipFileSystem.cs" />
     <Compile Include="Resources\ICommonResourceArchive.cs" />
-    <Compile Include="Windows\SaveWorldDialog.cs" />
     <Compile Include="Synchronization\TimerDaemon.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using OpenTK.Input;
 using Roton.Core;
 
 namespace Roton.Interface.Input
 {
-    public class KeysBuffer : IKeyboard
+    public class OpenTkKeyBuffer : IKeyboard
     {
         private static readonly Encoding Enc = Encoding.GetEncoding(437);
         private readonly Queue<int> _queue = new Queue<int>();

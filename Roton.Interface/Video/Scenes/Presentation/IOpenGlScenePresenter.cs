@@ -1,8 +1,4 @@
-﻿using OpenTK;
-using OpenTK.Platform;
-using Roton.Interface.Video.Scenes.Composition;
-
-namespace Roton.Interface.Video.Scenes.Presentation
+﻿namespace Roton.Interface.Video.Scenes.Presentation
 {
     /// <summary>
     /// The OpenGL rendering interface.
