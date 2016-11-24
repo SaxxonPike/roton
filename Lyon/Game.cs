@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.JsonPath.LambdaCompilation.ObjectDynamicExtension;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Input;
@@ -13,7 +12,6 @@ using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Scenes.Composition;
 using Roton.Interface.Video.Scenes.Presentation;
-using Roton.Resources;
 using KeyPressEventArgs = OpenTK.KeyPressEventArgs;
 
 namespace Lyon
@@ -22,7 +20,6 @@ namespace Lyon
     {
         private class Window : GameWindow, IOpenGlScenePresenterWindow
         {
-            private readonly Func<IBitmapSceneComposer> _getComposer;
             private readonly Func<IContext> _getContext;
             private readonly KeysBuffer _keysBuffer;
             private readonly IOpenGlScenePresenter _presenter;
@@ -32,7 +29,6 @@ namespace Lyon
                 Func<IContext> getContext,
                 KeysBuffer keysBuffer)
             {
-                _getComposer = getComposer;
                 _getContext = getContext;
                 _keysBuffer = keysBuffer;
                 _presenter = new OpenGlScenePresenter(getComposer, () => this);
@@ -54,14 +50,14 @@ namespace Lyon
 
             protected override void OnKeyDown(KeyboardKeyEventArgs e)
             {
-                _keysBuffer.Press((Keys)e.Key);
+                _keysBuffer.Press(e.Key);
                 UpdateKey(e);
                 base.OnKeyDown(e);
             }
 
             protected override void OnKeyPress(KeyPressEventArgs e)
             {
-                _keysBuffer.Press((Keys)e.KeyChar);
+                _keysBuffer.Press(e.KeyChar);
                 base.OnKeyPress(e);
             }
 

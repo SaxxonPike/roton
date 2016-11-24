@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using OpenTK.Input;
 using Roton.Core;
 
 namespace Roton.Interface.Input
@@ -53,35 +54,31 @@ namespace Roton.Interface.Input
             }
         }
 
-        private int GetCode(Keys data)
+        private int GetCode(Key data)
         {
-            var code = data & Keys.KeyCode;
-            var shift = ((data & Keys.Shift) != 0) ^ CapsLock;
-            var alt = (data & Keys.Alt) != 0;
-            var ctrl = (data & Keys.Control) != 0;
-            switch (code)
+            switch (data)
             {
-                case Keys.Back:
+                case Key.Back:
                     return 0x08;
-                case Keys.Down:
+                case Key.Down:
                     return 0xD0;
-                case Keys.Enter:
+                case Key.Enter:
                     return 0x0D;
-                case Keys.Escape:
+                case Key.Escape:
                     return 0x1B;
-                case Keys.Left:
+                case Key.Left:
                     return 0xCB;
-                case Keys.PageDown:
+                case Key.PageDown:
                     return 0xD1;
-                case Keys.PageUp:
+                case Key.PageUp:
                     return 0xC9;
-                case Keys.Right:
+                case Key.Right:
                     return 0xCD;
-                case Keys.Space:
+                case Key.Space:
                     return 0x20;
-                case Keys.Tab:
+                case Key.Tab:
                     return 0x09;
-                case Keys.Up:
+                case Key.Up:
                     return 0xC8;
             }
             return -1;
@@ -109,7 +106,7 @@ namespace Roton.Interface.Input
             }
         }
 
-        public bool Press(Keys data)
+        public bool Press(Key data)
         {
             var code = GetCode(data);
             if (code >= 0)
