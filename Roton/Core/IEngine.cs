@@ -82,6 +82,5 @@ namespace Roton.Core
         void UpdateRadius(IXyPair location, RadiusMode mode);
         void UpdateStatus();
         void WaitForTick();
-        void ExecuteOnce();
     }
 }

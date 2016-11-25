@@ -72,10 +72,6 @@ namespace Roton.Core
                     Engine.State.ActIndex++;
                 }
             }
-            else
-            {
-                Engine.ExecuteOnce();
-            }
         }
 
         public void PackBoard() => Engine.PackBoard();
