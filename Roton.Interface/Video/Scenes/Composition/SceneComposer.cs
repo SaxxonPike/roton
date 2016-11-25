@@ -1,10 +1,13 @@
 ﻿using System.Text;
 using Roton.Core;
+using Roton.Interface.Events;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
     public class SceneComposer : ISceneComposer
     {
+        public event SetSizeEventHandler AfterSetSize;
+
         protected AnsiChar[] Chars;
         private readonly AnsiChar _blankCharacter;
         private readonly Encoding _codePage437 = Encoding.GetEncoding(437);
@@ -22,6 +25,8 @@ namespace Roton.Interface.Video.Scenes.Composition
 
             var charTotal = Columns * Rows;
             Chars = new AnsiChar[charTotal];
+
+            AfterSetSize?.Invoke(this, new SetSizeEventArgs { Width = width, Height = height, Wide = wide });
         }
 
         public virtual void Write(int x, int y, string value, int color)

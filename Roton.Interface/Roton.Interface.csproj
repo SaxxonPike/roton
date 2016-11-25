@@ -44,6 +44,7 @@
     <Compile Include="Audio\Composition\AudioComposer.cs" />
     <Compile Include="Audio\Composition\IAudioComposer.cs" />
     <Compile Include="Audio\Presentation\OpenAlAudioPresenter.cs" />
+    <Compile Include="Events\SetSizeEventArgs.cs" />
     <Compile Include="Extensions\GlyphComposerExtensions.cs" />
     <Compile Include="Extensions\GlyphExtensions.cs" />
     <Compile Include="Extensions\PaletteComposerExtensions.cs" />

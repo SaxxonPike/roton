@@ -6,6 +6,7 @@ using OpenTK.Input;
 using Roton.Core;
 using Roton.FileIo;
 using Roton.Interface.Audio.Composition;
+using Roton.Interface.Events;
 using Roton.Interface.Input;
 using Roton.Interface.Resources;
 using Roton.Interface.Video;
@@ -72,6 +73,12 @@ namespace Lyon
                 _presenter.Render();
                 base.OnRenderFrame(e);
             }
+
+            protected override void OnResize(EventArgs e)
+            {
+                base.OnResize(e);
+                _presenter.UpdateViewport();
+            }
         }
 
         private Window _window;
@@ -96,10 +103,21 @@ namespace Lyon
         {
             var oldSceneComposer = _sceneComposer;
             _sceneComposer = new BitmapSceneComposer(_glyphComposer, _paletteComposer, width, height);
+            _sceneComposer.AfterSetSize += OnSetSize;
+            SetSize(width, height, wide);
+            oldSceneComposer?.Dispose();
+        }
+
+        private void SetSize(int width, int height, bool wide)
+        {
             var newWidth = width * _glyphComposer.MaxWidth * (wide ? 2 : 1);
             var newHeight = height * _glyphComposer.MaxHeight;
             _window?.SetSize(newWidth, newHeight);
-            oldSceneComposer?.Dispose();
+        }
+
+        private void OnSetSize(object sender, SetSizeEventArgs e)
+        {
+            SetSize(e.Width, e.Height, e.Wide);
         }
 
         private EngineConfiguration GetDefaultConfiguration(IFileSystem fileSystem)

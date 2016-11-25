@@ -9,8 +9,8 @@ namespace Roton.Interface.Video.Scenes.Composition
     public class BitmapSceneComposer : SceneComposer, IBitmapSceneComposer
     {
         private readonly IGlyphComposer _glyphComposer;
-        private readonly int _stride;
-        private readonly int[] _offsetLookUpTable;
+        private int _stride;
+        private int[] _offsetLookUpTable;
         private readonly int[] _colors;
         private bool _hideBlinkingCharacters;
         private bool _useFullBrightBackgrounds;
@@ -21,14 +21,29 @@ namespace Roton.Interface.Video.Scenes.Composition
             int columns, 
             int rows) : base(columns, rows)
         {
-            var charTotal = Columns * Rows;
             _glyphComposer = new CachedGlyphComposer(glyphComposer);
-            _stride = Columns * glyphComposer.MaxWidth;
-            _offsetLookUpTable = Enumerable.Range(0, charTotal)
-                .Select(i => glyphComposer.MaxWidth * (i % Columns) + glyphComposer.MaxHeight * _stride * (i / Columns))
-                .ToArray();
-            DirectAccessBitmap = new DirectAccessBitmap(_stride, Rows * glyphComposer.MaxHeight);
             _colors = paletteComposer.ComposeAllColors().Select(c => c.ToArgb()).ToArray();
+            InitializeNewBitmap();
+        }
+
+        public override void SetSize(int width, int height, bool wide)
+        {
+            base.SetSize(width, height, wide);
+            InitializeNewBitmap();
+        }
+
+        private void InitializeNewBitmap()
+        {
+            if (_glyphComposer == null)
+                return;
+
+            var charTotal = Columns * Rows;
+            _stride = Columns * _glyphComposer.MaxWidth;
+            _offsetLookUpTable = Enumerable.Range(0, charTotal)
+                .Select(i => _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * _stride * (i / Columns))
+                .ToArray();
+            DirectAccessBitmap?.Dispose();
+            DirectAccessBitmap = new DirectAccessBitmap(_stride, Rows * _glyphComposer.MaxHeight);
         }
 
         protected sealed override void OnGlyphUpdated(int index, AnsiChar ac)
@@ -64,7 +79,7 @@ namespace Roton.Interface.Video.Scenes.Composition
             }
         }
 
-        public IDirectAccessBitmap DirectAccessBitmap { get; }
+        public IDirectAccessBitmap DirectAccessBitmap { get; private set; }
 
         public void Dispose()
         {
