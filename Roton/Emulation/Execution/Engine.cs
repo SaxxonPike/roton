@@ -1293,6 +1293,27 @@ namespace Roton.Emulation.Execution
             TimerTick++;
         }
 
+        public void ExecuteOnce()
+        {
+            if (State.ActIndex > State.ActorCount)
+            {
+                if (!State.BreakGameLoop && !State.GamePaused)
+                {
+                    if (State.GameWaitTime <= 0 || State.PlayerTimer.Clock(State.GameWaitTime))
+                    {
+                        State.GameCycle++;
+                        if (State.GameCycle > 420)
+                        {
+                            State.GameCycle = 1;
+                        }
+                        State.ActIndex = 0;
+                        ReadInput();
+                    }
+                }
+                WaitForTick();
+            }
+        }
+
         public abstract IWorld World { get; }
 
         protected virtual bool ActorIsLocked(int index)
@@ -1608,23 +1629,7 @@ namespace Roton.Emulation.Execution
                     }
                 }
 
-                if (State.ActIndex > State.ActorCount)
-                {
-                    if (!State.BreakGameLoop && !State.GamePaused)
-                    {
-                        if (State.GameWaitTime <= 0 || State.PlayerTimer.Clock(State.GameWaitTime))
-                        {
-                            State.GameCycle++;
-                            if (State.GameCycle > 420)
-                            {
-                                State.GameCycle = 1;
-                            }
-                            State.ActIndex = 0;
-                            ReadInput();
-                        }
-                    }
-                    WaitForTick();
-                }
+                ExecuteOnce();
 
                 if (State.BreakGameLoop)
                 {
