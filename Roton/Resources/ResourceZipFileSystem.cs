@@ -3,37 +3,14 @@ using Roton.FileIo;
 
 namespace Roton.Resources
 {
-    public class ResourceZipFileSystem : ZipFileSystem, IResourceArchive
+    public static class ResourceZipFileSystem
     {
-        public static readonly IResourceArchive Default = new ResourceZipFileSystem(Properties.Resources.resources);
+        public static IFileSystem Root => GetPrependedFileSystem("root/");
+        public static IFileSystem System => GetPrependedFileSystem("system/");
 
-        public ResourceZipFileSystem(byte[] file) : base(file)
+        private static IFileSystem GetPrependedFileSystem(string path)
         {
-        }
-
-        public IEnumerable<string> GetRootFileNames()
-        {
-            return GetFileNames("root");
-        }
-
-        public byte[] GetSuperZztElementData()
-        {
-            return GetFile(GetCombinedPath("system", "elements-szzt.bin"));
-        }
-
-        public byte[] GetSuperZztMemoryData()
-        {
-            return GetFile(GetCombinedPath("system", "memory-szzt.bin"));
-        }
-
-        public byte[] GetZztElementData()
-        {
-            return GetFile(GetCombinedPath("system", "elements-zzt.bin"));
-        }
-
-        public byte[] GetZztMemoryData()
-        {
-            return GetFile(GetCombinedPath("system", "memory-zzt.bin"));
+            return new PrependedFileSystem(new ZipFileSystem(Properties.Resources.resources), path);
         }
     }
 }

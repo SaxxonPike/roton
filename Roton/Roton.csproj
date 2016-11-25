@@ -149,6 +149,8 @@
     <Compile Include="Emulation\ZZT\ZztAlerts.cs" />
     <Compile Include="Emulation\ZZT\ZztDrumBank.cs" />
     <Compile Include="Emulation\ZZT\ZztMessage.cs" />
+    <Compile Include="Events\DataEventArgs.cs" />
+    <Compile Include="Events\StreamEventArgs.cs" />
     <Compile Include="Extensions\ElementListExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
     <Compile Include="Extensions\SearchContextExtensions.cs" />
@@ -169,6 +171,8 @@
     <Compile Include="Core\IGameSerializer.cs" />
     <Compile Include="Core\ITileGrid.cs" />
     <Compile Include="Core\IOopContext.cs" />
+    <Compile Include="FileIo\PrependedFileSystem.cs" />
+    <Compile Include="FileIo\FixedFileSystem.cs" />
     <Compile Include="FileIo\ZipFileSystem.cs" />
     <Compile Include="Emulation\Execution\Grammar.cs" />
     <Compile Include="Core\ISoundSet.cs" />

@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Mapping;
+using Roton.Events;
 using Roton.FileIo;
 
 namespace Roton.Core
 {
     public interface IEngine
     {
+        event DataEventHandler RequestReplaceContext;
+
         IActorList Actors { get; }
         IAlerts Alerts { get; }
         IBoard Board { get; }

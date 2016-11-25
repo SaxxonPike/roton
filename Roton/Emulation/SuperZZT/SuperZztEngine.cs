@@ -117,6 +117,11 @@ namespace Roton.Emulation.SuperZZT
             return false;
         }
 
+        protected override string GetWorldName(string baseName)
+        {
+            return $"{baseName}.SZT";
+        }
+
         public override void RemoveItem(IXyPair location)
         {
             var result = new Tile(Elements.FloorId, 0x00);

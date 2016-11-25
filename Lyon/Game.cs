@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using OpenTK;
 using OpenTK.Input;
@@ -101,11 +102,11 @@ namespace Lyon
             oldSceneComposer?.Dispose();
         }
 
-        private IEngineConfiguration GetDefaultConfiguration()
+        private EngineConfiguration GetDefaultConfiguration(IFileSystem fileSystem)
         {
             return new EngineConfiguration
             {
-                Disk = new DiskFileSystem(),
+                Disk = fileSystem,
                 EditorMode = false,
                 Keyboard = _openTkKeyBuffer,
                 RandomSeed = 0,
@@ -117,14 +118,14 @@ namespace Lyon
         private void InitializeEmptyContext()
         {
             _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(), ContextEngine.Zzt);
+            _context = new Context(GetDefaultConfiguration(new DiskFileSystem()), ContextEngine.Zzt);
             _context.Start();
         }
 
         private void InitializeContextFromStream(Stream stream)
         {
             _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(), stream);
+            _context = new Context(GetDefaultConfiguration(new DiskFileSystem()), stream);
             _context.Start();
         }
 
@@ -177,6 +178,19 @@ namespace Lyon
         {
             _initializeContext = () => InitializeContextFromStream(stream);
             RunCommon();
+        }
+
+        public void Run(string path)
+        {
+            _initializeContext = () => InitializeContextFromPath(path);
+            RunCommon();
+        }
+
+        private void InitializeContextFromPath(string path)
+        {
+            _context?.Stop();
+            _context = new Context(GetDefaultConfiguration(new DiskFileSystem(Path.GetDirectoryName(path))), File.ReadAllBytes(path));
+            _context.Start();
         }
     }
 }

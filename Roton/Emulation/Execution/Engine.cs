@@ -7,6 +7,7 @@ using System.Threading;
 using Roton.Core;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.Timing;
+using Roton.Events;
 using Roton.Extensions;
 using Roton.FileIo;
 
@@ -14,6 +15,8 @@ namespace Roton.Emulation.Execution
 {
     internal abstract class Engine : IEngine
     {
+        public event DataEventHandler RequestReplaceContext;
+
         private readonly IEngineConfiguration _config;
         private int _timerTick;
 
@@ -24,7 +27,7 @@ namespace Roton.Emulation.Execution
             Memory = new Memory();
             Random = new Randomizer(new RandomState());
             SyncRandom = new Randomizer(new RandomState(config.RandomSeed));
-            Disk = config.Disk;
+            Timer = new CoreTimer();
         }
 
         private ITile BorderTile => State.BorderTile;
@@ -37,7 +40,9 @@ namespace Roton.Emulation.Execution
 
         private IRandomizer SyncRandom { get; }
 
-        private int TimerBase => CoreTimer.Tick & 0x7FFF;
+        private CoreTimer Timer { get; }
+
+        private int TimerBase => Timer.Tick & 0x7FFF;
 
         private Thread Thread { get; set; }
 
@@ -257,7 +262,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public IFileSystem Disk { get; set; }
+        public IFileSystem Disk => _config.Disk;
 
         public virtual AnsiChar Draw(IXyPair location)
         {
@@ -1171,7 +1176,7 @@ namespace Roton.Emulation.Execution
             {
                 ThreadActive = true;
                 Thread = new Thread(StartMain);
-                TimerTick = CoreTimer.Tick;
+                TimerTick = Timer.Tick;
                 Thread.Start();
             }
         }
@@ -1464,6 +1469,7 @@ namespace Roton.Emulation.Execution
 
         protected virtual byte[] LoadFile(string filename)
         {
+
             try
             {
                 return Disk.GetFile(filename);
@@ -1660,13 +1666,17 @@ namespace Roton.Emulation.Execution
 
         public bool PlayWorld()
         {
-            bool gameIsActive;
+            var gameIsActive = false;
 
             if (World.IsLocked)
             {
-                // reload world here
-                gameIsActive = State.WorldLoaded;
-                State.StartBoard = World.BoardIndex;
+                var file = LoadFile(GetWorldName(string.IsNullOrWhiteSpace(World.Name) ? State.WorldFileName : World.Name));
+                if (file != null)
+                {
+                    RequestReplaceContext?.Invoke(this, new DataEventArgs { Data = file });
+                    gameIsActive = State.WorldLoaded;
+                    State.StartBoard = World.BoardIndex;
+                }
             }
             else
             {
@@ -1684,6 +1694,8 @@ namespace Roton.Emulation.Execution
 
             return gameIsActive;
         }
+
+        protected abstract string GetWorldName(string baseName);
 
         protected virtual void ReadInput()
         {

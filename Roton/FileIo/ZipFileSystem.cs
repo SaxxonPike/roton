@@ -19,18 +19,6 @@ namespace Roton.FileIo
             return string.Join("/", paths);
         }
 
-        public IEnumerable<string> GetDirectoryNames(string path)
-        {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = ZipFile.Read(archiveStream))
-            {
-                return archive.Entries
-                    .Where(e => e.IsDirectory && e.FileName.StartsWith(path) && e.FileName != path)
-                    .Select(e => e.FileName.Split('/').Last())
-                    .ToList();
-            }
-        }
-
         public byte[] GetFile(string filename)
         {
             using (var archiveStream = new MemoryStream(_file))
@@ -59,14 +47,6 @@ namespace Roton.FileIo
                     .Select(e => e.FileName.Split('/').Last())
                     .ToList();
             }
-        }
-
-        public string GetParentPath(string path)
-        {
-            var paths = path.Split('/').Where(d => !string.IsNullOrEmpty(d)).ToList();
-            return paths.Count > 1
-                ? string.Join("/", paths.Take(paths.Count - 1))
-                : path;
         }
 
         public void PutFile(string filename, byte[] data)

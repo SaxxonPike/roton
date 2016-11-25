@@ -7,37 +7,30 @@ namespace Roton.FileIo
 {
     public class DiskFileSystem : IFileSystem
     {
-        public string GetCombinedPath(params string[] paths)
+        private readonly string _basePath;
+
+        public DiskFileSystem() : this(Environment.CurrentDirectory)
         {
-            return Path.Combine(paths);
         }
 
-        public IEnumerable<string> GetDirectoryNames(string path)
+        public DiskFileSystem(string basePath)
         {
-            return Directory.GetDirectories(Path.IsPathRooted(path)
-                ? path
-                : Path.Combine(Environment.CurrentDirectory, path))
-                .Select(p => new DirectoryInfo(p).Name);
+            _basePath = basePath;
         }
 
         public byte[] GetFile(string path)
         {
             return File.ReadAllBytes(Path.IsPathRooted(path)
                 ? path
-                : Path.Combine(Environment.CurrentDirectory, path));
+                : Path.Combine(_basePath, path));
         }
 
         public IEnumerable<string> GetFileNames(string path)
         {
             return Directory.GetFiles(Path.IsPathRooted(path)
                 ? path
-                : Path.Combine(Environment.CurrentDirectory, path))
+                : Path.Combine(_basePath, path))
                 .Select(p => new FileInfo(p).Name);
-        }
-
-        public string GetParentPath(string path)
-        {
-            return new DirectoryInfo(path).Parent?.Name ?? path;
         }
 
         public void PutFile(string path, byte[] data)

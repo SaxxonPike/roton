@@ -4,15 +4,15 @@ using System.Threading;
 namespace Roton.Emulation.Timing
 {
     // this is the master core timer, it'll automatically start and stop when it is queried regularly
-    internal static class CoreTimer
+    internal class CoreTimer
     {
-        private static int _maxLaggedTicks;
+        private int _maxLaggedTicks;
 
-        private static int _tick;
+        private int _tick;
 
-        public static bool Initialized { get; private set; }
+        public bool Initialized { get; private set; }
 
-        public static int MaxLaggedTicks
+        public int MaxLaggedTicks
         {
             get
             {
@@ -25,7 +25,7 @@ namespace Roton.Emulation.Timing
             set { _maxLaggedTicks = value; }
         }
 
-        public static int Tick
+        public int Tick
         {
             get
             {
@@ -39,9 +39,9 @@ namespace Roton.Emulation.Timing
             set { _tick = value; }
         }
 
-        private static int TicksUntilShutdown { get; set; }
+        private int TicksUntilShutdown { get; set; }
 
-        private static void Initialize()
+        private void Initialize()
         {
             if (!Initialized)
             {
@@ -51,12 +51,12 @@ namespace Roton.Emulation.Timing
             }
         }
 
-        private static void ResetShutdown()
+        private void ResetShutdown()
         {
             TicksUntilShutdown = 50;
         }
 
-        private static void ThreadLoop()
+        private void ThreadLoop()
         {
             var timer = new Stopwatch();
             var frequency = Stopwatch.Frequency*10L/718L;
@@ -85,7 +85,7 @@ namespace Roton.Emulation.Timing
             UnInitialize();
         }
 
-        private static void UnInitialize()
+        private void UnInitialize()
         {
             Initialized = false;
         }

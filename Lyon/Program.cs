@@ -17,11 +17,7 @@ namespace Lyon
             if (openWorldDialog.ShowDialog() == DialogResult.OK)
             {
                 var game = new Game();
-                var data = File.ReadAllBytes(openWorldDialog.FileName);
-                using (var stream = new MemoryStream(data))
-                {
-                    game.Run(stream);
-                }
+                game.Run(openWorldDialog.FileName);
             }
         }
     }

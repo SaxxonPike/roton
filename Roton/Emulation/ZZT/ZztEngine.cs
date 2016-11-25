@@ -111,5 +111,10 @@ namespace Roton.Emulation.ZZT
             }
             return false;
         }
+
+        protected override string GetWorldName(string baseName)
+        {
+            return $"{baseName}.ZZT";
+        }
     }
 }
