@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Roton.FileIo;
+﻿using Roton.FileIo;
 
 namespace Roton.Resources
 {

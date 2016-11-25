@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Roton.Resources
+﻿namespace Roton.Resources
 {
     public interface IResourceArchive
     {

@@ -4,7 +4,7 @@ using Roton.Interface.Windows;
 
 namespace Lyon.Dialogs
 {
-    public class SaveWorldDialog : IFileDialog
+    public class SaveWorldDialog : ISaveFileDialog
     {
         private static string UnknownFilter
             => string.Join("|",
@@ -42,7 +42,7 @@ namespace Lyon.Dialogs
 
         public string FileName => _dialog.FileName;
 
-        public DialogResult ShowDialog(IWorld worldInfo)
+        public FileDialogResult ShowDialog(IWorld worldInfo)
         {
             if (worldInfo.IsLocked)
             {
@@ -63,7 +63,7 @@ namespace Lyon.Dialogs
                         break;
                 }
             }
-            return _dialog.ShowDialog();
+            return (FileDialogResult) _dialog.ShowDialog();
         }
     }
 }

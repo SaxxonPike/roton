@@ -31,7 +31,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
         /// <summary>
         /// Initializes the OpenGL renderer.
         /// </summary>
-        public void Init()
+        private void Init()
         {
             // If a GLControl is assigned, it must be set as the current context
             // before anything happens.
@@ -44,10 +44,8 @@ namespace Roton.Interface.Video.Scenes.Presentation
         }
 
         /// <summary>
-        /// Renders the scene. If <see cref="FormControl" /> is assigned, its
-        /// buffer will be swapped on each render call.
+        /// Renders the scene.
         /// </summary>
-        /// <param name="composer">Composer to obtain the bitmap data from.</param>
         public void Render()
         {
             if (!_glReady) return;
@@ -107,7 +105,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
                 (int)TextureMagFilter.Nearest);
 
-            if(_glLastTexture != -1)
+            if (_glLastTexture != -1)
                 GL.DeleteTexture(_glLastTexture);
             _glLastTexture = glNewTexture;
         }

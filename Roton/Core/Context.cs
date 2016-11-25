@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Roton.Emulation.Mapping;
@@ -11,6 +12,8 @@ namespace Roton.Core
 {
     public sealed class Context : IContext
     {
+        public event EventHandler Terminated;
+
         private const int MaxGameCycle = 420;
         private readonly IEngineConfiguration _config;
 
@@ -135,6 +138,7 @@ namespace Roton.Core
             }
 
             Engine.RequestReplaceContext += OnEngineRequestReplaceContext;
+            Engine.Terminated += (s, e) => Terminated?.Invoke(s, e);
             Engine.ClearWorld();
         }
 

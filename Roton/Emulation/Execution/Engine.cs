@@ -15,6 +15,7 @@ namespace Roton.Emulation.Execution
 {
     internal abstract class Engine : IEngine
     {
+        public event EventHandler Terminated;
         public event DataEventHandler RequestReplaceContext;
 
         private readonly IEngineConfiguration _config;
@@ -1785,7 +1786,7 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        protected virtual void StartMain()
+        protected virtual void StartInit()
         {
             State.GameSpeed = 4;
             State.DefaultSaveName = "SAVED";
@@ -1800,8 +1801,13 @@ namespace Roton.Emulation.Execution
                 SetEditorMode();
             else
                 SetGameMode();
+        }
 
+        protected virtual void StartMain()
+        {
+            StartInit();
             TitleScreenLoop();
+            Terminated?.Invoke(this, EventArgs.Empty);
         }
 
         private void StopSound()

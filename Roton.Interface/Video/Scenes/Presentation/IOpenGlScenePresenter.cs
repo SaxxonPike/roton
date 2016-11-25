@@ -6,11 +6,6 @@
     public interface IOpenGlScenePresenter
     {
         /// <summary>
-        /// Initializes the OpenGL renderer.
-        /// </summary>
-        void Init();
-
-        /// <summary>
         /// Renders the scene.
         /// </summary>
         void Render();

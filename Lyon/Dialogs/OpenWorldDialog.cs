@@ -3,7 +3,7 @@ using Roton.Interface.Windows;
 
 namespace Lyon.Dialogs
 {
-    public class OpenWorldDialog : IFileDialog
+    public class OpenWorldDialog : IOpenFileDialog
     {
         private static string Filter
             => string.Join("|",
@@ -29,6 +29,6 @@ namespace Lyon.Dialogs
 
         public string FileName => _dialog.FileName;
 
-        public DialogResult ShowDialog() => _dialog.ShowDialog();
+        public FileDialogResult ShowDialog() => (FileDialogResult) _dialog.ShowDialog();
     }
 }

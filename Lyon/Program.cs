@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Windows.Forms;
 using Lyon.Dialogs;
+using Roton.Interface.Windows;
 
 namespace Lyon
 {
@@ -14,7 +13,7 @@ namespace Lyon
         private static void Main()
         {
             var openWorldDialog = new OpenWorldDialog();
-            if (openWorldDialog.ShowDialog() == DialogResult.OK)
+            if (openWorldDialog.ShowDialog() == FileDialogResult.Ok)
             {
                 var game = new Game();
                 game.Run(openWorldDialog.FileName);
