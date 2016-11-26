@@ -93,8 +93,8 @@ namespace Lyon
         {
             var fontData = CommonResourceZipFileSystem.Default.GetFont();
             var paletteData = CommonResourceZipFileSystem.Default.GetPalette();
-            _glyphComposer = new AutoDetectBinaryGlyphComposer(fontData);
-            _paletteComposer = new VgaPaletteComposer(paletteData);
+            _glyphComposer = new CachedGlyphComposer(new AutoDetectBinaryGlyphComposer(fontData));
+            _paletteComposer = new CachedPaletteComposer(new VgaPaletteComposer(paletteData));
             _openTkKeyBuffer = new OpenTkKeyBuffer();
         }
 
