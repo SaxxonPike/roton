@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
 </Project>
