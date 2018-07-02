@@ -24,13 +24,13 @@ namespace Roton.Interface.Video.Scenes.Composition
         int Width { get; }
 
         /// <summary>
-        /// Inner .NET Bitmap object.
-        /// </summary>
-        Bitmap InnerBitmap { get; }
-
-        /// <summary>
         /// Pointer to the raw bit data.
         /// </summary>
         IntPtr BitsPointer { get; }
+        
+        /// <summary>
+        /// Stride of the bitmap.
+        /// </summary>
+        int Stride { get; }
     }
 }

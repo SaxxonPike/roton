@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Roton.Interface.Video.Scenes.Composition;
 
 namespace Roton.Interface.Video.Terminals
 {
@@ -12,7 +12,7 @@ namespace Roton.Interface.Video.Terminals
         void AttachKeyHandler(Form form);
 
         event MouseEventHandler MouseDown;
-        Bitmap RenderAll();
-        Bitmap RenderSingle(int character, int color);
+        IDirectAccessBitmap RenderAll();
+        IDirectAccessBitmap RenderSingle(int character, int color);
     }
 }

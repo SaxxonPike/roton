@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Lyon;
+using OpenTK.Graphics;
 using Roton.Core;
 using Roton.Extensions;
 using Roton.FileIo;
@@ -13,6 +15,7 @@ using Roton.Interface.Resources;
 using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
+using Roton.Interface.Video.Scenes.Composition;
 using Roton.Interface.Video.Scenes.Presentation;
 using Roton.Interface.Video.Terminals;
 using Roton.Interface.Windows;
@@ -141,7 +144,7 @@ namespace Torch
                 var item = new ToolStripMenuItem
                 {
                     Text = $"Char #{i} / {i:x2}h",
-                    Image = _terminal.RenderSingle(i, Color),
+                    Image = RenderBitmap(_terminal.RenderSingle(i, Color)),
                     ImageScaling = ToolStripItemImageScaling.None,
                     Tag = i
                 };
@@ -190,7 +193,7 @@ namespace Torch
                     {
                         Text = "(&" + char.ConvertFromUtf32(element.MenuKey) + ") " + element.Name,
                         Tag = index,
-                        Image = _terminal.RenderSingle(element.Character, GetDefaultColor(element)),
+                        Image = RenderBitmap(_terminal.RenderSingle(element.Character, GetDefaultColor(element))),
                         ImageScaling = ToolStripItemImageScaling.None
                     };
                     item.Click +=
@@ -636,12 +639,20 @@ namespace Torch
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        private Bitmap RenderBitmap(IDirectAccessBitmap source)
+        {
+            return new Bitmap(source.Width, source.Height, source.Stride, PixelFormat.Format32bppArgb, source.BitsPointer);
+        }/// <summary>
+         /// ///
+         /// </summary>
+
         private void SaveScreenshot()
         {
             var result = ShowSaveScreenshot();
             if (result.Result == DialogResult.OK)
             {
-                using (var bitmap = _terminal.RenderAll())
+                var source = _terminal.RenderAll();
+                using (var bitmap = RenderBitmap(source))
                 {
                     bitmap.Save(result.FileName);
                 }
@@ -890,9 +901,14 @@ namespace Torch
             UpdateColorButton(backgroundColorButton, _terminal.PaletteComposer.ComposeColor((Color >> 4) & 0x0F));
         }
 
-        private void UpdateColorButton(ToolStripButton button, Color backgroundColor)
+        private Color ConvertColor(Color4 color)
         {
-            button.BackColor = backgroundColor;
+            return System.Drawing.Color.FromArgb((int)(256f * color.R), (int)(256f * color.G), (int)(256f * color.B));
+        }
+
+        private void UpdateColorButton(ToolStripButton button, Color4 backgroundColor)
+        {
+            button.BackColor = ConvertColor(backgroundColor);
 
             // ensure foreground text is always visible by contrast
             button.ForeColor = (backgroundColor.R + backgroundColor.G + backgroundColor.B)/3 >= 0x80

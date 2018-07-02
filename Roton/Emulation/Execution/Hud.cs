@@ -99,6 +99,8 @@ namespace Roton.Emulation.Execution
 
         public virtual IScrollResult ShowScroll(IEnumerable<string> lines)
         {
+            // TODO: Actually implement scroll window
+            
             // Fallback scroll implementation
             //MessageBox.Show(string.Join(Environment.NewLine, lines));
             return new ScrollResult {SelectedLine = -1};

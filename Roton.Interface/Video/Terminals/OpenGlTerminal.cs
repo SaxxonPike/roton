@@ -82,30 +82,32 @@ namespace Roton.Interface.Video.Terminals
         public int CursorX { get; set; }
         public int CursorY { get; set; }
 
-        public Bitmap RenderAll()
+        public IDirectAccessBitmap RenderAll()
         {
-            return new Bitmap(_sceneComposer.DirectAccessBitmap.InnerBitmap);
+            return _sceneComposer.DirectAccessBitmap;
         }
 
-        public Bitmap RenderSingle(int character, int color)
+        public IDirectAccessBitmap RenderSingle(int character, int color)
         {
             color = TranslateColorIndex(color);
-            var result = new Bitmap(_glyphComposer
+            var result = _glyphComposer
                 .ComposeGlyph(character)
-                .RenderToFastBitmap(_paletteComposer.ComposeColor(color & 0xF), _paletteComposer.ComposeColor(color >> 4))
-                .InnerBitmap);
-            if (_wideMode)
-            {
-                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
-                using (var g = Graphics.FromImage(wideResult))
-                {
-                    g.PixelOffsetMode = PixelOffsetMode.Half;
-                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
-                }
-                result.Dispose();
-                return wideResult;
-            }
+                .RenderToFastBitmap(_paletteComposer.ComposeColor(color & 0xF), _paletteComposer.ComposeColor(color >> 4));
+
+            // TODO: Do this in the editor, not here.
+
+//            if (_wideMode)
+//            {
+//                var wideResult = new Bitmap(result.Width*2, result.Height, result.PixelFormat);
+//                using (var g = Graphics.FromImage(wideResult))
+//                {
+//                    g.PixelOffsetMode = PixelOffsetMode.Half;
+//                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+//                    g.DrawImage(result, 0, 0, wideResult.Width, wideResult.Height);
+//                }
+//                result.Dispose();
+//                return wideResult;
+//            }
             return result;
         }
 
@@ -347,30 +349,32 @@ namespace Roton.Interface.Video.Terminals
                 for (var x = 0; x < _terminalWidth; x++)
                     Draw(x, y, _sceneComposer.GetChar(x, y));
 
-            // Update the cursor if it's enabled and the bitmap is valid.
-            if (!CursorEnabled || _sceneComposer == null) return;
-            using (var g = Graphics.FromImage(_sceneComposer.DirectAccessBitmap.InnerBitmap))
-            {
-                using (
-                    Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
-                        dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
-                {
-                    var outerRect = new Rectangle(CursorX*_glyphComposer.MaxWidth, CursorY*_glyphComposer.MaxHeight,
-                        _glyphComposer.MaxWidth - 1, _glyphComposer.MaxHeight - 1);
-                    g.DrawLines(dark, new[]
-                    {
-                        new Point(outerRect.Left, outerRect.Bottom),
-                        new Point(outerRect.Right, outerRect.Bottom),
-                        new Point(outerRect.Right, outerRect.Top)
-                    });
-                    g.DrawLines(bright, new[]
-                    {
-                        new Point(outerRect.Left, outerRect.Bottom),
-                        new Point(outerRect.Left, outerRect.Top),
-                        new Point(outerRect.Right, outerRect.Top)
-                    });
-                }
-            }
+            //TODO: Do this in the editor, not here.
+
+//            // Update the cursor if it's enabled and the bitmap is valid.
+//            if (!CursorEnabled || _sceneComposer == null) return;
+//            using (var g = Graphics.FromImage(_sceneComposer.DirectAccessBitmap.InnerBitmap))
+//            {
+//                using (
+//                    Pen bright = new Pen(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD)),
+//                        dark = new Pen(Color.FromArgb(0xFF, 0x22, 0x22, 0x22)))
+//                {
+//                    var outerRect = new Rectangle(CursorX*_glyphComposer.MaxWidth, CursorY*_glyphComposer.MaxHeight,
+//                        _glyphComposer.MaxWidth - 1, _glyphComposer.MaxHeight - 1);
+//                    g.DrawLines(dark, new[]
+//                    {
+//                        new Point(outerRect.Left, outerRect.Bottom),
+//                        new Point(outerRect.Right, outerRect.Bottom),
+//                        new Point(outerRect.Right, outerRect.Top)
+//                    });
+//                    g.DrawLines(bright, new[]
+//                    {
+//                        new Point(outerRect.Left, outerRect.Bottom),
+//                        new Point(outerRect.Left, outerRect.Top),
+//                        new Point(outerRect.Right, outerRect.Top)
+//                    });
+//                }
+//            }
         }
 
         private int TranslateColorIndex(int color)
