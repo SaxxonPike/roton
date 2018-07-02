@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Roton.Core;
 
 namespace Roton.Emulation.Execution
@@ -101,7 +100,7 @@ namespace Roton.Emulation.Execution
         public virtual IScrollResult ShowScroll(IEnumerable<string> lines)
         {
             // Fallback scroll implementation
-            MessageBox.Show(string.Join(Environment.NewLine, lines));
+            //MessageBox.Show(string.Join(Environment.NewLine, lines));
             return new ScrollResult {SelectedLine = -1};
         }
 

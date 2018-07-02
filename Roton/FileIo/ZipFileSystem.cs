@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using Ionic.Zip;
 
 namespace Roton.FileIo
 {
@@ -22,11 +22,11 @@ namespace Roton.FileIo
         public IEnumerable<string> GetDirectoryNames(string path)
         {
             using (var archiveStream = new MemoryStream(_file))
-            using (var archive = ZipFile.Read(archiveStream))
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
             {
                 return archive.Entries
-                    .Where(e => e.IsDirectory && e.FileName.StartsWith(path) && e.FileName != path)
-                    .Select(e => e.FileName.Split('/').Last())
+                    .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
+                    .Select(e => e.FullName.Split('/').Last())
                     .ToList();
             }
         }
@@ -34,15 +34,16 @@ namespace Roton.FileIo
         public byte[] GetFile(string filename)
         {
             using (var archiveStream = new MemoryStream(_file))
-            using (var archive = ZipFile.Read(archiveStream))
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
             {
-                var entry = archive.Entries.FirstOrDefault(e => e.FileName == filename);
+                var entry = archive.Entries.FirstOrDefault(e => e.FullName == filename);
                 if (entry == null)
                     return null;
 
                 using (var outputStream = new MemoryStream())
+                using (var inputStream = entry.Open())
                 {
-                    entry.Extract(outputStream);
+                    inputStream.CopyTo(outputStream);
                     outputStream.Flush();
                     return outputStream.ToArray();
                 }
@@ -52,11 +53,11 @@ namespace Roton.FileIo
         public IEnumerable<string> GetFileNames(string path)
         {
             using (var archiveStream = new MemoryStream(_file))
-            using (var archive = ZipFile.Read(archiveStream))
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
             {
                 return archive.Entries
-                    .Where(e => !e.IsDirectory && e.FileName.StartsWith(path))
-                    .Select(e => e.FileName.Split('/').Last())
+                    .Where(e => e.FullName.StartsWith(path))
+                    .Select(e => e.FullName.Split('/').Last())
                     .ToList();
             }
         }
@@ -72,9 +73,15 @@ namespace Roton.FileIo
         public void PutFile(string filename, byte[] data)
         {
             using (var archiveStream = new MemoryStream(_file))
-            using (var archive = ZipFile.Read(archiveStream))
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Update))
             {
-                archive.AddEntry(filename, data);
+                var entry = archive.CreateEntry(filename, CompressionLevel.Optimal);
+                using (var outputStream = entry.Open())
+                using (var inputStream = new MemoryStream(data))
+                {
+                    inputStream.CopyTo(outputStream);
+                    outputStream.Flush();
+                }
                 archiveStream.Flush();
                 _file = archiveStream.ToArray();
             }
