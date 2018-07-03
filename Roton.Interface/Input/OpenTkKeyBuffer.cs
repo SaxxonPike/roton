@@ -7,7 +7,7 @@ using Roton.Core;
 
 namespace Roton.Interface.Input
 {
-    public class OpenTkKeyBuffer : IKeyboard
+    public class OpenTkKeyBuffer : IKeyboard, IOpenTkKeyBuffer
     {
         private static readonly Encoding Enc = Encoding.GetEncoding(437);
         private readonly Queue<int> _queue = new Queue<int>();
@@ -112,5 +112,12 @@ namespace Roton.Interface.Input
                 Enqueue(code);
             return code >= 0;
         }
+    }
+
+    public interface IOpenTkKeyBuffer : IKeyboard
+    {
+        new bool Alt { get; set; }
+        new bool Control { get; set; }
+        new bool Shift { get; set; }
     }
 }

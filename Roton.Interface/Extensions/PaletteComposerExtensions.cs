@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using OpenTK.Graphics;
 using Roton.Interface.Video.Palettes;
 
 namespace Roton.Interface.Extensions

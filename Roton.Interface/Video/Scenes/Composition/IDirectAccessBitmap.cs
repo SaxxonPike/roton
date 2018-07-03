@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {

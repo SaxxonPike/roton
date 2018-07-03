@@ -1,23 +1,45 @@
 ﻿using System;
-using Lyon.Dialogs;
-using Roton.Interface.Windows;
+using Autofac;
+using Lyon.App;
+using Roton.Core;
+using Roton.Interface.Resources;
+using Roton.Interface.Video.Glyphs;
 
 namespace Lyon
 {
     internal static class Program
     {
-        /// <summary>
-        ///     The main entry point for the application.
-        /// </summary>
+        // STAThread is required for open/save dialogs.
+        
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
-            var openWorldDialog = new OpenWorldDialog();
-            if (openWorldDialog.ShowDialog() == FileDialogResult.Ok)
-            {
-                var game = new Game();
-                game.Run(openWorldDialog.FileName);
-            }
+            var builder = new ContainerBuilder();
+
+            builder.RegisterAssemblyTypes(
+                    typeof(IGame).Assembly,
+                    typeof(IContext).Assembly,
+                    typeof(IGlyphComposer).Assembly)
+                .Where(t => !t.IsAbstract && t.IsClass)
+                .AsImplementedInterfaces();
+
+            var container = builder.Build();
+            
+            container
+                .Resolve<IBootstrap>()
+                .Boot(args);
+        }
+
+        private static void Register(ContainerBuilder builder)
+        {
+            builder.RegisterType<ComposerProxy>()
+                .As<IComposerProxy>()
+                .OnActivated(e =>
+                {
+                    var resource = e.Context.Resolve<ICommonResourceArchive>();
+                    e.Instance.SetFont(resource.GetFont());
+                    e.Instance.SetPalette(resource.GetPalette());
+                });
         }
     }
 }

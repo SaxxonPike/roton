@@ -14,9 +14,9 @@ using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Scenes.Composition;
 using Roton.Interface.Video.Scenes.Presentation;
 
-namespace Lyon
+namespace Lyon.App
 {
-    public class Game
+    public class Game : IGame
     {
         private class Window : GameWindow, IOpenGlScenePresenterWindow
         {
@@ -25,13 +25,13 @@ namespace Lyon
             private readonly IOpenGlScenePresenter _presenter;
 
             public Window(
-                Func<IBitmapSceneComposer> getComposer,
+                IComposerProxy composerProxy,
                 Func<IContext> getContext,
                 OpenTkKeyBuffer openTkKeyBuffer)
             {
                 _getContext = getContext;
                 _openTkKeyBuffer = openTkKeyBuffer;
-                _presenter = new OpenGlScenePresenter(getComposer, () => this);
+                _presenter = new OpenGlScenePresenter(() => composerProxy.SceneComposer, () => this);
             }
 
             public void SetSize(int width, int height)
@@ -81,36 +81,25 @@ namespace Lyon
         }
 
         private Window _window;
-        private IBitmapSceneComposer _sceneComposer;
         private IContext _context;
-        private readonly IGlyphComposer _glyphComposer;
-        private readonly IPaletteComposer _paletteComposer;
-        private readonly OpenTkKeyBuffer _openTkKeyBuffer;
-        private IAudioComposer _audioComposer;
+        private readonly IComposerProxy _composerProxy;
+        private readonly IOpenTkKeyBuffer _keyboard;
         private Action _initializeContext;
 
-        public Game()
+        public Game(
+            IComposerProxy composerProxy,
+            IOpenTkKeyBuffer keyboard)
         {
-            var fontData = CommonResourceZipFileSystem.Default.GetFont();
-            var paletteData = CommonResourceZipFileSystem.Default.GetPalette();
-            _glyphComposer = new CachedGlyphComposer(new AutoDetectBinaryGlyphComposer(fontData));
-            _paletteComposer = new CachedPaletteComposer(new VgaPaletteComposer(paletteData));
-            _openTkKeyBuffer = new OpenTkKeyBuffer();
-        }
+            _composerProxy = composerProxy;
+            _keyboard = keyboard;
 
-        private void InitializeSceneComposer(int width, int height, bool wide)
-        {
-            var oldSceneComposer = _sceneComposer;
-            _sceneComposer = new BitmapSceneComposer(_glyphComposer, _paletteComposer, width, height);
-            _sceneComposer.AfterSetSize += OnSetSize;
-            SetSize(width, height, wide);
-            oldSceneComposer?.Dispose();
+            _composerProxy.AfterSetSize += OnSetSize;
         }
 
         private void SetSize(int width, int height, bool wide)
         {
-            var newWidth = width * _glyphComposer.MaxWidth * (wide ? 2 : 1);
-            var newHeight = height * _glyphComposer.MaxHeight;
+            var newWidth = width * _composerProxy.GlyphComposer.MaxWidth * (wide ? 2 : 1);
+            var newHeight = height * _composerProxy.GlyphComposer.MaxHeight;
             _window?.SetSize(newWidth, newHeight);
         }
 
@@ -119,30 +108,26 @@ namespace Lyon
             SetSize(e.Width, e.Height, e.Wide);
         }
 
-        private EngineConfiguration GetDefaultConfiguration(IFileSystem fileSystem)
+        private EngineConfiguration GetDefaultConfiguration()
         {
             return new EngineConfiguration
             {
-                Disk = fileSystem,
                 EditorMode = false,
-                Keyboard = _openTkKeyBuffer,
-                RandomSeed = 0,
-                Speaker = GetAudioComposer(),
-                Terminal = GetSceneComposer()
+                RandomSeed = 0
             };
         }
 
         private void InitializeEmptyContext()
         {
             _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(new DiskFileSystem()), ContextEngine.Zzt);
+            _context = new Context(GetDefaultConfiguration(), ContextEngine.Zzt);
             _context.Start();
         }
 
         private void InitializeContextFromStream(Stream stream)
         {
             _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(new DiskFileSystem()), stream);
+            _context = new Context(GetDefaultConfiguration(), stream);
             _context.Start();
         }
 
@@ -155,32 +140,9 @@ namespace Lyon
             return _context;
         }
 
-        private IBitmapSceneComposer GetSceneComposer()
-        {
-            if (_sceneComposer != null)
-                return _sceneComposer;
-
-            InitializeSceneComposer(80, 25, false);
-            return _sceneComposer;
-        }
-
-        private IAudioComposer GetAudioComposer()
-        {
-            if (_audioComposer != null)
-                return _audioComposer;
-
-            InitializeAudioComposer();
-            return _audioComposer;
-        }
-
-        private void InitializeAudioComposer()
-        {
-            _audioComposer = new AudioComposer(() => GetContext().Drums, 44100, 500);
-        }
-
         private void RunCommon()
         {
-            _window = _window ?? new Window(GetSceneComposer, GetContext, _openTkKeyBuffer);
+            _window = _window ?? new Window(_composerProxy, GetContext, _keyboard);
             _window.Run();
             _context?.Stop();
         }

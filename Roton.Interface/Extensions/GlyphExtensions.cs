@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using OpenTK.Graphics;
-using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Scenes.Composition;
 

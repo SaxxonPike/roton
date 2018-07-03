@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using OpenTK.Graphics;
 
 namespace Roton.Interface.Video.Palettes
 {
