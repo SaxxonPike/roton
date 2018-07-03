@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics;
+﻿using System.Drawing;
+using OpenTK.Graphics;
 
 namespace Roton.Interface.Video.Palettes
 {
@@ -10,6 +11,6 @@ namespace Roton.Interface.Video.Palettes
         /// <summary>
         /// Retrieve the 32-bit RGBA color for a specific color index in the palette.
         /// </summary>
-        Color4 ComposeColor(int index);
+        Color ComposeColor(int index);
     }
 }

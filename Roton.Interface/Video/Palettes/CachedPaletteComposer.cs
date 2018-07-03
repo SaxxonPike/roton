@@ -7,14 +7,14 @@ namespace Roton.Interface.Video.Palettes
 {
     public class CachedPaletteComposer : IPaletteComposer
     {
-        private readonly Color4[] _colors;
+        private readonly Color[] _colors;
 
         public CachedPaletteComposer(IPaletteComposer paletteComposer)
         {
             _colors = paletteComposer.ComposeAllColors().ToArray();
         }
 
-        public Color4 ComposeColor(int index)
+        public Color ComposeColor(int index)
         {
             return _colors[index];
         }
