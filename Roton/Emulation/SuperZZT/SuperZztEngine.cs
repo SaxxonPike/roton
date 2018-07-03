@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System;
+using Roton.Core;
 using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
@@ -117,6 +118,11 @@ namespace Roton.Emulation.SuperZZT
             return false;
         }
 
+        protected override string GetWorldName(string baseName)
+        {
+            return $"{baseName}.SZT";
+        }
+
         public override void RemoveItem(IXyPair location)
         {
             var result = new Tile(Elements.FloorId, 0x00);
@@ -164,7 +170,7 @@ namespace Roton.Emulation.SuperZZT
             BroadcastLabel(0, @"HINT", false);
         }
 
-        protected override void StartMain()
+        protected override void StartInit()
         {
             State.GameSpeed = 4;
             State.DefaultSaveName = "SAVED";
@@ -179,8 +185,6 @@ namespace Roton.Emulation.SuperZZT
                 SetEditorMode();
             else
                 SetGameMode();
-
-            TitleScreenLoop();
         }
     }
 }

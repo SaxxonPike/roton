@@ -1,44 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Roton.Core;
+using Roton.Interface.Events;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
     public class SceneComposer : ISceneComposer
     {
-        protected readonly AnsiChar[] Chars;
-        private readonly AnsiChar _blankCharacter;
+        public event SetSizeEventHandler AfterSetSize;
 
-        public SceneComposer(int rows, int columns)
+        protected AnsiChar[] Chars;
+        private readonly AnsiChar _blankCharacter;
+        private readonly Encoding _codePage437 = Encoding.GetEncoding(437);
+
+        public SceneComposer(int columns, int rows)
         {
-            Rows = rows;
-            Columns = columns;
+            _blankCharacter = new AnsiChar();
+            SetSize(columns, rows, false);
+        }
+
+        public virtual void SetSize(int width, int height, bool wide)
+        {
+            Rows = height;
+            Columns = width;
 
             var charTotal = Columns * Rows;
-            _blankCharacter = new AnsiChar();
             Chars = new AnsiChar[charTotal];
+
+            AfterSetSize?.Invoke(this, new SetSizeEventArgs { Width = width, Height = height, Wide = wide });
+        }
+
+        public virtual void Write(int x, int y, string value, int color)
+        {
+            foreach (var b in _codePage437.GetBytes(value ?? string.Empty))
+            {
+                if (y >= Rows)
+                    break;
+
+                while (x >= Columns)
+                {
+                    x -= Columns;
+                    y++;
+                }
+
+                Plot(x++, y, new AnsiChar(b, color));
+            }
         }
 
         protected virtual void OnGlyphUpdated(int index, AnsiChar ac)
         {
         }
 
-        public virtual AnsiChar GetChar(int x, int y)
+        public virtual AnsiChar Read(int x, int y)
         {
             return IsOutOfBounds(x, y)
                 ? _blankCharacter
                 : Chars[GetBufferOffset(x, y)];
         }
 
-        public virtual void RefreshChar(int x, int y)
+        public virtual void Update(int x, int y)
         {
             var index = GetBufferOffset(x, y);
             OnGlyphUpdated(index, Chars[index]);
         }
 
-        public virtual void SetChar(int x, int y, AnsiChar ac)
+        public void Clear()
+        {
+            for (var y = 0; y < Rows; y++)
+                for (var x = 0; x < Columns; x++)
+                    Plot(x, y, _blankCharacter);
+        }
+
+        public virtual void Plot(int x, int y, AnsiChar ac)
         {
             if (IsOutOfBounds(x, y))
                 return;
@@ -58,8 +90,8 @@ namespace Roton.Interface.Video.Scenes.Composition
             return x + y * Columns;
         }
 
-        public int Rows { get; }
+        public int Rows { get; protected set; }
 
-        public int Columns { get; }
+        public int Columns { get; protected set; }
     }
 }

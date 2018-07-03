@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
+using Roton.Events;
 using Roton.Resources;
 
 namespace Roton.Core
 {
     public sealed class Context : IContext
     {
+        public event EventHandler Terminated;
+
         private const int MaxGameCycle = 420;
         private readonly IEngineConfiguration _config;
 
@@ -120,24 +124,34 @@ namespace Roton.Core
 
         private void Initialize(ContextEngine engine)
         {
-            var resources = new ResourceZipFileSystem(Properties.Resources.resources);
+            var resources = ResourceZipFileSystem.System;
             switch (engine)
             {
                 case ContextEngine.Zzt:
-                    Engine = new ZztEngine(_config, resources.GetZztMemoryData(), resources.GetZztElementData());
+                    Engine = new ZztEngine(_config, resources.GetFile("memory-zzt.bin"), resources.GetFile("elements-zzt.bin"));
                     break;
                 case ContextEngine.SuperZzt:
-                    Engine = new SuperZztEngine(_config, resources.GetSuperZztMemoryData(),
-                        resources.GetSuperZztElementData());
+                    Engine = new SuperZztEngine(_config, resources.GetFile("memory-szzt.bin"), resources.GetFile("elements-szzt.bin"));
                     break;
                 default:
                     throw Exceptions.InvalidFormat;
             }
 
+            Engine.RequestReplaceContext += OnEngineRequestReplaceContext;
+            Engine.Terminated += (s, e) => Terminated?.Invoke(s, e);
             Engine.ClearWorld();
         }
 
-        private void Initialize(Stream stream)
+        private void OnEngineRequestReplaceContext(object sender, DataEventArgs e)
+        {
+            using (var mem = new MemoryStream(e.Data))
+            {
+                DetermineContextEngine(mem);
+                LoadAfterType(mem);
+            }
+        }
+
+        private ContextEngine DetermineContextEngine(Stream stream)
         {
             ContextEngine engine;
             var reader = new BinaryReader(stream);
@@ -152,6 +166,12 @@ namespace Roton.Core
                 default:
                     throw Exceptions.UnknownFormat;
             }
+            return engine;
+        }
+
+        private void Initialize(Stream stream)
+        {
+            var engine = DetermineContextEngine(stream);
             Initialize(engine);
             LoadAfterType(stream);
         }

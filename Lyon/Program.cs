@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
+using Lyon.Dialogs;
+using Roton.Interface.Windows;
 
 namespace Lyon
 {
@@ -11,9 +12,12 @@ namespace Lyon
         [STAThread]
         private static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GameForm());
+            var openWorldDialog = new OpenWorldDialog();
+            if (openWorldDialog.ShowDialog() == FileDialogResult.Ok)
+            {
+                var game = new Game();
+                game.Run(openWorldDialog.FileName);
+            }
         }
     }
 }

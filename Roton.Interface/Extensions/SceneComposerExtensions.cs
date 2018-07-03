@@ -1,5 +1,4 @@
 ﻿using Roton.Core;
-using Roton.Interface.Video.Scenes;
 using Roton.Interface.Video.Scenes.Composition;
 
 namespace Roton.Interface.Extensions
@@ -12,7 +11,7 @@ namespace Roton.Interface.Extensions
             {
                 for (var x = 0; x < composer.Columns; x++)
                 {
-                    composer.SetChar(x, y, new AnsiChar());
+                    composer.Plot(x, y, new AnsiChar());
                 }
             }
         }
