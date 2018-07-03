@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using OpenTK.Graphics;
+using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Scenes.Composition;
 
@@ -6,7 +8,7 @@ namespace Roton.Interface.Extensions
 {
     public static class GlyphExtensions
     {
-        public static IDirectAccessBitmap RenderToFastBitmap(this IGlyph glyph, Color foregroundColor, Color backgroundColor)
+        public static IDirectAccessBitmap RenderToFastBitmap(this IGlyph glyph, Color4 foregroundColor, Color4 backgroundColor)
         {
             var output = new DirectAccessBitmap(glyph.Width, glyph.Height);
             var count = output.Bits.Length;

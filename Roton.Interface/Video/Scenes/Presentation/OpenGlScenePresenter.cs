@@ -68,6 +68,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
+            //GL.Begin(BeginMode.Quads);
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(0.0f, 0.0f);
             GL.Vertex2(0.0f, 0.0f);
