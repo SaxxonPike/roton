@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class WebBehavior : ElementBehavior
+    public sealed class WebBehavior : ElementBehavior
     {
         public override string KnownName => "Web";
 

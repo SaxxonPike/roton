@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztElement : Element
+    public sealed class SuperZztElement : Element
     {
         public SuperZztElement(IMemory memory, int index, IBehavior behavior)
             : base(memory, 0x7CAA + index*0x00C2, behavior)

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal class MemoryTimer : ITimer
+    public class MemoryTimer : ITimer
     {
         private readonly IMemory _memory;
         private readonly int _offset;

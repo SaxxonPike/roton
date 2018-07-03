@@ -7,7 +7,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Serialization
 {
-    internal abstract class GameSerializer : IGameSerializer
+    public abstract class GameSerializer : IGameSerializer
     {
         protected GameSerializer(IMemory memory)
         {

@@ -3,7 +3,7 @@ using Roton.Emulation.Serialization;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztGameSerializer : GameSerializer
+    public sealed class ZztGameSerializer : GameSerializer
     {
         public ZztGameSerializer(IMemory memory)
             : base(memory)

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class KeyBehavior : ElementBehavior
+    public sealed class KeyBehavior : ElementBehavior
     {
         public override string KnownName => "Key";
 

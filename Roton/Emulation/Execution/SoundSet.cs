@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class SoundSet : ISoundSet
+    public class SoundSet : ISoundSet
     {
         public ISound Ammo => new Sound
             (

@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztEngine : Engine
+    public sealed class SuperZztEngine : Engine
     {
         public SuperZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
         {

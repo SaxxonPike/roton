@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztForestSound : ISound
+    public sealed class SuperZztForestSound : ISound
     {
         private readonly IMemory _memory;
         private readonly int _offset;

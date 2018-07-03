@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztElement : Element
+    public sealed class ZztElement : Element
     {
         public ZztElement(IMemory memory, int index, IBehavior behavior)
             : base(memory, 0x4AD4 + index*0x00C3, behavior)

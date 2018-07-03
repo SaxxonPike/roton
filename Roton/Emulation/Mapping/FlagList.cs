@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class FlagList : FixedList<string>, IFlagList
+    public abstract class FlagList : FixedList<string>, IFlagList
     {
         protected FlagList(IMemory memory, int offset)
         {

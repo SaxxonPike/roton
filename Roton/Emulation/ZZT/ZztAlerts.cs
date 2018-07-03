@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztAlerts : IAlerts
+    public sealed class ZztAlerts : IAlerts
     {
         private readonly int _ammoPerPickup;
         private readonly IColorList _colors;

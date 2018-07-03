@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class BulletBehavior : EnemyBehavior
+    public sealed class BulletBehavior : EnemyBehavior
     {
         public override string KnownName => "Bullet";
 

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class SpiderBehavior : EnemyBehavior
+    public sealed class SpiderBehavior : EnemyBehavior
     {
         public override string KnownName => "Spider";
 

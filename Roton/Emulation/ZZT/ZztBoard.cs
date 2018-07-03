@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztBoard : IBoard
+    public sealed class ZztBoard : IBoard
     {
         private readonly IMemory _memory;
 

@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class MessengerBehavior : ElementBehavior
+    public sealed class MessengerBehavior : ElementBehavior
     {
         public override string KnownName => "Messenger";
 

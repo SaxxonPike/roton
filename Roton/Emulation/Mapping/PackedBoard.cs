@@ -3,7 +3,7 @@ using Roton.Core;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class PackedBoard : IPackedBoard
+    public sealed class PackedBoard : IPackedBoard
     {
         public PackedBoard(byte[] data)
         {

@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class PlayerBehavior : ElementBehavior
+    public sealed class PlayerBehavior : ElementBehavior
     {
         public override string KnownName => "Player";
 

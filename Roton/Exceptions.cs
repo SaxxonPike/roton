@@ -2,7 +2,7 @@
 
 namespace Roton
 {
-    internal static class Exceptions
+    public static class Exceptions
     {
         public static readonly Exception CorruptedData = new Exception(
             "The data appears to be corrupt."

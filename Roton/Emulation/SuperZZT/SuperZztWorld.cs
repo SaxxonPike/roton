@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztWorld : IWorld
+    public sealed class SuperZztWorld : IWorld
     {
         public SuperZztWorld(IMemory memory)
         {

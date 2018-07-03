@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class InvisibleWallBehavior : ElementBehavior
+    public sealed class InvisibleWallBehavior : ElementBehavior
     {
         public override string KnownName => "Invisible Wall";
 

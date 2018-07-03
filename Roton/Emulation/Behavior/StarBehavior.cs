@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class StarBehavior : EnemyBehavior
+    public sealed class StarBehavior : EnemyBehavior
     {
         public override string KnownName => "Star";
 

@@ -16,20 +16,20 @@ using Roton.Interface.Video.Scenes.Presentation;
 
 namespace Lyon.App
 {
-    public class Game : IGame
+    public class Launcher : ILauncher
     {
         private class Window : GameWindow, IOpenGlScenePresenterWindow
         {
-            private readonly Func<IContext> _getContext;
-            private readonly OpenTkKeyBuffer _openTkKeyBuffer;
+            private readonly IContext _context;
+            private readonly IOpenTkKeyBuffer _openTkKeyBuffer;
             private readonly IOpenGlScenePresenter _presenter;
 
             public Window(
                 IComposerProxy composerProxy,
-                Func<IContext> getContext,
-                OpenTkKeyBuffer openTkKeyBuffer)
+                IContext context,
+                IOpenTkKeyBuffer openTkKeyBuffer)
             {
-                _getContext = getContext;
+                _context = context;
                 _openTkKeyBuffer = openTkKeyBuffer;
                 _presenter = new OpenGlScenePresenter(() => composerProxy.SceneComposer, () => this);
             }
@@ -63,7 +63,7 @@ namespace Lyon.App
 
             protected override void OnUpdateFrame(FrameEventArgs e)
             {
-                _getContext().ExecuteOnce();
+                _context.ExecuteOnce();
                 base.OnUpdateFrame(e);
             }
 
@@ -81,17 +81,18 @@ namespace Lyon.App
         }
 
         private Window _window;
-        private IContext _context;
         private readonly IComposerProxy _composerProxy;
         private readonly IOpenTkKeyBuffer _keyboard;
-        private Action _initializeContext;
+        private readonly IContextFactory _contextFactory;
 
-        public Game(
+        public Launcher(
             IComposerProxy composerProxy,
-            IOpenTkKeyBuffer keyboard)
+            IOpenTkKeyBuffer keyboard,
+            IContextFactory contextFactory)
         {
             _composerProxy = composerProxy;
             _keyboard = keyboard;
+            _contextFactory = contextFactory;
 
             _composerProxy.AfterSetSize += OnSetSize;
         }
@@ -108,68 +109,12 @@ namespace Lyon.App
             SetSize(e.Width, e.Height, e.Wide);
         }
 
-        private EngineConfiguration GetDefaultConfiguration()
+        public void Launch(ContextEngine contextEngine, IFileSystem fileSystem)
         {
-            return new EngineConfiguration
-            {
-                EditorMode = false,
-                RandomSeed = 0
-            };
-        }
-
-        private void InitializeEmptyContext()
-        {
-            _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(), ContextEngine.Zzt);
-            _context.Start();
-        }
-
-        private void InitializeContextFromStream(Stream stream)
-        {
-            _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(), stream);
-            _context.Start();
-        }
-
-        private IContext GetContext()
-        {
-            if (_context != null)
-                return _context;
-
-            _initializeContext();
-            return _context;
-        }
-
-        private void RunCommon()
-        {
-            _window = _window ?? new Window(_composerProxy, GetContext, _keyboard);
+            var context = _contextFactory.Create(contextEngine, fileSystem);
+            _window = _window ?? new Window(_composerProxy, context, _keyboard);
             _window.Run();
-            _context?.Stop();
-        }
-
-        public void Run()
-        {
-            _initializeContext = InitializeEmptyContext;
-            RunCommon();
-        }
-
-        public void Run(Stream stream)
-        {
-            _initializeContext = () => InitializeContextFromStream(stream);
-            RunCommon();
-        }
-
-        public void Run(string path)
-        {
-            _initializeContext = () => InitializeContextFromPath(path);
-            RunCommon();
-        }
-
-        private void InitializeContextFromPath(string path)
-        {
-            _context?.Stop();
-            _context = new Context(GetDefaultConfiguration(new DiskFileSystem(Path.GetDirectoryName(path))), File.ReadAllBytes(path));
-            _context.Start();
+            context.Stop();
         }
     }
 }

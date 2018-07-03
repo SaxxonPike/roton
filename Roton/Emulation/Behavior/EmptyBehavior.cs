@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal sealed class EmptyBehavior : ElementBehavior
+    public sealed class EmptyBehavior : ElementBehavior
     {
         public override string KnownName => "Empty";
     }

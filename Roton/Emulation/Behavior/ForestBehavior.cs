@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class ForestBehavior : ElementBehavior
+    public sealed class ForestBehavior : ElementBehavior
     {
         private readonly bool _clearToFloor;
 

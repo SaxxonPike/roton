@@ -13,7 +13,7 @@ using Roton.FileIo;
 
 namespace Roton.Emulation.Execution
 {
-    internal abstract class Engine : IEngine
+    public abstract class Engine : IEngine
     {
         public event EventHandler Terminated;
         public event DataEventHandler RequestReplaceContext;

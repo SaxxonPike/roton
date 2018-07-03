@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class ColorList : FixedList<string>, IColorList
+    public abstract class ColorList : FixedList<string>, IColorList
     {
         protected ColorList(IMemory memory, int offset)
         {

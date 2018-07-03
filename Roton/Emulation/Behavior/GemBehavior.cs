@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class GemBehavior : ElementBehavior
+    public sealed class GemBehavior : ElementBehavior
     {
         private readonly int _healthPerGem;
         private readonly int _scorePerGem;

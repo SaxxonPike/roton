@@ -3,7 +3,7 @@ using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
-    internal abstract class Hud : IHud
+    public abstract class Hud : IHud
     {
         protected Hud(IEngine engine, ITerminal terminal)
         {

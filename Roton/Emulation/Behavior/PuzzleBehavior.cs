@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal abstract class PuzzleBehavior : ElementBehavior
+    public abstract class PuzzleBehavior : ElementBehavior
     {
         public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
         {

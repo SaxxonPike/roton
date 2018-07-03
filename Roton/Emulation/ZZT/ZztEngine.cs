@@ -4,9 +4,9 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztEngine : Engine
+    public sealed class ZztEngine : Engine
     {
-        public ZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
+        public ZztEngine(byte[] memoryBytes, byte[] elementBytes)
         {
             var behaviorConfig = new BehaviorMapConfiguration
             {

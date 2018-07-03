@@ -7,7 +7,7 @@ using Roton.Interface.Video.Glyphs;
 
 namespace Lyon
 {
-    internal static class Program
+    public static class Program
     {
         // STAThread is required for open/save dialogs.
         
@@ -17,7 +17,7 @@ namespace Lyon
             var builder = new ContainerBuilder();
 
             builder.RegisterAssemblyTypes(
-                    typeof(IGame).Assembly,
+                    typeof(ILauncher).Assembly,
                     typeof(IContext).Assembly,
                     typeof(IGlyphComposer).Assembly)
                 .Where(t => !t.IsAbstract && t.IsClass)

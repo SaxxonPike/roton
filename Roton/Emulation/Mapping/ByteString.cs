@@ -3,7 +3,7 @@ using Roton.Core.Collections;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class ByteString : FixedList<int>
+    public sealed class ByteString : FixedList<int>
     {
         public ByteString(IMemory memory, int offset)
         {

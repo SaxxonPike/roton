@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class FakeWallBehavior : ElementBehavior
+    public sealed class FakeWallBehavior : ElementBehavior
     {
         public override string KnownName => "Fake Wall";
 

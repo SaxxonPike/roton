@@ -3,7 +3,7 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztColorList : ColorList
+    public sealed class SuperZztColorList : ColorList
     {
         public SuperZztColorList(IMemory memory)
             : base(memory, 0x21E7)

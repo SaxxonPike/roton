@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztState : IState
+    public sealed class SuperZztState : IState
     {
         private readonly IMemory _memory;
 

@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryLocation : IXyPair
+    public sealed class MemoryLocation : IXyPair
     {
         public MemoryLocation(IMemory memory, int offset)
         {

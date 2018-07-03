@@ -3,7 +3,7 @@ using Roton.Core.Collections;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class TileGrid : FixedList<ITile>, ITileGrid
+    public abstract class TileGrid : FixedList<ITile>, ITileGrid
     {
         protected TileGrid(IMemory memory, int offset, int width, int height)
         {

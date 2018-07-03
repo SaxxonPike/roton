@@ -5,7 +5,7 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztGrammar : Grammar
+    public sealed class SuperZztGrammar : Grammar
     {
         public SuperZztGrammar(IColorList colors, IElementList elements) : base(colors, elements)
         {

@@ -3,7 +3,7 @@ using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
-    internal class OopContext : IOopContext
+    public class OopContext : IOopContext
     {
         private readonly int _index;
         private readonly IExecutable _instructionSource;

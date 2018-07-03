@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztWorld : IWorld
+    public sealed class ZztWorld : IWorld
     {
         public ZztWorld(IMemory memory)
         {
@@ -32,7 +32,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x4831, value); }
         }
 
-        public IFlagList Flags => new ZztFlags(Memory);
+        public IFlagList Flags => new ZztFlagList(Memory);
 
         public int Gems
         {

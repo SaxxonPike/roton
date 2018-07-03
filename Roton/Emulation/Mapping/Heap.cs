@@ -4,7 +4,7 @@ using Roton.Core;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class Heap : IHeap
+    public sealed class Heap : IHeap
     {
         private int _nextEntry;
 

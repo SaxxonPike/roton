@@ -5,7 +5,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztHud : Hud
+    public sealed class SuperZztHud : Hud
     {
         public SuperZztHud(IEngine engine, ITerminal terminal)
             : base(engine, terminal)

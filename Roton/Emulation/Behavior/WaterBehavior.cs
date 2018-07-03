@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal class WaterBehavior : ElementBehavior
+    public class WaterBehavior : ElementBehavior
     {
         public override string KnownName => "Water";
 

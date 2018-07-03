@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Execution
 {
-    internal class Randomizer : IRandomizer
+    public class Randomizer : IRandomizer
     {
         private readonly IRandomState _state;
 

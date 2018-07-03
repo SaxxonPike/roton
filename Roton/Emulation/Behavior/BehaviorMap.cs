@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal class BehaviorMap : IBehaviorMap
+    public class BehaviorMap : IBehaviorMap
     {
         private readonly IBehaviorMapConfiguration _config;
         private readonly IElementList _elementList;

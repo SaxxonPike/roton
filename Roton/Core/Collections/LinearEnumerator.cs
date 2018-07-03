@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Roton.Core.Collections
 {
-    internal sealed class LinearEnumerator<T> : IEnumerator<T>
+    public sealed class LinearEnumerator<T> : IEnumerator<T>
     {
         public LinearEnumerator(Func<int, T> getter, int count)
         {

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class DoorBehavior : ElementBehavior
+    public sealed class DoorBehavior : ElementBehavior
     {
         public override string KnownName => "Door";
 

@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class KeyList : FixedList<bool>, IKeyList
+    public sealed class KeyList : FixedList<bool>, IKeyList
     {
         public KeyList(IMemory memory, int offset)
         {

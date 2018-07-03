@@ -4,7 +4,7 @@ using Roton.Emulation.Behavior;
 
 namespace Roton.Emulation.Mapping
 {
-    internal abstract class Element : IElement
+    public abstract class Element : IElement
     {
         protected Element(IMemory memory, int offset, IBehavior behavior)
         {

@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryTile : ITile
+    public sealed class MemoryTile : ITile
     {
         public MemoryTile(IMemory memory, int offset)
         {

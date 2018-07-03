@@ -9,7 +9,7 @@ namespace Roton.Core
         /// <summary>
         ///     Return the absolute difference between this value and another specified value.
         /// </summary>
-        internal static int AbsDiff(this int a, int b)
+        public static int AbsDiff(this int a, int b)
         {
             var diff = a - b;
             if (diff < 0)
@@ -20,7 +20,7 @@ namespace Roton.Core
         /// <summary>
         ///     Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
         /// </summary>
-        internal static int Polarity(this int value)
+        public static int Polarity(this int value)
         {
             if (value > 0)
                 return 1;
@@ -32,7 +32,7 @@ namespace Roton.Core
         /// <summary>
         ///     Return the squared result of an integer.
         /// </summary>
-        internal static int Square(this int i)
+        public static int Square(this int i)
         {
             return i*i;
         }
@@ -40,7 +40,7 @@ namespace Roton.Core
         /// <summary>
         ///     Convert a string to a byte array using code page 437.
         /// </summary>
-        internal static byte[] ToBytes(this string value)
+        public static byte[] ToBytes(this string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -52,7 +52,7 @@ namespace Roton.Core
         /// <summary>
         ///     Convert an integer to a character using code page 437.
         /// </summary>
-        internal static char ToChar(this int value)
+        public static char ToChar(this int value)
         {
             return CodePage437.GetChars(new[] {(byte) (value & 0xFF)})[0];
         }
@@ -60,7 +60,7 @@ namespace Roton.Core
         /// <summary>
         ///     Get the lowercase representation of an ASCII char stored as a byte.
         /// </summary>
-        internal static int ToLowerCase(this byte value)
+        public static int ToLowerCase(this byte value)
         {
             if (value >= 0x41 && value <= 0x5A)
             {
@@ -72,7 +72,7 @@ namespace Roton.Core
         /// <summary>
         ///     Convert an integer to a string using code page 437.
         /// </summary>
-        internal static string ToStringValue(this int value)
+        public static string ToStringValue(this int value)
         {
             return CodePage437.GetString(new[] {(byte) (value & 0xFF)});
         }
@@ -80,7 +80,7 @@ namespace Roton.Core
         /// <summary>
         ///     Convert a byte array to a string using code page 437.
         /// </summary>
-        internal static string ToStringValue(this byte[] value)
+        public static string ToStringValue(this byte[] value)
         {
             return CodePage437.GetString(value);
         }
@@ -88,7 +88,7 @@ namespace Roton.Core
         /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as a byte.
         /// </summary>
-        internal static int ToUpperCase(this byte value)
+        public static int ToUpperCase(this byte value)
         {
             if (value >= 0x61 && value <= 0x7A)
             {
@@ -100,7 +100,7 @@ namespace Roton.Core
         /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
-        internal static int ToUpperCase(this int value)
+        public static int ToUpperCase(this int value)
         {
             if (value >= 0x61 && value <= 0x7A)
             {

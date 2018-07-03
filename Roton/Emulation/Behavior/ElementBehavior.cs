@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal abstract class ElementBehavior : IBehavior
+    public abstract class ElementBehavior : IBehavior
     {
         public virtual void Act(IEngine engine, int index)
         {

@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class AmmoBehavior : ElementBehavior
+    public sealed class AmmoBehavior : ElementBehavior
     {
         private readonly int _ammoPerPickup;
 

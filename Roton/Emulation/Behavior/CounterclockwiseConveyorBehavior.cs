@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class CounterclockwiseConveyorBehavior : ElementBehavior
+    public sealed class CounterclockwiseConveyorBehavior : ElementBehavior
     {
         public override string KnownName => "Counterclockwise Conveyor";
 

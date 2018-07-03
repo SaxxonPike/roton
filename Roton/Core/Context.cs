@@ -15,27 +15,16 @@ namespace Roton.Core
         public event EventHandler Terminated;
 
         private const int MaxGameCycle = 420;
-        private readonly IEngineConfiguration _config;
 
-        public Context(IEngineConfiguration config, byte[] data)
+        public Context(
+            IActorList actorList, 
+            IBoard board, 
+            IDrumBank drumBank, 
+            IElementList elementList, 
+            ITileGrid tileGrid, 
+            IWorld world)
         {
-            _config = config;
-            using (var mem = new MemoryStream(data))
-            {
-                Initialize(mem);
-            }
-        }
-
-        public Context(IEngineConfiguration config, ContextEngine engine)
-        {
-            _config = config;
-            Initialize(engine);
-        }
-
-        public Context(IEngineConfiguration config, Stream stream)
-        {
-            _config = config;
-            Initialize(stream);
+            
         }
 
         private IGameSerializer GameSerializer => Engine.GameSerializer;

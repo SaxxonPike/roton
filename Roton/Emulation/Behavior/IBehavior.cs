@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Behavior
 {
-    internal interface IBehavior
+    public interface IBehavior
     {
         string KnownName { get; }
         void Act(IEngine engine, int index);

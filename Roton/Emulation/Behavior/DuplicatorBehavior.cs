@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class DuplicatorBehavior : ElementBehavior
+    public sealed class DuplicatorBehavior : ElementBehavior
     {
         public override string KnownName => "Duplicator";
 

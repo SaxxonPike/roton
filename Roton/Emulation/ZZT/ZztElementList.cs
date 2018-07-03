@@ -4,7 +4,7 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {
-    internal sealed class ZztElementList : ElementList
+    public sealed class ZztElementList : ElementList
     {
         public ZztElementList(IMemory memory, byte[] elementBytes, IBehaviorMapConfiguration config)
             : base(memory, 54, config)

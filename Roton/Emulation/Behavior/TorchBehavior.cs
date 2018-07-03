@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class TorchBehavior : ElementBehavior
+    public sealed class TorchBehavior : ElementBehavior
     {
         public override string KnownName => "Torch";
 

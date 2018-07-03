@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class Int16List : FixedList<int>
+    public sealed class Int16List : FixedList<int>
     {
         public Int16List(IMemory memory, int offset, int count)
         {

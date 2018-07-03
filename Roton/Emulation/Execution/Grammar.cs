@@ -7,7 +7,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
-    internal abstract class Grammar : IGrammar
+    public abstract class Grammar : IGrammar
     {
         private readonly IColorList _colors;
         private readonly IElementList _elements;

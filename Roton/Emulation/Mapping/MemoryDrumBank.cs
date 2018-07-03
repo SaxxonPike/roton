@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal class MemoryDrumBank : FixedList<IDrumSound>, IDrumBank
+    public class MemoryDrumBank : FixedList<IDrumSound>, IDrumBank
     {
         private readonly IMemory _memory;
         private readonly int _offset;

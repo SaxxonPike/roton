@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    internal interface IBehaviorMap
+    public interface IBehaviorMap
     {
         IBehavior Map(int id);
     }

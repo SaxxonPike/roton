@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
-    internal sealed class TransporterBehavior : ElementBehavior
+    public sealed class TransporterBehavior : ElementBehavior
     {
         public override string KnownName => "Transporter";
 

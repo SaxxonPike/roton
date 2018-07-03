@@ -3,7 +3,7 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.SuperZZT
 {
-    internal sealed class SuperZztSoundSet : SoundSet
+    public sealed class SuperZztSoundSet : SoundSet
     {
         public SuperZztSoundSet(IMemory memory)
         {

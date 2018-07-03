@@ -3,7 +3,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class MemoryVector : IXyPair
+    public sealed class MemoryVector : IXyPair
     {
         public MemoryVector(IMemory memory, int offset)
         {

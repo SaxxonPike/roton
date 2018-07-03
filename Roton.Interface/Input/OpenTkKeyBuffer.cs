@@ -119,5 +119,7 @@ namespace Roton.Interface.Input
         new bool Alt { get; set; }
         new bool Control { get; set; }
         new bool Shift { get; set; }
+        bool Press(char data);
+        bool Press(Key data);
     }
 }

@@ -3,7 +3,7 @@ using Roton.Core;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class Memory : IMemory
+    public sealed class Memory : IMemory
     {
         public Memory()
         {

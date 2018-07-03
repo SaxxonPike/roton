@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    internal sealed class Actor : IActor
+    public sealed class Actor : IActor
     {
         public Actor(IMemory memory, int offset)
         {
