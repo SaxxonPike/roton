@@ -6,4 +6,7 @@
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\resources.zip" />
+  </ItemGroup>
 </Project>

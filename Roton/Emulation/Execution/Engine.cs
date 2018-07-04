@@ -29,7 +29,7 @@ namespace Roton.Emulation.Execution
         private readonly IRandom _random;
         private readonly IBoard _board;
         private readonly IWorld _world;
-        private readonly ITimer _timer;
+        private readonly ITimers _timers;
         private readonly IElements _elements;
         private readonly ISounds _sounds;
         private readonly IGameSerializer _gameSerializer;
@@ -49,7 +49,7 @@ namespace Roton.Emulation.Execution
             IRandom random,
             IBoard board,
             IWorld world,
-            ITimer timer,
+            ITimers timers,
             IElements elements,
             ISounds sounds,
             IGameSerializer gameSerializer,
@@ -66,7 +66,7 @@ namespace Roton.Emulation.Execution
             _random = random;
             _board = board;
             _world = world;
-            _timer = timer;
+            _timers = timers;
             _elements = elements;
             _sounds = sounds;
             _gameSerializer = gameSerializer;
@@ -76,7 +76,7 @@ namespace Roton.Emulation.Execution
             _boards = boards;
         }
 
-        private int TimerBase => _timer.Ticks & 0x7FFF;
+        private int TimerBase => _timers.Player.Ticks & 0x7FFF;
 
         private Thread Thread { get; set; }
 
@@ -143,8 +143,10 @@ namespace Roton.Emulation.Execution
                     {
                         success = true;
                     }
+
                     _actors[info.SearchIndex].Instruction = info.SearchOffset;
                 }
+
                 info.SearchTarget = label;
             }
 
@@ -220,7 +222,7 @@ namespace Roton.Emulation.Execution
                     if (element.IsPushable)
                     {
                         var source = center.Sum(GetConveyorVector(i));
-                        var target = center.Sum(GetConveyorVector((i + 8 - direction)%8));
+                        var target = center.Sum(GetConveyorVector((i + 8 - direction) % 8));
                         if (element.Cycle > -1)
                         {
                             var tile = _grid.TileAt(source);
@@ -236,7 +238,7 @@ namespace Roton.Emulation.Execution
                             UpdateBoard(target);
                         }
 
-                        if (!_elements[surrounding[(i + 8 + direction)%8].Id].IsPushable)
+                        if (!_elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
                         {
                             _grid.TileAt(source).Id = _elements.EmptyId;
                             UpdateBoard(source);
@@ -271,7 +273,7 @@ namespace Roton.Emulation.Execution
         public virtual AnsiChar Draw(IXyPair location)
         {
             if (_board.IsDark && !_grid.ElementAt(location).IsAlwaysVisible &&
-                (_world.TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !_state.EditorMode)
+                (_world.TorchCycles <= 0 || Distance(_actors.Player.Location, location) >= 50) && !_state.EditorMode)
             {
                 return new AnsiChar(0xB0, 0x07);
             }
@@ -284,18 +286,22 @@ namespace Roton.Emulation.Execution
             {
                 return new AnsiChar(0x20, 0x0F);
             }
+
             if (element.HasDrawCode)
             {
                 return element.Draw(location);
             }
+
             if (tile.Id < elementCount - 7)
             {
                 return new AnsiChar(element.Character, tile.Color);
             }
+
             if (tile.Id != elementCount - 1)
             {
                 return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
             }
+
             return new AnsiChar(tile.Color, 0x0F);
         }
 
@@ -306,12 +312,13 @@ namespace Roton.Emulation.Execution
 
         public virtual void EnterBoard()
         {
-            _board.Entrance.CopyFrom(Player.Location);
+            _board.Entrance.CopyFrom(_actors.Player.Location);
             if (_board.IsDark && _alerts.Dark)
             {
                 SetMessage(0xC8, _alerts.DarkMessage);
                 _alerts.Dark = false;
             }
+
             _world.TimePassed = 0;
             UpdateStatus();
         }
@@ -361,6 +368,7 @@ namespace Roton.Emulation.Execution
                                 context.Instruction--;
                             context.Moved = true;
                         }
+
                         break;
                     case 0x23: // #
                         _grammar.Execute(context);
@@ -401,13 +409,12 @@ namespace Roton.Emulation.Execution
         public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
         {
             var label = context.SearchTarget;
-            var target = string.Empty;
             var success = false;
             var split = label.IndexOf(':');
 
             if (split > 0)
             {
-                target = label.Substring(0, split);
+                var target = label.Substring(0, split);
                 label = label.Substring(split + 1);
                 context.SearchTarget = target;
                 success = _grammar.GetTarget(context);
@@ -418,6 +425,7 @@ namespace Roton.Emulation.Execution
                 split = 0;
                 success = true;
             }
+
             while (true)
             {
                 if (!success)
@@ -442,6 +450,7 @@ namespace Roton.Emulation.Execution
                 success = context.SearchOffset >= 0;
                 break;
             }
+
             return success;
         }
 
@@ -466,8 +475,10 @@ namespace Roton.Emulation.Execution
                             return true;
                         }
                     }
+
                     location.X++;
                 }
+
                 location.X = 1;
                 location.Y++;
             }
@@ -501,6 +512,7 @@ namespace Roton.Emulation.Execution
                 result = true;
                 _state.PlayerTime = (_state.PlayerTime + interval) & 0x7FFF;
             }
+
             return result;
         }
 
@@ -534,6 +546,7 @@ namespace Roton.Emulation.Execution
                             UpdateRadius(actor.Location, 0);
                             _state.GamePaused = true;
                         }
+
                         this.PlaySound(4, _sounds.Ouch);
                     }
                     else
@@ -553,6 +566,7 @@ namespace Roton.Emulation.Execution
                 {
                     this.PlaySound(3, _sounds.EnemyDie);
                 }
+
                 RemoveActor(index);
             }
         }
@@ -574,12 +588,14 @@ namespace Roton.Emulation.Execution
             {
                 targetTile.SetTo(sourceTile.Id, (targetTile.Color & 0x70) | (sourceTile.Color & 0x0F));
             }
+
             sourceTile.CopyFrom(underTile);
             actor.Location.CopyFrom(target);
             if (targetTile.Id == _elements.PlayerId)
             {
                 ForcePlayerColor(index);
             }
+
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
             if (index == 0 && _board.IsDark)
@@ -607,6 +623,7 @@ namespace Roton.Emulation.Execution
                     }
                 }
             }
+
             if (index == 0)
             {
                 _hud.UpdateCamera();
@@ -657,8 +674,6 @@ namespace Roton.Emulation.Execution
             _boards[_world.BoardIndex] = board;
         }
 
-        public virtual IActor Player => _actors[0];
-
         public void PlaySound(int priority, ISound sound, int offset, int length)
         {
         }
@@ -702,6 +717,7 @@ namespace Roton.Emulation.Execution
                         _state.DefaultActor);
                 }
             }
+
             UpdateBoard(location);
         }
 
@@ -715,7 +731,8 @@ namespace Roton.Emulation.Execution
             }
 
             var tile = _grid.TileAt(location);
-            if ((tile.Id == _elements.SliderEwId && vector.Y == 0) || (tile.Id == _elements.SliderNsId && vector.X == 0) ||
+            if ((tile.Id == _elements.SliderEwId && vector.Y == 0) ||
+                (tile.Id == _elements.SliderNsId && vector.X == 0) ||
                 _elements[tile.Id].IsPushable)
             {
                 var furtherTile = _grid.TileAt(location.Sum(vector));
@@ -771,6 +788,7 @@ namespace Roton.Emulation.Execution
                                 Push(search, vector);
                                 element = _grid.ElementAt(search);
                             }
+
                             if (element.IsFloor)
                             {
                                 ended = true;
@@ -822,6 +840,7 @@ namespace Roton.Emulation.Execution
                 _state.OopByte = value;
                 instructionSource.Instruction++;
             }
+
             return value;
         }
 
@@ -834,6 +853,7 @@ namespace Roton.Emulation.Execution
                 result.Append(_state.OopByte.ToChar());
                 ReadActorCodeByte(index, instructionSource);
             }
+
             return result.ToString();
         }
 
@@ -978,7 +998,6 @@ namespace Roton.Emulation.Execution
         {
             _grid.TileAt(location).Id = _elements.EmptyId;
             UpdateBoard(location);
-
         }
 
         public IXyPair Rnd()
@@ -1019,6 +1038,7 @@ namespace Roton.Emulation.Execution
                         success = false;
                         break;
                     }
+
                     termOffset++;
                     if (termOffset >= termBytes.Length)
                     {
@@ -1048,25 +1068,28 @@ namespace Roton.Emulation.Execution
         public IXyPair Seek(IXyPair location)
         {
             var result = new Vector();
-            if (_random.Synced(2) == 0 || Player.Location.Y == location.Y)
+            if (_random.Synced(2) == 0 || _actors.Player.Location.Y == location.Y)
             {
-                result.X = (Player.Location.X - location.X).Polarity();
+                result.X = (_actors.Player.Location.X - location.X).Polarity();
             }
+
             if (result.X == 0)
             {
-                result.Y = (Player.Location.Y - location.Y).Polarity();
+                result.Y = (_actors.Player.Location.Y - location.Y).Polarity();
             }
+
             if (_world.EnergyCycles > 0)
             {
                 result.SetOpposite();
             }
+
             return result;
         }
 
         public void SetBoard(int boardIndex)
         {
             var element = _elements[_elements.PlayerId];
-            _grid.TileAt(Player.Location).SetTo(element.Id, element.Color);
+            _grid.TileAt(_actors.Player.Location).SetTo(element.Id, element.Color);
             PackBoard();
             UnpackBoard(boardIndex);
         }
@@ -1084,7 +1107,7 @@ namespace Roton.Emulation.Execution
             var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
 
             SpawnActor(new Location(0, 0), new Tile(_elements.MessengerId, 0), 1, _state.DefaultActor);
-            _actors[_state.ActorCount].P2 = duration/(_state.GameWaitTime + 1);
+            _actors[_state.ActorCount].P2 = duration / (_state.GameWaitTime + 1);
             _state.Message = topMessage;
             _state.Message2 = bottomMessage;
         }
@@ -1106,6 +1129,7 @@ namespace Roton.Emulation.Execution
                 {
                     source = _state.DefaultActor;
                 }
+
                 actor.CopyFrom(source);
                 actor.Location.CopyFrom(location);
                 actor.Cycle = cycle;
@@ -1120,6 +1144,7 @@ namespace Roton.Emulation.Execution
                 {
                     _grid.TileAt(actor.Location).Color = tile.Color;
                 }
+
                 _grid.TileAt(actor.Location).Id = tile.Id;
                 if (actor.Location.Y > 0)
                 {
@@ -1161,7 +1186,7 @@ namespace Roton.Emulation.Execution
             {
                 ThreadActive = true;
                 Thread = new Thread(StartMain);
-                TimerTick = _timer.Ticks;
+                TimerTick = _timers.Player.Ticks;
                 Thread.Start();
             }
         }
@@ -1177,6 +1202,7 @@ namespace Roton.Emulation.Execution
                         return flag.Substring(1);
                     }
                 }
+
                 return string.Empty;
             }
         }
@@ -1231,10 +1257,12 @@ namespace Roton.Emulation.Execution
                                             BroadcastLabel(-actorIndex, KnownLabels.Bombed, false);
                                         }
                                     }
+
                                     if (element.IsDestructible || element.Id == _elements.StarId)
                                     {
                                         Destroy(target);
                                     }
+
                                     if (element.Id == _elements.EmptyId || element.Id == _elements.BreakableId)
                                     {
                                         _grid.TileAt(target).SetTo(_elements.BreakableId, _random.Synced(7) + 9);
@@ -1249,6 +1277,7 @@ namespace Roton.Emulation.Execution
                                 }
                             }
                         }
+
                         UpdateBoard(target);
                     }
                 }
@@ -1266,6 +1295,7 @@ namespace Roton.Emulation.Execution
             {
                 Thread.Sleep(1);
             }
+
             TimerTick++;
         }
 
@@ -1299,6 +1329,7 @@ namespace Roton.Emulation.Execution
                 _grid.TileAt(0, y).Id = boardEdgeId;
                 _grid.TileAt(_grid.Width + 1, y).Id = boardEdgeId;
             }
+
             for (var x = 0; x <= _grid.Width + 1; x++)
             {
                 _grid.TileAt(x, 0).Id = boardEdgeId;
@@ -1320,6 +1351,7 @@ namespace Roton.Emulation.Execution
                 _grid.TileAt(1, y).SetTo(boardBorderId, boardBorderColor);
                 _grid.TileAt(_grid.Width, y).SetTo(boardBorderId, boardBorderColor);
             }
+
             for (var x = 1; x <= _grid.Width; x++)
             {
                 _grid.TileAt(x, 1).SetTo(boardBorderId, boardBorderColor);
@@ -1329,12 +1361,12 @@ namespace Roton.Emulation.Execution
             // generate player actor
             var element = _elements[_elements.PlayerId];
             _state.ActorCount = 0;
-            Player.Location.SetTo(_grid.Width/2, _grid.Height/2);
-            _grid.TileAt(Player.Location).SetTo(element.Id, element.Color);
-            Player.Cycle = 1;
-            Player.UnderTile.SetTo(0, 0);
-            Player.Pointer = 0;
-            Player.Length = 0;
+            _actors.Player.Location.SetTo(_grid.Width / 2, _grid.Height / 2);
+            _grid.TileAt(_actors.Player.Location).SetTo(element.Id, element.Color);
+            _actors.Player.Cycle = 1;
+            _actors.Player.UnderTile.SetTo(0, 0);
+            _actors.Player.Pointer = 0;
+            _actors.Player.Length = 0;
         }
 
         private int ColorMatch(ITile tile)
@@ -1350,7 +1382,7 @@ namespace Roton.Emulation.Execution
 
         private int Distance(IXyPair a, IXyPair b)
         {
-            return (a.Y - b.Y).Square()*2 + (a.X - b.X).Square();
+            return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
         }
 
         private void DrawTile(IXyPair location, AnsiChar ac)
@@ -1382,6 +1414,7 @@ namespace Roton.Emulation.Execution
                 {
                     Push(target, vector);
                 }
+
                 if (_grid.ElementAt(target).IsFloor)
                 {
                     MoveActor(context.Index, target);
@@ -1427,6 +1460,7 @@ namespace Roton.Emulation.Execution
             {
                 now += 0x8000;
             }
+
             return now - then;
         }
 
@@ -1443,7 +1477,6 @@ namespace Roton.Emulation.Execution
 
         protected virtual byte[] LoadFile(string filename)
         {
-
             try
             {
                 return _fileSystem.GetFile(filename);
@@ -1468,18 +1501,20 @@ namespace Roton.Emulation.Execution
                 {
                     ShowAbout();
                 }
+
                 if (_state.DefaultWorldName.Length <= 0)
                 {
                     // normally we would load the world here,
                     // however it will have already been loaded in the context
                 }
+
                 _state.StartBoard = _world.BoardIndex;
                 SetBoard(0);
                 _state.Init = false;
             }
 
             var element = _elements[_state.PlayerElement];
-            _grid.TileAt(Player.Location).SetTo(element.Id, element.Color);
+            _grid.TileAt(_actors.Player.Location).SetTo(element.Id, element.Color);
             if (_state.PlayerElement == _elements.MonitorId)
             {
                 SetMessage(0, new Message());
@@ -1505,37 +1540,40 @@ namespace Roton.Emulation.Execution
                         var actorData = _actors[_state.ActIndex];
                         if (actorData.Cycle != 0)
                         {
-                            if (_state.ActIndex%actorData.Cycle == _state.GameCycle%actorData.Cycle)
+                            if (_state.ActIndex % actorData.Cycle == _state.GameCycle % actorData.Cycle)
                             {
                                 _elements[_grid.TileAt(actorData.Location).Id].Act(_state.ActIndex);
                             }
                         }
+
                         _state.ActIndex++;
                     }
                 }
                 else
                 {
                     _state.ActIndex = _state.ActorCount + 1;
-                    if (_state.PlayerTimer.Clock(25))
+                    if (_timers.Player.Clock(25))
                     {
                         alternating = !alternating;
                     }
+
                     if (alternating)
                     {
                         var playerElement = _elements[_elements.PlayerId];
-                        DrawTile(Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
+                        DrawTile(_actors.Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                     }
                     else
                     {
-                        if (_grid.TileAt(Player.Location).Id == _elements.PlayerId)
+                        if (_grid.TileAt(_actors.Player.Location).Id == _elements.PlayerId)
                         {
-                            DrawTile(Player.Location, new AnsiChar(0x20, 0x0F));
+                            DrawTile(_actors.Player.Location, new AnsiChar(0x20, 0x0F));
                         }
                         else
                         {
-                            UpdateBoard(Player.Location);
+                            UpdateBoard(_actors.Player.Location);
                         }
                     }
+
                     _hud.DrawPausing();
                     ReadInput();
                     if (_state.KeyPressed == 0x1B)
@@ -1549,31 +1587,36 @@ namespace Roton.Emulation.Execution
                             _state.BreakGameLoop = true;
                             _hud.UpdateBorder();
                         }
+
                         _state.KeyPressed = 0;
                     }
+
                     if (!_state.KeyVector.IsZero())
                     {
-                        var target = Player.Location.Sum(_state.KeyVector);
+                        var target = _actors.Player.Location.Sum(_state.KeyVector);
                         _grid.ElementAt(target).Interact(target, 0, _state.KeyVector);
                     }
+
                     if (!_state.KeyVector.IsZero())
                     {
-                        var target = Player.Location.Sum(_state.KeyVector);
+                        var target = _actors.Player.Location.Sum(_state.KeyVector);
                         if (_grid.ElementAt(target).IsFloor)
                         {
-                            if (_grid.ElementAt(Player.Location).Id == _elements.PlayerId)
+                            if (_grid.ElementAt(_actors.Player.Location).Id == _elements.PlayerId)
                             {
                                 MoveActor(0, target);
                             }
                             else
                             {
-                                UpdateBoard(Player.Location);
-                                Player.Location.Add(_state.KeyVector);
-                                _grid.TileAt(Player.Location).SetTo(_elements.PlayerId, _elements[_elements.PlayerId].Color);
-                                UpdateBoard(Player.Location);
-                                UpdateRadius(Player.Location, RadiusMode.Update);
-                                UpdateRadius(Player.Location.Difference(_state.KeyVector), RadiusMode.Update);
+                                UpdateBoard(_actors.Player.Location);
+                                _actors.Player.Location.Add(_state.KeyVector);
+                                _grid.TileAt(_actors.Player.Location)
+                                    .SetTo(_elements.PlayerId, _elements[_elements.PlayerId].Color);
+                                UpdateBoard(_actors.Player.Location);
+                                UpdateRadius(_actors.Player.Location, RadiusMode.Update);
+                                UpdateRadius(_actors.Player.Location.Difference(_state.KeyVector), RadiusMode.Update);
                             }
+
                             _state.GamePaused = false;
                             _hud.ClearPausing();
                             _state.GameCycle = _random.Synced(100);
@@ -1598,8 +1641,9 @@ namespace Roton.Emulation.Execution
                     {
                         _hud.ClearTitleStatus();
                     }
+
                     element = _elements[_elements.PlayerId];
-                    _grid.TileAt(Player.Location).SetTo(element.Id, element.Color);
+                    _grid.TileAt(_actors.Player.Location).SetTo(element.Id, element.Color);
                     _state.GameOver = false;
                     break;
                 }
@@ -1612,17 +1656,19 @@ namespace Roton.Emulation.Execution
             {
                 if (!_state.BreakGameLoop && !_state.GamePaused)
                 {
-                    if (_state.GameWaitTime <= 0 || _state.PlayerTimer.Clock(_state.GameWaitTime))
+                    if (_state.GameWaitTime <= 0 || _timers.Player.Clock(_state.GameWaitTime))
                     {
                         _state.GameCycle++;
                         if (_state.GameCycle > 420)
                         {
                             _state.GameCycle = 1;
                         }
+
                         _state.ActIndex = 0;
                         ReadInput();
                     }
                 }
+
                 WaitForTick();
             }
         }
@@ -1649,10 +1695,12 @@ namespace Roton.Emulation.Execution
 
             if (_world.IsLocked)
             {
-                var file = LoadFile(GetWorldName(string.IsNullOrWhiteSpace(_world.Name) ? _state.WorldFileName : _world.Name));
+                var file = LoadFile(GetWorldName(string.IsNullOrWhiteSpace(_world.Name)
+                    ? _state.WorldFileName
+                    : _world.Name));
                 if (file != null)
                 {
-                    RequestReplaceContext?.Invoke(this, new DataEventArgs { Data = file });
+                    RequestReplaceContext?.Invoke(this, new DataEventArgs {Data = file});
                     gameIsActive = _state.WorldLoaded;
                     _state.StartBoard = _world.BoardIndex;
                 }
@@ -1800,6 +1848,7 @@ namespace Roton.Emulation.Execution
                 {
                     SetBoard(0);
                 }
+
                 while (ThreadActive)
                 {
                     _state.PlayerElement = _elements.MonitorId;
@@ -1823,6 +1872,7 @@ namespace Roton.Emulation.Execution
                         break;
                     }
                 }
+
                 if (_state.QuitZzt)
                 {
                     break;

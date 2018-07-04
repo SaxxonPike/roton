@@ -5,18 +5,18 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztAlerts : IAlerts
     {
-        private readonly int _ammoPerPickup;
         private readonly IColors _colors;
+        private readonly IConfig _config;
         private readonly IMemory _memory;
 
-        public ZztAlerts(IMemory memory, IColors colors, int ammoPerPickup)
+        public ZztAlerts(IMemory memory, IColors colors, IConfig config)
         {
             _memory = memory;
             _colors = colors;
-            _ammoPerPickup = ammoPerPickup;
+            _config = config;
         }
 
-        public IMessage AmmoMessage => new ZztMessage($"Ammunition - {_ammoPerPickup} shots per container.");
+        public IMessage AmmoMessage => new ZztMessage($"Ammunition - {_config.AmmoPerPickup} shots per container.");
 
         public bool AmmoPickup
         {

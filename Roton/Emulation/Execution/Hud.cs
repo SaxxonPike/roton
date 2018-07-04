@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
     public abstract class Hud : IHud
     {
-        protected Hud(IEngine engine, ITerminal terminal)
+        private readonly Lazy<IEngine> _engine;
+
+        protected Hud(Lazy<IEngine> engine, ITerminal terminal)
         {
-            Engine = engine;
+            _engine = engine;
             Terminal = terminal;
         }
 
-        protected IEngine Engine { get; }
+        protected IEngine Engine => _engine.Value;
 
         protected ITerminal Terminal { get; }
 

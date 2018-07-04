@@ -150,9 +150,9 @@ namespace Roton.Emulation.SuperZZT
 
         public SuperZztEngine(IKeyboard keyboard, IBoards boards, IFileSystem fileSystem, IState state,
             IOopContextFactory oopContextFactory, IActors actors, IGrid grid, IRandom random, IBoard board,
-            IWorld world, ITimer timer, IElements elements, ISounds sounds, IGameSerializer gameSerializer,
+            IWorld world, ITimers timers, IElements elements, ISounds sounds, IGameSerializer gameSerializer,
             IAlerts alerts, IHud hud, IGrammar grammar) : base(keyboard, boards, fileSystem, state, oopContextFactory,
-            actors, grid, random, board, world, timer, elements, sounds, gameSerializer, alerts, hud, grammar)
+            actors, grid, random, board, world, timers, elements, sounds, gameSerializer, alerts, hud, grammar)
         {
             _state = state;
             _actors = actors;

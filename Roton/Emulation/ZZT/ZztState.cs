@@ -9,12 +9,11 @@ namespace Roton.Emulation.ZZT
     {
         private readonly IMemory _memory;
 
-        public ZztState(IMemory memory, byte[] memoryBytes)
+        public ZztState(IMemory memory, IStaticResourceService staticResourceService)
         {
             _memory = memory;
-            memory.Write(0x0000, memoryBytes);
+            memory.Write(0x0000, staticResourceService.GetMemoryData());
             BorderTile = new MemoryTile(_memory, 0x0072);
-            Colors = new ZztColors(_memory);
             DefaultActor = new Actor(_memory, 0x0076);
             EdgeTile = new MemoryTile(_memory, 0x0074);
             KeyVector = new MemoryVector(_memory, 0x7C68);
@@ -25,8 +24,6 @@ namespace Roton.Emulation.ZZT
             TransporterVChars = new ByteString(_memory, 0x0136);
             Vector4 = new Int16List(_memory, 0x0062, 8);
             Vector8 = new Int16List(_memory, 0x0042, 16);
-            Alerts = new ZztAlerts(_memory, Colors, 5);
-            PlayerTimer = new MemoryTimer(_memory, 0x740A);
         }
 
         public int MainTime
@@ -59,8 +56,6 @@ namespace Roton.Emulation.ZZT
             set { _memory.Write16(0x31CD, value); }
         }
 
-        public IAlerts Alerts { get; }
-
         public int BoardCount
         {
             get { return _memory.Read16(0x45BE); }
@@ -80,8 +75,6 @@ namespace Roton.Emulation.ZZT
             get { return _memory.ReadBool(0x7B66); }
             set { _memory.WriteBool(0x7B66, value); }
         }
-
-        public IColors Colors { get; }
 
         public IActor DefaultActor { get; }
 
@@ -214,8 +207,6 @@ namespace Roton.Emulation.ZZT
             get { return _memory.Read16(0x4920); }
             set { _memory.Write16(0x4920, value); }
         }
-
-        public ITimer PlayerTimer { get; }
 
         public bool QuitZzt
         {

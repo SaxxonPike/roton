@@ -4,6 +4,8 @@ using Lyon.App;
 using Roton.Core;
 using Roton.Interface.Resources;
 using Roton.Interface.Video.Glyphs;
+using Roton.Interface.Video.Palettes;
+using Roton.Interface.Video.Scenes.Composition;
 
 namespace Lyon
 {
@@ -23,6 +25,8 @@ namespace Lyon
                 .Where(t => !t.IsAbstract && t.IsClass)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            
+            Register(builder);
 
             var container = builder.Build();
             

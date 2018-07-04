@@ -4,8 +4,6 @@ namespace Roton.Interface.Resources
 {
     public class CommonResourceZipFileSystem : ZipFileSystem, ICommonResourceArchive
     {
-        public static readonly ICommonResourceArchive Default = new CommonResourceZipFileSystem(Properties.Resources.resources);
-
         public CommonResourceZipFileSystem(byte[] file) : base(file)
         {
         }

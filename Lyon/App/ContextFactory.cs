@@ -9,6 +9,7 @@ using Roton.Emulation.Execution;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
 using Roton.FileIo;
+using Roton.Interface.Video.Scenes.Composition;
 
 namespace Lyon.App
 {
@@ -27,6 +28,12 @@ namespace Lyon.App
             {
                 builder.RegisterInstance(fileSystem).As<IFileSystem>().SingleInstance();
                 builder.RegisterType<Context>().As<IContext>().SingleInstance();
+                
+                builder.Register(c => c.Resolve<IComposerProxy>().SceneComposer)
+                    .As<ITerminal>();
+
+                builder.Register(c => c.Resolve<IComposerProxy>().AudioComposer)
+                    .As<ISpeaker>();
                 
                 switch (contextEngine)
                 {
@@ -56,6 +63,7 @@ namespace Lyon.App
                         builder.RegisterType<ZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<ZztGrid>().As<IGrid>().SingleInstance();
                         builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
+                        builder.RegisterType<ZztStaticResourceService>().As<IStaticResourceService>().SingleInstance();
                         break;
                     case ContextEngine.SuperZzt:
                         builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
@@ -83,6 +91,7 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<SuperZztGrid>().As<IGrid>().SingleInstance();
                         builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
+                        builder.RegisterType<SuperZztStaticResourceService>().As<IStaticResourceService>().SingleInstance();
                         break;
                 }
             });

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
@@ -14,7 +15,7 @@ namespace Roton.Emulation.SuperZZT
         private readonly IWorld _world;
         private readonly IElements _elements;
 
-        public SuperZztHud(IEngine engine, ITerminal terminal, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements)
+        public SuperZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements)
             : base(engine, terminal)
         {
             _state = state;

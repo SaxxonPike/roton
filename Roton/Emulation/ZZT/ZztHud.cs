@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
@@ -12,7 +13,7 @@ namespace Roton.Emulation.ZZT
         private readonly IElements _elements;
         private readonly IBoard _board;
 
-        public ZztHud(IEngine engine, ITerminal terminal, IState state, IWorld world, IElements elements, IBoard board)
+        public ZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IWorld world, IElements elements, IBoard board)
             : base(engine, terminal)
         {
             _state = state;

@@ -1,8 +1,12 @@
-﻿namespace Roton.Resources
+﻿using Roton.FileIo;
+
+namespace Roton.Resources
 {
     public interface IResourceArchive
     {
-        byte[] GetElementData();
-        byte[] GetMemoryData();
+        byte[] GetSuperZztElementData();
+        byte[] GetSuperZztMemoryData();
+        byte[] GetZztElementData();
+        byte[] GetZztMemoryData();
     }
 }

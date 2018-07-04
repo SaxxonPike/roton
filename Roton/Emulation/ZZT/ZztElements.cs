@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System;
+using Roton.Core;
 using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 
@@ -6,9 +7,9 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztElements : Elements
     {
-        private readonly IBehaviorMap _behaviorMap;
+        private readonly Lazy<IBehaviorMap> _behaviorMap;
 
-        public ZztElements(IMemory memory, IBehaviorMap behaviorMap, IStaticResourceService staticResourceService)
+        public ZztElements(IMemory memory, Lazy<IBehaviorMap> behaviorMap, IStaticResourceService staticResourceService)
             : base(memory, 54)
         {
             _behaviorMap = behaviorMap;
@@ -65,7 +66,7 @@ namespace Roton.Emulation.ZZT
 
         protected override IElement GetElement(int index)
         {
-            return new ZztElement(Memory, index, _behaviorMap.Map(index));
+            return new ZztElement(Memory, index, _behaviorMap.Value.Map(index));
         }
     }
 }

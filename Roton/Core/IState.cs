@@ -4,14 +4,11 @@ namespace Roton.Core
 {
     public interface IState
     {
-        IAlerts Alerts { get; }
         ITile BorderTile { get; }
-        IColors Colors { get; }
         IActor DefaultActor { get; }
         ITile EdgeTile { get; }
         IXyPair KeyVector { get; }
         IList<int> LineChars { get; }
-        ITimer PlayerTimer { get; }
         IList<int> SoundBuffer { get; }
         IList<int> StarChars { get; }
         IList<int> TransporterHChars { get; }

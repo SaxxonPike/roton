@@ -1,15 +1,34 @@
-﻿using Roton.FileIo;
+﻿using System.IO;
+using Roton.FileIo;
 
 namespace Roton.Resources
 {
-    public static class ResourceZipFileSystem
+    public class ResourceZipFileSystem : IResourceZipFileSystem
     {
-        public static IFileSystem Root => GetPrependedFileSystem("root/");
-        public static IFileSystem System => GetPrependedFileSystem("system/");
+        private byte[] _data;
 
-        private static IFileSystem GetPrependedFileSystem(string path)
+        public ResourceZipFileSystem()
         {
-            return new PrependedFileSystem(new ZipFileSystem(Properties.Resources.resources), path);
+            using (var stream = typeof(ResourceZipFileSystem).Assembly.GetManifestResourceStream("Resources/resources.zip"))
+            using (var mem = new MemoryStream())
+            {
+                stream.CopyTo(mem);
+                _data = mem.ToArray();
+            }
         }
+        
+        public IFileSystem Root => GetPrependedFileSystem("root/");
+        public IFileSystem System => GetPrependedFileSystem("system/");
+
+        private IFileSystem GetPrependedFileSystem(string path)
+        {
+            return new PrependedFileSystem(new ZipFileSystem(_data), path);
+        }
+    }
+
+    public interface IResourceZipFileSystem
+    {
+        IFileSystem Root { get; }
+        IFileSystem System { get; }
     }
 }
