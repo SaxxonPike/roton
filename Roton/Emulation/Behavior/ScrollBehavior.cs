@@ -1,33 +1,47 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public sealed class ScrollBehavior : ElementBehavior
     {
-        public override string KnownName => "Scroll";
+        private readonly IActors _actors;
+        private readonly IGrid _grid;
+        private readonly IEngine _engine;
+        private readonly IConfig _config;
+
+        public override string KnownName => KnownNames.Scroll;
+
+        public ScrollBehavior(IActors actors, IGrid grid, IEngine engine, IConfig config)
+        {
+            _actors = actors;
+            _grid = grid;
+            _engine = engine;
+            _config = config;
+        }
 
         public override void Act(int index)
         {
-            var actor = _actorList[index];
-            var color = engine.Tiles[actor.Location].Color;
+            var actor = _actors[index];
+            var color = _grid[actor.Location].Color;
 
             color++;
             if (color > 0x0F)
             {
                 color = 0x09;
             }
-            engine.Tiles[actor.Location].Color = color;
-            engine.UpdateBoard(actor.Location);
+            _grid[actor.Location].Color = color;
+            _engine.UpdateBoard(actor.Location);
         }
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var scrollIndex = engine.ActorIndexAt(location);
-            var actor = _actorList[scrollIndex];
+            var scrollIndex = _actors.ActorIndexAt(location);
+            var actor = _actors[scrollIndex];
 
-            engine.PlaySound(2, engine.EncodeMusic(@"c-c+d-d+e-e+f-f+g-g"));
-            engine.ExecuteCode(scrollIndex, actor, @"Scroll");
-            engine.RemoveActor(scrollIndex);
+            _engine.PlaySound(2, _engine.EncodeMusic(_config.ScrollMusic));
+            _engine.ExecuteCode(scrollIndex, actor, _config.ScrollTitle);
+            _engine.RemoveActor(scrollIndex);
         }
     }
 }

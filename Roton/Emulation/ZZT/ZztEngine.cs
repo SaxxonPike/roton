@@ -20,13 +20,13 @@ namespace Roton.Emulation.ZZT
 
             State = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
-            Actors = new ZztActorList(Memory);
+            Actors = new ZztActors(Memory);
             Board = new ZztBoard(Memory);
             GameSerializer = new ZztGameSerializer(Memory);
             Hud = new ZztHud(this, config.Terminal);
-            Elements = new ZztElementList(Memory, elementBytes, behaviorConfig);
-            SoundSet = new SoundSet();
-            Tiles = new ZztTileGrid(Memory);
+            Elements = new ZztElements(Memory, elementBytes, behaviorConfig);
+            Sounds = new Sounds();
+            Tiles = new ZztGrid(Memory);
             World = new ZztWorld(Memory);
             Grammar = new ZztGrammar(State.Colors, Elements);
             DrumBank = new ZztDrumBank(Memory);
@@ -34,17 +34,17 @@ namespace Roton.Emulation.ZZT
             Hud.Initialize();
         }
 
-        public override IActorList Actors { get; }
+        public override IActors Actors { get; }
         public override IBoard Board { get; }
         public override IDrumBank DrumBank { get; }
-        public override IElementList Elements { get; }
+        public override IElements Elements { get; }
         public override IGameSerializer GameSerializer { get; }
 
         public override IGrammar Grammar { get; }
         public override IHud Hud { get; }
-        public override ISoundSet SoundSet { get; }
+        public override ISounds Sounds { get; }
         public override IState State { get; }
-        public override ITileGrid Tiles { get; }
+        public override IGrid Tiles { get; }
         public override IWorld World { get; }
 
         public override void HandlePlayerInput(IActor actor, int hotkey)

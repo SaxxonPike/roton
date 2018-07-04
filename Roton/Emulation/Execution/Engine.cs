@@ -15,7 +15,7 @@ namespace Roton.Emulation.Execution
 {
     public abstract class Engine : IEngine
     {
-        private readonly IRandomizerService _randomizerService;
+        private readonly IRandom _random;
         public event EventHandler Terminated;
         public event DataEventHandler RequestReplaceContext;
 
@@ -25,23 +25,26 @@ namespace Roton.Emulation.Execution
         private readonly IFileSystem _fileSystem;
         private readonly IState _state;
         private readonly IOopContextFactory _oopContextFactory;
+        private readonly IActors _actors;
 
         protected Engine(
             IMemory memory, 
-            IRandomizerService randomizerService,
+            IRandom random,
             IKeyboard keyboard,
             ISpeaker speaker,
             IBoardList boardList,
             IFileSystem fileSystem,
             IState state,
-            IOopContextFactory oopContextFactory)
+            IOopContextFactory oopContextFactory,
+            IActors actors)
         {
-            _randomizerService = randomizerService;
+            _random = random;
             _keyboard = keyboard;
             _speaker = speaker;
             _fileSystem = fileSystem;
             _state = state;
             _oopContextFactory = oopContextFactory;
+            _actors = actors;
             Boards = boardList;
             Memory = memory;
             Timer = new CoreTimer();
@@ -49,9 +52,9 @@ namespace Roton.Emulation.Execution
 
         private ITile BorderTile => State.BorderTile;
 
-        private IRandomizer Random => _randomizerService.Random;
+        private IRandomizer Random => _random.NonSynced;
 
-        private IRandomizer SyncRandom => _randomizerService.SyncRandom;
+        private IRandomizer SyncRandom => _random.Synced;
 
         private CoreTimer Timer { get; }
 
@@ -67,19 +70,7 @@ namespace Roton.Emulation.Execution
             set { _timerTick = value & 0x7FFF; }
         }
 
-        public int ActorIndexAt(IXyPair location)
-        {
-            var index = 0;
-            foreach (var actor in Actors)
-            {
-                if (actor.Location.X == location.X && actor.Location.Y == location.Y)
-                    return index;
-                index++;
-            }
-            return -1;
-        }
-
-        public abstract IActorList Actors { get; }
+        public abstract IActors Actors { get; }
 
         public virtual int Adjacent(IXyPair location, int id)
         {
@@ -116,7 +107,7 @@ namespace Roton.Emulation.Execution
             else
             {
                 Destroy(location);
-                this.PlaySound(2, SoundSet.EnemySuicide);
+                this.PlaySound(2, Sounds.EnemySuicide);
             }
         }
 
@@ -308,7 +299,7 @@ namespace Roton.Emulation.Execution
 
         public abstract IDrumBank DrumBank { get; }
 
-        public abstract IElementList Elements { get; }
+        public abstract IElements Elements { get; }
 
         public ISound EncodeMusic(string music)
         {
@@ -540,7 +531,7 @@ namespace Roton.Emulation.Execution
                         World.TimePassed = 0;
                         if (Board.RestartOnZap)
                         {
-                            this.PlaySound(4, SoundSet.TimeOut);
+                            this.PlaySound(4, Sounds.TimeOut);
                             this.TileAt(actor.Location).Id = Elements.EmptyId;
                             UpdateBoard(actor.Location);
                             var oldLocation = actor.Location.Clone();
@@ -549,11 +540,11 @@ namespace Roton.Emulation.Execution
                             UpdateRadius(actor.Location, 0);
                             State.GamePaused = true;
                         }
-                        this.PlaySound(4, SoundSet.Ouch);
+                        this.PlaySound(4, Sounds.Ouch);
                     }
                     else
                     {
-                        this.PlaySound(5, SoundSet.GameOver);
+                        this.PlaySound(5, Sounds.GameOver);
                     }
                 }
             }
@@ -562,11 +553,11 @@ namespace Roton.Emulation.Execution
                 var element = this.TileAt(actor.Location).Id;
                 if (element == Elements.BulletId)
                 {
-                    this.PlaySound(3, SoundSet.BulletDie);
+                    this.PlaySound(3, Sounds.BulletDie);
                 }
                 else if (element != Elements.ObjectId)
                 {
-                    this.PlaySound(3, SoundSet.EnemyDie);
+                    this.PlaySound(3, Sounds.EnemyDie);
                 }
                 RemoveActor(index);
             }
@@ -814,7 +805,7 @@ namespace Roton.Emulation.Execution
                 if (target.X > 0)
                 {
                     MoveTile(actor.Location.Difference(vector), target);
-                    this.PlaySound(3, SoundSet.Transporter);
+                    this.PlaySound(3, Sounds.Transporter);
                 }
             }
         }
@@ -822,7 +813,7 @@ namespace Roton.Emulation.Execution
         public void RaiseError(string error)
         {
             SetMessage(0xC8, Alerts.ErrorMessage(error));
-            this.PlaySound(5, SoundSet.Error);
+            this.PlaySound(5, Sounds.Error);
         }
 
         public int RandomNumber(int max)
@@ -1118,7 +1109,7 @@ namespace Roton.Emulation.Execution
             ShowHelp("GAME");
         }
 
-        public abstract ISoundSet SoundSet { get; }
+        public abstract ISounds Sounds { get; }
 
         public void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
         {
@@ -1177,7 +1168,7 @@ namespace Roton.Emulation.Execution
             }
 
             Destroy(target);
-            this.PlaySound(2, SoundSet.BulletDie);
+            this.PlaySound(2, Sounds.BulletDie);
             return true;
         }
 
@@ -1222,7 +1213,7 @@ namespace Roton.Emulation.Execution
             return SyncRandom.GetNext(max);
         }
 
-        public abstract ITileGrid Tiles { get; }
+        public abstract IGrid Tiles { get; }
 
         public bool TitleScreen => State.PlayerElement != Elements.PlayerId;
 

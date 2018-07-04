@@ -1,34 +1,41 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public sealed class GemBehavior : ElementBehavior
     {
-        private readonly int _healthPerGem;
-        private readonly int _scorePerGem;
+        private readonly IConfig _config;
+        private readonly IWorld _world;
+        private readonly ISounds _sounds;
+        private readonly IEngine _engine;
+        private readonly IAlerts _alerts;
 
-        public GemBehavior(int healthPerGem, int scorePerGem)
+        public GemBehavior(IConfig config, IWorld world, ISounds sounds, IEngine engine, IAlerts alerts)
         {
-            _healthPerGem = healthPerGem;
-            _scorePerGem = scorePerGem;
+            _config = config;
+            _world = world;
+            _sounds = sounds;
+            _engine = engine;
+            _alerts = alerts;
         }
 
-        public override string KnownName => "Gem";
+        public override string KnownName => KnownNames.Gem;
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            engine.World.Health += _healthPerGem;
-            engine.World.Gems += 1;
-            engine.World.Score += _scorePerGem;
-            engine.RemoveItem(location);
-            engine.UpdateStatus();
-            engine.PlaySound(2, engine.SoundSet.Gem);
+            _world.Health += _config.HealthPerGem;
+            _world.Gems += 1;
+            _world.Score += _config.ScorePerGem;
+            _engine.RemoveItem(location);
+            _engine.UpdateStatus();
+            __engine.PlaySound(2, _sounds.Gem);
 
-            if (!engine.Alerts.GemPickup)
+            if (!_alerts.GemPickup)
                 return;
 
-            engine.SetMessage(0xC8, engine.Alerts.GemMessage);
-            engine.Alerts.GemPickup = false;
+            _engine.SetMessage(0xC8, _alerts.GemMessage);
+            _alerts.GemPickup = false;
         }
     }
 }

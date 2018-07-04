@@ -10,32 +10,32 @@ namespace Roton.Emulation.Execution
     public abstract class Grammar : IGrammar
     {
         private readonly IColorList _colors;
-        private readonly IElementList _elementList;
+        private readonly IElements _elements;
         private readonly IWorld _world;
         private readonly IBoard _board;
         private readonly IEngine _engine;
-        private readonly ISoundSet _soundSet;
-        private readonly ITileGrid _tileGrid;
-        private readonly IActorList _actorList;
+        private readonly ISounds _sounds;
+        private readonly IGrid _grid;
+        private readonly IActors _actors;
 
         protected Grammar(
             IColorList colors, 
-            IElementList elementList, 
+            IElements elements, 
             IWorld world, 
             IBoard board, 
             IEngine engine,
-            ISoundSet soundSet,
-            ITileGrid tileGrid,
-            IActorList actorList)
+            ISounds sounds,
+            IGrid grid,
+            IActors actors)
         {
             _colors = colors;
-            _elementList = elementList;
+            _elements = elements;
             _world = world;
             _board = board;
             _engine = engine;
-            _soundSet = soundSet;
-            _tileGrid = tileGrid;
-            _actorList = actorList;
+            _sounds = sounds;
+            _grid = grid;
+            _actors = actors;
             Cheats = GetCheats();
             Commands = GetCommands();
             Conditions = GetConditions();
@@ -169,7 +169,7 @@ namespace Roton.Emulation.Execution
                 break;
             }
 
-            foreach (var element in _elementList.Where(e => e != null))
+            foreach (var element in _elements.Where(e => e != null))
             {
                 if (new string(element.Name.ToUpperInvariant().Where(c => c >= 0x41 && c <= 0x5A).ToArray()) != word)
                     continue;
@@ -233,7 +233,7 @@ namespace Roton.Emulation.Execution
         {
             for (var i = 0; i < 4; i++)
             {
-                _engine.Destroy(_actorList.Player.Location.Sum(_engine.GetCardinalVector(i)));
+                _engine.Destroy(_actors.Player.Location.Sum(_engine.GetCardinalVector(i)));
             }
         }
 
@@ -321,7 +321,7 @@ namespace Roton.Emulation.Execution
         protected void Command_Die(IOopContext context)
         {
             context.Died = true;
-            context.DeathTile.SetTo(_elementList.EmptyId, 0);
+            context.DeathTile.SetTo(_elements.EmptyId, 0);
         }
 
         protected void Command_End(IOopContext context)
@@ -347,13 +347,13 @@ namespace Roton.Emulation.Execution
             if (vector != null)
             {
                 var target = context.Actor.Location.Sum(vector);
-                if (!_engine.ElementAt(target).IsFloor)
+                if (!__grid.ElementAt(target).IsFloor)
                 {
-                    _engine.Push(target, vector);
+                    __engine.Push(target, vector);
                 }
-                if (_engine.ElementAt(target).IsFloor)
+                if (__grid.ElementAt(target).IsFloor)
                 {
-                    _engine.MoveActor(context.Index, target);
+                    __engine.MoveActor(context.Index, target);
                     context.Moved = true;
                 }
                 else
@@ -386,7 +386,7 @@ namespace Roton.Emulation.Execution
         {
             var notes = context.ReadLine();
             var sound = _engine.EncodeMusic(notes);
-            _engine.PlaySound(-1, sound);
+            __engine.PlaySound(-1, sound);
             context.NextLine = false;
         }
 
@@ -451,11 +451,11 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = _elementList.Bullet();
+                var projectile = _elements.Bullet();
                 var success = _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
-                    _engine.PlaySound(2, _soundSet.EnemyShoot);
+                    __engine.PlaySound(2, _sounds.EnemyShoot);
                 }
                 context.Moved = true;
             }
@@ -480,7 +480,7 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = _elementList.Star();
+                var projectile = _elements.Star();
                 _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
             }
             context.Moved = true;
@@ -493,13 +493,13 @@ namespace Roton.Emulation.Execution
                 return;
 
             var target = vector.Sum(context.Actor.Location);
-            if (!_engine.ElementAt(target).IsFloor)
+            if (!__grid.ElementAt(target).IsFloor)
             {
-                _engine.Push(target, vector);
+                __engine.Push(target, vector);
             }
-            if (_engine.ElementAt(target).IsFloor)
+            if (__grid.ElementAt(target).IsFloor)
             {
-                _engine.MoveActor(context.Index, target);
+                __engine.MoveActor(context.Index, target);
                 context.Moved = true;
                 context.Resume = false;
             }
@@ -538,8 +538,8 @@ namespace Roton.Emulation.Execution
 
         protected bool? Condition_Alligned(IOopContext context)
         {
-            return context.Actor.Location.X == _actorList.Player.Location.X ||
-                   context.Actor.Location.Y == _actorList.Player.Location.Y;
+            return context.Actor.Location.X == _actors.Player.Location.X ||
+                   context.Actor.Location.Y == _actors.Player.Location.Y;
         }
 
         protected bool? Condition_Any(IOopContext context)
@@ -557,7 +557,7 @@ namespace Roton.Emulation.Execution
             if (direction == null)
                 return null;
 
-            return !_engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
+            return !__grid.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
         }
 
         protected bool? Condition_Contact(IOopContext context)
@@ -843,12 +843,12 @@ namespace Roton.Emulation.Execution
 
         protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
         {
-            if (location.X >= 1 && location.X <= _tileGrid.Width && location.Y >= 1 &&
-                location.Y <= _tileGrid.Height)
+            if (location.X >= 1 && location.X <= _grid.Width && location.Y >= 1 &&
+                location.Y <= _grid.Height)
             {
-                if (!engine.ElementAt(location).IsFloor)
+                if (!_grid.ElementAt(location).IsFloor)
                 {
-                    engine.Push(location, vector);
+                    _engine.Push(location, vector);
                 }
                 engine.PlotTile(location, kind);
             }
@@ -856,14 +856,14 @@ namespace Roton.Emulation.Execution
 
         protected bool Target_All(ISearchContext context)
         {
-            return context.SearchIndex < _actorList.Count;
+            return context.SearchIndex < _actors.Count;
         }
 
         private bool Target_Default(ISearchContext context)
         {
-            while (context.SearchIndex < _actorList.Count)
+            while (context.SearchIndex < _actors.Count)
             {
-                if (_actorList[context.SearchIndex].Pointer != 0)
+                if (_actors[context.SearchIndex].Pointer != 0)
                 {
                     var instruction = new Executable();
                     var firstByte = _engine.ReadActorCodeByte(context.SearchIndex, instruction);
@@ -883,13 +883,13 @@ namespace Roton.Emulation.Execution
 
         protected bool Target_Others(ISearchContext context)
         {
-            if (context.SearchIndex >= _actorList.Count)
+            if (context.SearchIndex >= _actors.Count)
                 return false;
 
             if (context.SearchIndex == context.SearchOffset)
                 context.SearchIndex++;
 
-            return context.SearchIndex < _actorList.Count;
+            return context.SearchIndex < _actors.Count;
         }
 
         protected bool Target_Self(ISearchContext context)

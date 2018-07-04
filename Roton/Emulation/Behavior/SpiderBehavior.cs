@@ -5,45 +5,59 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class SpiderBehavior : EnemyBehavior
     {
-        public override string KnownName => "Spider";
+        private readonly IEngine _engine;
+        private readonly IActors _actors;
+        private readonly IRandom _random;
+        private readonly IGrid _grid;
+        private readonly IElements _elements;
+        public override string KnownName => KnownNames.Spider;
+
+        public SpiderBehavior(IEngine engine, IActors actors, IRandom random, IGrid grid, IElements elements) : base(engine)
+        {
+            _engine = engine;
+            _actors = actors;
+            _random = random;
+            _grid = grid;
+            _elements = elements;
+        }
 
         public override void Act(int index)
         {
-            var actor = _actorList[index];
+            var actor = _actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 <= engine.SyncRandomNumber(10)
-                ? engine.Rnd()
-                : engine.Seek(actor.Location));
+            vector.CopyFrom(actor.P1 <= _random.Synced(10)
+                ? _engine.Rnd()
+                : _engine.Seek(actor.Location));
 
-            if (!ActSpiderAttemptDirection(engine, index, vector))
+            if (!ActSpiderAttemptDirection(index, vector))
             {
-                var i = (engine.SyncRandomNumber(2) << 1) - 1;
-                if (!ActSpiderAttemptDirection(engine, index, vector.Product(i).Swap()))
+                var i = (_random.Synced(2) << 1) - 1;
+                if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap()))
                 {
-                    if (!ActSpiderAttemptDirection(engine, index, vector.Product(i).Swap().Opposite()))
+                    if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap().Opposite()))
                     {
-                        ActSpiderAttemptDirection(engine, index, vector.Opposite());
+                        ActSpiderAttemptDirection(index, vector.Opposite());
                     }
                 }
             }
         }
 
-        private static bool ActSpiderAttemptDirection(IEngine engine, int index, IXyPair vector)
+        private bool ActSpiderAttemptDirection(int index, IXyPair vector)
         {
-            var actor = _actorList[index];
+            var actor = _actors[index];
             var target = actor.Location.Sum(vector);
-            var targetElement = engine.ElementAt(target).Id;
+            var targetElement = _grid.ElementAt(target).Id;
 
-            if (targetElement == engine.Elements.WebId)
+            if (targetElement == _elements.WebId)
             {
-                engine.MoveActor(index, target);
+                _engine.MoveActor(index, target);
                 return true;
             }
 
-            if (targetElement == engine.Elements.PlayerId)
+            if (targetElement == _elements.PlayerId)
             {
-                engine.Attack(index, target);
+                _engine.Attack(index, target);
                 return true;
             }
 

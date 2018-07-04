@@ -4,24 +4,37 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class DragonPupBehavior : EnemyBehavior
     {
-        public override string KnownName => "Dragon Pup";
+        private readonly IEngine _engine;
+        private readonly IState _state;
+        private readonly IGrid _grid;
+        private readonly IActors _actors;
 
+        public override string KnownName => KnownNames.DragonPup;
+
+        public DragonPupBehavior(IEngine engine, IState state, IGrid grid, IActors actors) : base(engine)
+        {
+            _engine = engine;
+            _state = state;
+            _grid = grid;
+            _actors = actors;
+        }
+        
         public override void Act(int index)
         {
-            engine.UpdateBoard(_actorList[index].Location);
+            _engine.UpdateBoard(_actors[index].Location);
         }
 
-        public override AnsiChar Draw(IEngine engine, IXyPair location)
+        public override AnsiChar Draw(IXyPair location)
         {
-            switch (engine.State.GameCycle & 0x3)
+            switch (_state.GameCycle & 0x3)
             {
                 case 0:
                 case 2:
-                    return new AnsiChar(0x94, engine.Tiles[location].Color);
+                    return new AnsiChar(0x94, _grid[location].Color);
                 case 1:
-                    return new AnsiChar(0xA2, engine.Tiles[location].Color);
+                    return new AnsiChar(0xA2, _grid[location].Color);
                 default:
-                    return new AnsiChar(0x95, engine.Tiles[location].Color);
+                    return new AnsiChar(0x95, _grid[location].Color);
             }
         }
     }

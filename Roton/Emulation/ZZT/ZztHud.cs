@@ -63,11 +63,11 @@ namespace Roton.Emulation.ZZT
             DrawString(0x3D, 2, @"    - - - - -      ", 0x1F);
             if (Engine.TitleScreen)
             {
-                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", Engine.State.GameSpeed);
+                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _state.GameSpeed);
                 DrawString(0x3E, 0x15, @" S ", 0x70);
                 DrawString(0x3E, 0x07, @" W ", 0x30);
                 DrawString(0x41, 0x07, @" World:", 0x1E);
-                DrawString(0x45, 0x08, Engine.World.Name.Length <= 0 ? @"Untitled" : Engine.World.Name, 0x1F);
+                DrawString(0x45, 0x08, _world.Name.Length <= 0 ? @"Untitled" : _world.Name, 0x1F);
                 DrawString(0x3E, 0x0B, @" P ", 0x70);
                 DrawString(0x41, 0x0B, @" Play", 0x1F);
                 DrawString(0x3E, 0x0C, @" R ", 0x30);
@@ -89,11 +89,11 @@ namespace Roton.Emulation.ZZT
                 DrawString(0x40, 0x0A, @"   Gems:", 0x1E);
                 DrawString(0x40, 0x0B, @"  Score:", 0x1E);
                 DrawString(0x40, 0x0C, @"   Keys:", 0x1E);
-                DrawChar(0x3E, 0x07, new AnsiChar(Engine.Elements[0x04].Character, 0x1F));
-                DrawChar(0x3E, 0x08, new AnsiChar(Engine.Elements[0x05].Character, 0x1B));
-                DrawChar(0x3E, 0x09, new AnsiChar(Engine.Elements[0x06].Character, 0x16));
-                DrawChar(0x3E, 0x0A, new AnsiChar(Engine.Elements[0x07].Character, 0x1B));
-                DrawChar(0x3E, 0x0C, new AnsiChar(Engine.Elements[0x08].Character, 0x1F));
+                DrawChar(0x3E, 0x07, new AnsiChar(_elements[0x04].Character, 0x1F));
+                DrawChar(0x3E, 0x08, new AnsiChar(_elements[0x05].Character, 0x1B));
+                DrawChar(0x3E, 0x09, new AnsiChar(_elements[0x06].Character, 0x16));
+                DrawChar(0x3E, 0x0A, new AnsiChar(_elements[0x07].Character, 0x1B));
+                DrawChar(0x3E, 0x0C, new AnsiChar(_elements[0x08].Character, 0x1F));
                 DrawString(0x3E, 0x0E, @" T ", 0x70);
                 DrawString(0x41, 0x0E, @" Torch", 0x1F);
                 DrawString(0x3E, 0x0F, @" B ", 0x30);
@@ -217,7 +217,7 @@ namespace Roton.Emulation.ZZT
 
         public override void Initialize()
         {
-            Terminal.SetSize(Engine.State.EditorMode ? 60 : 80, 25, false);
+            Terminal.SetSize(_state.EditorMode ? 60 : 80, 25, false);
         }
 
         private string IntToString(int i)
@@ -263,8 +263,8 @@ namespace Roton.Emulation.ZZT
                     // cancel it for now
                     performSelection = false;
                 }
-                if (!performSelection || Engine.State.KeyShift || Engine.State.KeyPressed == 0x0D ||
-                    Engine.State.KeyPressed == 0x1B)
+                if (!performSelection || _state.KeyShift || _state.KeyPressed == 0x0D ||
+                    _state.KeyPressed == 0x1B)
                 {
                     break;
                 }
@@ -291,30 +291,30 @@ namespace Roton.Emulation.ZZT
         {
             if (!Engine.TitleScreen)
             {
-                if (Engine.Board.TimeLimit <= 0)
+                if (_board.TimeLimit <= 0)
                 {
                     DrawStatusLine(6);
                 }
                 else
                 {
                     DrawString(0x40, 0x06, @"   Time:", 0x1E);
-                    DrawString(0x48, 0x06, IntToString(Engine.Board.TimeLimit - Engine.World.TimePassed), 0x1E);
+                    DrawString(0x48, 0x06, IntToString(_board.TimeLimit - _world.TimePassed), 0x1E);
                 }
-                if (Engine.World.Health < 0)
+                if (_world.Health < 0)
                 {
-                    Engine.World.Health = 0;
+                    _world.Health = 0;
                 }
-                DrawString(0x48, 0x07, IntToString(Engine.World.Health), 0x1E);
-                DrawString(0x48, 0x08, IntToString(Engine.World.Ammo), 0x1E);
-                DrawString(0x48, 0x09, IntToString(Engine.World.Torches), 0x1E);
-                DrawString(0x48, 0x0A, IntToString(Engine.World.Gems), 0x1E);
-                DrawString(0x48, 0x0B, IntToString(Engine.World.Score), 0x1E);
-                if (Engine.World.TorchCycles > 0)
+                DrawString(0x48, 0x07, IntToString(_world.Health), 0x1E);
+                DrawString(0x48, 0x08, IntToString(_world.Ammo), 0x1E);
+                DrawString(0x48, 0x09, IntToString(_world.Torches), 0x1E);
+                DrawString(0x48, 0x0A, IntToString(_world.Gems), 0x1E);
+                DrawString(0x48, 0x0B, IntToString(_world.Score), 0x1E);
+                if (_world.TorchCycles > 0)
                 {
                     for (var i = 2; i <= 5; i++)
                     {
                         DrawChar(0x49 + i, 0x09,
-                            Engine.World.TorchCycles/40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
+                            _world.TorchCycles/40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
                     }
                 }
                 else
@@ -325,12 +325,12 @@ namespace Roton.Emulation.ZZT
                 for (var i = 1; i <= 7; i++)
                 {
                     DrawChar(0x47 + i, 0x0C,
-                        Engine.World.Keys[i - 1]
-                            ? new AnsiChar(Engine.Elements[0x08].Character, 0x18 + i)
+                        _world.Keys[i - 1]
+                            ? new AnsiChar(_elements[0x08].Character, 0x18 + i)
                             : new AnsiChar(0x20, 0x1F));
                 }
 
-                DrawString(0x41, 0x0F, Engine.State.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
+                DrawString(0x41, 0x0F, _state.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
 
                 // normally the code would check if debug mode is enabled here
                 // and put the m000000 number ZZT generates

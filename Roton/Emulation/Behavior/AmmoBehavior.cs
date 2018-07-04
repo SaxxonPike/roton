@@ -8,15 +8,15 @@ namespace Roton.Emulation.Behavior
         private readonly IConfig _config;
         private readonly IWorld _world;
         private readonly IAlerts _alerts;
-        private readonly ISoundSet _soundSet;
+        private readonly ISounds _sounds;
         private readonly IEngine _engine;
 
-        public AmmoBehavior(IConfig config, IWorld world, IAlerts alerts, ISoundSet soundSet, IEngine engine)
+        public AmmoBehavior(IConfig config, IWorld world, IAlerts alerts, ISounds sounds, IEngine engine)
         {
             _config = config;
             _world = world;
             _alerts = alerts;
-            _soundSet = soundSet;
+            _sounds = sounds;
             _engine = engine;
         }
 
@@ -27,7 +27,7 @@ namespace Roton.Emulation.Behavior
             _world.Ammo += _config.AmmoPerPickup;
             _engine.RemoveItem(location);
             _engine.UpdateStatus();
-            _engine.PlaySound(2, _soundSet.Ammo);
+            __engine.PlaySound(2, _sounds.Ammo);
             if (_alerts.AmmoPickup)
             {
                 _engine.SetMessage(0xC8, _alerts.AmmoMessage);

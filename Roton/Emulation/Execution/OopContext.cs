@@ -8,16 +8,16 @@ namespace Roton.Emulation.Execution
         private readonly int _index;
         
         private readonly IExecutable _instructionSource;
-        private readonly IActorList _actorList;
+        private readonly IActors _actors;
 
         public OopContext(
             int index,
             IExecutable instructionSource,
             string name,
-            IActorList actorList)
+            IActors actors)
         {
             _instructionSource = instructionSource;
-            _actorList = actorList;
+            _actors = actors;
             _index = index;
             Index = index;
             Name = name;
@@ -31,7 +31,7 @@ namespace Roton.Emulation.Execution
             set { _instructionSource.Instruction = value; }
         }
 
-        public IActor Actor => _actorList[_index];
+        public IActor Actor => _actors[_index];
 
         public int CommandsExecuted { get; set; }
 

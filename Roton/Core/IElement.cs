@@ -4,9 +4,9 @@ namespace Roton.Core
 {
     public interface IElement
     {
-        Action<IEngine, int> Act { get; }
-        Func<IEngine, IXyPair, AnsiChar> Draw { get; }
-        Action<IEngine, IXyPair, int, IXyPair> Interact { get; }
+        Action<int> Act { get; }
+        Func<IXyPair, AnsiChar> Draw { get; }
+        Action<IXyPair, int, IXyPair> Interact { get; }
         string BoardEditText { get; set; }
         int Character { get; set; }
         string CodeEditText { get; set; }

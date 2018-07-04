@@ -1,24 +1,38 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public sealed class EnergizerBehavior : ElementBehavior
     {
-        public override string KnownName => "Energizer";
+        private readonly IEngine _engine;
+        private readonly ISounds _sounds;
+        private readonly IAlerts _alerts;
+        private readonly IWorld _world;
 
+        public override string KnownName => KnownNames.Energizer;
+
+        public EnergizerBehavior(IEngine engine, ISounds sounds, IAlerts alerts, IWorld world)
+        {
+            _engine = engine;
+            _sounds = sounds;
+            _alerts = alerts;
+            _world = world;
+        }
+        
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            engine.PlaySound(9, engine.SoundSet.Energizer);
-            engine.RemoveItem(location);
-            engine.World.EnergyCycles = 0x4B;
-            engine.UpdateStatus();
-            engine.UpdateBoard(location);
-            if (engine.Alerts.EnergizerPickup)
+            __engine.PlaySound(9, _sounds.Energizer);
+            _engine.RemoveItem(location);
+            _world.EnergyCycles = 0x4B;
+            _engine.UpdateStatus();
+            _engine.UpdateBoard(location);
+            if (_alerts.EnergizerPickup)
             {
-                engine.Alerts.EnergizerPickup = false;
-                engine.SetMessage(0xC8, engine.Alerts.EnergizerMessage);
+                _alerts.EnergizerPickup = false;
+                _engine.SetMessage(0xC8, _alerts.EnergizerMessage);
             }
-            engine.BroadcastLabel(0, @"ALL:ENERGIZE", false);
+            _engine.BroadcastLabel(0, KnownLabels.Energize, false);
         }
     }
 }

@@ -8,8 +8,8 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            engine.PlaySound(3, engine.SoundSet.Water);
-            engine.SetMessage(0x64, engine.Alerts.WaterMessage);
+            _engine.PlaySound(3, _sounds.Water);
+            engine.SetMessage(0x64, _alerts.WaterMessage);
         }
     }
 }

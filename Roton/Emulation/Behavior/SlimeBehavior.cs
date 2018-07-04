@@ -1,39 +1,57 @@
 ﻿using Roton.Core;
+using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public sealed class SlimeBehavior : ElementBehavior
     {
-        public override string KnownName => "Slime";
+        private readonly IActors _actors;
+        private readonly IGrid _grid;
+        private readonly IElements _elements;
+        private readonly IEngine _engine;
+        private readonly IState _state;
+        private readonly ISounds _sounds;
 
+        public override string KnownName => KnownNames.Slime;
+
+        public SlimeBehavior(IActors actors, IGrid grid, IElements elements, IEngine engine, IState state, ISounds sounds)
+        {
+            _actors = actors;
+            _grid = grid;
+            _elements = elements;
+            _engine = engine;
+            _state = state;
+            _sounds = sounds;
+        }
+        
         public override void Act(int index)
         {
-            var actor = _actorList[index];
+            var actor = _actors[index];
 
             if (actor.P1 >= actor.P2)
             {
                 var spawnCount = 0;
-                var color = engine.Tiles[actor.Location].Color;
-                var slimeElement = engine.Elements[engine.Elements.SlimeId];
-                var slimeTrailTile = new Tile(engine.Elements.BreakableId, color);
+                var color = _grid[actor.Location].Color;
+                var slimeElement = _elements[_elements.SlimeId];
+                var slimeTrailTile = new Tile(_elements.BreakableId, color);
                 var source = actor.Location.Clone();
                 actor.P1 = 0;
 
                 for (var i = 0; i < 4; i++)
                 {
-                    var target = source.Sum(engine.GetCardinalVector(i));
-                    if (engine.ElementAt(target).IsFloor)
+                    var target = source.Sum(_engine.GetCardinalVector(i));
+                    if (_grid.ElementAt(target).IsFloor)
                     {
                         if (spawnCount == 0)
                         {
-                            engine.MoveActor(index, target);
-                            engine.Tiles[source].CopyFrom(slimeTrailTile);
-                            engine.UpdateBoard(source);
+                            _engine.MoveActor(index, target);
+                            _grid[source].CopyFrom(slimeTrailTile);
+                            _engine.UpdateBoard(source);
                         }
                         else
                         {
-                            engine.SpawnActor(target, new Tile(engine.Elements.SlimeId, color), slimeElement.Cycle, null);
-                            _actorList[engine.State.ActorCount].P2 = actor.P2;
+                            _engine.SpawnActor(target, new Tile(_elements.SlimeId, color), slimeElement.Cycle, null);
+                            _actors[_state.ActorCount].P2 = actor.P2;
                         }
                         spawnCount++;
                     }
@@ -41,9 +59,9 @@ namespace Roton.Emulation.Behavior
 
                 if (spawnCount == 0)
                 {
-                    engine.RemoveActor(index);
-                    engine.Tiles[source].CopyFrom(slimeTrailTile);
-                    engine.UpdateBoard(source);
+                    _engine.RemoveActor(index);
+                    _grid[source].CopyFrom(slimeTrailTile);
+                    _engine.UpdateBoard(source);
                 }
             }
             else
@@ -54,12 +72,12 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var color = engine.Tiles[location].Color;
-            var slimeIndex = engine.ActorIndexAt(location);
-            engine.Harm(slimeIndex);
-            engine.Tiles[location].SetTo(engine.Elements.BreakableId, color);
-            engine.UpdateBoard(location);
-            engine.PlaySound(2, engine.SoundSet.SlimeDie);
+            var color = _grid[location].Color;
+            var slimeIndex = _actors.ActorIndexAt(location);
+            _engine.Harm(slimeIndex);
+            _grid[location].SetTo(_elements.BreakableId, color);
+            _engine.UpdateBoard(location);
+            _engine.PlaySound(2, _sounds.SlimeDie);
         }
     }
 }

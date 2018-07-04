@@ -4,19 +4,19 @@ namespace Roton.Extensions
 {
     public static class ElementListExtensions
     {
-        public static IElement Bullet(this IElementList elementList)
+        public static IElement Bullet(this IElements elements)
         {
-            return elementList[elementList.BulletId];
+            return elements[elements.BulletId];
         }
 
-        public static IElement Empty(this IElementList elementList)
+        public static IElement Empty(this IElements elements)
         {
-            return elementList[elementList.EmptyId];
+            return elements[elements.EmptyId];
         }
 
-        public static IElement Star(this IElementList elementList)
+        public static IElement Star(this IElements elements)
         {
-            return elementList[elementList.StarId];
+            return elements[elements.StarId];
         }
     }
 }

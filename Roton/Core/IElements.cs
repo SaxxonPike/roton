@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public interface IElementList : IEnumerable<IElement>
+    public interface IElements : IEnumerable<IElement>
     {
         int AmmoId { get; }
         int BearId { get; }

@@ -2,6 +2,6 @@
 {
     public sealed class PurpleTextBehavior : ElementBehavior
     {
-        public override string KnownName => "Text (Purple)";
+        public override string KnownName => KnownNames.PurpleText;
     }
 }

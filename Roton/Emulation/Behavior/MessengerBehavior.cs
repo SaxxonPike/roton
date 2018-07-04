@@ -4,21 +4,34 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class MessengerBehavior : ElementBehavior
     {
-        public override string KnownName => "Messenger";
+        private readonly IActors _actors;
+        private readonly IHud _hud;
+        private readonly IState _state;
+        private readonly IEngine _engine;
+        
+        public override string KnownName => KnownNames.Messenger;
+
+        public MessengerBehavior(IActors actors, IHud hud, IState state, IEngine engine)
+        {
+            _actors = actors;
+            _hud = hud;
+            _state = state;
+            _engine = engine;
+        }
 
         public override void Act(int index)
         {
-            var actor = _actorList[index];
+            var actor = _actors[index];
             if (actor.Location.X == 0)
             {
-                engine.Hud.DrawMessage(new Message(engine.State.Message, engine.State.Message2), actor.P2%7 + 9);
+                _hud.DrawMessage(new Message(_state.Message, _state.Message2), actor.P2 % 7 + 9);
                 actor.P2--;
                 if (actor.P2 > 0) return;
 
-                engine.RemoveActor(index);
-                engine.State.ActIndex--;
-                engine.Hud.UpdateBorder();
-                engine.State.Message = string.Empty;
+                _engine.RemoveActor(index);
+                _state.ActIndex--;
+                _hud.UpdateBorder();
+                _state.Message = string.Empty;
             }
         }
     }

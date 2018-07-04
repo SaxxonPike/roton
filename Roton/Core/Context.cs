@@ -17,7 +17,7 @@ namespace Roton.Core
         private readonly IState _state;
         private readonly IFileSystem _fileSystem;
         private readonly IBoardList _boardList;
-        private readonly IActorList _actorList;
+        private readonly IActors _actors;
         private readonly IGameSerializer _gameSerializer;
         private readonly IEngine _engine;
 
@@ -26,8 +26,8 @@ namespace Roton.Core
         private const int MaxGameCycle = 420;
 
         public Context(
-            IActorList actorList, 
-            ITileGrid tileGrid, 
+            IActors actors, 
+            IGrid grid, 
             IWorld world,
             IBoardList boardList,
             IGameSerializer gameSerializer,
@@ -39,11 +39,11 @@ namespace Roton.Core
             _memory = memory;
             _state = state;
             _fileSystem = fileSystem;
-            _actorList = actorList;
+            _actors = actors;
             _boardList = boardList;
             _gameSerializer = gameSerializer;
             _engine = engine;
-            Tiles = tileGrid;
+            Tiles = grid;
             WorldData = world;
         }
 
@@ -59,7 +59,7 @@ namespace Roton.Core
                     _state.GameCycle = 0;
                 }
 
-                foreach (var actor in _actorList)
+                foreach (var actor in _actors)
                 {
                     if (actor.Cycle > 0 && _state.ActIndex%actor.Cycle == _state.GameCycle%actor.Cycle)
                     {
@@ -104,7 +104,7 @@ namespace Roton.Core
 
         public void Stop() => _engine.Stop();
 
-        public ITileGrid Tiles { get; }
+        public IGrid Tiles { get; }
 
         public void UnpackBoard() => _engine.UnpackBoard(WorldData.BoardIndex);
 

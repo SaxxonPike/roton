@@ -6,7 +6,7 @@ namespace Roton.Emulation.Behavior
     {
         string KnownName { get; }
         void Act(int index);
-        AnsiChar Draw(IEngine engine, IXyPair location);
+        AnsiChar Draw(IXyPair location);
         void Interact(IXyPair location, int index, IXyPair vector);
     }
 }

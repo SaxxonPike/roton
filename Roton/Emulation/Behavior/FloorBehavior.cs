@@ -2,6 +2,6 @@
 {
     public sealed class FloorBehavior : ElementBehavior
     {
-        public override string KnownName => "Floor";
+        public override string KnownName => KnownNames.Floor;
     }
 }

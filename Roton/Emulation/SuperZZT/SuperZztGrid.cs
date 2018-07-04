@@ -3,9 +3,9 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public sealed class SuperZztTileGrid : TileGrid
+    public sealed class SuperZztGrid : Grid
     {
-        public SuperZztTileGrid(IMemory memory)
+        public SuperZztGrid(IMemory memory)
             : base(memory, 0x2BEB, 96, 80)
         {
         }

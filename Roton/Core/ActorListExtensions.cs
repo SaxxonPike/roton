@@ -2,9 +2,16 @@
 {
     public static class ActorListExtensions
     {
-        public static IActor GetPlayer(this IActorList actorList)
+        public static int ActorIndexAt(this IActors actors, IXyPair location)
         {
-            return actorList[0];
+            var index = 0;
+            foreach (var actor in actors)
+            {
+                if (actor.Location.X == location.X && actor.Location.Y == location.Y)
+                    return index;
+                index++;
+            }
+            return -1;
         }
     }
 }

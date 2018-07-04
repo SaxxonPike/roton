@@ -1,6 +1,6 @@
 ﻿namespace Roton.Core
 {
-    public interface ISoundSet
+    public interface ISounds
     {
         ISound Ammo { get; }
         ISound BombActivate { get; }

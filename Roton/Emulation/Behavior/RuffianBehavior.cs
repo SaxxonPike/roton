@@ -1,46 +1,64 @@
-﻿namespace Roton.Emulation.Behavior
+﻿using Roton.Core;
+using Roton.Extensions;
+
+namespace Roton.Emulation.Behavior
 {
     public sealed class RuffianBehavior : EnemyBehavior
     {
+        private readonly IActors _actors;
+        private readonly IEngine _engine;
+        private readonly IRandom _random;
+        private readonly IGrid _grid;
+        private readonly IElements _elements;
+
         public override string KnownName => "Ruffian";
 
+        public RuffianBehavior(IActors actors, IEngine engine, IRandom random, IGrid grid, IElements elements) : base(engine)
+        {
+            _actors = actors;
+            _engine = engine;
+            _random = random;
+            _grid = grid;
+            _elements = elements;
+        }
+        
         public override void Act(int index)
         {
-            var actor = _actorList[index];
+            var actor = _actors[index];
 
             if (actor.Vector.IsZero())
             {
-                if (actor.P2 + 8 <= engine.SyncRandomNumber(17))
+                if (actor.P2 + 8 <= _random.Synced(17))
                 {
-                    if (actor.P1 >= engine.SyncRandomNumber(9))
+                    if (actor.P1 >= _random.Synced(9))
                     {
-                        actor.Vector.CopyFrom(engine.Seek(actor.Location));
+                        actor.Vector.CopyFrom(_engine.Seek(actor.Location));
                     }
                     else
                     {
-                        actor.Vector.CopyFrom(engine.Rnd());
+                        actor.Vector.CopyFrom(_engine.Rnd());
                     }
                 }
             }
             else
             {
-                if (actor.Location.X == _actorList.GetPlayer().Location.X || actor.Location.Y == _actorList.GetPlayer().Location.Y)
+                if (actor.Location.X == _actors.Player.Location.X || actor.Location.Y == _actors.Player.Location.Y)
                 {
-                    if (actor.P1 >= engine.SyncRandomNumber(9))
+                    if (actor.P1 >= _random.Synced(9))
                     {
-                        actor.Vector.CopyFrom(engine.Seek(actor.Location));
+                        actor.Vector.CopyFrom(_engine.Seek(actor.Location));
                     }
                 }
 
                 var target = actor.Location.Sum(actor.Vector);
-                if (engine.ElementAt(target).Id == engine.Elements.PlayerId)
+                if (_grid.ElementAt(target).Id == _elements.PlayerId)
                 {
-                    engine.Attack(index, target);
+                    _engine.Attack(index, target);
                 }
-                else if (engine.ElementAt(target).IsFloor)
+                else if (_grid.ElementAt(target).IsFloor)
                 {
-                    engine.MoveActor(index, target);
-                    if (actor.P2 + 8 <= engine.SyncRandomNumber(17))
+                    _engine.MoveActor(index, target);
+                    if (actor.P2 + 8 <= _random.Synced(17))
                     {
                         actor.Vector.SetTo(0, 0);
                     }

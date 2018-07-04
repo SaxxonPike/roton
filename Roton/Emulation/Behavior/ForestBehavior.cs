@@ -5,34 +5,46 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class ForestBehavior : ElementBehavior
     {
-        private readonly bool _clearToFloor;
+        private readonly IConfig _config;
+        private readonly IElements _elements;
+        private readonly IGrid _grid;
+        private readonly IEngine _engine;
+        private readonly IState _state;
+        private readonly ISounds _sounds;
+        private readonly IAlerts _alerts;
 
-        public ForestBehavior(bool clearToFloor)
+        public ForestBehavior(IConfig config, IElements elements, IGrid grid, IEngine engine, IState state, ISounds sounds, IAlerts alerts)
         {
-            _clearToFloor = clearToFloor;
+            _config = config;
+            _elements = elements;
+            _grid = grid;
+            _engine = engine;
+            _state = state;
+            _sounds = sounds;
+            _alerts = alerts;
         }
 
-        public override string KnownName => "Forest";
+        public override string KnownName => KnownNames.Forest;
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            if (_clearToFloor)
-                engine.Tiles[location].SetTo(engine.Elements.FloorId, 0x02);
+            if (_config.ForestToFloor)
+                _grid[location].SetTo(_elements.FloorId, 0x02);
             else
-                engine.RemoveItem(location);
+                _engine.RemoveItem(location);
 
-            engine.UpdateBoard(location);
+            _engine.UpdateBoard(location);
 
-            var forestIndex = engine.State.ForestIndex;
-            var forestSongLength = engine.SoundSet.Forest.Length;
-            engine.State.ForestIndex = (forestIndex + 2)%forestSongLength;
-            engine.PlaySound(3, engine.SoundSet.Forest, forestIndex, 2);
+            var forestIndex = _state.ForestIndex;
+            var forestSongLength = _sounds.Forest.Length;
+            _state.ForestIndex = (forestIndex + 2)%forestSongLength;
+            __engine.PlaySound(3, _sounds.Forest, forestIndex, 2);
 
-            if (!engine.Alerts.Forest)
+            if (!_alerts.Forest)
                 return;
 
-            engine.SetMessage(0xC8, engine.Alerts.ForestMessage);
-            engine.Alerts.Forest = false;
+            _engine.SetMessage(0xC8, _alerts.ForestMessage);
+            _alerts.Forest = false;
         }
     }
 }

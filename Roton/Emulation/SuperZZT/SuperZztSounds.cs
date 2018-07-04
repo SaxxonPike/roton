@@ -3,9 +3,9 @@ using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public sealed class SuperZztSoundSet : SoundSet
+    public sealed class SuperZztSounds : Sounds
     {
-        public SuperZztSoundSet(IMemory memory)
+        public SuperZztSounds(IMemory memory)
         {
             Forest = new SuperZztForestSound(memory, 0x1E5C, 8);
         }

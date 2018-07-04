@@ -1,16 +1,26 @@
-﻿namespace Roton.Emulation.Behavior
+﻿using Roton.Core;
+
+namespace Roton.Emulation.Behavior
 {
     public sealed class MonitorBehavior : ElementBehavior
     {
-        public override string KnownName => "Monitor";
+        private readonly IState _state;
+        private readonly IEngine _engine;
+        
+        public override string KnownName => KnownNames.Monitor;
 
+        public MonitorBehavior(IState state, IEngine engine)
+        {
+            _state = state;
+            _engine = engine;
+        }
+        
         public override void Act(int index)
         {
-            if (engine.State.KeyPressed != 0)
-            {
-                engine.State.BreakGameLoop = true;
-            }
-            engine.MoveActorOnRiver(index);
+            if (_state.KeyPressed != 0)
+                _state.BreakGameLoop = true;
+            
+            __engine.MoveActorOnRiver(index);
         }
     }
 }

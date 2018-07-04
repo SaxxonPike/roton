@@ -4,9 +4,9 @@ using Roton.Core.Collections;
 
 namespace Roton.Emulation.Mapping
 {
-    public abstract class ActorList : FixedList<IActor>, IActorList
+    public abstract class Actors : FixedList<IActor>, IActors
     {
-        protected ActorList(IMemory memory, int capacity)
+        protected Actors(IMemory memory, int capacity)
         {
             Memory = memory;
             Capacity = capacity;

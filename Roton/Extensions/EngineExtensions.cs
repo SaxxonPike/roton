@@ -1,12 +1,14 @@
-﻿using Roton.Core;
+﻿using System.Linq;
+using Roton.Core;
 
 namespace Roton.Extensions
 {
     public static class EngineExtensions
     {
-        public static IActor ActorAt(this IEngine engine, IXyPair location)
+        public static IActor ActorAt(this IActors actors, IXyPair location)
         {
-            return _actorList[engine.ActorIndexAt(location)];
+            return actors
+                .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y);
         }
 
         public static AnsiChar Draw(this IEngine engine, int x, int y)
@@ -14,24 +16,14 @@ namespace Roton.Extensions
             return engine.Draw(new Location(x, y));
         }
 
-        public static IElement ElementAt(this IEngine engine, IXyPair location)
-        {
-            return engine.Elements[engine.Tiles[location].Id];
-        }
-
         public static void PlaySound(this IEngine engine, int priority, ISound sound)
         {
-            engine.PlaySound(priority, sound, 0, sound.Length);
+            _engine.PlaySound(priority, sound, 0, sound.Length);
         }
 
-        public static ITile TileAt(this IEngine engine, IXyPair location)
+        public static ITile TileAt(this IGrid grid, int x, int y)
         {
-            return engine.Tiles[location];
-        }
-
-        public static ITile TileAt(this IEngine engine, int x, int y)
-        {
-            return engine.Tiles[new Location(x, y)];
+            return grid[new Location(x, y)];
         }
     }
 }

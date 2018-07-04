@@ -2,6 +2,6 @@
 {
     public sealed class SolidWallBehavior : ElementBehavior
     {
-        public override string KnownName => "Solid Wall";
+        public override string KnownName => KnownNames.Solid;
     }
 }

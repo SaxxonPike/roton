@@ -7,42 +7,42 @@ namespace Roton.Extensions
     {
 //        public static IActor GetActor(this ISearchContext context, int index)
 //        {
-//            return context.Engine.Actors[index];
+//            return context._actors[index];
 //        }
 //
 //        public static int GetByte(this ISearchContext context)
 //        {
-//            return context.Engine.State.OopByte;
+//            return context._state.OopByte;
 //        }
 //
 //        public static IElement GetElement(this ISearchContext context, int index)
 //        {
-//            return context.Engine.Elements[index];
+//            return context._elements[index];
 //        }
 //
 //        public static IElement GetElement(this ISearchContext context, ITile tile)
 //        {
-//            return context.Engine.Elements[tile.Id];
+//            return context._elements[tile.Id];
 //        }
 //
 //        public static IFlagList GetFlags(this ISearchContext context)
 //        {
-//            return context.Engine.World.Flags;
+//            return context._world.Flags;
 //        }
 //
 //        public static int GetNumber(this ISearchContext context)
 //        {
-//            return context.Engine.State.OopNumber;
+//            return context._state.OopNumber;
 //        }
 //
 //        public static string GetWord(this ISearchContext context)
 //        {
-//            return context.Engine.State.OopWord;
+//            return context._state.OopWord;
 //        }
 //
 //        public static IWorld GetWorld(this ISearchContext context)
 //        {
-//            return context.Engine.World;
+//            return context._world;
 //        }
 //
 //        public static int ReadByte(this IOopContext context)
@@ -67,12 +67,12 @@ namespace Roton.Extensions
 //
 //        public static void SetByte(this ISearchContext context, int value)
 //        {
-//            context.Engine.State.OopByte = value;
+//            context._state.OopByte = value;
 //        }
 //
 //        public static void SetNumber(this ISearchContext context, int value)
 //        {
-//            context.Engine.State.OopNumber = value;
+//            context._state.OopNumber = value;
 //        }
     }
 }

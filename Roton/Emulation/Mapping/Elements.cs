@@ -5,9 +5,9 @@ using Roton.Emulation.Behavior;
 
 namespace Roton.Emulation.Mapping
 {
-    public abstract class ElementList : FixedList<IElement>, IElementList
+    public abstract class Elements : FixedList<IElement>, IElements
     {
-        protected ElementList(IMemory memory, int count, IBehaviorMapConfiguration config)
+        protected Elements(IMemory memory, int count, IBehaviorMapConfiguration config)
         {
             Count = count;
             Memory = memory;

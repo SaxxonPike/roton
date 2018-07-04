@@ -8,7 +8,7 @@ namespace Roton.Emulation.Behavior
         {
         }
 
-        public virtual AnsiChar Draw(IEngine engine, IXyPair location)
+        public virtual AnsiChar Draw(IXyPair location)
         {
             return new AnsiChar(0x3F, 0x40);
         }

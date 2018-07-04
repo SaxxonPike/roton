@@ -2,6 +2,6 @@
 {
     public sealed class NormalWallBehavior : ElementBehavior
     {
-        public override string KnownName => "Normal Wall";
+        public override string KnownName => KnownNames.Normal;
     }
 }

@@ -2,6 +2,6 @@
 {
     public sealed class GreenTextBehavior : ElementBehavior
     {
-        public override string KnownName => "Text (Green)";
+        public override string KnownName => KnownNames.GreenText;
     }
 }

@@ -2,6 +2,6 @@
 {
     public sealed class NorthRiverBehavior : ElementBehavior
     {
-        public override string KnownName => "River (North)";
+        public override string KnownName => KnownNames.RiverN;
     }
 }

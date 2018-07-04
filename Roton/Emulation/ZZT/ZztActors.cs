@@ -4,9 +4,9 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {
-    public sealed class ZztActorList : ActorList
+    public sealed class ZztActors : Actors
     {
-        public ZztActorList(IMemory memory)
+        public ZztActors(IMemory memory)
             : base(memory, 152)
         {
         }

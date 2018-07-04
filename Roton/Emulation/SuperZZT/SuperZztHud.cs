@@ -139,7 +139,7 @@ namespace Roton.Emulation.SuperZZT
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            if (Engine.State.EditorMode)
+            if (_state.EditorMode)
             {
                 if (x >= 0 && x < 96 && y >= 0 && y < 80)
                 {
@@ -150,8 +150,8 @@ namespace Roton.Emulation.SuperZZT
             {
                 x += 0x0E + 1;
                 y += 0x02 + 1;
-                x -= Engine.Board.Camera.X;
-                y -= Engine.Board.Camera.Y;
+                x -= _board.Camera.X;
+                y -= _board.Camera.Y;
                 if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
                 {
                     Terminal.Plot(x, y, ac);
@@ -161,12 +161,12 @@ namespace Roton.Emulation.SuperZZT
 
         private Vector GetTranslation()
         {
-            return new Vector(0x0F + -Engine.Board.Camera.X, 0x03 + -Engine.Board.Camera.Y);
+            return new Vector(0x0F + -_board.Camera.X, 0x03 + -_board.Camera.Y);
         }
 
         public override void Initialize()
         {
-            if (Engine.State.EditorMode)
+            if (_state.EditorMode)
             {
                 Terminal.SetSize(96, 80, true);
             }
@@ -178,9 +178,9 @@ namespace Roton.Emulation.SuperZZT
 
         public override void RedrawBoard()
         {
-            for (var x = 0; x < Engine.Tiles.Width; x++)
+            for (var x = 0; x < _grid.Width; x++)
             {
-                for (var y = 0; y < Engine.Tiles.Height; y++)
+                for (var y = 0; y < _grid.Height; y++)
                 {
                     DrawTile(x, y, Engine.Draw(x + 1, y + 1));
                 }
@@ -200,7 +200,7 @@ namespace Roton.Emulation.SuperZZT
         public override void UpdateCamera()
         {
             var camera = new Location16();
-            camera.CopyFrom(_actorList.GetPlayer().Location);
+            camera.CopyFrom(_actors.Player.Location);
             camera.Subtract(12, 10);
 
             if (camera.X < 1)
@@ -224,7 +224,7 @@ namespace Roton.Emulation.SuperZZT
                 // Super ZZT does a smart redraw
                 // todo: implement that instead of redrawing everything
                 OldCamera.CopyFrom(camera);
-                Engine.Board.Camera.CopyFrom(camera);
+                _board.Camera.CopyFrom(camera);
                 RedrawBoard();
             }
         }
@@ -233,12 +233,12 @@ namespace Roton.Emulation.SuperZZT
         {
             if (!Engine.TitleScreen)
             {
-                if (Engine.World.Health < 0)
+                if (_world.Health < 0)
                 {
-                    Engine.World.Health = 0;
+                    _world.Health = 0;
                 }
 
-                var healthRemaining = Engine.World.Health;
+                var healthRemaining = _world.Health;
                 for (var x = 7; x < 12; x++)
                 {
                     if (healthRemaining >= 20)
@@ -256,9 +256,9 @@ namespace Roton.Emulation.SuperZZT
                     healthRemaining -= 20;
                 }
 
-                DrawNumber(0x11, Engine.World.Gems);
-                DrawNumber(0x12, Engine.World.Ammo);
-                DrawNumber(0x15, Engine.World.Score);
+                DrawNumber(0x11, _world.Gems);
+                DrawNumber(0x12, _world.Ammo);
+                DrawNumber(0x15, _world.Score);
                 DrawString(0x00, 0x16, @"            ", 0x6F);
 
                 if (!string.IsNullOrWhiteSpace(Engine.StoneText))
@@ -266,20 +266,20 @@ namespace Roton.Emulation.SuperZZT
                     DrawString(0x01, 0x16, Engine.StoneText, 0x6F);
                 }
 
-                if (Engine.World.Stones >= 0)
+                if (_world.Stones >= 0)
                 {
-                    DrawNumber(0x16, Engine.World.Stones);
+                    DrawNumber(0x16, _world.Stones);
                 }
 
                 for (var i = 0; i < 7; i++)
                 {
-                    var keyChar = Engine.World.Keys[i] ? Engine.Elements[0x08].Character : 0x20;
+                    var keyChar = _world.Keys[i] ? _elements[0x08].Character : 0x20;
                     var x = i & 0x3;
                     var y = x >> 2;
                     DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
                 }
 
-                DrawString(0x03, 0x0A, Engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
+                DrawString(0x03, 0x0A, _state.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             }
         }
     }

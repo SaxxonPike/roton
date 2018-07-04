@@ -5,7 +5,7 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztGrammar : Grammar
     {
-        public ZztGrammar(IColorList colors, IElementList elementList) : base(colors, elementList)
+        public ZztGrammar(IColorList colors, IElements elements) : base(colors, elements)
         {
         }
 

@@ -12,11 +12,9 @@ namespace Roton.Core
         event DataEventHandler RequestReplaceContext;
         event EventHandler Terminated;
 
-        IActor Player { get; }
         string StoneText { get; }
         bool TitleScreen { get; }
         
-        int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
         bool BroadcastLabel(int sender, string label, bool force);
@@ -44,7 +42,6 @@ namespace Roton.Core
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void RaiseError(string error);
-        int RandomNumber(int max);
         int ReadActorCodeByte(int index, IExecutable instructionSource);
         string ReadActorCodeLine(int index, IExecutable instructionSource);
         int ReadActorCodeNumber(int index, IExecutable instructionSource);

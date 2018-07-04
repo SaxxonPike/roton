@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Behavior
 {
-    public class BehaviorMapConfiguration : IBehaviorMapConfiguration
+    public class BehaviorMapConfiguration
     {
         public int AmmoPerContainer { get; set; }
         public bool BuggyPassages { get; set; }

@@ -6,10 +6,10 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Web";
 
-        public override AnsiChar Draw(IEngine engine, IXyPair location)
+        public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(engine.State.WebChars[engine.Adjacent(location, engine.Elements.WebId)],
-                engine.Tiles[location].Color);
+            return new AnsiChar(_state.WebChars[engine.Adjacent(location, _elements.WebId)],
+                _grid[location].Color);
         }
     }
 }

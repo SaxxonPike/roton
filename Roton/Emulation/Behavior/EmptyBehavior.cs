@@ -2,6 +2,6 @@
 {
     public sealed class EmptyBehavior : ElementBehavior
     {
-        public override string KnownName => "Empty";
+        public override string KnownName => KnownNames.Empty;
     }
 }

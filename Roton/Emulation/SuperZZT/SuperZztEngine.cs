@@ -21,13 +21,13 @@ namespace Roton.Emulation.SuperZZT
 
             State = new SuperZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
 
-            Actors = new SuperZztActorList(Memory);
+            Actors = new SuperZztActors(Memory);
             Board = new SuperZztBoard(Memory);
             GameSerializer = new SuperZztGameSerializer(Memory);
             Hud = new SuperZztHud(this, config.Terminal);
-            Elements = new SuperZztElementList(Memory, elementBytes, behaviorConfig);
-            SoundSet = new SuperZztSoundSet(Memory);
-            Tiles = new SuperZztTileGrid(Memory);
+            Elements = new SuperZztElements(Memory, elementBytes, behaviorConfig);
+            Sounds = new SuperZztSounds(Memory);
+            Tiles = new SuperZztGrid(Memory);
             World = new SuperZztWorld(Memory);
             Grammar = new SuperZztGrammar(State.Colors, Elements);
             DrumBank = new SuperZztDrumBank(Memory);
@@ -35,11 +35,11 @@ namespace Roton.Emulation.SuperZZT
             Hud.Initialize();
         }
 
-        public override IActorList Actors { get; }
+        public override IActors Actors { get; }
         public override IBoard Board { get; }
 
         public override IDrumBank DrumBank { get; }
-        public override IElementList Elements { get; }
+        public override IElements Elements { get; }
 
         public override IGameSerializer GameSerializer { get; }
 
@@ -47,11 +47,11 @@ namespace Roton.Emulation.SuperZZT
 
         public override IHud Hud { get; }
 
-        public override ISoundSet SoundSet { get; }
+        public override ISounds Sounds { get; }
 
         public override IState State { get; }
 
-        public override ITileGrid Tiles { get; }
+        public override IGrid Tiles { get; }
 
         public override IWorld World { get; }
 
@@ -79,7 +79,7 @@ namespace Roton.Emulation.SuperZZT
                 case 0:
                     break;
                 default:
-                    context.Engine.State.KeyVector.SetTo(0, 0);
+                    context._state.KeyVector.SetTo(0, 0);
                     Hud.ShowScroll(context.Message);
                     break;
             }

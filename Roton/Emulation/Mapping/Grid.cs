@@ -3,9 +3,9 @@ using Roton.Core.Collections;
 
 namespace Roton.Emulation.Mapping
 {
-    public abstract class TileGrid : FixedList<ITile>, ITileGrid
+    public abstract class Grid : FixedList<ITile>, IGrid
     {
-        protected TileGrid(IMemory memory, int offset, int width, int height)
+        protected Grid(IMemory memory, int offset, int width, int height)
         {
             Memory = memory;
             Offset = offset;

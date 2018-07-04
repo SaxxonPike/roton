@@ -17,9 +17,9 @@ namespace Roton.Core
         int WorldDataSize { get; }
         byte[] LoadBoardData(Stream source);
         void LoadWorld(Stream source);
-        byte[] PackBoard(ITileGrid tiles);
+        byte[] PackBoard(IGrid tiles);
         void SaveBoardData(Stream target, byte[] data);
         void SaveWorld(Stream target);
-        void UnpackBoard(ITileGrid tiles, byte[] data);
+        void UnpackBoard(IGrid tiles, byte[] data);
     }
 }

@@ -6,148 +6,146 @@ namespace Roton.Emulation.Behavior
 {
     public class BehaviorMap : IBehaviorMap
     {
-        private readonly IBehaviorMapConfiguration _config;
-        private readonly IList<ElementBehavior> _elementBehaviors;
-        private readonly IElementList _elementList;
+        private readonly IList<IBehavior> _elementBehaviors;
+        private readonly IElements _elements;
 
-        public BehaviorMap(IElementList elementList, IBehaviorMapConfiguration config, IEnumerable<ElementBehavior> elementBehaviors)
+        public BehaviorMap(IElements elements, IEnumerable<IBehavior> elementBehaviors)
         {
-            _elementList = elementList;
-            _config = config;
+            _elements = elements;
             _elementBehaviors = elementBehaviors.ToList();
         }
 
         public IBehavior Map(int id)
         {
-            if (id == _elementList.AmmoId)
+            if (id == _elements.AmmoId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Ammo);
-            if (id == _elementList.BearId)
+            if (id == _elements.BearId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Bear);
-            if (id == _elementList.BlinkRayHId)
+            if (id == _elements.BlinkRayHId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BlinkRayH);
-            if (id == _elementList.BlinkRayVId)
+            if (id == _elements.BlinkRayVId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BlinkRayV);
-            if (id == _elementList.BlinkWallId)
+            if (id == _elements.BlinkWallId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BlinkWall);
-            if (id == _elementList.BoardEdgeId)
+            if (id == _elements.BoardEdgeId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BoardEdge);
-            if (id == _elementList.BombId)
+            if (id == _elements.BombId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Bomb);
-            if (id == _elementList.BoulderId)
+            if (id == _elements.BoulderId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Boulder);
-            if (id == _elementList.BreakableId)
+            if (id == _elements.BreakableId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Breakable);
-            if (id == _elementList.BulletId)
+            if (id == _elements.BulletId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Bullet);
-            if (id == _elementList.ClockwiseId)
+            if (id == _elements.ClockwiseId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Clockwise);
-            if (id == _elementList.CounterId)
+            if (id == _elements.CounterId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Counter);
-            if (id == _elementList.DoorId)
+            if (id == _elements.DoorId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Door);
-            if (id == _elementList.DragonPupId)
+            if (id == _elements.DragonPupId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.DragonPup);
-            if (id == _elementList.DuplicatorId)
+            if (id == _elements.DuplicatorId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Duplicator);
-            if (id == _elementList.EmptyId)
+            if (id == _elements.EmptyId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Empty);
-            if (id == _elementList.EnergizerId)
+            if (id == _elements.EnergizerId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Energizer);
-            if (id == _elementList.FakeId)
+            if (id == _elements.FakeId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Fake);
-            if (id == _elementList.FloorId)
+            if (id == _elements.FloorId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Floor);
-            if (id == _elementList.ForestId)
+            if (id == _elements.ForestId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Forest);
-            if (id == _elementList.GemId)
+            if (id == _elements.GemId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Gem);
-            if (id == _elementList.HeadId)
+            if (id == _elements.HeadId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Head);
-            if (id == _elementList.InvisibleId)
+            if (id == _elements.InvisibleId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Invisible);
-            if (id == _elementList.KeyId)
+            if (id == _elements.KeyId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Key);
-            if (id == _elementList.LavaId)
+            if (id == _elements.LavaId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Lava);
-            if (id == _elementList.LineId)
+            if (id == _elements.LineId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Line);
-            if (id == _elementList.LionId)
+            if (id == _elements.LionId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Lion);
-            if (id == _elementList.MessengerId)
+            if (id == _elements.MessengerId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Messenger);
-            if (id == _elementList.MonitorId)
+            if (id == _elements.MonitorId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Monitor);
-            if (id == _elementList.NormalId)
+            if (id == _elements.NormalId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Normal);
-            if (id == _elementList.ObjectId)
+            if (id == _elements.ObjectId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Object);
-            if (id == _elementList.PairerId)
+            if (id == _elements.PairerId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Pairer);
-            if (id == _elementList.PassageId)
+            if (id == _elements.PassageId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Passage);
-            if (id == _elementList.PlayerId)
+            if (id == _elements.PlayerId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Player);
-            if (id == _elementList.PusherId)
+            if (id == _elements.PusherId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Pusher);
-            if (id == _elementList.RicochetId)
+            if (id == _elements.RicochetId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Ricochet);
-            if (id == _elementList.RiverEId)
+            if (id == _elements.RiverEId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.RiverE);
-            if (id == _elementList.RiverNId)
+            if (id == _elements.RiverNId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.RiverN);
-            if (id == _elementList.RiverSId)
+            if (id == _elements.RiverSId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.RiverS);
-            if (id == _elementList.RiverWId)
+            if (id == _elements.RiverWId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.RiverW);
-            if (id == _elementList.RotonId)
+            if (id == _elements.RotonId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Roton);
-            if (id == _elementList.RuffianId)
+            if (id == _elements.RuffianId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Ruffian);
-            if (id == _elementList.ScrollId)
+            if (id == _elements.ScrollId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Scroll);
-            if (id == _elementList.SegmentId)
+            if (id == _elements.SegmentId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Segment);
-            if (id == _elementList.SharkId)
+            if (id == _elements.SharkId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Shark);
-            if (id == _elementList.SliderEwId)
+            if (id == _elements.SliderEwId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.SliderEw);
-            if (id == _elementList.SliderNsId)
+            if (id == _elements.SliderNsId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.SliderNs);
-            if (id == _elementList.SlimeId)
+            if (id == _elements.SlimeId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Slime);
-            if (id == _elementList.SolidId)
+            if (id == _elements.SolidId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Solid);
-            if (id == _elementList.SpiderId)
+            if (id == _elements.SpiderId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Spider);
-            if (id == _elementList.SpinningGunId)
+            if (id == _elements.SpinningGunId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.SpinningGun);
-            if (id == _elementList.StarId)
+            if (id == _elements.StarId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Star);
-            if (id == _elementList.StoneId)
+            if (id == _elements.StoneId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Stone);
-            if (id == _elementList.TigerId)
+            if (id == _elements.TigerId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Tiger);
-            if (id == _elementList.TorchId)
+            if (id == _elements.TorchId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Torch);
-            if (id == _elementList.TransporterId)
+            if (id == _elements.TransporterId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Transporter);
-            if (id == _elementList.WaterId)
+            if (id == _elements.WaterId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Water);
-            if (id == _elementList.WebId)
+            if (id == _elements.WebId)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.Web);
-            if (id == _elementList.Count - 7)
+            if (id == _elements.Count - 7)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BlueText);
-            if (id == _elementList.Count - 6)
+            if (id == _elements.Count - 6)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.GreenText);
-            if (id == _elementList.Count - 5)
+            if (id == _elements.Count - 5)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.CyanText);
-            if (id == _elementList.Count - 4)
+            if (id == _elements.Count - 4)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.RedText);
-            if (id == _elementList.Count - 3)
+            if (id == _elements.Count - 3)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.PurpleText);
-            if (id == _elementList.Count - 2)
+            if (id == _elements.Count - 2)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BrownText);
-            if (id == _elementList.Count - 1)
+            if (id == _elements.Count - 1)
                 return _elementBehaviors.First(e => e.KnownName == KnownNames.BlackText);
             return _elementBehaviors.First(e => e.KnownName == KnownNames.Undefined);
         }

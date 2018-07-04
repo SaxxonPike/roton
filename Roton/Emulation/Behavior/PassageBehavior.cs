@@ -5,30 +5,42 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class PassageBehavior : ElementBehavior
     {
-        private readonly bool _enableUnderTileBug;
+        private readonly IConfig _config;
+        private readonly IEngine _engine;
+        private readonly IActors _actors;
+        private readonly IElements _elements;
+        private readonly IGrid _grid;
+        private readonly ISounds _sounds;
+        private readonly IState _state;
 
-        public PassageBehavior(bool enableUnderTileBug)
+        public PassageBehavior(IConfig config, IEngine engine, IActors actors, IElements elements, IGrid grid, ISounds sounds, IState state)
         {
-            _enableUnderTileBug = enableUnderTileBug;
+            _config = config;
+            _engine = engine;
+            _actors = actors;
+            _elements = elements;
+            _grid = grid;
+            _sounds = sounds;
+            _state = state;
         }
 
-        public override string KnownName => "Passage";
+        public override string KnownName => KnownNames.Passage;
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var searchColor = engine.Tiles[location].Color;
-            var passageIndex = engine.ActorIndexAt(location);
-            var passageTarget = _actorList[passageIndex].P3;
-            engine.SetBoard(passageTarget);
+            var searchColor = _grid[location].Color;
+            var passageIndex = _actors.ActorIndexAt(location);
+            var passageTarget = _actors[passageIndex].P3;
+            _engine.SetBoard(passageTarget);
             var target = new Location();
 
-            for (var x = 1; x <= engine.Tiles.Width; x++)
+            for (var x = 1; x <= _grid.Width; x++)
             {
-                for (var y = 1; y <= engine.Tiles.Height; y++)
+                for (var y = 1; y <= _grid.Height; y++)
                 {
-                    if (engine.TileAt(x, y).Id == engine.Elements.PassageId)
+                    if (_grid.TileAt(x, y).Id == _elements.PassageId)
                     {
-                        if (engine.TileAt(x, y).Color == searchColor)
+                        if (_grid.TileAt(x, y).Color == searchColor)
                         {
                             target.SetTo(x, y);
                         }
@@ -36,25 +48,25 @@ namespace Roton.Emulation.Behavior
                 }
             }
 
-            if (_enableUnderTileBug)
+            if (_config.BuggyPassages)
             {
                 // this is what causes the black holes when using passages
-                engine.Tiles[_actorList.GetPlayer().Location].SetTo(engine.Elements.EmptyId, 0);
+                _grid[_actors.Player.Location].SetTo(_elements.EmptyId, 0);
             }
             else
             {
                 // Passage holes were fixed in Super ZZT
-                engine.Tiles[_actorList.GetPlayer().Location].CopyFrom(_actorList.GetPlayer().UnderTile);
+                _grid[_actors.Player.Location].CopyFrom(_actors.Player.UnderTile);
             }
 
             if (target.X != 0)
             {
-                _actorList.GetPlayer().Location.CopyFrom(target);
+                _actors.Player.Location.CopyFrom(target);
             }
-            engine.State.GamePaused = true;
-            engine.PlaySound(4, engine.SoundSet.Passage);
-            engine.FadePurple();
-            engine.EnterBoard();
+            _state.GamePaused = true;
+            _engine.PlaySound(4, _sounds.Passage);
+            _engine.FadePurple();
+            _engine.EnterBoard();
             vector.SetTo(0, 0);
         }
     }

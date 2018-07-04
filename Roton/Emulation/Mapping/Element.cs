@@ -24,7 +24,7 @@ namespace Roton.Emulation.Mapping
         public virtual string CodeEditText { get; set; }
         public virtual int Color { get; set; }
         public virtual int Cycle { get; set; }
-        public virtual Func<IEngine, IXyPair, AnsiChar> Draw => Behavior.Draw;
+        public virtual Func<IEngine, IXyPair, AnsiChar> Draw => (engine, location) => Behavior.Draw(, location);
         public virtual string EditorCategory { get; set; }
         public virtual bool HasDrawCode { get; set; }
         public virtual int Id { get; set; } = -1;
