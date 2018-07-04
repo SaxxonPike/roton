@@ -6,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Clockwise Conveyor";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             engine.UpdateBoard(actor.Location);
             engine.Convey(actor.Location, 1);
         }

@@ -7,9 +7,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Spider";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var vector = new Vector();
 
             vector.CopyFrom(actor.P1 <= engine.SyncRandomNumber(10)
@@ -31,7 +31,7 @@ namespace Roton.Emulation.Behavior
 
         private static bool ActSpiderAttemptDirection(IEngine engine, int index, IXyPair vector)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var target = actor.Location.Sum(vector);
             var targetElement = engine.ElementAt(target).Id;
 

@@ -6,24 +6,24 @@ namespace Roton.Emulation.Execution
     public class OopContext : IOopContext
     {
         private readonly int _index;
+        
         private readonly IExecutable _instructionSource;
+        private readonly IActorList _actorList;
 
         public OopContext(
             int index,
             IExecutable instructionSource,
             string name,
-            IEngine engine)
+            IActorList actorList)
         {
             _instructionSource = instructionSource;
+            _actorList = actorList;
             _index = index;
             Index = index;
             Name = name;
-            Engine = engine;
             DeathTile = new Tile(0, 0);
             Message = new List<string>();
         }
-
-        public IGrammar Grammar => Engine.Grammar;
 
         public int Instruction
         {
@@ -31,7 +31,7 @@ namespace Roton.Emulation.Execution
             set { _instructionSource.Instruction = value; }
         }
 
-        public IActor Actor => Engine.Actors[_index];
+        public IActor Actor => _actorList[_index];
 
         public int CommandsExecuted { get; set; }
 
@@ -58,8 +58,6 @@ namespace Roton.Emulation.Execution
         public bool Repeat { get; set; }
 
         public bool Resume { get; set; }
-
-        public IEngine Engine { get; }
 
         public int SearchIndex { get; set; }
 

@@ -7,9 +7,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Transporter";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            engine.UpdateBoard(engine.Actors[index].Location);
+            engine.UpdateBoard(_actorList[index].Location);
         }
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
@@ -34,7 +34,7 @@ namespace Roton.Emulation.Behavior
             return new AnsiChar(engine.State.TransporterHChars[index], engine.Tiles[location].Color);
         }
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             engine.PushThroughTransporter(location.Difference(vector), vector);
             vector.SetTo(0, 0);

@@ -12,24 +12,10 @@ namespace Roton.Core
         event DataEventHandler RequestReplaceContext;
         event EventHandler Terminated;
 
-        IActorList Actors { get; }
-        IAlerts Alerts { get; }
-        IBoard Board { get; }
-        IList<IPackedBoard> Boards { get; }
-        IFileSystem Disk { get; }
-        IDrumBank DrumBank { get; }
-        IElementList Elements { get; }
-        IGameSerializer GameSerializer { get; }
-        IGrammar Grammar { get; }
-        IHud Hud { get; }
-        IMemory Memory { get; }
         IActor Player { get; }
-        ISoundSet SoundSet { get; }
-        IState State { get; }
         string StoneText { get; }
-        ITileGrid Tiles { get; }
         bool TitleScreen { get; }
-        IWorld World { get; }
+        
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);

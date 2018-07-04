@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -9,9 +8,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Player";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var playerElement = engine.Elements[engine.Elements.PlayerId];
 
             // Energizer graphics

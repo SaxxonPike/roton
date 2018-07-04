@@ -1,5 +1,4 @@
 ﻿using Roton.Core;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -7,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Slime";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
 
             if (actor.P1 >= actor.P2)
             {
@@ -34,7 +33,7 @@ namespace Roton.Emulation.Behavior
                         else
                         {
                             engine.SpawnActor(target, new Tile(engine.Elements.SlimeId, color), slimeElement.Cycle, null);
-                            engine.Actors[engine.State.ActorCount].P2 = actor.P2;
+                            _actorList[engine.State.ActorCount].P2 = actor.P2;
                         }
                         spawnCount++;
                     }
@@ -53,7 +52,7 @@ namespace Roton.Emulation.Behavior
             }
         }
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             var color = engine.Tiles[location].Color;
             var slimeIndex = engine.ActorIndexAt(location);

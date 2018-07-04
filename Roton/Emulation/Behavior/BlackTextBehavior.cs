@@ -2,6 +2,6 @@
 {
     public sealed class BlackTextBehavior : ElementBehavior
     {
-        public override string KnownName => "Text (Black)";
+        public override string KnownName => KnownNames.BlackText;
     }
 }

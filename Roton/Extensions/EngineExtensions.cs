@@ -6,7 +6,7 @@ namespace Roton.Extensions
     {
         public static IActor ActorAt(this IEngine engine, IXyPair location)
         {
-            return engine.Actors[engine.ActorIndexAt(location)];
+            return _actorList[engine.ActorIndexAt(location)];
         }
 
         public static AnsiChar Draw(this IEngine engine, int x, int y)

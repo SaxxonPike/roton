@@ -1,15 +1,12 @@
-﻿using Roton.Core;
-using Roton.Extensions;
-
-namespace Roton.Emulation.Behavior
+﻿namespace Roton.Emulation.Behavior
 {
     public sealed class RuffianBehavior : EnemyBehavior
     {
         public override string KnownName => "Ruffian";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
 
             if (actor.Vector.IsZero())
             {
@@ -27,7 +24,7 @@ namespace Roton.Emulation.Behavior
             }
             else
             {
-                if (actor.Location.X == engine.Player.Location.X || actor.Location.Y == engine.Player.Location.Y)
+                if (actor.Location.X == _actorList.GetPlayer().Location.X || actor.Location.Y == _actorList.GetPlayer().Location.Y)
                 {
                     if (actor.P1 >= engine.SyncRandomNumber(9))
                     {

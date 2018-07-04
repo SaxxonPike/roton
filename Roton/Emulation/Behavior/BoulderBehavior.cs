@@ -2,6 +2,6 @@
 {
     public sealed class BoulderBehavior : PuzzleBehavior
     {
-        public override string KnownName => "Boulder";
+        public override string KnownName => KnownNames.Boulder;
     }
 }

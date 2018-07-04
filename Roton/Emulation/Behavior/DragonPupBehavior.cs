@@ -6,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Dragon Pup";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            engine.UpdateBoard(engine.Actors[index].Location);
+            engine.UpdateBoard(_actorList[index].Location);
         }
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)

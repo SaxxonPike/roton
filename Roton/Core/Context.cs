@@ -6,83 +6,87 @@ using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
 using Roton.Events;
+using Roton.FileIo;
 using Roton.Resources;
 
 namespace Roton.Core
 {
     public sealed class Context : IContext
     {
+        private readonly IMemory _memory;
+        private readonly IState _state;
+        private readonly IFileSystem _fileSystem;
+        private readonly IBoardList _boardList;
+        private readonly IActorList _actorList;
+        private readonly IGameSerializer _gameSerializer;
+        private readonly IEngine _engine;
+
         public event EventHandler Terminated;
 
         private const int MaxGameCycle = 420;
 
         public Context(
             IActorList actorList, 
-            IBoard board, 
-            IDrumBank drumBank, 
-            IElementList elementList, 
             ITileGrid tileGrid, 
-            IWorld world)
+            IWorld world,
+            IBoardList boardList,
+            IGameSerializer gameSerializer,
+            IEngine engine,
+            IMemory memory,
+            IState state,
+            IFileSystem fileSystem)
         {
-            
+            _memory = memory;
+            _state = state;
+            _fileSystem = fileSystem;
+            _actorList = actorList;
+            _boardList = boardList;
+            _gameSerializer = gameSerializer;
+            _engine = engine;
+            Tiles = tileGrid;
+            WorldData = world;
         }
-
-        private IGameSerializer GameSerializer => Engine.GameSerializer;
-
-        private IEngine Engine { get; set; }
-
-        public IActorList Actors => Engine.Actors;
-
-        public IBoard Board => Engine.Board;
-
-        public IList<IPackedBoard> Boards => Engine.Boards;
-
-        public IDrumBank Drums => Engine.DrumBank;
-
-        public byte[] DumpMemory() => Engine.Memory.Dump();
-
-        public IElementList Elements => Engine.Elements;
 
         public void ExecuteOnce()
         {
-            if (Engine.State.EditorMode)
+            if (_state.EditorMode)
             {
                 // simulate a game cycle for visuals only
-                Engine.State.ActIndex = 0;
-                Engine.State.GameCycle++;
-                if (Engine.State.GameCycle >= MaxGameCycle)
+                _state.ActIndex = 0;
+                _state.GameCycle++;
+                if (_state.GameCycle >= MaxGameCycle)
                 {
-                    Engine.State.GameCycle = 0;
+                    _state.GameCycle = 0;
                 }
 
-                foreach (var actor in Actors)
+                foreach (var actor in _actorList)
                 {
-                    if (actor.Cycle > 0 && Engine.State.ActIndex%actor.Cycle == Engine.State.GameCycle%actor.Cycle)
+                    if (actor.Cycle > 0 && _state.ActIndex%actor.Cycle == _state.GameCycle%actor.Cycle)
                     {
-                        Engine.UpdateBoard(actor.Location);
+                        _engine.UpdateBoard(actor.Location);
                     }
-                    Engine.State.ActIndex++;
+                    _state.ActIndex++;
                 }
             }
         }
 
-        public void PackBoard() => Engine.PackBoard();
+        public void PackBoard() => _engine.PackBoard();
 
-        public void Refresh() => Engine.RedrawBoard();
+        public void Refresh() => _engine.RedrawBoard();
 
         public byte[] Save()
         {
             using (var mem = new MemoryStream())
             {
                 var writer = new BinaryWriter(mem);
-                Engine.PackBoard();
+                _engine.PackBoard();
                 writer.Write((short) WorldData.WorldType);
-                writer.Write((short) (Boards.Count - 1));
+                writer.Write((short) (_boardList.Count - 1));
                 writer.Flush();
-                GameSerializer.SaveWorld(mem);
-                foreach (var board in Boards)
+                _gameSerializer.SaveWorld(mem);
+                foreach (var board in _boardList)
                 {
-                    GameSerializer.SaveBoardData(mem, board.Data);
+                    _gameSerializer.SaveBoardData(mem, board.Data);
                 }
                 mem.Flush();
                 return mem.ToArray();
@@ -91,44 +95,44 @@ namespace Roton.Core
 
         public void Save(string filename)
         {
-            Engine.Disk.PutFile(filename, Save());
+            _fileSystem.PutFile(filename, Save());
         }
 
-        public void SetBoard(int boardIndex) => Engine.SetBoard(boardIndex);
+        public void SetBoard(int boardIndex) => _engine.SetBoard(boardIndex);
 
-        public void Start() => Engine.Start();
+        public void Start() => _engine.Start();
 
-        public void Stop() => Engine.Stop();
+        public void Stop() => _engine.Stop();
 
-        public ITileGrid Tiles => Engine.Tiles;
+        public ITileGrid Tiles { get; }
 
-        public void UnpackBoard() => Engine.UnpackBoard(Engine.World.BoardIndex);
+        public void UnpackBoard() => _engine.UnpackBoard(WorldData.BoardIndex);
 
-        public IWorld WorldData => Engine.World;
+        public IWorld WorldData { get; }
 
         public int WorldSize
         {
-            get { return GameSerializer.WorldDataCapacity + Boards.Sum(board => board.Data.Length + 2); }
+            get { return _gameSerializer.WorldDataCapacity + _boardList.Sum(board => board.Data.Length + 2); }
         }
 
         private void Initialize(ContextEngine engine)
         {
-            var resources = ResourceZipFileSystem.System;
-            switch (engine)
-            {
-                case ContextEngine.Zzt:
-                    Engine = new ZztEngine(_config, resources.GetFile("memory-zzt.bin"), resources.GetFile("elements-zzt.bin"));
-                    break;
-                case ContextEngine.SuperZzt:
-                    Engine = new SuperZztEngine(_config, resources.GetFile("memory-szzt.bin"), resources.GetFile("elements-szzt.bin"));
-                    break;
-                default:
-                    throw Exceptions.InvalidFormat;
-            }
+//            var resources = ResourceZipFileSystem.System;
+//            switch (engine)
+//            {
+//                case ContextEngine.Zzt:
+//                    _engine = new ZztEngine(_config, resources.GetFile("memory-zzt.bin"), resources.GetFile("elements-zzt.bin"));
+//                    break;
+//                case ContextEngine.SuperZzt:
+//                    _engine = new SuperZztEngine(_config, resources.GetFile("memory-szzt.bin"), resources.GetFile("elements-szzt.bin"));
+//                    break;
+//                default:
+//                    throw Exceptions.InvalidFormat;
+//            }
 
-            Engine.RequestReplaceContext += OnEngineRequestReplaceContext;
-            Engine.Terminated += (s, e) => Terminated?.Invoke(s, e);
-            Engine.ClearWorld();
+            _engine.RequestReplaceContext += OnEngineRequestReplaceContext;
+            _engine.Terminated += (s, e) => Terminated?.Invoke(s, e);
+            _engine.ClearWorld();
         }
 
         private void OnEngineRequestReplaceContext(object sender, DataEventArgs e)
@@ -169,14 +173,14 @@ namespace Roton.Core
         {
             var reader = new BinaryReader(stream);
             int boardCount = reader.ReadInt16();
-            GameSerializer.LoadWorld(stream);
-            Boards.Clear();
+            _gameSerializer.LoadWorld(stream);
+            _boardList.Clear();
             for (var i = 0; i <= boardCount; i++)
             {
-                Boards.Add(new PackedBoard(GameSerializer.LoadBoardData(stream)));
+                _boardList.Add(new PackedBoard(_gameSerializer.LoadBoardData(stream)));
             }
-            GameSerializer.UnpackBoard(Engine.Tiles, Engine.Boards[Engine.World.BoardIndex].Data);
-            Engine.State.WorldLoaded = true;
+            _gameSerializer.UnpackBoard(Tiles, _boardList[WorldData.BoardIndex].Data);
+            _state.WorldLoaded = true;
         }
     }
 }

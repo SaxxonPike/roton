@@ -1,15 +1,14 @@
-﻿using Roton.Core;
-using Roton.Extensions;
-
-namespace Roton.Emulation.Behavior
+﻿namespace Roton.Emulation.Behavior
 {
     public sealed class CentipedeSegmentBehavior : EnemyBehavior
     {
-        public override string KnownName => "Centipede (Segment)";
+        public override string KnownName => KnownNames.Segment;
 
-        public override void Act(IEngine engine, int index)
+        
+        
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             if (actor.Leader < 0)
             {
                 if (actor.Leader < -1)

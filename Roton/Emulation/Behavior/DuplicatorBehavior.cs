@@ -7,9 +7,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Duplicator";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var source = actor.Location.Sum(actor.Vector);
             var target = actor.Location.Difference(actor.Vector);
 
@@ -34,7 +34,7 @@ namespace Roton.Emulation.Behavior
                             {
                                 var sourceTile = engine.TileAt(source);
                                 engine.SpawnActor(target, sourceTile, engine.Elements[sourceTile.Id].Cycle,
-                                    engine.Actors[sourceIndex]);
+                                    _actorList[sourceIndex]);
                                 engine.UpdateBoard(target);
                             }
                         }

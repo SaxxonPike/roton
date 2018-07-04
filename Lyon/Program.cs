@@ -21,7 +21,8 @@ namespace Lyon
                     typeof(IContext).Assembly,
                     typeof(IGlyphComposer).Assembly)
                 .Where(t => !t.IsAbstract && t.IsClass)
-                .AsImplementedInterfaces();
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
             var container = builder.Build();
             

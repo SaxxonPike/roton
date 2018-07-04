@@ -14,7 +14,7 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => "Forest";
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             if (_clearToFloor)
                 engine.Tiles[location].SetTo(engine.Elements.FloorId, 0x02);

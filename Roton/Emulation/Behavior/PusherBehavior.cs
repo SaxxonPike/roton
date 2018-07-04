@@ -7,9 +7,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Pusher";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var source = actor.Location.Clone();
 
             if (!engine.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
@@ -18,7 +18,7 @@ namespace Roton.Emulation.Behavior
             }
 
             index = engine.ActorIndexAt(source);
-            actor = engine.Actors[index];
+            actor = _actorList[index];
             if (!engine.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
 
             engine.MoveActor(index, actor.Location.Sum(actor.Vector));
@@ -27,7 +27,7 @@ namespace Roton.Emulation.Behavior
             if (engine.TileAt(behindLocation).Id != engine.Elements.PusherId) return;
 
             var behindIndex = engine.ActorIndexAt(behindLocation);
-            var behindActor = engine.Actors[behindIndex];
+            var behindActor = _actorList[behindIndex];
             if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
             {
                 engine.Elements[engine.Elements.PusherId].Act(engine, behindIndex);

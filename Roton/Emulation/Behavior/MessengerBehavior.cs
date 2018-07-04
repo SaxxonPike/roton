@@ -6,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Messenger";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             if (actor.Location.X == 0)
             {
                 engine.Hud.DrawMessage(new Message(engine.State.Message, engine.State.Message2), actor.P2%7 + 9);

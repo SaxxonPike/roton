@@ -14,9 +14,9 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => "Object";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             if (actor.Instruction >= 0)
             {
                 engine.ExecuteCode(index, actor, @"Interaction");
@@ -39,7 +39,7 @@ namespace Roton.Emulation.Behavior
             return new AnsiChar(engine.ActorAt(location).P1, engine.Tiles[location].Color);
         }
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             var objectIndex = engine.ActorIndexAt(location);
             engine.BroadcastLabel(-objectIndex, @"TOUCH", false);

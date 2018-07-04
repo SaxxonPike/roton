@@ -4,7 +4,7 @@ namespace Roton.Emulation.Behavior
 {
     public abstract class ElementBehavior : IBehavior
     {
-        public virtual void Act(IEngine engine, int index)
+        public virtual void Act(int index)
         {
         }
 
@@ -13,7 +13,7 @@ namespace Roton.Emulation.Behavior
             return new AnsiChar(0x3F, 0x40);
         }
 
-        public virtual void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public virtual void Interact(IXyPair location, int index, IXyPair vector)
         {
         }
 

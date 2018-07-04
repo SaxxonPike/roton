@@ -2,6 +2,6 @@
 {
     public sealed class BreakableWallBehavior : ElementBehavior
     {
-        public override string KnownName => "Breakable Wall";
+        public override string KnownName => KnownNames.Breakable;
     }
 }

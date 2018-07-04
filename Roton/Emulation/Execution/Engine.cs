@@ -15,31 +15,43 @@ namespace Roton.Emulation.Execution
 {
     public abstract class Engine : IEngine
     {
+        private readonly IRandomizerService _randomizerService;
         public event EventHandler Terminated;
         public event DataEventHandler RequestReplaceContext;
 
-        private readonly IEngineConfiguration _config;
         private int _timerTick;
+        private readonly IKeyboard _keyboard;
+        private readonly ISpeaker _speaker;
+        private readonly IFileSystem _fileSystem;
+        private readonly IState _state;
+        private readonly IOopContextFactory _oopContextFactory;
 
-        protected Engine(IEngineConfiguration config)
+        protected Engine(
+            IMemory memory, 
+            IRandomizerService randomizerService,
+            IKeyboard keyboard,
+            ISpeaker speaker,
+            IBoardList boardList,
+            IFileSystem fileSystem,
+            IState state,
+            IOopContextFactory oopContextFactory)
         {
-            _config = config;
-            Boards = new List<IPackedBoard>();
-            Memory = new Memory();
-            Random = new Randomizer(new RandomState());
-            SyncRandom = new Randomizer(new RandomState(config.RandomSeed));
+            _randomizerService = randomizerService;
+            _keyboard = keyboard;
+            _speaker = speaker;
+            _fileSystem = fileSystem;
+            _state = state;
+            _oopContextFactory = oopContextFactory;
+            Boards = boardList;
+            Memory = memory;
             Timer = new CoreTimer();
         }
 
         private ITile BorderTile => State.BorderTile;
 
-        private IKeyboard Keyboard => _config.Keyboard;
+        private IRandomizer Random => _randomizerService.Random;
 
-        private IRandomizer Random { get; }
-
-        private ISpeaker Speaker => _config.Speaker;
-
-        private IRandomizer SyncRandom { get; }
+        private IRandomizer SyncRandom => _randomizerService.SyncRandom;
 
         private CoreTimer Timer { get; }
 
@@ -110,7 +122,7 @@ namespace Roton.Emulation.Execution
 
         public abstract IBoard Board { get; }
 
-        public IList<IPackedBoard> Boards { get; }
+        public IBoardList Boards { get; }
 
         public virtual bool BroadcastLabel(int sender, string label, bool force)
         {
@@ -263,8 +275,6 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public IFileSystem Disk => _config.Disk;
-
         public virtual AnsiChar Draw(IXyPair location)
         {
             if (Board.IsDark && !this.ElementAt(location).IsAlwaysVisible &&
@@ -319,7 +329,7 @@ namespace Roton.Emulation.Execution
 
         public virtual void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
-            var context = new OopContext(index, instructionSource, name, this);
+            var context = _oopContextFactory.Create(index, instructionSource, name);
 
             context.PreviousInstruction = context.Instruction;
             context.Moved = false;
@@ -925,7 +935,7 @@ namespace Roton.Emulation.Execution
 
         public virtual int ReadKey()
         {
-            var key = Keyboard.GetKey();
+            var key = _keyboard.GetKey();
             State.KeyPressed = key > 0 ? key : 0;
             return State.KeyPressed;
         }
@@ -1425,7 +1435,7 @@ namespace Roton.Emulation.Execution
             }
             else
             {
-                context.Engine.State.KeyVector.SetTo(0, 0);
+                _state.KeyVector.SetTo(0, 0);
                 Hud.ShowScroll(context.Message);
             }
         }
@@ -1473,7 +1483,7 @@ namespace Roton.Emulation.Execution
 
             try
             {
-                return Disk.GetFile(filename);
+                return _fileSystem.GetFile(filename);
             }
             catch (Exception)
             {
@@ -1710,11 +1720,11 @@ namespace Roton.Emulation.Execution
             State.KeyPressed = 0;
             State.KeyVector.SetTo(0, 0);
 
-            var key = Keyboard.GetKey();
+            var key = _keyboard.GetKey();
             if (key >= 0)
             {
                 State.KeyPressed = key;
-                State.KeyShift = Keyboard.Shift;
+                State.KeyShift = _keyboard.Shift;
                 switch (key)
                 {
                     case 0xCB:

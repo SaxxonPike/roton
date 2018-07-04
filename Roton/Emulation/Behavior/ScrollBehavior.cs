@@ -1,5 +1,4 @@
 ﻿using Roton.Core;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -7,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Scroll";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var color = engine.Tiles[actor.Location].Color;
 
             color++;
@@ -21,10 +20,10 @@ namespace Roton.Emulation.Behavior
             engine.UpdateBoard(actor.Location);
         }
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             var scrollIndex = engine.ActorIndexAt(location);
-            var actor = engine.Actors[scrollIndex];
+            var actor = _actorList[scrollIndex];
 
             engine.PlaySound(2, engine.EncodeMusic(@"c-c+d-d+e-e+f-f+g-g"));
             engine.ExecuteCode(scrollIndex, actor, @"Scroll");

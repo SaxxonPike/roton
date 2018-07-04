@@ -18,7 +18,7 @@ namespace Roton.Emulation.Mapping
         protected IMemory Memory { get; private set; }
 
         protected int Offset { get; private set; }
-        public virtual Action<IEngine, int> Act => Behavior.Act;
+        public virtual Action<IEngine, int> Act => (engine, index) => Behavior.Act(, index);
         public virtual string BoardEditText { get; set; }
         public virtual int Character { get; set; }
         public virtual string CodeEditText { get; set; }
@@ -28,7 +28,7 @@ namespace Roton.Emulation.Mapping
         public virtual string EditorCategory { get; set; }
         public virtual bool HasDrawCode { get; set; }
         public virtual int Id { get; set; } = -1;
-        public virtual Action<IEngine, IXyPair, int, IXyPair> Interact => Behavior.Interact;
+        public virtual Action<IEngine, IXyPair, int, IXyPair> Interact => (engine, location, index, vector) => Behavior.Interact(, location, index, vector);
         public virtual bool IsAlwaysVisible { get; set; }
         public virtual bool IsDestructible { get; set; }
         public virtual bool IsEditorFloor { get; set; }

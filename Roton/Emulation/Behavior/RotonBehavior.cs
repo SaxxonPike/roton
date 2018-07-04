@@ -1,15 +1,12 @@
-﻿using Roton.Core;
-using Roton.Extensions;
-
-namespace Roton.Emulation.Behavior
+﻿namespace Roton.Emulation.Behavior
 {
     public sealed class RotonBehavior : EnemyBehavior
     {
         public override string KnownName => "Roton";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
 
             actor.P3--;
             if (actor.P3 < -actor.P2%10)

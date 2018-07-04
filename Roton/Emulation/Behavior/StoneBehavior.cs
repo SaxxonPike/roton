@@ -6,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Stone of Power";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            engine.UpdateBoard(engine.Actors[index].Location);
+            engine.UpdateBoard(_actorList[index].Location);
         }
 
         public override AnsiChar Draw(IEngine engine, IXyPair location)
@@ -16,7 +16,7 @@ namespace Roton.Emulation.Behavior
             return new AnsiChar(0x41 + engine.RandomNumber(0x1A), engine.Tiles[location].Color);
         }
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             if (engine.World.Stones < 0)
             {

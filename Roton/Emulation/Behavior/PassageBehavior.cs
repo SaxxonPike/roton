@@ -14,11 +14,11 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => "Passage";
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             var searchColor = engine.Tiles[location].Color;
             var passageIndex = engine.ActorIndexAt(location);
-            var passageTarget = engine.Actors[passageIndex].P3;
+            var passageTarget = _actorList[passageIndex].P3;
             engine.SetBoard(passageTarget);
             var target = new Location();
 
@@ -39,17 +39,17 @@ namespace Roton.Emulation.Behavior
             if (_enableUnderTileBug)
             {
                 // this is what causes the black holes when using passages
-                engine.Tiles[engine.Player.Location].SetTo(engine.Elements.EmptyId, 0);
+                engine.Tiles[_actorList.GetPlayer().Location].SetTo(engine.Elements.EmptyId, 0);
             }
             else
             {
                 // Passage holes were fixed in Super ZZT
-                engine.Tiles[engine.Player.Location].CopyFrom(engine.Player.UnderTile);
+                engine.Tiles[_actorList.GetPlayer().Location].CopyFrom(_actorList.GetPlayer().UnderTile);
             }
 
             if (target.X != 0)
             {
-                engine.Player.Location.CopyFrom(target);
+                _actorList.GetPlayer().Location.CopyFrom(target);
             }
             engine.State.GamePaused = true;
             engine.PlaySound(4, engine.SoundSet.Passage);

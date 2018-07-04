@@ -6,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Spinning Gun";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var firingElement = engine.Elements.BulletId;
             var shot = false;
 
@@ -23,15 +23,15 @@ namespace Roton.Emulation.Behavior
             {
                 if (actor.P1 >= engine.SyncRandomNumber(9))
                 {
-                    if (actor.Location.X.AbsDiff(engine.Player.Location.X) <= 2)
+                    if (actor.Location.X.AbsDiff(_actorList.GetPlayer().Location.X) <= 2)
                     {
                         shot = engine.SpawnProjectile(firingElement, actor.Location,
-                            new Vector(0, (engine.Player.Location.Y - actor.Location.Y).Polarity()), true);
+                            new Vector(0, (_actorList.GetPlayer().Location.Y - actor.Location.Y).Polarity()), true);
                     }
-                    if (!shot && actor.Location.Y.AbsDiff(engine.Player.Location.Y) <= 2)
+                    if (!shot && actor.Location.Y.AbsDiff(_actorList.GetPlayer().Location.Y) <= 2)
                     {
                         engine.SpawnProjectile(firingElement, actor.Location,
-                            new Vector((engine.Player.Location.X - actor.Location.X).Polarity(), 0), true);
+                            new Vector((_actorList.GetPlayer().Location.X - actor.Location.X).Polarity(), 0), true);
                     }
                 }
                 else

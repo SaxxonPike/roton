@@ -1,5 +1,4 @@
 ﻿using Roton.Core;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -7,9 +6,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Star";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
 
             actor.P2 = (actor.P2 - 1) & 0xFF;
             if (actor.P2 > 0)

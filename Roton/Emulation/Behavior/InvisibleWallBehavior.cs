@@ -1,5 +1,4 @@
 ﻿using Roton.Core;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
@@ -7,7 +6,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Invisible Wall";
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             engine.Tiles[location].Id = engine.Elements.NormalId;
             engine.UpdateBoard(location);

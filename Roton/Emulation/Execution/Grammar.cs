@@ -10,12 +10,32 @@ namespace Roton.Emulation.Execution
     public abstract class Grammar : IGrammar
     {
         private readonly IColorList _colors;
-        private readonly IElementList _elements;
+        private readonly IElementList _elementList;
+        private readonly IWorld _world;
+        private readonly IBoard _board;
+        private readonly IEngine _engine;
+        private readonly ISoundSet _soundSet;
+        private readonly ITileGrid _tileGrid;
+        private readonly IActorList _actorList;
 
-        protected Grammar(IColorList colors, IElementList elements)
+        protected Grammar(
+            IColorList colors, 
+            IElementList elementList, 
+            IWorld world, 
+            IBoard board, 
+            IEngine engine,
+            ISoundSet soundSet,
+            ITileGrid tileGrid,
+            IActorList actorList)
         {
             _colors = colors;
-            _elements = elements;
+            _elementList = elementList;
+            _world = world;
+            _board = board;
+            _engine = engine;
+            _soundSet = soundSet;
+            _tileGrid = tileGrid;
+            _actorList = actorList;
             Cheats = GetCheats();
             Commands = GetCommands();
             Conditions = GetConditions();
@@ -31,22 +51,22 @@ namespace Roton.Emulation.Execution
         private IDictionary<string, Func<IOopContext, IOopItem>> Items { get; }
         private IDictionary<string, Func<ISearchContext, bool>> Targets { get; }
 
-        public void Cheat(IEngine engine, string input)
+        public void Cheat(string input)
         {
             if (input == null)
                 return;
 
             Action<IEngine> func;
             Cheats.TryGetValue(input.ToUpperInvariant(), out func);
-            func?.Invoke(engine);
+            func?.Invoke(_engine);
 
             if (input.Length < 2)
                 return;
 
             if (input.StartsWith("+"))
-                engine.World.Flags.Add(input.Substring(1));
+                _world.Flags.Add(input.Substring(1));
             else if (input.StartsWith("-"))
-                engine.World.Flags.Remove(input.Substring(1));
+                _world.Flags.Remove(input.Substring(1));
         }
 
         public void Execute(IOopContext context)
@@ -69,11 +89,11 @@ namespace Roton.Emulation.Execution
                 }
                 else
                 {
-                    if (!context.Engine.BroadcastLabel(context.Index, command, false))
+                    if (!_engine.BroadcastLabel(context.Index, command, false))
                     {
                         if (!command.Contains(':'))
                         {
-                            context.Engine.RaiseError($"Bad command {command}");
+                            _engine.RaiseError($"Bad command {command}");
                         }
                     }
                     else
@@ -149,7 +169,7 @@ namespace Roton.Emulation.Execution
                 break;
             }
 
-            foreach (var element in _elements.Where(e => e != null))
+            foreach (var element in _elementList.Where(e => e != null))
             {
                 if (new string(element.Name.ToUpperInvariant().Where(c => c >= 0x41 && c <= 0x5A).ToArray()) != word)
                     continue;
@@ -170,50 +190,50 @@ namespace Roton.Emulation.Execution
             return func?.Invoke(context) ?? Target_Default(context);
         }
 
-        protected void Cheat_Ammo(IEngine engine)
+        protected void Cheat_Ammo()
         {
-            engine.World.Ammo += 5;
+            _world.Ammo += 5;
         }
 
-        protected void Cheat_Dark(IEngine engine)
+        protected void Cheat_Dark()
         {
-            engine.Board.IsDark = true;
-            engine.RedrawBoard();
+            _board.IsDark = true;
+            _engine.RedrawBoard();
         }
 
-        protected void Cheat_Gems(IEngine engine)
+        protected void Cheat_Gems()
         {
-            engine.World.Gems += 5;
+            _world.Gems += 5;
         }
 
-        protected void Cheat_Health(IEngine engine)
+        protected void Cheat_Health()
         {
-            engine.World.Health += 50;
+            _world.Health += 50;
         }
 
-        protected void Cheat_Keys(IEngine engine)
+        protected void Cheat_Keys()
         {
             for (var i = 1; i < 8; i++)
             {
-                engine.World.Keys[i] = true;
+                _world.Keys[i] = true;
             }
         }
 
-        protected void Cheat_Time(IEngine engine)
+        protected void Cheat_Time()
         {
-            engine.World.TimePassed -= 30;
+            _world.TimePassed -= 30;
         }
 
-        protected void Cheat_Torches(IEngine engine)
+        protected void Cheat_Torches()
         {
-            engine.World.Torches += 3;
+            _world.Torches += 3;
         }
 
-        protected void Cheat_Zap(IEngine engine)
+        protected void Cheat_Zap()
         {
             for (var i = 0; i < 4; i++)
             {
-                engine.Destroy(engine.Player.Location.Sum(engine.GetCardinalVector(i)));
+                _engine.Destroy(_actorList.Player.Location.Sum(_engine.GetCardinalVector(i)));
             }
         }
 
@@ -222,7 +242,7 @@ namespace Roton.Emulation.Execution
             var kind = GetKind(context);
             if (kind == null)
             {
-                context.Engine.RaiseError("Bad #BECOME");
+                _engine.RaiseError("Bad #BECOME");
                 return;
             }
 
@@ -232,7 +252,7 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Bind(IOopContext context)
         {
-            var search = new SearchContext(context.Engine);
+            var search = new SearchContext(_engine);
             var target = context.ReadWord();
             search.SearchTarget = target;
             if (GetTarget(search))
@@ -260,16 +280,16 @@ namespace Roton.Emulation.Execution
                         target.Color = targetElement.Color;
                     }
                     var location = new Location(0, 1);
-                    while (context.Engine.FindTile(source, location))
+                    while (_engine.FindTile(source, location))
                     {
-                        context.Engine.PlotTile(location, target);
+                        _engine.PlotTile(location, target);
                     }
                 }
             }
 
             if (!success)
             {
-                context.Engine.RaiseError("Bad #CHANGE");
+                _engine.RaiseError("Bad #CHANGE");
             }
         }
 
@@ -279,7 +299,7 @@ namespace Roton.Emulation.Execution
             if (value >= 0)
             {
                 context.Actor.P1 = value;
-                context.Engine.UpdateBoard(context.Actor.Location);
+                _engine.UpdateBoard(context.Actor.Location);
             }
         }
 
@@ -301,7 +321,7 @@ namespace Roton.Emulation.Execution
         protected void Command_Die(IOopContext context)
         {
             context.Died = true;
-            context.DeathTile.SetTo(context.Engine.Elements.EmptyId, 0);
+            context.DeathTile.SetTo(_elementList.EmptyId, 0);
         }
 
         protected void Command_End(IOopContext context)
@@ -318,7 +338,7 @@ namespace Roton.Emulation.Execution
         protected void Command_Give(IOopContext context)
         {
             context.Resume = ExecuteTransaction(context, false);
-            context.Engine.UpdateStatus();
+            _engine.UpdateStatus();
         }
 
         protected void Command_Go(IOopContext context)
@@ -327,13 +347,13 @@ namespace Roton.Emulation.Execution
             if (vector != null)
             {
                 var target = context.Actor.Location.Sum(vector);
-                if (!context.Engine.ElementAt(target).IsFloor)
+                if (!_engine.ElementAt(target).IsFloor)
                 {
-                    context.Engine.Push(target, vector);
+                    _engine.Push(target, vector);
                 }
-                if (context.Engine.ElementAt(target).IsFloor)
+                if (_engine.ElementAt(target).IsFloor)
                 {
-                    context.Engine.MoveActor(context.Index, target);
+                    _engine.MoveActor(context.Index, target);
                     context.Moved = true;
                 }
                 else
@@ -365,8 +385,8 @@ namespace Roton.Emulation.Execution
         protected void Command_Play(IOopContext context)
         {
             var notes = context.ReadLine();
-            var sound = context.Engine.EncodeMusic(notes);
-            context.Engine.PlaySound(-1, sound);
+            var sound = _engine.EncodeMusic(notes);
+            _engine.PlaySound(-1, sound);
             context.NextLine = false;
         }
 
@@ -381,12 +401,12 @@ namespace Roton.Emulation.Execution
                 if (kind != null)
                 {
                     success = true;
-                    PutTile(context.Engine, context.Actor.Location.Sum(vector), vector, kind);
+                    PutTile(_engine, context.Actor.Location.Sum(vector), vector, kind);
                 }
             }
 
             if (!success)
-                context.Engine.RaiseError("Bad #PUT");
+                _engine.RaiseError("Bad #PUT");
         }
 
         protected void Command_Restart(IOopContext context)
@@ -401,14 +421,14 @@ namespace Roton.Emulation.Execution
             while (true)
             {
                 context.SearchTarget = context.GetWord();
-                var result = context.Engine.ExecuteLabel(context.Index, context, "\xD\x27");
+                var result = _engine.ExecuteLabel(context.Index, context, "\xD\x27");
                 if (!result)
                     break;
 
                 while (context.SearchOffset >= 0)
                 {
                     context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x3A;
-                    context.SearchOffset = context.Engine.SearchActorCode(context.SearchIndex,
+                    context.SearchOffset = _engine.SearchActorCode(context.SearchIndex,
                         $"\xD\x27{context.GetWord()}");
                 }
             }
@@ -417,7 +437,7 @@ namespace Roton.Emulation.Execution
         protected void Command_Send(IOopContext context)
         {
             var target = context.ReadWord();
-            context.NextLine = context.Engine.BroadcastLabel(context.Index, target, false);
+            context.NextLine = _engine.BroadcastLabel(context.Index, target, false);
         }
 
         protected void Command_Set(IOopContext context)
@@ -431,11 +451,11 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = context.Engine.Elements.Bullet();
-                var success = context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+                var projectile = _elementList.Bullet();
+                var success = _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
-                    context.Engine.PlaySound(2, context.Engine.SoundSet.EnemyShoot);
+                    _engine.PlaySound(2, _soundSet.EnemyShoot);
                 }
                 context.Moved = true;
             }
@@ -444,7 +464,7 @@ namespace Roton.Emulation.Execution
         protected void Command_Take(IOopContext context)
         {
             context.Resume = ExecuteTransaction(context, true);
-            context.Engine.UpdateStatus();
+            _engine.UpdateStatus();
         }
 
         protected void Command_Then(IOopContext context)
@@ -460,8 +480,8 @@ namespace Roton.Emulation.Execution
             var vector = GetDirection(context);
             if (vector != null)
             {
-                var projectile = context.Engine.Elements.Star();
-                context.Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+                var projectile = _elementList.Star();
+                _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
             }
             context.Moved = true;
         }
@@ -473,13 +493,13 @@ namespace Roton.Emulation.Execution
                 return;
 
             var target = vector.Sum(context.Actor.Location);
-            if (!context.Engine.ElementAt(target).IsFloor)
+            if (!_engine.ElementAt(target).IsFloor)
             {
-                context.Engine.Push(target, vector);
+                _engine.Push(target, vector);
             }
-            if (context.Engine.ElementAt(target).IsFloor)
+            if (_engine.ElementAt(target).IsFloor)
             {
-                context.Engine.MoveActor(context.Index, target);
+                _engine.MoveActor(context.Index, target);
                 context.Moved = true;
                 context.Resume = false;
             }
@@ -509,7 +529,7 @@ namespace Roton.Emulation.Execution
             while (true)
             {
                 context.SearchTarget = context.GetWord();
-                var result = context.Engine.ExecuteLabel(context.Index, context, "\xD\x3A");
+                var result = _engine.ExecuteLabel(context.Index, context, "\xD\x3A");
                 if (!result)
                     break;
                 context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x27;
@@ -518,8 +538,8 @@ namespace Roton.Emulation.Execution
 
         protected bool? Condition_Alligned(IOopContext context)
         {
-            return context.Actor.Location.X == context.Engine.Player.Location.X ||
-                   context.Actor.Location.Y == context.Engine.Player.Location.Y;
+            return context.Actor.Location.X == _actorList.Player.Location.X ||
+                   context.Actor.Location.Y == _actorList.Player.Location.Y;
         }
 
         protected bool? Condition_Any(IOopContext context)
@@ -528,7 +548,7 @@ namespace Roton.Emulation.Execution
             if (kind == null)
                 return null;
 
-            return context.Engine.FindTile(kind, new Location(0, 1));
+            return _engine.FindTile(kind, new Location(0, 1));
         }
 
         protected bool? Condition_Blocked(IOopContext context)
@@ -537,7 +557,7 @@ namespace Roton.Emulation.Execution
             if (direction == null)
                 return null;
 
-            return !context.Engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
+            return !_engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
         }
 
         protected bool? Condition_Contact(IOopContext context)
@@ -594,19 +614,19 @@ namespace Roton.Emulation.Execution
 
         protected IXyPair Direction_Rnd(IOopContext context)
         {
-            return context.Engine.Rnd();
+            return _engine.Rnd();
         }
 
         protected IXyPair Direction_RndNe(IOopContext context)
         {
-            return context.Engine.SyncRandomNumber(2) == 0
+            return _engine.SyncRandomNumber(2) == 0
                 ? Vector.North
                 : Vector.East;
         }
 
         protected IXyPair Direction_RndNs(IOopContext context)
         {
-            return context.Engine.SyncRandomNumber(2) == 0
+            return _engine.SyncRandomNumber(2) == 0
                 ? Vector.North
                 : Vector.South;
         }
@@ -614,14 +634,14 @@ namespace Roton.Emulation.Execution
         protected IXyPair Direction_RndP(IOopContext context)
         {
             var direction = GetDirection(context);
-            return context.Engine.SyncRandomNumber(2) == 0
+            return _engine.SyncRandomNumber(2) == 0
                 ? direction.Clockwise()
                 : direction.CounterClockwise();
         }
 
         protected IXyPair Direction_Seek(IOopContext context)
         {
-            return context.Engine.Seek(context.Actor.Location);
+            return _engine.Seek(context.Actor.Location);
         }
 
         protected IXyPair Direction_South(IOopContext context)
@@ -664,14 +684,14 @@ namespace Roton.Emulation.Execution
         {
             return new Dictionary<string, Action<IEngine>>
             {
-                {"AMMO", Cheat_Ammo},
-                {"DARK", Cheat_Dark},
-                {"GEMS", Cheat_Gems},
-                {"HEALTH", Cheat_Health},
-                {"KEYS", Cheat_Keys},
-                {"TIME", Cheat_Time},
-                {"TORCHES", Cheat_Torches},
-                {"ZAP", Cheat_Zap}
+                {"AMMO", engine => Cheat_Ammo()},
+                {"DARK", engine => Cheat_Dark()},
+                {"GEMS", engine => Cheat_Gems()},
+                {"HEALTH", engine => Cheat_Health()},
+                {"KEYS", engine => Cheat_Keys()},
+                {"TIME", engine => Cheat_Time()},
+                {"TORCHES", engine => Cheat_Torches()},
+                {"ZAP", engine => Cheat_Zap()}
             };
         }
 
@@ -823,8 +843,8 @@ namespace Roton.Emulation.Execution
 
         protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)
         {
-            if (location.X >= 1 && location.X <= engine.Tiles.Width && location.Y >= 1 &&
-                location.Y <= engine.Tiles.Height)
+            if (location.X >= 1 && location.X <= _tileGrid.Width && location.Y >= 1 &&
+                location.Y <= _tileGrid.Height)
             {
                 if (!engine.ElementAt(location).IsFloor)
                 {
@@ -836,20 +856,20 @@ namespace Roton.Emulation.Execution
 
         protected bool Target_All(ISearchContext context)
         {
-            return context.SearchIndex < context.Engine.Actors.Count;
+            return context.SearchIndex < _actorList.Count;
         }
 
         private bool Target_Default(ISearchContext context)
         {
-            while (context.SearchIndex < context.Engine.Actors.Count)
+            while (context.SearchIndex < _actorList.Count)
             {
-                if (context.Engine.Actors[context.SearchIndex].Pointer != 0)
+                if (_actorList[context.SearchIndex].Pointer != 0)
                 {
                     var instruction = new Executable();
-                    var firstByte = context.Engine.ReadActorCodeByte(context.SearchIndex, instruction);
+                    var firstByte = _engine.ReadActorCodeByte(context.SearchIndex, instruction);
                     if (firstByte == 0x40)
                     {
-                        var name = context.Engine.ReadActorCodeWord(context.SearchIndex, instruction);
+                        var name = _engine.ReadActorCodeWord(context.SearchIndex, instruction);
                         if (name == context.SearchTarget)
                         {
                             return true;
@@ -863,13 +883,13 @@ namespace Roton.Emulation.Execution
 
         protected bool Target_Others(ISearchContext context)
         {
-            if (context.SearchIndex >= context.Engine.Actors.Count)
+            if (context.SearchIndex >= _actorList.Count)
                 return false;
 
             if (context.SearchIndex == context.SearchOffset)
                 context.SearchIndex++;
 
-            return context.SearchIndex < context.Engine.Actors.Count;
+            return context.SearchIndex < _actorList.Count;
         }
 
         protected bool Target_Self(ISearchContext context)

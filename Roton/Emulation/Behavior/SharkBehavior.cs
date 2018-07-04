@@ -7,9 +7,9 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Shark";
 
-        public override void Act(IEngine engine, int index)
+        public override void Act(int index)
         {
-            var actor = engine.Actors[index];
+            var actor = _actorList[index];
             var vector = new Vector();
 
             vector.CopyFrom(actor.P1 > engine.SyncRandomNumber(10)

@@ -5,25 +5,33 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class AmmoBehavior : ElementBehavior
     {
-        private readonly int _ammoPerPickup;
+        private readonly IConfig _config;
+        private readonly IWorld _world;
+        private readonly IAlerts _alerts;
+        private readonly ISoundSet _soundSet;
+        private readonly IEngine _engine;
 
-        public AmmoBehavior(int ammoPerPickup)
+        public AmmoBehavior(IConfig config, IWorld world, IAlerts alerts, ISoundSet soundSet, IEngine engine)
         {
-            _ammoPerPickup = ammoPerPickup;
+            _config = config;
+            _world = world;
+            _alerts = alerts;
+            _soundSet = soundSet;
+            _engine = engine;
         }
 
-        public override string KnownName => "Ammo";
+        public override string KnownName => KnownNames.Ammo;
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            engine.World.Ammo += _ammoPerPickup;
-            engine.RemoveItem(location);
-            engine.UpdateStatus();
-            engine.PlaySound(2, engine.SoundSet.Ammo);
-            if (engine.Alerts.AmmoPickup)
+            _world.Ammo += _config.AmmoPerPickup;
+            _engine.RemoveItem(location);
+            _engine.UpdateStatus();
+            _engine.PlaySound(2, _soundSet.Ammo);
+            if (_alerts.AmmoPickup)
             {
-                engine.SetMessage(0xC8, engine.Alerts.AmmoMessage);
-                engine.Alerts.AmmoPickup = false;
+                _engine.SetMessage(0xC8, _alerts.AmmoMessage);
+                _alerts.AmmoPickup = false;
             }
         }
     }

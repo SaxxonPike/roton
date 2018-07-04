@@ -6,7 +6,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => "Fake Wall";
 
-        public override void Interact(IEngine engine, IXyPair location, int index, IXyPair vector)
+        public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             if (!engine.Alerts.FakeWall) return;
 

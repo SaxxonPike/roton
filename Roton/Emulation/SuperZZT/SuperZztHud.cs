@@ -200,7 +200,7 @@ namespace Roton.Emulation.SuperZZT
         public override void UpdateCamera()
         {
             var camera = new Location16();
-            camera.CopyFrom(Engine.Player.Location);
+            camera.CopyFrom(_actorList.GetPlayer().Location);
             camera.Subtract(12, 10);
 
             if (camera.X < 1)
