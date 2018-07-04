@@ -3,9 +3,9 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public sealed class SuperZztFlagList : FlagList
+    public sealed class SuperZztFlags : Flags
     {
-        public SuperZztFlagList(IMemory memory)
+        public SuperZztFlags(IMemory memory)
             : base(memory, 0x7863 + 21)
         {
         }

@@ -65,7 +65,7 @@ namespace Roton.Emulation.Behavior
                 {
                     if (_grid.ElementAt(target).Id != _elements.PlayerId)
                     {
-                        __engine.MoveActor(0, target);
+                        _engine.MoveActor(0, target);
                     }
                     _engine.FadePurple();
                     vector.SetTo(0, 0);

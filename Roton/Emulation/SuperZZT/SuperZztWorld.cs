@@ -32,7 +32,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.Write16(0x785D, value); }
         }
 
-        public IFlagList Flags => new SuperZztFlagList(Memory);
+        public IFlags Flags => new SuperZztFlags(Memory);
 
         public int Gems
         {

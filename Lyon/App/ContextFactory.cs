@@ -31,14 +31,23 @@ namespace Lyon.App
                 switch (contextEngine)
                 {
                     case ContextEngine.Zzt:
+                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
+                        {
+                            e.Instance.AmmoPerPickup = 5;
+                            e.Instance.BuggyPassages = false;
+                            e.Instance.ForestToFloor = false;
+                            e.Instance.HealthPerGem = 1;
+                            e.Instance.MultiMovement = false;
+                            e.Instance.ScorePerGem = 10;
+                        });
                         builder.RegisterType<ZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<ZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<ZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<ZztColorList>().As<IColorList>().SingleInstance();
+                        builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<ZztElements>().As<IElements>().SingleInstance();
                         builder.RegisterType<ZztEngine>().As<IEngine>().SingleInstance();
-                        builder.RegisterType<ZztFlagList>().As<IFlagList>().SingleInstance();
+                        builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<ZztGrammar>().As<IGrammar>().SingleInstance();
                         builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
@@ -49,14 +58,23 @@ namespace Lyon.App
                         builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
                         break;
                     case ContextEngine.SuperZzt:
+                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
+                        {
+                            e.Instance.AmmoPerPickup = 20;
+                            e.Instance.BuggyPassages = true;
+                            e.Instance.ForestToFloor = true;
+                            e.Instance.HealthPerGem = 10;
+                            e.Instance.MultiMovement = true;
+                            e.Instance.ScorePerGem = 10;
+                        });
                         builder.RegisterType<SuperZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<SuperZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<SuperZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<SuperZztColorList>().As<IColorList>().SingleInstance();
+                        builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<SuperZztElements>().As<IElements>().SingleInstance();
                         builder.RegisterType<SuperZztEngine>().As<IEngine>().SingleInstance();
-                        builder.RegisterType<SuperZztFlagList>().As<IFlagList>().SingleInstance();
+                        builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<SuperZztGrammar>().As<IGrammar>().SingleInstance();
                         builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();

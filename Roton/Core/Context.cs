@@ -16,7 +16,7 @@ namespace Roton.Core
         private readonly IMemory _memory;
         private readonly IState _state;
         private readonly IFileSystem _fileSystem;
-        private readonly IBoardList _boardList;
+        private readonly IBoards _boards;
         private readonly IActors _actors;
         private readonly IGameSerializer _gameSerializer;
         private readonly IEngine _engine;
@@ -29,7 +29,7 @@ namespace Roton.Core
             IActors actors, 
             IGrid grid, 
             IWorld world,
-            IBoardList boardList,
+            IBoards boards,
             IGameSerializer gameSerializer,
             IEngine engine,
             IMemory memory,
@@ -40,7 +40,7 @@ namespace Roton.Core
             _state = state;
             _fileSystem = fileSystem;
             _actors = actors;
-            _boardList = boardList;
+            _boards = boards;
             _gameSerializer = gameSerializer;
             _engine = engine;
             Tiles = grid;
@@ -81,10 +81,10 @@ namespace Roton.Core
                 var writer = new BinaryWriter(mem);
                 _engine.PackBoard();
                 writer.Write((short) WorldData.WorldType);
-                writer.Write((short) (_boardList.Count - 1));
+                writer.Write((short) (_boards.Count - 1));
                 writer.Flush();
                 _gameSerializer.SaveWorld(mem);
-                foreach (var board in _boardList)
+                foreach (var board in _boards)
                 {
                     _gameSerializer.SaveBoardData(mem, board.Data);
                 }
@@ -112,7 +112,7 @@ namespace Roton.Core
 
         public int WorldSize
         {
-            get { return _gameSerializer.WorldDataCapacity + _boardList.Sum(board => board.Data.Length + 2); }
+            get { return _gameSerializer.WorldDataCapacity + _boards.Sum(board => board.Data.Length + 2); }
         }
 
         private void Initialize(ContextEngine engine)
@@ -174,12 +174,12 @@ namespace Roton.Core
             var reader = new BinaryReader(stream);
             int boardCount = reader.ReadInt16();
             _gameSerializer.LoadWorld(stream);
-            _boardList.Clear();
+            _boards.Clear();
             for (var i = 0; i <= boardCount; i++)
             {
-                _boardList.Add(new PackedBoard(_gameSerializer.LoadBoardData(stream)));
+                _boards.Add(new PackedBoard(_gameSerializer.LoadBoardData(stream)));
             }
-            _gameSerializer.UnpackBoard(Tiles, _boardList[WorldData.BoardIndex].Data);
+            _gameSerializer.UnpackBoard(Tiles, _boards[WorldData.BoardIndex].Data);
             _state.WorldLoaded = true;
         }
     }

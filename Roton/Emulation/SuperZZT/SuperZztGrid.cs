@@ -5,8 +5,8 @@ namespace Roton.Emulation.SuperZZT
 {
     public sealed class SuperZztGrid : Grid
     {
-        public SuperZztGrid(IMemory memory)
-            : base(memory, 0x2BEB, 96, 80)
+        public SuperZztGrid(IMemory memory, IElements elements)
+            : base(memory, elements, 0x2BEB, 96, 80)
         {
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public interface IFlagList : IEnumerable<string>
+    public interface IFlags : IEnumerable<string>
     {
         string this[int index] { get; set; }
         void Add(string item);

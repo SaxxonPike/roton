@@ -2,6 +2,6 @@
 {
     public sealed class RedTextBehavior : ElementBehavior
     {
-        public override string KnownName => "Text (Red)";
+        public override string KnownName => KnownNames.RedText;
     }
 }

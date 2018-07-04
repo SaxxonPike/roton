@@ -6,10 +6,10 @@ namespace Roton.Emulation.ZZT
     public sealed class ZztAlerts : IAlerts
     {
         private readonly int _ammoPerPickup;
-        private readonly IColorList _colors;
+        private readonly IColors _colors;
         private readonly IMemory _memory;
 
-        public ZztAlerts(IMemory memory, IColorList colors, int ammoPerPickup)
+        public ZztAlerts(IMemory memory, IColors colors, int ammoPerPickup)
         {
             _memory = memory;
             _colors = colors;

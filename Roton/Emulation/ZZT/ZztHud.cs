@@ -7,9 +7,18 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztHud : Hud
     {
-        public ZztHud(IEngine engine, ITerminal terminal)
+        private readonly IState _state;
+        private readonly IWorld _world;
+        private readonly IElements _elements;
+        private readonly IBoard _board;
+
+        public ZztHud(IEngine engine, ITerminal terminal, IState state, IWorld world, IElements elements, IBoard board)
             : base(engine, terminal)
         {
+            _state = state;
+            _world = world;
+            _elements = elements;
+            _board = board;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
         }

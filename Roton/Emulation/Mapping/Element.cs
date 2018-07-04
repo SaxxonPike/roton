@@ -18,17 +18,17 @@ namespace Roton.Emulation.Mapping
         protected IMemory Memory { get; private set; }
 
         protected int Offset { get; private set; }
-        public virtual Action<IEngine, int> Act => (engine, index) => Behavior.Act(, index);
+        public virtual Action< int> Act => (index) => Behavior.Act(index);
         public virtual string BoardEditText { get; set; }
         public virtual int Character { get; set; }
         public virtual string CodeEditText { get; set; }
         public virtual int Color { get; set; }
         public virtual int Cycle { get; set; }
-        public virtual Func<IEngine, IXyPair, AnsiChar> Draw => (engine, location) => Behavior.Draw(, location);
+        public virtual Func<IXyPair, AnsiChar> Draw => (location) => Behavior.Draw(location);
         public virtual string EditorCategory { get; set; }
         public virtual bool HasDrawCode { get; set; }
         public virtual int Id { get; set; } = -1;
-        public virtual Action<IEngine, IXyPair, int, IXyPair> Interact => (engine, location, index, vector) => Behavior.Interact(, location, index, vector);
+        public virtual Action<IXyPair, int, IXyPair> Interact => (location, index, vector) => Behavior.Interact(location, index, vector);
         public virtual bool IsAlwaysVisible { get; set; }
         public virtual bool IsDestructible { get; set; }
         public virtual bool IsEditorFloor { get; set; }

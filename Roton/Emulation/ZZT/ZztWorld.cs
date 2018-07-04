@@ -32,7 +32,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x4831, value); }
         }
 
-        public IFlagList Flags => new ZztFlagList(Memory);
+        public IFlags Flags => new ZztFlags(Memory);
 
         public int Gems
         {

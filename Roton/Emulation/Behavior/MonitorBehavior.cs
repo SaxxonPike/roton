@@ -20,7 +20,7 @@ namespace Roton.Emulation.Behavior
             if (_state.KeyPressed != 0)
                 _state.BreakGameLoop = true;
             
-            __engine.MoveActorOnRiver(index);
+            _engine.MoveActorOnRiver(index);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Roton.Core
         bool MultiMovement { get; }
         string ScrollMusic { get; } // @"c-c+d-d+e-e+f-f+g-g"
         string ScrollTitle { get; } // @"Scroll"
+        int ElementCount { get; }
     }
     
     public class Random : IRandom

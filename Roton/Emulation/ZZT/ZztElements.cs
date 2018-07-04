@@ -1,14 +1,18 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {
     public sealed class ZztElements : Elements
     {
-        public ZztElements(IMemory memory, byte[] elementBytes, IBehaviorMapConfiguration config)
-            : base(memory, 54, config)
+        private readonly IBehaviorMap _behaviorMap;
+
+        public ZztElements(IMemory memory, IBehaviorMap behaviorMap, IStaticResourceService staticResourceService)
+            : base(memory, 54)
         {
-            memory.Write(0x4AD4, elementBytes);
+            _behaviorMap = behaviorMap;
+            memory.Write(0x4AD4, staticResourceService.GetElementData());
         }
 
         public override int AmmoId => 0x05;
@@ -61,7 +65,7 @@ namespace Roton.Emulation.ZZT
 
         protected override IElement GetElement(int index)
         {
-            return new ZztElement(Memory, index, BehaviorMap.Map(index));
+            return new ZztElement(Memory, index, _behaviorMap.Map(index));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public interface IBoardList : IEnumerable<IPackedBoard>
+    public interface IBoards : IEnumerable<IPackedBoard>
     {
         IPackedBoard this[int index] { get; set; }
         int Count { get; }

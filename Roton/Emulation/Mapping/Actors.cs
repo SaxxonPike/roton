@@ -18,6 +18,8 @@ namespace Roton.Emulation.Mapping
 
         public int Capacity { get; }
 
+        public IActor Player => this[0];
+
         protected abstract IActor GetActor(int index);
 
         protected sealed override IActor GetItem(int index)

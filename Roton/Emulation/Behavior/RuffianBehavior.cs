@@ -11,7 +11,7 @@ namespace Roton.Emulation.Behavior
         private readonly IGrid _grid;
         private readonly IElements _elements;
 
-        public override string KnownName => "Ruffian";
+        public override string KnownName => KnownNames.Ruffian;
 
         public RuffianBehavior(IActors actors, IEngine engine, IRandom random, IGrid grid, IElements elements) : base(engine)
         {

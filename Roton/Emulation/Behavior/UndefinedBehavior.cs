@@ -2,6 +2,6 @@
 {
     public sealed class UndefinedBehavior : ElementBehavior
     {
-        public override string KnownName => "Undefined";
+        public override string KnownName => KnownNames.Undefined;
     }
 }

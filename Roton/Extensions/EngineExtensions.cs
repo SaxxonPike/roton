@@ -18,7 +18,7 @@ namespace Roton.Extensions
 
         public static void PlaySound(this IEngine engine, int priority, ISound sound)
         {
-            _engine.PlaySound(priority, sound, 0, sound.Length);
+            engine.PlaySound(priority, sound, 0, sound.Length);
         }
 
         public static ITile TileAt(this IGrid grid, int x, int y)

@@ -3,9 +3,9 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public sealed class SuperZztColorList : ColorList
+    public sealed class SuperZztColors : Colors
     {
-        public SuperZztColorList(IMemory memory)
+        public SuperZztColors(IMemory memory)
             : base(memory, 0x21E7)
         {
         }

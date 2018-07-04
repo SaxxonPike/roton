@@ -6,10 +6,10 @@ namespace Roton.Emulation.SuperZZT
     public sealed class SuperZztAlerts : IAlerts
     {
         private readonly int _ammoPerPickup;
-        private readonly IColorList _colors;
+        private readonly IColors _colors;
         private readonly IMemory _memory;
 
-        public SuperZztAlerts(IMemory memory, IColorList colors, int ammoPerPickup)
+        public SuperZztAlerts(IMemory memory, IColors colors, int ammoPerPickup)
         {
             _memory = memory;
             _colors = colors;

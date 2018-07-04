@@ -4,9 +4,9 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Mapping
 {
-    public abstract class FlagList : FixedList<string>, IFlagList
+    public abstract class Flags : FixedList<string>, IFlags
     {
-        protected FlagList(IMemory memory, int offset)
+        protected Flags(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

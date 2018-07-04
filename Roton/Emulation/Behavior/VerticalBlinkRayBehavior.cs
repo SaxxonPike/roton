@@ -2,6 +2,6 @@
 {
     public sealed class VerticalBlinkRayBehavior : ElementBehavior
     {
-        public override string KnownName => "Blink Ray (Vertical)";
+        public override string KnownName => KnownNames.BlinkRayV;
     }
 }

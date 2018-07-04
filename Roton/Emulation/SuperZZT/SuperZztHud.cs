@@ -7,9 +7,22 @@ namespace Roton.Emulation.SuperZZT
 {
     public sealed class SuperZztHud : Hud
     {
-        public SuperZztHud(IEngine engine, ITerminal terminal)
+        private readonly IState _state;
+        private readonly IBoard _board;
+        private readonly IGrid _grid;
+        private readonly IActors _actors;
+        private readonly IWorld _world;
+        private readonly IElements _elements;
+
+        public SuperZztHud(IEngine engine, ITerminal terminal, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements)
             : base(engine, terminal)
         {
+            _state = state;
+            _board = board;
+            _grid = grid;
+            _actors = actors;
+            _world = world;
+            _elements = elements;
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
 

@@ -5,5 +5,6 @@ namespace Roton.Emulation.Behavior
         public static readonly string Shot = "SHOT";
         public static readonly string Energize = "ALL:ENERGIZE";
         public static readonly string Touch = "TOUCH";
+        public static readonly string Bombed = "BOMBED";
     }
 }

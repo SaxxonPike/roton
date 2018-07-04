@@ -5,8 +5,8 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztGrid : Grid
     {
-        public ZztGrid(IMemory memory)
-            : base(memory, 0x24B9, 60, 25)
+        public ZztGrid(IMemory memory, IElements elements)
+            : base(memory, elements, 0x24B9, 60, 25)
         {
         }
     }

@@ -7,19 +7,16 @@ namespace Roton.Emulation.Mapping
 {
     public abstract class Elements : FixedList<IElement>, IElements
     {
-        protected Elements(IMemory memory, int count, IBehaviorMapConfiguration config)
+        protected Elements(IMemory memory, int count)
         {
             Count = count;
             Memory = memory;
-            BehaviorMap = new BehaviorMap(this, config);
             Cache = new Dictionary<int, IElement>();
         }
 
-        protected IBehaviorMap BehaviorMap { get; }
-
         private IDictionary<int, IElement> Cache { get; }
 
-        protected IMemory Memory { get; private set; }
+        protected IMemory Memory { get; }
 
         public virtual int AmmoId => -1;
         public virtual int BearId => -1;

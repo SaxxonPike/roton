@@ -14,7 +14,7 @@ namespace Roton.Emulation.ZZT
             _memory = memory;
             memory.Write(0x0000, memoryBytes);
             BorderTile = new MemoryTile(_memory, 0x0072);
-            Colors = new ZztColorList(_memory);
+            Colors = new ZztColors(_memory);
             DefaultActor = new Actor(_memory, 0x0076);
             EdgeTile = new MemoryTile(_memory, 0x0074);
             KeyVector = new MemoryVector(_memory, 0x7C68);
@@ -81,7 +81,7 @@ namespace Roton.Emulation.ZZT
             set { _memory.WriteBool(0x7B66, value); }
         }
 
-        public IColorList Colors { get; }
+        public IColors Colors { get; }
 
         public IActor DefaultActor { get; }
 

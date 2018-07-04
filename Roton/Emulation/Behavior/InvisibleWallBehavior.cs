@@ -26,7 +26,7 @@ namespace Roton.Emulation.Behavior
         {
             _grid[location].Id = _elements.NormalId;
             _engine.UpdateBoard(location);
-            __engine.PlaySound(3, _sounds.Invisible);
+            _engine.PlaySound(3, _sounds.Invisible);
             _engine.SetMessage(0x64, _alerts.InvisibleMessage);
         }
     }

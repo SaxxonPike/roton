@@ -6,7 +6,7 @@ namespace Roton.Core
     {
         IAlerts Alerts { get; }
         ITile BorderTile { get; }
-        IColorList Colors { get; }
+        IColors Colors { get; }
         IActor DefaultActor { get; }
         ITile EdgeTile { get; }
         IXyPair KeyVector { get; }

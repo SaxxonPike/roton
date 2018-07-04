@@ -2,7 +2,7 @@
 
 namespace Roton.Core
 {
-    public class BoardList : List<IPackedBoard>, IBoardList
+    public class Boards : List<IPackedBoard>, IBoards
     {
     }
 }

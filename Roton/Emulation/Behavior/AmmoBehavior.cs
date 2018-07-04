@@ -27,7 +27,7 @@ namespace Roton.Emulation.Behavior
             _world.Ammo += _config.AmmoPerPickup;
             _engine.RemoveItem(location);
             _engine.UpdateStatus();
-            __engine.PlaySound(2, _sounds.Ammo);
+            _engine.PlaySound(2, _sounds.Ammo);
             if (_alerts.AmmoPickup)
             {
                 _engine.SetMessage(0xC8, _alerts.AmmoMessage);

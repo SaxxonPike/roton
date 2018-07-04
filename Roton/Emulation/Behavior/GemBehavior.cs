@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
             _world.Score += _config.ScorePerGem;
             _engine.RemoveItem(location);
             _engine.UpdateStatus();
-            __engine.PlaySound(2, _sounds.Gem);
+            _engine.PlaySound(2, _sounds.Gem);
 
             if (!_alerts.GemPickup)
                 return;

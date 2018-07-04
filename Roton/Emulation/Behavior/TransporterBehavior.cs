@@ -5,8 +5,21 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class TransporterBehavior : ElementBehavior
     {
-        public override string KnownName => "Transporter";
+        private readonly IEngine _engine;
+        private readonly IActors _actors;
+        private readonly IState _state;
+        private readonly IGrid _grid;
+        
+        public override string KnownName => KnownNames.Transporter;
 
+        public TransporterBehavior(IEngine engine, IActors actors, IState state, IGrid grid)
+        {
+            _engine = engine;
+            _actors = actors;
+            _state = state;
+            _grid = grid;
+        }
+        
         public override void Act(int index)
         {
             _engine.UpdateBoard(_actors[index].Location);
@@ -14,7 +27,7 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IXyPair location)
         {
-            var actor = engine.ActorAt(location);
+            var actor = _actors.ActorAt(location);
             int index;
 
             if (actor.Vector.X == 0)

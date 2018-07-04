@@ -2,7 +2,7 @@
 {
     public interface IWorld
     {
-        IFlagList Flags { get; }
+        IFlags Flags { get; }
         IKeyList Keys { get; }
         ITimer TimeLimitTimer { get; }
         int WorldType { get; }

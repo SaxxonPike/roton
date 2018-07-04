@@ -11,7 +11,7 @@ namespace Roton.Emulation.Behavior
         private readonly IRandom _random;
         private readonly IEngine _engine;
 
-        public override string KnownName => "Tiger";
+        public override string KnownName => KnownNames.Tiger;
 
         public TigerBehavior(IActors actors, IElements elements, IRandom random, IEngine engine, IGrid grid) 
             : base(engine, random, grid, actors, elements)

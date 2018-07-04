@@ -1,83 +1,49 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
+using Roton.FileIo;
 
 namespace Roton.Emulation.ZZT
 {
     public sealed class ZztEngine : Engine
     {
-        public ZztEngine(byte[] memoryBytes, byte[] elementBytes)
-        {
-            var behaviorConfig = new BehaviorMapConfiguration
-            {
-                AmmoPerContainer = 5,
-                BuggyPassages = true,
-                ForestToFloor = false,
-                HealthPerGem = 1,
-                MultiMovement = false,
-                ScorePerGem = 10
-            };
-
-            State = new ZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
-
-            Actors = new ZztActors(Memory);
-            Board = new ZztBoard(Memory);
-            GameSerializer = new ZztGameSerializer(Memory);
-            Hud = new ZztHud(this, config.Terminal);
-            Elements = new ZztElements(Memory, elementBytes, behaviorConfig);
-            Sounds = new Sounds();
-            Tiles = new ZztGrid(Memory);
-            World = new ZztWorld(Memory);
-            Grammar = new ZztGrammar(State.Colors, Elements);
-            DrumBank = new ZztDrumBank(Memory);
-
-            Hud.Initialize();
-        }
-
-        public override IActors Actors { get; }
-        public override IBoard Board { get; }
-        public override IDrumBank DrumBank { get; }
-        public override IElements Elements { get; }
-        public override IGameSerializer GameSerializer { get; }
-
-        public override IGrammar Grammar { get; }
-        public override IHud Hud { get; }
-        public override ISounds Sounds { get; }
-        public override IState State { get; }
-        public override IGrid Tiles { get; }
-        public override IWorld World { get; }
+        private readonly IState _state;
+        private readonly IBoard _board;
+        private readonly IWorld _world;
+        private readonly IAlerts _alerts;
+        private readonly IHud _hud;
 
         public override void HandlePlayerInput(IActor actor, int hotkey)
         {
             switch (hotkey)
             {
                 case 0x54: // T
-                    if (World.TorchCycles <= 0)
+                    if (_world.TorchCycles <= 0)
                     {
-                        if (World.Torches <= 0)
+                        if (_world.Torches <= 0)
                         {
-                            if (Alerts.NoTorches)
+                            if (_alerts.NoTorches)
                             {
-                                SetMessage(0xC8, Alerts.NoTorchMessage);
-                                Alerts.NoTorches = false;
+                                SetMessage(0xC8, _alerts.NoTorchMessage);
+                                _alerts.NoTorches = false;
                             }
                         }
-                        else if (!Board.IsDark)
+                        else if (!_board.IsDark)
                         {
-                            if (Alerts.NotDark)
+                            if (_alerts.NotDark)
                             {
-                                SetMessage(0xC8, Alerts.NotDarkMessage);
-                                Alerts.NotDark = false;
+                                SetMessage(0xC8, _alerts.NotDarkMessage);
+                                _alerts.NotDark = false;
                             }
                         }
                         else
                         {
-                            World.Torches--;
-                            World.TorchCycles = 0xC8;
+                            _world.Torches--;
+                            _world.TorchCycles = 0xC8;
                             UpdateRadius(actor.Location, RadiusMode.Update);
                             UpdateStatus();
                         }
                     }
+
                     break;
                 case 0x46: // F
                     break;
@@ -106,15 +72,30 @@ namespace Roton.Emulation.ZZT
                     break;
                 case 0x1B: // esc
                 case 0x51: // Q
-                    State.QuitZzt = Hud.QuitZztConfirmation();
+                    _state.QuitZzt = _hud.QuitZztConfirmation();
                     break;
             }
+
             return false;
         }
 
         protected override string GetWorldName(string baseName)
         {
             return $"{baseName}.ZZT";
+        }
+
+        public ZztEngine(IKeyboard keyboard, IBoards boards, IFileSystem fileSystem, IState state,
+            IOopContextFactory oopContextFactory, IActors actors, IGrid grid, IRandom random, IBoard board,
+            IWorld world, ITimer timer, IElements elements, ISounds sounds, IGameSerializer gameSerializer,
+            IAlerts alerts, IHud hud, IGrammar grammar) : base(keyboard, boards, fileSystem, state, oopContextFactory,
+            actors, grid, random, board, world, timer, elements, sounds, gameSerializer, alerts, hud, grammar)
+        {
+            _state = state;
+            _board = board;
+            _world = world;
+            _alerts = alerts;
+            _hud = hud;
+            _hud.Initialize();
         }
     }
 }

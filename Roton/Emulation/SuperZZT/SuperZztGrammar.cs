@@ -7,10 +7,6 @@ namespace Roton.Emulation.SuperZZT
 {
     public sealed class SuperZztGrammar : Grammar
     {
-        public SuperZztGrammar(IColorList colors, IElements elements) : base(colors, elements)
-        {
-        }
-
         protected override void Command_Lock(IOopContext context)
         {
             context.Actor.P3 = 1;
@@ -32,6 +28,13 @@ namespace Roton.Emulation.SuperZZT
                 {"TIME", Item_Time},
                 {"Z", Item_Stones}
             };
+        }
+
+        public SuperZztGrammar(
+            IColors colors, IElements elements, IWorld world, IBoard board, IEngine engine, ISounds sounds, IGrid grid,
+            IActors actors, IFlags flags, IState state, IRandom random)
+            : base(colors, elements, world, board, engine, sounds, grid, actors, flags, state, random)
+        {
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Roton.Emulation.Behavior
 
             if (targetElement.IsFloor)
             {
-                __engine.MoveActor(index, target);
+                _engine.MoveActor(index, target);
             }
             else if (targetElement.Id == _elements.PlayerId || targetElement.Id == _elements.BreakableId)
             {

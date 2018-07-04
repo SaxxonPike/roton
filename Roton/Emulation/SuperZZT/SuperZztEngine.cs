@@ -1,63 +1,23 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
+using Roton.Emulation.Mapping;
 using Roton.Extensions;
+using Roton.FileIo;
+using Roton.Resources;
 
 namespace Roton.Emulation.SuperZZT
 {
     public sealed class SuperZztEngine : Engine
     {
-        public SuperZztEngine(IEngineConfiguration config, byte[] memoryBytes, byte[] elementBytes) : base(config)
-        {
-            var behaviorConfig = new BehaviorMapConfiguration
-            {
-                AmmoPerContainer = 20,
-                BuggyPassages = true,
-                ForestToFloor = false,
-                HealthPerGem = 1,
-                MultiMovement = false,
-                ScorePerGem = 10
-            };
-
-            State = new SuperZztState(Memory, memoryBytes) {EditorMode = config.EditorMode};
-
-            Actors = new SuperZztActors(Memory);
-            Board = new SuperZztBoard(Memory);
-            GameSerializer = new SuperZztGameSerializer(Memory);
-            Hud = new SuperZztHud(this, config.Terminal);
-            Elements = new SuperZztElements(Memory, elementBytes, behaviorConfig);
-            Sounds = new SuperZztSounds(Memory);
-            Tiles = new SuperZztGrid(Memory);
-            World = new SuperZztWorld(Memory);
-            Grammar = new SuperZztGrammar(State.Colors, Elements);
-            DrumBank = new SuperZztDrumBank(Memory);
-
-            Hud.Initialize();
-        }
-
-        public override IActors Actors { get; }
-        public override IBoard Board { get; }
-
-        public override IDrumBank DrumBank { get; }
-        public override IElements Elements { get; }
-
-        public override IGameSerializer GameSerializer { get; }
-
-        public override IGrammar Grammar { get; }
-
-        public override IHud Hud { get; }
-
-        public override ISounds Sounds { get; }
-
-        public override IState State { get; }
-
-        public override IGrid Tiles { get; }
-
-        public override IWorld World { get; }
+        private readonly IState _state;
+        private readonly IActors _actors;
+        private readonly IGrid _grid;
+        private readonly IElements _elements;
+        private readonly IHud _hud;
 
         protected override bool ActorIsLocked(int index)
         {
-            return Actors[index].P3 != 0;
+            return _actors[index].P3 != 0;
         }
 
         public override void EnterBoard()
@@ -79,8 +39,8 @@ namespace Roton.Emulation.SuperZZT
                 case 0:
                     break;
                 default:
-                    context._state.KeyVector.SetTo(0, 0);
-                    Hud.ShowScroll(context.Message);
+                    _state.KeyVector.SetTo(0, 0);
+                    _hud.ShowScroll(context.Message);
                     break;
             }
         }
@@ -111,9 +71,10 @@ namespace Roton.Emulation.SuperZZT
                     break;
                 case 0x1B: // esc
                 case 0x51: // Q
-                    State.QuitZzt = Hud.QuitZztConfirmation();
+                    _state.QuitZzt = _hud.QuitZztConfirmation();
                     break;
             }
+
             return false;
         }
 
@@ -124,28 +85,28 @@ namespace Roton.Emulation.SuperZZT
 
         public override void RemoveItem(IXyPair location)
         {
-            var result = new Tile(Elements.FloorId, 0x00);
+            var result = new Tile(_elements.FloorId, 0x00);
             var finished = false;
 
             for (var i = 0; i < 4; i++)
             {
                 var targetVector = GetCardinalVector(i);
                 var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
-                var adjacentTile = this.TileAt(targetLocation);
-                if (Elements[adjacentTile.Id].Cycle >= 0)
-                    adjacentTile = this.ActorAt(targetLocation).UnderTile;
+                var adjacentTile = _grid.TileAt(targetLocation);
+                if (_elements[adjacentTile.Id].Cycle >= 0)
+                    adjacentTile = _actors.ActorAt(targetLocation).UnderTile;
                 var adjacentElement = adjacentTile.Id;
 
-                if (adjacentElement == Elements.EmptyId ||
-                    adjacentElement == Elements.SliderEwId ||
-                    adjacentElement == Elements.SliderNsId ||
-                    adjacentElement == Elements.BoulderId)
+                if (adjacentElement == _elements.EmptyId ||
+                    adjacentElement == _elements.SliderEwId ||
+                    adjacentElement == _elements.SliderNsId ||
+                    adjacentElement == _elements.BoulderId)
                 {
                     finished = true;
                     result.Color = 0;
                 }
 
-                if (adjacentElement == Elements.FloorId)
+                if (adjacentElement == _elements.FloorId)
                 {
                     result.Color = adjacentTile.Color;
                 }
@@ -158,9 +119,10 @@ namespace Roton.Emulation.SuperZZT
 
             if (result.Color == 0)
             {
-                result.Id = Elements.EmptyId;
+                result.Id = _elements.EmptyId;
             }
-            this.TileAt(location).CopyFrom(result);
+
+            _grid.TileAt(location).CopyFrom(result);
         }
 
         public override void ShowInGameHelp()
@@ -171,19 +133,33 @@ namespace Roton.Emulation.SuperZZT
 
         protected override void StartInit()
         {
-            State.GameSpeed = 4;
-            State.DefaultSaveName = "SAVED";
-            State.DefaultBoardName = "TEMP";
-            State.DefaultWorldName = "MONSTER";
-            if (!State.WorldLoaded)
+            _state.GameSpeed = 4;
+            _state.DefaultSaveName = "SAVED";
+            _state.DefaultBoardName = "TEMP";
+            _state.DefaultWorldName = "MONSTER";
+            if (!_state.WorldLoaded)
             {
                 ClearWorld();
             }
 
-            if (State.EditorMode)
+            if (_state.EditorMode)
                 SetEditorMode();
             else
                 SetGameMode();
+        }
+
+        public SuperZztEngine(IKeyboard keyboard, IBoards boards, IFileSystem fileSystem, IState state,
+            IOopContextFactory oopContextFactory, IActors actors, IGrid grid, IRandom random, IBoard board,
+            IWorld world, ITimer timer, IElements elements, ISounds sounds, IGameSerializer gameSerializer,
+            IAlerts alerts, IHud hud, IGrammar grammar) : base(keyboard, boards, fileSystem, state, oopContextFactory,
+            actors, grid, random, board, world, timer, elements, sounds, gameSerializer, alerts, hud, grammar)
+        {
+            _state = state;
+            _actors = actors;
+            _grid = grid;
+            _elements = elements;
+            _hud = hud;
+            hud.Initialize();
         }
     }
 }

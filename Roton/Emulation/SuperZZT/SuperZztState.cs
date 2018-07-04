@@ -15,7 +15,7 @@ namespace Roton.Emulation.SuperZZT
             memory.Write(0x0000, memoryBytes);
 
             BorderTile = new Tile(0, 0); //Super ZZT doesn't keep this in game memory; it's in code
-            Colors = new SuperZztColorList(_memory);
+            Colors = new SuperZztColors(_memory);
             DefaultActor = new Actor(_memory, 0x2262);
             EdgeTile = new MemoryTile(_memory, 0x2260);
             KeyVector = new MemoryVector(_memory, 0xCC6E);
@@ -63,7 +63,7 @@ namespace Roton.Emulation.SuperZZT
 
         public bool CancelScroll { get; set; }
 
-        public IColorList Colors { get; }
+        public IColors Colors { get; }
 
         public IActor DefaultActor { get; }
 

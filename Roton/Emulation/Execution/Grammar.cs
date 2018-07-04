@@ -9,7 +9,7 @@ namespace Roton.Emulation.Execution
 {
     public abstract class Grammar : IGrammar
     {
-        private readonly IColorList _colors;
+        private readonly IColors _colors;
         private readonly IElements _elements;
         private readonly IWorld _world;
         private readonly IBoard _board;
@@ -17,16 +17,22 @@ namespace Roton.Emulation.Execution
         private readonly ISounds _sounds;
         private readonly IGrid _grid;
         private readonly IActors _actors;
+        private readonly IFlags _flags;
+        private readonly IState _state;
+        private readonly IRandom _random;
 
         protected Grammar(
-            IColorList colors, 
+            IColors colors, 
             IElements elements, 
             IWorld world, 
             IBoard board, 
             IEngine engine,
             ISounds sounds,
             IGrid grid,
-            IActors actors)
+            IActors actors,
+            IFlags flags,
+            IState state,
+            IRandom random)
         {
             _colors = colors;
             _elements = elements;
@@ -36,6 +42,9 @@ namespace Roton.Emulation.Execution
             _sounds = sounds;
             _grid = grid;
             _actors = actors;
+            _flags = flags;
+            _state = state;
+            _random = random;
             Cheats = GetCheats();
             Commands = GetCommands();
             Conditions = GetConditions();
@@ -76,7 +85,7 @@ namespace Roton.Emulation.Execution
                 context.Resume = false;
                 context.Executed = true;
 
-                var command = context.ReadWord();
+                var command = _engine.ReadActorCodeWord(context.Index, context);
                 if (command.Length == 0)
                     break;
 
@@ -120,7 +129,7 @@ namespace Roton.Emulation.Execution
                 {
                     if (context.NextLine && context.Instruction > 0)
                     {
-                        context.ReadLine();
+                        _engine.ReadActorCodeLine(context.Index, context);
                     }
                     break;
                 }
@@ -129,17 +138,17 @@ namespace Roton.Emulation.Execution
 
         public bool? GetCondition(IOopContext oopContext)
         {
-            var condition = oopContext.ReadWord();
+            var condition = _engine.ReadActorCodeWord(oopContext.Index, oopContext);
             Func<IOopContext, bool?> func;
             Conditions.TryGetValue(condition, out func);
             return func != null
                 ? func(oopContext)
-                : oopContext.GetFlags().Contains(condition);
+                : _flags.Contains(condition);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
-            var direction = oopContext.ReadWord();
+            var direction = _engine.ReadActorCodeWord(oopContext.Index, oopContext);
             Func<IOopContext, IXyPair> func;
             Directions.TryGetValue(direction, out func);
             return func?.Invoke(oopContext);
@@ -147,7 +156,7 @@ namespace Roton.Emulation.Execution
 
         public IOopItem GetItem(IOopContext oopContext)
         {
-            var item = oopContext.ReadWord();
+            var item = _engine.ReadActorCodeWord(oopContext.Index, oopContext);
             Func<IOopContext, IOopItem> func;
             Items.TryGetValue(item, out func);
             return func?.Invoke(oopContext);
@@ -155,7 +164,7 @@ namespace Roton.Emulation.Execution
 
         public ITile GetKind(IOopContext oopContext)
         {
-            var word = oopContext.ReadWord();
+            var word = _engine.ReadActorCodeWord(oopContext.Index, oopContext);
             var result = new Tile(0, 0);
             var success = false;
 
@@ -165,7 +174,7 @@ namespace Roton.Emulation.Execution
                     continue;
 
                 result.Color = i + 8;
-                word = oopContext.ReadWord();
+                word = _engine.ReadActorCodeWord(oopContext.Index, oopContext);
                 break;
             }
 
@@ -253,11 +262,11 @@ namespace Roton.Emulation.Execution
         protected void Command_Bind(IOopContext context)
         {
             var search = new SearchContext(_engine);
-            var target = context.ReadWord();
+            var target = _engine.ReadActorCodeWord(context.Index, context);
             search.SearchTarget = target;
             if (GetTarget(search))
             {
-                var targetActor = context.GetActor(search.SearchIndex);
+                var targetActor = _actors[search.SearchIndex];
                 context.Actor.Pointer = targetActor.Pointer;
                 context.Actor.Length = targetActor.Length;
                 context.Instruction = 0;
@@ -273,7 +282,7 @@ namespace Roton.Emulation.Execution
                 var target = GetKind(context);
                 if (target != null)
                 {
-                    var targetElement = context.GetElement(target);
+                    var targetElement = _elements[target.Id];
                     success = true;
                     if (target.Color == 0 && targetElement.Color < 0xF0)
                     {
@@ -295,7 +304,7 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Char(IOopContext context)
         {
-            var value = context.ReadNumber();
+            var value = _engine.ReadActorCodeNumber(context.Index, context);
             if (value >= 0)
             {
                 context.Actor.P1 = value;
@@ -305,13 +314,13 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Clear(IOopContext context)
         {
-            var flag = context.ReadWord();
-            context.GetFlags().Remove(flag);
+            var flag = _engine.ReadActorCodeWord(context.Index, context);
+            _flags.Remove(flag);
         }
 
         protected void Command_Cycle(IOopContext context)
         {
-            var value = context.ReadNumber();
+            var value = _engine.ReadActorCodeNumber(context.Index, context);
             if (value > 0)
             {
                 context.Actor.Cycle = value;
@@ -326,13 +335,13 @@ namespace Roton.Emulation.Execution
 
         protected void Command_End(IOopContext context)
         {
-            context.SetByte(0);
+            _state.OopByte = 0;
             context.Instruction = -1;
         }
 
         protected void Command_Endgame(IOopContext context)
         {
-            context.GetWorld().Health = 0;
+            _world.Health = 0;
         }
 
         protected void Command_Give(IOopContext context)
@@ -347,13 +356,13 @@ namespace Roton.Emulation.Execution
             if (vector != null)
             {
                 var target = context.Actor.Location.Sum(vector);
-                if (!__grid.ElementAt(target).IsFloor)
+                if (!_grid.ElementAt(target).IsFloor)
                 {
-                    __engine.Push(target, vector);
+                    _engine.Push(target, vector);
                 }
-                if (__grid.ElementAt(target).IsFloor)
+                if (_grid.ElementAt(target).IsFloor)
                 {
-                    __engine.MoveActor(context.Index, target);
+                    _engine.MoveActor(context.Index, target);
                     context.Moved = true;
                 }
                 else
@@ -384,9 +393,9 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Play(IOopContext context)
         {
-            var notes = context.ReadLine();
+            var notes = _engine.ReadActorCodeLine(context.Index, context);
             var sound = _engine.EncodeMusic(notes);
-            __engine.PlaySound(-1, sound);
+            _engine.PlaySound(-1, sound);
             context.NextLine = false;
         }
 
@@ -417,33 +426,33 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Restore(IOopContext context)
         {
-            context.ReadWord();
+            _engine.ReadActorCodeWord(context.Index, context);
             while (true)
             {
-                context.SearchTarget = context.GetWord();
+                context.SearchTarget = _engine.ReadActorCodeWord(context.Index, context);
                 var result = _engine.ExecuteLabel(context.Index, context, "\xD\x27");
                 if (!result)
                     break;
 
                 while (context.SearchOffset >= 0)
                 {
-                    context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x3A;
+                    _actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x3A;
                     context.SearchOffset = _engine.SearchActorCode(context.SearchIndex,
-                        $"\xD\x27{context.GetWord()}");
+                        $"\xD\x27{_engine.ReadActorCodeWord(context.Index, context)}");
                 }
             }
         }
 
         protected void Command_Send(IOopContext context)
         {
-            var target = context.ReadWord();
+            var target = _engine.ReadActorCodeWord(context.Index, context);
             context.NextLine = _engine.BroadcastLabel(context.Index, target, false);
         }
 
         protected void Command_Set(IOopContext context)
         {
-            var flag = context.ReadWord();
-            context.GetFlags().Add(flag);
+            var flag = _engine.ReadActorCodeWord(context.Index, context);
+            _flags.Add(flag);
         }
 
         protected void Command_Shoot(IOopContext context)
@@ -455,7 +464,7 @@ namespace Roton.Emulation.Execution
                 var success = _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
-                    __engine.PlaySound(2, _sounds.EnemyShoot);
+                    _engine.PlaySound(2, _sounds.EnemyShoot);
                 }
                 context.Moved = true;
             }
@@ -493,13 +502,13 @@ namespace Roton.Emulation.Execution
                 return;
 
             var target = vector.Sum(context.Actor.Location);
-            if (!__grid.ElementAt(target).IsFloor)
+            if (!_grid.ElementAt(target).IsFloor)
             {
-                __engine.Push(target, vector);
+                _engine.Push(target, vector);
             }
-            if (__grid.ElementAt(target).IsFloor)
+            if (_grid.ElementAt(target).IsFloor)
             {
-                __engine.MoveActor(context.Index, target);
+                _engine.MoveActor(context.Index, target);
                 context.Moved = true;
                 context.Resume = false;
             }
@@ -525,18 +534,18 @@ namespace Roton.Emulation.Execution
 
         protected void Command_Zap(IOopContext context)
         {
-            context.ReadWord();
+            _engine.ReadActorCodeWord(context.Index, context);
             while (true)
             {
-                context.SearchTarget = context.GetWord();
+                context.SearchTarget = _engine.ReadActorCodeWord(context.Index, context);
                 var result = _engine.ExecuteLabel(context.Index, context, "\xD\x3A");
                 if (!result)
                     break;
-                context.GetActor(context.SearchIndex).Code[context.SearchOffset + 1] = 0x27;
+                _actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x27;
             }
         }
 
-        protected bool? Condition_Alligned(IOopContext context)
+        protected bool? Condition_Aligned(IOopContext context)
         {
             return context.Actor.Location.X == _actors.Player.Location.X ||
                    context.Actor.Location.Y == _actors.Player.Location.Y;
@@ -557,19 +566,19 @@ namespace Roton.Emulation.Execution
             if (direction == null)
                 return null;
 
-            return !__grid.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
+            return !_grid.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
         }
 
         protected bool? Condition_Contact(IOopContext context)
         {
-            var player = context.GetActor(0);
+            var player = _actors.Player;
             var distance = new Location16(context.Actor.Location).Difference(player.Location);
             return distance.X*distance.X + distance.Y*distance.Y == 1;
         }
 
         protected bool? Condition_Energized(IOopContext context)
         {
-            return context.GetWorld().EnergyCycles > 0;
+            return _world.EnergyCycles > 0;
         }
 
         protected bool? Condition_Not(IOopContext context)
@@ -619,14 +628,14 @@ namespace Roton.Emulation.Execution
 
         protected IXyPair Direction_RndNe(IOopContext context)
         {
-            return _engine.SyncRandomNumber(2) == 0
+            return _random.Synced(2) == 0
                 ? Vector.North
                 : Vector.East;
         }
 
         protected IXyPair Direction_RndNs(IOopContext context)
         {
-            return _engine.SyncRandomNumber(2) == 0
+            return _random.Synced(2) == 0
                 ? Vector.North
                 : Vector.South;
         }
@@ -634,7 +643,7 @@ namespace Roton.Emulation.Execution
         protected IXyPair Direction_RndP(IOopContext context)
         {
             var direction = GetDirection(context);
-            return _engine.SyncRandomNumber(2) == 0
+            return _random.Synced(2) == 0
                 ? direction.Clockwise()
                 : direction.CounterClockwise();
         }
@@ -662,16 +671,16 @@ namespace Roton.Emulation.Execution
                 return false;
 
             // Do we have a valid amount?
-            var amount = context.ReadNumber();
+            var amount = _engine.ReadActorCodeNumber(context.Index, context);
             if (amount <= 0)
                 return true;
 
             // Modify value if we are taking.
             if (take)
-                context.SetNumber(-context.GetNumber());
+                _state.OopNumber = -_state.OopNumber;
 
             // Determine if the result will be in range.
-            var pendingAmount = item.Value + context.GetNumber();
+            var pendingAmount = item.Value + _state.OopNumber;
             if ((pendingAmount & 0xFFFF) >= 0x8000)
                 return true;
 
@@ -734,7 +743,7 @@ namespace Roton.Emulation.Execution
         {
             return new Dictionary<string, Func<IOopContext, bool?>>
             {
-                {"ALLIGNED", Condition_Alligned},
+                {"ALLIGNED", Condition_Aligned},
                 {"ANY", Condition_Any},
                 {"BLOCKED", Condition_Blocked},
                 {"CONTACT", Condition_Contact},
@@ -795,50 +804,50 @@ namespace Roton.Emulation.Execution
         protected IOopItem Item_Ammo(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Ammo,
-                v => context.GetWorld().Ammo = v);
+                () => _world.Ammo,
+                v => _world.Ammo = v);
         }
 
         protected IOopItem Item_Gems(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Gems,
-                v => context.GetWorld().Gems = v);
+                () => _world.Gems,
+                v => _world.Gems = v);
         }
 
         protected IOopItem Item_Health(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Health,
-                v => context.GetWorld().Health = v);
+                () => _world.Health,
+                v => _world.Health = v);
         }
 
         protected IOopItem Item_Score(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Score,
-                v => context.GetWorld().Score = v);
+                () => _world.Score,
+                v => _world.Score = v);
         }
 
         protected IOopItem Item_Stones(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Stones,
-                v => context.GetWorld().Stones = v);
+                () => _world.Stones,
+                v => _world.Stones = v);
         }
 
         protected IOopItem Item_Time(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().TimePassed,
-                v => context.GetWorld().TimePassed = v);
+                () => _world.TimePassed,
+                v => _world.TimePassed = v);
         }
 
         protected IOopItem Item_Torches(IOopContext context)
         {
             return new OopItem(
-                () => context.GetWorld().Torches,
-                v => context.GetWorld().Torches = v);
+                () => _world.Torches,
+                v => _world.Torches = v);
         }
 
         protected virtual void PutTile(IEngine engine, IXyPair location, IXyPair vector, ITile kind)

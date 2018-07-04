@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
             if (_world.Keys[keyIndex])
             {
                 _engine.SetMessage(0xC8, _alerts.KeyAlreadyMessage(color));
-                __engine.PlaySound(2, _sounds.KeyAlready);
+                _engine.PlaySound(2, _sounds.KeyAlready);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace Roton.Emulation.Behavior
                 _engine.RemoveItem(location);
                 _engine.UpdateStatus();
                 _engine.SetMessage(0xC8, _alerts.KeyPickupMessage(color));
-                __engine.PlaySound(2, _sounds.Key);
+                _engine.PlaySound(2, _sounds.Key);
             }
         }
     }

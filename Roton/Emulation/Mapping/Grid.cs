@@ -5,8 +5,11 @@ namespace Roton.Emulation.Mapping
 {
     public abstract class Grid : FixedList<ITile>, IGrid
     {
-        protected Grid(IMemory memory, int offset, int width, int height)
+        private readonly IElements _elements;
+
+        protected Grid(IMemory memory, IElements elements, int offset, int width, int height)
         {
+            _elements = elements;
             Memory = memory;
             Offset = offset;
             Height = height;
@@ -28,6 +31,11 @@ namespace Roton.Emulation.Mapping
         public ITile this[IXyPair location] => this[location.X*TotalHeight + location.Y];
 
         public int Width { get; }
+        
+        public IElement ElementAt(IXyPair location)
+        {
+            return _elements[this[location].Id];
+        }
 
         protected override ITile GetItem(int index)
         {

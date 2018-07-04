@@ -15,7 +15,6 @@ namespace Roton.Core
         string StoneText { get; }
         bool TitleScreen { get; }
         
-        int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
         bool BroadcastLabel(int sender, string label, bool force);
         void ClearSound();
@@ -61,7 +60,6 @@ namespace Roton.Core
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
         void Start();
         void Stop();
-        int SyncRandomNumber(int max);
         void UnpackBoard(int boardIndex);
         void UpdateBoard(IXyPair location);
         void UpdateRadius(IXyPair location, RadiusMode mode);
