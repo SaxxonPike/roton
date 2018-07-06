@@ -9,11 +9,11 @@ namespace Roton.Emulation.ZZT
     {
         private readonly Lazy<IBehaviorMap> _behaviorMap;
 
-        public ZztElements(IMemory memory, Lazy<IBehaviorMap> behaviorMap, IStaticResourceService staticResourceService)
+        public ZztElements(IMemory memory, Lazy<IBehaviorMap> behaviorMap, IEngineResourceProvider engineResourceProvider)
             : base(memory, 54)
         {
             _behaviorMap = behaviorMap;
-            memory.Write(0x4AD4, staticResourceService.GetElementData());
+            memory.Write(0x4AD4, engineResourceProvider.GetElementData());
         }
 
         public override int AmmoId => 0x05;

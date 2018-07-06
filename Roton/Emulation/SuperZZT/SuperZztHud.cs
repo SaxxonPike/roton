@@ -14,9 +14,11 @@ namespace Roton.Emulation.SuperZZT
         private readonly IActors _actors;
         private readonly IWorld _world;
         private readonly IElements _elements;
+        private readonly IFlags _flags;
+        private readonly ITerminal _terminal;
 
-        public SuperZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements)
-            : base(engine, terminal)
+        public SuperZztHud(Lazy<IEngine> engine, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements, IFlags flags, ITerminal terminal)
+            : base(engine)
         {
             _state = state;
             _board = board;
@@ -24,6 +26,8 @@ namespace Roton.Emulation.SuperZZT
             _actors = actors;
             _world = world;
             _elements = elements;
+            _flags = flags;
+            _terminal = terminal;
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
 
@@ -119,7 +123,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override void DrawChar(int x, int y, AnsiChar ac)
         {
-            Terminal.Plot(x, y, ac);
+            _terminal.Plot(x, y, ac);
         }
 
         public override void DrawMessage(IMessage message, int color)
@@ -143,7 +147,7 @@ namespace Roton.Emulation.SuperZZT
 
         public override void DrawString(int x, int y, string text, int color)
         {
-            Terminal.Write(x, y, text, color);
+            _terminal.Write(x, y, text, color);
         }
 
         public override void DrawTile(int x, int y, AnsiChar ac)
@@ -157,7 +161,7 @@ namespace Roton.Emulation.SuperZZT
             {
                 if (x >= 0 && x < 96 && y >= 0 && y < 80)
                 {
-                    Terminal.Plot(x, y, ac);
+                    _terminal.Plot(x, y, ac);
                 }
             }
             else
@@ -168,7 +172,7 @@ namespace Roton.Emulation.SuperZZT
                 y -= _board.Camera.Y;
                 if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
                 {
-                    Terminal.Plot(x, y, ac);
+                    _terminal.Plot(x, y, ac);
                 }
             }
         }
@@ -182,11 +186,11 @@ namespace Roton.Emulation.SuperZZT
         {
             if (_state.EditorMode)
             {
-                Terminal.SetSize(96, 80, true);
+                _terminal.SetSize(96, 80, true);
             }
             else
             {
-                Terminal.SetSize(40, 25, true);
+                _terminal.SetSize(40, 25, true);
             }
         }
 
@@ -275,9 +279,9 @@ namespace Roton.Emulation.SuperZZT
                 DrawNumber(0x15, _world.Score);
                 DrawString(0x00, 0x16, @"            ", 0x6F);
 
-                if (!string.IsNullOrWhiteSpace(Engine.StoneText))
+                if (!string.IsNullOrWhiteSpace(_flags.StoneText))
                 {
-                    DrawString(0x01, 0x16, Engine.StoneText, 0x6F);
+                    DrawString(0x01, 0x16, _flags.StoneText, 0x6F);
                 }
 
                 if (_world.Stones >= 0)

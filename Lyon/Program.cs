@@ -2,7 +2,7 @@
 using Autofac;
 using Lyon.App;
 using Roton.Core;
-using Roton.Interface.Resources;
+using Roton.Interface.Infrastructure;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 using Roton.Interface.Video.Scenes.Composition;
@@ -37,13 +37,17 @@ namespace Lyon
 
         private static void Register(ContainerBuilder builder)
         {
+            builder.Register(c => new InterfaceResourceProvider(c.Resolve<IResourceService>()
+                .GetResource(typeof(IInterfaceResourceProvider).Assembly)))
+                .As<IInterfaceResourceProvider>();
+
             builder.RegisterType<ComposerProxy>()
                 .As<IComposerProxy>()
                 .OnActivated(e =>
                 {
-                    var resource = e.Context.Resolve<ICommonResourceArchive>();
-                    e.Instance.SetFont(resource.GetFont());
-                    e.Instance.SetPalette(resource.GetPalette());
+                    var resource = e.Context.Resolve<IInterfaceResourceProvider>();
+                    e.Instance.SetFont(resource.GetFontData());
+                    e.Instance.SetPalette(resource.GetPaletteData());
                 });
         }
     }

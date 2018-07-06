@@ -1,4 +1,5 @@
-﻿using Roton.Core;
+﻿using System.Linq;
+using Roton.Core;
 using Roton.Core.Collections;
 using Roton.Extensions;
 
@@ -60,6 +61,22 @@ namespace Roton.Emulation.Mapping
                 return true;
             }
             return false;
+        }
+
+        public string StoneText
+        {
+            get
+            {
+                foreach (var flag in this.Select(f => f.ToUpperInvariant()))
+                {
+                    if (flag.Length > 0 && flag.StartsWith("Z"))
+                    {
+                        return flag.Substring(1);
+                    }
+                }
+
+                return string.Empty;
+            }
         }
 
         protected override string GetItem(int index)

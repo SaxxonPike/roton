@@ -1191,22 +1191,6 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        public string StoneText
-        {
-            get
-            {
-                foreach (var flag in _world.Flags.Select(f => f.ToUpperInvariant()))
-                {
-                    if (flag.Length > 0 && flag.StartsWith("Z"))
-                    {
-                        return flag.Substring(1);
-                    }
-                }
-
-                return string.Empty;
-            }
-        }
-
         public void Stop()
         {
             if (ThreadActive)

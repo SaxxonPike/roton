@@ -9,10 +9,10 @@ namespace Roton.Emulation.ZZT
     {
         private readonly IMemory _memory;
 
-        public ZztState(IMemory memory, IStaticResourceService staticResourceService)
+        public ZztState(IMemory memory, IEngineResourceProvider engineResourceProvider)
         {
             _memory = memory;
-            memory.Write(0x0000, staticResourceService.GetMemoryData());
+            memory.Write(0x0000, engineResourceProvider.GetMemoryData());
             BorderTile = new MemoryTile(_memory, 0x0072);
             DefaultActor = new Actor(_memory, 0x0076);
             EdgeTile = new MemoryTile(_memory, 0x0074);

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Roton.FileIo;
-using Roton.Interface.Resources;
-using Roton.Resources;
 
 namespace Lyon.App
 {

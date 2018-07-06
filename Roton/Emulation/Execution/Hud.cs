@@ -8,15 +8,12 @@ namespace Roton.Emulation.Execution
     {
         private readonly Lazy<IEngine> _engine;
 
-        protected Hud(Lazy<IEngine> engine, ITerminal terminal)
+        protected Hud(Lazy<IEngine> engine)
         {
             _engine = engine;
-            Terminal = terminal;
         }
 
         protected IEngine Engine => _engine.Value;
-
-        protected ITerminal Terminal { get; }
 
         public virtual void ClearPausing()
         {

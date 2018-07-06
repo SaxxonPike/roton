@@ -12,14 +12,17 @@ namespace Roton.Emulation.ZZT
         private readonly IWorld _world;
         private readonly IElements _elements;
         private readonly IBoard _board;
+        private readonly ITerminal _terminal;
 
-        public ZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IWorld world, IElements elements, IBoard board)
-            : base(engine, terminal)
+        public ZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IWorld world, IElements elements,
+            IBoard board)
+            : base(engine)
         {
             _state = state;
             _world = world;
             _elements = elements;
             _board = board;
+            _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
         }
@@ -28,7 +31,7 @@ namespace Roton.Emulation.ZZT
 
         private int ViewportHeight => 25;
 
-        private int ViewportTileCount => ViewportWidth*ViewportHeight;
+        private int ViewportTileCount => ViewportWidth * ViewportHeight;
 
         private int ViewportWidth => 60;
 
@@ -134,7 +137,7 @@ namespace Roton.Emulation.ZZT
 
         public override void DrawChar(int x, int y, AnsiChar ac)
         {
-            Terminal.Plot(x, y, ac);
+            _terminal.Plot(x, y, ac);
         }
 
         public override void DrawMessage(IMessage message, int color)
@@ -142,7 +145,7 @@ namespace Roton.Emulation.ZZT
             var text = message.Text.FirstOrDefault();
             if (!string.IsNullOrEmpty(text))
             {
-                var x = (60 - text.Length)/2;
+                var x = (60 - text.Length) / 2;
                 DrawString(x, 24, $" {text} ", color);
             }
         }
@@ -157,13 +160,13 @@ namespace Roton.Emulation.ZZT
             var blankChar = new AnsiChar(0x20, 0x11);
             for (var x = 60; x < 80; x++)
             {
-                Terminal.Plot(x, y, blankChar);
+                _terminal.Plot(x, y, blankChar);
             }
         }
 
         public override void DrawString(int x, int y, string text, int color)
         {
-            Terminal.Write(x, y, text, color);
+            _terminal.Write(x, y, text, color);
         }
 
         public override void DrawTile(int x, int y, AnsiChar ac)
@@ -178,7 +181,7 @@ namespace Roton.Emulation.ZZT
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            Terminal.Plot(x, y, ac);
+            _terminal.Plot(x, y, ac);
         }
 
         public override void DrawTitleStatus()
@@ -215,6 +218,7 @@ namespace Roton.Emulation.ZZT
                     FadeMatrix[index++] = new Location(x, y);
                 }
             }
+
             for (var i = 0; i < ViewportTileCount; i++)
             {
                 var sourceIndex = i;
@@ -227,7 +231,7 @@ namespace Roton.Emulation.ZZT
 
         public override void Initialize()
         {
-            Terminal.SetSize(_state.EditorMode ? 60 : 80, 25, false);
+            _terminal.SetSize(_state.EditorMode ? 60 : 80, 25, false);
         }
 
         private string IntToString(int i)
@@ -260,6 +264,7 @@ namespace Roton.Emulation.ZZT
                 minIndicator = @"1";
                 maxIndicator = @"9";
             }
+
             DrawStatusLine(y);
             DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
             DrawStatusLine(y + 1);
@@ -273,12 +278,14 @@ namespace Roton.Emulation.ZZT
                     // cancel it for now
                     performSelection = false;
                 }
+
                 if (!performSelection || _state.KeyShift || _state.KeyPressed == 0x0D ||
                     _state.KeyPressed == 0x1B)
                 {
                     break;
                 }
             }
+
             DrawChar(x + currentValue + 1, y + 1, new AnsiChar(0x1F, 0x1F));
             return currentValue;
         }
@@ -290,6 +297,7 @@ namespace Roton.Emulation.ZZT
                 DrawTileAt(new Location(x, 0));
                 DrawTileAt(new Location(x, ViewportHeight - 1));
             }
+
             for (var y = 0; y < ViewportHeight; y++)
             {
                 DrawTileAt(new Location(0, y));
@@ -310,10 +318,12 @@ namespace Roton.Emulation.ZZT
                     DrawString(0x40, 0x06, @"   Time:", 0x1E);
                     DrawString(0x48, 0x06, IntToString(_board.TimeLimit - _world.TimePassed), 0x1E);
                 }
+
                 if (_world.Health < 0)
                 {
                     _world.Health = 0;
                 }
+
                 DrawString(0x48, 0x07, IntToString(_world.Health), 0x1E);
                 DrawString(0x48, 0x08, IntToString(_world.Ammo), 0x1E);
                 DrawString(0x48, 0x09, IntToString(_world.Torches), 0x1E);
@@ -324,7 +334,7 @@ namespace Roton.Emulation.ZZT
                     for (var i = 2; i <= 5; i++)
                     {
                         DrawChar(0x49 + i, 0x09,
-                            _world.TorchCycles/40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
+                            _world.TorchCycles / 40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
                     }
                 }
                 else

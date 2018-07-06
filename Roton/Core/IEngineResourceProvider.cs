@@ -1,6 +1,6 @@
 namespace Roton.Core
 {
-    public interface IStaticResourceService
+    public interface IEngineResourceProvider
     {
         byte[] GetElementData();
         byte[] GetMemoryData();

@@ -8,11 +8,11 @@ namespace Roton.Emulation.SuperZZT
     {
         private readonly IBehaviorMap _behaviorMap;
 
-        public SuperZztElements(IMemory memory, IBehaviorMap behaviorMap, IStaticResourceService staticResourceService)
+        public SuperZztElements(IMemory memory, IBehaviorMap behaviorMap, IEngineResourceProvider engineResourceProvider)
             : base(memory, 80)
         {
             _behaviorMap = behaviorMap;
-            memory.Write(0x7CAA, staticResourceService.GetElementData());
+            memory.Write(0x7CAA, engineResourceProvider.GetElementData());
         }
 
         public override int AmmoId => 0x05;

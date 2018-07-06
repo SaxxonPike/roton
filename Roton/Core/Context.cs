@@ -7,13 +7,11 @@ using Roton.Emulation.SuperZZT;
 using Roton.Emulation.ZZT;
 using Roton.Events;
 using Roton.FileIo;
-using Roton.Resources;
 
 namespace Roton.Core
 {
     public sealed class Context : IContext
     {
-        private readonly IMemory _memory;
         private readonly IState _state;
         private readonly IFileSystem _fileSystem;
         private readonly IBoards _boards;
@@ -32,11 +30,9 @@ namespace Roton.Core
             IBoards boards,
             IGameSerializer gameSerializer,
             IEngine engine,
-            IMemory memory,
             IState state,
             IFileSystem fileSystem)
         {
-            _memory = memory;
             _state = state;
             _fileSystem = fileSystem;
             _actors = actors;
@@ -160,13 +156,6 @@ namespace Roton.Core
                     throw Exceptions.UnknownFormat;
             }
             return engine;
-        }
-
-        private void Initialize(Stream stream)
-        {
-            var engine = DetermineContextEngine(stream);
-            Initialize(engine);
-            LoadAfterType(stream);
         }
 
         private void LoadAfterType(Stream stream)

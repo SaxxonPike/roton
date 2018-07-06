@@ -12,7 +12,6 @@ namespace Roton.Core
         event DataEventHandler RequestReplaceContext;
         event EventHandler Terminated;
 
-        string StoneText { get; }
         bool TitleScreen { get; }
         
         void Attack(int index, IXyPair location);

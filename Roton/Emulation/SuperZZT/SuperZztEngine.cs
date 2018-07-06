@@ -3,7 +3,6 @@ using Roton.Emulation.Execution;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
 using Roton.FileIo;
-using Roton.Resources;
 
 namespace Roton.Emulation.SuperZZT
 {

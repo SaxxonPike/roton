@@ -7,7 +7,6 @@ using Roton.FileIo;
 using Roton.Interface.Audio.Composition;
 using Roton.Interface.Events;
 using Roton.Interface.Input;
-using Roton.Interface.Resources;
 using Roton.Interface.Video;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
