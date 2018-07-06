@@ -5,14 +5,12 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class ObjectBehavior : ElementBehavior
     {
-        private readonly IConfig _config;
         private readonly IActors _actors;
         private readonly IEngine _engine;
         private readonly IGrid _grid;
 
-        public ObjectBehavior(IConfig config, IActors actors, IEngine engine, IGrid grid)
+        public ObjectBehavior(IActors actors, IEngine engine, IGrid grid)
         {
-            _config = config;
             _actors = actors;
             _engine = engine;
             _grid = grid;

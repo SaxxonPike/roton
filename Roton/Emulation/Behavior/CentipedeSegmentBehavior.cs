@@ -7,7 +7,6 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IElements _elements;
-        private readonly IEngine _engine;
         private readonly IGrid _grid;
 
         public override string KnownName => KnownNames.Segment;
@@ -16,7 +15,6 @@ namespace Roton.Emulation.Behavior
         {
             _actors = actors;
             _elements = elements;
-            _engine = engine;
             _grid = grid;
         }
         
