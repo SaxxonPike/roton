@@ -6,19 +6,17 @@ namespace Roton.Emulation.Commands
     public class ChangeCommand : ICommand
     {
         private readonly IParser _parser;
-        private readonly IEngine _engine;
         private readonly IElements _elements;
         private readonly IPlotter _plotter;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly ITiles _tiles;
 
-        public ChangeCommand(IParser parser, IEngine engine, IElements elements, IPlotter plotter, IMessager messager, ITiles tiles)
+        public ChangeCommand(IParser parser, IElements elements, IPlotter plotter, IMessenger messenger, ITiles tiles)
         {
             _parser = parser;
-            _engine = engine;
             _elements = elements;
             _plotter = plotter;
-            _messager = messager;
+            _messenger = messenger;
             _tiles = tiles;
         }
 
@@ -49,7 +47,7 @@ namespace Roton.Emulation.Commands
 
             if (!success)
             {
-                _messager.RaiseError($"Bad #{Name}");
+                _messenger.RaiseError($"Bad #{Name}");
             }
         }
     }

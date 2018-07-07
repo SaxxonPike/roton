@@ -8,20 +8,17 @@ namespace Roton.Emulation.Behavior
         private readonly IState _state;
         private readonly ITiles _tiles;
         private readonly IElements _elements;
-        private readonly IPlotter _plotter;
         private readonly IDrawer _drawer;
         private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Counter;
 
-        public CounterclockwiseConveyorBehavior(IActors actors, IState state, ITiles tiles, IElements elements,
-            IPlotter plotter, IDrawer drawer, IMover mover)
+        public CounterclockwiseConveyorBehavior(IActors actors, IState state, ITiles tiles, IElements elements, IDrawer drawer, IMover mover)
         {
             _actors = actors;
             _state = state;
             _tiles = tiles;
             _elements = elements;
-            _plotter = plotter;
             _drawer = drawer;
             _mover = mover;
         }

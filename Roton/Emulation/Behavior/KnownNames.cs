@@ -7,66 +7,66 @@
         public static readonly string BlinkRayH = "Blink Ray (Horizontal)";
         public static readonly string BlinkRayV = "Blink Ray (Vertical)";
         public static readonly string Undefined = "Undefined";
-        public static string BlinkWall { get; set; }
-        public static string BoardEdge { get; set; }
-        public static string Bomb { get; set; }
-        public static string Boulder { get; set; }
-        public static string Breakable { get; set; }
-        public static string Bullet { get; set; }
-        public static string Clockwise { get; set; }
-        public static string Counter { get; set; }
-        public static string Door { get; set; }
-        public static string DragonPup { get; set; }
-        public static string Duplicator { get; set; }
-        public static string Empty { get; set; }
-        public static string Energizer { get; set; }
-        public static string Fake { get; set; }
-        public static string Floor { get; set; }
-        public static string Forest { get; set; }
-        public static string Gem { get; set; }
-        public static string Head { get; set; }
-        public static string Invisible { get; set; }
-        public static string Key { get; set; }
-        public static string Lava { get; set; }
-        public static string Line { get; set; }
-        public static string Lion { get; set; }
-        public static string Messenger { get; set; }
-        public static string Monitor { get; set; }
-        public static string Normal { get; set; }
-        public static string Object { get; set; }
-        public static string Pairer { get; set; }
-        public static string Passage { get; set; }
-        public static string Player { get; set; }
-        public static string Pusher { get; set; }
-        public static string Ricochet { get; set; }
-        public static string RiverE { get; set; }
-        public static string RiverN { get; set; }
-        public static string RiverS { get; set; }
-        public static string RiverW { get; set; }
-        public static string Roton { get; set; }
-        public static string Ruffian { get; set; }
-        public static string Scroll { get; set; }
-        public static string Segment { get; set; }
-        public static string Shark { get; set; }
-        public static string SliderEw { get; set; }
-        public static string SliderNs { get; set; }
-        public static string Slime { get; set; }
-        public static string Solid { get; set; }
-        public static string Spider { get; set; }
-        public static string SpinningGun { get; set; }
-        public static string Star { get; set; }
-        public static string Stone { get; set; }
-        public static string Tiger { get; set; }
-        public static string Torch { get; set; }
-        public static string Transporter { get; set; }
-        public static string Water { get; set; }
-        public static string Web { get; set; }
-        public static string BlueText { get; set; }
-        public static string GreenText { get; set; }
-        public static string CyanText { get; set; }
-        public static string RedText { get; set; }
-        public static string PurpleText { get; set; }
-        public static string BrownText { get; set; }
-        public static string BlackText { get; set; }
+        public static readonly string BlinkWall = "Blink Wall";
+        public static readonly string BoardEdge = "Board Edge";
+        public static readonly string Bomb = "Bomb";
+        public static readonly string Boulder = "Boulder";
+        public static readonly string Breakable = "Breakable";
+        public static readonly string Bullet = "Bullet";
+        public static readonly string Clockwise = "Clockwise";
+        public static readonly string Counter = "Counter";
+        public static readonly string Door = "Door";
+        public static readonly string DragonPup = "Dragon Pup";
+        public static readonly string Duplicator = "Duplicator";
+        public static readonly string Empty = "Empty";
+        public static readonly string Energizer = "Energizer";
+        public static readonly string Fake = "Fake";
+        public static readonly string Floor = "Floor";
+        public static readonly string Forest = "Forest";
+        public static readonly string Gem = "Gem";
+        public static readonly string Head = "Head";
+        public static readonly string Invisible = "Invisible";
+        public static readonly string Key = "Key";
+        public static readonly string Lava = "Lava";
+        public static readonly string Line = "Line";
+        public static readonly string Lion = "Lion";
+        public static readonly string Messenger = "Messenger";
+        public static readonly string Monitor = "Monitor";
+        public static readonly string Normal = "Normal";
+        public static readonly string Object = "Object";
+        public static readonly string Pairer = "Pairer";
+        public static readonly string Passage = "Passage";
+        public static readonly string Player = "Player";
+        public static readonly string Pusher = "Pusher";
+        public static readonly string Ricochet = "Ricochet";
+        public static readonly string RiverE = "River (E)";
+        public static readonly string RiverN = "River (N)";
+        public static readonly string RiverS = "River (S)";
+        public static readonly string RiverW = "River (W)";
+        public static readonly string Roton = "Roton";
+        public static readonly string Ruffian = "Ruffian";
+        public static readonly string Scroll = "Scroll";
+        public static readonly string Segment = "Segment";
+        public static readonly string Shark = "Shark";
+        public static readonly string SliderEw = "Slider (EW)";
+        public static readonly string SliderNs = "Slider (NS)";
+        public static readonly string Slime = "Slime";
+        public static readonly string Solid = "Solid";
+        public static readonly string Spider = "Spider";
+        public static readonly string SpinningGun = "Spinning Gun";
+        public static readonly string Star = "Star";
+        public static readonly string Stone = "Stone of Power";
+        public static readonly string Tiger = "Tiger";
+        public static readonly string Torch = "Torch";
+        public static readonly string Transporter = "Transporter";
+        public static readonly string Water = "Water";
+        public static readonly string Web = "Web";
+        public static readonly string BlueText = "Text (Blue)";
+        public static readonly string GreenText = "Text (Green)";
+        public static readonly string CyanText = "Text (Cyan)";
+        public static readonly string RedText = "Text (Red)";
+        public static readonly string PurpleText = "Text (Purple)";
+        public static readonly string BrownText = "Text (Brown)";
+        public static readonly string BlackText = "Text (Black)";
     }
 }

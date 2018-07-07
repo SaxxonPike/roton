@@ -12,22 +12,19 @@ namespace Roton.Emulation.Behavior
         private readonly ISounds _sounds;
         private readonly ISounder _sounder;
         private readonly IHud _hud;
-        private readonly IPlotter _plotter;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Torch;
 
-        public TorchBehavior(IWorld world, IAlerts alerts, ISounds sounds, ISounder sounder, IHud hud,
-            IPlotter plotter, IMessager messager, IMisc misc)
+        public TorchBehavior(IWorld world, IAlerts alerts, ISounds sounds, ISounder sounder, IHud hud, IMessenger messenger, IMisc misc)
         {
             _world = world;
             _alerts = alerts;
             _sounds = sounds;
             _sounder = sounder;
             _hud = hud;
-            _plotter = plotter;
-            _messager = messager;
+            _messenger = messenger;
             _misc = misc;
         }
 
@@ -38,7 +35,7 @@ namespace Roton.Emulation.Behavior
             _hud.UpdateStatus();
             if (_alerts.TorchPickup)
             {
-                _messager.SetMessage(0xC8, _alerts.TorchMessage);
+                _messenger.SetMessage(0xC8, _alerts.TorchMessage);
                 _alerts.TorchPickup = false;
             }
 

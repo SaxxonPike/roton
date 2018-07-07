@@ -13,13 +13,13 @@ namespace Roton.Emulation.Behavior
         private readonly ISounder _sounder;
         private readonly IDrawer _drawer;
         private readonly IRadius _radius;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Bomb;
 
         public BombBehavior(IActors actors, ISounds sounds, ITiles tiles, IAlerts alerts,
-            ISounder sounder, IDrawer drawer, IRadius radius, IMessager messager, IMover mover)
+            ISounder sounder, IDrawer drawer, IRadius radius, IMessenger messenger, IMover mover)
         {
             _actors = actors;
             _sounds = sounds;
@@ -28,7 +28,7 @@ namespace Roton.Emulation.Behavior
             _sounder = sounder;
             _drawer = drawer;
             _radius = radius;
-            _messager = messager;
+            _messenger = messenger;
             _mover = mover;
         }
 
@@ -69,7 +69,7 @@ namespace Roton.Emulation.Behavior
             {
                 actor.P1 = 9;
                 _drawer.UpdateBoard(location);
-                _messager.SetMessage(0xC8, _alerts.BombMessage);
+                _messenger.SetMessage(0xC8, _alerts.BombMessage);
                 _sounder.Play(4, _sounds.BombActivate);
             }
             else

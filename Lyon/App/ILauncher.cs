@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Roton.Core;
+﻿using Roton.Core;
 using Roton.FileIo;
 
 namespace Lyon.App

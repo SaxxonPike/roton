@@ -14,13 +14,13 @@ namespace Roton.Emulation.Behavior
         private readonly ISounder _sounder;
         private readonly IHud _hud;
         private readonly IDrawer _drawer;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Energizer;
 
         public EnergizerBehavior(ISounds sounds, IAlerts alerts, IWorld world, IBroadcaster broadcaster,
-            ISounder sounder, IHud hud, IDrawer drawer, IMessager messager, IMisc misc)
+            ISounder sounder, IHud hud, IDrawer drawer, IMessenger messenger, IMisc misc)
         {
             _sounds = sounds;
             _alerts = alerts;
@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
             _sounder = sounder;
             _hud = hud;
             _drawer = drawer;
-            _messager = messager;
+            _messenger = messenger;
             _misc = misc;
         }
 
@@ -43,7 +43,7 @@ namespace Roton.Emulation.Behavior
             if (_alerts.EnergizerPickup)
             {
                 _alerts.EnergizerPickup = false;
-                _messager.SetMessage(0xC8, _alerts.EnergizerMessage);
+                _messenger.SetMessage(0xC8, _alerts.EnergizerMessage);
             }
 
             _broadcaster.BroadcastLabel(0, KnownLabels.Energize, false);

@@ -5,14 +5,14 @@ namespace Roton.Emulation.Behavior
     public sealed class FakeWallBehavior : ElementBehavior
     {
         private readonly IAlerts _alerts;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
 
         public override string KnownName => KnownNames.Fake;
 
-        public FakeWallBehavior(IAlerts alerts, IMessager messager)
+        public FakeWallBehavior(IAlerts alerts, IMessenger messenger)
         {
             _alerts = alerts;
-            _messager = messager;
+            _messenger = messenger;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
@@ -20,7 +20,7 @@ namespace Roton.Emulation.Behavior
             if (!_alerts.FakeWall) return;
 
             _alerts.FakeWall = false;
-            _messager.SetMessage(0xC8, _alerts.FakeMessage);
+            _messenger.SetMessage(0xC8, _alerts.FakeMessage);
         }
     }
 }

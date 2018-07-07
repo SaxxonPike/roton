@@ -14,12 +14,12 @@ namespace Roton.Emulation.Behavior
         private readonly ISounds _sounds;
         private readonly IAlerts _alerts;
         private readonly ISounder _sounder;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IDrawer _drawer;
         private readonly IMisc _misc;
 
         public ForestBehavior(IConfig config, IElements elements, ITiles tiles, IState state,
-            ISounds sounds, IAlerts alerts, ISounder sounder, IMessager messager, IDrawer drawer,
+            ISounds sounds, IAlerts alerts, ISounder sounder, IMessenger messenger, IDrawer drawer,
             IMisc misc)
         {
             _config = config;
@@ -29,7 +29,7 @@ namespace Roton.Emulation.Behavior
             _sounds = sounds;
             _alerts = alerts;
             _sounder = sounder;
-            _messager = messager;
+            _messenger = messenger;
             _drawer = drawer;
             _misc = misc;
         }
@@ -53,7 +53,7 @@ namespace Roton.Emulation.Behavior
             if (!_alerts.Forest)
                 return;
 
-            _messager.SetMessage(0xC8, _alerts.ForestMessage);
+            _messenger.SetMessage(0xC8, _alerts.ForestMessage);
             _alerts.Forest = false;
         }
     }

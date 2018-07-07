@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 
 namespace Roton.Emulation.SuperZZT

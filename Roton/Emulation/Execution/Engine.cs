@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using Roton.Core;
-using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.Timing;
@@ -38,7 +37,7 @@ namespace Roton.Emulation.Execution
         private readonly ISounder _sounder;
         private readonly IPlotter _plotter;
         private readonly IDrawer _drawer;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMover _mover;
         private readonly IRadius _radius;
         private readonly IBoards _boards;
@@ -63,7 +62,7 @@ namespace Roton.Emulation.Execution
             ISounder sounder,
             IPlotter plotter,
             IDrawer drawer,
-            IMessager messager,
+            IMessenger messenger,
             IMover mover,
             IRadius radius,
             ITiles tiles,
@@ -91,7 +90,7 @@ namespace Roton.Emulation.Execution
             _sounder = sounder;
             _plotter = plotter;
             _drawer = drawer;
-            _messager = messager;
+            _messenger = messenger;
             _mover = mover;
             _radius = radius;
             _boards = boards;
@@ -169,7 +168,7 @@ namespace Roton.Emulation.Execution
                         var vector = _parser.GetDirection(context);
                         if (vector == null)
                         {
-                            _messager.RaiseError("Bad direction");
+                            _messenger.RaiseError("Bad direction");
                         }
                         else
                         {
@@ -475,7 +474,7 @@ namespace Roton.Emulation.Execution
             _tiles[_actors.Player.Location].SetTo(element.Id, element.Color);
             if (_state.PlayerElement == _elements.MonitorId)
             {
-                _messager.SetMessage(0, new Message());
+                _messenger.SetMessage(0, new Message());
                 _hud.DrawTitleStatus();
             }
 

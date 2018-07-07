@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Roton.Emulation.Mapping;
-using Roton.Emulation.SuperZZT;
-using Roton.Emulation.ZZT;
 using Roton.Events;
 using Roton.FileIo;
 

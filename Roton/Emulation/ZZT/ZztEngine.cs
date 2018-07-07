@@ -2,7 +2,6 @@
 using Roton.Emulation.Execution;
 using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
-using Roton.FileIo;
 
 namespace Roton.Emulation.ZZT
 {
@@ -12,19 +11,19 @@ namespace Roton.Emulation.ZZT
         private readonly IState _state;
         private readonly IWorld _world;
         private readonly IAlerts _alerts;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IRadius _radius;
         private readonly IBoard _board;
         private readonly IPassager _passager;
 
-        public ZztMisc(IHud hud, IState state, IWorld world, IAlerts alerts, IMessager messager, IRadius radius,
+        public ZztMisc(IHud hud, IState state, IWorld world, IAlerts alerts, IMessenger messenger, IRadius radius,
             IBoard board, IPassager passager)
         {
             _hud = hud;
             _state = state;
             _world = world;
             _alerts = alerts;
-            _messager = messager;
+            _messenger = messenger;
             _radius = radius;
             _board = board;
             _passager = passager;
@@ -39,7 +38,7 @@ namespace Roton.Emulation.ZZT
         {
             if (context.Message.Count == 1)
             {
-                _messager.SetMessage(0xC8, new Message(context.Message));
+                _messenger.SetMessage(0xC8, new Message(context.Message));
             }
             else
             {
@@ -64,7 +63,7 @@ namespace Roton.Emulation.ZZT
                         {
                             if (_alerts.NoTorches)
                             {
-                                _messager.SetMessage(0xC8, _alerts.NoTorchMessage);
+                                _messenger.SetMessage(0xC8, _alerts.NoTorchMessage);
                                 _alerts.NoTorches = false;
                             }
                         }
@@ -72,7 +71,7 @@ namespace Roton.Emulation.ZZT
                         {
                             if (_alerts.NotDark)
                             {
-                                _messager.SetMessage(0xC8, _alerts.NotDarkMessage);
+                                _messenger.SetMessage(0xC8, _alerts.NotDarkMessage);
                                 _alerts.NotDark = false;
                             }
                         }

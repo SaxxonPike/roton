@@ -1,6 +1,4 @@
-using Roton.Emulation.Directions;
-
-namespace Roton.Emulation.Commands
+namespace Roton.Emulation.Directions
 {
     public interface IDirections
     {

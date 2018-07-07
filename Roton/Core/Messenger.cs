@@ -4,7 +4,7 @@ using Roton.Extensions;
 
 namespace Roton.Core
 {
-    public class Messager : IMessager
+    public class Messenger : IMessenger
     {
         private readonly IActors _actors;
         private readonly IHud _hud;
@@ -16,7 +16,7 @@ namespace Roton.Core
         private readonly ISounder _sounder;
         private readonly ISounds _sounds;
 
-        public Messager(IActors actors, IHud hud, Lazy<ISpawner> spawner, IState state, IElements elements,
+        public Messenger(IActors actors, IHud hud, Lazy<ISpawner> spawner, IState state, IElements elements,
             Lazy<IMover> mover, IAlerts alerts, ISounder sounder, ISounds sounds)
         {
             _actors = actors;

@@ -5,7 +5,6 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class StarBehavior : EnemyBehavior
     {
-        private readonly IEngine _engine;
         private readonly IActors _actors;
         private readonly ITiles _tiles;
         private readonly IElements _elements;
@@ -16,10 +15,9 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => KnownNames.Star;
 
-        public StarBehavior(IEngine engine, IActors actors, ITiles tiles, IElements elements, IState state,
+        public StarBehavior(IActors actors, ITiles tiles, IElements elements, IState state,
             ICompass compass, IMover mover, IDrawer drawer) : base(mover)
         {
-            _engine = engine;
             _actors = actors;
             _tiles = tiles;
             _elements = elements;

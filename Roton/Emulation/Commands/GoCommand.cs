@@ -8,14 +8,12 @@ namespace Roton.Emulation.Commands
     {
         private readonly IParser _parser;
         private readonly ITiles _tiles;
-        private readonly IEngine _engine;
         private readonly IMover _mover;
 
-        public GoCommand(IParser parser, ITiles tiles, IEngine engine, IMover mover)
+        public GoCommand(IParser parser, ITiles tiles, IMover mover)
         {
             _parser = parser;
             _tiles = tiles;
-            _engine = engine;
             _mover = mover;
         }
         

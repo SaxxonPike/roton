@@ -1,6 +1,4 @@
-using Roton.Emulation.Conditions;
-
-namespace Roton.Emulation.Commands
+namespace Roton.Emulation.Conditions
 {
     public interface IConditions
     {

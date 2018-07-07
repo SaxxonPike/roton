@@ -4,7 +4,6 @@ using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
-using Roton.Emulation.Mapping;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
@@ -20,7 +19,7 @@ namespace Roton.Emulation.Execution
         private readonly Lazy<ICommands> _commands;
         private readonly ICompass _compass;
         private readonly ITiles _tiles;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
 
         public Interpreter(
             IWorld world,
@@ -32,7 +31,7 @@ namespace Roton.Emulation.Execution
             Lazy<ICommands> commands,
             ICompass compass,
             ITiles tiles,
-            IMessager messager)
+            IMessenger messenger)
         {
             _world = world;
             _tiles = tiles;
@@ -43,7 +42,7 @@ namespace Roton.Emulation.Execution
             _cheats = cheats;
             _commands = commands;
             _compass = compass;
-            _messager = messager;
+            _messenger = messenger;
         }
 
         public void Cheat(string input)
@@ -85,7 +84,7 @@ namespace Roton.Emulation.Execution
                     {
                         if (!name.Contains(':'))
                         {
-                            _messager.RaiseError($"Bad command {name}");
+                            _messenger.RaiseError($"Bad command {name}");
                         }
                     }
                     else

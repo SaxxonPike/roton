@@ -1,6 +1,6 @@
 namespace Roton.Core
 {
-    public interface IMessager
+    public interface IMessenger
     {
         void RaiseError(string error);
         void SetMessage(int duration, IMessage message);

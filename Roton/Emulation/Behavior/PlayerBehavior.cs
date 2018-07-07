@@ -22,7 +22,7 @@ namespace Roton.Emulation.Behavior
         private readonly IMover _mover;
         private readonly IDrawer _drawer;
         private readonly IPlotter _plotter;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly ISpawner _spawner;
         private readonly IRadius _radius;
         private readonly IMisc _misc;
@@ -31,7 +31,7 @@ namespace Roton.Emulation.Behavior
 
         public PlayerBehavior(IActors actors, IElements elements, IState state, ITiles tiles, IWorld world,
             IEngine engine, IAlerts alerts, IBoard board, ISounds sounds, IHud hud, ISounder sounder,
-            IMover mover, IDrawer drawer, IPlotter plotter, IMessager messager, ISpawner spawner, IRadius radius,
+            IMover mover, IDrawer drawer, IPlotter plotter, IMessenger messenger, ISpawner spawner, IRadius radius,
             IMisc misc)
         {
             _actors = actors;
@@ -48,7 +48,7 @@ namespace Roton.Emulation.Behavior
             _mover = mover;
             _drawer = drawer;
             _plotter = plotter;
-            _messager = messager;
+            _messenger = messenger;
             _spawner = spawner;
             _radius = radius;
             _misc = misc;
@@ -89,7 +89,7 @@ namespace Roton.Emulation.Behavior
                 _state.KeyShift = false;
                 if (_actors.ActorIndexAt(new Location(0, 0)) == -1)
                 {
-                    _messager.SetMessage(0x7D00, _alerts.GameOverMessage);
+                    _messenger.SetMessage(0x7D00, _alerts.GameOverMessage);
                 }
 
                 _state.GameWaitTime = 0;
@@ -124,7 +124,7 @@ namespace Roton.Emulation.Behavior
                         {
                             if (_alerts.OutOfAmmo)
                             {
-                                _messager.SetMessage(0xC8, _alerts.NoAmmoMessage);
+                                _messenger.SetMessage(0xC8, _alerts.NoAmmoMessage);
                                 _alerts.OutOfAmmo = false;
                             }
                         }
@@ -133,7 +133,7 @@ namespace Roton.Emulation.Behavior
                     {
                         if (_alerts.CantShootHere)
                         {
-                            _messager.SetMessage(0xC8, _alerts.NoShootMessage);
+                            _messenger.SetMessage(0xC8, _alerts.NoShootMessage);
                             _alerts.CantShootHere = false;
                         }
                     }
@@ -238,7 +238,7 @@ namespace Roton.Emulation.Behavior
                         _world.TimePassed++;
                         if (_board.TimeLimit - 10 == _world.TimePassed)
                         {
-                            _messager.SetMessage(0xC8, _alerts.TimeMessage);
+                            _messenger.SetMessage(0xC8, _alerts.TimeMessage);
                             _sounder.Play(3, _sounds.TimeLow);
                         }
                         else if (_world.TimePassed >= _board.TimeLimit)

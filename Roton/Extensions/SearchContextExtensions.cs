@@ -1,7 +1,4 @@
-﻿using Roton.Core;
-using Roton.Emulation.Mapping;
-
-namespace Roton.Extensions
+﻿namespace Roton.Extensions
 {
     public static class SearchContextExtensions
     {

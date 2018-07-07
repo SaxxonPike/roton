@@ -13,13 +13,13 @@ namespace Roton.Emulation.Behavior
         private readonly ISounds _sounds;
         private readonly ISounder _sounder;
         private readonly IHud _hud;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Door;
 
         public DoorBehavior(ITiles tiles, IAlerts alerts, IWorld world, ISounds sounds, ISounder sounder,
-            IHud hud, IMessager messager, IMisc misc)
+            IHud hud, IMessenger messenger, IMisc misc)
         {
             _tiles = tiles;
             _alerts = alerts;
@@ -27,7 +27,7 @@ namespace Roton.Emulation.Behavior
             _sounds = sounds;
             _sounder = sounder;
             _hud = hud;
-            _messager = messager;
+            _messenger = messenger;
             _misc = misc;
         }
 
@@ -37,7 +37,7 @@ namespace Roton.Emulation.Behavior
             var keyIndex = color - 1;
             if (!_world.Keys[keyIndex])
             {
-                _messager.SetMessage(0xC8, _alerts.DoorLockedMessage(color));
+                _messenger.SetMessage(0xC8, _alerts.DoorLockedMessage(color));
                 _sounder.Play(3, _sounds.DoorLocked);
             }
             else
@@ -45,7 +45,7 @@ namespace Roton.Emulation.Behavior
                 _world.Keys[keyIndex] = false;
                 _misc.RemoveItem(location);
                 _hud.UpdateStatus();
-                _messager.SetMessage(0xC8, _alerts.DoorOpenMessage(color));
+                _messenger.SetMessage(0xC8, _alerts.DoorOpenMessage(color));
                 _sounder.Play(3, _sounds.DoorOpen);
             }
         }

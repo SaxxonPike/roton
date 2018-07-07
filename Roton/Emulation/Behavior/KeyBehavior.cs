@@ -11,25 +11,23 @@ namespace Roton.Emulation.Behavior
         private readonly IWorld _world;
         private readonly IAlerts _alerts;
         private readonly ISounds _sounds;
-        private readonly IEngine _engine;
         private readonly ISounder _sounder;
         private readonly IHud _hud;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Key;
 
-        public KeyBehavior(ITiles tiles, IWorld world, IAlerts alerts, ISounds sounds, IEngine engine, ISounder sounder,
-            IHud hud, IMessager messager, IMisc misc)
+        public KeyBehavior(ITiles tiles, IWorld world, IAlerts alerts, ISounds sounds, ISounder sounder,
+            IHud hud, IMessenger messenger, IMisc misc)
         {
             _tiles = tiles;
             _world = world;
             _alerts = alerts;
             _sounds = sounds;
-            _engine = engine;
             _sounder = sounder;
             _hud = hud;
-            _messager = messager;
+            _messenger = messenger;
             _misc = misc;
         }
 
@@ -39,7 +37,7 @@ namespace Roton.Emulation.Behavior
             var keyIndex = color - 1;
             if (_world.Keys[keyIndex])
             {
-                _messager.SetMessage(0xC8, _alerts.KeyAlreadyMessage(color));
+                _messenger.SetMessage(0xC8, _alerts.KeyAlreadyMessage(color));
                 _sounder.Play(2, _sounds.KeyAlready);
             }
             else
@@ -47,7 +45,7 @@ namespace Roton.Emulation.Behavior
                 _world.Keys[keyIndex] = true;
                 _misc.RemoveItem(location);
                 _hud.UpdateStatus();
-                _messager.SetMessage(0xC8, _alerts.KeyPickupMessage(color));
+                _messenger.SetMessage(0xC8, _alerts.KeyPickupMessage(color));
                 _sounder.Play(2, _sounds.Key);
             }
         }

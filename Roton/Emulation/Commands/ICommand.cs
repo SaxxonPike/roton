@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Roton.Core;
 
 namespace Roton.Emulation.Commands

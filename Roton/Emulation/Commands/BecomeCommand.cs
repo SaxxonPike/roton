@@ -7,12 +7,12 @@ namespace Roton.Emulation.Commands
     public class BecomeCommand : ICommand
     {
         private readonly IParser _parser;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
 
-        public BecomeCommand(IParser parser, IMessager messager)
+        public BecomeCommand(IParser parser, IMessenger messenger)
         {
             _parser = parser;
-            _messager = messager;
+            _messenger = messenger;
         }
 
         public string Name => "BECOME";
@@ -22,7 +22,7 @@ namespace Roton.Emulation.Commands
             var kind = _parser.GetKind(context);
             if (kind == null)
             {
-                _messager.RaiseError($"Bad #{Name}");
+                _messenger.RaiseError($"Bad #{Name}");
                 return;
             }
 

@@ -11,7 +11,7 @@ namespace Roton.Emulation.SuperZZT
         private readonly IHud _hud;
         private readonly IBroadcaster _broadcaster;
         private readonly IPassager _passager;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IElements _elements;
         private readonly ITiles _tiles;
         private readonly IActors _actors;
@@ -19,13 +19,13 @@ namespace Roton.Emulation.SuperZZT
         private readonly IEngine _engine;
 
         public SuperZztMisc(IState state, IHud hud, IBroadcaster broadcaster, IPassager passager,
-            IMessager messager, IElements elements, ITiles tiles, IActors actors, ICompass compass, IEngine engine)
+            IMessenger messenger, IElements elements, ITiles tiles, IActors actors, ICompass compass, IEngine engine)
         {
             _state = state;
             _hud = hud;
             _broadcaster = broadcaster;
             _passager = passager;
-            _messager = messager;
+            _messenger = messenger;
             _elements = elements;
             _tiles = tiles;
             _actors = actors;
@@ -44,10 +44,10 @@ namespace Roton.Emulation.SuperZZT
             switch (context.Message.Count)
             {
                 case 1:
-                    _messager.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
+                    _messenger.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
                     break;
                 case 2:
-                    _messager.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
+                    _messenger.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
                     break;
                 case 0:
                     break;

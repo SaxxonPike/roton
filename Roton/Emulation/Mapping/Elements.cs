@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Roton.Core;
 using Roton.Core.Collections;
-using Roton.Emulation.Behavior;
 
 namespace Roton.Emulation.Mapping
 {

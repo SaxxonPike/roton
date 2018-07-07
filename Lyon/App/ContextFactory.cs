@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Autofac;
-using Autofac.Core.Registration;
+﻿using Autofac;
 using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
+using Roton.Emulation.Conditions;
+using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Items;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.Targets;
 using Roton.Emulation.ZZT;
 using Roton.FileIo;
-using Roton.Interface.Infrastructure;
-using Roton.Interface.Video.Scenes.Composition;
 
 namespace Lyon.App
 {

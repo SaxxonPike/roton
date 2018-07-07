@@ -6,13 +6,11 @@ namespace Roton.Emulation.Commands
     public class CharCommand : ICommand
     {
         private readonly IParser _parser;
-        private readonly IEngine _engine;
         private readonly IDrawer _drawer;
 
-        public CharCommand(IParser parser, IEngine engine, IDrawer drawer)
+        public CharCommand(IParser parser, IDrawer drawer)
         {
             _parser = parser;
-            _engine = engine;
             _drawer = drawer;
         }
         

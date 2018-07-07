@@ -6,7 +6,6 @@ namespace Roton.Emulation.Behavior
     public sealed class RuffianBehavior : EnemyBehavior
     {
         private readonly IActors _actors;
-        private readonly IEngine _engine;
         private readonly IRandom _random;
         private readonly ITiles _tiles;
         private readonly IElements _elements;
@@ -15,11 +14,10 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => KnownNames.Ruffian;
 
-        public RuffianBehavior(IActors actors, IEngine engine, IRandom random, ITiles tiles, IElements elements,
+        public RuffianBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements,
             IMover mover, ICompass compass) : base(mover)
         {
             _actors = actors;
-            _engine = engine;
             _random = random;
             _tiles = tiles;
             _elements = elements;

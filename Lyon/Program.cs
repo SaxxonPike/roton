@@ -4,8 +4,6 @@ using Lyon.App;
 using Roton.Core;
 using Roton.Interface.Infrastructure;
 using Roton.Interface.Video.Glyphs;
-using Roton.Interface.Video.Palettes;
-using Roton.Interface.Video.Scenes.Composition;
 
 namespace Lyon
 {

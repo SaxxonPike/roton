@@ -12,12 +12,12 @@ namespace Roton.Emulation.Behavior
         private readonly IHud _hud;
         private readonly IDrawer _drawer;
         private readonly IMover _mover;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
 
         public override string KnownName => KnownNames.Stone;
 
         public StoneBehavior(IActors actors, ITiles tiles, IWorld world, IAlerts alerts, IRandom random, IHud hud,
-            IDrawer drawer, IMover mover, IMessager messager)
+            IDrawer drawer, IMover mover, IMessenger messenger)
         {
             _actors = actors;
             _tiles = tiles;
@@ -27,7 +27,7 @@ namespace Roton.Emulation.Behavior
             _hud = hud;
             _drawer = drawer;
             _mover = mover;
-            _messager = messager;
+            _messenger = messenger;
         }
 
         public override void Act(int index)
@@ -48,7 +48,7 @@ namespace Roton.Emulation.Behavior
             _world.Stones++;
             _mover.Destroy(location);
             _hud.UpdateStatus();
-            _messager.SetMessage(0xC8, _alerts.StoneMessage);
+            _messenger.SetMessage(0xC8, _alerts.StoneMessage);
         }
     }
 }

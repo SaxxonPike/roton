@@ -1,16 +1,11 @@
 ﻿using System;
-using System.IO;
 using OpenTK;
 using OpenTK.Input;
 using Roton.Core;
 using Roton.FileIo;
-using Roton.Interface.Audio.Composition;
 using Roton.Interface.Events;
 using Roton.Interface.Input;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Glyphs;
-using Roton.Interface.Video.Palettes;
-using Roton.Interface.Video.Scenes.Composition;
 using Roton.Interface.Video.Scenes.Presentation;
 
 namespace Lyon.App

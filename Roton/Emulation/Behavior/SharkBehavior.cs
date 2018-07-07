@@ -7,7 +7,6 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IRandom _random;
-        private readonly IEngine _engine;
         private readonly ITiles _tiles;
         private readonly IElements _elements;
         private readonly ICompass _compass;
@@ -15,11 +14,10 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => KnownNames.Shark;
 
-        public SharkBehavior(IActors actors, IRandom random, IEngine engine, ITiles tiles, IElements elements, ICompass compass, IMover mover)
+        public SharkBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements, ICompass compass, IMover mover)
         {
             _actors = actors;
             _random = random;
-            _engine = engine;
             _tiles = tiles;
             _elements = elements;
             _compass = compass;

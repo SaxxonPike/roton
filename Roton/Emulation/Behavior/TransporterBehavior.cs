@@ -5,7 +5,6 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class TransporterBehavior : ElementBehavior
     {
-        private readonly IEngine _engine;
         private readonly IActors _actors;
         private readonly IState _state;
         private readonly ITiles _tiles;
@@ -14,9 +13,8 @@ namespace Roton.Emulation.Behavior
 
         public override string KnownName => KnownNames.Transporter;
 
-        public TransporterBehavior(IEngine engine, IActors actors, IState state, ITiles tiles, IDrawer drawer, IMover mover)
+        public TransporterBehavior(IActors actors, IState state, ITiles tiles, IDrawer drawer, IMover mover)
         {
-            _engine = engine;
             _actors = actors;
             _state = state;
             _tiles = tiles;

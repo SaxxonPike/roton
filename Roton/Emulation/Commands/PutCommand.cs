@@ -8,15 +8,15 @@ namespace Roton.Emulation.Commands
     {
         private readonly IParser _parser;
         private readonly IPlotter _plotter;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IConfig _config;
         private readonly ITiles _tiles;
 
-        public PutCommand(IParser parser, IPlotter plotter, IMessager messager, IConfig config, ITiles tiles)
+        public PutCommand(IParser parser, IPlotter plotter, IMessenger messenger, IConfig config, ITiles tiles)
         {
             _parser = parser;
             _plotter = plotter;
-            _messager = messager;
+            _messenger = messenger;
             _config = config;
             _tiles = tiles;
         }
@@ -42,7 +42,7 @@ namespace Roton.Emulation.Commands
             }
 
             if (!success)
-                _messager.RaiseError("Bad #PUT");
+                _messenger.RaiseError("Bad #PUT");
         }
     }
 }

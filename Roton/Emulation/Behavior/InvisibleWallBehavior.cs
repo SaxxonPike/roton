@@ -12,12 +12,12 @@ namespace Roton.Emulation.Behavior
         private readonly IAlerts _alerts;
         private readonly ISounder _sounder;
         private readonly IDrawer _drawer;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
 
         public override string KnownName => KnownNames.Invisible;
 
         public InvisibleWallBehavior(ITiles tiles, ISounds sounds, IElements elements, IAlerts alerts,
-            ISounder sounder, IDrawer drawer, IMessager messager)
+            ISounder sounder, IDrawer drawer, IMessenger messenger)
         {
             _tiles = tiles;
             _sounds = sounds;
@@ -25,7 +25,7 @@ namespace Roton.Emulation.Behavior
             _alerts = alerts;
             _sounder = sounder;
             _drawer = drawer;
-            _messager = messager;
+            _messenger = messenger;
         }
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
@@ -33,7 +33,7 @@ namespace Roton.Emulation.Behavior
             _tiles[location].Id = _elements.NormalId;
             _drawer.UpdateBoard(location);
             _sounder.Play(3, _sounds.Invisible);
-            _messager.SetMessage(0x64, _alerts.InvisibleMessage);
+            _messenger.SetMessage(0x64, _alerts.InvisibleMessage);
         }
     }
 }

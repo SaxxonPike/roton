@@ -7,7 +7,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => KnownNames.Lava;
 
-        public LavaBehavior(ISounds sounds, IAlerts alerts, ISounder sounder, IMessager messager) : base(sounds, alerts, sounder, messager)
+        public LavaBehavior(ISounds sounds, IAlerts alerts, ISounder sounder, IMessenger messenger) : base(sounds, alerts, sounder, messenger)
         {
         }
     }

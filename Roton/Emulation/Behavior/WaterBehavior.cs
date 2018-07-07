@@ -9,21 +9,21 @@ namespace Roton.Emulation.Behavior
         private readonly ISounds _sounds;
         private readonly IAlerts _alerts;
         private readonly ISounder _sounder;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         public override string KnownName => KnownNames.Water;
 
-        public WaterBehavior(ISounds sounds, IAlerts alerts, ISounder sounder, IMessager messager)
+        public WaterBehavior(ISounds sounds, IAlerts alerts, ISounder sounder, IMessenger messenger)
         {
             _sounds = sounds;
             _alerts = alerts;
             _sounder = sounder;
-            _messager = messager;
+            _messenger = messenger;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             _sounder.Play(3, _sounds.Water);
-            _messager.SetMessage(0x64, _alerts.WaterMessage);
+            _messenger.SetMessage(0x64, _alerts.WaterMessage);
         }
     }
 }

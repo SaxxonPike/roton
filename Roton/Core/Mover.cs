@@ -1,5 +1,4 @@
 using Roton.Emulation.Execution;
-using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
@@ -15,7 +14,7 @@ namespace Roton.Core
         private readonly IState _state;
         private readonly IActors _actors;
         private readonly IPlotter _plotter;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IAlerts _alerts;
         private readonly IBoard _board;
         private readonly IDrawer _drawer;
@@ -25,7 +24,7 @@ namespace Roton.Core
         private readonly IMisc _misc;
 
         public Mover(IWorld world, IHud hud, IElements elements, ISounder sounder, ISounds sounds,
-            IState state, IActors actors, IPlotter plotter, IMessager messager, IAlerts alerts, IBoard board, IDrawer drawer, IRadius radius,
+            IState state, IActors actors, IPlotter plotter, IMessenger messenger, IAlerts alerts, IBoard board, IDrawer drawer, IRadius radius,
             ICompass compass, ITiles tiles, IMisc misc)
         {
             _world = world;
@@ -36,7 +35,7 @@ namespace Roton.Core
             _state = state;
             _actors = actors;
             _plotter = plotter;
-            _messager = messager;
+            _messenger = messenger;
             _alerts = alerts;
             _board = board;
             _drawer = drawer;
@@ -170,7 +169,7 @@ namespace Roton.Core
                 {
                     _world.Health -= 10;
                     _hud.UpdateStatus();
-                    _messager.SetMessage(0x64, _alerts.OuchMessage);
+                    _messenger.SetMessage(0x64, _alerts.OuchMessage);
                     var color = _tiles[actor.Location].Color;
                     color &= 0x0F;
                     color |= 0x70;

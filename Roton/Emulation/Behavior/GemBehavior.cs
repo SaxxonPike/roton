@@ -13,11 +13,11 @@ namespace Roton.Emulation.Behavior
         private readonly IAlerts _alerts;
         private readonly ISounder _sounder;
         private readonly IHud _hud;
-        private readonly IMessager _messager;
+        private readonly IMessenger _messenger;
         private readonly IMisc _misc;
 
         public GemBehavior(IConfig config, IWorld world, ISounds sounds, IAlerts alerts,
-            ISounder sounder, IHud hud, IMessager messager, IMisc misc)
+            ISounder sounder, IHud hud, IMessenger messenger, IMisc misc)
         {
             _config = config;
             _world = world;
@@ -25,7 +25,7 @@ namespace Roton.Emulation.Behavior
             _alerts = alerts;
             _sounder = sounder;
             _hud = hud;
-            _messager = messager;
+            _messenger = messenger;
             _misc = misc;
         }
 
@@ -43,7 +43,7 @@ namespace Roton.Emulation.Behavior
             if (!_alerts.GemPickup)
                 return;
 
-            _messager.SetMessage(0xC8, _alerts.GemMessage);
+            _messenger.SetMessage(0xC8, _alerts.GemMessage);
             _alerts.GemPickup = false;
         }
     }

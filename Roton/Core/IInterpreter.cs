@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Mapping;
-
-namespace Roton.Core
+﻿namespace Roton.Core
 {
     public interface IInterpreter
     {
