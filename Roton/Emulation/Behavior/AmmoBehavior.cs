@@ -1,4 +1,6 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
+using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -9,15 +11,24 @@ namespace Roton.Emulation.Behavior
         private readonly IWorld _world;
         private readonly IAlerts _alerts;
         private readonly ISounds _sounds;
-        private readonly IEngine _engine;
+        private readonly ISounder _sounder;
+        private readonly IHud _hud;
+        private readonly IPlotter _plotter;
+        private readonly IMessager _messager;
+        private readonly IMisc _misc;
 
-        public AmmoBehavior(IConfig config, IWorld world, IAlerts alerts, ISounds sounds, IEngine engine)
+        public AmmoBehavior(IConfig config, IWorld world, IAlerts alerts, ISounds sounds, ISounder sounder, IHud hud,
+            IPlotter plotter, IMessager messager, IMisc misc)
         {
             _config = config;
             _world = world;
             _alerts = alerts;
             _sounds = sounds;
-            _engine = engine;
+            _sounder = sounder;
+            _hud = hud;
+            _plotter = plotter;
+            _messager = messager;
+            _misc = misc;
         }
 
         public override string KnownName => KnownNames.Ammo;
@@ -25,12 +36,12 @@ namespace Roton.Emulation.Behavior
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
             _world.Ammo += _config.AmmoPerPickup;
-            _engine.RemoveItem(location);
-            _engine.UpdateStatus();
-            _engine.PlaySound(2, _sounds.Ammo);
+            _misc.RemoveItem(location);
+            _hud.UpdateStatus();
+            _sounder.Play(2, _sounds.Ammo);
             if (_alerts.AmmoPickup)
             {
-                _engine.SetMessage(0xC8, _alerts.AmmoMessage);
+                _messager.SetMessage(0xC8, _alerts.AmmoMessage);
                 _alerts.AmmoPickup = false;
             }
         }

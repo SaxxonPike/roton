@@ -1,18 +1,47 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Execution;
+using Roton.Emulation.SuperZZT;
 using Roton.FileIo;
 
 namespace Roton.Emulation.ZZT
 {
-    public sealed class ZztEngine : Engine
+    public sealed class ZztMisc : IMisc
     {
+        private readonly IHud _hud;
         private readonly IState _state;
-        private readonly IBoard _board;
         private readonly IWorld _world;
         private readonly IAlerts _alerts;
-        private readonly IHud _hud;
+        private readonly IMessager _messager;
+        private readonly IRadius _radius;
+        private readonly IBoard _board;
 
-        public override void HandlePlayerInput(IActor actor, int hotkey)
+        public ZztMisc(IHud hud, IState state, IWorld world, IAlerts alerts, IMessager messager, IRadius radius, IBoard board)
+        {
+            _hud = hud;
+            _state = state;
+            _world = world;
+            _alerts = alerts;
+            _messager = messager;
+            _radius = radius;
+            _board = board;
+        }
+        
+        public void EnterBoard()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ExecuteMessage(IOopContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Init()
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public void HandlePlayerInput(IActor actor, int hotkey)
         {
             switch (hotkey)
             {
@@ -23,7 +52,7 @@ namespace Roton.Emulation.ZZT
                         {
                             if (_alerts.NoTorches)
                             {
-                                SetMessage(0xC8, _alerts.NoTorchMessage);
+                                _messager.SetMessage(0xC8, _alerts.NoTorchMessage);
                                 _alerts.NoTorches = false;
                             }
                         }
@@ -31,7 +60,7 @@ namespace Roton.Emulation.ZZT
                         {
                             if (_alerts.NotDark)
                             {
-                                SetMessage(0xC8, _alerts.NotDarkMessage);
+                                _messager.SetMessage(0xC8, _alerts.NotDarkMessage);
                                 _alerts.NotDark = false;
                             }
                         }
@@ -39,8 +68,8 @@ namespace Roton.Emulation.ZZT
                         {
                             _world.Torches--;
                             _world.TorchCycles = 0xC8;
-                            UpdateRadius(actor.Location, RadiusMode.Update);
-                            UpdateStatus();
+                            _radius.Update(actor.Location, RadiusMode.Update);
+                            _hud.UpdateStatus();
                         }
                     }
 
@@ -48,9 +77,9 @@ namespace Roton.Emulation.ZZT
                 case 0x46: // F
                     break;
             }
-        }
+        }        
 
-        public override bool HandleTitleInput(int hotkey)
+        public bool HandleTitleInput(int hotkey)
         {
             switch (hotkey)
             {
@@ -79,23 +108,19 @@ namespace Roton.Emulation.ZZT
             return false;
         }
 
-        protected override string GetWorldName(string baseName)
+        public void RemoveItem(IXyPair location)
         {
-            return $"{baseName}.ZZT";
+            throw new System.NotImplementedException();
         }
 
-        public ZztEngine(IKeyboard keyboard, IBoards boards, IFileSystem fileSystem, IState state,
-            IOopContextFactory oopContextFactory, IActors actors, IGrid grid, IRandom random, IBoard board,
-            IWorld world, ITimers timers, IElements elements, ISounds sounds, IGameSerializer gameSerializer,
-            IAlerts alerts, IHud hud, IGrammar grammar) : base(keyboard, boards, fileSystem, state, oopContextFactory,
-            actors, grid, random, board, world, timers, elements, sounds, gameSerializer, alerts, hud, grammar)
+        public void ShowInGameHelp()
         {
-            _state = state;
-            _board = board;
-            _world = world;
-            _alerts = alerts;
-            _hud = hud;
-            _hud.Initialize();
+            throw new System.NotImplementedException();
+        }
+
+        public string GetWorldName(string baseName)
+        {
+            return $"{baseName}.ZZT";
         }
     }
 }

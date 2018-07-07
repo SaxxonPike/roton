@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Execution;
+using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -10,29 +11,47 @@ namespace Roton.Emulation.Behavior
         private readonly IActors _actors;
         private readonly IElements _elements;
         private readonly IState _state;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IWorld _world;
         private readonly IEngine _engine;
         private readonly IAlerts _alerts;
         private readonly IBoard _board;
         private readonly ISounds _sounds;
         private readonly IHud _hud;
+        private readonly ISounder _sounder;
+        private readonly IMover _mover;
+        private readonly IDrawer _drawer;
+        private readonly IPlotter _plotter;
+        private readonly IMessager _messager;
+        private readonly ISpawner _spawner;
+        private readonly IRadius _radius;
+        private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Player;
 
-        public PlayerBehavior(IActors actors, IElements elements, IState state, IGrid grid, IWorld world,
-            IEngine engine, IAlerts alerts, IBoard board, ISounds sounds, IHud hud)
+        public PlayerBehavior(IActors actors, IElements elements, IState state, ITiles tiles, IWorld world,
+            IEngine engine, IAlerts alerts, IBoard board, ISounds sounds, IHud hud, ISounder sounder,
+            IMover mover, IDrawer drawer, IPlotter plotter, IMessager messager, ISpawner spawner, IRadius radius,
+            IMisc misc)
         {
             _actors = actors;
             _elements = elements;
             _state = state;
-            _grid = grid;
+            _tiles = tiles;
             _world = world;
             _engine = engine;
             _alerts = alerts;
             _board = board;
             _sounds = sounds;
             _hud = hud;
+            _sounder = sounder;
+            _mover = mover;
+            _drawer = drawer;
+            _plotter = plotter;
+            _messager = messager;
+            _spawner = spawner;
+            _radius = radius;
+            _misc = misc;
         }
 
         public override void Act(int index)
@@ -48,18 +67,18 @@ namespace Roton.Emulation.Behavior
 
                 if ((_state.GameCycle & 0x01) == 0)
                 {
-                    _grid[actor.Location].Color = ((_state.GameCycle % 7 + 1) << 4) | 0x0F;
+                    _tiles[actor.Location].Color = ((_state.GameCycle % 7 + 1) << 4) | 0x0F;
                 }
                 else
                 {
-                    _grid[actor.Location].Color = 0x0F;
+                    _tiles[actor.Location].Color = 0x0F;
                 }
 
-                _engine.UpdateBoard(actor.Location);
+                _drawer.UpdateBoard(actor.Location);
             }
             else
             {
-                _engine.ForcePlayerColor(index);
+                _plotter.ForcePlayerColor(index);
             }
 
             // Health logic
@@ -70,7 +89,7 @@ namespace Roton.Emulation.Behavior
                 _state.KeyShift = false;
                 if (_actors.ActorIndexAt(new Location(0, 0)) == -1)
                 {
-                    _engine.SetMessage(0x7D00, _alerts.GameOverMessage);
+                    _messager.SetMessage(0x7D00, _alerts.GameOverMessage);
                 }
 
                 _state.GameWaitTime = 0;
@@ -89,15 +108,15 @@ namespace Roton.Emulation.Behavior
                         {
                             var bulletCount =
                                 _actors.Count(
-                                    a => a.P1 == 0 && _grid[a.Location].Id == _elements.BulletId);
+                                    a => a.P1 == 0 && _tiles[a.Location].Id == _elements.BulletId);
                             if (bulletCount < _board.MaximumShots)
                             {
-                                if (_engine.SpawnProjectile(_elements.BulletId, actor.Location,
+                                if (_spawner.SpawnProjectile(_elements.BulletId, actor.Location,
                                     _state.KeyVector, false))
                                 {
                                     _world.Ammo--;
-                                    _engine.UpdateStatus();
-                                    _engine.PlaySound(2, _sounds.Shoot);
+                                    _hud.UpdateStatus();
+                                    _sounder.Play(2, _sounds.Shoot);
                                 }
                             }
                         }
@@ -105,7 +124,7 @@ namespace Roton.Emulation.Behavior
                         {
                             if (_alerts.OutOfAmmo)
                             {
-                                _engine.SetMessage(0xC8, _alerts.NoAmmoMessage);
+                                _messager.SetMessage(0xC8, _alerts.NoAmmoMessage);
                                 _alerts.OutOfAmmo = false;
                             }
                         }
@@ -114,7 +133,7 @@ namespace Roton.Emulation.Behavior
                     {
                         if (_alerts.CantShootHere)
                         {
-                            _engine.SetMessage(0xC8, _alerts.NoShootMessage);
+                            _messager.SetMessage(0xC8, _alerts.NoShootMessage);
                             _alerts.CantShootHere = false;
                         }
                     }
@@ -123,7 +142,7 @@ namespace Roton.Emulation.Behavior
                 {
                     // Movement logic
 
-                    _grid.ElementAt(actor.Location.Sum(_state.KeyVector))
+                    _tiles.ElementAt(actor.Location.Sum(_state.KeyVector))
                         .Interact(actor.Location.Sum(_state.KeyVector), 0, _state.KeyVector);
                     if (!_state.KeyVector.IsZero())
                     {
@@ -132,9 +151,9 @@ namespace Roton.Emulation.Behavior
                             // TODO: player step sound plays here
                         }
 
-                        if (_grid.ElementAt(actor.Location.Sum(_state.KeyVector)).IsFloor)
+                        if (_tiles.ElementAt(actor.Location.Sum(_state.KeyVector)).IsFloor)
                         {
-                            _engine.MoveActor(0, actor.Location.Sum(_state.KeyVector));
+                            _mover.MoveActor(0, actor.Location.Sum(_state.KeyVector));
                         }
                     }
                 }
@@ -161,8 +180,8 @@ namespace Roton.Emulation.Behavior
                     break;
                 case 0x42: // B
                     _state.GameQuiet = !_state.GameQuiet;
-                    _engine.ClearSound();
-                    _engine.UpdateStatus();
+                    _sounder.Clear();
+                    _hud.UpdateStatus();
                     _state.KeyPressed = 0x20;
                     break;
                 case 0x48: // H
@@ -172,7 +191,7 @@ namespace Roton.Emulation.Behavior
                     _hud.EnterCheat();
                     break;
                 default:
-                    _engine.HandlePlayerInput(actor, hotkey);
+                    _misc.HandlePlayerInput(actor, hotkey);
                     break;
             }
 
@@ -183,13 +202,13 @@ namespace Roton.Emulation.Behavior
                 _world.TorchCycles--;
                 if (_world.TorchCycles <= 0)
                 {
-                    _engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                    _engine.PlaySound(3, _sounds.TorchOut);
+                    _radius.Update(actor.Location, RadiusMode.Update);
+                    _sounder.Play(3, _sounds.TorchOut);
                 }
 
                 if (_world.TorchCycles % 40 == 0)
                 {
-                    _engine.UpdateStatus();
+                    _hud.UpdateStatus();
                 }
             }
 
@@ -200,11 +219,11 @@ namespace Roton.Emulation.Behavior
                 _world.EnergyCycles--;
                 if (_world.EnergyCycles == 10)
                 {
-                    _engine.PlaySound(9, _sounds.EnergyOut);
+                    _sounder.Play(9, _sounds.EnergyOut);
                 }
                 else if (_world.EnergyCycles <= 0)
                 {
-                    _engine.ForcePlayerColor(index);
+                    _plotter.ForcePlayerColor(index);
                 }
             }
 
@@ -219,20 +238,20 @@ namespace Roton.Emulation.Behavior
                         _world.TimePassed++;
                         if (_board.TimeLimit - 10 == _world.TimePassed)
                         {
-                            _engine.SetMessage(0xC8, _alerts.TimeMessage);
-                            _engine.PlaySound(3, _sounds.TimeLow);
+                            _messager.SetMessage(0xC8, _alerts.TimeMessage);
+                            _sounder.Play(3, _sounds.TimeLow);
                         }
                         else if (_world.TimePassed >= _board.TimeLimit)
                         {
-                            _engine.Harm(0);
+                            _mover.Harm(0);
                         }
 
-                        _engine.UpdateStatus();
+                        _hud.UpdateStatus();
                     }
                 }
             }
 
-            _engine.MoveActorOnRiver(index);
+            _mover.MoveActorOnRiver(index);
         }
     }
 }

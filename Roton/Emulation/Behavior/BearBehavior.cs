@@ -6,18 +6,18 @@ namespace Roton.Emulation.Behavior
     public sealed class BearBehavior : EnemyBehavior
     {
         private readonly IActors _actors;
-        private readonly IEngine _engine;
         private readonly IElements _elements;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
+        private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Bear;
 
-        public BearBehavior(IActors actors, IEngine engine, IElements elements, IGrid grid) : base(engine)
+        public BearBehavior(IActors actors, IElements elements, ITiles tiles, IPlotter plotter, IMover mover) : base(mover)
         {
             _actors = actors;
-            _engine = engine;
             _elements = elements;
-            _grid = grid;
+            _tiles = tiles;
+            _mover = mover;
         }
         
         public override void Act(int index)
@@ -43,15 +43,15 @@ namespace Roton.Emulation.Behavior
             }
 
             var target = actor.Location.Sum(vector);
-            var targetElement = _grid.ElementAt(target);
+            var targetElement = _tiles.ElementAt(target);
 
             if (targetElement.IsFloor)
             {
-                _engine.MoveActor(index, target);
+                _mover.MoveActor(index, target);
             }
             else if (targetElement.Id == _elements.PlayerId || targetElement.Id == _elements.BreakableId)
             {
-                _engine.Attack(index, target);
+                _mover.Attack(index, target);
             }
         }
     }

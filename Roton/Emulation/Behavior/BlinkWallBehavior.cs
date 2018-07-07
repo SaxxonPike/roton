@@ -7,20 +7,23 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IElements _elements;
-        private readonly IEngine _engine;
         private readonly IWorld _world;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
+        private readonly IDrawer _drawer;
+        private readonly IMover _mover;
         public override string KnownName => KnownNames.BlinkWall;
 
-        public BlinkWallBehavior(IActors actors, IElements elements, IEngine engine, IWorld world, IGrid grid)
+        public BlinkWallBehavior(IActors actors, IElements elements, IWorld world, ITiles tiles, IDrawer drawer,
+            IMover mover)
         {
             _actors = actors;
             _elements = elements;
-            _engine = engine;
             _world = world;
-            _grid = grid;
+            _tiles = tiles;
+            _drawer = drawer;
+            _mover = mover;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
@@ -30,7 +33,7 @@ namespace Roton.Emulation.Behavior
 
             if (actor.P3 == 1)
             {
-                actor.P3 = actor.P2*2 + 1;
+                actor.P3 = actor.P2 * 2 + 1;
 
                 var erasedRay = false;
                 var target = actor.Location.Sum(actor.Vector);
@@ -40,13 +43,13 @@ namespace Roton.Emulation.Behavior
                     ? _elements.BlinkRayVId
                     : _elements.BlinkRayHId;
 
-                var color = _grid[actor.Location].Color;
+                var color = _tiles[actor.Location].Color;
                 var rayTile = new Tile(rayElement, color);
 
-                while (_grid[target].Matches(rayTile))
+                while (_tiles[target].Matches(rayTile))
                 {
-                    _grid[target].Id = emptyElement;
-                    _engine.UpdateBoard(target);
+                    _tiles[target].Id = emptyElement;
+                    _drawer.UpdateBoard(target);
                     target.Add(actor.Vector);
                     erasedRay = true;
                 }
@@ -56,12 +59,12 @@ namespace Roton.Emulation.Behavior
 
                 do
                 {
-                    if (_grid.ElementAt(target).IsDestructible)
+                    if (_tiles.ElementAt(target).IsDestructible)
                     {
-                        _engine.Destroy(target);
+                        _mover.Destroy(target);
                     }
 
-                    if (_grid[target].Id == _elements.PlayerId)
+                    if (_tiles[target].Id == _elements.PlayerId)
                     {
                         var playerIndex = _actors.ActorIndexAt(target);
                         IXyPair testVector;
@@ -69,46 +72,50 @@ namespace Roton.Emulation.Behavior
                         if (actor.Vector.Y == 0)
                         {
                             testVector = new Vector(0, 1);
-                            if (_grid[target.Difference(testVector)].Id == emptyElement)
+                            if (_tiles[target.Difference(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Difference(testVector));
+                                _mover.MoveActor(playerIndex, target.Difference(testVector));
                             }
-                            else if (_grid[target.Sum(testVector)].Id == emptyElement)
+                            else if (_tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                _mover.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
                         else
                         {
                             testVector = new Vector(1, 0);
-                            if (_grid[target.Sum(testVector)].Id == emptyElement)
+                            if (_tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                _mover.MoveActor(playerIndex, target.Sum(testVector));
                             }
-                            else if (_grid[target.Difference(testVector)].Id == emptyElement)
+                            else if (_tiles[target.Difference(testVector)].Id == emptyElement)
                             {
                                 // "sum" is not a mistake; this is an original engine bug
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                _mover.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
-                        if (_grid[target].Id == _elements.PlayerId)
+
+                        if (_tiles[target].Id == _elements.PlayerId)
                         {
                             while (_world.Health > 0)
                             {
-                                _engine.Harm(0);
+                                _mover.Harm(0);
                             }
+
                             blocked = true;
                         }
                     }
-                    if (_grid[target].Id == emptyElement)
+
+                    if (_tiles[target].Id == emptyElement)
                     {
-                        _grid[target].CopyFrom(rayTile);
-                        _engine.UpdateBoard(target);
+                        _tiles[target].CopyFrom(rayTile);
+                        _drawer.UpdateBoard(target);
                     }
                     else
                     {
                         blocked = true;
                     }
+
                     target.Add(actor.Vector);
                 } while (!blocked);
             }
@@ -120,7 +127,7 @@ namespace Roton.Emulation.Behavior
 
         public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(0xCE, _grid[location].Color);
+            return new AnsiChar(0xCE, _tiles[location].Color);
         }
     }
 }

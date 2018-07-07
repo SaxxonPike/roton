@@ -12,16 +12,18 @@ namespace Roton.Emulation.ZZT
         private readonly IWorld _world;
         private readonly IElements _elements;
         private readonly IBoard _board;
+        private readonly IDrawer _drawer;
         private readonly ITerminal _terminal;
 
         public ZztHud(Lazy<IEngine> engine, ITerminal terminal, IState state, IWorld world, IElements elements,
-            IBoard board)
+            IBoard board, IDrawer drawer)
             : base(engine)
         {
             _state = state;
             _world = world;
             _elements = elements;
             _board = board;
+            _drawer = drawer;
             _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
@@ -176,7 +178,7 @@ namespace Roton.Emulation.ZZT
 
         private void DrawTileAt(IXyPair location)
         {
-            DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
+            DrawTileCommon(location.X, location.Y, _drawer.Draw(location.Sum(1, 1)));
         }
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -244,7 +246,7 @@ namespace Roton.Emulation.ZZT
             for (var i = 0; i < ViewportTileCount; i++)
             {
                 var location = FadeMatrix[i];
-                DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
+                DrawTileCommon(location.X, location.Y, _drawer.Draw(location.Sum(1, 1)));
                 FadeWait(i);
             }
         }

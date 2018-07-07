@@ -6,21 +6,21 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IElements _elements;
         private readonly IState _state;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         
         public override string KnownName => KnownNames.Web;
 
-        public WebBehavior(IElements elements, IState state, IGrid grid)
+        public WebBehavior(IElements elements, IState state, ITiles tiles)
         {
             _elements = elements;
             _state = state;
-            _grid = grid;
+            _tiles = tiles;
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(_state.WebChars[_grid.Adjacent(location, _elements.WebId)],
-                _grid[location].Color);
+            return new AnsiChar(_state.WebChars[_tiles.Adjacent(location, _elements.WebId)],
+                _tiles[location].Color);
         }
     }
 }

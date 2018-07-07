@@ -6,22 +6,24 @@ namespace Roton.Emulation.Behavior
     public sealed class BoardEdgeBehavior : ElementBehavior
     {
         private readonly IWorld _world;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IBoard _board;
         private readonly IElements _elements;
         private readonly IEngine _engine;
         private readonly IState _state;
+        private readonly IMover _mover;
 
         public override string KnownName => KnownNames.BoardEdge;
 
-        public BoardEdgeBehavior(IWorld world, IGrid grid, IBoard board, IElements elements, IEngine engine, IState state)
+        public BoardEdgeBehavior(IWorld world, ITiles tiles, IBoard board, IElements elements, IEngine engine, IState state, IMover mover)
         {
             _world = world;
-            _grid = grid;
+            _tiles = tiles;
             _board = board;
             _elements = elements;
             _engine = engine;
             _state = state;
+            _mover = mover;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
@@ -34,7 +36,7 @@ namespace Roton.Emulation.Behavior
             {
                 case -1:
                     targetBoard = _board.ExitNorth;
-                    target.Y = _grid.Height;
+                    target.Y = _tiles.Height;
                     break;
                 case 1:
                     targetBoard = _board.ExitSouth;
@@ -44,7 +46,7 @@ namespace Roton.Emulation.Behavior
                     if (vector.X == -1)
                     {
                         targetBoard = _board.ExitWest;
-                        target.X = _grid.Width;
+                        target.X = _tiles.Width;
                     }
                     else
                     {
@@ -57,15 +59,15 @@ namespace Roton.Emulation.Behavior
             if (targetBoard != 0)
             {
                 _engine.SetBoard(targetBoard);
-                if (_grid[target].Id != _elements.PlayerId)
+                if (_tiles[target].Id != _elements.PlayerId)
                 {
-                    _grid.ElementAt(target).Interact(target, index, _state.KeyVector);
+                    _tiles.ElementAt(target).Interact(target, index, _state.KeyVector);
                 }
-                if (_grid.ElementAt(target).IsFloor || _grid.ElementAt(target).Id == _elements.PlayerId)
+                if (_tiles.ElementAt(target).IsFloor || _tiles.ElementAt(target).Id == _elements.PlayerId)
                 {
-                    if (_grid.ElementAt(target).Id != _elements.PlayerId)
+                    if (_tiles.ElementAt(target).Id != _elements.PlayerId)
                     {
-                        _engine.MoveActor(0, target);
+                        _mover.MoveActor(0, target);
                     }
                     _engine.FadePurple();
                     vector.SetTo(0, 0);

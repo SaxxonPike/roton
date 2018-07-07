@@ -37,5 +37,7 @@
         IMessage ErrorMessage(string error);
         IMessage KeyAlreadyMessage(int color);
         IMessage KeyPickupMessage(int color);
+
+        void Reset();
     }
 }

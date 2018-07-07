@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Behavior
 {
@@ -6,7 +7,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => KnownNames.Lava;
 
-        public LavaBehavior(IEngine engine, ISounds sounds, IAlerts alerts) : base(engine, sounds, alerts)
+        public LavaBehavior(ISounds sounds, IAlerts alerts, ISounder sounder, IMessager messager) : base(sounds, alerts, sounder, messager)
         {
         }
     }

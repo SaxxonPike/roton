@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -6,40 +7,43 @@ namespace Roton.Emulation.Behavior
     public sealed class PusherBehavior : ElementBehavior
     {
         private readonly IActors _actors;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly ISounds _sounds;
         private readonly IElements _elements;
-        private readonly IEngine _engine;
+        private readonly ISounder _sounder;
+        private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Pusher;
 
-        public PusherBehavior(IActors actors, IGrid grid, ISounds sounds, IElements elements, IEngine engine)
+        public PusherBehavior(IActors actors, ITiles tiles, ISounds sounds, IElements elements,
+            ISounder sounder, IMover mover)
         {
             _actors = actors;
-            _grid = grid;
+            _tiles = tiles;
             _sounds = sounds;
             _elements = elements;
-            _engine = engine;
+            _sounder = sounder;
+            _mover = mover;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
             var source = actor.Location.Clone();
 
-            if (!_grid.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
+            if (!_tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
             {
-                _engine.Push(actor.Location.Sum(actor.Vector), actor.Vector);
+                _mover.Push(actor.Location.Sum(actor.Vector), actor.Vector);
             }
 
             index = _actors.ActorIndexAt(source);
             actor = _actors[index];
-            if (!_grid.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
+            if (!_tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
 
-            _engine.MoveActor(index, actor.Location.Sum(actor.Vector));
-            _engine.PlaySound(2, _sounds.Push);
+            _mover.MoveActor(index, actor.Location.Sum(actor.Vector));
+            _sounder.Play(2, _sounds.Push);
             var behindLocation = actor.Location.Difference(actor.Vector);
-            if (_grid.TileAt(behindLocation).Id != _elements.PusherId) return;
+            if (_tiles[behindLocation].Id != _elements.PusherId) return;
 
             var behindIndex = _actors.ActorIndexAt(behindLocation);
             var behindActor = _actors[behindIndex];
@@ -55,13 +59,13 @@ namespace Roton.Emulation.Behavior
             switch (actor.Vector.X)
             {
                 case 1:
-                    return new AnsiChar(0x10, _grid[location].Color);
+                    return new AnsiChar(0x10, _tiles[location].Color);
                 case -1:
-                    return new AnsiChar(0x11, _grid[location].Color);
+                    return new AnsiChar(0x11, _tiles[location].Color);
                 default:
                     return actor.Vector.Y == -1
-                        ? new AnsiChar(0x1E, _grid[location].Color)
-                        : new AnsiChar(0x1F, _grid[location].Color);
+                        ? new AnsiChar(0x1E, _tiles[location].Color)
+                        : new AnsiChar(0x1F, _tiles[location].Color);
             }
         }
     }

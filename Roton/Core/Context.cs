@@ -14,6 +14,8 @@ namespace Roton.Core
     {
         private readonly IState _state;
         private readonly IFileSystem _fileSystem;
+        private readonly IHud _hud;
+        private readonly IDrawer _drawer;
         private readonly IBoards _boards;
         private readonly IActors _actors;
         private readonly IGameSerializer _gameSerializer;
@@ -25,21 +27,25 @@ namespace Roton.Core
 
         public Context(
             IActors actors, 
-            IGrid grid, 
+            ITiles tiles, 
             IWorld world,
             IBoards boards,
             IGameSerializer gameSerializer,
             IEngine engine,
             IState state,
-            IFileSystem fileSystem)
+            IFileSystem fileSystem,
+            IHud hud,
+            IDrawer drawer)
         {
             _state = state;
             _fileSystem = fileSystem;
+            _hud = hud;
+            _drawer = drawer;
             _actors = actors;
             _boards = boards;
             _gameSerializer = gameSerializer;
             _engine = engine;
-            Tiles = grid;
+            Tiles = tiles;
             WorldData = world;
         }
 
@@ -59,7 +65,7 @@ namespace Roton.Core
                 {
                     if (actor.Cycle > 0 && _state.ActIndex%actor.Cycle == _state.GameCycle%actor.Cycle)
                     {
-                        _engine.UpdateBoard(actor.Location);
+                        _drawer.UpdateBoard(actor.Location);
                     }
                     _state.ActIndex++;
                 }
@@ -68,7 +74,7 @@ namespace Roton.Core
 
         public void PackBoard() => _engine.PackBoard();
 
-        public void Refresh() => _engine.RedrawBoard();
+        public void Refresh() => _hud.RedrawBoard();
 
         public byte[] Save()
         {
@@ -100,7 +106,7 @@ namespace Roton.Core
 
         public void Stop() => _engine.Stop();
 
-        public IGrid Tiles { get; }
+        public ITiles Tiles { get; }
 
         public void UnpackBoard() => _engine.UnpackBoard(WorldData.BoardIndex);
 
@@ -113,19 +119,6 @@ namespace Roton.Core
 
         private void Initialize(ContextEngine engine)
         {
-//            var resources = ResourceZipFileSystem.System;
-//            switch (engine)
-//            {
-//                case ContextEngine.Zzt:
-//                    _engine = new ZztEngine(_config, resources.GetFile("memory-zzt.bin"), resources.GetFile("elements-zzt.bin"));
-//                    break;
-//                case ContextEngine.SuperZzt:
-//                    _engine = new SuperZztEngine(_config, resources.GetFile("memory-szzt.bin"), resources.GetFile("elements-szzt.bin"));
-//                    break;
-//                default:
-//                    throw Exceptions.InvalidFormat;
-//            }
-
             _engine.RequestReplaceContext += OnEngineRequestReplaceContext;
             _engine.Terminated += (s, e) => Terminated?.Invoke(s, e);
             _engine.ClearWorld();

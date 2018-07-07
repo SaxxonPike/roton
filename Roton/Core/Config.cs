@@ -12,5 +12,6 @@ namespace Roton.Core
         public string ScrollMusic { get; set; }
         public string ScrollTitle { get; set; }
         public int ElementCount { get; set; }
+        public bool BuggyPut { get; set; }
     }
 }

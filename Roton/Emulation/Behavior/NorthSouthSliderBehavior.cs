@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Behavior
 {
@@ -6,7 +7,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => KnownNames.SliderNs;
 
-        public NorthSouthSliderBehavior(IEngine engine, ISounds sounds) : base(engine, sounds)
+        public NorthSouthSliderBehavior(ISounds sounds, ISounder sounder, IMover mover) : base(sounds, sounder, mover)
         {
         }
     }

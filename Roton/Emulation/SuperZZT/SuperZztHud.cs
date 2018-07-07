@@ -10,24 +10,27 @@ namespace Roton.Emulation.SuperZZT
     {
         private readonly IState _state;
         private readonly IBoard _board;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IActors _actors;
         private readonly IWorld _world;
         private readonly IElements _elements;
         private readonly IFlags _flags;
         private readonly ITerminal _terminal;
+        private readonly IDrawer _drawer;
 
-        public SuperZztHud(Lazy<IEngine> engine, IState state, IBoard board, IGrid grid, IActors actors, IWorld world, IElements elements, IFlags flags, ITerminal terminal)
+        public SuperZztHud(Lazy<IEngine> engine, IState state, IBoard board, ITiles tiles, IActors actors, IWorld world,
+            IElements elements, IFlags flags, ITerminal terminal, IDrawer drawer)
             : base(engine)
         {
             _state = state;
             _board = board;
-            _grid = grid;
+            _tiles = tiles;
             _actors = actors;
             _world = world;
             _elements = elements;
             _flags = flags;
             _terminal = terminal;
+            _drawer = drawer;
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
 
@@ -104,6 +107,7 @@ namespace Roton.Emulation.SuperZZT
                 DrawString(0x00, 0x16, @"            ", 0x6F);
                 DrawString(0x00, 0x17, @"            ", 0x6F);
             }
+
             CreateStatusWindow();
         }
 
@@ -196,11 +200,12 @@ namespace Roton.Emulation.SuperZZT
 
         public override void RedrawBoard()
         {
-            for (var x = 0; x < _grid.Width; x++)
+            for (var x = 0; x < _tiles.Width; x++)
             {
-                for (var y = 0; y < _grid.Height; y++)
+                for (var y = 0; y < _tiles.Height; y++)
                 {
-                    DrawTile(x, y, Engine.Draw(x + 1, y + 1));
+                    //DrawTile(x, y, _drawer.Draw(x + 1, y + 1));
+                    _drawer.UpdateBoard(new Location(x, y));
                 }
             }
         }
@@ -225,18 +230,22 @@ namespace Roton.Emulation.SuperZZT
             {
                 camera.X = 1;
             }
+
             if (camera.X > 73)
             {
                 camera.X = 73;
             }
+
             if (camera.Y < 1)
             {
                 camera.Y = 1;
             }
+
             if (camera.Y > 61)
             {
                 camera.Y = 61;
             }
+
             if (!OldCamera.Matches(camera))
             {
                 // Super ZZT does a smart redraw
@@ -271,6 +280,7 @@ namespace Roton.Emulation.SuperZZT
                     {
                         DrawChar(x, 0x0F, new AnsiChar(0x20, 0x6E));
                     }
+
                     healthRemaining -= 20;
                 }
 

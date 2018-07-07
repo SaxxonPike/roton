@@ -5,49 +5,52 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class RotonBehavior : EnemyBehavior
     {
-        private readonly IEngine _engine;
         private readonly IActors _actors;
         private readonly IRandom _random;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
+        private readonly IMover _mover;
+        private readonly ICompass _compass;
 
         public override string KnownName => KnownNames.Roton;
 
-        public RotonBehavior(IEngine engine, IActors actors, IRandom random, IGrid grid, IElements elements) : base(engine)
+        public RotonBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements,
+            IMover mover, ICompass compass) : base(mover)
         {
-            _engine = engine;
             _actors = actors;
             _random = random;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
+            _mover = mover;
+            _compass = compass;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
 
             actor.P3--;
-            if (actor.P3 < -actor.P2%10)
+            if (actor.P3 < -actor.P2 % 10)
             {
-                actor.P3 = actor.P2*10 + _random.Synced(10);
+                actor.P3 = actor.P2 * 10 + _random.Synced(10);
             }
 
-            actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+            actor.Vector.CopyFrom(_compass.Seek(actor.Location));
             if (actor.P1 <= _random.Synced(10))
             {
                 var temp = actor.Vector.X;
-                actor.Vector.X = -actor.P2.Polarity()*actor.Vector.Y;
-                actor.Vector.Y = actor.P2.Polarity()*temp;
+                actor.Vector.X = -actor.P2.Polarity() * actor.Vector.Y;
+                actor.Vector.Y = actor.P2.Polarity() * temp;
             }
 
             var target = actor.Location.Sum(actor.Vector);
-            if (_grid.ElementAt(target).IsFloor)
+            if (_tiles.ElementAt(target).IsFloor)
             {
-                _engine.MoveActor(index, target);
+                _mover.MoveActor(index, target);
             }
-            else if (_grid.TileAt(target).Id == _elements.PlayerId)
+            else if (_tiles[target].Id == _elements.PlayerId)
             {
-                _engine.Attack(index, target);
+                _mover.Attack(index, target);
             }
         }
     }

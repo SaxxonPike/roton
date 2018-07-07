@@ -8,20 +8,25 @@ namespace Roton.Emulation.Behavior
         private readonly IActors _actors;
         private readonly IEngine _engine;
         private readonly IRandom _random;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
+        private readonly IMover _mover;
+        private readonly ICompass _compass;
 
         public override string KnownName => KnownNames.Ruffian;
 
-        public RuffianBehavior(IActors actors, IEngine engine, IRandom random, IGrid grid, IElements elements) : base(engine)
+        public RuffianBehavior(IActors actors, IEngine engine, IRandom random, ITiles tiles, IElements elements,
+            IMover mover, ICompass compass) : base(mover)
         {
             _actors = actors;
             _engine = engine;
             _random = random;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
+            _mover = mover;
+            _compass = compass;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
@@ -32,11 +37,11 @@ namespace Roton.Emulation.Behavior
                 {
                     if (actor.P1 >= _random.Synced(9))
                     {
-                        actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+                        actor.Vector.CopyFrom(_compass.Seek(actor.Location));
                     }
                     else
                     {
-                        actor.Vector.CopyFrom(_engine.Rnd());
+                        actor.Vector.CopyFrom(_compass.Rnd());
                     }
                 }
             }
@@ -46,18 +51,18 @@ namespace Roton.Emulation.Behavior
                 {
                     if (actor.P1 >= _random.Synced(9))
                     {
-                        actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+                        actor.Vector.CopyFrom(_compass.Seek(actor.Location));
                     }
                 }
 
                 var target = actor.Location.Sum(actor.Vector);
-                if (_grid.ElementAt(target).Id == _elements.PlayerId)
+                if (_tiles.ElementAt(target).Id == _elements.PlayerId)
                 {
-                    _engine.Attack(index, target);
+                    _mover.Attack(index, target);
                 }
-                else if (_grid.ElementAt(target).IsFloor)
+                else if (_tiles.ElementAt(target).IsFloor)
                 {
-                    _engine.MoveActor(index, target);
+                    _mover.MoveActor(index, target);
                     if (actor.P2 + 8 <= _random.Synced(17))
                     {
                         actor.Vector.SetTo(0, 0);

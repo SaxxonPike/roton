@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Roton.Core;
+using Roton.Emulation.Execution;
 
 namespace Roton.Extensions
 {
@@ -11,19 +12,9 @@ namespace Roton.Extensions
                 .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y);
         }
 
-        public static AnsiChar Draw(this IEngine engine, int x, int y)
+        public static void Play(this ISounder sounder, int priority, ISound sound)
         {
-            return engine.Draw(new Location(x, y));
-        }
-
-        public static void PlaySound(this IEngine engine, int priority, ISound sound)
-        {
-            engine.PlaySound(priority, sound, 0, sound.Length);
-        }
-
-        public static ITile TileAt(this IGrid grid, int x, int y)
-        {
-            return grid[new Location(x, y)];
+            sounder.Play(priority, sound, 0, sound.Length);
         }
     }
 }

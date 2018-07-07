@@ -6,30 +6,35 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IElements _elements;
-        private readonly IEngine _engine;
         private readonly IRandom _random;
         private readonly IState _state;
-        private readonly IGrid _grid;
-        
+        private readonly ITiles _tiles;
+        private readonly IDrawer _drawer;
+        private readonly ICompass _compass;
+        private readonly ISpawner _spawner;
+
         public override string KnownName => KnownNames.SpinningGun;
 
-        public SpinningGunBehavior(IActors actors, IElements elements, IEngine engine, IRandom random, IState state, IGrid grid)
+        public SpinningGunBehavior(IActors actors, IElements elements, IRandom random, IState state,
+            ITiles tiles, IDrawer drawer, ICompass compass, ISpawner spawner)
         {
             _actors = actors;
             _elements = elements;
-            _engine = engine;
             _random = random;
             _state = state;
-            _grid = grid;
+            _tiles = tiles;
+            _drawer = drawer;
+            _compass = compass;
+            _spawner = spawner;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
             var firingElement = _elements.BulletId;
             var shot = false;
 
-            _engine.UpdateBoard(actor.Location);
+            _drawer.UpdateBoard(actor.Location);
 
             if (actor.P2 >= 0x80)
             {
@@ -42,18 +47,19 @@ namespace Roton.Emulation.Behavior
                 {
                     if (actor.Location.X.AbsDiff(_actors.Player.Location.X) <= 2)
                     {
-                        shot = _engine.SpawnProjectile(firingElement, actor.Location,
+                        shot = _spawner.SpawnProjectile(firingElement, actor.Location,
                             new Vector(0, (_actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
                     }
+
                     if (!shot && actor.Location.Y.AbsDiff(_actors.Player.Location.Y) <= 2)
                     {
-                        _engine.SpawnProjectile(firingElement, actor.Location,
+                        _spawner.SpawnProjectile(firingElement, actor.Location,
                             new Vector((_actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
                     }
                 }
                 else
                 {
-                    _engine.SpawnProjectile(firingElement, actor.Location, _engine.Rnd(), true);
+                    _spawner.SpawnProjectile(firingElement, actor.Location, _compass.Rnd(), true);
                 }
             }
         }
@@ -64,15 +70,15 @@ namespace Roton.Emulation.Behavior
             {
                 case 0:
                 case 1:
-                    return new AnsiChar(0x18, _grid[location].Color);
+                    return new AnsiChar(0x18, _tiles[location].Color);
                 case 2:
                 case 3:
-                    return new AnsiChar(0x1A, _grid[location].Color);
+                    return new AnsiChar(0x1A, _tiles[location].Color);
                 case 4:
                 case 5:
-                    return new AnsiChar(0x19, _grid[location].Color);
+                    return new AnsiChar(0x19, _tiles[location].Color);
                 default:
-                    return new AnsiChar(0x1B, _grid[location].Color);
+                    return new AnsiChar(0x1B, _tiles[location].Color);
             }
         }
     }

@@ -55,19 +55,17 @@ namespace Lyon.App
                         builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<ZztElements>().As<IElements>().SingleInstance();
-                        builder.RegisterType<ZztEngine>().As<IEngine>().SingleInstance();
                         builder.Register(c => new ZztEngineResourceProvider(c.Resolve<IResourceService>()
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()
                             .SingleInstance();
                         builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
-                        builder.RegisterType<ZztGrammar>().As<IGrammar>().SingleInstance();
                         builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
                         builder.RegisterType<ZztMessage>().As<IMessage>().SingleInstance();
                         builder.RegisterType<Sounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<ZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<ZztGrid>().As<IGrid>().SingleInstance();
+                        builder.RegisterType<ZztTiles>().As<ITiles>().SingleInstance();
                         builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
                         break;
                     case ContextEngine.SuperZzt:
@@ -86,19 +84,17 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<SuperZztElements>().As<IElements>().SingleInstance();
-                        builder.RegisterType<SuperZztEngine>().As<IEngine>().SingleInstance();
                         builder.Register(c => new SuperZztEngineResourceProvider(c.Resolve<IResourceService>()
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()
                             .SingleInstance();
                         builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
-                        builder.RegisterType<SuperZztGrammar>().As<IGrammar>().SingleInstance();
                         builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
                         builder.RegisterType<SuperZztMessage>().As<IMessage>().SingleInstance();
                         builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<SuperZztGrid>().As<IGrid>().SingleInstance();
+                        builder.RegisterType<SuperZztTiles>().As<ITiles>().SingleInstance();
                         builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
                         break;
                 }

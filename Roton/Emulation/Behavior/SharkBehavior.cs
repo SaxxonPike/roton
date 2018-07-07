@@ -8,18 +8,22 @@ namespace Roton.Emulation.Behavior
         private readonly IActors _actors;
         private readonly IRandom _random;
         private readonly IEngine _engine;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
+        private readonly ICompass _compass;
+        private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Shark;
 
-        public SharkBehavior(IActors actors, IRandom random, IEngine engine, IGrid grid, IElements elements)
+        public SharkBehavior(IActors actors, IRandom random, IEngine engine, ITiles tiles, IElements elements, ICompass compass, IMover mover)
         {
             _actors = actors;
             _random = random;
             _engine = engine;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
+            _compass = compass;
+            _mover = mover;
         }
 
         public override void Act(int index)
@@ -28,19 +32,19 @@ namespace Roton.Emulation.Behavior
             var vector = new Vector();
 
             vector.CopyFrom(actor.P1 > _random.Synced(10)
-                ? _engine.Seek(actor.Location)
-                : _engine.Rnd());
+                ? _compass.Seek(actor.Location)
+                : _compass.Rnd());
 
             var target = actor.Location.Sum(vector);
-            var targetElement = _grid.ElementAt(target);
+            var targetElement = _tiles.ElementAt(target);
 
             if (targetElement.Id == _elements.WaterId || targetElement.Id == _elements.LavaId)
             {
-                _engine.MoveActor(index, target);
+                _mover.MoveActor(index, target);
             }
             else if (targetElement.Id == _elements.PlayerId)
             {
-                _engine.Attack(index, target);
+                _mover.Attack(index, target);
             }
         }
     }

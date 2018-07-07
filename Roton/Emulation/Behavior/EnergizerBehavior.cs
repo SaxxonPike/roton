@@ -1,38 +1,52 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
+using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public sealed class EnergizerBehavior : ElementBehavior
     {
-        private readonly IEngine _engine;
         private readonly ISounds _sounds;
         private readonly IAlerts _alerts;
         private readonly IWorld _world;
+        private readonly IBroadcaster _broadcaster;
+        private readonly ISounder _sounder;
+        private readonly IHud _hud;
+        private readonly IDrawer _drawer;
+        private readonly IMessager _messager;
+        private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.Energizer;
 
-        public EnergizerBehavior(IEngine engine, ISounds sounds, IAlerts alerts, IWorld world)
+        public EnergizerBehavior(ISounds sounds, IAlerts alerts, IWorld world, IBroadcaster broadcaster,
+            ISounder sounder, IHud hud, IDrawer drawer, IMessager messager, IMisc misc)
         {
-            _engine = engine;
             _sounds = sounds;
             _alerts = alerts;
             _world = world;
+            _broadcaster = broadcaster;
+            _sounder = sounder;
+            _hud = hud;
+            _drawer = drawer;
+            _messager = messager;
+            _misc = misc;
         }
-        
+
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _engine.PlaySound(9, _sounds.Energizer);
-            _engine.RemoveItem(location);
+            _sounder.Play(9, _sounds.Energizer);
+            _misc.RemoveItem(location);
             _world.EnergyCycles = 0x4B;
-            _engine.UpdateStatus();
-            _engine.UpdateBoard(location);
+            _hud.UpdateStatus();
+            _drawer.UpdateBoard(location);
             if (_alerts.EnergizerPickup)
             {
                 _alerts.EnergizerPickup = false;
-                _engine.SetMessage(0xC8, _alerts.EnergizerMessage);
+                _messager.SetMessage(0xC8, _alerts.EnergizerMessage);
             }
-            _engine.BroadcastLabel(0, KnownLabels.Energize, false);
+
+            _broadcaster.BroadcastLabel(0, KnownLabels.Energize, false);
         }
     }
 }

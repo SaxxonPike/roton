@@ -46,7 +46,7 @@ namespace Roton.Emulation.Serialization
             Memory.Write(WorldDataOffset, header, 0, WorldDataSize);
         }
 
-        public byte[] PackBoard(IGrid tiles)
+        public byte[] PackBoard(ITiles tiles)
         {
             using (var mem = new MemoryStream())
             {
@@ -82,7 +82,7 @@ namespace Roton.Emulation.Serialization
             target.Write(worldBytes, 0, worldBytes.Length);
         }
 
-        public void UnpackBoard(IGrid tiles, byte[] data)
+        public void UnpackBoard(ITiles tiles, byte[] data)
         {
             using (var mem = new MemoryStream(data))
             {
@@ -147,7 +147,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        private void PackTiles(IGrid tiles, BinaryWriter target)
+        private void PackTiles(ITiles tiles, BinaryWriter target)
         {
             var firstTile = tiles[new Location(1, 1)];
             var count = 0;
@@ -221,7 +221,7 @@ namespace Roton.Emulation.Serialization
             }
         }
 
-        private void UnpackTiles(IGrid tiles, BinaryReader source)
+        private void UnpackTiles(ITiles tiles, BinaryReader source)
         {
             var count = 0;
             var id = 0;

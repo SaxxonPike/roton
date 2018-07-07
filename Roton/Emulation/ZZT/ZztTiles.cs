@@ -3,9 +3,9 @@ using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.ZZT
 {
-    public sealed class ZztGrid : Grid
+    public sealed class ZztTiles : Tiles
     {
-        public ZztGrid(IMemory memory, IElements elements)
+        public ZztTiles(IMemory memory, IElements elements)
             : base(memory, elements, 0x24B9, 60, 25)
         {
         }

@@ -4,16 +4,16 @@ namespace Roton.Emulation.Behavior
 {
     public abstract class EnemyBehavior : ElementBehavior
     {
-        private readonly IEngine _engine;
+        private readonly IMover _mover;
 
-        public EnemyBehavior(IEngine engine)
+        protected EnemyBehavior(IMover mover)
         {
-            _engine = engine;
+            _mover = mover;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _engine.Attack(index, location);
+            _mover.Attack(index, location);
         }
     }
 }

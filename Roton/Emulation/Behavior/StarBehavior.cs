@@ -7,21 +7,28 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IEngine _engine;
         private readonly IActors _actors;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
         private readonly IState _state;
+        private readonly ICompass _compass;
+        private readonly IMover _mover;
+        private readonly IDrawer _drawer;
 
         public override string KnownName => KnownNames.Star;
 
-        public StarBehavior(IEngine engine, IActors actors, IGrid grid, IElements elements, IState state) : base(engine)
+        public StarBehavior(IEngine engine, IActors actors, ITiles tiles, IElements elements, IState state,
+            ICompass compass, IMover mover, IDrawer drawer) : base(mover)
         {
             _engine = engine;
             _actors = actors;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
             _state = state;
+            _compass = compass;
+            _mover = mover;
+            _drawer = drawer;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
@@ -31,40 +38,41 @@ namespace Roton.Emulation.Behavior
             {
                 if ((actor.P2 & 1) == 0)
                 {
-                    actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+                    actor.Vector.CopyFrom(_compass.Seek(actor.Location));
                     var targetLocation = actor.Location.Sum(actor.Vector);
-                    var targetElement = _grid.ElementAt(targetLocation);
+                    var targetElement = _tiles.ElementAt(targetLocation);
 
                     if (targetElement.Id == _elements.PlayerId || targetElement.Id == _elements.BreakableId)
                     {
-                        _engine.Attack(index, targetLocation);
+                        _mover.Attack(index, targetLocation);
                     }
                     else
                     {
                         if (!targetElement.IsFloor)
                         {
-                            _engine.Push(targetLocation, actor.Vector);
+                            _mover.Push(targetLocation, actor.Vector);
                         }
+
                         if (targetElement.IsFloor || targetElement.Id == _elements.WaterId)
                         {
-                            _engine.MoveActor(index, targetLocation);
+                            _mover.MoveActor(index, targetLocation);
                         }
                     }
                 }
                 else
                 {
-                    _engine.UpdateBoard(actor.Location);
+                    _drawer.UpdateBoard(actor.Location);
                 }
             }
             else
             {
-                _engine.RemoveActor(index);
+                _mover.RemoveActor(index);
             }
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            var tile = _grid[location];
+            var tile = _tiles[location];
             tile.Color++;
             if (tile.Color > 15)
                 tile.Color = 9;

@@ -50,6 +50,11 @@ namespace Roton.Extensions
             return clone;
         }
 
+        public static int DistanceTo(this IXyPair a, IXyPair b)
+        {
+            return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
+        }
+
         public static bool IsNonZero(this IXyPair pair)
         {
             return pair.X != 0 || pair.Y != 0;

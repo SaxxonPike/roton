@@ -7,21 +7,26 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IRandom _random;
-        private readonly IEngine _engine;
         private readonly IElements _elements;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
+        private readonly IDrawer _drawer;
+        private readonly ICompass _compass;
+        private readonly IMover _mover;
 
         public override string KnownName => KnownNames.Head;
 
-        public CentipedeHeadBehavior(IActors actors, IRandom random, IEngine engine, IElements elements, IGrid grid) : base(engine)
+        public CentipedeHeadBehavior(IActors actors, IRandom random, IElements elements, ITiles tiles,
+            IDrawer drawer, ICompass compass, IMover mover) : base(mover)
         {
             _actors = actors;
             _random = random;
-            _engine = engine;
             _elements = elements;
-            _grid = grid;
+            _tiles = tiles;
+            _drawer = drawer;
+            _compass = compass;
+            _mover = mover;
         }
-        
+
         public override void Act(int index)
         {
             var player = _actors.Player;
@@ -31,15 +36,15 @@ namespace Roton.Emulation.Behavior
 
             if (player.Location.X == actor.Location.X && actor.P1 > _random.Synced(10))
             {
-                actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+                actor.Vector.CopyFrom(_compass.Seek(actor.Location));
             }
             else if (player.Location.Y == actor.Location.Y && actor.P1 > _random.Synced(10))
             {
-                actor.Vector.CopyFrom(_engine.Seek(actor.Location));
+                actor.Vector.CopyFrom(_compass.Seek(actor.Location));
             }
             else if (actor.Vector.IsZero() || actor.P2 > _random.Synced(10) << 2)
             {
-                actor.Vector.CopyFrom(_engine.Rnd());
+                actor.Vector.CopyFrom(_compass.Rnd());
             }
 
             if (actor.Vector.IsNonZero())
@@ -47,19 +52,19 @@ namespace Roton.Emulation.Behavior
                 // The centipede wants to move, determine where it can
 
                 var vector = actor.Vector.Clone();
-                var element = _grid.ElementAt(actor.Location.Sum(vector));
+                var element = _tiles.ElementAt(actor.Location.Sum(vector));
                 if (!element.IsFloor && element.Id != _elements.PlayerId)
                 {
-                    actor.Vector.CopyFrom(_engine.RndP(vector));
-                    element = _grid.ElementAt(actor.Location.Sum(actor.Vector));
+                    actor.Vector.CopyFrom(_compass.RndP(vector));
+                    element = _tiles.ElementAt(actor.Location.Sum(actor.Vector));
                     if (!element.IsFloor && element.Id != _elements.PlayerId)
                     {
                         actor.Vector.SetOpposite();
-                        element = _grid.ElementAt(actor.Location.Sum(actor.Vector));
+                        element = _tiles.ElementAt(actor.Location.Sum(actor.Vector));
                         if (!element.IsFloor && element.Id != _elements.PlayerId)
                         {
                             actor.Vector.CopyFrom(vector.Opposite());
-                            element = _grid.ElementAt(actor.Location.Sum(actor.Vector));
+                            element = _tiles.ElementAt(actor.Location.Sum(actor.Vector));
                             if (!element.IsFloor && element.Id != _elements.PlayerId)
                             {
                                 actor.Vector.SetTo(0, 0);
@@ -73,8 +78,8 @@ namespace Roton.Emulation.Behavior
             {
                 // Reverse the centipede
 
-                _grid.TileAt(actor.Location).Id = _elements.SegmentId;
-                _engine.UpdateBoard(actor.Location);
+                _tiles[actor.Location].Id = _elements.SegmentId;
+                _drawer.UpdateBoard(actor.Location);
                 var segmentIndex = index;
                 while (true)
                 {
@@ -87,9 +92,10 @@ namespace Roton.Emulation.Behavior
                     else
                         break;
                 }
+
                 var newHead = _actors[segmentIndex];
-                _grid.TileAt(newHead.Location).Id = _elements.HeadId;
-                _engine.UpdateBoard(newHead.Location);
+                _tiles[newHead.Location].Id = _elements.HeadId;
+                _drawer.UpdateBoard(newHead.Location);
             }
             else
             {
@@ -97,24 +103,25 @@ namespace Roton.Emulation.Behavior
 
                 var target = actor.Location.Sum(actor.Vector);
 
-                if (_grid.ElementAt(target).Id == _elements.PlayerId)
+                if (_tiles.ElementAt(target).Id == _elements.PlayerId)
                 {
                     // The centipede is moving into a player
 
                     if (actor.Follower > 0)
                     {
                         var follower = _actors[actor.Follower];
-                        _grid.TileAt(follower.Location).Id = _elements.HeadId;
+                        _tiles[follower.Location].Id = _elements.HeadId;
                         follower.Leader = -1;
-                        _engine.UpdateBoard(follower.Location);
+                        _drawer.UpdateBoard(follower.Location);
                     }
+
                     actor.Follower = -1;
                     actor.Leader = -1;
-                    _engine.Attack(index, target);
+                    _mover.Attack(index, target);
                 }
                 else
                 {
-                    _engine.MoveActor(index, target);
+                    _mover.MoveActor(index, target);
                     var segmentIndex = index;
 
                     // The centipede has moved, so move its followers
@@ -128,17 +135,17 @@ namespace Roton.Emulation.Behavior
                         if (segment.Follower < 0)
                         {
                             // Determine if there are any eligible new follower segments
-                            if (_grid.ElementAt(origin.Difference(vector)).Id == _elements.SegmentId &&
+                            if (_tiles.ElementAt(origin.Difference(vector)).Id == _elements.SegmentId &&
                                 _actors.ActorAt(origin.Difference(vector)).Leader <= 0)
                             {
                                 segment.Follower = _actors.ActorIndexAt(origin.Difference(vector));
                             }
-                            else if (_grid.ElementAt(origin.Difference(vector.Swap())).Id == _elements.SegmentId &&
+                            else if (_tiles.ElementAt(origin.Difference(vector.Swap())).Id == _elements.SegmentId &&
                                      _actors.ActorAt(origin.Difference(vector.Swap())).Leader <= 0)
                             {
                                 segment.Follower = _actors.ActorIndexAt(origin.Difference(vector.Swap()));
                             }
-                            else if (_grid.ElementAt(origin.Sum(vector.Swap())).Id == _elements.SegmentId &&
+                            else if (_tiles.ElementAt(origin.Sum(vector.Swap())).Id == _elements.SegmentId &&
                                      _actors.ActorAt(origin.Sum(vector.Swap())).Leader <= 0)
                             {
                                 segment.Follower = _actors.ActorIndexAt(origin.Sum(vector.Swap()));
@@ -155,6 +162,7 @@ namespace Roton.Emulation.Behavior
                         {
                             throw Exceptions.SelfReferenceCentipede;
                         }
+
                         if (followerIndex > 0)
                         {
                             var follower = _actors[followerIndex];
@@ -162,7 +170,7 @@ namespace Roton.Emulation.Behavior
                             follower.P1 = segment.P1;
                             follower.P2 = segment.P2;
                             follower.Vector.SetTo(origin.X - follower.Location.X, origin.Y - follower.Location.Y);
-                            _engine.MoveActor(segment.Follower, origin);
+                            _mover.MoveActor(segment.Follower, origin);
                         }
 
                         segmentIndex = segment.Follower;

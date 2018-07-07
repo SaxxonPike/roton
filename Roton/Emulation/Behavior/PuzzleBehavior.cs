@@ -1,23 +1,26 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
 {
     public abstract class PuzzleBehavior : ElementBehavior
     {
-        private readonly IEngine _engine;
         private readonly ISounds _sounds;
+        private readonly ISounder _sounder;
+        private readonly IMover _mover;
 
-        public PuzzleBehavior(IEngine engine, ISounds sounds)
+        public PuzzleBehavior(ISounds sounds, ISounder sounder, IMover mover)
         {
-            _engine = engine;
             _sounds = sounds;
+            _sounder = sounder;
+            _mover = mover;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _engine.Push(location, vector);
-            _engine.PlaySound(2, _sounds.Push);
+            _mover.Push(location, vector);
+            _sounder.Play(2, _sounds.Push);
         }
     }
 }

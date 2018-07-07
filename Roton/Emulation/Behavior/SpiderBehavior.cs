@@ -5,20 +5,24 @@ namespace Roton.Emulation.Behavior
 {
     public sealed class SpiderBehavior : EnemyBehavior
     {
-        private readonly IEngine _engine;
         private readonly IActors _actors;
         private readonly IRandom _random;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
+        private readonly ICompass _compass;
+        private readonly IMover _mover;
+
         public override string KnownName => KnownNames.Spider;
 
-        public SpiderBehavior(IEngine engine, IActors actors, IRandom random, IGrid grid, IElements elements) : base(engine)
+        public SpiderBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements, ICompass compass,
+            IMover mover) : base(mover)
         {
-            _engine = engine;
             _actors = actors;
             _random = random;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
+            _compass = compass;
+            _mover = mover;
         }
 
         public override void Act(int index)
@@ -27,8 +31,8 @@ namespace Roton.Emulation.Behavior
             var vector = new Vector();
 
             vector.CopyFrom(actor.P1 <= _random.Synced(10)
-                ? _engine.Rnd()
-                : _engine.Seek(actor.Location));
+                ? _compass.Rnd()
+                : _compass.Seek(actor.Location));
 
             if (!ActSpiderAttemptDirection(index, vector))
             {
@@ -47,17 +51,17 @@ namespace Roton.Emulation.Behavior
         {
             var actor = _actors[index];
             var target = actor.Location.Sum(vector);
-            var targetElement = _grid.ElementAt(target).Id;
+            var targetElement = _tiles.ElementAt(target).Id;
 
             if (targetElement == _elements.WebId)
             {
-                _engine.MoveActor(index, target);
+                _mover.MoveActor(index, target);
                 return true;
             }
 
             if (targetElement == _elements.PlayerId)
             {
-                _engine.Attack(index, target);
+                _mover.Attack(index, target);
                 return true;
             }
 

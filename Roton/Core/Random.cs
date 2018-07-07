@@ -14,6 +14,7 @@ namespace Roton.Core
         string ScrollMusic { get; } // @"c-c+d-d+e-e+f-f+g-g"
         string ScrollTitle { get; } // @"Scroll"
         int ElementCount { get; }
+        bool BuggyPut { get; }
     }
     
     public class Random : IRandom

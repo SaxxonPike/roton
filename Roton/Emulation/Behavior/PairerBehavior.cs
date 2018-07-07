@@ -6,7 +6,7 @@ namespace Roton.Emulation.Behavior
     {
         public override string KnownName => KnownNames.Pairer;
 
-        public PairerBehavior(IEngine engine) : base(engine)
+        public PairerBehavior(IMover mover) : base(mover)
         {
         }
     }

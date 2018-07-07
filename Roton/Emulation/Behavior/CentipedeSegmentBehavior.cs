@@ -7,15 +7,15 @@ namespace Roton.Emulation.Behavior
     {
         private readonly IActors _actors;
         private readonly IElements _elements;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
 
         public override string KnownName => KnownNames.Segment;
 
-        public CentipedeSegmentBehavior(IActors actors, IElements elements, IEngine engine, IGrid grid) : base(engine)
+        public CentipedeSegmentBehavior(IActors actors, IElements elements, ITiles tiles, IMover mover) : base(mover)
         {
             _actors = actors;
             _elements = elements;
-            _grid = grid;
+            _tiles = tiles;
         }
         
         public override void Act(int index)
@@ -25,7 +25,7 @@ namespace Roton.Emulation.Behavior
             {
                 if (actor.Leader < -1)
                 {
-                    _grid.TileAt(actor.Location).Id = _elements.HeadId;
+                    _tiles[actor.Location].Id = _elements.HeadId;
                 }
                 else
                 {

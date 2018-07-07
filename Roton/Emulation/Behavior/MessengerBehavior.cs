@@ -7,16 +7,16 @@ namespace Roton.Emulation.Behavior
         private readonly IActors _actors;
         private readonly IHud _hud;
         private readonly IState _state;
-        private readonly IEngine _engine;
-        
+        private readonly IMover _mover;
+
         public override string KnownName => KnownNames.Messenger;
 
-        public MessengerBehavior(IActors actors, IHud hud, IState state, IEngine engine)
+        public MessengerBehavior(IActors actors, IHud hud, IState state, IMover mover)
         {
             _actors = actors;
             _hud = hud;
             _state = state;
-            _engine = engine;
+            _mover = mover;
         }
 
         public override void Act(int index)
@@ -28,7 +28,7 @@ namespace Roton.Emulation.Behavior
                 actor.P2--;
                 if (actor.P2 > 0) return;
 
-                _engine.RemoveActor(index);
+                _mover.RemoveActor(index);
                 _state.ActIndex--;
                 _hud.UpdateBorder();
                 _state.Message = string.Empty;

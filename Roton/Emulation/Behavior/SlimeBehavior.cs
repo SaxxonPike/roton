@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -6,24 +7,33 @@ namespace Roton.Emulation.Behavior
     public sealed class SlimeBehavior : ElementBehavior
     {
         private readonly IActors _actors;
-        private readonly IGrid _grid;
+        private readonly ITiles _tiles;
         private readonly IElements _elements;
-        private readonly IEngine _engine;
         private readonly IState _state;
         private readonly ISounds _sounds;
+        private readonly ISounder _sounder;
+        private readonly ICompass _compass;
+        private readonly IMover _mover;
+        private readonly IDrawer _drawer;
+        private readonly ISpawner _spawner;
 
         public override string KnownName => KnownNames.Slime;
 
-        public SlimeBehavior(IActors actors, IGrid grid, IElements elements, IEngine engine, IState state, ISounds sounds)
+        public SlimeBehavior(IActors actors, ITiles tiles, IElements elements, IState state,
+            ISounds sounds, ISounder sounder, ICompass compass, IMover mover, IDrawer drawer, ISpawner spawner)
         {
             _actors = actors;
-            _grid = grid;
+            _tiles = tiles;
             _elements = elements;
-            _engine = engine;
             _state = state;
             _sounds = sounds;
+            _sounder = sounder;
+            _compass = compass;
+            _mover = mover;
+            _drawer = drawer;
+            _spawner = spawner;
         }
-        
+
         public override void Act(int index)
         {
             var actor = _actors[index];
@@ -31,7 +41,7 @@ namespace Roton.Emulation.Behavior
             if (actor.P1 >= actor.P2)
             {
                 var spawnCount = 0;
-                var color = _grid[actor.Location].Color;
+                var color = _tiles[actor.Location].Color;
                 var slimeElement = _elements[_elements.SlimeId];
                 var slimeTrailTile = new Tile(_elements.BreakableId, color);
                 var source = actor.Location.Clone();
@@ -39,29 +49,30 @@ namespace Roton.Emulation.Behavior
 
                 for (var i = 0; i < 4; i++)
                 {
-                    var target = source.Sum(_engine.GetCardinalVector(i));
-                    if (_grid.ElementAt(target).IsFloor)
+                    var target = source.Sum(_compass.GetCardinalVector(i));
+                    if (_tiles.ElementAt(target).IsFloor)
                     {
                         if (spawnCount == 0)
                         {
-                            _engine.MoveActor(index, target);
-                            _grid[source].CopyFrom(slimeTrailTile);
-                            _engine.UpdateBoard(source);
+                            _mover.MoveActor(index, target);
+                            _tiles[source].CopyFrom(slimeTrailTile);
+                            _drawer.UpdateBoard(source);
                         }
                         else
                         {
-                            _engine.SpawnActor(target, new Tile(_elements.SlimeId, color), slimeElement.Cycle, null);
+                            _spawner.SpawnActor(target, new Tile(_elements.SlimeId, color), slimeElement.Cycle, null);
                             _actors[_state.ActorCount].P2 = actor.P2;
                         }
+
                         spawnCount++;
                     }
                 }
 
                 if (spawnCount == 0)
                 {
-                    _engine.RemoveActor(index);
-                    _grid[source].CopyFrom(slimeTrailTile);
-                    _engine.UpdateBoard(source);
+                    _mover.RemoveActor(index);
+                    _tiles[source].CopyFrom(slimeTrailTile);
+                    _drawer.UpdateBoard(source);
                 }
             }
             else
@@ -72,12 +83,12 @@ namespace Roton.Emulation.Behavior
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var color = _grid[location].Color;
+            var color = _tiles[location].Color;
             var slimeIndex = _actors.ActorIndexAt(location);
-            _engine.Harm(slimeIndex);
-            _grid[location].SetTo(_elements.BreakableId, color);
-            _engine.UpdateBoard(location);
-            _engine.PlaySound(2, _sounds.SlimeDie);
+            _mover.Harm(slimeIndex);
+            _tiles[location].SetTo(_elements.BreakableId, color);
+            _drawer.UpdateBoard(location);
+            _sounder.Play(2, _sounds.SlimeDie);
         }
     }
 }
