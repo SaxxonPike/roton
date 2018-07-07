@@ -7,9 +7,4 @@ namespace Roton.Emulation.Items
         string Name { get; }
         IOopItem Execute(IOopContext oopContext);
     }
-
-    public interface IItems
-    {
-        IItem Get(string name);
-    }
 }

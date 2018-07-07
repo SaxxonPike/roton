@@ -1,0 +1,72 @@
+﻿namespace Roton.Emulation.Behaviors
+{
+    public static class KnownNames
+    {
+        public static readonly string Ammo = "Ammo";
+        public static readonly string Bear = "Bear";
+        public static readonly string BlinkRayH = "Blink Ray (Horizontal)";
+        public static readonly string BlinkRayV = "Blink Ray (Vertical)";
+        public static readonly string Undefined = "Undefined";
+        public static readonly string BlinkWall = "Blink Wall";
+        public static readonly string BoardEdge = "Board Edge";
+        public static readonly string Bomb = "Bomb";
+        public static readonly string Boulder = "Boulder";
+        public static readonly string Breakable = "Breakable";
+        public static readonly string Bullet = "Bullet";
+        public static readonly string Clockwise = "Clockwise";
+        public static readonly string Counter = "Counter";
+        public static readonly string Door = "Door";
+        public static readonly string DragonPup = "Dragon Pup";
+        public static readonly string Duplicator = "Duplicator";
+        public static readonly string Empty = "Empty";
+        public static readonly string Energizer = "Energizer";
+        public static readonly string Fake = "Fake";
+        public static readonly string Floor = "Floor";
+        public static readonly string Forest = "Forest";
+        public static readonly string Gem = "Gem";
+        public static readonly string Head = "Head";
+        public static readonly string Invisible = "Invisible";
+        public static readonly string Key = "Key";
+        public static readonly string Lava = "Lava";
+        public static readonly string Line = "Line";
+        public static readonly string Lion = "Lion";
+        public static readonly string Messenger = "Messenger";
+        public static readonly string Monitor = "Monitor";
+        public static readonly string Normal = "Normal";
+        public static readonly string Object = "Object";
+        public static readonly string Pairer = "Pairer";
+        public static readonly string Passage = "Passage";
+        public static readonly string Player = "Player";
+        public static readonly string Pusher = "Pusher";
+        public static readonly string Ricochet = "Ricochet";
+        public static readonly string RiverE = "River (E)";
+        public static readonly string RiverN = "River (N)";
+        public static readonly string RiverS = "River (S)";
+        public static readonly string RiverW = "River (W)";
+        public static readonly string Roton = "Roton";
+        public static readonly string Ruffian = "Ruffian";
+        public static readonly string Scroll = "Scroll";
+        public static readonly string Segment = "Segment";
+        public static readonly string Shark = "Shark";
+        public static readonly string SliderEw = "Slider (EW)";
+        public static readonly string SliderNs = "Slider (NS)";
+        public static readonly string Slime = "Slime";
+        public static readonly string Solid = "Solid";
+        public static readonly string Spider = "Spider";
+        public static readonly string SpinningGun = "Spinning Gun";
+        public static readonly string Star = "Star";
+        public static readonly string Stone = "Stone of Power";
+        public static readonly string Tiger = "Tiger";
+        public static readonly string Torch = "Torch";
+        public static readonly string Transporter = "Transporter";
+        public static readonly string Water = "Water";
+        public static readonly string Web = "Web";
+        public static readonly string BlueText = "Text (Blue)";
+        public static readonly string GreenText = "Text (Green)";
+        public static readonly string CyanText = "Text (Cyan)";
+        public static readonly string RedText = "Text (Red)";
+        public static readonly string PurpleText = "Text (Purple)";
+        public static readonly string BrownText = "Text (Brown)";
+        public static readonly string BlackText = "Text (Black)";
+    }
+}

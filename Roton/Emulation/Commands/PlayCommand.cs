@@ -20,7 +20,7 @@ namespace Roton.Emulation.Commands
         public void Execute(IOopContext context)
         {
             var notes = _parser.ReadLine(context.Index, context);
-            var sound = _sounder.Encode(notes);
+            var sound = _sounder.EncodeMusic(notes);
             _sounder.Play(-1, sound);
             context.NextLine = false;
         }
