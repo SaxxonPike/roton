@@ -4,6 +4,7 @@ using Roton.Core;
 using Roton.Emulation.Behavior;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.SuperZZT;
+using Roton.Emulation.Timing;
 using Roton.Events;
 using Roton.Extensions;
 using Roton.FileIo;
@@ -23,6 +24,7 @@ namespace Roton.Emulation.Execution
         private readonly IActors _actors;
         private readonly ITiles _tiles;
         private readonly IMisc _misc;
+        private readonly ICoreTimer _coreTimer;
         private readonly IRandom _random;
         private readonly IBoard _board;
         private readonly IWorld _world;
@@ -65,7 +67,8 @@ namespace Roton.Emulation.Execution
             IMover mover,
             IRadius radius,
             ITiles tiles,
-            IMisc misc)
+            IMisc misc,
+            ICoreTimer coreTimer)
         {
             _keyboard = keyboard;
             _fileSystem = fileSystem;
@@ -74,6 +77,7 @@ namespace Roton.Emulation.Execution
             _actors = actors;
             _tiles = tiles;
             _misc = misc;
+            _coreTimer = coreTimer;
             _random = random;
             _board = board;
             _world = world;
@@ -93,7 +97,7 @@ namespace Roton.Emulation.Execution
             _boards = boards;
         }
 
-        private int TimerBase => _timers.Player.Ticks & 0x7FFF;
+        private int TimerBase => _coreTimer.Tick & 0x7FFF;
 
         private Thread Thread { get; set; }
 
@@ -128,19 +132,6 @@ namespace Roton.Emulation.Execution
             _board.Name = "Introduction screen";
             _world.Name = string.Empty;
             _state.WorldFileName = string.Empty;
-        }
-
-        public void EnterBoard()
-        {
-            _board.Entrance.CopyFrom(_actors.Player.Location);
-            if (_board.IsDark && _alerts.Dark)
-            {
-                _messager.SetMessage(0xC8, _alerts.DarkMessage);
-                _alerts.Dark = false;
-            }
-
-            _world.TimePassed = 0;
-            _hud.UpdateStatus();
         }
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
@@ -277,6 +268,7 @@ namespace Roton.Emulation.Execution
                 ThreadActive = true;
                 Thread = new Thread(StartMain);
                 TimerTick = _timers.Player.Ticks;
+                _hud.Initialize();
                 Thread.Start();
             }
         }
@@ -381,14 +373,14 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        protected void ExecuteDeath(IOopContext context)
+        private void ExecuteDeath(IOopContext context)
         {
             var location = context.Actor.Location.Clone();
             _mover.Harm(context.Index);
             _plotter.PlotTile(location, context.DeathTile);
         }
 
-        protected void ExecuteDirection(IOopContext context, IXyPair vector)
+        private void ExecuteDirection(IOopContext context, IXyPair vector)
         {
             if (vector.IsZero())
             {
@@ -410,17 +402,8 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        protected void ExecuteMessage(IOopContext context)
+        private void ExecuteMessage(IOopContext context)
         {
-            if (context.Message.Count == 1)
-            {
-                _messager.SetMessage(0xC8, new Message(context.Message));
-            }
-            else
-            {
-                _state.KeyVector.SetTo(0, 0);
-                _hud.ShowScroll(context.Message);
-            }
         }
 
         public void FadeRed()
@@ -441,7 +424,7 @@ namespace Roton.Emulation.Execution
             return now - then;
         }
 
-        protected void InitializeElements(bool showInvisibles)
+        private void InitializeElements(bool showInvisibles)
         {
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
@@ -450,7 +433,7 @@ namespace Roton.Emulation.Execution
             _elements[_elements.PlayerId].Character = 0x02;
         }
 
-        protected byte[] LoadFile(string filename)
+        private byte[] LoadFile(string filename)
         {
             try
             {
@@ -672,7 +655,7 @@ namespace Roton.Emulation.Execution
             if (gameIsActive)
             {
                 SetBoard(_state.StartBoard);
-                EnterBoard();
+                _misc.EnterBoard();
                 _state.PlayerElement = _elements.PlayerId;
                 _state.GamePaused = true;
                 MainLoop(true);
@@ -681,7 +664,7 @@ namespace Roton.Emulation.Execution
             return gameIsActive;
         }
 
-        protected void ReadInput()
+        private void ReadInput()
         {
             _state.KeyShift = false;
             _state.KeyArrow = false;
@@ -736,7 +719,7 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        protected void StartInit()
+        private void StartInit()
         {
             _state.GameSpeed = 4;
             _state.DefaultSaveName = "SAVED";
@@ -753,14 +736,14 @@ namespace Roton.Emulation.Execution
                 SetGameMode();
         }
 
-        protected void StartMain()
+        private void StartMain()
         {
             StartInit();
             TitleScreenLoop();
             Terminated?.Invoke(this, EventArgs.Empty);
         }
 
-        protected void TitleScreenLoop()
+        private void TitleScreenLoop()
         {
             _state.QuitZzt = false;
             _state.Init = true;

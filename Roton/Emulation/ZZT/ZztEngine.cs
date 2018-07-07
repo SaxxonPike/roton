@@ -1,6 +1,7 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Emulation.SuperZZT;
+using Roton.Extensions;
 using Roton.FileIo;
 
 namespace Roton.Emulation.ZZT
@@ -14,8 +15,10 @@ namespace Roton.Emulation.ZZT
         private readonly IMessager _messager;
         private readonly IRadius _radius;
         private readonly IBoard _board;
+        private readonly IPassager _passager;
 
-        public ZztMisc(IHud hud, IState state, IWorld world, IAlerts alerts, IMessager messager, IRadius radius, IBoard board)
+        public ZztMisc(IHud hud, IState state, IWorld world, IAlerts alerts, IMessager messager, IRadius radius,
+            IBoard board, IPassager passager)
         {
             _hud = hud;
             _state = state;
@@ -24,23 +27,32 @@ namespace Roton.Emulation.ZZT
             _messager = messager;
             _radius = radius;
             _board = board;
+            _passager = passager;
         }
-        
+
         public void EnterBoard()
         {
-            throw new System.NotImplementedException();
+            _passager.EnterBoard();
         }
 
         public void ExecuteMessage(IOopContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.Message.Count == 1)
+            {
+                _messager.SetMessage(0xC8, new Message(context.Message));
+            }
+            else
+            {
+                _state.KeyVector.SetTo(0, 0);
+                _hud.ShowScroll(context.Message);
+            }
         }
 
         public void Init()
         {
             throw new System.NotImplementedException();
         }
-        
+
         public void HandlePlayerInput(IActor actor, int hotkey)
         {
             switch (hotkey)
@@ -77,7 +89,7 @@ namespace Roton.Emulation.ZZT
                 case 0x46: // F
                     break;
             }
-        }        
+        }
 
         public bool HandleTitleInput(int hotkey)
         {

@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Mapping;
 using Roton.Extensions;
 
@@ -8,15 +9,15 @@ namespace Roton.Core
         private readonly IElements _elements;
         private readonly IActors _actors;
         private readonly IState _state;
-        private readonly IDrawer _drawer;
-        private readonly ISpawner _spawner;
-        private readonly IMover _mover;
+        private readonly Lazy<IDrawer> _drawer;
+        private readonly Lazy<ISpawner> _spawner;
+        private readonly Lazy<IMover> _mover;
         private readonly ITiles _tiles;
 
         public Plotter(IElements elements, IActors actors,
             IState state,
-            IDrawer drawer, ISpawner spawner,
-            IMover mover, ITiles tiles)
+            Lazy<IDrawer> drawer, Lazy<ISpawner> spawner,
+            Lazy<IMover> mover, ITiles tiles)
         {
             _elements = elements;
             _actors = actors;
@@ -36,7 +37,7 @@ namespace Roton.Core
             {
                 playerElement.Character = 2;
                 _tiles[actor.Location].Color = playerElement.Color;
-                _drawer.UpdateBoard(actor.Location);
+                _drawer.Value.UpdateBoard(actor.Location);
             }
         }
 
@@ -68,19 +69,19 @@ namespace Roton.Core
             }
             else
             {
-                _mover.Destroy(location);
+                _mover.Value.Destroy(location);
                 if (targetElement.Cycle < 0)
                 {
                     existingTile.SetTo(targetElement.Id, targetColor);
                 }
                 else
                 {
-                    _spawner.SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
+                    _spawner.Value.SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
                         _state.DefaultActor);
                 }
             }
 
-            _drawer.UpdateBoard(location);
+            _drawer.Value.UpdateBoard(location);
         }
 
         public void Put(IXyPair location, IXyPair vector, ITile kind)
@@ -90,7 +91,7 @@ namespace Roton.Core
             {
                 if (!_tiles.ElementAt(location).IsFloor)
                 {
-                    _mover.Push(location, vector);
+                    _mover.Value.Push(location, vector);
                 }
 
                 PlotTile(location, kind);
@@ -100,7 +101,7 @@ namespace Roton.Core
         public virtual void RemoveItem(IXyPair location)
         {
             _tiles[location].Id = _elements.EmptyId;
-            _drawer.UpdateBoard(location);
+            _drawer.Value.UpdateBoard(location);
         }
     }
 }

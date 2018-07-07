@@ -1,5 +1,6 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Execution;
+using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -14,9 +15,10 @@ namespace Roton.Emulation.Behavior
         private readonly ISounds _sounds;
         private readonly IState _state;
         private readonly ISounder _sounder;
+        private readonly IMisc _misc;
 
         public PassageBehavior(IConfig config, IEngine engine, IActors actors, IElements elements, ITiles tiles,
-            ISounds sounds, IState state, ISounder sounder)
+            ISounds sounds, IState state, ISounder sounder, IMisc misc)
         {
             _config = config;
             _engine = engine;
@@ -26,6 +28,7 @@ namespace Roton.Emulation.Behavior
             _sounds = sounds;
             _state = state;
             _sounder = sounder;
+            _misc = misc;
         }
 
         public override string KnownName => KnownNames.Passage;
@@ -72,7 +75,7 @@ namespace Roton.Emulation.Behavior
             _state.GamePaused = true;
             _sounder.Play(4, _sounds.Passage);
             _engine.FadePurple();
-            _engine.EnterBoard();
+            _misc.EnterBoard();
             vector.SetTo(0, 0);
         }
     }

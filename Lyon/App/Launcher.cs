@@ -31,6 +31,7 @@ namespace Lyon.App
                 _context = context;
                 _openTkKeyBuffer = openTkKeyBuffer;
                 _presenter = new OpenGlScenePresenter(() => composerProxy.SceneComposer, () => this);
+                _context.Start();
             }
 
             public void SetSize(int width, int height)

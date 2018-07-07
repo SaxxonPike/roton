@@ -38,7 +38,7 @@ namespace Lyon.App
         public void SetScene(int width, int height, bool wide)
         {
             if (_sceneComposer?.IsValueCreated ?? false)
-                (_sceneComposer.Value as IDisposable)?.Dispose();
+                _sceneComposer.Value?.Dispose();
 
             _sceneComposer = new Lazy<IBitmapSceneComposer>(() =>
             {
@@ -48,9 +48,9 @@ namespace Lyon.App
             });
         }
         
-        public IGlyphComposer GlyphComposer => _glyphComposer.Value;
-        public IPaletteComposer PaletteComposer => _paletteComposer.Value;
-        public IBitmapSceneComposer SceneComposer => _sceneComposer.Value;
-        public IAudioComposer AudioComposer => _audioComposer.Value;
+        public IGlyphComposer GlyphComposer => _glyphComposer?.Value;
+        public IPaletteComposer PaletteComposer => _paletteComposer?.Value;
+        public IBitmapSceneComposer SceneComposer => _sceneComposer?.Value;
+        public IAudioComposer AudioComposer => _audioComposer?.Value;
     }
 }

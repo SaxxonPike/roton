@@ -9,69 +9,39 @@ using Roton.Extensions;
 
 namespace Roton.Emulation.Execution
 {
-    public abstract class Interpreter : IInterpreter
+    public class Interpreter : IInterpreter
     {
-        private readonly IColors _colors;
-        private readonly IElements _elements;
         private readonly IWorld _world;
-        private readonly IBoard _board;
-        private readonly IEngine _engine;
-        private readonly ISounds _sounds;
         private readonly IActors _actors;
-        private readonly IFlags _flags;
-        private readonly IState _state;
         private readonly IRandom _random;
         private readonly IParser _parser;
         private readonly IBroadcaster _broadcaster;
-        private readonly IHud _hud;
-        private readonly ISounder _sounder;
-        private readonly ICheats _cheats;
-        private readonly ICommands _commands;
-        private readonly IBroker _broker;
+        private readonly Lazy<ICheats> _cheats;
+        private readonly Lazy<ICommands> _commands;
         private readonly ICompass _compass;
         private readonly ITiles _tiles;
         private readonly IMessager _messager;
 
-        protected Interpreter(
-            IColors colors, 
-            IElements elements, 
-            IWorld world, 
-            IBoard board, 
-            IEngine engine,
-            ISounds sounds,
+        public Interpreter(
+            IWorld world,
             IActors actors,
-            IFlags flags,
-            IState state,
             IRandom random,
             IParser parser,
             IBroadcaster broadcaster,
-            IHud hud,
-            ISounder sounder,
-            ICheats cheats,
-            ICommands commands,
-            IBroker broker,
+            Lazy<ICheats> cheats,
+            Lazy<ICommands> commands,
             ICompass compass,
             ITiles tiles,
             IMessager messager)
         {
-            _colors = colors;
-            _elements = elements;
             _world = world;
-            _board = board;
-            _engine = engine;
-            _sounds = sounds;
             _tiles = tiles;
             _actors = actors;
-            _flags = flags;
-            _state = state;
             _random = random;
             _parser = parser;
             _broadcaster = broadcaster;
-            _hud = hud;
-            _sounder = sounder;
             _cheats = cheats;
             _commands = commands;
-            _broker = broker;
             _compass = compass;
             _messager = messager;
         }
@@ -81,7 +51,7 @@ namespace Roton.Emulation.Execution
             if (input == null)
                 return;
 
-            _cheats.Get(input.ToUpperInvariant())?.Execute();
+            _cheats.Value.Get(input.ToUpperInvariant())?.Execute();
 
             if (input.Length < 2)
                 return;
@@ -103,7 +73,7 @@ namespace Roton.Emulation.Execution
                 if (name.Length == 0)
                     break;
 
-                var command = _commands.Get(name);
+                var command = _commands.Value.Get(name);
 
                 if (command != null)
                 {

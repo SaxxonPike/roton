@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using Roton.Core;
@@ -12,24 +13,22 @@ namespace Roton.Emulation.Execution
     {
         private readonly IActors _actors;
         private readonly IState _state;
-        private readonly IConditions _conditions;
-        private readonly IDirections _directions;
+        private readonly Lazy<IConditions> _conditions;
+        private readonly Lazy<IDirections> _directions;
         private readonly IFlags _flags;
-        private readonly IParser _parser;
         private readonly IElements _elements;
         private readonly IItems _items;
         private readonly IColors _colors;
-        private readonly ITargets _targets;
+        private readonly Lazy<ITargets> _targets;
 
-        public Parser(IActors actors, IState state, IConditions conditions, IDirections directions, IFlags flags,
-            IParser parser, IElements elements, IItems items, IColors colors, ITargets targets)
+        public Parser(IActors actors, IState state, Lazy<IConditions> conditions, Lazy<IDirections> directions, IFlags flags,
+            IElements elements, IItems items, IColors colors, Lazy<ITargets> targets)
         {
             _actors = actors;
             _state = state;
             _conditions = conditions;
             _directions = directions;
             _flags = flags;
-            _parser = parser;
             _elements = elements;
             _items = items;
             _colors = colors;
@@ -191,27 +190,27 @@ namespace Roton.Emulation.Execution
         public bool? GetCondition(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var condition = _conditions.Get(name);
+            var condition = _conditions.Value.Get(name);
             return condition?.Execute(oopContext) ?? _flags.Contains(name);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
-            var name = _parser.ReadWord(oopContext.Index, oopContext);
-            var direction = _directions.Get(name);
+            var name = ReadWord(oopContext.Index, oopContext);
+            var direction = _directions.Value.Get(name);
             return direction?.Execute(oopContext);
         }
 
         public IOopItem GetItem(IOopContext oopContext)
         {
-            var name = _parser.ReadWord(oopContext.Index, oopContext);
+            var name = ReadWord(oopContext.Index, oopContext);
             var item = _items.Get(name);
             return item?.Execute(oopContext);
         }
 
         public ITile GetKind(IOopContext oopContext)
         {
-            var word = _parser.ReadWord(oopContext.Index, oopContext);
+            var word = ReadWord(oopContext.Index, oopContext);
             var result = new Tile(0, 0);
             var success = false;
 
@@ -221,7 +220,7 @@ namespace Roton.Emulation.Execution
                     continue;
 
                 result.Color = i + 8;
-                word = _parser.ReadWord(oopContext.Index, oopContext);
+                word = ReadWord(oopContext.Index, oopContext);
                 break;
             }
 
@@ -241,7 +240,7 @@ namespace Roton.Emulation.Execution
         public bool GetTarget(ISearchContext context)
         {
             context.SearchIndex++;
-            var target = _targets.Get(context.SearchTarget) ?? _targets.GetDefault();
+            var target = _targets.Value.Get(context.SearchTarget) ?? _targets.Value.GetDefault();
             return target.Execute(context);
         }
     }

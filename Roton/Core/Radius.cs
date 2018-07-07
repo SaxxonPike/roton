@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Behavior;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Mapping;
@@ -11,12 +12,12 @@ namespace Roton.Core
         private readonly IBroadcaster _broadcaster;
         private readonly IElements _elements;
         private readonly IRandom _random;
-        private readonly IDrawer _drawer;
-        private readonly IMover _mover;
+        private readonly Lazy<IDrawer> _drawer;
+        private readonly Lazy<IMover> _mover;
         private readonly ITiles _tiles;
 
         public Radius(IActors actors, IBroadcaster broadcaster, IElements elements,
-            IRandom random, IDrawer drawer, IMover mover, ITiles tiles)
+            IRandom random, Lazy<IDrawer> drawer, Lazy<IMover> mover, ITiles tiles)
         {
             _actors = actors;
             _broadcaster = broadcaster;
@@ -59,7 +60,7 @@ namespace Roton.Core
 
                                     if (element.IsDestructible || element.Id == _elements.StarId)
                                     {
-                                        _mover.Destroy(target);
+                                        _mover.Value.Destroy(target);
                                     }
 
                                     if (element.Id == _elements.EmptyId || element.Id == _elements.BreakableId)
@@ -77,7 +78,7 @@ namespace Roton.Core
                             }
                         }
 
-                        _drawer.UpdateBoard(target);
+                        _drawer.Value.UpdateBoard(target);
                     }
                 }
             }

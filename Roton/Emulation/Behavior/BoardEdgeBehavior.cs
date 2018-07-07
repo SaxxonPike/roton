@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.SuperZZT;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behavior
@@ -12,10 +13,11 @@ namespace Roton.Emulation.Behavior
         private readonly IEngine _engine;
         private readonly IState _state;
         private readonly IMover _mover;
+        private readonly IMisc _misc;
 
         public override string KnownName => KnownNames.BoardEdge;
 
-        public BoardEdgeBehavior(IWorld world, ITiles tiles, IBoard board, IElements elements, IEngine engine, IState state, IMover mover)
+        public BoardEdgeBehavior(IWorld world, ITiles tiles, IBoard board, IElements elements, IEngine engine, IState state, IMover mover, IMisc misc)
         {
             _world = world;
             _tiles = tiles;
@@ -24,6 +26,7 @@ namespace Roton.Emulation.Behavior
             _engine = engine;
             _state = state;
             _mover = mover;
+            _misc = misc;
         }
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
@@ -71,7 +74,7 @@ namespace Roton.Emulation.Behavior
                     }
                     _engine.FadePurple();
                     vector.SetTo(0, 0);
-                    _engine.EnterBoard();
+                    _misc.EnterBoard();
                 }
                 else
                 {

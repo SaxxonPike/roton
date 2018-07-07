@@ -9,7 +9,7 @@ namespace Roton.Emulation.Execution
         private readonly IParser _parser;
         private readonly ILocker _locker;
 
-        protected Broadcaster(IActors actors, IParser parser, ILocker locker)
+        public Broadcaster(IActors actors, IParser parser, ILocker locker)
         {
             _actors = actors;
             _parser = parser;

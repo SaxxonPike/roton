@@ -15,7 +15,6 @@ namespace Roton.Core
         bool TitleScreen { get; }
         
         void ClearWorld();
-        void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         void FadePurple();
         bool GetPlayerTimeElapsed(int interval);

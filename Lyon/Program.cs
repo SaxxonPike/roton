@@ -12,7 +12,7 @@ namespace Lyon
     public static class Program
     {
         // STAThread is required for open/save dialogs.
-        
+
         [STAThread]
         private static void Main(string[] args)
         {
@@ -25,11 +25,11 @@ namespace Lyon
                 .Where(t => !t.IsAbstract && t.IsClass)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            
+
             Register(builder);
 
             var container = builder.Build();
-            
+
             container
                 .Resolve<IBootstrap>()
                 .Boot(args);
@@ -38,8 +38,9 @@ namespace Lyon
         private static void Register(ContainerBuilder builder)
         {
             builder.Register(c => new InterfaceResourceProvider(c.Resolve<IResourceService>()
-                .GetResource(typeof(IInterfaceResourceProvider).Assembly)))
-                .As<IInterfaceResourceProvider>();
+                    .GetResource(typeof(IInterfaceResourceProvider).Assembly)))
+                .As<IInterfaceResourceProvider>()
+                .SingleInstance();
 
             builder.RegisterType<ComposerProxy>()
                 .As<IComposerProxy>()
@@ -48,7 +49,11 @@ namespace Lyon
                     var resource = e.Context.Resolve<IInterfaceResourceProvider>();
                     e.Instance.SetFont(resource.GetFontData());
                     e.Instance.SetPalette(resource.GetPaletteData());
-                });
+                })
+                .SingleInstance();
+
+            builder.RegisterType<SpeakerProxy>().As<ISpeaker>().SingleInstance();
+            builder.RegisterType<TerminalProxy>().As<ITerminal>().SingleInstance();
         }
     }
 }

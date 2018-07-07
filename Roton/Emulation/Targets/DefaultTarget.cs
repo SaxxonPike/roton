@@ -15,7 +15,7 @@ namespace Roton.Emulation.Targets
             _parser = parser;
         }
         
-        public string Name => null;
+        public string Name => string.Empty;
         
         public bool Execute(ISearchContext context)
         {
