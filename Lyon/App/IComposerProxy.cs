@@ -1,4 +1,5 @@
 ﻿using Roton.Core;
+using Roton.Emulation.Data;
 using Roton.Interface.Audio.Composition;
 using Roton.Interface.Events;
 using Roton.Interface.Video.Glyphs;

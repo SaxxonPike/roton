@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Core
+namespace Roton.Emulation.Data.Impl
 {
     public class Boards : List<IPackedBoard>, IBoards
     {

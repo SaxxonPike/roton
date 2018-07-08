@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Roton.Emulation.Mapping;
 
-namespace Roton.Core
+namespace Roton.Emulation.Data
 {
     public interface IOopContext : IExecutable, ISearchContext
     {

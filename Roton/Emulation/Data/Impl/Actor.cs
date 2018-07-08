@@ -1,8 +1,7 @@
 ﻿using System;
 using Roton.Core;
-using Roton.Extensions;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public sealed class Actor : IActor
     {

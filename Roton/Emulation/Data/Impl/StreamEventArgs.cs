@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Roton.Events
+namespace Roton.Emulation.Data.Impl
 {
     public delegate void StreamEventHandler(object sender, StreamEventArgs e);
 

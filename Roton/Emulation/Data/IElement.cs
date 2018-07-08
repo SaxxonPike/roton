@@ -1,6 +1,7 @@
 ﻿using System;
+using Roton.Emulation.Data.Impl;
 
-namespace Roton.Core
+namespace Roton.Emulation.Data
 {
     public interface IElement
     {

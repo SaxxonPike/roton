@@ -1,6 +1,6 @@
 using Roton.Core;
+using Roton.Emulation.Data;
 using Roton.Emulation.Items;
-using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.Execution
 {

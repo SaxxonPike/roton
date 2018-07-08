@@ -2,10 +2,11 @@
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Items;
-using Roton.Emulation.Mapping;
 using Roton.Emulation.Targets;
 
 namespace Roton.Emulation.Core
@@ -15,7 +16,7 @@ namespace Roton.Emulation.Core
         IActors Actors { get; }
         IAlerts Alerts { get; }
         IBoard Board { get; }
-        ICheats Cheats { get; }
+        ICheatList CheatList { get; }
         IColors Colors { get; }
         ICommands Commands { get; }
         IConditions Conditions { get; }
@@ -57,6 +58,7 @@ namespace Roton.Emulation.Core
         bool GetPlayerTimeElapsed(int interval);
         void HandlePlayerInput(IActor actor, int hotkey);
         void Harm(int index);
+        void LoadWorld(string name);
         void LockActor(int index);
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);

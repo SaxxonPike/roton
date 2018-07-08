@@ -2,6 +2,7 @@
 using System.IO;
 using Lyon.App.Dialogs;
 using Roton.Core;
+using Roton.Emulation.Data.Impl;
 using Roton.Interface.Windows;
 
 namespace Lyon.App

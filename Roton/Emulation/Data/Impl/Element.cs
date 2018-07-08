@@ -1,8 +1,7 @@
 ﻿using System;
-using Roton.Core;
 using Roton.Emulation.Behaviors;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class Element : IElement
     {

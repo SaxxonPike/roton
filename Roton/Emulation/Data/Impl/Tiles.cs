@@ -1,7 +1,4 @@
-﻿using Roton.Core;
-using Roton.Core.Collections;
-
-namespace Roton.Emulation.Mapping
+﻿namespace Roton.Emulation.Data.Impl
 {
     public abstract class Tiles : FixedList<ITile>, ITiles
     {

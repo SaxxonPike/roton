@@ -3,7 +3,7 @@ using Roton.Emulation.Directions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public class ZztDirections : Directions
+    public class ZztDirections : Data.Impl.Directions
     {
         public ZztDirections(IEnumerable<IDirection> commands) : base(commands, new string[]{})
         {

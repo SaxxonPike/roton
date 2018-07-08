@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Execution
 {
@@ -18,7 +19,7 @@ namespace Roton.Emulation.Execution
             if (input == null)
                 return;
 
-            _engine.Cheats.Get(input.ToUpperInvariant())?.Execute();
+            _engine.CheatList.Get(input.ToUpperInvariant())?.Execute();
 
             if (input.Length < 2)
                 return;

@@ -1,4 +1,6 @@
-﻿namespace Roton.Core
+﻿using Roton.Emulation.Data;
+
+namespace Roton.Core
 {
     public interface IInterpreter
     {

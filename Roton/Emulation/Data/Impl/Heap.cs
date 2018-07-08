@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roton.Core;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public sealed class Heap : IHeap
     {

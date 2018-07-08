@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Events
+namespace Roton.Emulation.Data.Impl
 {
     public delegate void DataEventHandler(object sender, DataEventArgs e);
 

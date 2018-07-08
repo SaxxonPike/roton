@@ -1,4 +1,4 @@
-﻿namespace Roton.Core
+﻿namespace Roton.Emulation.Data
 {
     public interface IKeyboard
     {

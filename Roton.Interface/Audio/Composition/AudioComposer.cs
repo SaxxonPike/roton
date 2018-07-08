@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Roton.Core;
+using Roton.Emulation.Data;
 
 namespace Roton.Interface.Audio.Composition
 {

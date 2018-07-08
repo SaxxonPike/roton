@@ -1,9 +1,6 @@
 ﻿using System.Linq;
-using Roton.Core;
-using Roton.Core.Collections;
-using Roton.Extensions;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class Flags : FixedList<string>, IFlags
     {

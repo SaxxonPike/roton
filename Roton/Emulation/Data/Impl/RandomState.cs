@@ -1,6 +1,7 @@
 ﻿using System;
+using Roton.Emulation.Execution;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Data.Impl
 {
     public class RandomState : IRandomState
     {

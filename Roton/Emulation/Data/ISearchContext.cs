@@ -1,4 +1,4 @@
-﻿namespace Roton.Emulation.Mapping
+﻿namespace Roton.Emulation.Data
 {
     public interface ISearchContext
     {

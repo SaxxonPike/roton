@@ -1,7 +1,7 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Execution;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.SuperZZT;
-using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {

@@ -3,7 +3,7 @@ using Roton.Emulation.Conditions;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public class SuperZztConditions : Conditions
+    public class SuperZztConditions : Conditions.Conditions
     {
         public SuperZztConditions(IEnumerable<ICondition> commands) : base(commands, new string[]{})
         {

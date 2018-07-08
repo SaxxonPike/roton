@@ -1,6 +1,6 @@
 ﻿using Roton.Core;
 
-namespace Roton.Extensions
+namespace Roton.Emulation.Data.Impl
 {
     public static class XyPairExtensions
     {

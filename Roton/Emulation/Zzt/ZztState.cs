@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Roton.Core;
-using Roton.Emulation.Mapping;
-using Roton.Extensions;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.ZZT
 {

@@ -3,6 +3,8 @@ using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Items;
@@ -47,7 +49,7 @@ namespace Lyon.App
                         builder.RegisterType<ZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<ZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<ZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<ZztCheats>().As<ICheats>().SingleInstance();
+                        builder.RegisterType<ZztCheatList>().As<ICheatList>().SingleInstance();
                         builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<ZztCommands>().As<ICommands>().SingleInstance();
                         builder.RegisterType<ZztConditions>().As<IConditions>().SingleInstance();
@@ -84,7 +86,7 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<SuperZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<SuperZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<SuperZztCheats>().As<ICheats>().SingleInstance();
+                        builder.RegisterType<SuperZztCheatList>().As<ICheatList>().SingleInstance();
                         builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<SuperZztCommands>().As<ICommands>().SingleInstance();
                         builder.RegisterType<SuperZztConditions>().As<IConditions>().SingleInstance();

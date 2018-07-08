@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Directions;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class Directions : IDirections
     {

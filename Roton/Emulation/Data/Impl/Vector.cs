@@ -1,4 +1,4 @@
-﻿namespace Roton.Core
+﻿namespace Roton.Emulation.Data.Impl
 {
     /// <summary>
     ///     A signed 16-bit (X,Y) pair.

@@ -1,4 +1,6 @@
-﻿namespace Roton.Core
+﻿using Roton.Emulation.Data.Impl;
+
+namespace Roton.Core
 {
     public interface ITerminal
     {

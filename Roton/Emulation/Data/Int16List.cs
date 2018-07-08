@@ -1,8 +1,6 @@
-﻿using Roton.Core;
-using Roton.Core.Collections;
-using Roton.Extensions;
+﻿using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data
 {
     public sealed class Int16List : FixedList<int>
     {

@@ -1,8 +1,4 @@
-﻿using Roton.Core;
-using Roton.Core.Collections;
-using Roton.Extensions;
-
-namespace Roton.Emulation.Mapping
+﻿namespace Roton.Emulation.Data.Impl
 {
     public abstract class KeyList : FixedList<bool>, IKeyList
     {

@@ -1,4 +1,4 @@
-using Roton.Emulation.Mapping;
+using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Targets
 {

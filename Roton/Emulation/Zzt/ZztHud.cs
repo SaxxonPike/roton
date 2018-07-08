@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using Roton.Core;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Execution;
-using Roton.Extensions;
 
 namespace Roton.Emulation.ZZT
 {

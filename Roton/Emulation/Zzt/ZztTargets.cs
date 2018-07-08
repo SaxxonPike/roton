@@ -3,7 +3,7 @@ using Roton.Emulation.Targets;
 
 namespace Roton.Emulation.SuperZZT
 {
-    public class ZztTargets : Targets
+    public class ZztTargets : Targets.Targets
     {
         public ZztTargets(IEnumerable<ITarget> items) : base(items, new string[]{})
         {

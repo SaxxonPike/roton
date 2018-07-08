@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Roton.Emulation.Data;
 
 namespace Roton.Core
 {

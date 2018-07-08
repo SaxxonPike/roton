@@ -1,6 +1,7 @@
 using Roton.Core;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Execution;
-using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.Targets
 {

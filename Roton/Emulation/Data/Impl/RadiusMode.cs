@@ -1,4 +1,4 @@
-﻿namespace Roton.Emulation.Execution
+﻿namespace Roton.Emulation.Data.Impl
 {
     public enum RadiusMode
     {

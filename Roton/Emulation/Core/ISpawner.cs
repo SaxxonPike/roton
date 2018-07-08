@@ -1,3 +1,5 @@
+using Roton.Emulation.Data;
+
 namespace Roton.Core
 {
     public interface ISpawner

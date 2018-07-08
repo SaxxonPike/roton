@@ -1,6 +1,4 @@
-﻿using Roton.Core;
-
-namespace Roton.Emulation.Mapping
+﻿namespace Roton.Emulation.Data.Impl
 {
     public class Executable : IExecutable
     {

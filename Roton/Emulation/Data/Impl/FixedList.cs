@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Roton.Core.Collections
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class FixedList<T> : IList<T>
     {

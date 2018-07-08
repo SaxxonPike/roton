@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Roton.Emulation.Conditions;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Conditions
 {
     public abstract class Conditions : IConditions
     {

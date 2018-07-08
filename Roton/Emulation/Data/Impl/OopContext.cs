@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Roton.Core;
 using Roton.Emulation.Core;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Data.Impl
 {
     public class OopContext : IOopContext
     {

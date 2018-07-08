@@ -1,4 +1,4 @@
-﻿namespace Roton.Core
+﻿namespace Roton.Emulation.Data.Impl
 {
     /// <summary>
     ///     An unsigned 8-bit (X,Y) pair.

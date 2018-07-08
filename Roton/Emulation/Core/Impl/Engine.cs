@@ -1,15 +1,17 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Items;
-using Roton.Emulation.Mapping;
 using Roton.Emulation.Targets;
 using Roton.Emulation.Timing;
 using Roton.Extensions;
@@ -23,7 +25,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IAlerts> _alerts;
         private readonly Lazy<IBoard> _board;
         private readonly Lazy<IBoards> _boards;
-        private readonly Lazy<ICheats> _cheats;
+        private readonly Lazy<ICheatList> _cheats;
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IColors> _colors;
         private readonly Lazy<ICommands> _commands;
@@ -55,7 +57,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
             Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditions> conditions, Lazy<IDirections> directions,
-            Lazy<IColors> colors, Lazy<ICheats> cheats, Lazy<ICommands> commands, Lazy<ITargets> targets,
+            Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommands> commands, Lazy<ITargets> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItems> items, Lazy<IBoards> boards)
         {
@@ -211,7 +213,7 @@ namespace Roton.Emulation.Core.Impl
             return success;
         }
 
-        public ICheats Cheats => _cheats.Value;
+        public ICheatList CheatList => _cheats.Value;
 
         public void ClearSound()
         {
@@ -649,6 +651,34 @@ namespace Roton.Emulation.Core.Impl
 
                 RemoveActor(index);
             }
+        }
+
+        public void LoadWorld(string name)
+        {
+            using (var stream = new MemoryStream(Disk.GetFile(Features.GetWorldName(name))))
+            using (var reader = new BinaryReader(stream))
+            {
+                var type = reader.ReadInt16();
+                if (type != World.WorldType)
+                    throw new Exception("Incompatible world for this engine.");
+
+                var numBoards = reader.ReadInt16();
+                if (numBoards < 0)
+                    throw new Exception("Board count must be zero or greater.");
+
+                GameSerializer.LoadWorld(stream);
+
+                var newBoards = Enumerable
+                    .Range(0, numBoards + 1)
+                    .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)));
+                
+                Boards.Clear();
+                
+                foreach (var rawBoard in newBoards)
+                    Boards.Add(rawBoard);
+            }
+
+            State.WorldLoaded = true;
         }
 
         public IHud Hud => _hud.Value;
@@ -1673,7 +1703,23 @@ namespace Roton.Emulation.Core.Impl
             State.DefaultSaveName = "SAVED";
             State.DefaultBoardName = "TEMP";
             State.DefaultWorldName = "TOWN";
-            if (!State.WorldLoaded) ClearWorld();
+
+            var worldToLoad = State.DefaultWorldName;
+
+            var zztCfg = Disk.GetFile("ZZT.CFG");
+            if (zztCfg != null && zztCfg.Length > 0)
+            {
+                using (var stream = new MemoryStream(zztCfg))
+                using (var reader = new StreamReader(stream))
+                {
+                    worldToLoad = reader.ReadLine();
+                }
+            }
+
+            LoadWorld(worldToLoad);
+
+            if (!State.WorldLoaded)
+                ClearWorld();
 
             if (State.EditorMode)
                 SetEditorMode();

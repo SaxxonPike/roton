@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Roton.Core;
-using Roton.Core.Collections;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class Elements : FixedList<IElement>, IElements
     {

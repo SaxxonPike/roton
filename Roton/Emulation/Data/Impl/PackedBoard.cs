@@ -1,7 +1,7 @@
 ﻿using System;
 using Roton.Core;
 
-namespace Roton.Emulation.Mapping
+namespace Roton.Emulation.Data.Impl
 {
     public sealed class PackedBoard : IPackedBoard
     {

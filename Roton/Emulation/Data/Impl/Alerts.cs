@@ -1,6 +1,4 @@
-﻿using Roton.Core;
-
-namespace Roton.Emulation.ZZT
+﻿namespace Roton.Emulation.Data.Impl
 {
     public abstract class Alerts : IAlerts
     {
