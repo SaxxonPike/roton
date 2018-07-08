@@ -39,7 +39,7 @@ namespace Roton.Emulation.Behaviors
                 _alerts.TorchPickup = false;
             }
 
-            _sounder.Play(3, _sounds.Torch);
+            _engine.PlaySound(3, _sounds.Torch);
         }
     }
 }

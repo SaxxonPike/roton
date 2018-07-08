@@ -46,7 +46,7 @@ namespace Roton.Emulation.Behaviors
             var scrollIndex = _actors.ActorIndexAt(location);
             var actor = _actors[scrollIndex];
 
-            _sounder.Play(2, _sounder.EncodeMusic(_config.ScrollMusic));
+            _engine.PlaySound(2, _sounder.EncodeMusic(_config.ScrollMusic));
             _engine.ExecuteCode(scrollIndex, actor, _config.ScrollTitle);
             _mover.RemoveActor(scrollIndex);
         }

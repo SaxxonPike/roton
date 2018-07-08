@@ -22,7 +22,7 @@ namespace Roton.Emulation.Behaviors
         
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _sounder.Play(3, _sounds.Water);
+            _engine.PlaySound(3, _sounds.Water);
             _messenger.SetMessage(0x64, _alerts.WaterMessage);
         }
     }

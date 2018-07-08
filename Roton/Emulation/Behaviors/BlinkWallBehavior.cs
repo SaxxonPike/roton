@@ -5,28 +5,18 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class BlinkWallBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly IElements _elements;
-        private readonly IWorld _world;
-        private readonly ITiles _tiles;
-        private readonly IDrawer _drawer;
-        private readonly IMover _mover;
-        public override string KnownName => KnownNames.BlinkWall;
+        private readonly IEngine _engine;
 
-        public BlinkWallBehavior(IActors actors, IElements elements, IWorld world, ITiles tiles, IDrawer drawer,
-            IMover mover)
+        public BlinkWallBehavior(IEngine engine)
         {
-            _actors = actors;
-            _elements = elements;
-            _world = world;
-            _tiles = tiles;
-            _drawer = drawer;
-            _mover = mover;
+            _engine = engine;
         }
+
+        public override string KnownName => KnownNames.BlinkWall;
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
 
             if (actor.P3 == 0)
                 actor.P3 = actor.P1 + 1;
@@ -37,19 +27,19 @@ namespace Roton.Emulation.Behaviors
 
                 var erasedRay = false;
                 var target = actor.Location.Sum(actor.Vector);
-                var emptyElement = _elements.EmptyId;
+                var emptyElement = _engine.Elements.EmptyId;
 
                 var rayElement = actor.Vector.X == 0
-                    ? _elements.BlinkRayVId
-                    : _elements.BlinkRayHId;
+                    ? _engine.Elements.BlinkRayVId
+                    : _engine.Elements.BlinkRayHId;
 
-                var color = _tiles[actor.Location].Color;
+                var color = _engine.Tiles[actor.Location].Color;
                 var rayTile = new Tile(rayElement, color);
 
-                while (_tiles[target].Matches(rayTile))
+                while (_engine.Tiles[target].Matches(rayTile))
                 {
-                    _tiles[target].Id = emptyElement;
-                    _drawer.UpdateBoard(target);
+                    _engine.Tiles[target].Id = emptyElement;
+                    _engine.UpdateBoard(target);
                     target.Add(actor.Vector);
                     erasedRay = true;
                 }
@@ -59,57 +49,57 @@ namespace Roton.Emulation.Behaviors
 
                 do
                 {
-                    if (_tiles.ElementAt(target).IsDestructible)
+                    if (_engine.Tiles.ElementAt(target).IsDestructible)
                     {
-                        _mover.Destroy(target);
+                        _engine.Destroy(target);
                     }
 
-                    if (_tiles[target].Id == _elements.PlayerId)
+                    if (_engine.Tiles[target].Id == _engine.Elements.PlayerId)
                     {
-                        var playerIndex = _actors.ActorIndexAt(target);
+                        var playerIndex = _engine.Actors.ActorIndexAt(target);
                         IXyPair testVector;
 
                         if (actor.Vector.Y == 0)
                         {
                             testVector = new Vector(0, 1);
-                            if (_tiles[target.Difference(testVector)].Id == emptyElement)
+                            if (_engine.Tiles[target.Difference(testVector)].Id == emptyElement)
                             {
-                                _mover.MoveActor(playerIndex, target.Difference(testVector));
+                                _engine.MoveActor(playerIndex, target.Difference(testVector));
                             }
-                            else if (_tiles[target.Sum(testVector)].Id == emptyElement)
+                            else if (_engine.Tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _mover.MoveActor(playerIndex, target.Sum(testVector));
+                                _engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
                         else
                         {
                             testVector = new Vector(1, 0);
-                            if (_tiles[target.Sum(testVector)].Id == emptyElement)
+                            if (_engine.Tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _mover.MoveActor(playerIndex, target.Sum(testVector));
+                                _engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
-                            else if (_tiles[target.Difference(testVector)].Id == emptyElement)
+                            else if (_engine.Tiles[target.Difference(testVector)].Id == emptyElement)
                             {
                                 // "sum" is not a mistake; this is an original engine bug
-                                _mover.MoveActor(playerIndex, target.Sum(testVector));
+                                _engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
 
-                        if (_tiles[target].Id == _elements.PlayerId)
+                        if (_engine.Tiles[target].Id == _engine.Elements.PlayerId)
                         {
-                            while (_world.Health > 0)
+                            while (_engine.World.Health > 0)
                             {
-                                _mover.Harm(0);
+                                _engine.Harm(0);
                             }
 
                             blocked = true;
                         }
                     }
 
-                    if (_tiles[target].Id == emptyElement)
+                    if (_engine.Tiles[target].Id == emptyElement)
                     {
-                        _tiles[target].CopyFrom(rayTile);
-                        _drawer.UpdateBoard(target);
+                        _engine.Tiles[target].CopyFrom(rayTile);
+                        _engine.UpdateBoard(target);
                     }
                     else
                     {
@@ -127,7 +117,7 @@ namespace Roton.Emulation.Behaviors
 
         public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(0xCE, _tiles[location].Color);
+            return new AnsiChar(0xCE, _engine.Tiles[location].Color);
         }
     }
 }

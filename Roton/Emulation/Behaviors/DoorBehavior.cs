@@ -38,7 +38,7 @@ namespace Roton.Emulation.Behaviors
             if (!_world.Keys[keyIndex])
             {
                 _messenger.SetMessage(0xC8, _alerts.DoorLockedMessage(color));
-                _sounder.Play(3, _sounds.DoorLocked);
+                _engine.PlaySound(3, _sounds.DoorLocked);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace Roton.Emulation.Behaviors
                 _misc.RemoveItem(location);
                 _hud.UpdateStatus();
                 _messenger.SetMessage(0xC8, _alerts.DoorOpenMessage(color));
-                _sounder.Play(3, _sounds.DoorOpen);
+                _engine.PlaySound(3, _sounds.DoorOpen);
             }
         }
     }

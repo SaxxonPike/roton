@@ -73,7 +73,7 @@ namespace Roton.Emulation.Behaviors
             }
 
             _state.GamePaused = true;
-            _sounder.Play(4, _sounds.Passage);
+            _engine.PlaySound(4, _sounds.Passage);
             _engine.FadePurple();
             _misc.EnterBoard();
             vector.SetTo(0, 0);

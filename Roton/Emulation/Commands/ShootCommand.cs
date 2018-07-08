@@ -32,7 +32,7 @@ namespace Roton.Emulation.Commands
                 var success = _spawner.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
-                    _sounder.Play(2, _sounds.EnemyShoot);
+                    _engine.PlaySound(2, _sounds.EnemyShoot);
                 }
                 context.Moved = true;
             }

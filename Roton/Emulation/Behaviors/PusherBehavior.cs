@@ -41,7 +41,7 @@ namespace Roton.Emulation.Behaviors
             if (!_tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
 
             _mover.MoveActor(index, actor.Location.Sum(actor.Vector));
-            _sounder.Play(2, _sounds.Push);
+            _engine.PlaySound(2, _sounds.Push);
             var behindLocation = actor.Location.Difference(actor.Vector);
             if (_tiles[behindLocation].Id != _elements.PusherId) return;
 

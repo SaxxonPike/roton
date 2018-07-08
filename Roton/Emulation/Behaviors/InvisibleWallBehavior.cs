@@ -32,7 +32,7 @@ namespace Roton.Emulation.Behaviors
         {
             _tiles[location].Id = _elements.NormalId;
             _drawer.UpdateBoard(location);
-            _sounder.Play(3, _sounds.Invisible);
+            _engine.PlaySound(3, _sounds.Invisible);
             _messenger.SetMessage(0x64, _alerts.InvisibleMessage);
         }
     }

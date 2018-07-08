@@ -38,7 +38,7 @@ namespace Roton.Emulation.Behaviors
             _world.Score += _config.ScorePerGem;
             _misc.RemoveItem(location);
             _hud.UpdateStatus();
-            _sounder.Play(2, _sounds.Gem);
+            _engine.PlaySound(2, _sounds.Gem);
 
             if (!_alerts.GemPickup)
                 return;

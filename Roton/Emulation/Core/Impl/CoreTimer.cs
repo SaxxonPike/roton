@@ -4,7 +4,7 @@ using System.Threading;
 namespace Roton.Emulation.Timing
 {
     // this is the master core timer, it'll automatically start and stop when it is queried regularly
-    public class CoreTimer : ICoreTimer
+    public class Clock : IClock
     {
         private int _maxLaggedTicks;
 
@@ -91,7 +91,7 @@ namespace Roton.Emulation.Timing
         }
     }
 
-    public interface ICoreTimer
+    public interface IClock
     {
         int Tick { get; }
     }

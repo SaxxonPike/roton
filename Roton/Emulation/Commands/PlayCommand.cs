@@ -21,7 +21,7 @@ namespace Roton.Emulation.Commands
         {
             var notes = _parser.ReadLine(context.Index, context);
             var sound = _sounder.EncodeMusic(notes);
-            _sounder.Play(-1, sound);
+            _engine.PlaySound(-1, sound);
             context.NextLine = false;
         }
     }

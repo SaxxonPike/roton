@@ -7,7 +7,7 @@ namespace Roton.Emulation.Behaviors
     {
         public override string KnownName => KnownNames.Boulder;
 
-        public BoulderBehavior(ISounds sounds, ISounder sounder, IMover mover) : base(sounds, sounder, mover)
+        public BoulderBehavior(IEngine engine) : base(engine)
         {
         }
     }

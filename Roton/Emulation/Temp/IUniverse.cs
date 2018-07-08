@@ -55,7 +55,7 @@ namespace Roton.Core
         private readonly ISounds _sounds;
         private readonly IAlerts _alerts;
         private readonly IGalaxy _galaxy;
-        private readonly ICoreTimer _coreTimer;
+        private readonly IClock _clock;
         private readonly IBoards _boards;
         private readonly IGameSerializer _gameSerializer;
         private readonly IOopContextFactory _oopContextFactory;
@@ -65,7 +65,7 @@ namespace Roton.Core
 
         public Universe(IWorld world, IBoard board, ITiles tiles, IActors actors, IState state, IElements elements,
             IInterpreter interpreter, IParser parser, IRandom random, IHud hud, ISounds sounds, IAlerts alerts,
-            IGalaxy galaxy, ICoreTimer coreTimer, IBoards boards, IGameSerializer gameSerializer, IOopContextFactory oopContextFactory,
+            IGalaxy galaxy, IClock clock, IBoards boards, IGameSerializer gameSerializer, IOopContextFactory oopContextFactory,
             IKeyboard keyboard, ITimers timers, IFileSystem fileSystem)
         {
             _world = world;
@@ -81,7 +81,7 @@ namespace Roton.Core
             _sounds = sounds;
             _alerts = alerts;
             _galaxy = galaxy;
-            _coreTimer = coreTimer;
+            _clock = clock;
             _boards = boards;
             _gameSerializer = gameSerializer;
             _oopContextFactory = oopContextFactory;
@@ -878,7 +878,7 @@ namespace Roton.Core
 
         private int _timerTick;
 
-        private int TimerBase => _coreTimer.Tick & 0x7FFF;
+        private int TimerBase => _clock.Tick & 0x7FFF;
 
         private Thread Thread { get; set; }
 

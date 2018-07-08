@@ -70,11 +70,11 @@ namespace Roton.Emulation.Behaviors
                             _drawer.UpdateBoard(target);
                         }
 
-                        _sounder.Play(3, _sounds.Duplicate);
+                        _engine.PlaySound(3, _sounds.Duplicate);
                     }
                     else
                     {
-                        _sounder.Play(3, _sounds.DuplicateFail);
+                        _engine.PlaySound(3, _sounds.DuplicateFail);
                     }
                 }
 

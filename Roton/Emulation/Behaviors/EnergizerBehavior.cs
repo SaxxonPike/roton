@@ -35,7 +35,7 @@ namespace Roton.Emulation.Behaviors
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _sounder.Play(9, _sounds.Energizer);
+            _engine.PlaySound(9, _sounds.Energizer);
             _misc.RemoveItem(location);
             _world.EnergyCycles = 0x4B;
             _hud.UpdateStatus();

@@ -116,7 +116,7 @@ namespace Roton.Emulation.Behaviors
                                 {
                                     _world.Ammo--;
                                     _hud.UpdateStatus();
-                                    _sounder.Play(2, _sounds.Shoot);
+                                    _engine.PlaySound(2, _sounds.Shoot);
                                 }
                             }
                         }
@@ -203,7 +203,7 @@ namespace Roton.Emulation.Behaviors
                 if (_world.TorchCycles <= 0)
                 {
                     _radius.Update(actor.Location, RadiusMode.Update);
-                    _sounder.Play(3, _sounds.TorchOut);
+                    _engine.PlaySound(3, _sounds.TorchOut);
                 }
 
                 if (_world.TorchCycles % 40 == 0)
@@ -219,7 +219,7 @@ namespace Roton.Emulation.Behaviors
                 _world.EnergyCycles--;
                 if (_world.EnergyCycles == 10)
                 {
-                    _sounder.Play(9, _sounds.EnergyOut);
+                    _engine.PlaySound(9, _sounds.EnergyOut);
                 }
                 else if (_world.EnergyCycles <= 0)
                 {
@@ -239,7 +239,7 @@ namespace Roton.Emulation.Behaviors
                         if (_board.TimeLimit - 10 == _world.TimePassed)
                         {
                             _messenger.SetMessage(0xC8, _alerts.TimeMessage);
-                            _sounder.Play(3, _sounds.TimeLow);
+                            _engine.PlaySound(3, _sounds.TimeLow);
                         }
                         else if (_world.TimePassed >= _board.TimeLimit)
                         {
