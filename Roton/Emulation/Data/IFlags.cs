@@ -9,7 +9,5 @@ namespace Roton.Core
         void Clear();
         bool Contains(string item);
         bool Remove(string item);
-        
-        string StoneText { get; }
     }
 }

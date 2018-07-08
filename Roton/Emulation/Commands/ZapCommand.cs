@@ -1,33 +1,30 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Commands
 {
     public class ZapCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IBroadcaster _broadcaster;
-        private readonly IActors _actors;
+        private readonly IEngine _engine;
 
-        public ZapCommand(IParser parser, IBroadcaster broadcaster, IActors actors)
+        public ZapCommand(IEngine engine)
         {
-            _parser = parser;
-            _broadcaster = broadcaster;
-            _actors = actors;
+            _engine = engine;
         }
         
         public string Name => "ZAP";
         
         public void Execute(IOopContext context)
         {
-            _parser.ReadWord(context.Index, context);
+            _engine.Parser.ReadWord(context.Index, context);
             while (true)
             {
-                context.SearchTarget = _parser.ReadWord(context.Index, context);
-                var result = _broadcaster.ExecuteLabel(context.Index, context, "\xD\x3A");
+                context.SearchTarget = _engine.Parser.ReadWord(context.Index, context);
+                var result = _engine.ExecuteLabel(context.Index, context, "\xD\x3A");
                 if (!result)
                     break;
-                _actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x27;
+                _engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x27;
             }
         }
     }

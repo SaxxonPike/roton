@@ -1,24 +1,23 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Commands
 {
     public class TakeCommand : ICommand
     {
-        private readonly IBroker _broker;
-        private readonly IHud _hud;
+        private readonly IEngine _engine;
 
-        public TakeCommand(IBroker broker, IHud hud)
+        public TakeCommand(IEngine engine)
         {
-            _broker = broker;
-            _hud = hud;
+            _engine = engine;
         }
         
         public string Name => "TAKE";
         
         public void Execute(IOopContext context)
         {
-            context.Resume = _broker.ExecuteTransaction(context, true);
-            _hud.UpdateStatus();
+            context.Resume = _engine.ExecuteTransaction(context, true);
+            _engine.Hud.UpdateStatus();
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
-using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
-    public class OopItem : IOopItem
+    public class OopItem
     {
         private readonly Func<int> _read;
         private readonly Action<int> _write;

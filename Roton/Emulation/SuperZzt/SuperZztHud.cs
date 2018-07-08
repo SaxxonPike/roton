@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -274,9 +275,11 @@ namespace Roton.Emulation.SuperZZT
                 DrawNumber(0x15, _engine.World.Score);
                 DrawString(0x00, 0x16, @"            ", 0x6F);
 
-                if (!string.IsNullOrWhiteSpace(_engine.Flags.StoneText))
+                var stoneText = StoneText;
+
+                if (!string.IsNullOrWhiteSpace(stoneText))
                 {
-                    DrawString(0x01, 0x16, _engine.Flags.StoneText, 0x6F);
+                    DrawString(0x01, 0x16, stoneText, 0x6F);
                 }
 
                 if (_engine.World.Stones >= 0)
@@ -295,5 +298,21 @@ namespace Roton.Emulation.SuperZZT
                 DrawString(0x03, 0x0A, _engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             }
         }
+        
+        private string StoneText
+        {
+            get
+            {
+                foreach (var flag in _engine.Flags.Select(f => f.ToUpperInvariant()))
+                {
+                    if (flag.Length > 0 && flag.StartsWith("Z"))
+                    {
+                        return flag.Substring(1);
+                    }
+                }
+
+                return string.Empty;
+            }
+        }        
     }
 }

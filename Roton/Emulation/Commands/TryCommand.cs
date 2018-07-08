@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -6,33 +7,29 @@ namespace Roton.Emulation.Commands
 {
     public class TryCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IMover _mover;
-        private readonly ITiles _tiles;
+        private readonly IEngine _engine;
 
-        public TryCommand(IParser parser, IMover mover, ITiles tiles)
+        public TryCommand(IEngine engine)
         {
-            _parser = parser;
-            _mover = mover;
-            _tiles = tiles;
+            _engine = engine;
         }
         
         public string Name => "TRY";
         
         public void Execute(IOopContext context)
         {
-            var vector = _parser.GetDirection(context);
+            var vector = _engine.Parser.GetDirection(context);
             if (vector == null)
                 return;
 
             var target = vector.Sum(context.Actor.Location);
-            if (!_tiles.ElementAt(target).IsFloor)
+            if (!_engine.Tiles.ElementAt(target).IsFloor)
             {
-                _mover.Push(target, vector);
+                _engine.Push(target, vector);
             }
-            if (_tiles.ElementAt(target).IsFloor)
+            if (_engine.ElementAt(target).IsFloor)
             {
-                _mover.MoveActor(context.Index, target);
+                _engine.MoveActor(context.Index, target);
                 context.Moved = true;
                 context.Resume = false;
             }

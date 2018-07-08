@@ -1,38 +1,35 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Commands
 {
     public class RestoreCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IBroadcaster _broadcaster;
-        private readonly IActors _actors;
+        private readonly IEngine _engine;
 
-        public RestoreCommand(IParser parser, IBroadcaster broadcaster, IActors actors)
+        public RestoreCommand(IEngine engine)
         {
-            _parser = parser;
-            _broadcaster = broadcaster;
-            _actors = actors;
+            _engine = engine;
         }
         
         public string Name => "RESTORE";
         
         public void Execute(IOopContext context)
         {
-            _parser.ReadWord(context.Index, context);
+            _engine.Parser.ReadWord(context.Index, context);
             while (true)
             {
-                context.SearchTarget = _parser.ReadWord(context.Index, context);
-                var result = _broadcaster.ExecuteLabel(context.Index, context, "\xD\x27");
+                context.SearchTarget = _engine.Parser.ReadWord(context.Index, context);
+                var result = _engine.ExecuteLabel(context.Index, context, "\xD\x27");
                 if (!result)
                     break;
 
                 while (context.SearchOffset >= 0)
                 {
-                    _actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x3A;
-                    context.SearchOffset = _parser.Search(context.SearchIndex,
-                        $"\xD\x27{_parser.ReadWord(context.Index, context)}");
+                    _engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x3A;
+                    context.SearchOffset = _engine.Parser.Search(context.SearchIndex,
+                        $"\xD\x27{_engine.Parser.ReadWord(context.Index, context)}");
                 }
             }
         }

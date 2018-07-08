@@ -1,39 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
+using Roton.Emulation.Items;
 using Roton.Emulation.Mapping;
 using Roton.Emulation.Targets;
-using Roton.Events;
-using Roton.FileIo;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IEngine
     {
-        event DataEventHandler RequestReplaceContext;
-        event EventHandler Terminated;
-
         IActors Actors { get; }
         IAlerts Alerts { get; }
         IBoard Board { get; }
-        IList<IPackedBoard> Boards { get; }
-        IFileSystem Disk { get; }
-        IDrumBank DrumBank { get; }
+        ICheats Cheats { get; }
+        IColors Colors { get; }
+        ICommands Commands { get; }
+        IConditions Conditions { get; }
+        IConfig Config { get; }
+        IDirections Directions { get; }
         IElements Elements { get; }
-        IGameSerializer GameSerializer { get; }
-        IInterpreter Interpreter { get; }
+        IFlags Flags { get; }
         IHud Hud { get; }
+        IItems Items { get; }
+        IParser Parser { get; }
         IActor Player { get; }
+        IRandom Random { get; }
         ISounds Sounds { get; }
         IState State { get; }
-        string StoneText { get; }
+        ITargets Targets { get; }
         ITiles Tiles { get; }
         bool TitleScreen { get; }
         IWorld World { get; }
+        IActor ActorAt(IXyPair difference);
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
@@ -43,10 +44,12 @@ namespace Roton.Core
         void Convey(IXyPair center, int direction);
         void Destroy(IXyPair location);
         AnsiChar Draw(IXyPair location);
+        IElement ElementAt(IXyPair location);
         ISound EncodeMusic(string music);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         bool ExecuteLabel(int sender, ISearchContext context, string prefix);
+        bool ExecuteTransaction(IOopContext context, bool take);
         void FadePurple();
         bool FindTile(ITile kind, IXyPair location);
         void ForcePlayerColor(int index);
@@ -54,55 +57,36 @@ namespace Roton.Core
         bool GetPlayerTimeElapsed(int interval);
         void HandlePlayerInput(IActor actor, int hotkey);
         void Harm(int index);
+        void LockActor(int index);
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
-        void PackBoard();
         void PlaySound(int priority, ISound sound);
         void PlaySound(int priority, ISound sound, int offset, int length);
         void PlotTile(IXyPair location, ITile tile);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
+        void PutTile(IXyPair location, IXyPair vector, ITile kind);
         void RaiseError(string error);
-        IRandom Random { get; }
-        IConfig Config { get; }
-        IFlags Flags { get; }
-        ICheats Cheats { get; }
-        ICommands Commands { get; }
-        IParser Parser { get; }
-        IConditions Conditions { get; }
-        IDirections Directions { get; }
-        ITargets Targets { get; }
-        IColors Colors { get; }
-        int ReadActorCodeByte(int index, IExecutable instructionSource);
-        string ReadActorCodeLine(int index, IExecutable instructionSource);
-        int ReadActorCodeNumber(int index, IExecutable instructionSource);
-        string ReadActorCodeWord(int index, IExecutable instructionSource);
         int ReadKey();
-        void RedrawBoard();
         void RemoveActor(int index);
         void RemoveItem(IXyPair location);
         IXyPair Rnd();
         IXyPair RndP(IXyPair vector);
-        int SearchActorCode(int index, string term);
         IXyPair Seek(IXyPair location);
         void SetBoard(int boardIndex);
+        void SetEditorMode();
+        void SetGameMode();
         void SetMessage(int duration, IMessage message);
+        void ShowHelp(string name);
         void ShowInGameHelp();
         void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source);
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
         void Start();
         void Stop();
-        int SyncRandomNumber(int max);
-        void UnpackBoard(int boardIndex);
+        void UnlockActor(int index);
         void UpdateBoard(IXyPair location);
         void UpdateRadius(IXyPair location, RadiusMode mode);
         void UpdateStatus();
         void WaitForTick();
-        IActor ActorAt(IXyPair difference);
-        void ShowHelp(string name);
-        void SetEditorMode();
-        void SetGameMode();
-        IElement ElementAt(IXyPair location);
-        bool ExecuteTransaction(IOopContext context, bool take);
     }
 }

@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -89,6 +90,12 @@ namespace Roton.Emulation.Zzt
             }
         }
 
+        public bool CanPutTile(IXyPair location)
+        {
+            // ZZT does not allow #put on the bottom row
+            return location.Y < 25;
+        }
+        
         public bool HandleTitleInput(int hotkey)
         {
             switch (hotkey)

@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -6,43 +7,34 @@ namespace Roton.Emulation.Commands
 {
     public class PutCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IPlotter _plotter;
-        private readonly IMessenger _messenger;
-        private readonly IConfig _config;
-        private readonly ITiles _tiles;
+        private readonly IEngine _engine;
 
-        public PutCommand(IParser parser, IPlotter plotter, IMessenger messenger, IConfig config, ITiles tiles)
+        public PutCommand(IEngine engine)
         {
-            _parser = parser;
-            _plotter = plotter;
-            _messenger = messenger;
-            _config = config;
-            _tiles = tiles;
+            _engine = engine;
         }
         
         public string Name => "PUT";
         
         public void Execute(IOopContext context)
         {
-            var vector = _parser.GetDirection(context);
+            var vector = _engine.Parser.GetDirection(context);
             var success = false;
 
             if (vector != null)
             {
-                var kind = _parser.GetKind(context);
+                var kind = _engine.Parser.GetKind(context);
                 if (kind != null)
                 {
                     success = true;
                     
                     var target = context.Actor.Location.Sum(vector);
-                    if (!_config.BuggyPut || target.Y < _tiles.Height)
-                        _plotter.Put(target, vector, kind);
+                    _engine.PutTile(target, vector, kind);
                 }
             }
 
             if (!success)
-                _messenger.RaiseError("Bad #PUT");
+                _engine.RaiseError("Bad #PUT");
         }
     }
 }

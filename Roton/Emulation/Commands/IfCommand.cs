@@ -1,26 +1,26 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Commands
 {
     public class IfCommand : ICommand
     {
-        private readonly IParser _parser;
+        private readonly IEngine _engine;
 
-        public IfCommand(IParser parser)
+        public IfCommand(IEngine engine)
         {
-            _parser = parser;
+            _engine = engine;
         }
         
         public string Name => "IF";
         
         public void Execute(IOopContext context)
         {
-            var condition = _parser.GetCondition(context);
+            var condition = _engine.Parser.GetCondition(context);
+            
             if (condition.HasValue)
-            {
                 context.Resume = condition.Value;
-            }
         }
     }
 }

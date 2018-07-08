@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -6,33 +7,25 @@ namespace Roton.Emulation.Commands
 {
     public class ShootCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IElements _elements;
-        private readonly ISpawner _spawner;
-        private readonly ISounder _sounder;
-        private readonly ISounds _sounds;
+        private readonly IEngine _engine;
 
-        public ShootCommand(IParser parser, IElements elements, ISpawner spawner, ISounder sounder, ISounds sounds)
+        public ShootCommand(IEngine engine)
         {
-            _parser = parser;
-            _elements = elements;
-            _spawner = spawner;
-            _sounder = sounder;
-            _sounds = sounds;
+            _engine = engine;
         }
         
         public string Name => "SHOOT";
         
         public void Execute(IOopContext context)
         {
-            var vector = _parser.GetDirection(context);
+            var vector = _engine.Parser.GetDirection(context);
             if (vector != null)
             {
-                var projectile = _elements.Bullet();
-                var success = _spawner.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+                var projectile = _engine.Elements.Bullet();
+                var success = _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
                 if (success)
                 {
-                    _engine.PlaySound(2, _sounds.EnemyShoot);
+                    _engine.PlaySound(2, _engine.Sounds.EnemyShoot);
                 }
                 context.Moved = true;
             }

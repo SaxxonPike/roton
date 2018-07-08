@@ -8,6 +8,7 @@ using Roton.Emulation.Execution;
 using Roton.Emulation.Items;
 using Roton.Emulation.SuperZZT;
 using Roton.Emulation.Targets;
+using Roton.Emulation.Zzt;
 using Roton.Emulation.ZZT;
 using Roton.FileIo;
 
@@ -57,13 +58,12 @@ namespace Lyon.App
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()
                             .SingleInstance();
+                        builder.RegisterType<ZztFeatures>().As<IFeatures>().SingleInstance();
                         builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
                         builder.RegisterType<ZztItems>().As<IItems>().SingleInstance();
-                        builder.RegisterType<ZztLocker>().As<ILocker>().SingleInstance();
-                        builder.RegisterType<ZztMessage>().As<IMessage>().SingleInstance();
-                        builder.RegisterType<ZztMisc>().As<IMisc>().SingleInstance();
+                        builder.RegisterType<ZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<Sounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<ZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<ZztTargets>().As<ITargets>().SingleInstance();
@@ -95,13 +95,12 @@ namespace Lyon.App
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()
                             .SingleInstance();
+                        builder.RegisterType<SuperZztFeatures>().As<IFeatures>().SingleInstance();
                         builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
                         builder.RegisterType<SuperZztItems>().As<IItems>().SingleInstance();
-                        builder.RegisterType<SuperZztLocker>().As<ILocker>().SingleInstance();
-                        builder.RegisterType<SuperZztMessage>().As<IMessage>().SingleInstance();
-                        builder.RegisterType<SuperZztMisc>().As<IMisc>().SingleInstance();
+                        builder.RegisterType<SuperZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<SuperZztTargets>().As<ITargets>().SingleInstance();

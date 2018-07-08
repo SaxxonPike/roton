@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Items;
 using Roton.Emulation.Mapping;
 
 namespace Roton.Emulation.Execution
@@ -7,7 +8,7 @@ namespace Roton.Emulation.Execution
     {
         bool? GetCondition(IOopContext oopContext);
         IXyPair GetDirection(IOopContext oopContext);
-        IOopItem GetItem(IOopContext oopContext);
+        IItem GetItem(IOopContext oopContext);
         ITile GetKind(IOopContext oopContext);
         bool GetTarget(ISearchContext context);
         int ReadByte(int index, IExecutable instructionSource);

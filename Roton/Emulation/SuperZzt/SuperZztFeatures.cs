@@ -1,5 +1,6 @@
 using Roton.Core;
 using Roton.Emulation.Behaviors;
+using Roton.Emulation.Core;
 using Roton.Extensions;
 
 namespace Roton.Emulation.SuperZZT
@@ -153,6 +154,16 @@ namespace Roton.Emulation.SuperZZT
                 _engine.SetEditorMode();
             else
                 _engine.SetGameMode();
+        }
+
+        public void HandlePlayerInput(IActor actor, int hotkey)
+        {
+            // todo: this
+        }
+
+        public bool CanPutTile(IXyPair location)
+        {
+            return true;
         }
     }
 }

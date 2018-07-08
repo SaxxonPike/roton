@@ -1,14 +1,22 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Commands
 {
     public class LockCommand : ICommand
     {
+        private readonly IEngine _engine;
+
+        public LockCommand(IEngine engine)
+        {
+            _engine = engine;
+        }
+        
         public string Name => "LOCK";
         
         public void Execute(IOopContext context)
         {
-            context.Actor.P2 = 1;
+            _engine.LockActor(context.Index);
         }
     }
 }

@@ -1,25 +1,24 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Commands
 {
     public class PlayCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly ISounder _sounder;
+        private readonly IEngine _engine;
 
-        public PlayCommand(IParser parser, ISounder sounder)
+        public PlayCommand(IEngine engine)
         {
-            _parser = parser;
-            _sounder = sounder;
+            _engine = engine;
         }
         
         public string Name => "PLAY";
         
         public void Execute(IOopContext context)
         {
-            var notes = _parser.ReadLine(context.Index, context);
-            var sound = _sounder.EncodeMusic(notes);
+            var notes = _engine.Parser.ReadLine(context.Index, context);
+            var sound = _engine.EncodeMusic(notes);
             _engine.PlaySound(-1, sound);
             context.NextLine = false;
         }

@@ -1,25 +1,24 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 
 namespace Roton.Emulation.Commands
 {
     public class SetCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IFlags _flags;
+        private readonly IEngine _engine;
 
-        public SetCommand(IParser parser, IFlags flags)
+        public SetCommand(IEngine engine)
         {
-            _parser = parser;
-            _flags = flags;
+            _engine = engine;
         }
         
         public string Name => "SET";
         
         public void Execute(IOopContext context)
         {
-            var flag = _parser.ReadWord(context.Index, context);
-            _flags.Add(flag);
+            var flag = _engine.Parser.ReadWord(context.Index, context);
+            _engine.Flags.Add(flag);
         }
     }
 }

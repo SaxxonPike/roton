@@ -1,4 +1,5 @@
 using Roton.Core;
+using Roton.Emulation.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
@@ -6,18 +7,18 @@ namespace Roton.Emulation.Commands
 {
     public class WalkCommand : ICommand
     {
-        private readonly IParser _parser;
+        private readonly IEngine _engine;
 
-        public WalkCommand(IParser parser)
+        public WalkCommand(IEngine engine)
         {
-            _parser = parser;
+            _engine = engine;
         }
 
         public string Name => "WALK";
         
         public void Execute(IOopContext context)
         {
-            var vector = _parser.GetDirection(context);
+            var vector = _engine.Parser.GetDirection(context);
             if (vector != null)
             {
                 context.Actor.Vector.CopyFrom(vector);

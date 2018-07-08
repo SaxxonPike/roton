@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Roton.Core;
-using Roton.Emulation.Cheats;
-using Roton.Emulation.Commands;
-using Roton.Extensions;
+using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Execution
 {

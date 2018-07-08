@@ -1,12 +1,9 @@
-using System;
 using System.Linq;
 using System.Text;
 using Roton.Core;
-using Roton.Emulation.Conditions;
-using Roton.Emulation.Directions;
+using Roton.Emulation.Core;
 using Roton.Emulation.Items;
 using Roton.Emulation.Mapping;
-using Roton.Emulation.Targets;
 
 namespace Roton.Emulation.Execution
 {
@@ -66,6 +63,8 @@ namespace Roton.Emulation.Execution
 
             return result;
         }
+
+        public int GetNumber(IOopContext context) => ReadNumber(context.Index, context);
 
         public int ReadByte(int index, IExecutable instructionSource)
         {
@@ -174,22 +173,22 @@ namespace Roton.Emulation.Execution
         public bool? GetCondition(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var condition = _engine.Conditions.Value.Get(name);
+            var condition = _engine.Conditions.Get(name);
             return condition?.Execute(oopContext) ?? _engine.Flags.Contains(name);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var direction = _engine.Directions.Value.Get(name);
+            var direction = _engine.Directions.Get(name);
             return direction?.Execute(oopContext);
         }
 
-        public IOopItem GetItem(IOopContext oopContext)
+        public IItem GetItem(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
             var item = _engine.Items.Get(name);
-            return item?.Execute(oopContext);
+            return item;
         }
 
         public ITile GetKind(IOopContext oopContext)

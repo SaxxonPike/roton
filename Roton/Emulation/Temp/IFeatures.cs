@@ -12,5 +12,7 @@ namespace Roton.Core
         void ShowInGameHelp();
         void ExecuteMessage(IOopContext context);
         void Init();
+        void HandlePlayerInput(IActor actor, int hotkey);
+        bool CanPutTile(IXyPair location);
     }
 }
