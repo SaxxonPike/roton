@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Core;
-
-namespace Roton.Core
+﻿namespace Roton.Emulation.Core.Impl
 {
     public sealed class Context : IContext
     {

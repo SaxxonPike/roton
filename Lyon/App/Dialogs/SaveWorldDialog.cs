@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using Roton.Core;
 using Roton.Emulation.Data;
 using Roton.Interface.Windows;
 

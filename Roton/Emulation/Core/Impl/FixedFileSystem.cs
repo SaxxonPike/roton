@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Roton.FileIo
+namespace Roton.Emulation.Core.Impl
 {
     public class FixedFileSystem : IFileSystem
     {

@@ -2,7 +2,7 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.ZZT
+namespace Roton.Emulation.Zzt
 {
     public sealed class ZztElement : Element
     {

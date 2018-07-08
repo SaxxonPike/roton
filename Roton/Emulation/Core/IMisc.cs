@@ -1,7 +1,6 @@
-using Roton.Core;
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Core
 {
     public interface IMisc
     {

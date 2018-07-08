@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Cheats;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.SuperZzt
 {
     public class SuperZztCheatList : Cheats.CheatList
     {

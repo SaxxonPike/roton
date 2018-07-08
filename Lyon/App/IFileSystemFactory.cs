@@ -1,6 +1,4 @@
-﻿using Roton.FileIo;
-
-namespace Lyon.App
+﻿namespace Lyon.App
 {
     public interface IFileSystemFactory
     {

@@ -1,4 +1,3 @@
-using Roton.Core;
 using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Items

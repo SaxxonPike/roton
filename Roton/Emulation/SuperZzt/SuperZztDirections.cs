@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Roton.Emulation.Directions;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.SuperZzt
 {
     public class SuperZztDirections : Data.Impl.Directions
     {

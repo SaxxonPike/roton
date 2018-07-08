@@ -2,7 +2,7 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IHud
     {

@@ -1,9 +1,7 @@
 ﻿using System;
-using Roton.Core;
-using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 
-namespace Roton.Extensions
+namespace Roton.Emulation.Data.Impl
 {
     public static class ActorExtensions
     {

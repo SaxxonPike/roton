@@ -1,5 +1,4 @@
-﻿using Roton.Core;
-using Roton.Emulation.Data.Impl;
+﻿using Roton.Emulation.Data.Impl;
 using Roton.Interface.Video.Scenes.Composition;
 
 namespace Roton.Interface.Extensions

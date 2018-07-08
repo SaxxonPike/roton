@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Data;
-
-namespace Roton.Core
+﻿namespace Roton.Emulation.Data.Impl
 {
     public class Sound : ISound
     {

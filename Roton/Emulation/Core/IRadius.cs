@@ -1,8 +1,7 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Execution;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IRadius
     {

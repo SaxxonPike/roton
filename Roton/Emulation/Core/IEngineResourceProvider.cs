@@ -1,4 +1,4 @@
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IEngineResourceProvider
     {

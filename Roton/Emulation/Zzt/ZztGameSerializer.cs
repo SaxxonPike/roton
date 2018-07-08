@@ -1,7 +1,7 @@
-﻿using Roton.Emulation.Data;
-using Roton.Emulation.Serialization;
+﻿using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data;
 
-namespace Roton.Emulation.ZZT
+namespace Roton.Emulation.Zzt
 {
     public sealed class ZztGameSerializer : GameSerializer
     {

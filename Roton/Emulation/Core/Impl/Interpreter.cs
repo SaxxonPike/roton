@@ -1,9 +1,7 @@
 ﻿using System.Linq;
-using Roton.Core;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Core.Impl
 {
     public class Interpreter : IInterpreter
     {

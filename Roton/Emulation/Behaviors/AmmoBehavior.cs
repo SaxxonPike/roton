@@ -1,12 +1,11 @@
-﻿using Roton.Core;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Behaviors
 {
     public sealed class AmmoBehavior : ElementBehavior
     {
-        private IEngine _engine;
+        private readonly IEngine _engine;
 
         public AmmoBehavior(IEngine engine)
         {

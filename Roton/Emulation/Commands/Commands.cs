@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Roton.Emulation.Commands;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Commands
 {
     public abstract class Commands : ICommands
     {

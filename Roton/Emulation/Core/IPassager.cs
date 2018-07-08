@@ -1,9 +1,7 @@
-using Roton.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Extensions;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Core
 {
     public interface IPassager
     {

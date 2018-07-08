@@ -1,8 +1,7 @@
-using Roton.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Items;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Core
 {
     public interface IParser
     {

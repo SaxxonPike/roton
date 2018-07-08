@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Roton.Emulation.Targets;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Zzt
 {
     public class ZztTargets : Targets.Targets
     {

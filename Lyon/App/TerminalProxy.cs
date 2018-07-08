@@ -1,4 +1,3 @@
-using Roton.Core;
 using Roton.Emulation.Data.Impl;
 
 namespace Lyon.App

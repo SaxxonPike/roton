@@ -1,8 +1,7 @@
-﻿using Roton.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Serialization
+namespace Roton.Emulation.Core.Impl
 {
     public class ArtSerializer : IArtSerializer
     {

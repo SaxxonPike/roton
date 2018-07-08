@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core.Impl
 {
     public class ResourceService : IResourceService
     {

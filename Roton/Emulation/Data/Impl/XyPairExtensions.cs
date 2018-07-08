@@ -1,4 +1,4 @@
-﻿using Roton.Core;
+﻿using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl
 {

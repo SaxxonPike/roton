@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Data;
-
-namespace Roton.Extensions
+﻿namespace Roton.Emulation.Data.Impl
 {
     public static class ActorListExtensions
     {

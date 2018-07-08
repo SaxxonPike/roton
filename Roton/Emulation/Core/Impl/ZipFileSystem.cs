@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Roton.FileIo
+namespace Roton.Emulation.Core.Impl
 {
     public class ZipFileSystem : IFileSystem
     {

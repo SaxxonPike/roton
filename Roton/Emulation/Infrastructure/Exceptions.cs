@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton
+namespace Roton.Emulation.Infrastructure
 {
     public static class Exceptions
     {

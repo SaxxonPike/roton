@@ -1,10 +1,7 @@
-﻿using Roton.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.ZZT;
-using Roton.Extensions;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.SuperZzt
 {
     public sealed class SuperZztAlerts : Alerts
     {

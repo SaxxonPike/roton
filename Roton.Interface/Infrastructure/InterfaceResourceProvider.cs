@@ -1,5 +1,3 @@
-using Roton.Core;
-
 namespace Roton.Interface.Infrastructure
 {
     public class InterfaceResourceProvider : IInterfaceResourceProvider

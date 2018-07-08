@@ -1,10 +1,7 @@
 ﻿using System.Linq;
-using Roton.Core;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Execution;
-using Roton.Emulation.SuperZZT;
-using Roton.Extensions;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Behaviors
 {

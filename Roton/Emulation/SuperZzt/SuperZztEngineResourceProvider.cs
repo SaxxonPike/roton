@@ -1,6 +1,6 @@
-using Roton.Core;
+using Roton.Emulation.Core;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.SuperZzt
 {
     public class SuperZztEngineResourceProvider : IEngineResourceProvider
     {

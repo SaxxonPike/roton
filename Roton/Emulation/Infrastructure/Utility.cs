@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Roton.Core
+namespace Roton.Emulation.Infrastructure
 {
     public static class Utility
     {

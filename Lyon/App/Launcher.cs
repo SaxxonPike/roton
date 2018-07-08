@@ -1,9 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Input;
-using Roton.Core;
 using Roton.Emulation.Data.Impl;
-using Roton.FileIo;
 using Roton.Interface.Events;
 using Roton.Interface.Input;
 using Roton.Interface.Video;

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Roton.Emulation.Commands;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.Zzt
 {
-    public class ZztCommands : Commands
+    public class ZztCommands : Commands.Commands
     {
         public ZztCommands(IEnumerable<ICommand> commands) : base(commands, new[]
         {

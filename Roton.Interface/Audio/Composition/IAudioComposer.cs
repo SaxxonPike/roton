@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Roton.Core;
 
 namespace Roton.Interface.Audio.Composition
 {

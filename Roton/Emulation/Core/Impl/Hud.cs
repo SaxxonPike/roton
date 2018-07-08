@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Roton.Core;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Core.Impl
 {
     public abstract class Hud : IHud
     {

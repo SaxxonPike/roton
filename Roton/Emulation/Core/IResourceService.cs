@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IResourceService
     {

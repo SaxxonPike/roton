@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using Roton.Core;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Execution;
 
-namespace Roton.Emulation.ZZT
+namespace Roton.Emulation.Zzt
 {
     public sealed class ZztHud : Hud
     {

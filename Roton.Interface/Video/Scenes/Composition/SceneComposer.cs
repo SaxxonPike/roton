@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Roton.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
 

@@ -1,5 +1,3 @@
-using Roton.Core;
-
 namespace Roton.Emulation.Items
 {
     public interface IItem

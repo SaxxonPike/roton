@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Data;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core
 {
     public interface IInterpreter
     {

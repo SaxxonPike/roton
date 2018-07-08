@@ -1,12 +1,11 @@
 using System.Linq;
 using System.Text;
-using Roton.Core;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 
-namespace Roton.Emulation.Execution
+namespace Roton.Emulation.Core.Impl
 {
     public class Parser : IParser
     {

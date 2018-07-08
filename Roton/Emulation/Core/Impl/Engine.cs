@@ -3,19 +3,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Roton.Core;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
-using Roton.Emulation.Execution;
+using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
-using Roton.Emulation.Timing;
-using Roton.Extensions;
-using Roton.FileIo;
+using Roton.Emulation.Temp;
 
 namespace Roton.Emulation.Core.Impl
 {

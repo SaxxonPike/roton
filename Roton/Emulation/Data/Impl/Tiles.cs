@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿using Roton.Emulation.Infrastructure;
+
+namespace Roton.Emulation.Data.Impl
 {
     public abstract class Tiles : FixedList<ITile>, ITiles
     {

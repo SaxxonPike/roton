@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 
-namespace Roton.Emulation.Timing
+namespace Roton.Emulation.Core.Impl
 {
     // this is the master core timer, it'll automatically start and stop when it is queried regularly
     public class Clock : IClock

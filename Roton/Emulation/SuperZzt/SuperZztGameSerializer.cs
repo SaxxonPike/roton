@@ -1,8 +1,7 @@
-﻿using Roton.Core;
+﻿using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
-using Roton.Emulation.Serialization;
 
-namespace Roton.Emulation.SuperZZT
+namespace Roton.Emulation.SuperZzt
 {
     public sealed class SuperZztGameSerializer : GameSerializer
     {

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Roton.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Extensions;
+using Roton.Emulation.Infrastructure;
 
-namespace Roton.Emulation.Serialization
+namespace Roton.Emulation.Core.Impl
 {
     public abstract class GameSerializer : IGameSerializer
     {

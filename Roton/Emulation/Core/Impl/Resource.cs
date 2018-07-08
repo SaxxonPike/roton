@@ -1,7 +1,6 @@
 ﻿using System;
-using Roton.FileIo;
 
-namespace Roton.Core
+namespace Roton.Emulation.Core.Impl
 {
     public class Resource : IResource
     {

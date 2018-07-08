@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Data;
 
-namespace Roton.Emulation.ZZT
+namespace Roton.Emulation.Zzt
 {
     public sealed class ZztMessage : IMessage
     {

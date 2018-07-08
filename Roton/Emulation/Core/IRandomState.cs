@@ -1,4 +1,4 @@
-﻿namespace Roton.Emulation.Execution
+﻿namespace Roton.Emulation.Core
 {
     public interface IRandomState
     {
