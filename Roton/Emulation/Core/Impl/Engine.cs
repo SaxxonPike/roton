@@ -519,7 +519,7 @@ namespace Roton.Emulation.Core.Impl
                 return false;
 
             // Do we have a valid amount?
-            var amount = Parser.GetNumber(context);
+            var amount = Parser.ReadNumber(context.Index, context);
             if (amount <= 0)
                 return true;
 
@@ -674,7 +674,8 @@ namespace Roton.Emulation.Core.Impl
                 foreach (var rawBoard in newBoards)
                     Boards.Add(rawBoard);
             }
-
+            
+            UnpackBoard(World.BoardIndex);
             State.WorldLoaded = true;
         }
 

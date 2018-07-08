@@ -19,7 +19,7 @@ namespace Roton.Emulation.Commands
             _engine.Parser.ReadWord(context.Index, context);
             while (true)
             {
-                context.SearchTarget = _engine.Parser.ReadWord(context.Index, context);
+                context.SearchTarget = _engine.State.OopWord;
                 var result = _engine.ExecuteLabel(context.Index, context, "\xD\x3A");
                 if (!result)
                     break;

@@ -11,6 +11,7 @@ namespace Roton.Emulation.SuperZzt
             {"ALL", targets.OfType<AllTarget>().Single()},
             {"OTHERS", targets.OfType<OthersTarget>().Single()},
             {"SELF", targets.OfType<SelfTarget>().Single()},
+            {"", targets.OfType<DefaultTarget>().Single()}
         })
         {
         }
