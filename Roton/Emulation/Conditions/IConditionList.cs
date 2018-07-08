@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Conditions
 {
-    public interface IConditions
+    public interface IConditionList
     {
         ICondition Get(string name);
     }

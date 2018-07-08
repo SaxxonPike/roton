@@ -2,7 +2,9 @@
 using Autofac;
 using Lyon.App;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Interface.Infrastructure;
+using Roton.Interface.Input;
 using Roton.Interface.Video.Glyphs;
 
 namespace Lyon
@@ -52,6 +54,7 @@ namespace Lyon
 
             builder.RegisterType<SpeakerProxy>().As<ISpeaker>().SingleInstance();
             builder.RegisterType<TerminalProxy>().As<ITerminal>().SingleInstance();
+            builder.RegisterType<OpenTkKeyBuffer>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }

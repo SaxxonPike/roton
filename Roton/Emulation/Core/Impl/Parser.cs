@@ -173,21 +173,21 @@ namespace Roton.Emulation.Core.Impl
         public bool? GetCondition(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var condition = _engine.Conditions.Get(name);
+            var condition = _engine.ConditionList.Get(name);
             return condition?.Execute(oopContext) ?? _engine.Flags.Contains(name);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var direction = _engine.Directions.Get(name);
+            var direction = _engine.DirectionList.Get(name);
             return direction?.Execute(oopContext);
         }
 
         public IItem GetItem(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var item = _engine.Items.Get(name);
+            var item = _engine.ItemList.Get(name);
             return item;
         }
 
@@ -223,7 +223,7 @@ namespace Roton.Emulation.Core.Impl
         public bool GetTarget(ISearchContext context)
         {
             context.SearchIndex++;
-            var target = _engine.Targets.Get(context.SearchTarget) ?? _engine.Targets.GetDefault();
+            var target = _engine.TargetList.Get(context.SearchTarget) ?? _engine.TargetList.GetDefault();
             return target.Execute(context);
         }
     }

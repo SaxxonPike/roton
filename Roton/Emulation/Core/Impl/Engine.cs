@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Roton.Emulation.Behaviors;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
@@ -26,9 +27,9 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IColors> _colors;
         private readonly Lazy<ICommands> _commands;
-        private readonly Lazy<IConditions> _conditions;
+        private readonly Lazy<IConditionList> _conditions;
         private readonly Lazy<IConfig> _config;
-        private readonly Lazy<IDirections> _directions;
+        private readonly Lazy<IDirectionList> _directions;
         private readonly Lazy<IElements> _elements;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
@@ -36,13 +37,13 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IGameSerializer> _gameSerializer;
         private readonly Lazy<IHud> _hud;
         private readonly Lazy<IInterpreter> _interpreter;
-        private readonly Lazy<IItems> _items;
+        private readonly Lazy<IItemList> _items;
         private readonly Lazy<IKeyboard> _keyboard;
         private readonly Lazy<IParser> _parser;
         private readonly Lazy<IRandom> _random;
         private readonly Lazy<ISounds> _sounds;
         private readonly Lazy<IState> _state;
-        private readonly Lazy<ITargets> _targets;
+        private readonly Lazy<ITargetList> _targets;
         private readonly Lazy<ITiles> _tiles;
         private readonly Lazy<ITimers> _timers;
         private readonly Lazy<IWorld> _world;
@@ -53,10 +54,10 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IFileSystem> fileSystem, Lazy<IElements> elements,
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
-            Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditions> conditions, Lazy<IDirections> directions,
-            Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommands> commands, Lazy<ITargets> targets,
+            Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
+            Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommands> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
-            Lazy<IWorld> world, Lazy<IItems> items, Lazy<IBoards> boards)
+            Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards)
         {
             _clock = clock;
             _actors = actors;
@@ -247,7 +248,7 @@ namespace Roton.Emulation.Core.Impl
 
         public ICommands Commands => _commands.Value;
 
-        public IConditions Conditions => _conditions.Value;
+        public IConditionList ConditionList => _conditions.Value;
 
         public IConfig Config => _config.Value;
 
@@ -333,7 +334,7 @@ namespace Roton.Emulation.Core.Impl
                 Harm(index);
         }
 
-        public IDirections Directions => _directions.Value;
+        public IDirectionList DirectionList => _directions.Value;
 
         public AnsiChar Draw(IXyPair location)
         {
@@ -679,7 +680,7 @@ namespace Roton.Emulation.Core.Impl
 
         public IHud Hud => _hud.Value;
 
-        public IItems Items => _items.Value;
+        public IItemList ItemList => _items.Value;
 
         public void LockActor(int index)
         {
@@ -1106,7 +1107,7 @@ namespace Roton.Emulation.Core.Impl
             if (ThreadActive) ThreadActive = false;
         }
 
-        public ITargets Targets => _targets.Value;
+        public ITargetList TargetList => _targets.Value;
 
         public ITiles Tiles => _tiles.Value;
 
@@ -1143,7 +1144,7 @@ namespace Roton.Emulation.Core.Impl
                                 if (element.CodeEditText.Length > 0)
                                 {
                                     var actorIndex = ActorIndexAt(target);
-                                    if (actorIndex > 0) BroadcastLabel(-actorIndex, @"BOMBED", false);
+                                    if (actorIndex > 0) BroadcastLabel(-actorIndex, KnownLabels.Bombed, false);
                                 }
 
                                 if (element.IsDestructible || element.Id == Elements.StarId) Destroy(target);
@@ -1640,54 +1641,6 @@ namespace Roton.Emulation.Core.Impl
                 result.Y = 0;
         }
 
-        private int SearchActorCode(int index, string term)
-        {
-            var result = -1;
-            var termBytes = term.ToBytes();
-            var actor = Actors[index];
-            var offset = new Executable {Instruction = 0};
-
-            while (offset.Instruction < actor.Length)
-            {
-                var oldOffset = offset.Instruction;
-                var termOffset = 0;
-                bool success;
-
-                while (true)
-                {
-                    ReadActorCodeByte(index, offset);
-                    if (termBytes[termOffset].ToUpperCase() != State.OopByte.ToUpperCase())
-                    {
-                        success = false;
-                        break;
-                    }
-
-                    termOffset++;
-                    if (termOffset >= termBytes.Length)
-                    {
-                        success = true;
-                        break;
-                    }
-                }
-
-                if (success)
-                {
-                    ReadActorCodeByte(index, offset);
-                    State.OopByte = State.OopByte.ToUpperCase();
-                    if (!(State.OopByte >= 0x41 && State.OopByte <= 0x5A || State.OopByte == 0x5F))
-                    {
-                        result = oldOffset;
-                        break;
-                    }
-                }
-
-                oldOffset++;
-                offset.Instruction = oldOffset;
-            }
-
-            return result;
-        }
-
         private void ShowAbout()
         {
             ShowHelp("ABOUT");
@@ -1699,6 +1652,8 @@ namespace Roton.Emulation.Core.Impl
             State.DefaultSaveName = "SAVED";
             State.DefaultBoardName = "TEMP";
             State.DefaultWorldName = "TOWN";
+            
+            ClearWorld();
 
             var worldToLoad = State.DefaultWorldName;
 

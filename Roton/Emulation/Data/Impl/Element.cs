@@ -14,9 +14,9 @@ namespace Roton.Emulation.Data.Impl
 
         private IBehavior Behavior { get; }
 
-        protected IMemory Memory { get; private set; }
+        protected IMemory Memory { get; }
 
-        protected int Offset { get; private set; }
+        protected int Offset { get; }
         public virtual Action< int> Act => (index) => Behavior.Act(index);
         public virtual string BoardEditText { get; set; }
         public virtual int Character { get; set; }

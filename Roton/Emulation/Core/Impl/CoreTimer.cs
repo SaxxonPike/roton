@@ -10,9 +10,9 @@ namespace Roton.Emulation.Core.Impl
 
         private int _tick;
 
-        public bool Initialized { get; private set; }
+        private bool Initialized { get; set; }
 
-        public int MaxLaggedTicks
+        private int MaxLaggedTicks
         {
             get
             {
@@ -22,7 +22,6 @@ namespace Roton.Emulation.Core.Impl
                 }
                 return _maxLaggedTicks;
             }
-            set { _maxLaggedTicks = value; }
         }
 
         public int Tick

@@ -3,15 +3,13 @@ using System.Linq;
 
 namespace Roton.Emulation.Targets
 {
-    public abstract class Targets : ITargets
+    public abstract class TargetList : ITargetList
     {
         private readonly IDictionary<string, ITarget> _targets;
 
-        protected Targets(IEnumerable<ITarget> items, string[] enabledNames)
+        protected TargetList(IDictionary<string, ITarget> targets)
         {
-            _targets = items
-                .Where(c => enabledNames.Contains(c.Name))
-                .ToDictionary(c => c.Name, c => c);
+            _targets = targets;
         }
         
         public ITarget Get(string name)

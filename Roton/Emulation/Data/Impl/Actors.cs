@@ -13,7 +13,7 @@ namespace Roton.Emulation.Data.Impl
 
         private IDictionary<int, IActor> Cache { get; } = new Dictionary<int, IActor>();
 
-        protected IMemory Memory { get; private set; }
+        protected IMemory Memory { get; }
 
         public int Capacity { get; }
 

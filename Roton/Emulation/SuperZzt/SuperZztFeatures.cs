@@ -79,7 +79,7 @@ namespace Roton.Emulation.SuperZzt
 
         public void EnterBoard()
         {
-            _engine.BroadcastLabel(0, @"ENTER", false);
+            _engine.BroadcastLabel(0, KnownLabels.Enter, false);
             _engine.Board.Entrance.CopyFrom(_engine.Actors.Player.Location);
             if (_engine.Board.IsDark && _engine.Alerts.Dark)
             {

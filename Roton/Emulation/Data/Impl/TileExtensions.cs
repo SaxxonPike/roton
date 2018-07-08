@@ -23,16 +23,5 @@
             self.Id = id;
             self.Color = color;
         }
-
-        public static void SetTo(this ITile self, IElement element)
-        {
-            self.Id = element.Id;
-        }
-
-        public static void SetTo(this ITile self, IElement element, int color)
-        {
-            SetTo(self, element);
-            self.Color = color;
-        }
     }
 }

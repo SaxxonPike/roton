@@ -17,19 +17,19 @@ namespace Roton.Emulation.Core
         ICheatList CheatList { get; }
         IColors Colors { get; }
         ICommands Commands { get; }
-        IConditions Conditions { get; }
+        IConditionList ConditionList { get; }
         IConfig Config { get; }
-        IDirections Directions { get; }
+        IDirectionList DirectionList { get; }
         IElements Elements { get; }
         IFlags Flags { get; }
         IHud Hud { get; }
-        IItems Items { get; }
+        IItemList ItemList { get; }
         IParser Parser { get; }
         IActor Player { get; }
         IRandom Random { get; }
         ISounds Sounds { get; }
         IState State { get; }
-        ITargets Targets { get; }
+        ITargetList TargetList { get; }
         ITiles Tiles { get; }
         bool TitleScreen { get; }
         IWorld World { get; }

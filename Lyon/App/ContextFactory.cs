@@ -51,8 +51,8 @@ namespace Lyon.App
                         builder.RegisterType<ZztCheatList>().As<ICheatList>().SingleInstance();
                         builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<ZztCommands>().As<ICommands>().SingleInstance();
-                        builder.RegisterType<ZztConditions>().As<IConditions>().SingleInstance();
-                        builder.RegisterType<ZztDirections>().As<IDirections>().SingleInstance();
+                        builder.RegisterType<ZztConditionList>().As<IConditionList>().SingleInstance();
+                        builder.RegisterType<ZztDirectionList>().As<IDirectionList>().SingleInstance();
                         builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<ZztElements>().As<IElements>().SingleInstance();
                         builder.Register(c => new ZztEngineResourceProvider(c.Resolve<IResourceService>()
@@ -63,11 +63,11 @@ namespace Lyon.App
                         builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
-                        builder.RegisterType<ZztItems>().As<IItems>().SingleInstance();
+                        builder.RegisterType<ZztItemList>().As<IItemList>().SingleInstance();
                         builder.RegisterType<ZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<Sounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<ZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<ZztTargets>().As<ITargets>().SingleInstance();
+                        builder.RegisterType<ZztTargetList>().As<ITargetList>().SingleInstance();
                         builder.RegisterType<ZztTiles>().As<ITiles>().SingleInstance();
                         builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
                         break;
@@ -88,8 +88,8 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztCheatList>().As<ICheatList>().SingleInstance();
                         builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
                         builder.RegisterType<SuperZztCommands>().As<ICommands>().SingleInstance();
-                        builder.RegisterType<SuperZztConditions>().As<IConditions>().SingleInstance();
-                        builder.RegisterType<SuperZztDirections>().As<IDirections>().SingleInstance();
+                        builder.RegisterType<SuperZztConditionList>().As<IConditionList>().SingleInstance();
+                        builder.RegisterType<SuperZztDirectionList>().As<IDirectionList>().SingleInstance();
                         builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<SuperZztElements>().As<IElements>().SingleInstance();
                         builder.Register(c => new SuperZztEngineResourceProvider(c.Resolve<IResourceService>()
@@ -100,11 +100,11 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
-                        builder.RegisterType<SuperZztItems>().As<IItems>().SingleInstance();
+                        builder.RegisterType<SuperZztItemList>().As<IItemList>().SingleInstance();
                         builder.RegisterType<SuperZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<SuperZztTargets>().As<ITargets>().SingleInstance();
+                        builder.RegisterType<SuperZztTargetList>().As<ITargetList>().SingleInstance();
                         builder.RegisterType<SuperZztTiles>().As<ITiles>().SingleInstance();
                         builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
                         break;

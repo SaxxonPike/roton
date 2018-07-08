@@ -3,15 +3,13 @@ using System.Linq;
 
 namespace Roton.Emulation.Conditions
 {
-    public abstract class Conditions : IConditions
+    public abstract class ConditionList : IConditionList
     {
         private readonly IDictionary<string, ICondition> _commands;
 
-        protected Conditions(IEnumerable<ICondition> commands, string[] enabledNames)
+        protected ConditionList(IDictionary<string, ICondition> conditions)
         {
-            _commands = commands
-                .Where(c => enabledNames.Contains(c.Name))
-                .ToDictionary(c => c.Name, c => c);
+            _commands = conditions;
         }
         
         public ICondition Get(string name)

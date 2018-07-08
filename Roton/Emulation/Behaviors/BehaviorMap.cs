@@ -6,13 +6,13 @@ namespace Roton.Emulation.Behaviors
 {
     public class BehaviorMap : IBehaviorMap
     {
-        private readonly IList<IBehavior> _elementBehaviors;
+        private readonly ICollection<IBehavior> _elementBehaviors;
         private readonly IElements _elements;
 
-        public BehaviorMap(IElements elements, IEnumerable<IBehavior> elementBehaviors)
+        public BehaviorMap(IElements elements, ICollection<IBehavior> elementBehaviors)
         {
             _elements = elements;
-            _elementBehaviors = elementBehaviors.ToList();
+            _elementBehaviors = elementBehaviors;
         }
 
         public IBehavior Map(int id)

@@ -13,7 +13,7 @@ namespace Roton.Emulation.Data.Impl
 
         private byte[] Bytes { get; }
 
-        public int Length => 0x1 << 16;
+        private int Length => 0x1 << 16;
 
         private int Mask => Length - 1;
 
@@ -57,7 +57,7 @@ namespace Roton.Emulation.Data.Impl
             Bytes[offset & Mask] = (byte) (value & 0xFF);
         }
 
-        public void Reset()
+        private void Reset()
         {
             for (var i = 0; i < Bytes.Length; i++)
             {

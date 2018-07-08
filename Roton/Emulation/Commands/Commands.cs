@@ -7,11 +7,9 @@ namespace Roton.Emulation.Commands
     {
         private readonly IDictionary<string, ICommand> _commands;
 
-        protected Commands(IEnumerable<ICommand> commands, string[] enabledNames)
+        protected Commands(IDictionary<string, ICommand> commands)
         {
-            _commands = commands
-                .Where(c => enabledNames.Contains(c.Name))
-                .ToDictionary(c => c.Name, c => c);
+            _commands = commands;
         }
         
         public ICommand Get(string name)

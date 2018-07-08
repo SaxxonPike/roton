@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Targets
 {
-    public interface ITargets
+    public interface ITargetList
     {
         ITarget Get(string name);
         ITarget GetDefault();
