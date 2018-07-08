@@ -5,7 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Roton.Core;
+using Roton.Emulation.Cheats;
+using Roton.Emulation.Commands;
+using Roton.Emulation.Conditions;
+using Roton.Emulation.Directions;
 using Roton.Emulation.Mapping;
+using Roton.Emulation.Targets;
 using Roton.Emulation.Timing;
 using Roton.Events;
 using Roton.Extensions;
@@ -13,7 +18,7 @@ using Roton.FileIo;
 
 namespace Roton.Emulation.Execution
 {
-    internal abstract class Engine : IEngine
+    public sealed class Engine : IEngine
     {
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IActors> _actors;
@@ -30,6 +35,13 @@ namespace Roton.Emulation.Execution
         private readonly Lazy<ITimers> _timers;
         private readonly Lazy<IParser> _parser;
         private readonly Lazy<IConfig> _config;
+        private readonly Lazy<IFlags> _flags;
+        private readonly Lazy<IConditions> _conditions;
+        private readonly Lazy<IDirections> _directions;
+        private readonly Lazy<IColors> _colors;
+        private readonly Lazy<ICheats> _cheats;
+        private readonly Lazy<ICommands> _commands;
+        private readonly Lazy<ITargets> _targets;
 
         public event EventHandler Terminated;
         public event DataEventHandler RequestReplaceContext;
@@ -40,7 +52,8 @@ namespace Roton.Emulation.Execution
             Lazy<IFileSystem> fileSystem, Lazy<IDrumBank> drumBank, Lazy<IElements> elements,
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
-            Lazy<IConfig> config)
+            Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditions> conditions, Lazy<IDirections> directions,
+            Lazy<IColors> colors, Lazy<ICheats> cheats, Lazy<ICommands> commands, Lazy<ITargets> targets)
         {
             _clock = clock;
             _actors = actors;
@@ -57,15 +70,36 @@ namespace Roton.Emulation.Execution
             _timers = timers;
             _parser = parser;
             _config = config;
+            _flags = flags;
+            _conditions = conditions;
+            _directions = directions;
+            _colors = colors;
+            _cheats = cheats;
+            _commands = commands;
+            _targets = targets;
         }
 
-        private IParser Parser => _parser.Value;
+        public IColors Colors => _colors.Value;
+
+        public IConditions Conditions => _conditions.Value;
+
+        public IDirections Directions => _directions.Value;
+
+        public ITargets Targets => _targets.Value;
+
+        public ICommands Commands => _commands.Value;
+
+        public ICheats Cheats => _cheats.Value;
+
+        public IParser Parser => _parser.Value;
 
         private ITimers Timers => _timers.Value;
 
         public IRandom Random => _random.Value;
 
         public IConfig Config => _config.Value;
+
+        public IFlags Flags => _flags.Value;
 
         private ITile BorderTile => State.BorderTile;
 
@@ -97,7 +131,7 @@ namespace Roton.Emulation.Execution
 
         public IActors Actors => _actors.Value;
 
-        public virtual int Adjacent(IXyPair location, int id)
+        public int Adjacent(IXyPair location, int id)
         {
             return (location.Y <= 1 || Tiles[location.Sum(Vector.North)].Id == id ? 1 : 0) |
                    (location.Y >= Tiles.Height || Tiles[location.Sum(Vector.South)].Id == id ? 2 : 0) |
@@ -146,7 +180,7 @@ namespace Roton.Emulation.Execution
 
         public IList<IPackedBoard> Boards { get; }
 
-        public virtual bool BroadcastLabel(int sender, string label, bool force)
+        public bool BroadcastLabel(int sender, string label, bool force)
         {
             var external = false;
             var success = false;
@@ -157,7 +191,7 @@ namespace Roton.Emulation.Execution
                 sender = -sender;
             }
 
-            var info = new SearchContext(this)
+            var info = new SearchContext
             {
                 SearchIndex = 0,
                 SearchOffset = 0,
@@ -299,7 +333,7 @@ namespace Roton.Emulation.Execution
 
         public IFileSystem Disk => _fileSystem.Value;
 
-        public virtual AnsiChar Draw(IXyPair location)
+        public AnsiChar Draw(IXyPair location)
         {
             if (Board.IsDark && !ElementAt(location).IsAlwaysVisible &&
                 (World.TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !State.EditorMode)
@@ -339,7 +373,7 @@ namespace Roton.Emulation.Execution
             return new Sound();
         }
 
-        public virtual void EnterBoard()
+        public void EnterBoard()
         {
             Board.Entrance.CopyFrom(Player.Location);
             if (Board.IsDark && Alerts.Dark)
@@ -351,7 +385,7 @@ namespace Roton.Emulation.Execution
             UpdateStatus();
         }
 
-        public virtual void ExecuteCode(int index, IExecutable instructionSource, string name)
+        public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
             var context = new OopContext(index, instructionSource, name, this);
 
@@ -493,10 +527,10 @@ namespace Roton.Emulation.Execution
             {
                 while (location.X <= Tiles.Width)
                 {
-                    var tile = Tiles[location);
+                    var tile = Tiles[location];
                     if (tile.Id == kind.Id)
                     {
-                        if (kind.Color == 0 || ColorMatch(Tiles[location)) == kind.Color)
+                        if (kind.Color == 0 || ColorMatch(Tiles[location]) == kind.Color)
                         {
                             return true;
                         }
@@ -510,7 +544,7 @@ namespace Roton.Emulation.Execution
             return false;
         }
 
-        public virtual void ForcePlayerColor(int index)
+        public void ForcePlayerColor(int index)
         {
             var actor = Actors[index];
             var playerElement = Elements[Elements.PlayerId];
@@ -598,14 +632,12 @@ namespace Roton.Emulation.Execution
 
         public abstract IHud Hud { get; }
 
-        public IMemory Memory { get; }
-
         public void MoveActor(int index, IXyPair target)
         {
             var actor = Actors[index];
             var sourceLocation = actor.Location.Clone();
-            var sourceTile = Tiles[actor.Location);
-            var targetTile = Tiles[target);
+            var sourceTile = Tiles[actor.Location];
+            var targetTile = Tiles[target];
             var underTile = actor.UnderTile.Clone();
 
             actor.UnderTile.CopyFrom(targetTile);
@@ -700,7 +732,7 @@ namespace Roton.Emulation.Execution
             Boards[World.BoardIndex] = board;
         }
 
-        public virtual IActor Player => Actors[0];
+        public IActor Player => Actors[0];
 
         public void PlaySound(int priority, ISound sound, int offset, int length)
         {
@@ -757,7 +789,7 @@ namespace Roton.Emulation.Execution
                 throw Exceptions.PushStackOverflow;
             }
 
-            var tile = Tiles[location)\];
+            var tile = Tiles[location];
             if ((tile.Id == Elements.SliderEwId && vector.Y == 0) || (tile.Id == Elements.SliderNsId && vector.X == 0) ||
                 Elements[tile.Id].IsPushable)
             {
@@ -960,7 +992,7 @@ namespace Roton.Emulation.Execution
 
         public IKeyboard Keyboard => _keyboard.Value;
 
-        public virtual int ReadKey()
+        public int ReadKey()
         {
             var key = Keyboard.GetKey();
             State.KeyPressed = key > 0 ? key : 0;
@@ -1025,7 +1057,7 @@ namespace Roton.Emulation.Execution
             State.ActorCount--;
         }
 
-        public virtual void RemoveItem(IXyPair location)
+        public void RemoveItem(IXyPair location)
         {
             Tiles[location].Id = Elements.EmptyId;
             UpdateBoard(location);
@@ -1049,7 +1081,7 @@ namespace Roton.Emulation.Execution
             return result;
         }
 
-        public virtual int SearchActorCode(int index, string term)
+        public int SearchActorCode(int index, string term)
         {
             var result = -1;
             var termBytes = term.ToBytes();
@@ -1140,7 +1172,7 @@ namespace Roton.Emulation.Execution
             State.Message2 = bottomMessage;
         }
 
-        public virtual void ShowInGameHelp()
+        public void ShowInGameHelp()
         {
             ShowHelp("GAME");
         }
@@ -1322,7 +1354,7 @@ namespace Roton.Emulation.Execution
             Hud.UpdateStatus();
         }
 
-        public virtual void WaitForTick()
+        public void WaitForTick()
         {
             while (ClockTick == ClockBase && ThreadActive)
             {
@@ -1333,7 +1365,7 @@ namespace Roton.Emulation.Execution
 
         public abstract IWorld World { get; }
 
-        protected virtual bool ActorIsLocked(int index)
+        protected bool ActorIsLocked(int index)
         {
             return Actors[index].P2 != 0;
         }
@@ -1426,14 +1458,14 @@ namespace Roton.Emulation.Execution
         {
         }
 
-        protected virtual void ExecuteDeath(IOopContext context)
+        protected void ExecuteDeath(IOopContext context)
         {
             var location = context.Actor.Location.Clone();
             Harm(context.Index);
             PlotTile(location, context.DeathTile);
         }
 
-        protected virtual void ExecuteDirection(IOopContext context, IXyPair vector)
+        protected void ExecuteDirection(IOopContext context, IXyPair vector)
         {
             if (vector.IsZero())
             {
@@ -1454,7 +1486,7 @@ namespace Roton.Emulation.Execution
             }
         }
 
-        protected virtual void ExecuteMessage(IOopContext context)
+        protected void ExecuteMessage(IOopContext context)
         {
             if (context.Message.Count == 1)
             {
@@ -1496,7 +1528,7 @@ namespace Roton.Emulation.Execution
 
         public abstract bool HandleTitleInput(int hotkey);
 
-        protected virtual void InitializeElements(bool showInvisibles)
+        protected void InitializeElements(bool showInvisibles)
         {
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
@@ -1505,7 +1537,7 @@ namespace Roton.Emulation.Execution
             Elements[Elements.PlayerId].Character = 0x02;
         }
 
-        protected virtual byte[] LoadFile(string filename)
+        protected byte[] LoadFile(string filename)
         {
 
             try
@@ -1740,7 +1772,7 @@ namespace Roton.Emulation.Execution
 
         protected abstract string GetWorldName(string baseName);
 
-        protected virtual void ReadInput()
+        protected void ReadInput()
         {
             State.KeyShift = false;
             State.KeyArrow = false;
@@ -1819,11 +1851,11 @@ namespace Roton.Emulation.Execution
             ShowHelp("ABOUT");
         }
 
-        private void ShowHelp(string filename)
+        public void ShowHelp(string filename)
         {
         }
 
-        protected virtual void StartInit()
+        protected void StartInit()
         {
             State.GameSpeed = 4;
             State.DefaultSaveName = "SAVED";
@@ -1840,7 +1872,7 @@ namespace Roton.Emulation.Execution
                 SetGameMode();
         }
 
-        protected virtual void StartMain()
+        protected void StartMain()
         {
             StartInit();
             TitleScreenLoop();
@@ -1893,5 +1925,31 @@ namespace Roton.Emulation.Execution
                 }
             }
         }
+        
+        public bool ExecuteTransaction(IOopContext context, bool take)
+        {
+            // Does the item exist?
+            var item = Parser.GetItem(context);
+            if (item == null)
+                return false;
+
+            // Do we have a valid amount?
+            var amount = Parser.GetNumber(context);
+            if (amount <= 0)
+                return true;
+
+            // Modify value if we are taking.
+            if (take)
+                State.OopNumber = -State.OopNumber;
+
+            // Determine if the result will be in range.
+            var pendingAmount = item.Value + _engine.State.OopNumber;
+            if ((pendingAmount & 0xFFFF) >= 0x8000)
+                return true;
+
+            // Successful transaction.
+            item.Value = pendingAmount;
+            return false;
+        }        
     }
 }

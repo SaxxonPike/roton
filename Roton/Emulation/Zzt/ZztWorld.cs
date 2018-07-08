@@ -6,10 +6,10 @@ namespace Roton.Emulation.ZZT
 {
     public sealed class ZztWorld : IWorld
     {
-        public ZztWorld(IMemory memory)
+        public ZztWorld(IMemory memory, IKeyList keyList)
         {
             Memory = memory;
-            TimeLimitTimer = new MemoryTimer(memory, 0x4920);
+            Keys = keyList;
         }
 
         private IMemory Memory { get; }
@@ -32,8 +32,6 @@ namespace Roton.Emulation.ZZT
             set { Memory.Write16(0x4831, value); }
         }
 
-        public IFlags Flags => new ZztFlags(Memory);
-
         public int Gems
         {
             get { return Memory.Read16(0x4820); }
@@ -52,7 +50,7 @@ namespace Roton.Emulation.ZZT
             set { Memory.WriteBool(0x4922, value); }
         }
 
-        public IKeyList Keys => new KeyList(Memory, 0x4822);
+        public IKeyList Keys { get; }
 
         public string Name
         {
@@ -71,8 +69,6 @@ namespace Roton.Emulation.ZZT
             get { return 0; }
             set { }
         }
-
-        public ITimer TimeLimitTimer { get; }
 
         public int TimePassed
         {

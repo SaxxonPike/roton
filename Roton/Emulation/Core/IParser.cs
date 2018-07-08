@@ -15,5 +15,6 @@ namespace Roton.Emulation.Execution
         int ReadNumber(int index, IExecutable instructionSource);
         string ReadWord(int index, IExecutable instructionSource);
         int Search(int index, string term);
+        int GetNumber(IOopContext context);
     }
 }

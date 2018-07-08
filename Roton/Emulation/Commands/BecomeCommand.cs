@@ -6,23 +6,21 @@ namespace Roton.Emulation.Commands
 {
     public class BecomeCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IMessenger _messenger;
+        private readonly IEngine _engine;
 
-        public BecomeCommand(IParser parser, IMessenger messenger)
+        public BecomeCommand(IEngine engine)
         {
-            _parser = parser;
-            _messenger = messenger;
+            _engine = engine;
         }
 
         public string Name => "BECOME";
 
         public void Execute(IOopContext context)
         {
-            var kind = _parser.GetKind(context);
+            var kind = _engine.Parser.GetKind(context);
             if (kind == null)
             {
-                _messenger.RaiseError($"Bad #{Name}");
+                _engine.RaiseError($"Bad #{Name}");
                 return;
             }
 

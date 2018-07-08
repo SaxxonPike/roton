@@ -5,38 +5,27 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class SpiderBehavior : EnemyBehavior
     {
-        private readonly IActors _actors;
-        private readonly IRandom _random;
-        private readonly ITiles _tiles;
-        private readonly IElements _elements;
-        private readonly ICompass _compass;
-        private readonly IMover _mover;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Spider;
 
-        public SpiderBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements, ICompass compass,
-            IMover mover) : base(mover)
+        public SpiderBehavior(IEngine engine) : base(engine)
         {
-            _actors = actors;
-            _random = random;
-            _tiles = tiles;
-            _elements = elements;
-            _compass = compass;
-            _mover = mover;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 <= _random.Synced(10)
-                ? _compass.Rnd()
-                : _compass.Seek(actor.Location));
+            vector.CopyFrom(actor.P1 <= _engine.Random.Synced(10)
+                ? _engine.Rnd()
+                : _engine.Seek(actor.Location));
 
             if (!ActSpiderAttemptDirection(index, vector))
             {
-                var i = (_random.Synced(2) << 1) - 1;
+                var i = (_engine.Random.Synced(2) << 1) - 1;
                 if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap()))
                 {
                     if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap().Opposite()))
@@ -49,19 +38,19 @@ namespace Roton.Emulation.Behaviors
 
         private bool ActSpiderAttemptDirection(int index, IXyPair vector)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
             var target = actor.Location.Sum(vector);
-            var targetElement = _tiles.ElementAt(target).Id;
+            var targetElement = _engine.Tiles.ElementAt(target).Id;
 
-            if (targetElement == _elements.WebId)
+            if (targetElement == _engine.Elements.WebId)
             {
-                _mover.MoveActor(index, target);
+                _engine.MoveActor(index, target);
                 return true;
             }
 
-            if (targetElement == _elements.PlayerId)
+            if (targetElement == _engine.Elements.PlayerId)
             {
-                _mover.Attack(index, target);
+                _engine.Attack(index, target);
                 return true;
             }
 

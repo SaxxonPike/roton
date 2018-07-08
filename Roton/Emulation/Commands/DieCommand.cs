@@ -5,11 +5,11 @@ namespace Roton.Emulation.Commands
 {
     public class DieCommand : ICommand
     {
-        private readonly IElements _elements;
+        private readonly IEngine _engine;
 
-        public DieCommand(IElements elements)
+        public DieCommand(IEngine engine)
         {
-            _elements = elements;
+            _engine = engine;
         }
         
         public string Name => "DIE";
@@ -17,7 +17,7 @@ namespace Roton.Emulation.Commands
         public void Execute(IOopContext context)
         {
             context.Died = true;
-            context.DeathTile.SetTo(_elements.EmptyId, 0);
+            context.DeathTile.SetTo(_engine.Elements.EmptyId, 0);
         }
     }
 }

@@ -1,67 +1,47 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behaviors
 {
     public sealed class SlimeBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly ITiles _tiles;
-        private readonly IElements _elements;
-        private readonly IState _state;
-        private readonly ISounds _sounds;
-        private readonly ISounder _sounder;
-        private readonly ICompass _compass;
-        private readonly IMover _mover;
-        private readonly IDrawer _drawer;
-        private readonly ISpawner _spawner;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Slime;
 
-        public SlimeBehavior(IActors actors, ITiles tiles, IElements elements, IState state,
-            ISounds sounds, ISounder sounder, ICompass compass, IMover mover, IDrawer drawer, ISpawner spawner)
+        public SlimeBehavior(IEngine engine)
         {
-            _actors = actors;
-            _tiles = tiles;
-            _elements = elements;
-            _state = state;
-            _sounds = sounds;
-            _sounder = sounder;
-            _compass = compass;
-            _mover = mover;
-            _drawer = drawer;
-            _spawner = spawner;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
 
             if (actor.P1 >= actor.P2)
             {
                 var spawnCount = 0;
-                var color = _tiles[actor.Location].Color;
-                var slimeElement = _elements[_elements.SlimeId];
-                var slimeTrailTile = new Tile(_elements.BreakableId, color);
+                var color = _engine.Tiles[actor.Location].Color;
+                var slimeElement = _engine.Elements[_engine.Elements.SlimeId];
+                var slimeTrailTile = new Tile(_engine.Elements.BreakableId, color);
                 var source = actor.Location.Clone();
                 actor.P1 = 0;
 
                 for (var i = 0; i < 4; i++)
                 {
-                    var target = source.Sum(_compass.GetCardinalVector(i));
-                    if (_tiles.ElementAt(target).IsFloor)
+                    var target = source.Sum(_engine.GetCardinalVector(i));
+                    if (_engine.Tiles.ElementAt(target).IsFloor)
                     {
                         if (spawnCount == 0)
                         {
-                            _mover.MoveActor(index, target);
-                            _tiles[source].CopyFrom(slimeTrailTile);
-                            _drawer.UpdateBoard(source);
+                            _engine.MoveActor(index, target);
+                            _engine.Tiles[source].CopyFrom(slimeTrailTile);
+                            _engine.UpdateBoard(source);
                         }
                         else
                         {
-                            _spawner.SpawnActor(target, new Tile(_elements.SlimeId, color), slimeElement.Cycle, null);
-                            _actors[_state.ActorCount].P2 = actor.P2;
+                            _engine.SpawnActor(target, new Tile(_engine.Elements.SlimeId, color), slimeElement.Cycle, null);
+                            _engine.Actors[_engine.State.ActorCount].P2 = actor.P2;
                         }
 
                         spawnCount++;
@@ -70,9 +50,9 @@ namespace Roton.Emulation.Behaviors
 
                 if (spawnCount == 0)
                 {
-                    _mover.RemoveActor(index);
-                    _tiles[source].CopyFrom(slimeTrailTile);
-                    _drawer.UpdateBoard(source);
+                    _engine.RemoveActor(index);
+                    _engine.Tiles[source].CopyFrom(slimeTrailTile);
+                    _engine.UpdateBoard(source);
                 }
             }
             else
@@ -83,12 +63,12 @@ namespace Roton.Emulation.Behaviors
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var color = _tiles[location].Color;
-            var slimeIndex = _actors.ActorIndexAt(location);
-            _mover.Harm(slimeIndex);
-            _tiles[location].SetTo(_elements.BreakableId, color);
-            _drawer.UpdateBoard(location);
-            _engine.PlaySound(2, _sounds.SlimeDie);
+            var color = _engine.Tiles[location].Color;
+            var slimeIndex = _engine.ActorIndexAt(location);
+            _engine.Harm(slimeIndex);
+            _engine.Tiles[location].SetTo(_engine.Elements.BreakableId, color);
+            _engine.UpdateBoard(location);
+            _engine.PlaySound(2, _engine.Sounds.SlimeDie);
         }
     }
 }

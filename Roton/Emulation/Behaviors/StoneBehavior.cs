@@ -4,51 +4,34 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class StoneBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly ITiles _tiles;
-        private readonly IWorld _world;
-        private readonly IAlerts _alerts;
-        private readonly IRandom _random;
-        private readonly IHud _hud;
-        private readonly IDrawer _drawer;
-        private readonly IMover _mover;
-        private readonly IMessenger _messenger;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Stone;
 
-        public StoneBehavior(IActors actors, ITiles tiles, IWorld world, IAlerts alerts, IRandom random, IHud hud,
-            IDrawer drawer, IMover mover, IMessenger messenger)
+        public StoneBehavior(IEngine engine)
         {
-            _actors = actors;
-            _tiles = tiles;
-            _world = world;
-            _alerts = alerts;
-            _random = random;
-            _hud = hud;
-            _drawer = drawer;
-            _mover = mover;
-            _messenger = messenger;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            _drawer.UpdateBoard(_actors[index].Location);
+            _engine.UpdateBoard(_engine.Actors[index].Location);
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(0x41 + _random.NonSynced(0x1A), _tiles[location].Color);
+            return new AnsiChar(0x41 + _engine.Random.NonSynced(0x1A), _engine.Tiles[location].Color);
         }
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            if (_world.Stones < 0)
-                _world.Stones = 0;
+            if (_engine.World.Stones < 0)
+                _engine.World.Stones = 0;
 
-            _world.Stones++;
-            _mover.Destroy(location);
-            _hud.UpdateStatus();
-            _messenger.SetMessage(0xC8, _alerts.StoneMessage);
+            _engine.World.Stones++;
+            _engine.Destroy(location);
+            _engine.Hud.UpdateStatus();
+            _engine.SetMessage(0xC8, _engine.Alerts.StoneMessage);
         }
     }
 }

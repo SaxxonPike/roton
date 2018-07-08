@@ -4,11 +4,11 @@ namespace Roton.Emulation.Cheats
 {
     public class KeysCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public KeysCheat(IWorld world)
+        public KeysCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
 
         public string Name => "KEYS";
@@ -16,7 +16,7 @@ namespace Roton.Emulation.Cheats
         public void Execute()
         {
             for (var i = 1; i < 8; i++)
-                _world.Keys[i] = true;
+                _engine.World.Keys[i] = true;
         }
     }
 }

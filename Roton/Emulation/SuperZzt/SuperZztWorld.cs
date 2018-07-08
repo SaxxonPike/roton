@@ -6,10 +6,10 @@ namespace Roton.Emulation.SuperZZT
 {
     public sealed class SuperZztWorld : IWorld
     {
-        public SuperZztWorld(IMemory memory)
+        public SuperZztWorld(IMemory memory, IKeyList keyList)
         {
             Memory = memory;
-            TimeLimitTimer = new MemoryTimer(memory, 0x79CA);
+            Keys = keyList;
         }
 
         private IMemory Memory { get; }
@@ -52,7 +52,7 @@ namespace Roton.Emulation.SuperZZT
             set { Memory.WriteBool(0x79CC, value); }
         }
 
-        public IKeyList Keys => new KeyList(Memory, 0x7850);
+        public IKeyList Keys { get; }
 
         public string Name
         {
@@ -71,8 +71,6 @@ namespace Roton.Emulation.SuperZZT
             get { return Memory.Read16(0x79CD); }
             set { Memory.Write16(0x79CD, value); }
         }
-
-        public ITimer TimeLimitTimer { get; }
 
         public int TimePassed
         {

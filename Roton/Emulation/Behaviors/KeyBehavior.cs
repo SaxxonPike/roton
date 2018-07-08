@@ -1,52 +1,34 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Execution;
 using Roton.Emulation.SuperZZT;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behaviors
 {
     public sealed class KeyBehavior : ElementBehavior
     {
-        private readonly ITiles _tiles;
-        private readonly IWorld _world;
-        private readonly IAlerts _alerts;
-        private readonly ISounds _sounds;
-        private readonly ISounder _sounder;
-        private readonly IHud _hud;
-        private readonly IMessenger _messenger;
-        private readonly IMisc _misc;
-
+        private readonly IEngine _engine;
         public override string KnownName => KnownNames.Key;
 
-        public KeyBehavior(ITiles tiles, IWorld world, IAlerts alerts, ISounds sounds, ISounder sounder,
-            IHud hud, IMessenger messenger, IMisc misc)
+        public KeyBehavior(IEngine engine)
         {
-            _tiles = tiles;
-            _world = world;
-            _alerts = alerts;
-            _sounds = sounds;
-            _sounder = sounder;
-            _hud = hud;
-            _messenger = messenger;
-            _misc = misc;
+            _engine = engine;
         }
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var color = _tiles[location].Color & 0x07;
+            var color = _engine.Tiles[location].Color & 0x07;
             var keyIndex = color - 1;
-            if (_world.Keys[keyIndex])
+            if (_engine.World.Keys[keyIndex])
             {
-                _messenger.SetMessage(0xC8, _alerts.KeyAlreadyMessage(color));
-                _engine.PlaySound(2, _sounds.KeyAlready);
+                _engine.SetMessage(0xC8, _engine.Alerts.KeyAlreadyMessage(color));
+                _engine.PlaySound(2, _engine.Sounds.KeyAlready);
             }
             else
             {
-                _world.Keys[keyIndex] = true;
-                _misc.RemoveItem(location);
-                _hud.UpdateStatus();
-                _messenger.SetMessage(0xC8, _alerts.KeyPickupMessage(color));
-                _engine.PlaySound(2, _sounds.Key);
+                _engine.World.Keys[keyIndex] = true;
+                _engine.RemoveItem(location);
+                _engine.Hud.UpdateStatus();
+                _engine.SetMessage(0xC8, _engine.Alerts.KeyPickupMessage(color));
+                _engine.PlaySound(2, _engine.Sounds.Key);
             }
         }
     }

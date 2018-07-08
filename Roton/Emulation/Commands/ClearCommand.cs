@@ -5,21 +5,19 @@ namespace Roton.Emulation.Commands
 {
     public class ClearCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IFlags _flags;
+        private readonly IEngine _engine;
 
-        public ClearCommand(IParser parser, IFlags flags)
+        public ClearCommand(IEngine engine)
         {
-            _parser = parser;
-            _flags = flags;
+            _engine = engine;
         }
         
         public string Name => "CLEAR";
         
         public void Execute(IOopContext context)
         {
-            var flag = _parser.ReadWord(context.Index, context);
-            _flags.Remove(flag);
+            var flag = _engine.Parser.ReadWord(context.Index, context);
+            _engine.Flags.Remove(flag);
         }
     }
 }

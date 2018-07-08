@@ -4,18 +4,18 @@ namespace Roton.Emulation.Cheats
 {
     public class TorchesCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public TorchesCheat(IWorld world)
+        public TorchesCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
         
         public string Name => "TORCHES";
         
         public void Execute()
         {
-            _world.Torches += 3;
+            _engine.World.Torches += 3;
         }
     }
 }

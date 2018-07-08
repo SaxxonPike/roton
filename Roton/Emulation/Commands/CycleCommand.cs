@@ -5,18 +5,18 @@ namespace Roton.Emulation.Commands
 {
     public class CycleCommand : ICommand
     {
-        private readonly IParser _parser;
+        private readonly IEngine _engine;
 
-        public CycleCommand(IParser parser)
+        public CycleCommand(IEngine engine)
         {
-            _parser = parser;
+            _engine = engine;
         }
 
         public string Name => "CYCLE";
         
         public void Execute(IOopContext context)
         {
-            var value = _parser.ReadNumber(context.Index, context);
+            var value = _engine.Parser.ReadNumber(context.Index, context);
             if (value > 0)
             {
                 context.Actor.Cycle = value;

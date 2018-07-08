@@ -4,18 +4,18 @@ namespace Roton.Emulation.Cheats
 {
     public class AmmoCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public AmmoCheat(IWorld world)
+        public AmmoCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
         
         public string Name => "AMMO";
         
         public void Execute()
         {
-            _world.Ammo += 5;
+            _engine.World.Ammo += 5;
         }
     }
 }

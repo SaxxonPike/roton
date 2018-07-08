@@ -4,18 +4,18 @@ namespace Roton.Emulation.Cheats
 {
     public class GemsCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public GemsCheat(IWorld world)
+        public GemsCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
 
         public string Name => "GEMS";
         
         public void Execute()
         {
-            _world.Gems += 5;
+            _engine.World.Gems += 5;
         }
     }
 }

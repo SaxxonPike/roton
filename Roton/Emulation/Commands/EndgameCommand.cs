@@ -4,18 +4,18 @@ namespace Roton.Emulation.Commands
 {
     public class EndgameCommand : ICommand
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public EndgameCommand(IWorld world)
+        public EndgameCommand(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
         
         public string Name => "ENDGAME";
         
         public void Execute(IOopContext context)
         {
-            _world.Health = 0;
+            _engine.World.Health = 0;
         }
     }
 }

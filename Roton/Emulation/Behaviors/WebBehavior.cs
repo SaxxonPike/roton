@@ -4,23 +4,19 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class WebBehavior : ElementBehavior
     {
-        private readonly IElements _elements;
-        private readonly IState _state;
-        private readonly ITiles _tiles;
+        private readonly IEngine _engine;
         
         public override string KnownName => KnownNames.Web;
 
-        public WebBehavior(IElements elements, IState state, ITiles tiles)
+        public WebBehavior(IEngine engine)
         {
-            _elements = elements;
-            _state = state;
-            _tiles = tiles;
+            _engine = engine;
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(_state.WebChars[_tiles.Adjacent(location, _elements.WebId)],
-                _tiles[location].Color);
+            return new AnsiChar(_engine.State.WebChars[_engine.Adjacent(location, _engine.Elements.WebId)],
+                _engine.Tiles[location].Color);
         }
     }
 }

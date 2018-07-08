@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Roton.Emulation.Cheats;
+using Roton.Emulation.Commands;
+using Roton.Emulation.Conditions;
+using Roton.Emulation.Directions;
 using Roton.Emulation.Execution;
 using Roton.Emulation.Mapping;
+using Roton.Emulation.Targets;
 using Roton.Events;
 using Roton.FileIo;
 
@@ -22,7 +27,6 @@ namespace Roton.Core
         IGameSerializer GameSerializer { get; }
         IInterpreter Interpreter { get; }
         IHud Hud { get; }
-        IMemory Memory { get; }
         IActor Player { get; }
         ISounds Sounds { get; }
         IState State { get; }
@@ -61,6 +65,14 @@ namespace Roton.Core
         void RaiseError(string error);
         IRandom Random { get; }
         IConfig Config { get; }
+        IFlags Flags { get; }
+        ICheats Cheats { get; }
+        ICommands Commands { get; }
+        IParser Parser { get; }
+        IConditions Conditions { get; }
+        IDirections Directions { get; }
+        ITargets Targets { get; }
+        IColors Colors { get; }
         int ReadActorCodeByte(int index, IExecutable instructionSource);
         string ReadActorCodeLine(int index, IExecutable instructionSource);
         int ReadActorCodeNumber(int index, IExecutable instructionSource);
@@ -87,5 +99,10 @@ namespace Roton.Core
         void UpdateStatus();
         void WaitForTick();
         IActor ActorAt(IXyPair difference);
+        void ShowHelp(string name);
+        void SetEditorMode();
+        void SetGameMode();
+        IElement ElementAt(IXyPair location);
+        bool ExecuteTransaction(IOopContext context, bool take);
     }
 }

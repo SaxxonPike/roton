@@ -6,13 +6,11 @@ namespace Roton.Emulation.Commands
 {
     public class BindCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IActors _actors;
+        private readonly IEngine _engine;
 
-        public BindCommand(IParser parser, IActors actors)
+        public BindCommand(IEngine engine)
         {
-            _parser = parser;
-            _actors = actors;
+            _engine = engine;
         }
         
         public string Name => "BIND";
@@ -20,11 +18,11 @@ namespace Roton.Emulation.Commands
         public void Execute(IOopContext context)
         {
             var search = new SearchContext();
-            var target = _parser.ReadWord(context.Index, context);
+            var target = _engine.Parser.ReadWord(context.Index, context);
             search.SearchTarget = target;
-            if (_parser.GetTarget(search))
+            if (_engine.Parser.GetTarget(search))
             {
-                var targetActor = _actors[search.SearchIndex];
+                var targetActor = _engine.Actors[search.SearchIndex];
                 context.Actor.Pointer = targetActor.Pointer;
                 context.Actor.Length = targetActor.Length;
                 context.Instruction = 0;

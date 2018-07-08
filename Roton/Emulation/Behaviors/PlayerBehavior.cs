@@ -8,133 +8,96 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class PlayerBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly IElements _elements;
-        private readonly IState _state;
-        private readonly ITiles _tiles;
-        private readonly IWorld _world;
         private readonly IEngine _engine;
-        private readonly IAlerts _alerts;
-        private readonly IBoard _board;
-        private readonly ISounds _sounds;
-        private readonly IHud _hud;
-        private readonly ISounder _sounder;
-        private readonly IMover _mover;
-        private readonly IDrawer _drawer;
-        private readonly IPlotter _plotter;
-        private readonly IMessenger _messenger;
-        private readonly ISpawner _spawner;
-        private readonly IRadius _radius;
-        private readonly IMisc _misc;
-
+        
         public override string KnownName => KnownNames.Player;
 
-        public PlayerBehavior(IActors actors, IElements elements, IState state, ITiles tiles, IWorld world,
-            IEngine engine, IAlerts alerts, IBoard board, ISounds sounds, IHud hud, ISounder sounder,
-            IMover mover, IDrawer drawer, IPlotter plotter, IMessenger messenger, ISpawner spawner, IRadius radius,
-            IMisc misc)
+        public PlayerBehavior(IEngine engine)
         {
-            _actors = actors;
-            _elements = elements;
-            _state = state;
-            _tiles = tiles;
-            _world = world;
             _engine = engine;
-            _alerts = alerts;
-            _board = board;
-            _sounds = sounds;
-            _hud = hud;
-            _sounder = sounder;
-            _mover = mover;
-            _drawer = drawer;
-            _plotter = plotter;
-            _messenger = messenger;
-            _spawner = spawner;
-            _radius = radius;
-            _misc = misc;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
-            var playerElement = _elements[_elements.PlayerId];
+            var actor = _engine.Actors[index];
+            var playerElement = _engine.Elements[_engine.Elements.PlayerId];
 
             // Energizer graphics
 
-            if (_world.EnergyCycles > 0)
+            if (_engine.World.EnergyCycles > 0)
             {
                 playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
-                if ((_state.GameCycle & 0x01) == 0)
+                if ((_engine.State.GameCycle & 0x01) == 0)
                 {
-                    _tiles[actor.Location].Color = ((_state.GameCycle % 7 + 1) << 4) | 0x0F;
+                    _engine.Tiles[actor.Location].Color = ((_engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
                 }
                 else
                 {
-                    _tiles[actor.Location].Color = 0x0F;
+                    _engine.Tiles[actor.Location].Color = 0x0F;
                 }
 
-                _drawer.UpdateBoard(actor.Location);
+                _engine.UpdateBoard(actor.Location);
             }
             else
             {
-                _plotter.ForcePlayerColor(index);
+                _engine.ForcePlayerColor(index);
             }
 
             // Health logic
 
-            if (_world.Health <= 0)
+            if (_engine.World.Health <= 0)
             {
-                _state.KeyVector.SetTo(0, 0);
-                _state.KeyShift = false;
-                if (_actors.ActorIndexAt(new Location(0, 0)) == -1)
+                _engine.State.KeyVector.SetTo(0, 0);
+                _engine.State.KeyShift = false;
+                if (_engine.Actors.ActorIndexAt(new Location(0, 0)) == -1)
                 {
-                    _messenger.SetMessage(0x7D00, _alerts.GameOverMessage);
+                    _engine.SetMessage(0x7D00, _engine.Alerts.GameOverMessage);
                 }
 
-                _state.GameWaitTime = 0;
-                _state.GameOver = true;
+                _engine.State.GameWaitTime = 0;
+                _engine.State.GameOver = true;
             }
 
-            if (_state.KeyVector.IsNonZero())
+            if (_engine.State.KeyVector.IsNonZero())
             {
-                if (_state.KeyShift || _state.KeyPressed == 0x20)
+                if (_engine.State.KeyShift || _engine.State.KeyPressed == 0x20)
                 {
                     // Shooting logic
 
-                    if (_board.MaximumShots > 0)
+                    if (_engine.Board.MaximumShots > 0)
                     {
-                        if (_world.Ammo > 0)
+                        if (_engine.World.Ammo > 0)
                         {
                             var bulletCount =
-                                _actors.Count(
-                                    a => a.P1 == 0 && _tiles[a.Location].Id == _elements.BulletId);
-                            if (bulletCount < _board.MaximumShots)
+                                _engine.Actors.Count(
+                                    a => a.P1 == 0 && _engine.Tiles[a.Location].Id == _engine.Elements.BulletId);
+                            if (bulletCount < _engine.Board.MaximumShots)
                             {
-                                if (_spawner.SpawnProjectile(_elements.BulletId, actor.Location,
-                                    _state.KeyVector, false))
+                                if (_engine.SpawnProjectile(_engine.Elements.BulletId, actor.Location,
+                                    _engine.State.KeyVector, false))
                                 {
-                                    _world.Ammo--;
-                                    _hud.UpdateStatus();
-                                    _engine.PlaySound(2, _sounds.Shoot);
+                                    _engine.World.Ammo--;
+                                    _engine.Hud.UpdateStatus();
+                                    _engine.PlaySound(2, _engine.Sounds.Shoot);
                                 }
                             }
                         }
                         else
                         {
-                            if (_alerts.OutOfAmmo)
+                            if (_engine.Alerts.OutOfAmmo)
                             {
-                                _messenger.SetMessage(0xC8, _alerts.NoAmmoMessage);
-                                _alerts.OutOfAmmo = false;
+                                _engine.SetMessage(0xC8, _engine.Alerts.NoAmmoMessage);
+                                _engine.Alerts.OutOfAmmo = false;
                             }
                         }
                     }
                     else
                     {
-                        if (_alerts.CantShootHere)
+                        if (_engine.Alerts.CantShootHere)
                         {
-                            _messenger.SetMessage(0xC8, _alerts.NoShootMessage);
-                            _alerts.CantShootHere = false;
+                            _engine.SetMessage(0xC8, _engine.Alerts.NoShootMessage);
+                            _engine.Alerts.CantShootHere = false;
                         }
                     }
                 }
@@ -142,18 +105,18 @@ namespace Roton.Emulation.Behaviors
                 {
                     // Movement logic
 
-                    _tiles.ElementAt(actor.Location.Sum(_state.KeyVector))
-                        .Interact(actor.Location.Sum(_state.KeyVector), 0, _state.KeyVector);
-                    if (!_state.KeyVector.IsZero())
+                    _engine.Tiles.ElementAt(actor.Location.Sum(_engine.State.KeyVector))
+                        .Interact(actor.Location.Sum(_engine.State.KeyVector), 0, _engine.State.KeyVector);
+                    if (!_engine.State.KeyVector.IsZero())
                     {
-                        if (!_state.SoundPlaying)
+                        if (!_engine.State.SoundPlaying)
                         {
                             // TODO: player step sound plays here
                         }
 
-                        if (_tiles.ElementAt(actor.Location.Sum(_state.KeyVector)).IsFloor)
+                        if (_engine.Tiles.ElementAt(actor.Location.Sum(_engine.State.KeyVector)).IsFloor)
                         {
-                            _mover.MoveActor(0, actor.Location.Sum(_state.KeyVector));
+                            _engine.MoveActor(0, actor.Location.Sum(_engine.State.KeyVector));
                         }
                     }
                 }
@@ -161,97 +124,97 @@ namespace Roton.Emulation.Behaviors
 
             // Hotkey logic
 
-            var hotkey = _state.KeyPressed.ToUpperCase();
+            var hotkey = _engine.State.KeyPressed.ToUpperCase();
             switch (hotkey)
             {
                 case 0x51: // Q
                 case 0x1B: // escape
-                    _state.BreakGameLoop = _state.GameOver || _hud.EndGameConfirmation();
+                    _engine.State.BreakGameLoop = _engine.State.GameOver || _engine.Hud.EndGameConfirmation();
                     break;
                 case 0x53: // S
-                    _hud.SaveGame();
+                    _engine.Hud.SaveGame();
                     break;
                 case 0x50: // P
-                    if (_world.Health > 0)
+                    if (_engine.World.Health > 0)
                     {
-                        _state.GamePaused = true;
+                        _engine.State.GamePaused = true;
                     }
 
                     break;
                 case 0x42: // B
-                    _state.GameQuiet = !_state.GameQuiet;
-                    _sounder.ClearSound();
-                    _hud.UpdateStatus();
-                    _state.KeyPressed = 0x20;
+                    _engine.State.GameQuiet = !_engine.State.GameQuiet;
+                    _engine.ClearSound();
+                    _engine.Hud.UpdateStatus();
+                    _engine.State.KeyPressed = 0x20;
                     break;
                 case 0x48: // H
                     _engine.ShowInGameHelp();
                     break;
                 case 0x3F: // ?
-                    _hud.EnterCheat();
+                    _engine.Hud.EnterCheat();
                     break;
                 default:
-                    _misc.HandlePlayerInput(actor, hotkey);
+                    _engine.HandlePlayerInput(actor, hotkey);
                     break;
             }
 
             // Torch logic
 
-            if (_world.TorchCycles > 0)
+            if (_engine.World.TorchCycles > 0)
             {
-                _world.TorchCycles--;
-                if (_world.TorchCycles <= 0)
+                _engine.World.TorchCycles--;
+                if (_engine.World.TorchCycles <= 0)
                 {
-                    _radius.Update(actor.Location, RadiusMode.Update);
-                    _engine.PlaySound(3, _sounds.TorchOut);
+                    _engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                    _engine.PlaySound(3, _engine.Sounds.TorchOut);
                 }
 
-                if (_world.TorchCycles % 40 == 0)
+                if (_engine.World.TorchCycles % 40 == 0)
                 {
-                    _hud.UpdateStatus();
+                    _engine.Hud.UpdateStatus();
                 }
             }
 
             // Energizer logic
 
-            if (_world.EnergyCycles > 0)
+            if (_engine.World.EnergyCycles > 0)
             {
-                _world.EnergyCycles--;
-                if (_world.EnergyCycles == 10)
+                _engine.World.EnergyCycles--;
+                if (_engine.World.EnergyCycles == 10)
                 {
-                    _engine.PlaySound(9, _sounds.EnergyOut);
+                    _engine.PlaySound(9, _engine.Sounds.EnergyOut);
                 }
-                else if (_world.EnergyCycles <= 0)
+                else if (_engine.World.EnergyCycles <= 0)
                 {
-                    _plotter.ForcePlayerColor(index);
+                    _engine.ForcePlayerColor(index);
                 }
             }
 
             // Time limit logic
 
-            if (_board.TimeLimit > 0)
+            if (_engine.Board.TimeLimit > 0)
             {
-                if (_world.Health > 0)
+                if (_engine.World.Health > 0)
                 {
                     if (_engine.GetPlayerTimeElapsed(100))
                     {
-                        _world.TimePassed++;
-                        if (_board.TimeLimit - 10 == _world.TimePassed)
+                        _engine.World.TimePassed++;
+                        if (_engine.Board.TimeLimit - 10 == _engine.World.TimePassed)
                         {
-                            _messenger.SetMessage(0xC8, _alerts.TimeMessage);
-                            _engine.PlaySound(3, _sounds.TimeLow);
+                            _engine.SetMessage(0xC8, _engine.Alerts.TimeMessage);
+                            _engine.PlaySound(3, _engine.Sounds.TimeLow);
                         }
-                        else if (_world.TimePassed >= _board.TimeLimit)
+                        else if (_engine.World.TimePassed >= _engine.Board.TimeLimit)
                         {
-                            _mover.Harm(0);
+                            _engine.Harm(0);
                         }
 
-                        _hud.UpdateStatus();
+                        _engine.Hud.UpdateStatus();
                     }
                 }
             }
 
-            _mover.MoveActorOnRiver(index);
+            _engine.MoveActorOnRiver(index);
         }
     }
 }

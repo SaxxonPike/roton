@@ -4,41 +4,35 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class TigerBehavior : LionBehavior
     {
-        private readonly IActors _actors;
-        private readonly IElements _elements;
-        private readonly IRandom _random;
-        private readonly ISpawner _spawner;
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Tiger;
 
-        public TigerBehavior(IActors actors, IElements elements, IRandom random, ISpawner spawner, IMover mover,
-            ITiles tiles, ICompass compass) : base(random, tiles, actors, elements, compass, mover)
+        public TigerBehavior(IEngine engine) : base(engine)
         {
-            _actors = actors;
-            _elements = elements;
-            _random = random;
-            _spawner = spawner;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
-            var firingElement = _elements.BulletId;
+            var actor = _engine.Actors[index];
+            var firingElement = _engine.Elements.BulletId;
 
             if (actor.P2 >= 0x80)
             {
-                firingElement = _elements.StarId;
+                firingElement = _engine.Elements.StarId;
             }
 
-            if ((actor.P2 & 0x7F) > 3 * _random.Synced(10))
+            if ((actor.P2 & 0x7F) > 3 * _engine.Random.Synced(10))
             {
-                var shot = actor.Location.X.AbsDiff(_actors.Player.Location.X) <= 2 &&
-                           _spawner.SpawnProjectile(firingElement, actor.Location,
-                               new Vector(0, (_actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
+                var shot = actor.Location.X.AbsDiff(_engine.Actors.Player.Location.X) <= 2 &&
+                           _engine.SpawnProjectile(firingElement, actor.Location,
+                               new Vector(0, (_engine.Actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
 
-                if (!shot && actor.Location.Y.AbsDiff(_actors.Player.Location.Y) <= 2)
+                if (!shot && actor.Location.Y.AbsDiff(_engine.Actors.Player.Location.Y) <= 2)
                 {
-                    _spawner.SpawnProjectile(firingElement, actor.Location,
-                        new Vector((_actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
+                    _engine.SpawnProjectile(firingElement, actor.Location,
+                        new Vector((_engine.Actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
                 }
             }
 

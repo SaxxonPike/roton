@@ -4,18 +4,18 @@ namespace Roton.Emulation.Cheats
 {
     public class HealthCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public HealthCheat(IWorld world)
+        public HealthCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
         
         public string Name => "HEALTH";
         
         public void Execute()
         {
-            _world.Health += 50;
+            _engine.World.Health += 50;
         }
     }
 }

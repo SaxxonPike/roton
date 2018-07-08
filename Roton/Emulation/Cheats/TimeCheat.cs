@@ -4,18 +4,18 @@ namespace Roton.Emulation.Cheats
 {
     public class TimeCheat : ICheat
     {
-        private readonly IWorld _world;
+        private readonly IEngine _engine;
 
-        public TimeCheat(IWorld world)
+        public TimeCheat(IEngine engine)
         {
-            _world = world;
+            _engine = engine;
         }
         
         public string Name => "TIME";
         
         public void Execute()
         {
-            _world.TimePassed -= 30;
+            _engine.World.TimePassed -= 30;
         }
     }
 }

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Roton.Core;
 
 namespace Roton.Emulation.Execution
 {
     public abstract class Hud : IHud
     {
-        private readonly Lazy<IEngine> _engine;
+        private readonly IEngine _engine;
 
-        protected Hud(Lazy<IEngine> engine)
+        protected Hud(IEngine engine)
         {
             _engine = engine;
         }
-
-        protected IEngine Engine => _engine.Value;
 
         public virtual void ClearPausing()
         {
@@ -121,8 +118,8 @@ namespace Roton.Emulation.Execution
         {
             while (true)
             {
-                Engine.WaitForTick();
-                var key = Engine.ReadKey().ToUpperCase();
+                _engine.WaitForTick();
+                var key = _engine.ReadKey().ToUpperCase();
                 switch (key)
                 {
                     case 0x59:

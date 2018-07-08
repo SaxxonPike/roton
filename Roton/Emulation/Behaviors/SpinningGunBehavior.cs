@@ -4,81 +4,66 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class SpinningGunBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly IElements _elements;
-        private readonly IRandom _random;
-        private readonly IState _state;
-        private readonly ITiles _tiles;
-        private readonly IDrawer _drawer;
-        private readonly ICompass _compass;
-        private readonly ISpawner _spawner;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.SpinningGun;
 
-        public SpinningGunBehavior(IActors actors, IElements elements, IRandom random, IState state,
-            ITiles tiles, IDrawer drawer, ICompass compass, ISpawner spawner)
+        public SpinningGunBehavior(IEngine engine)
         {
-            _actors = actors;
-            _elements = elements;
-            _random = random;
-            _state = state;
-            _tiles = tiles;
-            _drawer = drawer;
-            _compass = compass;
-            _spawner = spawner;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
-            var firingElement = _elements.BulletId;
+            var actor = _engine.Actors[index];
+            var firingElement = _engine.Elements.BulletId;
             var shot = false;
 
-            _drawer.UpdateBoard(actor.Location);
+            _engine.UpdateBoard(actor.Location);
 
             if (actor.P2 >= 0x80)
             {
-                firingElement = _elements.StarId;
+                firingElement = _engine.Elements.StarId;
             }
 
-            if ((actor.P2 & 0x7F) > _random.Synced(9))
+            if ((actor.P2 & 0x7F) > _engine.Random.Synced(9))
             {
-                if (actor.P1 >= _random.Synced(9))
+                if (actor.P1 >= _engine.Random.Synced(9))
                 {
-                    if (actor.Location.X.AbsDiff(_actors.Player.Location.X) <= 2)
+                    if (actor.Location.X.AbsDiff(_engine.Actors.Player.Location.X) <= 2)
                     {
-                        shot = _spawner.SpawnProjectile(firingElement, actor.Location,
-                            new Vector(0, (_actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
+                        shot = _engine.SpawnProjectile(firingElement, actor.Location,
+                            new Vector(0, (_engine.Actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
                     }
 
-                    if (!shot && actor.Location.Y.AbsDiff(_actors.Player.Location.Y) <= 2)
+                    if (!shot && actor.Location.Y.AbsDiff(_engine.Actors.Player.Location.Y) <= 2)
                     {
-                        _spawner.SpawnProjectile(firingElement, actor.Location,
-                            new Vector((_actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
+                        _engine.SpawnProjectile(firingElement, actor.Location,
+                            new Vector((_engine.Actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
                     }
                 }
                 else
                 {
-                    _spawner.SpawnProjectile(firingElement, actor.Location, _compass.Rnd(), true);
+                    _engine.SpawnProjectile(firingElement, actor.Location, _engine.Rnd(), true);
                 }
             }
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            switch (_state.GameCycle & 0x7)
+            switch (_engine.State.GameCycle & 0x7)
             {
                 case 0:
                 case 1:
-                    return new AnsiChar(0x18, _tiles[location].Color);
+                    return new AnsiChar(0x18, _engine.Tiles[location].Color);
                 case 2:
                 case 3:
-                    return new AnsiChar(0x1A, _tiles[location].Color);
+                    return new AnsiChar(0x1A, _engine.Tiles[location].Color);
                 case 4:
                 case 5:
-                    return new AnsiChar(0x19, _tiles[location].Color);
+                    return new AnsiChar(0x19, _engine.Tiles[location].Color);
                 default:
-                    return new AnsiChar(0x1B, _tiles[location].Color);
+                    return new AnsiChar(0x1B, _engine.Tiles[location].Color);
             }
         }
     }

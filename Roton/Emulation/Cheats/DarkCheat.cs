@@ -4,21 +4,19 @@ namespace Roton.Emulation.Cheats
 {
     public class DarkCheat : ICheat
     {
-        private readonly IBoard _board;
-        private readonly IHud _hud;
+        private readonly IEngine _engine;
 
-        public DarkCheat(IBoard board, IHud hud)
+        public DarkCheat(IEngine engine)
         {
-            _board = board;
-            _hud = hud;
+            _engine = engine;
         }
         
         public string Name => "DARK";
         
         public void Execute()
         {
-            _board.IsDark = true;
-            _hud.RedrawBoard();
+            _engine.Board.IsDark = true;
+            _engine.Hud.RedrawBoard();
         }
     }
 }

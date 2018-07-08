@@ -1,51 +1,31 @@
-using System;
 using Roton.Core;
 using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Zzt
 {
-    public class ZztGalaxy : IGalaxy
+    public class ZztFeatures : IFeatures
     {
-        private readonly Lazy<IUniverse> _universe;
-        private readonly IActors _actors;
-        private readonly ITiles _tiles;
-        private readonly IElements _elements;
-        private readonly IBoard _board;
-        private readonly IMessenger _messenger;
-        private readonly IAlerts _alerts;
-        private readonly IWorld _world;
-        private readonly IHud _hud;
-        private readonly IState _state;
+        private readonly IEngine _engine;
 
-        public ZztGalaxy(Lazy<IUniverse> universe, IActors actors, ITiles tiles, IElements elements, IBoard board,
-            IMessenger messenger, IAlerts alerts, IWorld world, IHud hud, IState state)
+        public ZztFeatures(IEngine engine)
         {
-            _universe = universe;
-            _actors = actors;
-            _tiles = tiles;
-            _elements = elements;
-            _board = board;
-            _messenger = messenger;
-            _alerts = alerts;
-            _world = world;
-            _hud = hud;
-            _state = state;
+            _engine = engine;
         }
 
         public void LockActor(int index)
         {
-            _actors[index].P2 = 1;
+            _engine.Actors[index].P2 = 1;
         }
 
         public void UnlockActor(int index)
         {
-            _actors[index].P2 = 0;
+            _engine.Actors[index].P2 = 0;
         }
 
         public bool IsActorLocked(int index)
         {
-            return _actors[index].P2 != 0;
+            return _engine.Actors[index].P2 != 0;
         }
 
         public void EnterBoard()
@@ -57,44 +37,49 @@ namespace Roton.Emulation.Zzt
         {
             if (context.Message.Count == 1)
             {
-                _messenger.SetMessage(0xC8, new Message(context.Message));
+                _engine.SetMessage(0xC8, new Message(context.Message));
             }
             else
             {
-                _state.KeyVector.SetTo(0, 0);
-                _hud.ShowScroll(context.Message);
+                _engine.State.KeyVector.SetTo(0, 0);
+                _engine.Hud.ShowScroll(context.Message);
             }
         }
-        
+
+        public void Init()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void HandlePlayerInput(IActor actor, int hotkey)
         {
             switch (hotkey)
             {
                 case 0x54: // T
-                    if (_world.TorchCycles <= 0)
+                    if (_engine.World.TorchCycles <= 0)
                     {
-                        if (_world.Torches <= 0)
+                        if (_engine.World.Torches <= 0)
                         {
-                            if (_alerts.NoTorches)
+                            if (_engine.Alerts.NoTorches)
                             {
-                                _messenger.SetMessage(0xC8, _alerts.NoTorchMessage);
-                                _alerts.NoTorches = false;
+                                _engine.SetMessage(0xC8, _engine.Alerts.NoTorchMessage);
+                                _engine.Alerts.NoTorches = false;
                             }
                         }
-                        else if (!_board.IsDark)
+                        else if (!_engine.Board.IsDark)
                         {
-                            if (_alerts.NotDark)
+                            if (_engine.Alerts.NotDark)
                             {
-                                _messenger.SetMessage(0xC8, _alerts.NotDarkMessage);
-                                _alerts.NotDark = false;
+                                _engine.SetMessage(0xC8, _engine.Alerts.NotDarkMessage);
+                                _engine.Alerts.NotDark = false;
                             }
                         }
                         else
                         {
-                            _world.Torches--;
-                            _world.TorchCycles = 0xC8;
-                            _universe.Value.Radius(actor.Location, RadiusMode.Update);
-                            _hud.UpdateStatus();
+                            _engine.World.Torches--;
+                            _engine.World.TorchCycles = 0xC8;
+                            _engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                            _engine.Hud.UpdateStatus();
                         }
                     }
 
@@ -126,7 +111,7 @@ namespace Roton.Emulation.Zzt
                     break;
                 case 0x1B: // esc
                 case 0x51: // Q
-                    _state.QuitZzt = _hud.QuitZztConfirmation();
+                    _engine.State.QuitZzt = _engine.Hud.QuitZztConfirmation();
                     break;
             }
 
@@ -140,7 +125,7 @@ namespace Roton.Emulation.Zzt
 
         public void ShowInGameHelp()
         {
-            throw new System.NotImplementedException();
+            _engine.ShowHelp("GAME");
         }
 
         public string GetWorldName(string baseName)

@@ -4,21 +4,19 @@ namespace Roton.Emulation.Commands
 {
     public class GiveCommand : ICommand
     {
-        private readonly IBroker _broker;
-        private readonly IHud _hud;
+        private readonly IEngine _engine;
 
-        public GiveCommand(IBroker broker, IHud hud)
+        public GiveCommand(IEngine engine)
         {
-            _broker = broker;
-            _hud = hud;
+            _engine = engine;
         }
         
         public string Name => "GIVE";
         
         public void Execute(IOopContext context)
         {
-            context.Resume = _broker.ExecuteTransaction(context, false);
-            _hud.UpdateStatus();
+            context.Resume = _engine.ExecuteTransaction(context, false);
+            _engine.Hud.UpdateStatus();
         }
     }
 }

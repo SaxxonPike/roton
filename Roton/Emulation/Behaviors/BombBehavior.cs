@@ -1,6 +1,5 @@
 ﻿using Roton.Core;
 using Roton.Emulation.Execution;
-using Roton.Extensions;
 
 namespace Roton.Emulation.Behaviors
 {
@@ -41,13 +40,13 @@ namespace Roton.Emulation.Behaviors
 
         public override AnsiChar Draw(IXyPair location)
         {
-            var p1 = _engine.Actors.ActorAt(location).P1;
+            var p1 = _engine.ActorAt(location).P1;
             return new AnsiChar(p1 > 1 ? 0x30 + p1 : 0x0B, _engine.Tiles[location].Color);
         }
 
         public override void Interact(IXyPair location, int index, IXyPair vector)
         {
-            var actor = _engine.Actors.ActorAt(location);
+            var actor = _engine.ActorAt(location);
             if (actor.P1 == 0)
             {
                 actor.P1 = 9;

@@ -5,24 +5,22 @@ namespace Roton.Emulation.Commands
 {
     public class CharCommand : ICommand
     {
-        private readonly IParser _parser;
-        private readonly IDrawer _drawer;
+        private readonly IEngine _engine;
 
-        public CharCommand(IParser parser, IDrawer drawer)
+        public CharCommand(IEngine engine)
         {
-            _parser = parser;
-            _drawer = drawer;
+            _engine = engine;
         }
         
         public string Name => "CHAR";
         
         public void Execute(IOopContext context)
         {
-            var value = _parser.ReadNumber(context.Index, context);
+            var value = _engine.Parser.ReadNumber(context.Index, context);
             if (value >= 0)
             {
                 context.Actor.P1 = value;
-                _drawer.UpdateBoard(context.Actor.Location);
+                _engine.UpdateBoard(context.Actor.Location);
             }
         }
     }

@@ -1,71 +1,62 @@
 ﻿using Roton.Core;
-using Roton.Emulation.Execution;
 using Roton.Extensions;
 
 namespace Roton.Emulation.Behaviors
 {
     public sealed class PusherBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly ITiles _tiles;
-        private readonly ISounds _sounds;
-        private readonly IElements _elements;
-        private readonly ISounder _sounder;
-        private readonly IMover _mover;
-
+        private readonly IEngine _engine;
         public override string KnownName => KnownNames.Pusher;
 
-        public PusherBehavior(IActors actors, ITiles tiles, ISounds sounds, IElements elements,
-            ISounder sounder, IMover mover)
+        public PusherBehavior(IEngine engine)
         {
-            _actors = actors;
-            _tiles = tiles;
-            _sounds = sounds;
-            _elements = elements;
-            _sounder = sounder;
-            _mover = mover;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
             var source = actor.Location.Clone();
 
-            if (!_tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
+            if (!_engine.Tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
             {
-                _mover.Push(actor.Location.Sum(actor.Vector), actor.Vector);
+                _engine.Push(actor.Location.Sum(actor.Vector), actor.Vector);
             }
 
-            index = _actors.ActorIndexAt(source);
-            actor = _actors[index];
-            if (!_tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) return;
+            index = _engine.Actors.ActorIndexAt(source);
+            actor = _engine.Actors[index];
+            
+            if (!_engine.Tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) 
+                return;
 
-            _mover.MoveActor(index, actor.Location.Sum(actor.Vector));
-            _engine.PlaySound(2, _sounds.Push);
+            _engine.MoveActor(index, actor.Location.Sum(actor.Vector));
+            _engine.PlaySound(2, _engine.Sounds.Push);
             var behindLocation = actor.Location.Difference(actor.Vector);
-            if (_tiles[behindLocation].Id != _elements.PusherId) return;
+            
+            if (_engine.Tiles[behindLocation].Id != _engine.Elements.PusherId) 
+                return;
 
-            var behindIndex = _actors.ActorIndexAt(behindLocation);
-            var behindActor = _actors[behindIndex];
+            var behindIndex = _engine.Actors.ActorIndexAt(behindLocation);
+            var behindActor = _engine.Actors[behindIndex];
             if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
             {
-                _elements[_elements.PusherId].Act(behindIndex);
+                _engine.Elements[_engine.Elements.PusherId].Act(behindIndex);
             }
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            var actor = _actors.ActorAt(location);
+            var actor = _engine.ActorAt(location);
             switch (actor.Vector.X)
             {
                 case 1:
-                    return new AnsiChar(0x10, _tiles[location].Color);
+                    return new AnsiChar(0x10, _engine.Tiles[location].Color);
                 case -1:
-                    return new AnsiChar(0x11, _tiles[location].Color);
+                    return new AnsiChar(0x11, _engine.Tiles[location].Color);
                 default:
                     return actor.Vector.Y == -1
-                        ? new AnsiChar(0x1E, _tiles[location].Color)
-                        : new AnsiChar(0x1F, _tiles[location].Color);
+                        ? new AnsiChar(0x1E, _engine.Tiles[location].Color)
+                        : new AnsiChar(0x1F, _engine.Tiles[location].Color);
             }
         }
     }

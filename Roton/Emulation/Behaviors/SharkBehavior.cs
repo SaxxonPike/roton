@@ -5,44 +5,34 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class SharkBehavior : ElementBehavior
     {
-        private readonly IActors _actors;
-        private readonly IRandom _random;
-        private readonly ITiles _tiles;
-        private readonly IElements _elements;
-        private readonly ICompass _compass;
-        private readonly IMover _mover;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Shark;
 
-        public SharkBehavior(IActors actors, IRandom random, ITiles tiles, IElements elements, ICompass compass, IMover mover)
+        public SharkBehavior(IEngine engine)
         {
-            _actors = actors;
-            _random = random;
-            _tiles = tiles;
-            _elements = elements;
-            _compass = compass;
-            _mover = mover;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 > _random.Synced(10)
-                ? _compass.Seek(actor.Location)
-                : _compass.Rnd());
+            vector.CopyFrom(actor.P1 > _engine.Random.Synced(10)
+                ? _engine.Seek(actor.Location)
+                : _engine.Rnd());
 
             var target = actor.Location.Sum(vector);
-            var targetElement = _tiles.ElementAt(target);
+            var targetElement = _engine.Tiles.ElementAt(target);
 
-            if (targetElement.Id == _elements.WaterId || targetElement.Id == _elements.LavaId)
+            if (targetElement.Id == _engine.Elements.WaterId || targetElement.Id == _engine.Elements.LavaId)
             {
-                _mover.MoveActor(index, target);
+                _engine.MoveActor(index, target);
             }
-            else if (targetElement.Id == _elements.PlayerId)
+            else if (targetElement.Id == _engine.Elements.PlayerId)
             {
-                _mover.Attack(index, target);
+                _engine.Attack(index, target);
             }
         }
     }

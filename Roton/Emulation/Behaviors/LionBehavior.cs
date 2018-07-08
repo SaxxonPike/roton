@@ -5,44 +5,33 @@ namespace Roton.Emulation.Behaviors
 {
     public class LionBehavior : EnemyBehavior
     {
-        private readonly IRandom _random;
-        private readonly ITiles _tiles;
-        private readonly IActors _actors;
-        private readonly IElements _elements;
-        private readonly ICompass _compass;
-        private readonly IMover _mover;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Lion;
 
-        public LionBehavior(IRandom random, ITiles tiles, IActors actors, IElements elements,
-            ICompass compass, IMover mover) : base(mover)
+        public LionBehavior(IEngine engine) : base(engine)
         {
-            _random = random;
-            _tiles = tiles;
-            _actors = actors;
-            _elements = elements;
-            _compass = compass;
-            _mover = mover;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 >= _random.Synced(10)
-                ? _compass.Seek(actor.Location)
-                : _compass.Rnd());
+            vector.CopyFrom(actor.P1 >= _engine.Random.Synced(10)
+                ? _engine.Seek(actor.Location)
+                : _engine.Rnd());
 
             var target = actor.Location.Sum(vector);
-            var element = _tiles.ElementAt(target);
+            var element = _engine.Tiles.ElementAt(target);
             if (element.IsFloor)
             {
-                _mover.MoveActor(index, target);
+                _engine.MoveActor(index, target);
             }
-            else if (element.Id == _elements.PlayerId)
+            else if (element.Id == _engine.Elements.PlayerId)
             {
-                _mover.Attack(index, target);
+                _engine.Attack(index, target);
             }
         }
     }

@@ -5,76 +5,63 @@ namespace Roton.Emulation.Behaviors
 {
     public sealed class StarBehavior : EnemyBehavior
     {
-        private readonly IActors _actors;
-        private readonly ITiles _tiles;
-        private readonly IElements _elements;
-        private readonly IState _state;
-        private readonly ICompass _compass;
-        private readonly IMover _mover;
-        private readonly IDrawer _drawer;
-
+        private readonly IEngine _engine;
+        
         public override string KnownName => KnownNames.Star;
 
-        public StarBehavior(IActors actors, ITiles tiles, IElements elements, IState state,
-            ICompass compass, IMover mover, IDrawer drawer) : base(mover)
+        public StarBehavior(IEngine engine) : base(engine)
         {
-            _actors = actors;
-            _tiles = tiles;
-            _elements = elements;
-            _state = state;
-            _compass = compass;
-            _mover = mover;
-            _drawer = drawer;
+            _engine = engine;
         }
 
         public override void Act(int index)
         {
-            var actor = _actors[index];
+            var actor = _engine.Actors[index];
 
             actor.P2 = (actor.P2 - 1) & 0xFF;
             if (actor.P2 > 0)
             {
                 if ((actor.P2 & 1) == 0)
                 {
-                    actor.Vector.CopyFrom(_compass.Seek(actor.Location));
+                    actor.Vector.CopyFrom(_engine.Seek(actor.Location));
                     var targetLocation = actor.Location.Sum(actor.Vector);
-                    var targetElement = _tiles.ElementAt(targetLocation);
+                    var targetElement = _engine.Tiles.ElementAt(targetLocation);
 
-                    if (targetElement.Id == _elements.PlayerId || targetElement.Id == _elements.BreakableId)
+                    if (targetElement.Id == _engine.Elements.PlayerId || targetElement.Id == _engine.Elements.BreakableId)
                     {
-                        _mover.Attack(index, targetLocation);
+                        _engine.Attack(index, targetLocation);
                     }
                     else
                     {
                         if (!targetElement.IsFloor)
                         {
-                            _mover.Push(targetLocation, actor.Vector);
+                            _engine.Push(targetLocation, actor.Vector);
                         }
 
-                        if (targetElement.IsFloor || targetElement.Id == _elements.WaterId)
+                        if (targetElement.IsFloor || targetElement.Id == _engine.Elements.WaterId)
                         {
-                            _mover.MoveActor(index, targetLocation);
+                            _engine.MoveActor(index, targetLocation);
                         }
                     }
                 }
                 else
                 {
-                    _drawer.UpdateBoard(actor.Location);
+                    _engine.UpdateBoard(actor.Location);
                 }
             }
             else
             {
-                _mover.RemoveActor(index);
+                _engine.RemoveActor(index);
             }
         }
 
         public override AnsiChar Draw(IXyPair location)
         {
-            var tile = _tiles[location];
+            var tile = _engine.Tiles[location];
             tile.Color++;
             if (tile.Color > 15)
                 tile.Color = 9;
-            return new AnsiChar(_state.StarChars[_state.GameCycle & 0x3], tile.Color);
+            return new AnsiChar(_engine.State.StarChars[_engine.State.GameCycle & 0x3], tile.Color);
         }
     }
 }

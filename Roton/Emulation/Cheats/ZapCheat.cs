@@ -5,15 +5,11 @@ namespace Roton.Emulation.Cheats
 {
     public class ZapCheat : ICheat
     {
-        private readonly IActors _actors;
-        private readonly IMover _mover;
-        private readonly ICompass _compass;
+        private readonly IEngine _engine;
 
-        public ZapCheat(IActors actors, IMover mover, ICompass compass)
+        public ZapCheat(IEngine engine)
         {
-            _actors = actors;
-            _mover = mover;
-            _compass = compass;
+            _engine = engine;
         }
         
         public string Name => "ZAP";
@@ -22,7 +18,7 @@ namespace Roton.Emulation.Cheats
         {
             for (var i = 0; i < 4; i++)
             {
-                _mover.Destroy(_actors.Player.Location.Sum(_compass.GetCardinalVector(i)));
+                _engine.Destroy(_engine.Player.Location.Sum(_engine.GetCardinalVector(i)));
             }
         }
     }

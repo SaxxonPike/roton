@@ -5,6 +5,6 @@ namespace Roton.Emulation.Items
     public interface IItem
     {
         string Name { get; }
-        IOopItem Execute(IOopContext oopContext);
+        int Value { get; set; }
     }
 }
