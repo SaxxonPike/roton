@@ -468,13 +468,12 @@ namespace Roton.Emulation.Core.Impl
         public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
         {
             var label = context.SearchTarget;
-            var target = string.Empty;
             var success = false;
             var split = label.IndexOf(':');
 
             if (split > 0)
             {
-                target = label.Substring(0, split);
+                var target = label.Substring(0, split);
                 label = label.Substring(split + 1);
                 context.SearchTarget = target;
                 success = Parser.GetTarget(context);

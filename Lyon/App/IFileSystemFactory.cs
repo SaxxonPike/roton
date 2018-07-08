@@ -1,4 +1,6 @@
-﻿namespace Lyon.App
+﻿using Roton.Emulation.Core;
+
+namespace Lyon.App
 {
     public interface IFileSystemFactory
     {

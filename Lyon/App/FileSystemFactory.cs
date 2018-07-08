@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 
 namespace Lyon.App
 {

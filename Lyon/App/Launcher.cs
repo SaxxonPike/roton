@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Input;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
 using Roton.Interface.Input;

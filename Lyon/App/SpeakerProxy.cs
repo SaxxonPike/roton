@@ -1,3 +1,5 @@
+using Roton.Emulation.Core;
+
 namespace Lyon.App
 {
     public class SpeakerProxy : ISpeaker

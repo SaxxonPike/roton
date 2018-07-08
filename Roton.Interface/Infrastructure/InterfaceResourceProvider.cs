@@ -1,3 +1,5 @@
+using Roton.Emulation.Core;
+
 namespace Roton.Interface.Infrastructure
 {
     public class InterfaceResourceProvider : IInterfaceResourceProvider

@@ -4,7 +4,7 @@ using Roton.Emulation.Cheats;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztCheatList : Cheats.CheatList
+    public class SuperZztCheatList : CheatList
     {
         public SuperZztCheatList(ICollection<ICheat> cheats) : base(new Dictionary<string, ICheat>
         {

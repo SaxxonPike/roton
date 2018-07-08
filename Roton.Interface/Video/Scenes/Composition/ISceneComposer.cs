@@ -1,4 +1,5 @@
-﻿using Roton.Interface.Events;
+﻿using Roton.Emulation.Core;
+using Roton.Interface.Events;
 
 namespace Roton.Interface.Video.Scenes.Composition
 {
