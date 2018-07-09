@@ -16,5 +16,7 @@ namespace Roton.Emulation.Temp
         void Init();
         void HandlePlayerInput(IActor actor, int hotkey);
         bool CanPutTile(IXyPair location);
+        void ClearForest(IXyPair location);
+        void CleanUpPassageMovement();
     }
 }

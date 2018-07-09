@@ -7,9 +7,8 @@ namespace Roton.Emulation.SuperZzt
     public sealed class SuperZztElement : Element
     {
         public SuperZztElement(IMemory memory, int index, IBehavior behavior)
-            : base(memory, 0x7CAA + index*0x00C2, behavior)
+            : base(memory, 0x7CAA + index*0x00C2, behavior, index)
         {
-            Id = index;
         }
 
         public override string BoardEditText
@@ -53,6 +52,8 @@ namespace Roton.Emulation.SuperZzt
             get { return Memory.ReadBool(Offset + 0x06); }
             set { Memory.WriteBool(Offset + 0x06, value); }
         }
+
+        public override bool IsAlwaysVisible { get; set; }
 
         public override bool IsDestructible
         {

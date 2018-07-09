@@ -5,8 +5,8 @@ namespace Roton.Emulation.SuperZzt
 {
     public sealed class SuperZztTiles : Tiles
     {
-        public SuperZztTiles(IMemory memory, IElements elements)
-            : base(memory, elements, 0x2BEB, 96, 80)
+        public SuperZztTiles(IMemory memory, IElementList elementList)
+            : base(memory, elementList, 0x2BEB, 96, 80)
         {
         }
     }

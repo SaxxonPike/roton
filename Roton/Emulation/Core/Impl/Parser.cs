@@ -207,7 +207,7 @@ namespace Roton.Emulation.Core.Impl
                 break;
             }
 
-            foreach (var element in _engine.Elements.Where(e => e != null))
+            foreach (var element in _engine.ElementList.Where(e => e != null))
             {
                 if (new string(element.Name.ToUpperInvariant().Where(c => c >= 0x41 && c <= 0x5A).ToArray()) != word)
                     continue;

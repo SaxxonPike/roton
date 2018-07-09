@@ -95,7 +95,17 @@ namespace Roton.Emulation.Zzt
             // ZZT does not allow #put on the bottom row
             return location.Y < 25;
         }
-        
+
+        public void ClearForest(IXyPair location)
+        {
+            _engine.RemoveItem(location);
+        }
+
+        public void CleanUpPassageMovement()
+        {
+            _engine.Tiles[_engine.Player.Location].SetTo(_engine.ElementList.EmptyId, 0);
+        }
+
         public bool HandleTitleInput(int hotkey)
         {
             switch (hotkey)

@@ -4,11 +4,11 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class Tiles : FixedList<ITile>, ITiles
     {
-        private readonly IElements _elements;
+        private readonly IElementList _elementList;
 
-        protected Tiles(IMemory memory, IElements elements, int offset, int width, int height)
+        protected Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
         {
-            _elements = elements;
+            _elementList = elementList;
             Memory = memory;
             Offset = offset;
             Height = height;
@@ -48,7 +48,7 @@ namespace Roton.Emulation.Data.Impl
         
         public IElement ElementAt(IXyPair location)
         {
-            return _elements[this[location].Id];
+            return _elementList[this[location].Id];
         }
 
         public bool FindTile(ITile kind, IXyPair location)
@@ -79,7 +79,7 @@ namespace Roton.Emulation.Data.Impl
 
         private int ColorMatch(ITile tile)
         {
-            var element = _elements[tile.Id];
+            var element = _elementList[tile.Id];
 
             if (element.Color < 0xF0) return element.Color & 7;
             if (element.Color == 0xFE) return ((tile.Color >> 4) & 0x0F) + 8;

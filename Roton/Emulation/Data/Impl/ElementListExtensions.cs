@@ -2,19 +2,19 @@
 {
     public static class ElementListExtensions
     {
-        public static IElement Bullet(this IElements elements)
+        public static IElement Bullet(this IElementList elementList)
         {
-            return elements[elements.BulletId];
+            return elementList[elementList.BulletId];
         }
 
-        public static IElement Empty(this IElements elements)
+        public static IElement Empty(this IElementList elementList)
         {
-            return elements[elements.EmptyId];
+            return elementList[elementList.EmptyId];
         }
 
-        public static IElement Star(this IElements elements)
+        public static IElement Star(this IElementList elementList)
         {
-            return elements[elements.StarId];
+            return elementList[elementList.StarId];
         }
     }
 }

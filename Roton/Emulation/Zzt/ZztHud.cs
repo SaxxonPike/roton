@@ -96,11 +96,11 @@ namespace Roton.Emulation.Zzt
                 DrawString(0x40, 0x0A, @"   Gems:", 0x1E);
                 DrawString(0x40, 0x0B, @"  Score:", 0x1E);
                 DrawString(0x40, 0x0C, @"   Keys:", 0x1E);
-                DrawChar(0x3E, 0x07, new AnsiChar(_engine.Elements[0x04].Character, 0x1F));
-                DrawChar(0x3E, 0x08, new AnsiChar(_engine.Elements[0x05].Character, 0x1B));
-                DrawChar(0x3E, 0x09, new AnsiChar(_engine.Elements[0x06].Character, 0x16));
-                DrawChar(0x3E, 0x0A, new AnsiChar(_engine.Elements[0x07].Character, 0x1B));
-                DrawChar(0x3E, 0x0C, new AnsiChar(_engine.Elements[0x08].Character, 0x1F));
+                DrawChar(0x3E, 0x07, new AnsiChar(_engine.ElementList[0x04].Character, 0x1F));
+                DrawChar(0x3E, 0x08, new AnsiChar(_engine.ElementList[0x05].Character, 0x1B));
+                DrawChar(0x3E, 0x09, new AnsiChar(_engine.ElementList[0x06].Character, 0x16));
+                DrawChar(0x3E, 0x0A, new AnsiChar(_engine.ElementList[0x07].Character, 0x1B));
+                DrawChar(0x3E, 0x0C, new AnsiChar(_engine.ElementList[0x08].Character, 0x1F));
                 DrawString(0x3E, 0x0E, @" T ", 0x70);
                 DrawString(0x41, 0x0E, @" Torch", 0x1F);
                 DrawString(0x3E, 0x0F, @" B ", 0x30);
@@ -340,7 +340,7 @@ namespace Roton.Emulation.Zzt
                 {
                     DrawChar(0x47 + i, 0x0C,
                         _engine.World.Keys[i - 1]
-                            ? new AnsiChar(_engine.Elements[0x08].Character, 0x18 + i)
+                            ? new AnsiChar(_engine.ElementList[0x08].Character, 0x18 + i)
                             : new AnsiChar(0x20, 0x1F));
                 }
 

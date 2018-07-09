@@ -290,7 +290,7 @@ namespace Roton.Emulation.SuperZzt
 
                 for (var i = 0; i < 7; i++)
                 {
-                    var keyChar = _engine.World.Keys[i] ? _engine.Elements[0x08].Character : 0x20;
+                    var keyChar = _engine.World.Keys[i] ? _engine.ElementList[0x08].Character : 0x20;
                     var x = i & 0x3;
                     var y = x >> 2;
                     DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));

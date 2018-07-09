@@ -5,11 +5,12 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class Element : IElement
     {
-        protected Element(IMemory memory, int offset, IBehavior behavior)
+        protected Element(IMemory memory, int offset, IBehavior behavior, int id)
         {
             Memory = memory;
             Offset = offset;
             Behavior = behavior;
+            Id = id;
         }
 
         private IBehavior Behavior { get; }
@@ -17,34 +18,35 @@ namespace Roton.Emulation.Data.Impl
         protected IMemory Memory { get; }
 
         protected int Offset { get; }
-        public virtual Action< int> Act => (index) => Behavior.Act(index);
-        public virtual string BoardEditText { get; set; }
-        public virtual int Character { get; set; }
-        public virtual string CodeEditText { get; set; }
-        public virtual int Color { get; set; }
-        public virtual int Cycle { get; set; }
-        public virtual Func<IXyPair, AnsiChar> Draw => (location) => Behavior.Draw(location);
-        public virtual string EditorCategory { get; set; }
-        public virtual bool HasDrawCode { get; set; }
-        public virtual int Id { get; set; } = -1;
-        public virtual Action<IXyPair, int, IXyPair> Interact => (location, index, vector) => Behavior.Interact(location, index, vector);
-        public virtual bool IsAlwaysVisible { get; set; }
-        public virtual bool IsDestructible { get; set; }
-        public virtual bool IsEditorFloor { get; set; }
-        public virtual bool IsFloor { get; set; }
-        public virtual bool IsPushable { get; set; }
-        public virtual int MenuIndex { get; set; }
-        public virtual int MenuKey { get; set; }
-        public virtual string Name { get; set; }
-        public virtual string P1EditText { get; set; }
-        public virtual string P2EditText { get; set; }
-        public virtual string P3EditText { get; set; }
-        public virtual int Points { get; set; }
-        public virtual string StepEditText { get; set; }
+        public Action<int> Act => (index) => Behavior.Action.Act(index);
+        public abstract string BoardEditText { get; set; }
+        public abstract int Character { get; set; }
+        public abstract string CodeEditText { get; set; }
+        public abstract int Color { get; set; }
+        public abstract int Cycle { get; set; }
+        public Func<IXyPair, AnsiChar> Draw => (location) => Behavior.Draw.Draw(location);
+        public abstract string EditorCategory { get; set; }
+        public abstract bool HasDrawCode { get; set; }
+        public int Id { get; }
+        public Action<IXyPair, int, IXyPair> Interact => (location, index, vector) =>
+            Behavior.Interaction.Interact(location, index, vector);
+        public abstract bool IsAlwaysVisible { get; set; }
+        public abstract bool IsDestructible { get; set; }
+        public abstract bool IsEditorFloor { get; set; }
+        public abstract bool IsFloor { get; set; }
+        public abstract bool IsPushable { get; set; }
+        public abstract int MenuIndex { get; set; }
+        public abstract int MenuKey { get; set; }
+        public abstract string Name { get; set; }
+        public abstract string P1EditText { get; set; }
+        public abstract string P2EditText { get; set; }
+        public abstract string P3EditText { get; set; }
+        public abstract int Points { get; set; }
+        public abstract string StepEditText { get; set; }
 
         public override string ToString()
         {
-            return Behavior.KnownName ?? string.Empty;
+            return Behavior.Name ?? string.Empty;
         }
     }
 }

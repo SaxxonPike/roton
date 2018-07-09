@@ -20,7 +20,7 @@ namespace Roton.Emulation.Commands
             var vector = _engine.Parser.GetDirection(context);
             if (vector != null)
             {
-                var projectile = _engine.Elements.Star();
+                var projectile = _engine.ElementList.Star();
                 _engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
             }
             context.Moved = true;

@@ -24,7 +24,7 @@ namespace Roton.Emulation.Commands
                 var target = _engine.Parser.GetKind(context);
                 if (target != null)
                 {
-                    var targetElement = _engine.Elements[target.Id];
+                    var targetElement = _engine.ElementList[target.Id];
                     success = true;
                     if (target.Color == 0 && targetElement.Color < 0xF0)
                     {

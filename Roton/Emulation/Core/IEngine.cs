@@ -1,4 +1,6 @@
-﻿using Roton.Emulation.Cheats;
+﻿using Roton.Emulation.Actions;
+using Roton.Emulation.Behaviors;
+using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
@@ -20,7 +22,7 @@ namespace Roton.Emulation.Core
         IConditionList ConditionList { get; }
         IConfig Config { get; }
         IDirectionList DirectionList { get; }
-        IElements Elements { get; }
+        IElementList ElementList { get; }
         IFlags Flags { get; }
         IHud Hud { get; }
         IItemList ItemList { get; }
@@ -88,5 +90,8 @@ namespace Roton.Emulation.Core
         void UpdateRadius(IXyPair location, RadiusMode mode);
         void UpdateStatus();
         void WaitForTick();
+        void ClearForest(IXyPair location);
+        void CleanUpPassageMovement();
+        IBehaviorList BehaviorList { get; }
     }
 }

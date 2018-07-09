@@ -1,13 +1,14 @@
-﻿using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Actions;
+using Roton.Emulation.Draws;
+using Roton.Emulation.Interactions;
 
 namespace Roton.Emulation.Behaviors
 {
     public interface IBehavior
     {
-        string KnownName { get; }
-        void Act(int index);
-        AnsiChar Draw(IXyPair location);
-        void Interact(IXyPair location, int index, IXyPair vector);
+        IAction Action { get; }
+        IInteraction Interaction { get; }
+        IDraw Draw { get; }
+        string Name { get; }
     }
 }

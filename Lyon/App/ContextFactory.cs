@@ -54,7 +54,7 @@ namespace Lyon.App
                         builder.RegisterType<ZztConditionList>().As<IConditionList>().SingleInstance();
                         builder.RegisterType<ZztDirectionList>().As<IDirectionList>().SingleInstance();
                         builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
-                        builder.RegisterType<ZztElements>().As<IElements>().SingleInstance();
+                        builder.RegisterType<ZztElementList>().As<IElementList>().SingleInstance();
                         builder.Register(c => new ZztEngineResourceProvider(c.Resolve<IResourceService>()
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()
@@ -91,7 +91,7 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztConditionList>().As<IConditionList>().SingleInstance();
                         builder.RegisterType<SuperZztDirectionList>().As<IDirectionList>().SingleInstance();
                         builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
-                        builder.RegisterType<SuperZztElements>().As<IElements>().SingleInstance();
+                        builder.RegisterType<SuperZztElementList>().As<IElementList>().SingleInstance();
                         builder.Register(c => new SuperZztEngineResourceProvider(c.Resolve<IResourceService>()
                                 .GetResource(typeof(IEngineResourceProvider).Assembly)))
                             .As<IEngineResourceProvider>()

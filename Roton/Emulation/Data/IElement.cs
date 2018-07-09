@@ -15,7 +15,7 @@ namespace Roton.Emulation.Data
         int Cycle { get; set; }
         string EditorCategory { get; set; }
         bool HasDrawCode { get; set; }
-        int Id { get; set; }
+        int Id { get; }
         bool IsAlwaysVisible { get; set; }
         bool IsDestructible { get; set; }
         bool IsEditorFloor { get; set; }

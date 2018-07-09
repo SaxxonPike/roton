@@ -5,8 +5,8 @@ namespace Roton.Emulation.Zzt
 {
     public sealed class ZztTiles : Tiles
     {
-        public ZztTiles(IMemory memory, IElements elements)
-            : base(memory, elements, 0x24B9, 60, 25)
+        public ZztTiles(IMemory memory, IElementList elementList)
+            : base(memory, elementList, 0x24B9, 60, 25)
         {
         }
     }

@@ -32,7 +32,7 @@ namespace Roton.Emulation.SuperZzt
 
         public void RemoveItem(IXyPair location)
         {
-            var result = new Tile(_engine.Elements.FloorId, 0x00);
+            var result = new Tile(_engine.ElementList.FloorId, 0x00);
             var finished = false;
 
             for (var i = 0; i < 4; i++)
@@ -40,20 +40,20 @@ namespace Roton.Emulation.SuperZzt
                 var targetVector = _engine.GetCardinalVector(i);
                 var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
                 var adjacentTile = _engine.Tiles[targetLocation];
-                if (_engine.Elements[adjacentTile.Id].Cycle >= 0)
+                if (_engine.ElementList[adjacentTile.Id].Cycle >= 0)
                     adjacentTile = _engine.ActorAt(targetLocation).UnderTile;
                 var adjacentElement = adjacentTile.Id;
 
-                if (adjacentElement == _engine.Elements.EmptyId ||
-                    adjacentElement == _engine.Elements.SliderEwId ||
-                    adjacentElement == _engine.Elements.SliderNsId ||
-                    adjacentElement == _engine.Elements.BoulderId)
+                if (adjacentElement == _engine.ElementList.EmptyId ||
+                    adjacentElement == _engine.ElementList.SliderEwId ||
+                    adjacentElement == _engine.ElementList.SliderNsId ||
+                    adjacentElement == _engine.ElementList.BoulderId)
                 {
                     finished = true;
                     result.Color = 0;
                 }
 
-                if (adjacentElement == _engine.Elements.FloorId)
+                if (adjacentElement == _engine.ElementList.FloorId)
                 {
                     result.Color = adjacentTile.Color;
                 }
@@ -66,7 +66,7 @@ namespace Roton.Emulation.SuperZzt
 
             if (result.Color == 0)
             {
-                result.Id = _engine.Elements.EmptyId;
+                result.Id = _engine.ElementList.EmptyId;
             }
 
             _engine.Tiles[location].CopyFrom(result);
@@ -165,6 +165,16 @@ namespace Roton.Emulation.SuperZzt
         public bool CanPutTile(IXyPair location)
         {
             return true;
+        }
+
+        public void ClearForest(IXyPair location)
+        {
+            _engine.Tiles[location].SetTo(_engine.ElementList.FloorId, 0x02);
+        }
+
+        public void CleanUpPassageMovement()
+        {
+            _engine.Tiles[_engine.Player.Location].CopyFrom(_engine.Player.UnderTile);
         }
     }
 }

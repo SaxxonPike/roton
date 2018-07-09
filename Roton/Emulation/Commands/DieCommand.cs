@@ -18,7 +18,7 @@ namespace Roton.Emulation.Commands
         public void Execute(IOopContext context)
         {
             context.Died = true;
-            context.DeathTile.SetTo(_engine.Elements.EmptyId, 0);
+            context.DeathTile.SetTo(_engine.ElementList.EmptyId, 0);
         }
     }
 }

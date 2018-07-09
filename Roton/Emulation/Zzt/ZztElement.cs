@@ -7,9 +7,8 @@ namespace Roton.Emulation.Zzt
     public sealed class ZztElement : Element
     {
         public ZztElement(IMemory memory, int index, IBehavior behavior)
-            : base(memory, 0x4AD4 + index*0x00C3, behavior)
+            : base(memory, 0x4AD4 + index*0x00C3, behavior, index)
         {
-            Id = index;
         }
 
         public override string BoardEditText
