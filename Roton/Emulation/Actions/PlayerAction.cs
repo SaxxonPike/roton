@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public sealed class PlayerAction : IAction
     {
@@ -103,8 +102,9 @@ namespace Roton.Emulation.Behaviors
                 {
                     // Movement logic
 
-                    _engine.Tiles.ElementAt(actor.Location.Sum(_engine.State.KeyVector))
+                    _engine.InteractionList.Get(_engine.Tiles[actor.Location.Sum(_engine.State.KeyVector)].Id)
                         .Interact(actor.Location.Sum(_engine.State.KeyVector), 0, _engine.State.KeyVector);
+                    
                     if (!_engine.State.KeyVector.IsZero())
                     {
                         if (!_engine.State.SoundPlaying)

@@ -3,17 +3,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Roton.Emulation.Behaviors;
+using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
+using Roton.Emulation.Draws;
 using Roton.Emulation.Infrastructure;
+using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
-using Roton.Emulation.Temp;
 
 namespace Roton.Emulation.Core.Impl
 {
@@ -23,7 +24,9 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IAlerts> _alerts;
         private readonly Lazy<IBoard> _board;
         private readonly Lazy<IBoards> _boards;
-        private readonly Lazy<IBehaviorList> _behaviorList;
+        private readonly Lazy<IActionList> _actionList;
+        private readonly Lazy<IDrawList> _drawList;
+        private readonly Lazy<IInteractionList> _interactionList;
         private readonly Lazy<ICheatList> _cheats;
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IColors> _colors;
@@ -58,7 +61,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommands> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
-            Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IBehaviorList> behaviorList)
+            Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
+            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList)
         {
             _clock = clock;
             _actors = actors;
@@ -88,7 +92,9 @@ namespace Roton.Emulation.Core.Impl
             _world = world;
             _items = items;
             _boards = boards;
-            _behaviorList = behaviorList;
+            _actionList = actionList;
+            _drawList = drawList;
+            _interactionList = interactionList;
         }
 
         private IBoards Boards => _boards.Value;
@@ -350,7 +356,8 @@ namespace Roton.Emulation.Core.Impl
 
             if (tile.Id == ElementList.EmptyId) return new AnsiChar(0x20, 0x0F);
 
-            if (element.HasDrawCode) return element.Draw(location);
+            if (element.HasDrawCode)
+                return DrawList.Get(tile.Id).Draw(location);
 
             if (tile.Id < elementCount - 7) return new AnsiChar(element.Character, tile.Color);
 
@@ -359,6 +366,8 @@ namespace Roton.Emulation.Core.Impl
 
             return new AnsiChar(tile.Color, 0x0F);
         }
+
+        public IDrawList DrawList => _drawList.Value;
 
         public IElement ElementAt(IXyPair location)
         {
@@ -747,8 +756,9 @@ namespace Roton.Emulation.Core.Impl
                 vector.SetTo(-1, 0);
             else if (underId == ElementList.RiverEId) vector.SetTo(1, 0);
 
-            if (ElementAt(actor.Location).Id == ElementList.PlayerId)
-                ElementAt(actor.Location.Sum(vector)).Interact(actor.Location.Sum(vector), 0, vector);
+            var actorTile = Tiles[actor.Location];
+            if (actorTile.Id == ElementList.PlayerId)
+                InteractionList.Get(actorTile.Id).Interact(actor.Location.Sum(vector), 0, vector);
 
             if (vector.IsNonZero())
             {
@@ -1181,14 +1191,17 @@ namespace Roton.Emulation.Core.Impl
 
         public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
-        public IBehaviorList BehaviorList => _behaviorList.Value;
+        public IActionList ActionList 
+            => _actionList.Value;
+        
+        public IInteractionList InteractionList 
+            => _interactionList.Value;
+        
+        public IWorld World 
+            => _world.Value;
 
-        public IWorld World => _world.Value;
-
-        private bool ActorIsLocked(int index)
-        {
-            return Features.IsActorLocked(index);
-        }
+        private bool ActorIsLocked(int index) 
+            => Features.IsActorLocked(index);
 
         private void ClearBoard()
         {
@@ -1423,7 +1436,7 @@ namespace Roton.Emulation.Core.Impl
                         var actorData = Actors[State.ActIndex];
                         if (actorData.Cycle != 0)
                             if (State.ActIndex % actorData.Cycle == State.GameCycle % actorData.Cycle)
-                                ElementList[Tiles[actorData.Location].Id].Act(State.ActIndex);
+                                ActionList.Get(Tiles[actorData.Location].Id).Act(State.ActIndex);
 
                         State.ActIndex++;
                     }
@@ -1466,7 +1479,7 @@ namespace Roton.Emulation.Core.Impl
                     if (!State.KeyVector.IsZero())
                     {
                         var target = Player.Location.Sum(State.KeyVector);
-                        ElementAt(target).Interact(target, 0, State.KeyVector);
+                        InteractionList.Get(ElementAt(target).Id).Interact(target, 0, State.KeyVector);
                     }
 
                     if (!State.KeyVector.IsZero())

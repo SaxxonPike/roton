@@ -4,7 +4,7 @@ using Roton.Emulation.Targets;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztTargetList : Targets.TargetList
+    public class SuperZztTargetList : TargetList
     {
         public SuperZztTargetList(ICollection<ITarget> targets) : base(new Dictionary<string, ITarget>
         {

@@ -1,8 +1,7 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Interactions;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Interactions
 {
     public class EnemyInteraction : IInteraction
     {

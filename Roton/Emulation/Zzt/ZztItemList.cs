@@ -4,7 +4,7 @@ using Roton.Emulation.Items;
 
 namespace Roton.Emulation.Zzt
 {
-    public class ZztItemList : Items.ItemList
+    public class ZztItemList : ItemList
     {
         public ZztItemList(ICollection<IItem> items) : base(new Dictionary<string, IItem>
         {

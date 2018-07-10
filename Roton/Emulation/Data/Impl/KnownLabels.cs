@@ -1,4 +1,4 @@
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Data.Impl
 {
     public static class KnownLabels
     {

@@ -1,9 +1,8 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public sealed class TigerAction : IAction
     {
@@ -38,7 +37,7 @@ namespace Roton.Emulation.Behaviors
             }
 
             // Proceed to lion code.
-            _engine.BehaviorList.Get(_engine.ElementList.LionId).Action.Act(index);
+            _engine.ActionList.Get(_engine.ElementList.LionId).Act(index);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public class CentipedeHeadAction : IAction
     {

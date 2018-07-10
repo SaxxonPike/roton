@@ -1,9 +1,8 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Interactions;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Interactions
 {
     public class BoardEdgeInteraction : IInteraction
     {
@@ -49,7 +48,8 @@ namespace Roton.Emulation.Behaviors
                 _engine.SetBoard(targetBoard);
                 if (_engine.Tiles[target].Id != _engine.ElementList.PlayerId)
                 {
-                    _engine.Tiles.ElementAt(target).Interact(target, index, _engine.State.KeyVector);
+                    _engine.InteractionList.Get(_engine.Tiles[target].Id)
+                        .Interact(target, index, _engine.State.KeyVector);
                 }
                 if (_engine.Tiles.ElementAt(target).IsFloor || _engine.Tiles.ElementAt(target).Id == _engine.ElementList.PlayerId)
                 {

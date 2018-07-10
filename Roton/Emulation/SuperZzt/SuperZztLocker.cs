@@ -1,9 +1,8 @@
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztLocker : ILocker
+    public class SuperZztLocker
     {
         private readonly IActors _actors;
 

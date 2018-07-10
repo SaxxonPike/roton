@@ -1,8 +1,8 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Interactions;
+using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Interactions
 {
     public class EnergizerInteraction : IInteraction
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using Roton.Emulation.Behaviors;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
@@ -8,12 +6,9 @@ namespace Roton.Emulation.Zzt
 {
     public sealed class ZztElementList : ElementList
     {
-        private readonly Lazy<IBehaviorMap> _behaviorMap;
-
-        public ZztElementList(IMemory memory, Lazy<IBehaviorMap> behaviorMap, IEngineResourceProvider engineResourceProvider)
+        public ZztElementList(IMemory memory, IEngineResourceProvider engineResourceProvider)
             : base(memory, 54)
         {
-            _behaviorMap = behaviorMap;
             memory.Write(0x4AD4, engineResourceProvider.GetElementData());
         }
 
@@ -31,7 +26,6 @@ namespace Roton.Emulation.Zzt
         public override int CounterId => 0x11;
         public override int DoorId => 0x09;
         public override int DuplicatorId => 0x0C;
-
         public override int EmptyId => 0x00;
         public override int EnergizerId => 0x0E;
         public override int FakeId => 0x1B;
@@ -67,7 +61,7 @@ namespace Roton.Emulation.Zzt
 
         protected override IElement GetElement(int index)
         {
-            return new ZztElement(Memory, index, _behaviorMap.Value.Map(index));
+            return new ZztElement(Memory, index);
         }
     }
 }

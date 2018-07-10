@@ -1,8 +1,7 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public sealed class SharkAction : IAction
     {

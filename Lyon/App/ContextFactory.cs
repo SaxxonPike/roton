@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
@@ -7,10 +8,11 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
+using Roton.Emulation.Draws;
+using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.SuperZzt;
 using Roton.Emulation.Targets;
-using Roton.Emulation.Temp;
 using Roton.Emulation.Zzt;
 
 namespace Lyon.App
@@ -45,6 +47,7 @@ namespace Lyon.App
                             e.Instance.ScorePerGem = 10;
                             e.Instance.BuggyPut = true;
                         });
+                        builder.RegisterType<ZztActionList>().As<IActionList>().SingleInstance();
                         builder.RegisterType<ZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<ZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<ZztBoard>().As<IBoard>().SingleInstance();
@@ -53,6 +56,7 @@ namespace Lyon.App
                         builder.RegisterType<ZztCommands>().As<ICommands>().SingleInstance();
                         builder.RegisterType<ZztConditionList>().As<IConditionList>().SingleInstance();
                         builder.RegisterType<ZztDirectionList>().As<IDirectionList>().SingleInstance();
+                        builder.RegisterType<ZztDrawList>().As<IDrawList>().SingleInstance();
                         builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<ZztElementList>().As<IElementList>().SingleInstance();
                         builder.Register(c => new ZztEngineResourceProvider(c.Resolve<IResourceService>()
@@ -63,12 +67,14 @@ namespace Lyon.App
                         builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
+                        builder.RegisterType<ZztInteractionList>().As<IInteractionList>().SingleInstance();
                         builder.RegisterType<ZztItemList>().As<IItemList>().SingleInstance();
                         builder.RegisterType<ZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<Sounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<ZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<ZztTargetList>().As<ITargetList>().SingleInstance();
                         builder.RegisterType<ZztTiles>().As<ITiles>().SingleInstance();
+                        builder.RegisterType<ZztTimers>().As<ITimers>().SingleInstance();
                         builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
                         break;
                     case ContextEngine.SuperZzt:
@@ -82,6 +88,7 @@ namespace Lyon.App
                             e.Instance.ScorePerGem = 10;
                             e.Instance.BuggyPut = false;
                         });
+                        builder.RegisterType<SuperZztActionList>().As<IActionList>().SingleInstance();
                         builder.RegisterType<SuperZztActors>().As<IActors>().SingleInstance();
                         builder.RegisterType<SuperZztAlerts>().As<IAlerts>().SingleInstance();
                         builder.RegisterType<SuperZztBoard>().As<IBoard>().SingleInstance();
@@ -90,6 +97,7 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztCommands>().As<ICommands>().SingleInstance();
                         builder.RegisterType<SuperZztConditionList>().As<IConditionList>().SingleInstance();
                         builder.RegisterType<SuperZztDirectionList>().As<IDirectionList>().SingleInstance();
+                        builder.RegisterType<SuperZztDrawList>().As<IDrawList>().SingleInstance();
                         builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
                         builder.RegisterType<SuperZztElementList>().As<IElementList>().SingleInstance();
                         builder.Register(c => new SuperZztEngineResourceProvider(c.Resolve<IResourceService>()
@@ -100,12 +108,14 @@ namespace Lyon.App
                         builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
                         builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
                         builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
+                        builder.RegisterType<SuperZztInteractionList>().As<IInteractionList>().SingleInstance();
                         builder.RegisterType<SuperZztItemList>().As<IItemList>().SingleInstance();
                         builder.RegisterType<SuperZztKeyList>().As<IKeyList>().SingleInstance();
                         builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
                         builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
                         builder.RegisterType<SuperZztTargetList>().As<ITargetList>().SingleInstance();
                         builder.RegisterType<SuperZztTiles>().As<ITiles>().SingleInstance();
+                        builder.RegisterType<SuperZztTimers>().As<ITimers>().SingleInstance();
                         builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
                         break;
                 }

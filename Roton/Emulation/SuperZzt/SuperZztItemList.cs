@@ -4,7 +4,7 @@ using Roton.Emulation.Items;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztItemList : Items.ItemList
+    public class SuperZztItemList : ItemList
     {
         public SuperZztItemList(ICollection<IItem> items) : base(new Dictionary<string, IItem>
         {

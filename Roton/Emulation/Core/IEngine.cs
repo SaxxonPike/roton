@@ -1,11 +1,12 @@
 ﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Behaviors;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
+using Roton.Emulation.Draws;
+using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 
@@ -92,6 +93,8 @@ namespace Roton.Emulation.Core
         void WaitForTick();
         void ClearForest(IXyPair location);
         void CleanUpPassageMovement();
-        IBehaviorList BehaviorList { get; }
+        IActionList ActionList { get; }
+        IDrawList DrawList { get; }
+        IInteractionList InteractionList { get; }
     }
 }

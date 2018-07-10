@@ -2,7 +2,6 @@
 using Autofac;
 using Lyon.App;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Interface.Infrastructure;
 using Roton.Interface.Input;
 using Roton.Interface.Video.Glyphs;

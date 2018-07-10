@@ -1,13 +1,7 @@
-﻿using System;
-using Roton.Emulation.Data.Impl;
-
-namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data
 {
     public interface IElement
     {
-        Action<int> Act { get; }
-        Func<IXyPair, AnsiChar> Draw { get; }
-        Action<IXyPair, int, IXyPair> Interact { get; }
         string BoardEditText { get; set; }
         int Character { get; set; }
         string CodeEditText { get; set; }

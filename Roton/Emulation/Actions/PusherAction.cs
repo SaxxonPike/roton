@@ -1,8 +1,7 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public class PusherAction : IAction
     {
@@ -40,7 +39,7 @@ namespace Roton.Emulation.Behaviors
             var behindActor = _engine.Actors[behindIndex];
             if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
             {
-                _engine.ElementList[_engine.ElementList.PusherId].Act(behindIndex);
+                _engine.ActionList.Get(_engine.ElementList.PusherId).Act(behindIndex);
             }
         }
     }

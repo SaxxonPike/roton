@@ -1,7 +1,6 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Temp;
 
 namespace Roton.Emulation.Zzt
 {

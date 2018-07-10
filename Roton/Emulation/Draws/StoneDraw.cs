@@ -1,9 +1,8 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Draws;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Draws
 {
     public class StoneDraw : IDraw
     {

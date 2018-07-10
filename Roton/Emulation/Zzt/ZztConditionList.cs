@@ -4,7 +4,7 @@ using Roton.Emulation.Conditions;
 
 namespace Roton.Emulation.Zzt
 {
-    public class ZztConditionList : Conditions.ConditionList
+    public class ZztConditionList : ConditionList
     {
         public ZztConditionList(ICollection<ICondition> conditions) : base(new Dictionary<string, ICondition>
         {

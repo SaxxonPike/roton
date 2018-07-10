@@ -1,7 +1,6 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public class DragonPupAction : IAction
     {

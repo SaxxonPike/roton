@@ -1,5 +1,4 @@
-﻿using Roton.Emulation.Behaviors;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
@@ -127,7 +126,7 @@ namespace Roton.Emulation.SuperZzt
 
         protected override IElement GetElement(int index)
         {
-            return new SuperZztElement(Memory, index, _behaviorMap.Map(index));
+            return new SuperZztElement(Memory, index);
         }
     }
 }

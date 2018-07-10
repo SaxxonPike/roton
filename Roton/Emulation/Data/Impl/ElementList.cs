@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using Roton.Emulation.Behaviors;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl
 {
     public abstract class ElementList : FixedList<IElement>, IElementList
     {
-        private readonly IBehaviorList _behaviorList;
-
-        protected ElementList(IMemory memory, int count, IBehaviorList behaviorList)
+        protected ElementList(IMemory memory, int count)
         {
-            _behaviorList = behaviorList;
             Count = count;
             Memory = memory;
             Cache = new Dictionary<int, IElement>();
@@ -84,8 +80,7 @@ namespace Roton.Emulation.Data.Impl
 
         protected sealed override IElement GetItem(int index)
         {
-            IElement element;
-            Cache.TryGetValue(index, out element);
+            Cache.TryGetValue(index, out var element);
             if (element != null)
                 return element;
 

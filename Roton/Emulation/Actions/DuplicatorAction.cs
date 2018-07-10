@@ -1,9 +1,7 @@
-﻿using Roton.Emulation.Actions;
-using Roton.Emulation.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Emulation.Behaviors
+namespace Roton.Emulation.Actions
 {
     public sealed class DuplicatorAction : IAction
     {
@@ -24,7 +22,8 @@ namespace Roton.Emulation.Behaviors
             {
                 if (_engine.Tiles[target].Id == _engine.ElementList.PlayerId)
                 {
-                    _engine.Tiles.ElementAt(source).Interact(source, 0, _engine.State.KeyVector);
+                    _engine.InteractionList.Get(_engine.Tiles[source].Id)
+                        .Interact(source, 0, _engine.State.KeyVector);
                 }
                 else
                 {

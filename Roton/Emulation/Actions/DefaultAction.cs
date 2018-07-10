@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Actions;
-
-namespace Roton.Emulation.Behaviors
+﻿namespace Roton.Emulation.Actions
 {
     public class DefaultAction : IAction
     {
