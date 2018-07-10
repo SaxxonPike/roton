@@ -216,6 +216,7 @@ IDBs
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+.idea/**/contentModel.xml
 
 # Gradle
 .idea/**/gradle.xml
