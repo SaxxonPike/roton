@@ -16,8 +16,6 @@ namespace Roton.Emulation.Conditions
             _engine = engine;
         }
 
-        public string Name => "ANY";
-
         public bool? Execute(IOopContext context)
         {
             var kind = _engine.Parser.GetKind(context);

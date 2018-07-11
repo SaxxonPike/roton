@@ -15,9 +15,7 @@ namespace Roton.Emulation.Conditions
         {
             _engine = engine;
         }
-        
-        public string Name => "ENERGIZED";
-        
+
         public bool? Execute(IOopContext context)
         {
             return _engine.World.EnergyCycles > 0;

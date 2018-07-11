@@ -14,9 +14,7 @@ namespace Roton.Emulation.Cheats
         {
             _engine = engine;
         }
-        
-        public string Name => "ZAP";
-        
+
         public void Execute()
         {
             for (var i = 0; i < 4; i++)

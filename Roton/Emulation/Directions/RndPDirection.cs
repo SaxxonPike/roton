@@ -15,9 +15,7 @@ namespace Roton.Emulation.Directions
         {
             _engine = engine;
         }
-        
-        public string Name => "RNDP";
-        
+
         public IXyPair Execute(IOopContext context)
         {
             var direction = _engine.Parser.GetDirection(context);

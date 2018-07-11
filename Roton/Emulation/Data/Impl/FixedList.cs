@@ -57,8 +57,8 @@ namespace Roton.Emulation.Data.Impl
 
         public T this[int index]
         {
-            get { return GetItem(index); }
-            set { SetItem(index, value); }
+            get => GetItem(index);
+            set => SetItem(index, value);
         }
 
         public virtual void RemoveAt(int index)

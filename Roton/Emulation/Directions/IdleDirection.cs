@@ -8,8 +8,6 @@ namespace Roton.Emulation.Directions
     [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class IdleDirection : IDirection
     {
-        public string Name => "IDLE";
-        
         public IXyPair Execute(IOopContext context)
         {
             return Vector.Idle;

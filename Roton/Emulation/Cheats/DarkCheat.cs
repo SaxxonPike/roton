@@ -13,9 +13,7 @@ namespace Roton.Emulation.Cheats
         {
             _engine = engine;
         }
-        
-        public string Name => "DARK";
-        
+
         public void Execute()
         {
             _engine.Board.IsDark = true;

@@ -15,8 +15,6 @@ namespace Roton.Emulation.Cheats
             _engine = engine;
         }
 
-        public string Name => "KEYS";
-        
         public void Execute()
         {
             for (var i = 1; i < 8; i++)

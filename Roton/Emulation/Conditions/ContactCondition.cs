@@ -16,8 +16,6 @@ namespace Roton.Emulation.Conditions
             _engine = engine;
         }
 
-        public string Name => "CONTACT";
-
         public bool? Execute(IOopContext context)
         {
             var player = _engine.Player;

@@ -16,8 +16,6 @@ namespace Roton.Emulation.Directions
             _engine = engine;
         }
 
-        public string Name => "CCW";
-        
         public IXyPair Execute(IOopContext context)
         {
             return _engine.Parser.GetDirection(context).CounterClockwise();

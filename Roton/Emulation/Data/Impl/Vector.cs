@@ -31,14 +31,14 @@
 
         public int X
         {
-            get { return _x; }
-            set { _x = (value << 16) >> 16; }
+            get => _x;
+            set => _x = (value << 16) >> 16;
         }
 
         public int Y
         {
-            get { return _y; }
-            set { _y = (value << 16) >> 16; }
+            get => _y;
+            set => _y = (value << 16) >> 16;
         }
 
         public override string ToString()

@@ -8,8 +8,6 @@ namespace Roton.Emulation.Directions
     [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class SouthDirection : IDirection
     {
-        public string Name => "SOUTH";
-        
         public IXyPair Execute(IOopContext context)
         {
             return Vector.South;

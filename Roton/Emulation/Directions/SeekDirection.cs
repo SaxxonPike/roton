@@ -15,9 +15,7 @@ namespace Roton.Emulation.Directions
         {
             _engine = engine;
         }
-        
-        public string Name => "SEEK";
-        
+
         public IXyPair Execute(IOopContext context)
         {
             return _engine.Seek(context.Actor.Location);

@@ -16,8 +16,6 @@ namespace Roton.Emulation.Conditions
             _engine = engine;
         }
 
-        public string Name => "BLOCKED";
-
         public bool? Execute(IOopContext context)
         {
             var direction = _engine.Parser.GetDirection(context);

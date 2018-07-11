@@ -25,14 +25,14 @@
 
         public int X
         {
-            get { return _x; }
-            set { _x = value & 0xFF; }
+            get => _x;
+            set => _x = value & 0xFF;
         }
 
         public int Y
         {
-            get { return _y; }
-            set { _y = value & 0xFF; }
+            get => _y;
+            set => _y = value & 0xFF;
         }
 
         public override string ToString()

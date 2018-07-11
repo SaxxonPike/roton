@@ -16,8 +16,6 @@ namespace Roton.Emulation.Conditions
             _engine = engine;
         }
 
-        public string Name => "ALLIGNED";
-
         public bool? Execute(IOopContext context)
         {
             return context.Actor.Location.X == _engine.Player.Location.X ||

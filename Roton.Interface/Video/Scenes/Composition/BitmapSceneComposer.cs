@@ -16,9 +16,9 @@ namespace Roton.Interface.Video.Scenes.Composition
         private bool _useFullBrightBackgrounds;
 
         public BitmapSceneComposer(
-            IGlyphComposer glyphComposer, 
+            IGlyphComposer glyphComposer,
             IPaletteComposer paletteComposer,
-            int columns, 
+            int columns,
             int rows) : base(columns, rows)
         {
             _glyphComposer = new CachedGlyphComposer(glyphComposer);
@@ -40,7 +40,8 @@ namespace Roton.Interface.Video.Scenes.Composition
             var charTotal = Columns * Rows;
             _stride = Columns * _glyphComposer.MaxWidth;
             _offsetLookUpTable = Enumerable.Range(0, charTotal)
-                .Select(i => _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * _stride * (i / Columns))
+                .Select(i =>
+                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * _stride * (i / Columns))
                 .ToArray();
             DirectAccessBitmap?.Dispose();
             DirectAccessBitmap = new DirectAccessBitmap(_stride, Rows * _glyphComposer.MaxHeight);
@@ -75,6 +76,7 @@ namespace Roton.Interface.Video.Scenes.Composition
                     var inputBitData = inputBits[inputOffset++];
                     outputBits[outputOffset++] = (inputBitData & foregroundColor) | (~inputBitData & backgroundColor);
                 }
+
                 baseOffset += _stride;
             }
         }

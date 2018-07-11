@@ -8,8 +8,6 @@ namespace Roton.Emulation.Directions
     [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class FlowDirection : IDirection
     {
-        public string Name => "FLOW";
-        
         public IXyPair Execute(IOopContext context)
         {
             return context.Actor.Vector.Clone();

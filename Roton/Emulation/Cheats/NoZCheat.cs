@@ -13,9 +13,7 @@ namespace Roton.Emulation.Cheats
         {
             _engine = engine;
         }
-        
-        public string Name => "NOZ";
-        
+
         public void Execute()
         {
             _engine.World.Stones--;

@@ -15,8 +15,6 @@ namespace Roton.Emulation.Cheats
             _engine = engine;
         }
 
-        public string Name => "GEMS";
-        
         public void Execute()
         {
             _engine.World.Gems += 5;

@@ -16,8 +16,6 @@ namespace Roton.Emulation.Conditions
             _engine = engine;
         }
 
-        public string Name => "NOT";
-        
         public bool? Execute(IOopContext context)
         {
             return !_engine.Parser.GetCondition(context);

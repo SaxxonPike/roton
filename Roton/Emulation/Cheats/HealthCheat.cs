@@ -14,9 +14,7 @@ namespace Roton.Emulation.Cheats
         {
             _engine = engine;
         }
-        
-        public string Name => "HEALTH";
-        
+
         public void Execute()
         {
             _engine.World.Health += 50;

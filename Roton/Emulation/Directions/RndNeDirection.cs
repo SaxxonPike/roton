@@ -15,9 +15,7 @@ namespace Roton.Emulation.Directions
         {
             _engine = engine;
         }
-        
-        public string Name => "RNDNE";
-        
+
         public IXyPair Execute(IOopContext context)
         {
             return _engine.Random.Synced(2) == 0

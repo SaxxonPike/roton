@@ -19,14 +19,14 @@
 
         public int X
         {
-            get { return Memory.Read16(Offset + 0x00); }
-            set { Memory.Write16(Offset + 0x00, value); }
+            get => Memory.Read16(Offset + 0x00);
+            set => Memory.Write16(Offset + 0x00, value);
         }
 
         public int Y
         {
-            get { return Memory.Read16(Offset + 0x02); }
-            set { Memory.Write16(Offset + 0x02, value); }
+            get => Memory.Read16(Offset + 0x02);
+            set => Memory.Write16(Offset + 0x02, value);
         }
 
         public override string ToString()

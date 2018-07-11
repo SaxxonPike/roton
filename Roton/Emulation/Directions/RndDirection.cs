@@ -15,9 +15,7 @@ namespace Roton.Emulation.Directions
         {
             _engine = engine;
         }
-        
-        public string Name => "RND";
-        
+
         public IXyPair Execute(IOopContext context)
         {
             return _engine.Rnd();

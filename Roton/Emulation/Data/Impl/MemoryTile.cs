@@ -19,14 +19,14 @@
 
         public int Color
         {
-            get { return Memory.Read8(Offset + 0x01); }
-            set { Memory.Write8(Offset + 0x01, value); }
+            get => Memory.Read8(Offset + 0x01);
+            set => Memory.Write8(Offset + 0x01, value);
         }
 
         public int Id
         {
-            get { return Memory.Read8(Offset + 0x00); }
-            set { Memory.Write8(Offset + 0x00, value); }
+            get => Memory.Read8(Offset + 0x00);
+            set => Memory.Write8(Offset + 0x00, value);
         }
 
         public override string ToString()
