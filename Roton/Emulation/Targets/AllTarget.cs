@@ -1,8 +1,12 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets
 {
-    public class AllTarget : ITarget
+    [ContextEngine(ContextEngine.Zzt, "ALL")]
+    [ContextEngine(ContextEngine.SuperZzt, "ALL")]
+    public sealed class AllTarget : ITarget
     {
         private readonly IActors _actors;
 
@@ -10,9 +14,7 @@ namespace Roton.Emulation.Targets
         {
             _actors = actors;
         }
-        
-        public string Name => "ALL";
-        
+
         public bool Execute(ISearchContext context)
         {
             return context.SearchIndex < _actors.Count;

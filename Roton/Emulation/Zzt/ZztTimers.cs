@@ -1,9 +1,11 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
-    public class ZztTimers : ITimers
+    [ContextEngine(ContextEngine.Zzt)]
+    public sealed class ZztTimers : ITimers
     {
         public ZztTimers(IMemory memory)
         {

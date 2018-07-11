@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class BecomeCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "BECOME")]
+    [ContextEngine(ContextEngine.SuperZzt, "BECOME")]
+    public sealed class BecomeCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -13,14 +16,12 @@ namespace Roton.Emulation.Commands
             _engine = engine;
         }
 
-        public string Name => "BECOME";
-
         public void Execute(IOopContext context)
         {
             var kind = _engine.Parser.GetKind(context);
             if (kind == null)
             {
-                _engine.RaiseError($"Bad #{Name}");
+                _engine.RaiseError($"Bad #BECOME");
                 return;
             }
 

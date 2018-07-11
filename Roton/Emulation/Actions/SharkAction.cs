@@ -1,8 +1,10 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
+    [ContextEngine(ContextEngine.Zzt, 0x26)]
     public sealed class SharkAction : IAction
     {
         private readonly IEngine _engine;

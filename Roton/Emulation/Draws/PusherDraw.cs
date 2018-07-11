@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class PusherDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt, 0x28)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x28)]
+    public sealed class PusherDraw : IDraw
     {
         private readonly IEngine _engine;
 

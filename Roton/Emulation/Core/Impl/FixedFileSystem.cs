@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class FixedFileSystem : IFileSystem
+    public sealed class FixedFileSystem : IFileSystem
     {
         private readonly IFileSystem _fallbackFileSystem;
         private readonly IDictionary<string, byte[]> _files;

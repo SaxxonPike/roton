@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl
 {
-    public class Sound : ISound
+    public sealed class Sound : ISound
     {
         private readonly int[] _data;
 

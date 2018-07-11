@@ -1,8 +1,11 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class DarkCheat : ICheat
+    [ContextEngine(ContextEngine.Zzt, "DARK")]
+    public sealed class DarkCheat : ICheat
     {
         private readonly IEngine _engine;
 

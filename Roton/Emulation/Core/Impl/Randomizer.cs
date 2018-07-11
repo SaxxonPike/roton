@@ -1,6 +1,11 @@
-﻿namespace Roton.Emulation.Core.Impl
+﻿using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
+
+namespace Roton.Emulation.Core.Impl
 {
-    public class Randomizer : IRandomizer
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class Randomizer : IRandomizer
     {
         private readonly IRandomState _state;
 
@@ -13,7 +18,7 @@
         {
             unchecked
             {
-                var newState = _state.State*33797 + 1;
+                var newState = _state.State * 33797 + 1;
                 _state.State = newState;
             }
 

@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class HealthCheat : ICheat
+    [ContextEngine(ContextEngine.Zzt, "HEALTH")]
+    [ContextEngine(ContextEngine.SuperZzt, "HEALTH")]
+    public sealed class HealthCheat : ICheat
     {
         private readonly IEngine _engine;
 

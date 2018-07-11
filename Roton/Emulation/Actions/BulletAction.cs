@@ -1,10 +1,12 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class BulletAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x12)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x45)]
+    public sealed class BulletAction : IAction
     {
         private readonly IEngine _engine;
 

@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class DuplicatorDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt, 0x0C)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x0C)]
+    public sealed class DuplicatorDraw : IDraw
     {
         private readonly IEngine _engine;
 

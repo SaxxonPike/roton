@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class ClearCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "CLEAR")]
+    [ContextEngine(ContextEngine.SuperZzt, "CLEAR")]
+    public sealed class ClearCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,13 +15,11 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "CLEAR";
-        
+
         public void Execute(IOopContext context)
         {
             var flag = _engine.Parser.ReadWord(context.Index, context);
-            _engine.Flags.Remove(flag);
+            _engine.World.Flags.Remove(flag);
         }
     }
 }

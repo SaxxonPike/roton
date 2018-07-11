@@ -19,12 +19,11 @@ namespace Roton.Emulation.Core
         IBoard Board { get; }
         ICheatList CheatList { get; }
         IColors Colors { get; }
-        ICommands Commands { get; }
+        ICommandList CommandList { get; }
         IConditionList ConditionList { get; }
         IConfig Config { get; }
         IDirectionList DirectionList { get; }
         IElementList ElementList { get; }
-        IFlags Flags { get; }
         IHud Hud { get; }
         IItemList ItemList { get; }
         IParser Parser { get; }

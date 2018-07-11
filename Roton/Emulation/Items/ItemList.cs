@@ -1,14 +1,22 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    public abstract class ItemList : IItemList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class ItemList : IItemList
     {
-        private readonly IDictionary<string, IItem> _items;
+        private readonly IDictionary<string, IItem> _items = new Dictionary<string, IItem>();
 
-        protected ItemList(IDictionary<string, IItem> items)
+        public ItemList(IContextMetadataService contextMetadataService, IEnumerable<IItem> items)
         {
-            _items = items;
+            foreach (var item in items)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(item))
+                    _items.Add(attribute.Name, item);
+            }
         }
         
         public IItem Get(string name)

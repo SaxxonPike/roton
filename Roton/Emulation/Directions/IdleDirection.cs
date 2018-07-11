@@ -1,9 +1,12 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    public class IdleDirection : IDirection
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class IdleDirection : IDirection
     {
         public string Name => "IDLE";
         

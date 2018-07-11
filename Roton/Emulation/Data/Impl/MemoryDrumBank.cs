@@ -1,11 +1,11 @@
 ﻿namespace Roton.Emulation.Data.Impl
 {
-    public class MemoryDrumBank : FixedList<IDrumSound>, IDrumBank
+    public abstract class MemoryDrumBank : FixedList<IDrumSound>, IDrumBank
     {
         private readonly IMemory _memory;
         private readonly int _offset;
 
-        public MemoryDrumBank(IMemory memory, int offset)
+        protected MemoryDrumBank(IMemory memory, int offset)
         {
             _memory = memory;
             _offset = offset;

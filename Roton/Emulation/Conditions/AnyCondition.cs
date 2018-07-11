@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    public class AnyCondition : ICondition
+    [ContextEngine(ContextEngine.Zzt, "ANY")]
+    [ContextEngine(ContextEngine.SuperZzt, "ANY")]
+    public sealed class AnyCondition : ICondition
     {
         private readonly IEngine _engine;
 

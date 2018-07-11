@@ -1,15 +1,17 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.SuperZzt
 {
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class SuperZztElementList : ElementList
     {
-        public SuperZztElementList(IMemory memory, IEngineResourceProvider engineResourceProvider)
+        public SuperZztElementList(IMemory memory, IEngineResourceService engineResourceService)
             : base(memory, 80)
         {
-            memory.Write(0x7CAA, engineResourceProvider.GetElementData());
+            memory.Write(0x7CAA, engineResourceService.GetElementData());
         }
 
         public override int AmmoId => 0x05;

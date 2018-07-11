@@ -13,19 +13,13 @@ namespace Roton.Emulation.Core.Impl
             _basePath = basePath;
         }
 
-        public byte[] GetFile(string path)
-        {
-            return _baseFileSystem.GetFile($"{_basePath}{path}");
-        }
+        public byte[] GetFile(string path) 
+            => _baseFileSystem.GetFile($"{_basePath}{path}");
 
-        public IEnumerable<string> GetFileNames(string path)
-        {
-            return _baseFileSystem.GetFileNames($"{_basePath}{path}");
-        }
+        public IEnumerable<string> GetFileNames(string path) 
+            => _baseFileSystem.GetFileNames($"{_basePath}{path}");
 
-        public void PutFile(string path, byte[] data)
-        {
-            _baseFileSystem.PutFile($"{_basePath}{path}", data);
-        }
+        public void PutFile(string path, byte[] data) 
+            => _baseFileSystem.PutFile($"{_basePath}{path}", data);
     }
 }

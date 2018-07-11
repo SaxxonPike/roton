@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class Interpreter : IInterpreter
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class Interpreter : IInterpreter
     {
         private readonly IEngine _engine;
 
@@ -23,9 +27,9 @@ namespace Roton.Emulation.Core.Impl
                 return;
 
             if (input.StartsWith("+"))
-                _engine.Flags.Add(input.Substring(1));
+                _engine.World.Flags.Add(input.Substring(1));
             else if (input.StartsWith("-"))
-                _engine.Flags.Remove(input.Substring(1));
+                _engine.World.Flags.Remove(input.Substring(1));
         }
 
         public void Execute(IOopContext context)
@@ -39,7 +43,7 @@ namespace Roton.Emulation.Core.Impl
                 if (name.Length == 0)
                     break;
 
-                var command = _engine.Commands.Get(name);
+                var command = _engine.CommandList.Get(name);
 
                 if (command != null)
                 {
@@ -84,58 +88,5 @@ namespace Roton.Emulation.Core.Impl
                 }
             }
         }
-
-//
-//        protected virtual IDictionary<string, Func<IOopContext, bool?>> GetConditions()
-//        {
-//            return new Dictionary<string, Func<IOopContext, bool?>>
-//            {
-//                {"ALLIGNED", Condition_Aligned},
-//                {"ANY", Condition_Any},
-//                {"BLOCKED", Condition_Blocked},
-//                {"CONTACT", Condition_Contact},
-//                {"ENERGIZED", Condition_Energized},
-//                {"NOT", Condition_Not}
-//            };
-//        }
-//
-//        protected virtual IDictionary<string, Func<IOopContext, IXyPair>> GetDirections()
-//        {
-//            return new Dictionary<string, Func<IOopContext, IXyPair>>
-//            {
-//                {"CW", Direction_Cw},
-//                {"CCW", Direction_Ccw},
-//                {"E", Direction_East},
-//                {"EAST", Direction_East},
-//                {"FLOW", Direction_Flow},
-//                {"I", Direction_Idle},
-//                {"IDLE", Direction_Idle},
-//                {"N", Direction_North},
-//                {"NORTH", Direction_North},
-//                {"OPP", Direction_Opp},
-//                {"RND", Direction_Rnd},
-//                {"RNDNE", Direction_RndNe},
-//                {"RNDNS", Direction_RndNs},
-//                {"RNDP", Direction_RndP},
-//                {"S", Direction_South},
-//                {"SOUTH", Direction_South},
-//                {"SEEK", Direction_Seek},
-//                {"W", Direction_West},
-//                {"WEST", Direction_West}
-//            };
-//        }
-//
-//        protected virtual IDictionary<string, Func<IOopContext, IOopItem>> GetItems()
-//        {
-//            return new Dictionary<string, Func<IOopContext, IOopItem>>
-//            {
-//                {"AMMO", Item_Ammo},
-//                {"GEMS", Item_Gems},
-//                {"HEALTH", Item_Health},
-//                {"SCORE", Item_Score},
-//                {"TIME", Item_Time},
-//                {"TORCHES", Item_Torches}
-//            };
-//        }
     }
 }

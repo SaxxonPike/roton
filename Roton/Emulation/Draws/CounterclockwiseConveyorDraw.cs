@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class CounterclockwiseConveyorDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt, 0x11)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x11)]
+    public sealed class CounterclockwiseConveyorDraw : IDraw
     {
         private readonly IEngine _engine;
 

@@ -1,10 +1,12 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class DragonPupDraw : IDraw
+    [ContextEngine(ContextEngine.SuperZzt, 0x3C)]
+    public sealed class DragonPupDraw : IDraw
     {
         private readonly IEngine _engine;
 

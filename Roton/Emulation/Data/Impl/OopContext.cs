@@ -3,7 +3,7 @@ using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Data.Impl
 {
-    public class OopContext : IOopContext
+    public sealed class OopContext : IOopContext
     {
         private readonly int _index;
         
@@ -27,8 +27,8 @@ namespace Roton.Emulation.Data.Impl
 
         public int Instruction
         {
-            get { return _instructionSource.Instruction; }
-            set { _instructionSource.Instruction = value; }
+            get => _instructionSource.Instruction;
+            set => _instructionSource.Instruction = value;
         }
 
         public IActor Actor => _engine.Actors[_index];

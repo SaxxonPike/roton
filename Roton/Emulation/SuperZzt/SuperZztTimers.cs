@@ -1,9 +1,11 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztTimers : ITimers
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class SuperZztTimers : ITimers
     {
         public SuperZztTimers(IMemory memory)
         {

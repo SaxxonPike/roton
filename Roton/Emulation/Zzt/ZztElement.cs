@@ -1,12 +1,14 @@
 ﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
+    [ContextEngine(ContextEngine.Zzt)]
     public sealed class ZztElement : Element
     {
         public ZztElement(IMemory memory, int index)
-            : base(memory, 0x4AD4 + index*0x00C3, index)
+            : base(memory, 0x4AD4 + index * 0x00C3, index)
         {
         }
 

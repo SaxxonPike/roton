@@ -1,9 +1,12 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class LionAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x29)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x29)]
+    public sealed class LionAction : IAction
     {
         private readonly IEngine _engine;
 

@@ -1,8 +1,11 @@
 ﻿using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
+    [ContextEngine(ContextEngine.Zzt)]
     public sealed class ZztGameSerializer : GameSerializer
     {
         public ZztGameSerializer(IMemory memory)

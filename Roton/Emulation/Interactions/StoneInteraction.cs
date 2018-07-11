@@ -1,8 +1,11 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
+    [ContextEngine(ContextEngine.SuperZzt, 0x40)]
     public sealed class StoneInteraction : IInteraction
     {
         private readonly IEngine _engine;

@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Commands
 {
-    public interface ICommands
+    public interface ICommandList
     {
         ICommand Get(string name);
     }

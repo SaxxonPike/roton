@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class ChangeCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "CHANGE")]
+    [ContextEngine(ContextEngine.SuperZzt, "CHANGE")]
+    public sealed class ChangeCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -13,8 +16,6 @@ namespace Roton.Emulation.Commands
             _engine = engine;
         }
 
-        public string Name => "CHANGE";
-        
         public void Execute(IOopContext context)
         {
             var success = false;
@@ -40,7 +41,7 @@ namespace Roton.Emulation.Commands
 
             if (!success)
             {
-                _engine.RaiseError($"Bad #{Name}");
+                _engine.RaiseError($"Bad #CHANGE");
             }
         }
     }

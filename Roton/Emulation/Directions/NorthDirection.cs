@@ -1,9 +1,12 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    public class NorthDirection : IDirection
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class NorthDirection : IDirection
     {
         public string Name => "NORTH";
         

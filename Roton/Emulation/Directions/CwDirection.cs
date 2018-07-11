@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    public class CwDirection : IDirection
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class CwDirection : IDirection
     {
         private readonly IEngine _engine;
 

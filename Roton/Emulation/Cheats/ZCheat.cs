@@ -1,8 +1,11 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class ZCheat : ICheat
+    [ContextEngine(ContextEngine.SuperZzt, "Z")]
+    public sealed class ZCheat : ICheat
     {
         private readonly IEngine _engine;
 

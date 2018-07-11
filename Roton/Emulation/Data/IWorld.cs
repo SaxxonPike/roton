@@ -2,6 +2,7 @@
 {
     public interface IWorld
     {
+        IFlags Flags { get; }
         IKeyList Keys { get; }
         int WorldType { get; }
         int Ammo { get; set; }

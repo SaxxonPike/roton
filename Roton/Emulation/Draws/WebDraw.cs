@@ -1,9 +1,11 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class WebDraw : IDraw
     {
         private readonly IEngine _engine;

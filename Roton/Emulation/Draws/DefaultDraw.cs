@@ -1,9 +1,12 @@
 ﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class DefaultDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class DefaultDraw : IDraw
     {
         public AnsiChar Draw(IXyPair location)
         {

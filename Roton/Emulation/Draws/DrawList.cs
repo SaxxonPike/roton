@@ -1,21 +1,27 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public abstract class DrawList : IDrawList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class DrawList : IDrawList
     {
-        private readonly IDictionary<int, IDraw> _draws;
-        private readonly IDraw _defaultDraw;
+        private readonly IDictionary<int, IDraw> _draws = new Dictionary<int, IDraw>();
 
-        protected DrawList(IDictionary<int, IDraw> draws, IDraw defaultDraw)
+        public DrawList(IContextMetadataService contextMetadataService, IEnumerable<IDraw> draws)
         {
-            _draws = draws;
-            _defaultDraw = defaultDraw;
+            foreach (var draw in draws)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(draw))
+                    _draws.Add(attribute.Id, draw);
+            }
         }
         
         public IDraw Get(int index)
         {
-            return _draws.ContainsKey(index) ? _draws[index] : _defaultDraw;
+            return _draws.ContainsKey(index) ? _draws[index] : _draws[-1];
         }
     }
 }

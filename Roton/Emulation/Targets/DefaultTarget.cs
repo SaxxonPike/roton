@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets
 {
-    public class DefaultTarget : ITarget
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class DefaultTarget : ITarget
     {
         private readonly IActors _actors;
         private readonly IParser _parser;
@@ -14,9 +17,7 @@ namespace Roton.Emulation.Targets
             _actors = actors;
             _parser = parser;
         }
-        
-        public string Name => string.Empty;
-        
+
         public bool Execute(ISearchContext context)
         {
             while (context.SearchIndex < _actors.Count)

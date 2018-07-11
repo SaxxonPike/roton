@@ -1,11 +1,13 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class RestartCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "RESTART")]
+    [ContextEngine(ContextEngine.SuperZzt, "RESTART")]
+    public sealed class RestartCommand : ICommand
     {
-        public string Name => "RESTART";
-        
         public void Execute(IOopContext context)
         {
             context.Instruction = 0;

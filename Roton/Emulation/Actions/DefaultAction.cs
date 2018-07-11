@@ -1,6 +1,11 @@
-﻿namespace Roton.Emulation.Actions
+﻿using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
+
+namespace Roton.Emulation.Actions
 {
-    public class DefaultAction : IAction
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class DefaultAction : IAction
     {
         public void Act(int index)
         {

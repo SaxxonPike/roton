@@ -3,9 +3,11 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
+    [ContextEngine(ContextEngine.Zzt)]
     public sealed class ZztHud : Hud
     {
         private readonly IEngine _engine;

@@ -2,6 +2,7 @@
 using Autofac;
 using Lyon.App;
 using Roton.Emulation.Core;
+using Roton.Infrastructure;
 using Roton.Interface.Infrastructure;
 using Roton.Interface.Input;
 using Roton.Interface.Video.Glyphs;
@@ -19,7 +20,6 @@ namespace Lyon
 
             builder.RegisterAssemblyTypes(
                     typeof(ILauncher).Assembly,
-                    typeof(IContext).Assembly,
                     typeof(IGlyphComposer).Assembly)
                 .Where(t => !t.IsAbstract && t.IsClass)
                 .AsImplementedInterfaces()
@@ -36,16 +36,19 @@ namespace Lyon
 
         private static void Register(ContainerBuilder builder)
         {
-            builder.Register(c => new InterfaceResourceProvider(c.Resolve<IResourceService>()
-                    .GetResource(typeof(IInterfaceResourceProvider).Assembly)))
-                .As<IInterfaceResourceProvider>()
+            builder.RegisterType<AssemblyResourceService>()
+                .As<IAssemblyResourceService>()
+                .SingleInstance();
+            
+            builder.RegisterType<InterfaceResourceService>()
+                .As<IInterfaceResourceService>()
                 .SingleInstance();
 
             builder.RegisterType<ComposerProxy>()
                 .As<IComposerProxy>()
                 .OnActivated(e =>
                 {
-                    var resource = e.Context.Resolve<IInterfaceResourceProvider>();
+                    var resource = e.Context.Resolve<IInterfaceResourceService>();
                     e.Instance.SetFont(resource.GetFontData());
                     e.Instance.SetPalette(resource.GetPaletteData());
                 })

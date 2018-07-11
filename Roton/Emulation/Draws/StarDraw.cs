@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class StarDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt, 0x0F)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x48)]
+    public sealed class StarDraw : IDraw
     {
         private readonly IEngine _engine;
 

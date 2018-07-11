@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class ZipFileSystem : IFileSystem
+    public sealed class ZipFileSystem : IFileSystem
     {
         private byte[] _file;
 

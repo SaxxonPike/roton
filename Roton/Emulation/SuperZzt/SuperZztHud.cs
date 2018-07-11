@@ -4,9 +4,11 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.SuperZzt
 {
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class SuperZztHud : Hud
     {
         private readonly IEngine _engine;
@@ -304,7 +306,7 @@ namespace Roton.Emulation.SuperZzt
         {
             get
             {
-                foreach (var flag in _engine.Flags.Select(f => f.ToUpperInvariant()))
+                foreach (var flag in _engine.World.Flags.Select(f => f.ToUpperInvariant()))
                 {
                     if (flag.Length > 0 && flag.StartsWith("Z"))
                     {

@@ -1,6 +1,6 @@
 namespace Roton.Interface.Infrastructure
 {
-    public interface IInterfaceResourceProvider
+    public interface IInterfaceResourceService
     {
         byte[] GetPaletteData();
         byte[] GetFontData();        

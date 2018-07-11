@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class LockCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "LOCK")]
+    [ContextEngine(ContextEngine.SuperZzt, "LOCK")]
+    public sealed class LockCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "LOCK";
-        
+
         public void Execute(IOopContext context)
         {
             _engine.LockActor(context.Index);

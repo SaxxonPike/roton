@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class EndCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "END")]
+    [ContextEngine(ContextEngine.SuperZzt, "END")]
+    public sealed class EndCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "END";
-        
+
         public void Execute(IOopContext context)
         {
             _engine.State.OopByte = 0;

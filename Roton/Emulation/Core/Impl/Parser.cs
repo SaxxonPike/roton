@@ -4,10 +4,13 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class Parser : IParser
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class Parser : IParser
     {
         private readonly IEngine _engine;
 
@@ -50,7 +53,8 @@ namespace Roton.Emulation.Core.Impl
                 {
                     ReadByte(index, offset);
                     _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
-                    if (!((_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A) || _engine.State.OopByte == 0x5F))
+                    if (!((_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A) ||
+                          _engine.State.OopByte == 0x5F))
                     {
                         result = oldOffset;
                         break;
@@ -126,8 +130,7 @@ namespace Roton.Emulation.Core.Impl
             }
             else
             {
-                int resultInt;
-                int.TryParse(result.ToString(), out resultInt);
+                int.TryParse(result.ToString(), out var resultInt);
                 _engine.State.OopNumber = resultInt;
             }
 
@@ -152,7 +155,8 @@ namespace Roton.Emulation.Core.Impl
             if (!(_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39))
             {
                 while ((_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A) ||
-                       (_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39) || (_engine.State.OopByte == 0x3A) ||
+                       (_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39) ||
+                       (_engine.State.OopByte == 0x3A) ||
                        (_engine.State.OopByte == 0x5F))
                 {
                     result.Append(_engine.State.OopByte.ToChar());
@@ -174,7 +178,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var name = ReadWord(oopContext.Index, oopContext);
             var condition = _engine.ConditionList.Get(name);
-            return condition?.Execute(oopContext) ?? _engine.Flags.Contains(name);
+            return condition?.Execute(oopContext) ?? _engine.World.Flags.Contains(name);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
@@ -223,7 +227,7 @@ namespace Roton.Emulation.Core.Impl
         public bool GetTarget(ISearchContext context)
         {
             context.SearchIndex++;
-            var target = _engine.TargetList.Get(context.SearchTarget) ?? _engine.TargetList.GetDefault();
+            var target = _engine.TargetList.Get(context.SearchTarget);
             return target.Execute(context);
         }
     }

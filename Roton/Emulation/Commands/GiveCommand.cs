@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class GiveCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "GIVE")]
+    [ContextEngine(ContextEngine.SuperZzt, "GIVE")]
+    public sealed class GiveCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "GIVE";
-        
+
         public void Execute(IOopContext context)
         {
             context.Resume = _engine.ExecuteTransaction(context, false);

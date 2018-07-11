@@ -1,20 +1,28 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    public abstract class ConditionList : IConditionList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class ConditionList : IConditionList
     {
-        private readonly IDictionary<string, ICondition> _commands;
+        private readonly IDictionary<string, ICondition> _conditions = new Dictionary<string, ICondition>();
 
-        protected ConditionList(IDictionary<string, ICondition> conditions)
+        public ConditionList(IContextMetadataService contextMetadataService, IEnumerable<ICondition> conditions)
         {
-            _commands = conditions;
+            foreach (var condition in conditions)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(condition))
+                    _conditions.Add(attribute.Name, condition);
+            }
         }
         
         public ICondition Get(string name)
         {
-            return _commands.ContainsKey(name)
-                ? _commands[name]
+            return _conditions.ContainsKey(name)
+                ? _conditions[name]
                 : null;
         }        
     }

@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using Autofac;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
@@ -14,6 +16,7 @@ using Roton.Emulation.Items;
 using Roton.Emulation.SuperZzt;
 using Roton.Emulation.Targets;
 using Roton.Emulation.Zzt;
+using Roton.Infrastructure;
 
 namespace Lyon.App
 {
@@ -26,99 +29,113 @@ namespace Lyon.App
             _rootLifetimeScope = rootLifetimeScope;
         }
 
+        private IContextMetadataService GetContextMetadataService(ContextEngine contextEngine)
+        {
+            switch (contextEngine)
+            {
+                case ContextEngine.Zzt:
+                    return new ZztContextMetadataService();
+                case ContextEngine.SuperZzt:
+                    return new SuperZztContextMetadataService();
+            }
+
+            throw new Exception($"Unknown {nameof(ContextEngine)}: {contextEngine}");
+        }
+
         public IContext Create(ContextEngine contextEngine, IFileSystem fileSystem)
         {
             var scope = _rootLifetimeScope.BeginLifetimeScope(builder =>
             {
                 builder.RegisterInstance(fileSystem).As<IFileSystem>().SingleInstance();
-                
                 builder.RegisterType<Context>().As<IContext>().SingleInstance();
+
+                var contextMetadataService = GetContextMetadataService(contextEngine);
+                builder.RegisterInstance(contextMetadataService).As<IContextMetadataService>()
+                    .SingleInstance();
+                builder.RegisterTypes(contextMetadataService.GetTypes().ToArray())
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
                 
-                switch (contextEngine)
-                {
-                    case ContextEngine.Zzt:
-                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
-                        {
-                            e.Instance.AmmoPerPickup = 5;
-                            e.Instance.BuggyPassages = false;
-                            e.Instance.ForestToFloor = false;
-                            e.Instance.HealthPerGem = 1;
-                            e.Instance.MultiMovement = false;
-                            e.Instance.ScorePerGem = 10;
-                            e.Instance.BuggyPut = true;
-                        });
-                        builder.RegisterType<ZztActionList>().As<IActionList>().SingleInstance();
-                        builder.RegisterType<ZztActors>().As<IActors>().SingleInstance();
-                        builder.RegisterType<ZztAlerts>().As<IAlerts>().SingleInstance();
-                        builder.RegisterType<ZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<ZztCheatList>().As<ICheatList>().SingleInstance();
-                        builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
-                        builder.RegisterType<ZztCommands>().As<ICommands>().SingleInstance();
-                        builder.RegisterType<ZztConditionList>().As<IConditionList>().SingleInstance();
-                        builder.RegisterType<ZztDirectionList>().As<IDirectionList>().SingleInstance();
-                        builder.RegisterType<ZztDrawList>().As<IDrawList>().SingleInstance();
-                        builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
-                        builder.RegisterType<ZztElementList>().As<IElementList>().SingleInstance();
-                        builder.Register(c => new ZztEngineResourceProvider(c.Resolve<IResourceService>()
-                                .GetResource(typeof(IEngineResourceProvider).Assembly)))
-                            .As<IEngineResourceProvider>()
-                            .SingleInstance();
-                        builder.RegisterType<ZztFeatures>().As<IFeatures>().SingleInstance();
-                        builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
-                        builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
-                        builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
-                        builder.RegisterType<ZztInteractionList>().As<IInteractionList>().SingleInstance();
-                        builder.RegisterType<ZztItemList>().As<IItemList>().SingleInstance();
-                        builder.RegisterType<ZztKeyList>().As<IKeyList>().SingleInstance();
-                        builder.RegisterType<Sounds>().As<ISounds>().SingleInstance();
-                        builder.RegisterType<ZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<ZztTargetList>().As<ITargetList>().SingleInstance();
-                        builder.RegisterType<ZztTiles>().As<ITiles>().SingleInstance();
-                        builder.RegisterType<ZztTimers>().As<ITimers>().SingleInstance();
-                        builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
-                        break;
-                    case ContextEngine.SuperZzt:
-                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
-                        {
-                            e.Instance.AmmoPerPickup = 20;
-                            e.Instance.BuggyPassages = true;
-                            e.Instance.ForestToFloor = true;
-                            e.Instance.HealthPerGem = 10;
-                            e.Instance.MultiMovement = true;
-                            e.Instance.ScorePerGem = 10;
-                            e.Instance.BuggyPut = false;
-                        });
-                        builder.RegisterType<SuperZztActionList>().As<IActionList>().SingleInstance();
-                        builder.RegisterType<SuperZztActors>().As<IActors>().SingleInstance();
-                        builder.RegisterType<SuperZztAlerts>().As<IAlerts>().SingleInstance();
-                        builder.RegisterType<SuperZztBoard>().As<IBoard>().SingleInstance();
-                        builder.RegisterType<SuperZztCheatList>().As<ICheatList>().SingleInstance();
-                        builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
-                        builder.RegisterType<SuperZztCommands>().As<ICommands>().SingleInstance();
-                        builder.RegisterType<SuperZztConditionList>().As<IConditionList>().SingleInstance();
-                        builder.RegisterType<SuperZztDirectionList>().As<IDirectionList>().SingleInstance();
-                        builder.RegisterType<SuperZztDrawList>().As<IDrawList>().SingleInstance();
-                        builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
-                        builder.RegisterType<SuperZztElementList>().As<IElementList>().SingleInstance();
-                        builder.Register(c => new SuperZztEngineResourceProvider(c.Resolve<IResourceService>()
-                                .GetResource(typeof(IEngineResourceProvider).Assembly)))
-                            .As<IEngineResourceProvider>()
-                            .SingleInstance();
-                        builder.RegisterType<SuperZztFeatures>().As<IFeatures>().SingleInstance();
-                        builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
-                        builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
-                        builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
-                        builder.RegisterType<SuperZztInteractionList>().As<IInteractionList>().SingleInstance();
-                        builder.RegisterType<SuperZztItemList>().As<IItemList>().SingleInstance();
-                        builder.RegisterType<SuperZztKeyList>().As<IKeyList>().SingleInstance();
-                        builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
-                        builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
-                        builder.RegisterType<SuperZztTargetList>().As<ITargetList>().SingleInstance();
-                        builder.RegisterType<SuperZztTiles>().As<ITiles>().SingleInstance();
-                        builder.RegisterType<SuperZztTimers>().As<ITimers>().SingleInstance();
-                        builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
-                        break;
-                }
+//                switch (contextEngine)
+//                {
+//                    case ContextEngine.Zzt:
+//                        
+//                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
+//                        {
+//                            e.Instance.AmmoPerPickup = 5;
+//                            e.Instance.BuggyPassages = false;
+//                            e.Instance.ForestToFloor = false;
+//                            e.Instance.HealthPerGem = 1;
+//                            e.Instance.MultiMovement = false;
+//                            e.Instance.ScorePerGem = 10;
+//                            e.Instance.BuggyPut = true;
+//                        });
+//                        builder.RegisterType<ZztActionList>().As<IActionList>().SingleInstance();
+//                        builder.RegisterType<ZztActors>().As<IActors>().SingleInstance();
+//                        builder.RegisterType<ZztAlerts>().As<IAlerts>().SingleInstance();
+//                        builder.RegisterType<ZztBoard>().As<IBoard>().SingleInstance();
+//                        builder.RegisterType<ZztCheatList>().As<ICheatList>().SingleInstance();
+//                        builder.RegisterType<ZztColors>().As<IColors>().SingleInstance();
+//                        builder.RegisterType<ZztCommandList>().As<ICommandList>().SingleInstance();
+//                        builder.RegisterType<ZztConditionList>().As<IConditionList>().SingleInstance();
+//                        builder.RegisterType<ZztDirectionList>().As<IDirectionList>().SingleInstance();
+//                        builder.RegisterType<ZztDrawList>().As<IDrawList>().SingleInstance();
+//                        builder.RegisterType<ZztDrumBank>().As<IDrumBank>().SingleInstance();
+//                        builder.RegisterType<ZztElementList>().As<IElementList>().SingleInstance();
+//                        builder.RegisterType<ZztEngineResourceService>().As<IEngineResourceService>().SingleInstance();
+//                        builder.RegisterType<ZztFeatures>().As<IFeatures>().SingleInstance();
+//                        builder.RegisterType<ZztFlags>().As<IFlags>().SingleInstance();
+//                        builder.RegisterType<ZztGameSerializer>().As<IGameSerializer>().SingleInstance();
+//                        builder.RegisterType<ZztHud>().As<IHud>().SingleInstance();
+//                        builder.RegisterType<ZztInteractionList>().As<IInteractionList>().SingleInstance();
+//                        builder.RegisterType<ZztItemList>().As<IItemList>().SingleInstance();
+//                        builder.RegisterType<ZztKeyList>().As<IKeyList>().SingleInstance();
+//                        builder.RegisterType<ZztSounds>().As<ISounds>().SingleInstance();
+//                        builder.RegisterType<ZztState>().As<IState>().SingleInstance();
+//                        builder.RegisterType<ZztTargetList>().As<ITargetList>().SingleInstance();
+//                        builder.RegisterType<ZztTiles>().As<ITiles>().SingleInstance();
+//                        builder.RegisterType<ZztTimers>().As<ITimers>().SingleInstance();
+//                        builder.RegisterType<ZztWorld>().As<IWorld>().SingleInstance();
+//                        break;
+//                    case ContextEngine.SuperZzt:
+//                        builder.RegisterType<Config>().As<IConfig>().SingleInstance().OnActivated(e =>
+//                        {
+//                            e.Instance.AmmoPerPickup = 20;
+//                            e.Instance.BuggyPassages = true;
+//                            e.Instance.ForestToFloor = true;
+//                            e.Instance.HealthPerGem = 10;
+//                            e.Instance.MultiMovement = true;
+//                            e.Instance.ScorePerGem = 10;
+//                            e.Instance.BuggyPut = false;
+//                        });
+//                        builder.RegisterType<SuperZztActionList>().As<IActionList>().SingleInstance();
+//                        builder.RegisterType<SuperZztActors>().As<IActors>().SingleInstance();
+//                        builder.RegisterType<SuperZztAlerts>().As<IAlerts>().SingleInstance();
+//                        builder.RegisterType<SuperZztBoard>().As<IBoard>().SingleInstance();
+//                        builder.RegisterType<SuperZztCheatList>().As<ICheatList>().SingleInstance();
+//                        builder.RegisterType<SuperZztColors>().As<IColors>().SingleInstance();
+//                        builder.RegisterType<SuperZztCommandList>().As<ICommandList>().SingleInstance();
+//                        builder.RegisterType<SuperZztConditionList>().As<IConditionList>().SingleInstance();
+//                        builder.RegisterType<SuperZztDirectionList>().As<IDirectionList>().SingleInstance();
+//                        builder.RegisterType<SuperZztDrawList>().As<IDrawList>().SingleInstance();
+//                        builder.RegisterType<SuperZztDrumBank>().As<IDrumBank>().SingleInstance();
+//                        builder.RegisterType<SuperZztElementList>().As<IElementList>().SingleInstance();
+//                        builder.RegisterType<SuperZztEngineResourceService>().As<IEngineResourceService>().SingleInstance();
+//                        builder.RegisterType<SuperZztFeatures>().As<IFeatures>().SingleInstance();
+//                        builder.RegisterType<SuperZztFlags>().As<IFlags>().SingleInstance();
+//                        builder.RegisterType<SuperZztGameSerializer>().As<IGameSerializer>().SingleInstance();
+//                        builder.RegisterType<SuperZztHud>().As<IHud>().SingleInstance();
+//                        builder.RegisterType<SuperZztInteractionList>().As<IInteractionList>().SingleInstance();
+//                        builder.RegisterType<SuperZztItemList>().As<IItemList>().SingleInstance();
+//                        builder.RegisterType<SuperZztKeyList>().As<IKeyList>().SingleInstance();
+//                        builder.RegisterType<SuperZztSounds>().As<ISounds>().SingleInstance();
+//                        builder.RegisterType<SuperZztState>().As<IState>().SingleInstance();
+//                        builder.RegisterType<SuperZztTargetList>().As<ITargetList>().SingleInstance();
+//                        builder.RegisterType<SuperZztTiles>().As<ITiles>().SingleInstance();
+//                        builder.RegisterType<SuperZztTimers>().As<ITimers>().SingleInstance();
+//                        builder.RegisterType<SuperZztWorld>().As<IWorld>().SingleInstance();
+//                        break;
+//                }
             });
 
             return scope.Resolve<IContext>();

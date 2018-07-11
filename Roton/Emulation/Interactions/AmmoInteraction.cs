@@ -1,8 +1,12 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
+    [ContextEngine(ContextEngine.Zzt, 0x05)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x05)]
     public sealed class AmmoInteraction : IInteraction
     {
         private readonly IEngine _engine;

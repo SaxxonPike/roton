@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class SendCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "SEND")]
+    [ContextEngine(ContextEngine.SuperZzt, "SEND")]
+    public sealed class SendCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "SEND";
-        
+
         public void Execute(IOopContext context)
         {
             var target = _engine.Parser.ReadWord(context.Index, context);

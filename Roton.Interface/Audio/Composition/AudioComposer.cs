@@ -38,7 +38,7 @@ namespace Roton.Interface.Audio.Composition
 
             _frequencyDutyCycleTable =
                 Enumerable.Range(0, 12 * 6)
-                .Select(i => outputSampleRate * AccumulatorMultiplier / (440d * Math.Pow(2d, (double)(i - 33) / 12)))
+                .Select(i => outputSampleRate * AccumulatorMultiplier / (440d * Math.Pow(2d, (i - 33d) / 12)))
                 .Select(i => (int)i)
                 .ToArray();
         }

@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class IfCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "IF")]
+    [ContextEngine(ContextEngine.SuperZzt, "IF")]
+    public sealed class IfCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "IF";
-        
+
         public void Execute(IOopContext context)
         {
             var condition = _engine.Parser.GetCondition(context);

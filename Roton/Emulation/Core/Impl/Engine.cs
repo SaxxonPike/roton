@@ -15,9 +15,12 @@ using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class Engine : IEngine
     {
         private readonly Lazy<IActors> _actors;
@@ -30,7 +33,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<ICheatList> _cheats;
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IColors> _colors;
-        private readonly Lazy<ICommands> _commands;
+        private readonly Lazy<ICommandList> _commands;
         private readonly Lazy<IConditionList> _conditions;
         private readonly Lazy<IConfig> _config;
         private readonly Lazy<IDirectionList> _directions;
@@ -59,7 +62,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
             Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
-            Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommands> commands, Lazy<ITargetList> targets,
+            Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList)
@@ -119,8 +122,8 @@ namespace Roton.Emulation.Core.Impl
 
         private int ClockTick
         {
-            get { return _clockTick; }
-            set { _clockTick = value & 0x7FFF; }
+            get => _clockTick;
+            set => _clockTick = value & 0x7FFF;
         }
 
         private Thread Thread { get; set; }
@@ -254,7 +257,7 @@ namespace Roton.Emulation.Core.Impl
 
         public IColors Colors => _colors.Value;
 
-        public ICommands Commands => _commands.Value;
+        public ICommandList CommandList => _commands.Value;
 
         public IConditionList ConditionList => _conditions.Value;
 
@@ -381,18 +384,7 @@ namespace Roton.Emulation.Core.Impl
             return new Sound();
         }
 
-        public void EnterBoard()
-        {
-            Board.Entrance.CopyFrom(Player.Location);
-            if (Board.IsDark && Alerts.Dark)
-            {
-                SetMessage(0xC8, Alerts.DarkMessage);
-                Alerts.Dark = false;
-            }
-
-            World.TimePassed = 0;
-            UpdateStatus();
-        }
+        public void EnterBoard() => Features.EnterBoard();
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
@@ -964,8 +956,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void RemoveItem(IXyPair location)
         {
-            Tiles[location].Id = ElementList.EmptyId;
-            UpdateBoard(location);
+            Features.RemoveItem(location);
         }
 
         public IXyPair Rnd()
@@ -1196,7 +1187,7 @@ namespace Roton.Emulation.Core.Impl
         
         public IInteractionList InteractionList 
             => _interactionList.Value;
-        
+
         public IWorld World 
             => _world.Value;
 

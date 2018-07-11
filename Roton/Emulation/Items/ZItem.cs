@@ -1,8 +1,11 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    public class ZItem : IItem
+    [ContextEngine(ContextEngine.SuperZzt, "Z")]
+    public sealed class ZItem : IItem
     {
         private readonly IEngine _engine;
 
@@ -10,8 +13,6 @@ namespace Roton.Emulation.Items
         {
             _engine = engine;
         }
-        
-        public string Name => "Z";
 
         public int Value
         {

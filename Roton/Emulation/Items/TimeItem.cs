@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    public class TimeItem : IItem
+    [ContextEngine(ContextEngine.Zzt, "TIME")]
+    [ContextEngine(ContextEngine.SuperZzt, "TIME")]
+    public sealed class TimeItem : IItem
     {
         private readonly IEngine _engine;
 
@@ -10,8 +14,6 @@ namespace Roton.Emulation.Items
         {
             _engine = engine;
         }
-        
-        public string Name => "TIME";
 
         public int Value
         {

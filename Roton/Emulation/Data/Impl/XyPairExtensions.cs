@@ -85,7 +85,7 @@ namespace Roton.Emulation.Data.Impl
         public static IXyPair Product(this IXyPair pair, int value)
         {
             var clone = pair.Clone();
-            clone.SetTo(clone.X*value, clone.Y*value);
+            clone.SetTo(clone.X * value, clone.Y * value);
             return clone;
         }
 

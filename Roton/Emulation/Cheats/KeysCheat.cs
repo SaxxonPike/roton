@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class KeysCheat : ICheat
+    [ContextEngine(ContextEngine.Zzt, "KEYS")]
+    [ContextEngine(ContextEngine.SuperZzt, "KEYS")]
+    public sealed class KeysCheat : ICheat
     {
         private readonly IEngine _engine;
 

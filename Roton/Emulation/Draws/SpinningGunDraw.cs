@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    public class SpinningGunDraw : IDraw
+    [ContextEngine(ContextEngine.Zzt, 0x27)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x27)]
+    public sealed class SpinningGunDraw : IDraw
     {
         private readonly IEngine _engine;
 

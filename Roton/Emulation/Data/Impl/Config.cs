@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Data.Impl
 {
-    public class Config : IConfig
+    public abstract class Config : IConfig
     {
         public int RandomSeed { get; set; }
         public int AmmoPerPickup { get; set; }

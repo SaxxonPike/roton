@@ -1,11 +1,13 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets
 {
-    public class SelfTarget : ITarget
+    [ContextEngine(ContextEngine.Zzt, "SELF")]
+    [ContextEngine(ContextEngine.SuperZzt, "SELF")]
+    public sealed class SelfTarget : ITarget
     {
-        public string Name => "SELF";
-        
         public bool Execute(ISearchContext context)
         {
             if (context.SearchOffset <= 0)

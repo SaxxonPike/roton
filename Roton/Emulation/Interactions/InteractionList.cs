@@ -1,21 +1,27 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    public abstract class InteractionList : IInteractionList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class InteractionList : IInteractionList
     {
-        private readonly IDictionary<int, IInteraction> _interactions;
-        private readonly IInteraction _defaultInteraction;
+        private readonly IDictionary<int, IInteraction> _interactions = new Dictionary<int, IInteraction>();
 
-        protected InteractionList(IDictionary<int, IInteraction> interactions, IInteraction defaultInteraction)
+        public InteractionList(IContextMetadataService contextMetadataService, IEnumerable<IInteraction> interactions)
         {
-            _interactions = interactions;
-            _defaultInteraction = defaultInteraction;
+            foreach (var interaction in interactions)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(interaction))
+                    _interactions.Add(attribute.Id, interaction);
+            }
         }
         
         public IInteraction Get(int index)
         {
-            return _interactions.ContainsKey(index) ? _interactions[index] : _defaultInteraction;
+            return _interactions.ContainsKey(index) ? _interactions[index] : _interactions[-1];
         }
     }
 

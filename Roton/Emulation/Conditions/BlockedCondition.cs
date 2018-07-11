@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    public class BlockedCondition : ICondition
+    [ContextEngine(ContextEngine.Zzt, "BLOCKED")]
+    [ContextEngine(ContextEngine.SuperZzt, "BLOCKED")]
+    public sealed class BlockedCondition : ICondition
     {
         private readonly IEngine _engine;
 

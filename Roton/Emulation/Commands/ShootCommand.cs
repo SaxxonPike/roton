@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class ShootCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "SHOOT")]
+    [ContextEngine(ContextEngine.SuperZzt, "SHOOT")]
+    public sealed class ShootCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -12,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "SHOOT";
-        
+
         public void Execute(IOopContext context)
         {
             var vector = _engine.Parser.GetDirection(context);

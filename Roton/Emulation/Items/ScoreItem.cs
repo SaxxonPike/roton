@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    public class ScoreItem : IItem
+    [ContextEngine(ContextEngine.Zzt, "SCORE")]
+    [ContextEngine(ContextEngine.SuperZzt, "SCORE")]
+    public sealed class ScoreItem : IItem
     {
         private readonly IEngine _engine;
 
@@ -10,8 +14,6 @@ namespace Roton.Emulation.Items
         {
             _engine = engine;
         }
-        
-        public string Name => "SCORE";
 
         public int Value
         {

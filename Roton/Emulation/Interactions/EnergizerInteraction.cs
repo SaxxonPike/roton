@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    public class EnergizerInteraction : IInteraction
+    [ContextEngine(ContextEngine.Zzt, 0x0E)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x0E)]
+    public sealed class EnergizerInteraction : IInteraction
     {
         private readonly IEngine _engine;
 

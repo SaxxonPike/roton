@@ -1,14 +1,20 @@
 ﻿using System;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl
 {
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class Actor : IActor
     {
         public Actor(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;
+            Location = new MemoryLocation(Memory, Offset + 0x00);
+            UnderTile = new MemoryTile(Memory, Offset + 0x0F);
+            Vector = new MemoryVector(Memory, Offset + 0x02);
         }
 
         private IMemory Memory { get; }
@@ -17,67 +23,67 @@ namespace Roton.Emulation.Data.Impl
 
         public int Cycle
         {
-            get { return Memory.Read16(Offset + 0x06); }
-            set { Memory.Write16(Offset + 0x06, value); }
+            get => Memory.Read16(Offset + 0x06);
+            set => Memory.Write16(Offset + 0x06, value);
         }
 
         public int Follower
         {
-            get { return Memory.Read16(Offset + 0x0B); }
-            set { Memory.Write16(Offset + 0x0B, value); }
+            get => Memory.Read16(Offset + 0x0B);
+            set => Memory.Write16(Offset + 0x0B, value);
         }
 
         public int Leader
         {
-            get { return Memory.Read16(Offset + 0x0D); }
-            set { Memory.Write16(Offset + 0x0D, value); }
+            get => Memory.Read16(Offset + 0x0D);
+            set => Memory.Write16(Offset + 0x0D, value);
         }
 
         public int Length
         {
-            get { return Memory.Read16(Offset + 0x17); }
-            set { Memory.Write16(Offset + 0x17, value); }
+            get => Memory.Read16(Offset + 0x17);
+            set => Memory.Write16(Offset + 0x17, value);
         }
 
-        public IXyPair Location => new MemoryLocation(Memory, Offset + 0x00);
+        public IXyPair Location { get; }
 
         public int P1
         {
-            get { return Memory.Read8(Offset + 0x08); }
-            set { Memory.Write8(Offset + 0x08, value); }
+            get => Memory.Read8(Offset + 0x08);
+            set => Memory.Write8(Offset + 0x08, value);
         }
 
         public int P2
         {
-            get { return Memory.Read8(Offset + 0x09); }
-            set { Memory.Write8(Offset + 0x09, value); }
+            get => Memory.Read8(Offset + 0x09);
+            set => Memory.Write8(Offset + 0x09, value);
         }
 
         public int P3
         {
-            get { return Memory.Read8(Offset + 0x0A); }
-            set { Memory.Write8(Offset + 0x0A, value); }
+            get => Memory.Read8(Offset + 0x0A);
+            set => Memory.Write8(Offset + 0x0A, value);
         }
 
         public int Pointer
         {
-            get { return Memory.Read32(Offset + 0x11); }
-            set { Memory.Write32(Offset + 0x11, value); }
+            get => Memory.Read32(Offset + 0x11);
+            set => Memory.Write32(Offset + 0x11, value);
         }
 
-        public ITile UnderTile => new MemoryTile(Memory, Offset + 0x0F);
+        public ITile UnderTile { get; }
 
-        public IXyPair Vector => new MemoryVector(Memory, Offset + 0x02);
+        public IXyPair Vector { get; }
 
         public int Instruction
         {
-            get { return Memory.Read16(Offset + 0x15); }
-            set { Memory.Write16(Offset + 0x15, value); }
+            get => Memory.Read16(Offset + 0x15);
+            set => Memory.Write16(Offset + 0x15, value);
         }
 
         public byte[] Code
         {
-            get { return Memory.Heap[Pointer]; }
+            get => Memory.Heap[Pointer];
             set { }
         }
 

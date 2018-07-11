@@ -1,5 +1,10 @@
-﻿namespace Roton.Emulation.Core.Impl
+﻿using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
+
+namespace Roton.Emulation.Core.Impl
 {
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
     public sealed class Context : IContext
     {
         private readonly IEngine _engine;

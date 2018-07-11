@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Core
 {
-    public interface IEngineResourceProvider
+    public interface IEngineResourceService
     {
         byte[] GetElementData();
         byte[] GetMemoryData();

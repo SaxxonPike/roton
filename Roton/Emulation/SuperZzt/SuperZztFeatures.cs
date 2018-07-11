@@ -1,10 +1,12 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.SuperZzt
 {
-    public class SuperZztFeatures : IFeatures
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class SuperZztFeatures : IFeatures
     {
         private readonly IEngine _engine;
 

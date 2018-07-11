@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data.Impl
 {
-    public class Message : IMessage
+    public sealed class Message : IMessage
     {
         public Message()
         {

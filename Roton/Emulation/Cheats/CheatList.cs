@@ -1,14 +1,22 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public abstract class CheatList : ICheatList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class CheatList : ICheatList
     {
-        private readonly IDictionary<string, ICheat> _cheats;
+        private readonly IDictionary<string, ICheat> _cheats = new Dictionary<string, ICheat>();
 
-        protected CheatList(IDictionary<string, ICheat> cheats)
+        public CheatList(IContextMetadataService contextMetadataService, IEnumerable<ICheat> cheats)
         {
-            _cheats = cheats;
+            foreach (var cheat in cheats)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(cheat))
+                    _cheats.Add(attribute.Name, cheat);
+            }
         }
         
         public ICheat Get(string name)
@@ -16,6 +24,6 @@ namespace Roton.Emulation.Cheats
             return _cheats.ContainsKey(name)
                 ? _cheats[name]
                 : null;
-        }
+        }        
     }
 }

@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class BlinkWallAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x1D)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x1D)]
+    public sealed class BlinkWallAction : IAction
     {
         private readonly IEngine _engine;
 

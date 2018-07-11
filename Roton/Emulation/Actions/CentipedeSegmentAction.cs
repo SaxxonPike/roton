@@ -1,8 +1,12 @@
 ﻿using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class CentipedeSegmentAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x2D)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x2D)]
+    public sealed class CentipedeSegmentAction : IAction
     {
         private readonly IEngine _engine;
 

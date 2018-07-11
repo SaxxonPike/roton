@@ -1,10 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class CentipedeHeadAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x2C)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x2C)]
+    public sealed class CentipedeHeadAction : IAction
     {
         private readonly IEngine _engine;
 

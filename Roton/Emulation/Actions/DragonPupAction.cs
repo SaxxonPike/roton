@@ -1,7 +1,10 @@
 ﻿using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
+    [ContextEngine(ContextEngine.SuperZzt, 0x3C)]
     public class DragonPupAction : IAction
     {
         private readonly IEngine _engine;

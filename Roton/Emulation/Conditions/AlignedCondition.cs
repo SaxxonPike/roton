@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    public class AlignedCondition : ICondition
+    [ContextEngine(ContextEngine.Zzt, "ALLIGNED")]
+    [ContextEngine(ContextEngine.SuperZzt, "ALLIGNED")]
+    public sealed class AlignedCondition : ICondition
     {
         private readonly IEngine _engine;
 

@@ -1,9 +1,13 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    public class InvisibleWallInteraction : IInteraction
+    [ContextEngine(ContextEngine.Zzt, 0x1C)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x1C)]
+    public sealed class InvisibleWallInteraction : IInteraction
     {
         private readonly IEngine _engine;
 

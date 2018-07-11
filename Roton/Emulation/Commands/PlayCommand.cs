@@ -1,9 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class PlayCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "PLAY")]
+    [ContextEngine(ContextEngine.SuperZzt, "PLAY")]
+    public sealed class PlayCommand : ICommand
     {
         private readonly IEngine _engine;
 
@@ -11,9 +15,7 @@ namespace Roton.Emulation.Commands
         {
             _engine = engine;
         }
-        
-        public string Name => "PLAY";
-        
+
         public void Execute(IOopContext context)
         {
             var notes = _engine.Parser.ReadLine(context.Index, context);

@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class TimeCheat : ICheat
+    [ContextEngine(ContextEngine.Zzt, "TIME")]
+    [ContextEngine(ContextEngine.SuperZzt, "TIME")]
+    public sealed class TimeCheat : ICheat
     {
         private readonly IEngine _engine;
 

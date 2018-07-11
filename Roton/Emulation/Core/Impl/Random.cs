@@ -1,9 +1,12 @@
 ﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class Random : IRandom
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class Random : IRandom
     {
         private readonly IRandomizer _random;
         private readonly IRandomizer _syncRandom;
@@ -14,14 +17,10 @@ namespace Roton.Emulation.Core.Impl
             _syncRandom = new Randomizer(new RandomState(config.RandomSeed));
         }
 
-        public int NonSynced(int exclusiveMax)
-        {
-            return _random.GetNext(exclusiveMax);
-        }
+        public int NonSynced(int exclusiveMax) 
+            => _random.GetNext(exclusiveMax);
 
-        public int Synced(int exclusiveMax)
-        {
-            return _syncRandom.GetNext(exclusiveMax);
-        }
+        public int Synced(int exclusiveMax) 
+            => _syncRandom.GetNext(exclusiveMax);
     }
 }

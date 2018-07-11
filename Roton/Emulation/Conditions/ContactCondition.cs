@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    public class ContactCondition : ICondition
+    [ContextEngine(ContextEngine.Zzt, "CONTACT")]
+    [ContextEngine(ContextEngine.SuperZzt, "CONTACT")]
+    public sealed class ContactCondition : ICondition
     {
         private readonly IEngine _engine;
 

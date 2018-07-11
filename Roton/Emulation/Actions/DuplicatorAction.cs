@@ -1,8 +1,11 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
+    [ContextEngine(ContextEngine.Zzt, 0x0C)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x0C)]
     public sealed class DuplicatorAction : IAction
     {
         private readonly IEngine _engine;

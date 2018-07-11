@@ -1,9 +1,11 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
+    [ContextEngine(ContextEngine.SuperZzt, 0x3E)]
     public sealed class SpiderAction : IAction
     {
         private readonly IEngine _engine;

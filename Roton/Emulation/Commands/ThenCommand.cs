@@ -1,11 +1,13 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    public class ThenCommand : ICommand
+    [ContextEngine(ContextEngine.Zzt, "THEN")]
+    [ContextEngine(ContextEngine.SuperZzt, "THEN")]
+    public sealed class ThenCommand : ICommand
     {
-        public string Name => "THEN";
-        
         public void Execute(IOopContext context)
         {
             // The actual code doesn't work this way.

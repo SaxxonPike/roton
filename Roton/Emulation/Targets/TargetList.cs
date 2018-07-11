@@ -1,14 +1,22 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets
 {
-    public abstract class TargetList : ITargetList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class TargetList : ITargetList
     {
-        private readonly IDictionary<string, ITarget> _targets;
+        private readonly IDictionary<string, ITarget> _targets = new Dictionary<string, ITarget>();
 
-        protected TargetList(IDictionary<string, ITarget> targets)
+        public TargetList(IContextMetadataService contextMetadataService, IEnumerable<ITarget> targets)
         {
-            _targets = targets;
+            foreach (var target in targets)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(target))
+                    _targets.Add(attribute.Name, target);
+            }
         }
         
         public ITarget Get(string name)
@@ -16,8 +24,6 @@ namespace Roton.Emulation.Targets
             return _targets.ContainsKey(name)
                 ? _targets[name]
                 : null;
-        }
-
-        public ITarget GetDefault() => Get(string.Empty);
+        }        
     }
 }

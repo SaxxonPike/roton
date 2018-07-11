@@ -1,15 +1,17 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
+    [ContextEngine(ContextEngine.Zzt)]
     public sealed class ZztElementList : ElementList
     {
-        public ZztElementList(IMemory memory, IEngineResourceProvider engineResourceProvider)
+        public ZztElementList(IMemory memory, IEngineResourceService engineResourceService)
             : base(memory, 54)
         {
-            memory.Write(0x4AD4, engineResourceProvider.GetElementData());
+            memory.Write(0x4AD4, engineResourceService.GetElementData());
         }
 
         public override int AmmoId => 0x05;
@@ -59,9 +61,7 @@ namespace Roton.Emulation.Zzt
         public override int TransporterId => 0x1E;
         public override int WaterId => 0x13;
 
-        protected override IElement GetElement(int index)
-        {
-            return new ZztElement(Memory, index);
-        }
+        protected override IElement GetElement(int index) 
+            => new ZztElement(Memory, index);
     }
 }

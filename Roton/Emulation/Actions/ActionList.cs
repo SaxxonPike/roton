@@ -1,21 +1,28 @@
 using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public abstract class ActionList : IActionList
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class ActionList : IActionList
     {
-        private readonly IDictionary<int, IAction> _actions;
-        private readonly IAction _defaultAction;
+        private readonly IDictionary<int, IAction> _actions = new Dictionary<int, IAction>();
 
-        protected ActionList(IDictionary<int, IAction> actions, IAction defaultAction)
+        public ActionList(IContextMetadataService contextMetadataService, IEnumerable<IAction> actions)
         {
-            _actions = actions;
-            _defaultAction = defaultAction;
+            foreach (var action in actions)
+            {
+                foreach (var attribute in contextMetadataService.GetMetadata(action))
+                    _actions.Add(attribute.Id, action);
+            }
         }
         
         public IAction Get(int index)
         {
-            return _actions.ContainsKey(index) ? _actions[index] : _defaultAction;
+            return _actions.ContainsKey(index) ? _actions[index] : _actions[-1];
         }
+
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    public class MessengerAction : IAction
+    [ContextEngine(ContextEngine.Zzt, 0x02)]
+    [ContextEngine(ContextEngine.SuperZzt, 0x02)]
+    public sealed class MessengerAction : IAction
     {
         private readonly IEngine _engine;
 

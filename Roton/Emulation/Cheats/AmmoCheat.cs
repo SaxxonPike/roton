@@ -1,8 +1,12 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    public class AmmoCheat : ICheat
+    [ContextEngine(ContextEngine.Zzt, "AMMO")]
+    [ContextEngine(ContextEngine.SuperZzt, "AMMO")]
+    public sealed class AmmoCheat : ICheat
     {
         private readonly IEngine _engine;
 

@@ -1,8 +1,10 @@
 ﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
+    [ContextEngine(ContextEngine.SuperZzt)]
     public class ArtSerializer : IArtSerializer
     {
         private readonly IMemory _memory;

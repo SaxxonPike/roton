@@ -1,10 +1,12 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Zzt
 {
-    public class ZztFeatures : IFeatures
+    [ContextEngine(ContextEngine.Zzt)]
+    public sealed class ZztFeatures : IFeatures
     {
         private readonly IEngine _engine;
 
@@ -30,7 +32,15 @@ namespace Roton.Emulation.Zzt
 
         public void EnterBoard()
         {
-            throw new System.NotImplementedException();
+            _engine.Board.Entrance.CopyFrom(_engine.Player.Location);
+            if (_engine.Board.IsDark && _engine.Alerts.Dark)
+            {
+                _engine.SetMessage(0xC8, _engine.Alerts.DarkMessage);
+                _engine.Alerts.Dark = false;
+            }
+
+            _engine.World.TimePassed = 0;
+            _engine.UpdateStatus();
         }
 
         public void ExecuteMessage(IOopContext context)
@@ -136,7 +146,8 @@ namespace Roton.Emulation.Zzt
 
         public void RemoveItem(IXyPair location)
         {
-            throw new System.NotImplementedException();
+            _engine.Tiles[location].Id = _engine.ElementList.EmptyId;
+            _engine.UpdateBoard(location);
         }
 
         public void ShowInGameHelp()

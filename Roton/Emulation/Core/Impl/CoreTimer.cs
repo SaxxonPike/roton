@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Threading;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    // this is the master core timer, it'll automatically start and stop when it is queried regularly
-    public class Clock : IClock
+    [ContextEngine(ContextEngine.Zzt)]
+    [ContextEngine(ContextEngine.SuperZzt)]
+    public sealed class Clock : IClock
     {
         private int _maxLaggedTicks;
 
@@ -35,7 +38,7 @@ namespace Roton.Emulation.Core.Impl
                 ResetShutdown();
                 return _tick;
             }
-            set { _tick = value; }
+            set => _tick = value;
         }
 
         private int TicksUntilShutdown { get; set; }
