@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class ConditionList : IConditionList
     {
         private readonly IDictionary<string, ICondition> _conditions = new Dictionary<string, ICondition>();

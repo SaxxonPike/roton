@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x1B)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1B)]
+    [ContextEngine(ContextEngine.Original, 0x1B)]
+    [ContextEngine(ContextEngine.Super, 0x1B)]
     public sealed class FakeWallInteraction : IInteraction
     {
         private readonly IEngine _engine;

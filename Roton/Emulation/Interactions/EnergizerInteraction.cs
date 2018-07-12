@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x0E)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x0E)]
+    [ContextEngine(ContextEngine.Original, 0x0E)]
+    [ContextEngine(ContextEngine.Super, 0x0E)]
     public sealed class EnergizerInteraction : IInteraction
     {
         private readonly IEngine _engine;

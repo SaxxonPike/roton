@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.Zzt, 0x1F)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1F)]
+    [ContextEngine(ContextEngine.Original, 0x1F)]
+    [ContextEngine(ContextEngine.Super, 0x1F)]
     public sealed class LineWallDraw : IDraw
     {
         private readonly IEngine _engine;

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x0D)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x0D)]
+    [ContextEngine(ContextEngine.Original, 0x0D)]
+    [ContextEngine(ContextEngine.Super, 0x0D)]
     public sealed class BombInteraction : IInteraction
     {
         private readonly IEngine _engine;

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "RESTART")]
-    [ContextEngine(ContextEngine.SuperZzt, "RESTART")]
+    [ContextEngine(ContextEngine.Original, "RESTART")]
+    [ContextEngine(ContextEngine.Super, "RESTART")]
     public sealed class RestartCommand : ICommand
     {
         public void Execute(IOopContext context)

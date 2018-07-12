@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    [ContextEngine(ContextEngine.Zzt, "ALLIGNED")]
-    [ContextEngine(ContextEngine.SuperZzt, "ALLIGNED")]
+    [ContextEngine(ContextEngine.Original, "ALLIGNED")]
+    [ContextEngine(ContextEngine.Super, "ALLIGNED")]
     public sealed class AlignedCondition : ICondition
     {
         private readonly IEngine _engine;

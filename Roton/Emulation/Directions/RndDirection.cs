@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original, "RND")]
+    [ContextEngine(ContextEngine.Super, "RND")]
     public sealed class RndDirection : IDirection
     {
         private readonly IEngine _engine;

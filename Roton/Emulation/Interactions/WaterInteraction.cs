@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x13)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x13)]
+    [ContextEngine(ContextEngine.Original, 0x13)]
+    [ContextEngine(ContextEngine.Super, 0x13)]
     public sealed class WaterInteraction : IInteraction
     {
         private readonly IEngine _engine;

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    [ContextEngine(ContextEngine.Zzt, "SCORE")]
-    [ContextEngine(ContextEngine.SuperZzt, "SCORE")]
+    [ContextEngine(ContextEngine.Original, "SCORE")]
+    [ContextEngine(ContextEngine.Super, "SCORE")]
     public sealed class ScoreItem : IItem
     {
         private readonly IEngine _engine;

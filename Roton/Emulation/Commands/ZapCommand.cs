@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "ZAP")]
-    [ContextEngine(ContextEngine.SuperZzt, "ZAP")]
+    [ContextEngine(ContextEngine.Original, "ZAP")]
+    [ContextEngine(ContextEngine.Super, "ZAP")]
     public sealed class ZapCommand : ICommand
     {
         private readonly IEngine _engine;

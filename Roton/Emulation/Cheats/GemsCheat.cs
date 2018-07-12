@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    [ContextEngine(ContextEngine.Zzt, "GEMS")]
-    [ContextEngine(ContextEngine.SuperZzt, "GEMS")]
+    [ContextEngine(ContextEngine.Original, "GEMS")]
+    [ContextEngine(ContextEngine.Super, "GEMS")]
     public sealed class GemsCheat : ICheat
     {
         private readonly IEngine _engine;

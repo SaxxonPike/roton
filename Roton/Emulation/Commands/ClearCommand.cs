@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "CLEAR")]
-    [ContextEngine(ContextEngine.SuperZzt, "CLEAR")]
+    [ContextEngine(ContextEngine.Original, "CLEAR")]
+    [ContextEngine(ContextEngine.Super, "CLEAR")]
     public sealed class ClearCommand : ICommand
     {
         private readonly IEngine _engine;

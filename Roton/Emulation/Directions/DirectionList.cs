@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class DirectionList : IDirectionList
     {
         private readonly IDictionary<string, IDirection> _directions = new Dictionary<string, IDirection>();

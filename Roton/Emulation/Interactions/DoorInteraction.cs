@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x09)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x09)]
+    [ContextEngine(ContextEngine.Original, 0x09)]
+    [ContextEngine(ContextEngine.Super, 0x09)]
     public sealed class DoorInteraction : IInteraction
     {
         private readonly IEngine _engine;

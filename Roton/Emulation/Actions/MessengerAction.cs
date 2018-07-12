@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x02)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x02)]
+    [ContextEngine(ContextEngine.Original, 0x02)]
+    [ContextEngine(ContextEngine.Super, 0x02)]
     public sealed class MessengerAction : IAction
     {
         private readonly IEngine _engine;

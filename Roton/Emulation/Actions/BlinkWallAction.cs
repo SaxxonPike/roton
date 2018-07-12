@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x1D)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1D)]
+    [ContextEngine(ContextEngine.Original, 0x1D)]
+    [ContextEngine(ContextEngine.Super, 0x1D)]
     public sealed class BlinkWallAction : IAction
     {
         private readonly IEngine _engine;

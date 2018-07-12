@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    [ContextEngine(ContextEngine.Zzt, "TIME")]
-    [ContextEngine(ContextEngine.SuperZzt, "TIME")]
+    [ContextEngine(ContextEngine.Original, "TIME")]
+    [ContextEngine(ContextEngine.Super, "TIME")]
     public sealed class TimeCheat : ICheat
     {
         private readonly IEngine _engine;

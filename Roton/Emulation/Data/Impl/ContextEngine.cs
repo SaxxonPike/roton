@@ -2,7 +2,7 @@
 {
     public enum ContextEngine
     {
-        Zzt,
-        SuperZzt
+        Original,
+        Super
     }
 }

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x10)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x10)]
+    [ContextEngine(ContextEngine.Original, 0x10)]
+    [ContextEngine(ContextEngine.Super, 0x10)]
     public sealed class ClockwiseConveyorAction : IAction
     {
         private readonly IEngine _engine;

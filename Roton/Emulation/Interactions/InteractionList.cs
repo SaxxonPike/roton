@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class InteractionList : IInteractionList
     {
         private readonly IDictionary<int, IInteraction> _interactions = new Dictionary<int, IInteraction>();

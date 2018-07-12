@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.Zzt, 0x0C)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x0C)]
+    [ContextEngine(ContextEngine.Original, 0x0C)]
+    [ContextEngine(ContextEngine.Super, 0x0C)]
     public sealed class DuplicatorDraw : IDraw
     {
         private readonly IEngine _engine;

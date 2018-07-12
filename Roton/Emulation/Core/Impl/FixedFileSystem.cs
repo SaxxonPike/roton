@@ -16,6 +16,9 @@ namespace Roton.Emulation.Core.Impl
 
         public byte[] GetFile(string path)
         {
+            if (path == null)
+                return null;
+            
             return _files.ContainsKey(path) ? _files[path] : _fallbackFileSystem.GetFile(path);
         }
 

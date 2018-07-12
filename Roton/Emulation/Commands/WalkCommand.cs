@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "WALK")]
-    [ContextEngine(ContextEngine.SuperZzt, "WALK")]
+    [ContextEngine(ContextEngine.Original, "WALK")]
+    [ContextEngine(ContextEngine.Super, "WALK")]
     public sealed class WalkCommand : ICommand
     {
         private readonly IEngine _engine;

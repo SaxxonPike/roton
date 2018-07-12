@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x27)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x27)]
+    [ContextEngine(ContextEngine.Original, 0x27)]
+    [ContextEngine(ContextEngine.Super, 0x27)]
     public sealed class SpinningGunAction : IAction
     {
         private readonly IEngine _engine;

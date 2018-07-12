@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "THEN")]
-    [ContextEngine(ContextEngine.SuperZzt, "THEN")]
+    [ContextEngine(ContextEngine.Original, "THEN")]
+    [ContextEngine(ContextEngine.Super, "THEN")]
     public sealed class ThenCommand : ICommand
     {
         public void Execute(IOopContext context)

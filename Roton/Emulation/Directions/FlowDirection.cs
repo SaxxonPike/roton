@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original, "FLOW")]
+    [ContextEngine(ContextEngine.Super, "FLOW")]
     public sealed class FlowDirection : IDirection
     {
         public IXyPair Execute(IOopContext context)

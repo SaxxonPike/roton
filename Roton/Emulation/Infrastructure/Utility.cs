@@ -42,11 +42,9 @@ namespace Roton.Emulation.Infrastructure
         /// </summary>
         public static byte[] ToBytes(this string value)
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                return new byte[0];
-            }
-            return CodePage437.GetBytes(value);
+            return string.IsNullOrEmpty(value) 
+                ? new byte[0] 
+                : CodePage437.GetBytes(value);
         }
 
         /// <summary>

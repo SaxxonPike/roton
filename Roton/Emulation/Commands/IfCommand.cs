@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "IF")]
-    [ContextEngine(ContextEngine.SuperZzt, "IF")]
+    [ContextEngine(ContextEngine.Original, "IF")]
+    [ContextEngine(ContextEngine.Super, "IF")]
     public sealed class IfCommand : ICommand
     {
         private readonly IEngine _engine;

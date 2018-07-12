@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x12)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x45)]
+    [ContextEngine(ContextEngine.Original, 0x12)]
+    [ContextEngine(ContextEngine.Super, 0x45)]
     public sealed class BulletAction : IAction
     {
         private readonly IEngine _engine;
@@ -38,7 +38,7 @@ namespace Roton.Emulation.Actions
                 }
 
                 if (element.Id == _engine.ElementList.BreakableId ||
-                    (element.IsDestructible && (element.Id == _engine.ElementList.PlayerId || actor.P1 == 0)))
+                    element.IsDestructible && (element.Id == _engine.ElementList.PlayerId || actor.P1 == 0))
                 {
                     if (element.Points != 0)
                     {

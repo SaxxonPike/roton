@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.SuperZzt, 0x40)]
+    [ContextEngine(ContextEngine.Super, 0x40)]
     public sealed class StoneInteraction : IInteraction
     {
         private readonly IEngine _engine;

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class DefaultInteraction : IInteraction
     {
         public void Interact(IXyPair location, int index, IXyPair vector)

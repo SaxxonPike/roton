@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x0B)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x0B)]
+    [ContextEngine(ContextEngine.Original, 0x0B)]
+    [ContextEngine(ContextEngine.Super, 0x0B)]
     public sealed class PassageInteraction : IInteraction
     {
         private readonly IEngine _engine;

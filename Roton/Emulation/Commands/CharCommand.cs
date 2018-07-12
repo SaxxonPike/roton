@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "CHAR")]
-    [ContextEngine(ContextEngine.SuperZzt, "CHAR")]
+    [ContextEngine(ContextEngine.Original, "CHAR")]
+    [ContextEngine(ContextEngine.Super, "CHAR")]
     public sealed class CharCommand : ICommand
     {
         private readonly IEngine _engine;

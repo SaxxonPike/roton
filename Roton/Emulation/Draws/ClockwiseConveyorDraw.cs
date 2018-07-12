@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.Zzt, 0x10)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x10)]
+    [ContextEngine(ContextEngine.Original, 0x10)]
+    [ContextEngine(ContextEngine.Super, 0x10)]
     public sealed class ClockwiseConveyorDraw : IDraw
     {
         private readonly IEngine _engine;

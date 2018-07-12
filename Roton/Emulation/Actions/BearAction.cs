@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x22)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x22)]
+    [ContextEngine(ContextEngine.Original, 0x22)]
+    [ContextEngine(ContextEngine.Super, 0x22)]
     public sealed class BearAction : IAction
     {
         private readonly IEngine _engine;
@@ -22,7 +22,7 @@ namespace Roton.Emulation.Actions
             var vector = new Vector();
 
             if (_engine.Player.Location.X == actor.Location.X ||
-                (8 - actor.P1 < _engine.Player.Location.Y.AbsDiff(actor.Location.Y)))
+                8 - actor.P1 < _engine.Player.Location.Y.AbsDiff(actor.Location.Y))
             {
                 if (8 - actor.P1 < _engine.Player.Location.X.AbsDiff(actor.Location.X))
                 {

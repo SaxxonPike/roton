@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.Zzt, 0x28)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x28)]
+    [ContextEngine(ContextEngine.Original, 0x28)]
+    [ContextEngine(ContextEngine.Super, 0x28)]
     public sealed class PusherDraw : IDraw
     {
         private readonly IEngine _engine;

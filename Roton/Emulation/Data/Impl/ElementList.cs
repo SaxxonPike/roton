@@ -75,6 +75,8 @@ namespace Roton.Emulation.Data.Impl
         public virtual int TransporterId => -1;
         public virtual int WaterId => -1;
         public virtual int WebId => -1;
+        
+        public abstract void Reset();
 
         protected abstract IElement GetElement(int index);
 

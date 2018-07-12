@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x1E)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1E)]
+    [ContextEngine(ContextEngine.Original, 0x1E)]
+    [ContextEngine(ContextEngine.Super, 0x1E)]
     public sealed class TransporterInteraction : IInteraction
     {
         private readonly IEngine _engine;

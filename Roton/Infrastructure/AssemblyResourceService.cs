@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Roton.Emulation.Core;
@@ -21,6 +22,9 @@ namespace Roton.Infrastructure
             using (var stream = assembly.GetManifestResourceStream(name))
             using (var mem = new MemoryStream())
             {
+                if (stream == null)
+                    throw new Exception($"Reading resource failed: {name}");
+                
                 stream.CopyTo(mem);
                 
                 var resource = new Resource(mem.ToArray());

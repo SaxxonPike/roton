@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x0A)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x0A)]
+    [ContextEngine(ContextEngine.Original, 0x0A)]
+    [ContextEngine(ContextEngine.Super, 0x0A)]
     public sealed class ScrollAction : IAction
     {
         private readonly IEngine _engine;

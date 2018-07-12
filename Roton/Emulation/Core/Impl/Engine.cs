@@ -19,17 +19,15 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class Engine : IEngine
     {
+        private readonly Lazy<IActionList> _actionList;
         private readonly Lazy<IActors> _actors;
         private readonly Lazy<IAlerts> _alerts;
         private readonly Lazy<IBoard> _board;
         private readonly Lazy<IBoards> _boards;
-        private readonly Lazy<IActionList> _actionList;
-        private readonly Lazy<IDrawList> _drawList;
-        private readonly Lazy<IInteractionList> _interactionList;
         private readonly Lazy<ICheatList> _cheats;
         private readonly Lazy<IClock> _clock;
         private readonly Lazy<IColors> _colors;
@@ -37,12 +35,15 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IConditionList> _conditions;
         private readonly Lazy<IConfig> _config;
         private readonly Lazy<IDirectionList> _directions;
+        private readonly Lazy<IDrawList> _drawList;
         private readonly Lazy<IElementList> _elements;
+        private readonly Lazy<IFacts> _facts;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
         private readonly Lazy<IGameSerializer> _gameSerializer;
         private readonly Lazy<IHud> _hud;
+        private readonly Lazy<IInteractionList> _interactionList;
         private readonly Lazy<IInterpreter> _interpreter;
         private readonly Lazy<IItemList> _items;
         private readonly Lazy<IKeyboard> _keyboard;
@@ -65,7 +66,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
-            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList)
+            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts)
         {
             _clock = clock;
             _actors = actors;
@@ -98,6 +99,7 @@ namespace Roton.Emulation.Core.Impl
             _actionList = actionList;
             _drawList = drawList;
             _interactionList = interactionList;
+            _facts = facts;
         }
 
         private IBoards Boards => _boards.Value;
@@ -111,6 +113,8 @@ namespace Roton.Emulation.Core.Impl
         private IFileSystem Disk => _fileSystem.Value;
 
         private IFeatures Features => _features.Value;
+
+        public IFlags Flags => _flags.Value;
 
         private IGameSerializer GameSerializer => _gameSerializer.Value;
 
@@ -129,6 +133,9 @@ namespace Roton.Emulation.Core.Impl
         private Thread Thread { get; set; }
 
         private bool ThreadActive { get; set; }
+
+        public IActionList ActionList
+            => _actionList.Value;
 
         public IActor ActorAt(IXyPair location)
         {
@@ -224,6 +231,16 @@ namespace Roton.Emulation.Core.Impl
 
         public ICheatList CheatList => _cheats.Value;
 
+        public void CleanUpPassageMovement()
+        {
+            Features.CleanUpPassageMovement();
+        }
+
+        public void ClearForest(IXyPair location)
+        {
+            Features.ClearForest(location);
+        }
+
         public void ClearSound()
         {
             State.SoundPlaying = false;
@@ -238,20 +255,20 @@ namespace Roton.Emulation.Core.Impl
             ClearBoard();
             Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
             World.BoardIndex = 0;
-            World.Ammo = 0;
-            World.Gems = 0;
-            World.Health = 100;
-            World.EnergyCycles = 0;
-            World.Torches = 0;
-            World.TorchCycles = 0;
-            World.Score = 0;
-            World.TimePassed = 0;
-            World.Stones = -1;
+            World.Ammo = Facts.DefaultAmmo;
+            World.Gems = Facts.DefaultGems;
+            World.Health = Facts.DefaultHealth;
+            World.EnergyCycles = Facts.DefaultEnergyCycles;
+            World.Torches = Facts.DefaultTorches;
+            World.TorchCycles = Facts.DefaultTorchCycles;
+            World.Score = Facts.DefaultScore;
+            World.TimePassed = Facts.DefaultTimePassed;
+            World.Stones = Facts.DefaultStones;
             World.Keys.Clear();
             Flags.Clear();
             SetBoard(0);
-            Board.Name = "Introduction screen";
-            World.Name = string.Empty;
+            Board.Name = Facts.DefaultBoardTitle;
+            World.Name = Facts.DefaultWorldTitle;
             State.WorldFileName = string.Empty;
         }
 
@@ -350,24 +367,25 @@ namespace Roton.Emulation.Core.Impl
         public AnsiChar Draw(IXyPair location)
         {
             if (Board.IsDark && !ElementAt(location).IsAlwaysVisible &&
-                (World.TorchCycles <= 0 || Distance(Player.Location, location) >= 50) && !State.EditorMode)
-                return new AnsiChar(0xB0, 0x07);
+                (World.TorchCycles <= 0 || Distance(Player.Location, location) >= Facts.TorchRadius) &&
+                !State.EditorMode)
+                return Facts.DarknessTile;
 
             var tile = Tiles[location];
             var element = ElementList[tile.Id];
             var elementCount = ElementList.Count;
 
-            if (tile.Id == ElementList.EmptyId) return new AnsiChar(0x20, 0x0F);
+            if (tile.Id == ElementList.EmptyId)
+                return Facts.EmptyTile;
 
             if (element.HasDrawCode)
                 return DrawList.Get(tile.Id).Draw(location);
 
             if (tile.Id < elementCount - 7) return new AnsiChar(element.Character, tile.Color);
 
-            if (tile.Id != elementCount - 1)
-                return new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F);
-
-            return new AnsiChar(tile.Color, 0x0F);
+            return tile.Id != elementCount - 1
+                ? new AnsiChar(tile.Color, ((tile.Id - (elementCount - 8)) << 4) | 0x0F)
+                : new AnsiChar(tile.Color, 0x0F);
         }
 
         public IDrawList DrawList => _drawList.Value;
@@ -384,7 +402,10 @@ namespace Roton.Emulation.Core.Impl
             return new Sound();
         }
 
-        public void EnterBoard() => Features.EnterBoard();
+        public void EnterBoard()
+        {
+            Features.EnterBoard();
+        }
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
@@ -493,7 +514,7 @@ namespace Roton.Emulation.Core.Impl
             {
                 if (!success) break;
 
-                if (label.ToUpper() == @"RESTART")
+                if (label.ToUpper() == Facts.RestartLabel)
                 {
                     context.SearchOffset = 0;
                 }
@@ -540,9 +561,11 @@ namespace Roton.Emulation.Core.Impl
             return false;
         }
 
+        public IFacts Facts => _facts.Value;
+
         public void FadePurple()
         {
-            FadeBoard(new AnsiChar(0xDB, 0x05));
+            FadeBoard(Facts.FadeTile);
             Hud.RedrawBoard();
         }
 
@@ -568,16 +591,14 @@ namespace Roton.Emulation.Core.Impl
             return false;
         }
 
-        public IFlags Flags => _flags.Value;
-
         public void ForcePlayerColor(int index)
         {
             var actor = Actors[index];
             var playerElement = ElementList[ElementList.PlayerId];
             if (Tiles[actor.Location].Color != playerElement.Color ||
-                playerElement.Character != 0x02)
+                playerElement.Character != Facts.PlayerCharacter)
             {
-                playerElement.Character = 2;
+                playerElement.Character = Facts.PlayerCharacter;
                 Tiles[actor.Location].Color = playerElement.Color;
                 UpdateBoard(actor.Location);
             }
@@ -612,9 +633,9 @@ namespace Roton.Emulation.Core.Impl
             {
                 if (World.Health > 0)
                 {
-                    World.Health -= 10;
+                    World.Health -= Facts.HealthLostPerHit;
                     UpdateStatus();
-                    SetMessage(0x64, Alerts.OuchMessage);
+                    SetMessage(Facts.ShortMessageDuration, Alerts.OuchMessage);
                     var color = Tiles[actor.Location].Color;
                     color &= 0x0F;
                     color |= 0x70;
@@ -653,38 +674,58 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
+        public IHud Hud => _hud.Value;
+
+        public IInteractionList InteractionList
+            => _interactionList.Value;
+
+        public IItemList ItemList => _items.Value;
+
         public void LoadWorld(string name)
         {
-            using (var stream = new MemoryStream(Disk.GetFile(Features.GetWorldName(name))))
-            using (var reader = new BinaryReader(stream))
+            byte[] TryLoadWorld()
             {
-                var type = reader.ReadInt16();
-                if (type != World.WorldType)
-                    throw new Exception("Incompatible world for this engine.");
-
-                var numBoards = reader.ReadInt16();
-                if (numBoards < 0)
-                    throw new Exception("Board count must be zero or greater.");
-
-                GameSerializer.LoadWorld(stream);
-
-                var newBoards = Enumerable
-                    .Range(0, numBoards + 1)
-                    .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)));
-                
-                Boards.Clear();
-                
-                foreach (var rawBoard in newBoards)
-                    Boards.Add(rawBoard);
+                try
+                {
+                    return Disk.GetFile(Features.GetWorldName(name));
+                }
+                catch (IOException e)
+                {
+                    return new byte[0];
+                }
             }
-            
+
+            using (var stream = new MemoryStream(TryLoadWorld()))
+            {
+                if (stream.Length == 0)
+                    return;
+
+                using (var reader = new BinaryReader(stream))
+                {
+                    var type = reader.ReadInt16();
+                    if (type != World.WorldType)
+                        throw new Exception("Incompatible world for this engine.");
+
+                    var numBoards = reader.ReadInt16();
+                    if (numBoards < 0)
+                        throw new Exception("Board count must be zero or greater.");
+
+                    GameSerializer.LoadWorld(stream);
+
+                    var newBoards = Enumerable
+                        .Range(0, numBoards + 1)
+                        .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)));
+
+                    Boards.Clear();
+
+                    foreach (var rawBoard in newBoards)
+                        Boards.Add(rawBoard);
+                }
+            }
+
             UnpackBoard(World.BoardIndex);
             State.WorldLoaded = true;
         }
-
-        public IHud Hud => _hud.Value;
-
-        public IItemList ItemList => _items.Value;
 
         public void LockActor(int index)
         {
@@ -718,14 +759,18 @@ namespace Roton.Emulation.Core.Impl
                 if (squareDistanceX + squareDistanceY == 1)
                 {
                     var glowLocation = new Location();
-                    for (var x = target.X - 11; x <= target.X + 11; x++)
-                    for (var y = target.Y - 8; y <= target.Y + 8; y++)
+                    for (var x = target.X - Facts.TorchDrawBoxVerticalSize;
+                        x <= target.X + Facts.TorchDrawBoxVerticalSize;
+                        x++)
+                    for (var y = target.Y - Facts.TorchDrawBoxHorizontalSize;
+                        y <= target.Y + Facts.TorchDrawBoxHorizontalSize;
+                        y++)
                     {
                         glowLocation.SetTo(x, y);
                         if (glowLocation.X >= 1 && glowLocation.X <= Tiles.Width && glowLocation.Y >= 1 &&
                             glowLocation.Y <= Tiles.Height)
-                            if ((Distance(sourceLocation, glowLocation) < 50) ^
-                                (Distance(target, glowLocation) < 50))
+                            if ((Distance(sourceLocation, glowLocation) < Facts.TorchRadius) ^
+                                (Distance(target, glowLocation) < Facts.TorchRadius))
                                 UpdateBoard(glowLocation);
                     }
                 }
@@ -815,7 +860,8 @@ namespace Roton.Emulation.Core.Impl
         {
             // this is here to prevent endless push loops
             // but doesn't exist in the original code
-            if (vector.IsZero()) throw Exceptions.PushStackOverflow;
+            if (vector.IsZero())
+                throw Exceptions.PushStackOverflow;
 
             var tile = Tiles[location];
             if (tile.Id == ElementList.SliderEwId && vector.Y == 0 ||
@@ -906,7 +952,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void RaiseError(string error)
         {
-            SetMessage(0xC8, Alerts.ErrorMessage(error));
+            SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
             PlaySound(5, Sounds.Error);
         }
 
@@ -1140,7 +1186,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     var target = new Location(x, y);
                     if (mode != RadiusMode.Update)
-                        if (Distance(source, target) < 50)
+                        if (Distance(source, target) < Facts.TorchRadius)
                         {
                             var element = ElementAt(target);
                             if (mode == RadiusMode.Explode)
@@ -1148,7 +1194,7 @@ namespace Roton.Emulation.Core.Impl
                                 if (element.CodeEditText.Length > 0)
                                 {
                                     var actorIndex = ActorIndexAt(target);
-                                    if (actorIndex > 0) BroadcastLabel(-actorIndex, KnownLabels.Bombed, false);
+                                    if (actorIndex > 0) BroadcastLabel(-actorIndex, Facts.BombedLabel, false);
                                 }
 
                                 if (element.IsDestructible || element.Id == ElementList.StarId) Destroy(target);
@@ -1178,21 +1224,13 @@ namespace Roton.Emulation.Core.Impl
             ClockTick++;
         }
 
-        public void ClearForest(IXyPair location) => Features.ClearForest(location);
-
-        public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
-
-        public IActionList ActionList 
-            => _actionList.Value;
-        
-        public IInteractionList InteractionList 
-            => _interactionList.Value;
-
-        public IWorld World 
+        public IWorld World
             => _world.Value;
 
-        private bool ActorIsLocked(int index) 
-            => Features.IsActorLocked(index);
+        private bool ActorIsLocked(int index)
+        {
+            return Features.IsActorLocked(index);
+        }
 
         private void ClearBoard()
         {
@@ -1319,7 +1357,7 @@ namespace Roton.Emulation.Core.Impl
                     if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
                     {
                         State.GameCycle++;
-                        if (State.GameCycle > 420) State.GameCycle = 1;
+                        if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
 
                         State.ActIndex = 0;
                         ReadInput();
@@ -1336,7 +1374,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void FadeRed()
         {
-            FadeBoard(new AnsiChar(0xDB, 0x04));
+            FadeBoard(Facts.ErrorFadeTile);
             Hud.RedrawBoard();
         }
 
@@ -1361,6 +1399,8 @@ namespace Roton.Emulation.Core.Impl
 
         private void InitializeElements(bool showInvisibles)
         {
+            ElementList.Reset();
+
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
             ElementList[ElementList.InvisibleId].Character = showInvisibles ? 0xB0 : 0x20;
@@ -1390,13 +1430,11 @@ namespace Roton.Emulation.Core.Impl
 
             if (State.Init)
             {
-                if (!State.AboutShown) ShowAbout();
+                if (!State.AboutShown)
+                    ShowAbout();
 
-                if (State.DefaultWorldName.Length <= 0)
-                {
-                    // normally we would load the world here,
-                    // however it will have already been loaded in the context
-                }
+                if (State.DefaultWorldName.Length > 0)
+                    LoadWorld(State.DefaultWorldName);
 
                 State.StartBoard = World.BoardIndex;
                 SetBoard(0);
@@ -1411,11 +1449,12 @@ namespace Roton.Emulation.Core.Impl
                 Hud.DrawTitleStatus();
             }
 
-            if (gameIsActive) FadePurple();
+            if (gameIsActive)
+                FadePurple();
 
             State.GameWaitTime = State.GameSpeed << 1;
             State.BreakGameLoop = false;
-            State.GameCycle = Random.Synced(0x64);
+            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
             State.ActIndex = State.ActorCount + 1;
 
             while (ThreadActive)
@@ -1435,7 +1474,9 @@ namespace Roton.Emulation.Core.Impl
                 else
                 {
                     State.ActIndex = State.ActorCount + 1;
-                    if (Timers.Player.Clock(25)) alternating = !alternating;
+
+                    if (Timers.Player.Clock(Facts.PauseFlashInterval))
+                        alternating = !alternating;
 
                     if (alternating)
                     {
@@ -1452,7 +1493,7 @@ namespace Roton.Emulation.Core.Impl
 
                     Hud.DrawPausing();
                     ReadInput();
-                    if (State.KeyPressed == 0x1B)
+                    if (State.KeyPressed == (int) EngineKeyCode.Escape)
                     {
                         if (World.Health > 0)
                         {
@@ -1486,7 +1527,8 @@ namespace Roton.Emulation.Core.Impl
                             {
                                 UpdateBoard(Player.Location);
                                 Player.Location.Add(State.KeyVector);
-                                Tiles[Player.Location].SetTo(ElementList.PlayerId, ElementList[ElementList.PlayerId].Color);
+                                Tiles[Player.Location].SetTo(ElementList.PlayerId,
+                                    ElementList[ElementList.PlayerId].Color);
                                 UpdateBoard(Player.Location);
                                 UpdateRadius(Player.Location, RadiusMode.Update);
                                 UpdateRadius(Player.Location.Difference(State.KeyVector), RadiusMode.Update);
@@ -1494,7 +1536,7 @@ namespace Roton.Emulation.Core.Impl
 
                             State.GamePaused = false;
                             Hud.ClearPausing();
-                            State.GameCycle = Random.Synced(100);
+                            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
                             World.IsLocked = true;
                         }
                     }
@@ -1608,21 +1650,22 @@ namespace Roton.Emulation.Core.Impl
             {
                 State.KeyPressed = key;
                 State.KeyShift = Keyboard.Shift;
+
                 switch (key)
                 {
-                    case 0xCB:
+                    case (int) EngineKeyCode.LeftArrow:
                         State.KeyVector.CopyFrom(Vector.West);
                         State.KeyArrow = true;
                         break;
-                    case 0xCD:
+                    case (int) EngineKeyCode.RightArrow:
                         State.KeyVector.CopyFrom(Vector.East);
                         State.KeyArrow = true;
                         break;
-                    case 0xC8:
+                    case (int) EngineKeyCode.UpArrow:
                         State.KeyVector.CopyFrom(Vector.North);
                         State.KeyArrow = true;
                         break;
-                    case 0xD0:
+                    case (int) EngineKeyCode.DownArrow:
                         State.KeyVector.CopyFrom(Vector.South);
                         State.KeyArrow = true;
                         break;
@@ -1661,40 +1704,62 @@ namespace Roton.Emulation.Core.Impl
 
         private void StartInit()
         {
-            State.GameSpeed = 4;
-            State.DefaultSaveName = "SAVED";
-            State.DefaultBoardName = "TEMP";
-            State.DefaultWorldName = "TOWN";
-            
+            State.GameSpeed = Facts.DefaultGameSpeed;
+            State.DefaultSaveName = Facts.DefaultSavedGameName;
+            State.DefaultBoardName = Facts.DefaultBoardName;
+            State.DefaultWorldName = Config.DefaultWorld ?? Facts.DefaultWorldName;
+            State.Init = true;
+
             ClearWorld();
 
-            var worldToLoad = State.DefaultWorldName;
-
-            var zztCfg = Disk.GetFile("ZZT.CFG");
-            if (zztCfg != null && zztCfg.Length > 0)
+            if (Facts.ConfigFileName != null)
             {
-                using (var stream = new MemoryStream(zztCfg))
-                using (var reader = new StreamReader(stream))
+                var zztCfg = Disk.GetFile(Facts.ConfigFileName);
+                if (zztCfg != null && zztCfg.Length > 0)
                 {
-                    worldToLoad = reader.ReadLine();
+                    using (var stream = new MemoryStream(zztCfg))
+                    using (var reader = new StreamReader(stream))
+                    {
+                        State.DefaultWorldName = reader.ReadLine();
+                    }                    
                 }
             }
 
-            LoadWorld(worldToLoad);
-
-            if (!State.WorldLoaded)
-                ClearWorld();
-
-            if (State.EditorMode)
-                SetEditorMode();
-            else
-                SetGameMode();
+            SetGameMode();
         }
 
         private void StartMain()
         {
+            ValidateDependencies();
             StartInit();
             TitleScreenLoop();
+        }
+
+        private void ValidateDependencies()
+        {
+            if (ActionList == null) throw new Exception($"{nameof(ActionList)} cannot be null.");
+            if (Actors == null) throw new Exception($"{nameof(Actors)} cannot be null.");
+            if (Alerts == null) throw new Exception($"{nameof(Alerts)} cannot be null.");
+            if (Board == null) throw new Exception($"{nameof(Board)} cannot be null.");
+            if (CheatList == null) throw new Exception($"{nameof(CheatList)} cannot be null.");
+            if (Colors == null) throw new Exception($"{nameof(Colors)} cannot be null.");
+            if (CommandList == null) throw new Exception($"{nameof(CommandList)} cannot be null.");
+            if (ConditionList == null) throw new Exception($"{nameof(ConditionList)} cannot be null.");
+            if (Config == null) throw new Exception($"{nameof(Config)} cannot be null.");
+            if (DirectionList == null) throw new Exception($"{nameof(DirectionList)} cannot be null.");
+            if (ElementList == null) throw new Exception($"{nameof(ElementList)} cannot be null.");
+            if (Hud == null) throw new Exception($"{nameof(Hud)} cannot be null.");
+            if (ItemList == null) throw new Exception($"{nameof(ItemList)} cannot be null.");
+            if (Parser == null) throw new Exception($"{nameof(Parser)} cannot be null.");
+            if (Random == null) throw new Exception($"{nameof(Random)} cannot be null.");
+            if (Sounds == null) throw new Exception($"{nameof(Sounds)} cannot be null.");
+            if (State == null) throw new Exception($"{nameof(State)} cannot be null.");
+            if (TargetList == null) throw new Exception($"{nameof(TargetList)} cannot be null.");
+            if (Tiles == null) throw new Exception($"{nameof(Tiles)} cannot be null.");
+            if (World == null) throw new Exception($"{nameof(World)} cannot be null.");
+            if (DrawList == null) throw new Exception($"{nameof(DrawList)} cannot be null.");
+            if (InteractionList == null) throw new Exception($"{nameof(InteractionList)} cannot be null.");
+            if (Facts == null) throw new Exception($"{nameof(Facts)} cannot be null.");
         }
 
         private void StopSound()
@@ -1703,7 +1768,7 @@ namespace Roton.Emulation.Core.Impl
 
         private void TitleScreenLoop()
         {
-            State.QuitZzt = false;
+            State.QuitEngine = false;
             State.Init = true;
             State.StartBoard = 0;
             var gameEnded = true;
@@ -1723,10 +1788,10 @@ namespace Roton.Emulation.Core.Impl
                     var startPlaying = Features.HandleTitleInput(hotkey);
                     if (startPlaying) gameEnded = PlayWorld();
 
-                    if (gameEnded || State.QuitZzt) break;
+                    if (gameEnded || State.QuitEngine) break;
                 }
 
-                if (State.QuitZzt) break;
+                if (State.QuitEngine) break;
             }
         }
 

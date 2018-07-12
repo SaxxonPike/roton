@@ -8,8 +8,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class Parser : IParser
     {
         private readonly IEngine _engine;
@@ -53,7 +53,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     ReadByte(index, offset);
                     _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
-                    if (!((_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A) ||
+                    if (!(_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A ||
                           _engine.State.OopByte == 0x5F))
                     {
                         result = oldOffset;
@@ -154,10 +154,10 @@ namespace Roton.Emulation.Core.Impl
 
             if (!(_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39))
             {
-                while ((_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A) ||
-                       (_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39) ||
-                       (_engine.State.OopByte == 0x3A) ||
-                       (_engine.State.OopByte == 0x5F))
+                while (_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A ||
+                       _engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39 ||
+                       _engine.State.OopByte == 0x3A ||
+                       _engine.State.OopByte == 0x5F)
                 {
                     result.Append(_engine.State.OopByte.ToChar());
                     ReadByte(index, instructionSource);
@@ -227,7 +227,7 @@ namespace Roton.Emulation.Core.Impl
         public bool GetTarget(ISearchContext context)
         {
             context.SearchIndex++;
-            var target = _engine.TargetList.Get(context.SearchTarget);
+            var target = _engine.TargetList.Get(context.SearchTarget) ?? _engine.TargetList.Get(string.Empty);
             return target.Execute(context);
         }
     }

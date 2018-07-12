@@ -95,5 +95,6 @@ namespace Roton.Emulation.Core
         IActionList ActionList { get; }
         IDrawList DrawList { get; }
         IInteractionList InteractionList { get; }
+        IFacts Facts { get; }
     }
 }

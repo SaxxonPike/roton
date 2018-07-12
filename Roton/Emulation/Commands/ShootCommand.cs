@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "SHOOT")]
-    [ContextEngine(ContextEngine.SuperZzt, "SHOOT")]
+    [ContextEngine(ContextEngine.Original, "SHOOT")]
+    [ContextEngine(ContextEngine.Super, "SHOOT")]
     public sealed class ShootCommand : ICommand
     {
         private readonly IEngine _engine;

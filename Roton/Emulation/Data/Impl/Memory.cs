@@ -3,8 +3,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class Memory : IMemory
     {
         public Memory()

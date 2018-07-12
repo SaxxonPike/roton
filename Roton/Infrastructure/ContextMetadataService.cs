@@ -14,14 +14,14 @@ namespace Roton.Infrastructure
             _contextEngine = contextEngine;
         }
 
-        public IList<ContextEngineAttribute> GetMetadata(object obj) => obj
+        public IEnumerable<ContextEngineAttribute> GetMetadata(object obj) => obj
             .GetType()
             .GetCustomAttributes(true)
             .OfType<ContextEngineAttribute>()
             .Where(a => a.ContextEngine == _contextEngine)
             .ToList();
 
-        public IList<Type> GetTypes() => GetType()
+        public IEnumerable<Type> GetTypes() => GetType()
             .Assembly
             .GetTypes()
             .Where(t => t

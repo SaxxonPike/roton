@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x01)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x01)]
+    [ContextEngine(ContextEngine.Original, 0x01)]
+    [ContextEngine(ContextEngine.Super, 0x01)]
     public sealed class BoardEdgeInteraction : IInteraction
     {
         private readonly IEngine _engine;
@@ -46,28 +46,28 @@ namespace Roton.Emulation.Interactions
                     break;
             }
 
-            if (targetBoard != 0)
+            if (targetBoard == 0) 
+                return;
+            
+            _engine.SetBoard(targetBoard);
+            if (_engine.Tiles[target].Id != _engine.ElementList.PlayerId)
             {
-                _engine.SetBoard(targetBoard);
-                if (_engine.Tiles[target].Id != _engine.ElementList.PlayerId)
+                _engine.InteractionList.Get(_engine.Tiles[target].Id)
+                    .Interact(target, index, _engine.State.KeyVector);
+            }
+            if (_engine.Tiles.ElementAt(target).IsFloor || _engine.Tiles.ElementAt(target).Id == _engine.ElementList.PlayerId)
+            {
+                if (_engine.Tiles.ElementAt(target).Id != _engine.ElementList.PlayerId)
                 {
-                    _engine.InteractionList.Get(_engine.Tiles[target].Id)
-                        .Interact(target, index, _engine.State.KeyVector);
+                    _engine.MoveActor(0, target);
                 }
-                if (_engine.Tiles.ElementAt(target).IsFloor || _engine.Tiles.ElementAt(target).Id == _engine.ElementList.PlayerId)
-                {
-                    if (_engine.Tiles.ElementAt(target).Id != _engine.ElementList.PlayerId)
-                    {
-                        _engine.MoveActor(0, target);
-                    }
-                    _engine.FadePurple();
-                    vector.SetTo(0, 0);
-                    _engine.EnterBoard();
-                }
-                else
-                {
-                    _engine.SetBoard(oldBoard);
-                }
+                _engine.FadePurple();
+                vector.SetTo(0, 0);
+                _engine.EnterBoard();
+            }
+            else
+            {
+                _engine.SetBoard(oldBoard);
             }
         }
     }

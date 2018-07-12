@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "LOCK")]
-    [ContextEngine(ContextEngine.SuperZzt, "LOCK")]
+    [ContextEngine(ContextEngine.Original, "LOCK")]
+    [ContextEngine(ContextEngine.Super, "LOCK")]
     public sealed class LockCommand : ICommand
     {
         private readonly IEngine _engine;

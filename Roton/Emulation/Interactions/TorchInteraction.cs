@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x06)]
+    [ContextEngine(ContextEngine.Original, 0x06)]
     public sealed class TorchInteraction : IInteraction
     {
         private readonly IEngine _engine;

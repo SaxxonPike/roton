@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "BECOME")]
-    [ContextEngine(ContextEngine.SuperZzt, "BECOME")]
+    [ContextEngine(ContextEngine.Original, "BECOME")]
+    [ContextEngine(ContextEngine.Super, "BECOME")]
     public sealed class BecomeCommand : ICommand
     {
         private readonly IEngine _engine;

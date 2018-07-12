@@ -2,6 +2,7 @@
 using OpenTK;
 using OpenTK.Input;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
 using Roton.Interface.Input;
@@ -104,9 +105,9 @@ namespace Lyon.App
             SetSize(e.Width, e.Height, e.Wide);
         }
 
-        public void Launch(ContextEngine contextEngine, IFileSystem fileSystem)
+        public void Launch(ContextEngine contextEngine, IFileSystem fileSystem, IConfig config)
         {
-            var context = _contextFactory.Create(contextEngine, fileSystem);
+            var context = _contextFactory.Create(contextEngine, fileSystem, config);
             _window = _window ?? new Window(_composerProxy, context, _keyboard);
             _window.Run();
             context.Stop();

@@ -4,8 +4,10 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original, "W")]
+    [ContextEngine(ContextEngine.Original, "WEST")]
+    [ContextEngine(ContextEngine.Super, "W")]
+    [ContextEngine(ContextEngine.Super, "WEST")]
     public sealed class WestDirection : IDirection
     {
         public IXyPair Execute(IOopContext context)

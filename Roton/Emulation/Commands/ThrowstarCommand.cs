@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "THROWSTAR")]
-    [ContextEngine(ContextEngine.SuperZzt, "THROWSTAR")]
+    [ContextEngine(ContextEngine.Original, "THROWSTAR")]
+    [ContextEngine(ContextEngine.Super, "THROWSTAR")]
     public sealed class ThrowstarCommand : ICommand
     {
         private readonly IEngine _engine;

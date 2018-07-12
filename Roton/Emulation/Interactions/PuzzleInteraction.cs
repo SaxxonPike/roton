@@ -5,12 +5,12 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x18)]
-    [ContextEngine(ContextEngine.Zzt, 0x19)]
-    [ContextEngine(ContextEngine.Zzt, 0x1A)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x18)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x19)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1A)]
+    [ContextEngine(ContextEngine.Original, 0x18)]
+    [ContextEngine(ContextEngine.Original, 0x19)]
+    [ContextEngine(ContextEngine.Original, 0x1A)]
+    [ContextEngine(ContextEngine.Super, 0x18)]
+    [ContextEngine(ContextEngine.Super, 0x19)]
+    [ContextEngine(ContextEngine.Super, 0x1A)]
     public sealed class PuzzleInteraction : IInteraction
     {
         private readonly IEngine _engine;

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    [ContextEngine(ContextEngine.Zzt, "HEALTH")]
-    [ContextEngine(ContextEngine.SuperZzt, "HEALTH")]
+    [ContextEngine(ContextEngine.Original, "HEALTH")]
+    [ContextEngine(ContextEngine.Super, "HEALTH")]
     public sealed class HealthCheat : ICheat
     {
         private readonly IEngine _engine;

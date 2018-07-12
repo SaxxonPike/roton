@@ -82,7 +82,7 @@ namespace Roton.Interface.Video.Scenes.Composition
 
         private bool IsOutOfBounds(int x, int y)
         {
-            return (x < 0 || x >= Columns || y < 0 || y >= Rows);
+            return x < 0 || x >= Columns || y < 0 || y >= Rows;
         }
 
         protected int GetBufferOffset(int x, int y)

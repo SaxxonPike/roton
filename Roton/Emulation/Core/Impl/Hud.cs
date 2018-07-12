@@ -75,9 +75,9 @@ namespace Roton.Emulation.Core.Impl
 
         public abstract void Initialize();
 
-        public virtual bool QuitZztConfirmation()
+        public virtual bool QuitEngineConfirmation()
         {
-            return Confirm("Quit ZZT? ");
+            return Confirm("Quit Roton? ");
         }
 
         public virtual void RedrawBoard()

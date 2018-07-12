@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Super, 0x3F)]
     public sealed class WebDraw : IDraw
     {
         private readonly IEngine _engine;

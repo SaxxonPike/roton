@@ -21,7 +21,7 @@ namespace Roton.Emulation.Core
         string EnterCheat();
         void FadeBoard(AnsiChar ac);
         void Initialize();
-        bool QuitZztConfirmation();
+        bool QuitEngineConfirmation();
         void RedrawBoard();
         string SaveGame();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);

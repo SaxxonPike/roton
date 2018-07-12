@@ -11,7 +11,7 @@ namespace Lyon.App
         {
             var files = new Dictionary<string, byte[]>
             {
-                ["ZZT.CFG"] = GetBytes(defaultWorld)
+                ["ZZT.CFG"] = GetBytes(defaultWorld ?? string.Empty)
             };
             
             return new FixedFileSystem(files, new DiskFileSystem(path));

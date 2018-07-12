@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "CHANGE")]
-    [ContextEngine(ContextEngine.SuperZzt, "CHANGE")]
+    [ContextEngine(ContextEngine.Original, "CHANGE")]
+    [ContextEngine(ContextEngine.Super, "CHANGE")]
     public sealed class ChangeCommand : ICommand
     {
         private readonly IEngine _engine;

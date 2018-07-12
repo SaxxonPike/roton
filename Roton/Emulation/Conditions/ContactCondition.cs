@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    [ContextEngine(ContextEngine.Zzt, "CONTACT")]
-    [ContextEngine(ContextEngine.SuperZzt, "CONTACT")]
+    [ContextEngine(ContextEngine.Original, "CONTACT")]
+    [ContextEngine(ContextEngine.Super, "CONTACT")]
     public sealed class ContactCondition : ICondition
     {
         private readonly IEngine _engine;

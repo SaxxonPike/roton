@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x25)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x25)]
+    [ContextEngine(ContextEngine.Original, 0x25)]
+    [ContextEngine(ContextEngine.Super, 0x25)]
     public sealed class SlimeInteraction : IInteraction
     {
         private readonly IEngine _engine;

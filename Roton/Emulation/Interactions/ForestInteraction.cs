@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x14)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x14)]
+    [ContextEngine(ContextEngine.Original, 0x14)]
+    [ContextEngine(ContextEngine.Super, 0x14)]
     public sealed class ForestInteraction : IInteraction
     {
         private readonly IEngine _engine;

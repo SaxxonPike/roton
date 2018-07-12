@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.SuperZzt, 0x3E)]
+    [ContextEngine(ContextEngine.Super, 0x3E)]
     public sealed class SpiderAction : IAction
     {
         private readonly IEngine _engine;

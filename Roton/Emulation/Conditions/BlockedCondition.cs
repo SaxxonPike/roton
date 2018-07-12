@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    [ContextEngine(ContextEngine.Zzt, "BLOCKED")]
-    [ContextEngine(ContextEngine.SuperZzt, "BLOCKED")]
+    [ContextEngine(ContextEngine.Original, "BLOCKED")]
+    [ContextEngine(ContextEngine.Super, "BLOCKED")]
     public sealed class BlockedCondition : ICondition
     {
         private readonly IEngine _engine;

@@ -44,7 +44,7 @@ namespace Roton.Emulation.Data
         string OopWord { get; set; }
         int PlayerElement { get; set; }
         int PlayerTime { get; set; }
-        bool QuitZzt { get; set; }
+        bool QuitEngine { get; set; }
         int SoundBufferLength { get; set; }
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }

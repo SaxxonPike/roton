@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    [ContextEngine(ContextEngine.Zzt, "TIME")]
-    [ContextEngine(ContextEngine.SuperZzt, "TIME")]
+    [ContextEngine(ContextEngine.Original, "TIME")]
+    [ContextEngine(ContextEngine.Super, "TIME")]
     public sealed class TimeItem : IItem
     {
         private readonly IEngine _engine;

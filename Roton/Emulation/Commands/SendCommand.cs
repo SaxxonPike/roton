@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "SEND")]
-    [ContextEngine(ContextEngine.SuperZzt, "SEND")]
+    [ContextEngine(ContextEngine.Original, "SEND")]
+    [ContextEngine(ContextEngine.Super, "SEND")]
     public sealed class SendCommand : ICommand
     {
         private readonly IEngine _engine;

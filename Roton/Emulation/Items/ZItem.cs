@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    [ContextEngine(ContextEngine.SuperZzt, "Z")]
+    [ContextEngine(ContextEngine.Super, "Z")]
     public sealed class ZItem : IItem
     {
         private readonly IEngine _engine;

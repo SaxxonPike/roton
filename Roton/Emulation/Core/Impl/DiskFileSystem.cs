@@ -15,7 +15,7 @@ namespace Roton.Emulation.Core.Impl
 
         public DiskFileSystem(string basePath)
         {
-            _basePath = basePath;
+            _basePath = basePath ?? Environment.CurrentDirectory;
         }
 
         public byte[] GetFile(string path)

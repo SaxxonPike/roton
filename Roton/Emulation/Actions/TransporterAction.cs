@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x1E)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x1E)]
+    [ContextEngine(ContextEngine.Original, 0x1E)]
+    [ContextEngine(ContextEngine.Super, 0x1E)]
     public sealed class TransporterAction : IAction
     {
         private readonly IEngine _engine;

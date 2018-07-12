@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x08)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x08)]
+    [ContextEngine(ContextEngine.Original, 0x08)]
+    [ContextEngine(ContextEngine.Super, 0x08)]
     public sealed class KeyInteraction : IInteraction
     {
         private readonly IEngine _engine;

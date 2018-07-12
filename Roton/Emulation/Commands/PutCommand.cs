@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "PUT")]
-    [ContextEngine(ContextEngine.SuperZzt, "PUT")]
+    [ContextEngine(ContextEngine.Original, "PUT")]
+    [ContextEngine(ContextEngine.Super, "PUT")]
     public sealed class PutCommand : ICommand
     {
         private readonly IEngine _engine;

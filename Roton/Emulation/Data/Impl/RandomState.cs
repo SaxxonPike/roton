@@ -9,7 +9,7 @@ namespace Roton.Emulation.Data.Impl
         {
             var time = DateTimeOffset.Now;
             var seed = (time.Second << 24) |
-                       ((time.Millisecond/10) << 16) |
+                       ((time.Millisecond / 10) << 16) |
                        (time.Hour << 8) |
                        time.Minute;
             Seed = seed;

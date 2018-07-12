@@ -64,5 +64,7 @@ namespace Roton.Emulation.Data
         int TransporterId { get; }
         int WaterId { get; }
         int WebId { get; }
+
+        void Reset();
     }
 }

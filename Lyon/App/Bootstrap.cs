@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using Lyon.App.Dialogs;
 using Roton.Emulation.Data.Impl;
-using Roton.Interface.Windows;
 
 namespace Lyon.App
 {
@@ -16,30 +14,28 @@ namespace Lyon.App
             _launcher = launcher;
             _fileSystemFactory = fileSystemFactory;
         }
-        
+
         public void Boot(string[] args)
         {
-            string fileName = null;
-            
-            if (args.Length == 0)
+            var fileName = args.Length > 0
+                ? args[0]
+                : null;
+
+            var fileSystem = fileName != null
+                ? _fileSystemFactory.Create(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName))
+                : _fileSystemFactory.Create(Environment.CurrentDirectory, null);
+
+            var config = new Config
             {
-                var openWorldDialog = new OpenWorldDialog();
-                if (openWorldDialog.ShowDialog() == FileDialogResult.Ok)
-                    fileName = openWorldDialog.FileName;
-            }
+                DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
+                RandomSeed = null
+            };
 
-            if (fileName == null)
-                fileName = "TOWN.ZZT";
+            if (fileName == null || fileName.EndsWith(".zzt", StringComparison.OrdinalIgnoreCase))
+                _launcher.Launch(ContextEngine.Original, fileSystem, config);
 
-            var fileSystem = _fileSystemFactory.Create(
-                Path.GetDirectoryName(fileName),
-                Path.GetFileNameWithoutExtension(fileName));
-            
-            if (fileName.EndsWith(".zzt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.Zzt, fileSystem);                
-
-            if (fileName.EndsWith(".szt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.SuperZzt, fileSystem);                
+            else if (fileName.EndsWith(".szt", StringComparison.OrdinalIgnoreCase))
+                _launcher.Launch(ContextEngine.Super, fileSystem, config);
         }
     }
 }

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Conditions
 {
-    [ContextEngine(ContextEngine.Zzt, "ANY")]
-    [ContextEngine(ContextEngine.SuperZzt, "ANY")]
+    [ContextEngine(ContextEngine.Original, "ANY")]
+    [ContextEngine(ContextEngine.Super, "ANY")]
     public sealed class AnyCondition : ICondition
     {
         private readonly IEngine _engine;

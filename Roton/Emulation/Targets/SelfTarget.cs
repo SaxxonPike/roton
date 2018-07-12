@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets
 {
-    [ContextEngine(ContextEngine.Zzt, "SELF")]
-    [ContextEngine(ContextEngine.SuperZzt, "SELF")]
+    [ContextEngine(ContextEngine.Original, "SELF")]
+    [ContextEngine(ContextEngine.Super, "SELF")]
     public sealed class SelfTarget : ITarget
     {
         public bool Execute(ISearchContext context)

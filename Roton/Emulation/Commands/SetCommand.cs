@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "SET")]
-    [ContextEngine(ContextEngine.SuperZzt, "SET")]
+    [ContextEngine(ContextEngine.Original, "SET")]
+    [ContextEngine(ContextEngine.Super, "SET")]
     public sealed class SetCommand : ICommand
     {
         private readonly IEngine _engine;

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws
 {
-    [ContextEngine(ContextEngine.SuperZzt, 0x3C)]
+    [ContextEngine(ContextEngine.Super, 0x3C)]
     public sealed class DragonPupDraw : IDraw
     {
         private readonly IEngine _engine;

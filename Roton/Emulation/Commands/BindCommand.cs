@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "BIND")]
-    [ContextEngine(ContextEngine.SuperZzt, "BIND")]
+    [ContextEngine(ContextEngine.Original, "BIND")]
+    [ContextEngine(ContextEngine.Super, "BIND")]
     public sealed class BindCommand : ICommand
     {
         private readonly IEngine _engine;

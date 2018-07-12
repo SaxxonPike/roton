@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats
 {
-    [ContextEngine(ContextEngine.Zzt, "TORCHES")]
+    [ContextEngine(ContextEngine.Original, "TORCHES")]
     public sealed class TorchesCheat : ICheat
     {
         private readonly IEngine _engine;

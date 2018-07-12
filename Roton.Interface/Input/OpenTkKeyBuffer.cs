@@ -78,8 +78,9 @@ namespace Roton.Interface.Input
                     return 0x09;
                 case Key.Up:
                     return 0xC8;
+                default:
+                    return -1;
             }
-            return -1;
         }
 
         public bool Press(char data)

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Directions
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original, "CCW")]
+    [ContextEngine(ContextEngine.Super, "CCW")]
     public sealed class CcwDirection : IDirection
     {
         private readonly IEngine _engine;

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "TAKE")]
-    [ContextEngine(ContextEngine.SuperZzt, "TAKE")]
+    [ContextEngine(ContextEngine.Original, "TAKE")]
+    [ContextEngine(ContextEngine.Super, "TAKE")]
     public sealed class TakeCommand : ICommand
     {
         private readonly IEngine _engine;

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items
 {
-    [ContextEngine(ContextEngine.Zzt, "GEMS")]
-    [ContextEngine(ContextEngine.SuperZzt, "GEMS")]
+    [ContextEngine(ContextEngine.Original, "GEMS")]
+    [ContextEngine(ContextEngine.Super, "GEMS")]
     public sealed class GemsItem : IItem
     {
         private readonly IEngine _engine;

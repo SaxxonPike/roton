@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x2C)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x2C)]
+    [ContextEngine(ContextEngine.Original, 0x2C)]
+    [ContextEngine(ContextEngine.Super, 0x2C)]
     public sealed class CentipedeHeadAction : IAction
     {
         private readonly IEngine _engine;

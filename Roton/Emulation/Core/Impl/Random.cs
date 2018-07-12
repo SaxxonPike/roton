@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    [ContextEngine(ContextEngine.Zzt)]
-    [ContextEngine(ContextEngine.SuperZzt)]
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public sealed class Random : IRandom
     {
         private readonly IRandomizer _random;
@@ -14,7 +14,9 @@ namespace Roton.Emulation.Core.Impl
         public Random(IConfig config)
         {
             _random = new Randomizer(new RandomState());
-            _syncRandom = new Randomizer(new RandomState(config.RandomSeed));
+            _syncRandom = new Randomizer(config.RandomSeed.HasValue 
+                ? new RandomState(config.RandomSeed.Value) 
+                : new RandomState());
         }
 
         public int NonSynced(int exclusiveMax) 

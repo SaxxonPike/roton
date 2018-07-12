@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands
 {
-    [ContextEngine(ContextEngine.Zzt, "UNLOCK")]
-    [ContextEngine(ContextEngine.SuperZzt, "UNLOCK")]
+    [ContextEngine(ContextEngine.Original, "UNLOCK")]
+    [ContextEngine(ContextEngine.Super, "UNLOCK")]
     public sealed class UnlockCommand : ICommand
     {
         private readonly IEngine _engine;

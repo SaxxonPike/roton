@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions
 {
-    [ContextEngine(ContextEngine.Zzt, 0x07)]
-    [ContextEngine(ContextEngine.SuperZzt, 0x07)]
+    [ContextEngine(ContextEngine.Original, 0x07)]
+    [ContextEngine(ContextEngine.Super, 0x07)]
     public sealed class GemInteraction : IInteraction
     {
         private readonly IEngine _engine;
@@ -18,9 +18,9 @@ namespace Roton.Emulation.Interactions
         
         public void Interact(IXyPair location, int index, IXyPair vector)
         {
-            _engine.World.Health += _engine.Config.HealthPerGem;
+            _engine.World.Health += _engine.Facts.HealthPerGem;
             _engine.World.Gems += 1;
-            _engine.World.Score += _engine.Config.ScorePerGem;
+            _engine.World.Score += _engine.Facts.ScorePerGem;
             _engine.RemoveItem(location);
             _engine.Hud.UpdateStatus();
             _engine.PlaySound(2, _engine.Sounds.Gem);
