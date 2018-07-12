@@ -36,11 +36,12 @@ namespace Roton.Interface.Video.Glyphs
             }
 
             _innerGlyphComposer = new VgaGlyphComposer(font);
-            if (font != null)
-            {
-                MaxWidth = font.Width;
-                MaxHeight = font.Height;
-            }
+            
+            if (font == null) 
+                return;
+            
+            MaxWidth = font.Width;
+            MaxHeight = font.Height;
         }
 
         public IGlyph ComposeGlyph(int index) => _innerGlyphComposer.ComposeGlyph(index);

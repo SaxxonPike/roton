@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Roton.Core;
+using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
 
 namespace Roton.Interface.Video.Scenes.Composition
@@ -82,7 +82,7 @@ namespace Roton.Interface.Video.Scenes.Composition
 
         private bool IsOutOfBounds(int x, int y)
         {
-            return (x < 0 || x >= Columns || y < 0 || y >= Rows);
+            return x < 0 || x >= Columns || y < 0 || y >= Rows;
         }
 
         protected int GetBufferOffset(int x, int y)

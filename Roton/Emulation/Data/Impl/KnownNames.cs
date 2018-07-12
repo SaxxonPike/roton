@@ -1,0 +1,72 @@
+﻿namespace Roton.Emulation.Data.Impl
+{
+    public static class KnownNames
+    {
+        public const string Ammo = "Ammo";
+        public const string Bear = "Bear";
+        public const string BlinkRayH = "Blink Ray (Horizontal)";
+        public const string BlinkRayV = "Blink Ray (Vertical)";
+        public const string Undefined = "Undefined";
+        public const string BlinkWall = "Blink Wall";
+        public const string BoardEdge = "Board Edge";
+        public const string Bomb = "Bomb";
+        public const string Boulder = "Boulder";
+        public const string Breakable = "Breakable";
+        public const string Bullet = "Bullet";
+        public const string Clockwise = "Clockwise";
+        public const string Counter = "Counter";
+        public const string Door = "Door";
+        public const string DragonPup = "Dragon Pup";
+        public const string Duplicator = "Duplicator";
+        public const string Empty = "Empty";
+        public const string Energizer = "Energizer";
+        public const string Fake = "Fake";
+        public const string Floor = "Floor";
+        public const string Forest = "Forest";
+        public const string Gem = "Gem";
+        public const string Head = "Head";
+        public const string Invisible = "Invisible";
+        public const string Key = "Key";
+        public const string Lava = "Lava";
+        public const string Line = "Line";
+        public const string Lion = "Lion";
+        public const string Messenger = "Messenger";
+        public const string Monitor = "Monitor";
+        public const string Normal = "Normal";
+        public const string Object = "Object";
+        public const string Pairer = "Pairer";
+        public const string Passage = "Passage";
+        public const string Player = "Player";
+        public const string Pusher = "Pusher";
+        public const string Ricochet = "Ricochet";
+        public const string RiverE = "River (E)";
+        public const string RiverN = "River (N)";
+        public const string RiverS = "River (S)";
+        public const string RiverW = "River (W)";
+        public const string Roton = "Roton";
+        public const string Ruffian = "Ruffian";
+        public const string Scroll = "Scroll";
+        public const string Segment = "Segment";
+        public const string Shark = "Shark";
+        public const string SliderEw = "Slider (EW)";
+        public const string SliderNs = "Slider (NS)";
+        public const string Slime = "Slime";
+        public const string Solid = "Solid";
+        public const string Spider = "Spider";
+        public const string SpinningGun = "Spinning Gun";
+        public const string Star = "Star";
+        public const string Stone = "Stone of Power";
+        public const string Tiger = "Tiger";
+        public const string Torch = "Torch";
+        public const string Transporter = "Transporter";
+        public const string Water = "Water";
+        public const string Web = "Web";
+        public const string BlueText = "Text (Blue)";
+        public const string GreenText = "Text (Green)";
+        public const string CyanText = "Text (Cyan)";
+        public const string RedText = "Text (Red)";
+        public const string PurpleText = "Text (Purple)";
+        public const string BrownText = "Text (Brown)";
+        public const string BlackText = "Text (Black)";
+    }
+}

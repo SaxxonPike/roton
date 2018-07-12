@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Input;
-using Roton.Core;
 
 namespace Roton.Interface.Input
 {
-    public class OpenTkKeyBuffer : IKeyboard
+    public class OpenTkKeyBuffer : IOpenTkKeyBuffer
     {
         private static readonly Encoding Enc = Encoding.GetEncoding(437);
         private readonly Queue<int> _queue = new Queue<int>();
@@ -79,8 +78,9 @@ namespace Roton.Interface.Input
                     return 0x09;
                 case Key.Up:
                     return 0xC8;
+                default:
+                    return -1;
             }
-            return -1;
         }
 
         public bool Press(char data)
