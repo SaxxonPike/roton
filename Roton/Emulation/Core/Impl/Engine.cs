@@ -563,6 +563,14 @@ namespace Roton.Emulation.Core.Impl
 
         public IFacts Facts => _facts.Value;
 
+        public void StepOnce()
+        {
+            var oldThreadActive = ThreadActive;
+            ThreadActive = true;
+            MainLoop(true, true);
+            ThreadActive = oldThreadActive;
+        }
+
         public void FadePurple()
         {
             FadeBoard(Facts.FadeTile);
@@ -1232,7 +1240,7 @@ namespace Roton.Emulation.Core.Impl
             return Features.IsActorLocked(index);
         }
 
-        private void ClearBoard()
+        public void ClearBoard()
         {
             var emptyId = ElementList.EmptyId;
             var boardEdgeId = State.EdgeTile.Id;
@@ -1349,24 +1357,6 @@ namespace Roton.Emulation.Core.Impl
             Features.ExecuteMessage(context);
         }
 
-        private void ExecuteOnce()
-        {
-            if (State.ActIndex > State.ActorCount)
-            {
-                if (!State.BreakGameLoop && !State.GamePaused)
-                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
-                    {
-                        State.GameCycle++;
-                        if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
-
-                        State.ActIndex = 0;
-                        ReadInput();
-                    }
-
-                WaitForTick();
-            }
-        }
-
         private void FadeBoard(AnsiChar ac)
         {
             Hud.FadeBoard(ac);
@@ -1421,41 +1411,16 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void MainLoop(bool gameIsActive)
+        private void MainLoop(bool doFade, bool step)
         {
             var alternating = false;
 
-            Hud.CreateStatusText();
-            Hud.UpdateStatus();
-
-            if (State.Init)
+            if (!step)
             {
-                if (!State.AboutShown)
-                    ShowAbout();
-
-                if (State.DefaultWorldName.Length > 0)
-                    LoadWorld(State.DefaultWorldName);
-
-                State.StartBoard = World.BoardIndex;
-                SetBoard(0);
-                State.Init = false;
+                Hud.CreateStatusText();
+                Hud.UpdateStatus();
+                MainLoopInit(doFade);
             }
-
-            var element = ElementList[State.PlayerElement];
-            Tiles[Player.Location].SetTo(element.Id, element.Color);
-            if (State.PlayerElement == ElementList.MonitorId)
-            {
-                SetMessage(0, new Message());
-                Hud.DrawTitleStatus();
-            }
-
-            if (gameIsActive)
-                FadePurple();
-
-            State.GameWaitTime = State.GameSpeed << 1;
-            State.BreakGameLoop = false;
-            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
-            State.ActIndex = State.ActorCount + 1;
 
             while (ThreadActive)
             {
@@ -1542,7 +1507,23 @@ namespace Roton.Emulation.Core.Impl
                     }
                 }
 
-                ExecuteOnce();
+                if (State.ActIndex > State.ActorCount)
+                {
+                    if (!State.BreakGameLoop && !State.GamePaused)
+                        if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
+                        {
+                            State.GameCycle++;
+                            if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
+
+                            State.ActIndex = 0;
+                            ReadInput();
+                        }
+
+                    if (step)
+                        break;
+                    
+                    WaitForTick();
+                }
 
                 if (State.BreakGameLoop)
                 {
@@ -1556,12 +1537,44 @@ namespace Roton.Emulation.Core.Impl
                         Hud.ClearTitleStatus();
                     }
 
-                    element = ElementList[ElementList.PlayerId];
+                    var element = ElementList[ElementList.PlayerId];
                     Tiles[Player.Location].SetTo(element.Id, element.Color);
                     State.GameOver = false;
                     break;
                 }
             }
+        }
+
+        private void MainLoopInit(bool doFade)
+        {
+            if (State.Init)
+            {
+                if (!State.AboutShown)
+                    ShowAbout();
+
+                if (State.DefaultWorldName.Length > 0)
+                    LoadWorld(State.DefaultWorldName);
+
+                State.StartBoard = World.BoardIndex;
+                SetBoard(0);
+                State.Init = false;
+            }                
+
+            var element = ElementList[State.PlayerElement];
+            Tiles[Player.Location].SetTo(element.Id, element.Color);
+            if (State.PlayerElement == ElementList.MonitorId)
+            {
+                SetMessage(0, new Message());
+                Hud.DrawTitleStatus();
+            }
+
+            if (doFade)
+                FadePurple();
+
+            State.GameWaitTime = State.GameSpeed << 1;
+            State.BreakGameLoop = false;
+            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
+            State.ActIndex = State.ActorCount + 1;
         }
 
         private void MoveTile(IXyPair source, IXyPair target)
@@ -1612,7 +1625,7 @@ namespace Roton.Emulation.Core.Impl
                 EnterBoard();
                 State.PlayerElement = ElementList.PlayerId;
                 State.GamePaused = true;
-                MainLoop(true);
+                MainLoop(true, false);
             }
 
             return gameIsActive;
@@ -1781,7 +1794,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
-                    MainLoop(gameEnded);
+                    MainLoop(gameEnded, false);
                     if (!ThreadActive) break;
 
                     var hotkey = State.KeyPressed.ToUpperCase();

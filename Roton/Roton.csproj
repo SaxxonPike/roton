@@ -10,4 +10,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\resources.zip" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Editing\Core" />
+  </ItemGroup>
 </Project>

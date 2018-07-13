@@ -40,6 +40,7 @@ namespace Roton.Emulation.Core
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
         bool BroadcastLabel(int sender, string label, bool force);
+        void ClearBoard();
         void ClearSound();
         void ClearWorld();
         void Convey(IXyPair center, int direction);
@@ -96,5 +97,6 @@ namespace Roton.Emulation.Core
         IDrawList DrawList { get; }
         IInteractionList InteractionList { get; }
         IFacts Facts { get; }
+        void StepOnce();
     }
 }
