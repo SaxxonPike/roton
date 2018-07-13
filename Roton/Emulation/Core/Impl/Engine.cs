@@ -689,7 +689,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     return Disk.GetFile(Features.GetWorldName(name));
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     return new byte[0];
                 }
