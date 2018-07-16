@@ -601,15 +601,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void ForcePlayerColor(int index)
         {
-            var actor = Actors[index];
-            var playerElement = ElementList[ElementList.PlayerId];
-            if (Tiles[actor.Location].Color != playerElement.Color ||
-                playerElement.Character != Facts.PlayerCharacter)
-            {
-                playerElement.Character = Facts.PlayerCharacter;
-                Tiles[actor.Location].Color = playerElement.Color;
-                UpdateBoard(actor.Location);
-            }
+            Features.ForcePlayerColor(index);
         }
 
         public IXyPair GetCardinalVector(int index)
@@ -756,7 +748,8 @@ namespace Roton.Emulation.Core.Impl
 
             sourceTile.CopyFrom(underTile);
             actor.Location.CopyFrom(target);
-            if (targetTile.Id == ElementList.PlayerId) ForcePlayerColor(index);
+            if (targetTile.Id == ElementList.PlayerId) 
+                ForcePlayerColor(index);
 
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
@@ -783,8 +776,9 @@ namespace Roton.Emulation.Core.Impl
                     }
                 }
             }
-
-            if (index == 0) Hud.UpdateCamera();
+            
+            if (index == 0)
+                Hud.UpdateCamera();
         }
 
         public void MoveActorOnRiver(int index)

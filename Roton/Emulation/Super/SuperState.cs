@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
@@ -10,10 +11,10 @@ namespace Roton.Emulation.Super
     {
         private readonly IMemory _memory;
 
-        public SuperState(IMemory memory, byte[] memoryBytes)
+        public SuperState(IMemory memory, IEngineResourceService engineResourceService)
         {
             _memory = memory;
-            memory.Write(0x0000, memoryBytes);
+            memory.Write(0x0000, engineResourceService.GetMemoryData());
 
             BorderTile = new Tile(0, 0); // Not in memory
             DefaultActor = new Actor(_memory, 0x2262);

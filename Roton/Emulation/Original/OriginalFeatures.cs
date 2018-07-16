@@ -116,6 +116,19 @@ namespace Roton.Emulation.Original
             _engine.Tiles[_engine.Player.Location].SetTo(_engine.ElementList.EmptyId, 0);
         }
 
+        public void ForcePlayerColor(int index)
+        {
+            var actor = _engine.Actors[index];
+            var playerElement = _engine.ElementList[_engine.ElementList.PlayerId];
+            if (_engine.Tiles[actor.Location].Color == playerElement.Color &&
+                playerElement.Character == _engine.Facts.PlayerCharacter) 
+                return;
+            
+            playerElement.Character = _engine.Facts.PlayerCharacter;
+            _engine.Tiles[actor.Location].Color = playerElement.Color;
+            _engine.UpdateBoard(actor.Location);
+        }
+
         public bool HandleTitleInput(int hotkey)
         {
             switch (hotkey)

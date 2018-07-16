@@ -175,5 +175,10 @@ namespace Roton.Emulation.Super
         {
             _engine.Tiles[_engine.Player.Location].CopyFrom(_engine.Player.UnderTile);
         }
+
+        public void ForcePlayerColor(int index)
+        {
+            // Super does not enforce player's background color.
+        }
     }
 }

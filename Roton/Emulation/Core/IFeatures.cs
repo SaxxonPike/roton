@@ -18,5 +18,6 @@ namespace Roton.Emulation.Core
         bool CanPutTile(IXyPair location);
         void ClearForest(IXyPair location);
         void CleanUpPassageMovement();
+        void ForcePlayerColor(int index);
     }
 }
