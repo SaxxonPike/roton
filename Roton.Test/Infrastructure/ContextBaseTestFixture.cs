@@ -10,6 +10,7 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
+using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
@@ -22,7 +23,7 @@ namespace Roton.Test.Infrastructure
         {
             ContextEngine = contextEngine;
         }
-        
+
         protected IContext Context { get; private set; }
         protected TestFileSystem FileSystem { get; private set; }
         protected Config Config { get; private set; }
@@ -40,6 +41,7 @@ namespace Roton.Test.Infrastructure
         protected IConditionList ConditionList => Engine.ConditionList;
         protected IDirectionList DirectionList => Engine.DirectionList;
         protected IElementList ElementList => Engine.ElementList;
+        protected IFacts Facts => Engine.Facts;
         protected IHud Hud => Engine.Hud;
         protected IItemList ItemList => Engine.ItemList;
         protected IParser Parser => Engine.Parser;
@@ -52,7 +54,7 @@ namespace Roton.Test.Infrastructure
         protected IWorld World => Engine.World;
 
         protected void Step() => Engine.StepOnce();
-        
+
         [SetUp]
         public void __SetUpContext()
         {
@@ -62,7 +64,7 @@ namespace Roton.Test.Infrastructure
             TerminalMock = new Mock<ITerminal>();
             Keyboard = new TestKeyboard();
             SpeakerMock = new Mock<ISpeaker>();
-            
+
             // Outer container
             var builder = new ContainerBuilder();
             builder.Register(c => TerminalMock.Object).As<ITerminal>();
@@ -70,17 +72,26 @@ namespace Roton.Test.Infrastructure
             builder.Register(c => SpeakerMock.Object).As<ISpeaker>();
             builder.RegisterType<AssemblyResourceService>().As<IAssemblyResourceService>();
             var container = builder.Build();
-            
+
             // Inner container
             var contextFactory = new ContextFactory(container);
             Context = contextFactory.Create(ContextEngine, FileSystem, Config);
-            
+
             // Preconfiguration
             Engine.ClearWorld();
             State.AboutShown = true;
             State.Init = false;
         }
-        
+
         protected ContextEngine ContextEngine { get; }
+
+        protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
+
+        protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
+
+        protected void PlotAt(int x, int y, int id, int color = 0x0F) =>
+            Tiles[new Location(x, y)].CopyFrom(new Tile(id, color));
+
+        protected void Type(EngineKeyCode ekc) => Keyboard.Type(new KeyPress {Code = (int) ekc});
     }
 }
