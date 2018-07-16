@@ -98,5 +98,6 @@ namespace Roton.Emulation.Core
         IInteractionList InteractionList { get; }
         IFacts Facts { get; }
         void StepOnce();
+        string[] GetMessageLines();
     }
 }

@@ -571,6 +571,8 @@ namespace Roton.Emulation.Core.Impl
             ThreadActive = oldThreadActive;
         }
 
+        public string[] GetMessageLines() => Features.GetMessageLines();
+
         public void FadePurple()
         {
             FadeBoard(Facts.FadeTile);

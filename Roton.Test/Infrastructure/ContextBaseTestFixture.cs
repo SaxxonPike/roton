@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Lyon.App;
 using Moq;
@@ -6,7 +9,6 @@ using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
@@ -31,6 +33,8 @@ namespace Roton.Test.Infrastructure
         protected TestKeyboard Keyboard { get; private set; }
         protected Mock<ISpeaker> SpeakerMock { get; private set; }
 
+        private Random Rand { get; } = new Random();
+
         protected IEngine Engine => Context.Engine;
         protected IActors Actors => Engine.Actors;
         protected IAlerts Alerts => Engine.Alerts;
@@ -52,6 +56,9 @@ namespace Roton.Test.Infrastructure
         protected ITargetList TargetList => Engine.TargetList;
         protected ITiles Tiles => Engine.Tiles;
         protected IWorld World => Engine.World;
+
+        protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
+        protected IEnumerable<string> Message => FullMessage.Where(m => m != string.Empty).ToArray();
 
         protected void Step() => Engine.StepOnce();
 
@@ -89,9 +96,17 @@ namespace Roton.Test.Infrastructure
 
         protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
 
-        protected void PlotAt(int x, int y, int id, int color = 0x0F) =>
-            Tiles[new Location(x, y)].CopyFrom(new Tile(id, color));
+        protected void PlotTo(int x, int y, int id, int? color = null) =>
+            Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
+
+        protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
         protected void Type(EngineKeyCode ekc) => Keyboard.Type(new KeyPress {Code = (int) ekc});
+
+        protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
+
+        protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
+
+        protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
     }
 }

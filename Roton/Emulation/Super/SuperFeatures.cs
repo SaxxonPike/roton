@@ -180,5 +180,12 @@ namespace Roton.Emulation.Super
         {
             // Super does not enforce player's background color.
         }
+
+        public string[] GetMessageLines()
+        {
+            return string.IsNullOrEmpty(_engine.State.Message2)
+                ? new[] {string.Empty, _engine.State.Message} 
+                : new[] {_engine.State.Message, _engine.State.Message2};
+        }
     }
 }

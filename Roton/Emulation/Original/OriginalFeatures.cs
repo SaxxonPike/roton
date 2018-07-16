@@ -129,6 +129,11 @@ namespace Roton.Emulation.Original
             _engine.UpdateBoard(actor.Location);
         }
 
+        public string[] GetMessageLines()
+        {
+            return new[] {_engine.State.Message};
+        }
+
         public bool HandleTitleInput(int hotkey)
         {
             switch (hotkey)

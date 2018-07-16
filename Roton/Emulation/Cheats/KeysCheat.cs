@@ -17,7 +17,7 @@ namespace Roton.Emulation.Cheats
 
         public void Execute()
         {
-            for (var i = 1; i < 8; i++)
+            for (var i = 0; i < 7; i++)
                 _engine.World.Keys[i] = true;
         }
     }
