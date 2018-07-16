@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Roton.Emulation.Data;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Test.Infrastructure
 {
@@ -27,7 +29,7 @@ namespace Roton.Test.Infrastructure
             _queue.Clear();
         }
 
-        public int GetKey()
+        public EngineKeyCode GetKey()
         {
             if (_queue.Count <= 0) 
                 return 0;
@@ -38,5 +40,7 @@ namespace Roton.Test.Infrastructure
             Control = key.Control;
             return key.Code;
         }
+
+        public bool HasKey => _queue.Count > 0;
     }
 }

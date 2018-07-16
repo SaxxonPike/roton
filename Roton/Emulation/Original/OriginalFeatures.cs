@@ -62,11 +62,11 @@ namespace Roton.Emulation.Original
             throw new System.NotImplementedException();
         }
 
-        public void HandlePlayerInput(IActor actor, int hotkey)
+        public void HandlePlayerInput(IActor actor)
         {
-            switch (hotkey)
+            switch (_engine.State.KeyPressed)
             {
-                case 0x54: // T
+                case EngineKeyCode.T:
                     if (_engine.World.TorchCycles <= 0)
                     {
                         if (_engine.World.Torches <= 0)
@@ -95,7 +95,7 @@ namespace Roton.Emulation.Original
                     }
 
                     break;
-                case 0x46: // F
+                case EngineKeyCode.F:
                     break;
             }
         }
@@ -134,29 +134,29 @@ namespace Roton.Emulation.Original
             return new[] {_engine.State.Message};
         }
 
-        public bool HandleTitleInput(int hotkey)
+        public bool HandleTitleInput()
         {
-            switch (hotkey)
+            switch (_engine.State.KeyPressed)
             {
-                case (int)EngineKeyCode.P:
+                case EngineKeyCode.P:
                     return true;
-                case (int)EngineKeyCode.W:
+                case EngineKeyCode.W:
                     break;
-                case (int)EngineKeyCode.A:
+                case EngineKeyCode.A:
                     break;
-                case (int)EngineKeyCode.E:
+                case EngineKeyCode.E:
                     break;
-                case (int)EngineKeyCode.S:
+                case EngineKeyCode.S:
                     break;
-                case (int)EngineKeyCode.R:
+                case EngineKeyCode.R:
                     break;
-                case (int)EngineKeyCode.H:
+                case EngineKeyCode.H:
                     break;
-                case (int)EngineKeyCode.QuestionMark:
+                case EngineKeyCode.QuestionMark:
                     _engine.Hud.EnterCheat();
                     break;
-                case (int)EngineKeyCode.Escape:
-                case (int)EngineKeyCode.Q:
+                case EngineKeyCode.Escape:
+                case EngineKeyCode.Q:
                     _engine.State.QuitEngine = _engine.Hud.QuitEngineConfirmation();
                     break;
             }

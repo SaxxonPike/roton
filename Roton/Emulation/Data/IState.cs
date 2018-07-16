@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data
 {
@@ -35,7 +36,7 @@ namespace Roton.Emulation.Data
         int GameWaitTime { get; set; }
         bool Init { get; set; }
         bool KeyArrow { get; set; }
-        int KeyPressed { get; set; }
+        EngineKeyCode KeyPressed { get; set; }
         bool KeyShift { get; set; }
         string Message { get; set; }
         string Message2 { get; set; }

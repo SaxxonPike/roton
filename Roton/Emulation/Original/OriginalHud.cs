@@ -3,6 +3,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original
@@ -275,8 +276,8 @@ namespace Roton.Emulation.Original
                     performSelection = false;
                 }
 
-                if (!performSelection || _engine.State.KeyShift || _engine.State.KeyPressed == 0x0D ||
-                    _engine.State.KeyPressed == 0x1B)
+                if (!performSelection || _engine.State.KeyShift || _engine.State.KeyPressed == EngineKeyCode.Enter ||
+                    _engine.State.KeyPressed == EngineKeyCode.Escape)
                 {
                     break;
                 }

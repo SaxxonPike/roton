@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data
+﻿using Roton.Emulation.Infrastructure;
+
+namespace Roton.Emulation.Data
 {
     public interface IKeyboard
     {
@@ -6,6 +8,6 @@
         bool Control { get; }
         bool Shift { get; }
         void Clear();
-        int GetKey();
+        EngineKeyCode GetKey();
     }
 }

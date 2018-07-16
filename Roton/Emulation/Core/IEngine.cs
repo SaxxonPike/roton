@@ -6,6 +6,7 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Draws;
+using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
@@ -57,7 +58,7 @@ namespace Roton.Emulation.Core
         void ForcePlayerColor(int index);
         IXyPair GetCardinalVector(int index);
         bool GetPlayerTimeElapsed(int interval);
-        void HandlePlayerInput(IActor actor, int hotkey);
+        void HandlePlayerInput(IActor actor);
         void Harm(int index);
         void LoadWorld(string name);
         void LockActor(int index);
@@ -70,7 +71,7 @@ namespace Roton.Emulation.Core
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void PutTile(IXyPair location, IXyPair vector, ITile kind);
         void RaiseError(string error);
-        int ReadKey();
+        EngineKeyCode ReadKey();
         void RemoveActor(int index);
         void RemoveItem(IXyPair location);
         IXyPair Rnd();

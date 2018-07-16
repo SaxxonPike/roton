@@ -623,9 +623,9 @@ namespace Roton.Emulation.Core.Impl
             return result;
         }
 
-        public void HandlePlayerInput(IActor actor, int hotkey)
+        public void HandlePlayerInput(IActor actor)
         {
-            Features.HandlePlayerInput(actor, hotkey);
+            Features.HandlePlayerInput(actor);
         }
 
         public void Harm(int index)
@@ -962,10 +962,10 @@ namespace Roton.Emulation.Core.Impl
 
         public IRandom Random => _random.Value;
 
-        public int ReadKey()
+        public EngineKeyCode ReadKey()
         {
             var key = Keyboard.GetKey();
-            State.KeyPressed = key > 0 ? key : 0;
+            State.KeyPressed = key;
             return State.KeyPressed;
         }
 
@@ -1454,7 +1454,7 @@ namespace Roton.Emulation.Core.Impl
 
                     Hud.DrawPausing();
                     ReadInput();
-                    if (State.KeyPressed == (int) EngineKeyCode.Escape)
+                    if (State.KeyPressed == EngineKeyCode.Escape)
                     {
                         if (World.Health > 0)
                         {
@@ -1662,19 +1662,19 @@ namespace Roton.Emulation.Core.Impl
 
                 switch (key)
                 {
-                    case (int) EngineKeyCode.LeftArrow:
+                    case EngineKeyCode.Left:
                         State.KeyVector.CopyFrom(Vector.West);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.RightArrow:
+                    case EngineKeyCode.Right:
                         State.KeyVector.CopyFrom(Vector.East);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.UpArrow:
+                    case EngineKeyCode.Up:
                         State.KeyVector.CopyFrom(Vector.North);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.DownArrow:
+                    case EngineKeyCode.Down:
                         State.KeyVector.CopyFrom(Vector.South);
                         State.KeyArrow = true;
                         break;
@@ -1793,8 +1793,8 @@ namespace Roton.Emulation.Core.Impl
                     MainLoop(gameEnded, false);
                     if (!ThreadActive) break;
 
-                    var hotkey = State.KeyPressed.ToUpperCase();
-                    var startPlaying = Features.HandleTitleInput(hotkey);
+                    var hotkey = State.KeyPressed;
+                    var startPlaying = Features.HandleTitleInput();
                     if (startPlaying) gameEnded = PlayWorld();
 
                     if (gameEnded || State.QuitEngine) break;

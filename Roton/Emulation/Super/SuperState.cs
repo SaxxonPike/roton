@@ -2,6 +2,7 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super
@@ -138,10 +139,10 @@ namespace Roton.Emulation.Super
             set => _memory.WriteBool(0xCC84, value);
         }
 
-        public int KeyPressed
+        public EngineKeyCode KeyPressed
         {
-            get => _memory.Read8(0xCC76);
-            set => _memory.Write8(0xCC76, value);
+            get => (EngineKeyCode) _memory.Read8(0xCC76);
+            set => _memory.Write8(0xCC76, (int) value);
         }
 
         public bool KeyShift

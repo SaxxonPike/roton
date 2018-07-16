@@ -5,6 +5,7 @@ using Autofac;
 using Lyon.App;
 using Moq;
 using NUnit.Framework;
+using OpenTK.Input;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
@@ -62,6 +63,12 @@ namespace Roton.Test.Infrastructure
 
         protected void Step() => Engine.StepOnce();
 
+        protected void StepAllKeys()
+        {
+            while (State.KeyPressed != 0 || Keyboard.HasKey)
+                Step();
+        }
+
         [SetUp]
         public void __SetUpContext()
         {
@@ -101,7 +108,7 @@ namespace Roton.Test.Infrastructure
 
         protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
-        protected void Type(EngineKeyCode ekc) => Keyboard.Type(new KeyPress {Code = (int) ekc});
+        protected void Type(EngineKeyCode ekc) => Keyboard.Type(new KeyPress {Code = ekc});
 
         protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
 
