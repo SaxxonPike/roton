@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using AutoFixture;
+using AutoFixture.Dsl;
 using Lyon.App;
 using Moq;
 using NUnit.Framework;
@@ -35,6 +37,7 @@ namespace Roton.Test.Infrastructure
         protected Mock<ISpeaker> SpeakerMock { get; private set; }
 
         private Random Rand { get; } = new Random();
+        private Fixture Fixture { get; } = new Fixture();
 
         protected IEngine Engine => Context.Engine;
         protected IActors Actors => Engine.Actors;
@@ -47,8 +50,10 @@ namespace Roton.Test.Infrastructure
         protected IDirectionList DirectionList => Engine.DirectionList;
         protected IElementList ElementList => Engine.ElementList;
         protected IFacts Facts => Engine.Facts;
+        protected IHeap Heap => Engine.Heap;
         protected IHud Hud => Engine.Hud;
         protected IItemList ItemList => Engine.ItemList;
+        protected IMemory Memory => Engine.Memory;
         protected IParser Parser => Engine.Parser;
         protected IActor Player => Engine.Player;
         protected IRandom Random => Engine.Random;
@@ -68,7 +73,7 @@ namespace Roton.Test.Infrastructure
             while (State.KeyPressed != 0 || Keyboard.HasKey)
                 Step();
         }
-
+        
         [SetUp]
         public void __SetUpContext()
         {
@@ -105,6 +110,21 @@ namespace Roton.Test.Infrastructure
 
         protected void PlotTo(int x, int y, int id, int? color = null) =>
             Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
+        
+        protected int SpawnTo(int x, int y, int id, int? color = null)
+        {
+            Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? ElementList[id].Color), ElementList[id].Cycle,
+                State.DefaultActor);
+            return ActorIndexAt(x, y);
+        }
+
+        protected void SetActorCode(int index, params string[] code)
+        {
+            var codeBytes = string.Join(new string('\xD', 1), code).ToBytes();
+            var pointer = Heap.Allocate(codeBytes);
+            Actors[index].Pointer = pointer;
+            Actors[index].Length = codeBytes.Length;
+        }
 
         protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
@@ -115,5 +135,13 @@ namespace Roton.Test.Infrastructure
         protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
 
         protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
+
+        protected T Create<T>() => Fixture.Create<T>();
+
+        protected IEnumerable<T> CreateMany<T>() => Fixture.CreateMany<T>();
+        
+        protected IEnumerable<T> CreateMany<T>(int count) => Fixture.CreateMany<T>(count);
+
+        protected ICustomizationComposer<T> Build<T>() => Fixture.Build<T>();
     }
 }

@@ -12,13 +12,13 @@ namespace Roton.Emulation.Super
     {
         private readonly IMemory _memory;
 
-        public SuperState(IMemory memory, IEngineResourceService engineResourceService)
+        public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
         {
             _memory = memory;
             memory.Write(0x0000, engineResourceService.GetMemoryData());
 
             BorderTile = new Tile(0, 0); // Not in memory
-            DefaultActor = new Actor(_memory, 0x2262);
+            DefaultActor = new Actor(_memory, heap, 0x2262);
             EdgeTile = new MemoryTile(_memory, 0x2260);
             KeyVector = new MemoryVector(_memory, 0xCC6E);
             LineChars = new ByteString(_memory, 0x22BA);

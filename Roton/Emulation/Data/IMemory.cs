@@ -2,7 +2,6 @@
 {
     public interface IMemory
     {
-        IHeap Heap { get; }
         byte[] Dump();
         byte[] Read(int offset, int length);
         int Read8(int offset);

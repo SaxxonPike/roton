@@ -98,6 +98,8 @@ namespace Roton.Emulation.Core
         IDrawList DrawList { get; }
         IInteractionList InteractionList { get; }
         IFacts Facts { get; }
+        IHeap Heap { get; }
+        IMemory Memory { get; }
         void StepOnce();
         string[] GetMessageLines();
     }

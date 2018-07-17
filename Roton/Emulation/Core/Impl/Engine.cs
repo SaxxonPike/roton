@@ -38,6 +38,8 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IDrawList> _drawList;
         private readonly Lazy<IElementList> _elements;
         private readonly Lazy<IFacts> _facts;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<IHeap> _heap;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
@@ -66,7 +68,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
-            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts)
+            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
+            Lazy<IHeap> heap)
         {
             _clock = clock;
             _actors = actors;
@@ -100,6 +103,8 @@ namespace Roton.Emulation.Core.Impl
             _drawList = drawList;
             _interactionList = interactionList;
             _facts = facts;
+            _memory = memory;
+            _heap = heap;
         }
 
         private IBoards Boards => _boards.Value;
@@ -562,6 +567,10 @@ namespace Roton.Emulation.Core.Impl
         }
 
         public IFacts Facts => _facts.Value;
+
+        public IHeap Heap => _heap.Value;
+        
+        public IMemory Memory => _memory.Value;
 
         public void StepOnce()
         {

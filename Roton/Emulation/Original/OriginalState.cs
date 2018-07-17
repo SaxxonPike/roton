@@ -12,12 +12,12 @@ namespace Roton.Emulation.Original
     {
         private readonly IMemory _memory;
 
-        public OriginalState(IMemory memory, IEngineResourceService engineResourceService)
+        public OriginalState(IMemory memory, IHeap heap, IEngineResourceService engineResourceService)
         {
             _memory = memory;
             memory.Write(0x0000, engineResourceService.GetMemoryData());
             BorderTile = new MemoryTile(_memory, 0x0072);
-            DefaultActor = new Actor(_memory, 0x0076);
+            DefaultActor = new Actor(_memory, heap, 0x0076);
             EdgeTile = new MemoryTile(_memory, 0x0074);
             KeyVector = new MemoryVector(_memory, 0x7C68);
             LineChars = new ByteString(_memory, 0x0098);
