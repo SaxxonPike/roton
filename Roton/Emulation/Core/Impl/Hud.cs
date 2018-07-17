@@ -121,13 +121,13 @@ namespace Roton.Emulation.Core.Impl
             while (true)
             {
                 _engine.WaitForTick();
-                var key = _engine.ReadKey().ToUpperCase();
+                var key = _engine.ReadKey();
                 switch (key)
                 {
-                    case 0x59:
+                    case EngineKeyCode.Y:
                         return true;
-                    case 0x4E:
-                    case 0x1B:
+                    case EngineKeyCode.N:
+                    case EngineKeyCode.Escape:
                         return false;
                 }
             }

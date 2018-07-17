@@ -38,6 +38,8 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IDrawList> _drawList;
         private readonly Lazy<IElementList> _elements;
         private readonly Lazy<IFacts> _facts;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<IHeap> _heap;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
@@ -66,7 +68,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
-            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts)
+            Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
+            Lazy<IHeap> heap)
         {
             _clock = clock;
             _actors = actors;
@@ -100,6 +103,8 @@ namespace Roton.Emulation.Core.Impl
             _drawList = drawList;
             _interactionList = interactionList;
             _facts = facts;
+            _memory = memory;
+            _heap = heap;
         }
 
         private IBoards Boards => _boards.Value;
@@ -563,6 +568,20 @@ namespace Roton.Emulation.Core.Impl
 
         public IFacts Facts => _facts.Value;
 
+        public IHeap Heap => _heap.Value;
+        
+        public IMemory Memory => _memory.Value;
+
+        public void StepOnce()
+        {
+            var oldThreadActive = ThreadActive;
+            ThreadActive = true;
+            MainLoop(true, true);
+            ThreadActive = oldThreadActive;
+        }
+
+        public string[] GetMessageLines() => Features.GetMessageLines();
+
         public void FadePurple()
         {
             FadeBoard(Facts.FadeTile);
@@ -593,15 +612,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void ForcePlayerColor(int index)
         {
-            var actor = Actors[index];
-            var playerElement = ElementList[ElementList.PlayerId];
-            if (Tiles[actor.Location].Color != playerElement.Color ||
-                playerElement.Character != Facts.PlayerCharacter)
-            {
-                playerElement.Character = Facts.PlayerCharacter;
-                Tiles[actor.Location].Color = playerElement.Color;
-                UpdateBoard(actor.Location);
-            }
+            Features.ForcePlayerColor(index);
         }
 
         public IXyPair GetCardinalVector(int index)
@@ -621,9 +632,9 @@ namespace Roton.Emulation.Core.Impl
             return result;
         }
 
-        public void HandlePlayerInput(IActor actor, int hotkey)
+        public void HandlePlayerInput(IActor actor)
         {
-            Features.HandlePlayerInput(actor, hotkey);
+            Features.HandlePlayerInput(actor);
         }
 
         public void Harm(int index)
@@ -748,7 +759,8 @@ namespace Roton.Emulation.Core.Impl
 
             sourceTile.CopyFrom(underTile);
             actor.Location.CopyFrom(target);
-            if (targetTile.Id == ElementList.PlayerId) ForcePlayerColor(index);
+            if (targetTile.Id == ElementList.PlayerId) 
+                ForcePlayerColor(index);
 
             UpdateBoard(target);
             UpdateBoard(sourceLocation);
@@ -775,8 +787,9 @@ namespace Roton.Emulation.Core.Impl
                     }
                 }
             }
-
-            if (index == 0) Hud.UpdateCamera();
+            
+            if (index == 0)
+                Hud.UpdateCamera();
         }
 
         public void MoveActorOnRiver(int index)
@@ -958,10 +971,10 @@ namespace Roton.Emulation.Core.Impl
 
         public IRandom Random => _random.Value;
 
-        public int ReadKey()
+        public EngineKeyCode ReadKey()
         {
             var key = Keyboard.GetKey();
-            State.KeyPressed = key > 0 ? key : 0;
+            State.KeyPressed = key;
             return State.KeyPressed;
         }
 
@@ -1232,7 +1245,7 @@ namespace Roton.Emulation.Core.Impl
             return Features.IsActorLocked(index);
         }
 
-        private void ClearBoard()
+        public void ClearBoard()
         {
             var emptyId = ElementList.EmptyId;
             var boardEdgeId = State.EdgeTile.Id;
@@ -1349,24 +1362,6 @@ namespace Roton.Emulation.Core.Impl
             Features.ExecuteMessage(context);
         }
 
-        private void ExecuteOnce()
-        {
-            if (State.ActIndex > State.ActorCount)
-            {
-                if (!State.BreakGameLoop && !State.GamePaused)
-                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
-                    {
-                        State.GameCycle++;
-                        if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
-
-                        State.ActIndex = 0;
-                        ReadInput();
-                    }
-
-                WaitForTick();
-            }
-        }
-
         private void FadeBoard(AnsiChar ac)
         {
             Hud.FadeBoard(ac);
@@ -1421,41 +1416,16 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void MainLoop(bool gameIsActive)
+        private void MainLoop(bool doFade, bool step)
         {
             var alternating = false;
 
-            Hud.CreateStatusText();
-            Hud.UpdateStatus();
-
-            if (State.Init)
+            if (!step)
             {
-                if (!State.AboutShown)
-                    ShowAbout();
-
-                if (State.DefaultWorldName.Length > 0)
-                    LoadWorld(State.DefaultWorldName);
-
-                State.StartBoard = World.BoardIndex;
-                SetBoard(0);
-                State.Init = false;
+                Hud.CreateStatusText();
+                Hud.UpdateStatus();
+                MainLoopInit(doFade);
             }
-
-            var element = ElementList[State.PlayerElement];
-            Tiles[Player.Location].SetTo(element.Id, element.Color);
-            if (State.PlayerElement == ElementList.MonitorId)
-            {
-                SetMessage(0, new Message());
-                Hud.DrawTitleStatus();
-            }
-
-            if (gameIsActive)
-                FadePurple();
-
-            State.GameWaitTime = State.GameSpeed << 1;
-            State.BreakGameLoop = false;
-            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
-            State.ActIndex = State.ActorCount + 1;
 
             while (ThreadActive)
             {
@@ -1493,7 +1463,7 @@ namespace Roton.Emulation.Core.Impl
 
                     Hud.DrawPausing();
                     ReadInput();
-                    if (State.KeyPressed == (int) EngineKeyCode.Escape)
+                    if (State.KeyPressed == EngineKeyCode.Escape)
                     {
                         if (World.Health > 0)
                         {
@@ -1542,7 +1512,23 @@ namespace Roton.Emulation.Core.Impl
                     }
                 }
 
-                ExecuteOnce();
+                if (State.ActIndex > State.ActorCount)
+                {
+                    if (!State.BreakGameLoop && !State.GamePaused)
+                        if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
+                        {
+                            State.GameCycle++;
+                            if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
+
+                            State.ActIndex = 0;
+                            ReadInput();
+                        }
+
+                    if (step)
+                        break;
+                    
+                    WaitForTick();
+                }
 
                 if (State.BreakGameLoop)
                 {
@@ -1556,12 +1542,44 @@ namespace Roton.Emulation.Core.Impl
                         Hud.ClearTitleStatus();
                     }
 
-                    element = ElementList[ElementList.PlayerId];
+                    var element = ElementList[ElementList.PlayerId];
                     Tiles[Player.Location].SetTo(element.Id, element.Color);
                     State.GameOver = false;
                     break;
                 }
             }
+        }
+
+        private void MainLoopInit(bool doFade)
+        {
+            if (State.Init)
+            {
+                if (!State.AboutShown)
+                    ShowAbout();
+
+                if (State.DefaultWorldName.Length > 0)
+                    LoadWorld(State.DefaultWorldName);
+
+                State.StartBoard = World.BoardIndex;
+                SetBoard(0);
+                State.Init = false;
+            }                
+
+            var element = ElementList[State.PlayerElement];
+            Tiles[Player.Location].SetTo(element.Id, element.Color);
+            if (State.PlayerElement == ElementList.MonitorId)
+            {
+                SetMessage(0, new Message());
+                Hud.DrawTitleStatus();
+            }
+
+            if (doFade)
+                FadePurple();
+
+            State.GameWaitTime = State.GameSpeed << 1;
+            State.BreakGameLoop = false;
+            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
+            State.ActIndex = State.ActorCount + 1;
         }
 
         private void MoveTile(IXyPair source, IXyPair target)
@@ -1612,7 +1630,7 @@ namespace Roton.Emulation.Core.Impl
                 EnterBoard();
                 State.PlayerElement = ElementList.PlayerId;
                 State.GamePaused = true;
-                MainLoop(true);
+                MainLoop(true, false);
             }
 
             return gameIsActive;
@@ -1653,19 +1671,19 @@ namespace Roton.Emulation.Core.Impl
 
                 switch (key)
                 {
-                    case (int) EngineKeyCode.LeftArrow:
+                    case EngineKeyCode.Left:
                         State.KeyVector.CopyFrom(Vector.West);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.RightArrow:
+                    case EngineKeyCode.Right:
                         State.KeyVector.CopyFrom(Vector.East);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.UpArrow:
+                    case EngineKeyCode.Up:
                         State.KeyVector.CopyFrom(Vector.North);
                         State.KeyArrow = true;
                         break;
-                    case (int) EngineKeyCode.DownArrow:
+                    case EngineKeyCode.Down:
                         State.KeyVector.CopyFrom(Vector.South);
                         State.KeyArrow = true;
                         break;
@@ -1781,11 +1799,11 @@ namespace Roton.Emulation.Core.Impl
                 {
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
-                    MainLoop(gameEnded);
+                    MainLoop(gameEnded, false);
                     if (!ThreadActive) break;
 
-                    var hotkey = State.KeyPressed.ToUpperCase();
-                    var startPlaying = Features.HandleTitleInput(hotkey);
+                    var hotkey = State.KeyPressed;
+                    var startPlaying = Features.HandleTitleInput();
                     if (startPlaying) gameEnded = PlayWorld();
 
                     if (gameEnded || State.QuitEngine) break;

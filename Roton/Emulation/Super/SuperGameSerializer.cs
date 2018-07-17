@@ -8,8 +8,8 @@ namespace Roton.Emulation.Super
     [ContextEngine(ContextEngine.Super)]
     public sealed class SuperGameSerializer : GameSerializer
     {
-        public SuperGameSerializer(IMemory memory)
-            : base(memory)
+        public SuperGameSerializer(IMemory memory, IHeap heap)
+            : base(memory, heap)
         {
         }
 

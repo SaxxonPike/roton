@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Input;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Interface.Input
 {
     public class OpenTkKeyBuffer : IOpenTkKeyBuffer
     {
         private static readonly Encoding Enc = Encoding.GetEncoding(437);
-        private readonly Queue<int> _queue = new Queue<int>();
+        private readonly Queue<EngineKeyCode> _queue = new Queue<EngineKeyCode>();
         private readonly object _syncObject = new object();
 
         public bool CapsLock { get; set; }
@@ -29,7 +30,7 @@ namespace Roton.Interface.Input
 
         public bool Control { get; set; }
 
-        public int GetKey()
+        public EngineKeyCode GetKey()
         {
             lock (_syncObject)
             {
@@ -37,13 +38,13 @@ namespace Roton.Interface.Input
                 {
                     return _queue.Dequeue();
                 }
-                return -1;
+                return EngineKeyCode.None;
             }
         }
 
         public bool Shift { get; set; }
 
-        private void Enqueue(int data)
+        private void Enqueue(EngineKeyCode data)
         {
             lock (_syncObject)
             {
@@ -52,34 +53,34 @@ namespace Roton.Interface.Input
             }
         }
 
-        private int GetCode(Key data)
+        private EngineKeyCode GetCode(Key data)
         {
             switch (data)
             {
                 case Key.Back:
-                    return 0x08;
+                    return EngineKeyCode.Backspace;
                 case Key.Down:
-                    return 0xD0;
+                    return EngineKeyCode.Down;
                 case Key.Enter:
-                    return 0x0D;
+                    return EngineKeyCode.Enter;
                 case Key.Escape:
-                    return 0x1B;
+                    return EngineKeyCode.Escape;
                 case Key.Left:
-                    return 0xCB;
+                    return EngineKeyCode.Left;
                 case Key.PageDown:
-                    return 0xD1;
+                    return EngineKeyCode.PageDown;
                 case Key.PageUp:
-                    return 0xC9;
+                    return EngineKeyCode.PageUp;
                 case Key.Right:
-                    return 0xCD;
+                    return EngineKeyCode.Right;
                 case Key.Space:
-                    return 0x20;
+                    return EngineKeyCode.Space;
                 case Key.Tab:
-                    return 0x09;
+                    return EngineKeyCode.Tab;
                 case Key.Up:
-                    return 0xC8;
+                    return EngineKeyCode.Up;
                 default:
-                    return -1;
+                    return EngineKeyCode.None;
             }
         }
 
@@ -90,7 +91,7 @@ namespace Roton.Interface.Input
                 int code = Enc.GetBytes(new[] {data})[0];
                 if (code >= 0x20 && code <= 0xFF)
                 {
-                    Enqueue(code);
+                    Enqueue((EngineKeyCode)code);
                 }
                 else
                 {

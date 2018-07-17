@@ -10,13 +10,15 @@ namespace Roton.Emulation.Core
         void RemoveItem(IXyPair location);
         string GetWorldName(string baseName);
         void EnterBoard();
-        bool HandleTitleInput(int hotkey);
+        bool HandleTitleInput();
         void ShowInGameHelp();
         void ExecuteMessage(IOopContext context);
         void Init();
-        void HandlePlayerInput(IActor actor, int hotkey);
+        void HandlePlayerInput(IActor actor);
         bool CanPutTile(IXyPair location);
         void ClearForest(IXyPair location);
         void CleanUpPassageMovement();
+        void ForcePlayerColor(int index);
+        string[] GetMessageLines();
     }
 }

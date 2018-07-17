@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super
@@ -10,13 +12,13 @@ namespace Roton.Emulation.Super
     {
         private readonly IMemory _memory;
 
-        public SuperState(IMemory memory, byte[] memoryBytes)
+        public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
         {
             _memory = memory;
-            memory.Write(0x0000, memoryBytes);
+            memory.Write(0x0000, engineResourceService.GetMemoryData());
 
             BorderTile = new Tile(0, 0); // Not in memory
-            DefaultActor = new Actor(_memory, 0x2262);
+            DefaultActor = new Actor(_memory, heap, 0x2262);
             EdgeTile = new MemoryTile(_memory, 0x2260);
             KeyVector = new MemoryVector(_memory, 0xCC6E);
             LineChars = new ByteString(_memory, 0x22BA);
@@ -137,10 +139,10 @@ namespace Roton.Emulation.Super
             set => _memory.WriteBool(0xCC84, value);
         }
 
-        public int KeyPressed
+        public EngineKeyCode KeyPressed
         {
-            get => _memory.Read8(0xCC76);
-            set => _memory.Write8(0xCC76, value);
+            get => (EngineKeyCode) _memory.Read8(0xCC76);
+            set => _memory.Write8(0xCC76, (int) value);
         }
 
         public bool KeyShift

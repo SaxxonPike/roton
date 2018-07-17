@@ -159,15 +159,19 @@ namespace Roton.Emulation.Super
             }
             else
             {
-                x += 0x0E + 1;
-                y += 0x02 + 1;
-                x -= _engine.Board.Camera.X;
-                y -= _engine.Board.Camera.Y;
-                if (x >= 0x0E && x <= 0x25 && y >= 0x02 && y <= 0x15)
-                {
-                    _terminal.Plot(x, y, ac);
-                }
+                var loc = new Location(x, y).Sum(GetTranslation());
+                if (IsWithinCamera(loc))
+                    _terminal.Plot(loc.X, loc.Y, ac);
             }
+        }
+
+        private bool IsWithinCamera(IXyPair loc)
+        {
+//            x += 0x0E + 1;
+//            y += 0x02 + 1;
+//            x -= _engine.Board.Camera.X;
+//            y -= _engine.Board.Camera.Y;
+            return loc.X >= 0x0E && loc.X <= 0x25 && loc.Y >= 0x02 && loc.Y <= 0x15;
         }
 
         private Vector GetTranslation()
@@ -193,8 +197,9 @@ namespace Roton.Emulation.Super
             {
                 for (var y = 0; y < _engine.Tiles.Height; y++)
                 {
-                    //DrawTile(x, y, _drawer.Draw(x + 1, y + 1));
-                    _engine.UpdateBoard(new Location(x, y));
+                    var loc = new Location(x, y);
+                    if (IsWithinCamera(loc.Sum(GetTranslation())))
+                        _engine.UpdateBoard(loc.Sum(1, 1));
                 }
             }
         }
@@ -235,9 +240,9 @@ namespace Roton.Emulation.Super
                 camera.Y = 61;
             }
 
-            if (OldCamera.Matches(camera)) 
+            if (OldCamera.Matches(camera))
                 return;
-            
+
             // todo: implement super smart redraw instead of redrawing everything
             OldCamera.CopyFrom(camera);
             _engine.Board.Camera.CopyFrom(camera);
@@ -246,9 +251,9 @@ namespace Roton.Emulation.Super
 
         public override void UpdateStatus()
         {
-            if (_engine.TitleScreen) 
+            if (_engine.TitleScreen)
                 return;
-            
+
             if (_engine.World.Health < 0)
             {
                 _engine.World.Health = 0;
@@ -300,7 +305,7 @@ namespace Roton.Emulation.Super
 
             DrawString(0x03, 0x0A, _engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
         }
-        
+
         private string StoneText
         {
             get
@@ -315,6 +320,6 @@ namespace Roton.Emulation.Super
 
                 return string.Empty;
             }
-        }        
+        }
     }
 }

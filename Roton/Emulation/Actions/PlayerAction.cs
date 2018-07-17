@@ -61,7 +61,7 @@ namespace Roton.Emulation.Actions
 
             if (_engine.State.KeyVector.IsNonZero())
             {
-                if (_engine.State.KeyShift || _engine.State.KeyPressed == 0x20)
+                if (_engine.State.KeyShift || _engine.State.KeyPressed == EngineKeyCode.Space)
                 {
                     // Shooting logic
 
@@ -125,37 +125,37 @@ namespace Roton.Emulation.Actions
 
             // Hotkey logic
 
-            var hotkey = _engine.State.KeyPressed.ToUpperCase();
+            var hotkey = _engine.State.KeyPressed;
             switch (hotkey)
             {
-                case 0x51: // Q
-                case 0x1B: // escape
+                case EngineKeyCode.Q:
+                case EngineKeyCode.Escape:
                     _engine.State.BreakGameLoop = _engine.State.GameOver || _engine.Hud.EndGameConfirmation();
                     break;
-                case 0x53: // S
+                case EngineKeyCode.S:
                     _engine.Hud.SaveGame();
                     break;
-                case 0x50: // P
+                case EngineKeyCode.P:
                     if (_engine.World.Health > 0)
                     {
                         _engine.State.GamePaused = true;
                     }
 
                     break;
-                case 0x42: // B
+                case EngineKeyCode.B:
                     _engine.State.GameQuiet = !_engine.State.GameQuiet;
                     _engine.ClearSound();
                     _engine.Hud.UpdateStatus();
-                    _engine.State.KeyPressed = 0x20;
+                    _engine.State.KeyPressed = EngineKeyCode.Space;
                     break;
-                case 0x48: // H
+                case EngineKeyCode.H:
                     _engine.ShowInGameHelp();
                     break;
-                case 0x3F: // ?
+                case EngineKeyCode.QuestionMark:
                     _engine.Hud.EnterCheat();
                     break;
                 default:
-                    _engine.HandlePlayerInput(actor, hotkey);
+                    _engine.HandlePlayerInput(actor);
                     break;
             }
 

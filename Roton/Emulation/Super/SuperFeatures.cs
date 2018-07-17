@@ -1,6 +1,7 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super
@@ -91,23 +92,23 @@ namespace Roton.Emulation.Super
             _engine.Hud.UpdateStatus();
         }
 
-        public bool HandleTitleInput(int hotkey)
+        public bool HandleTitleInput()
         {
-            switch (hotkey)
+            switch (_engine.State.KeyPressed)
             {
-                case 0x0D: // Enter
+                case EngineKeyCode.Enter: // Enter
                     return true;
-                case 0x57: // W
+                case EngineKeyCode.W: // W
                     break;
-                case 0x52: // R
+                case EngineKeyCode.R: // R
                     break;
-                case 0x48: // H
+                case EngineKeyCode.H: // H
                     ShowInGameHelp();
                     break;
-                case 0x7C: // ?
+                case EngineKeyCode.QuestionMark: // ?
                     break;
-                case 0x1B: // esc
-                case 0x51: // Q
+                case EngineKeyCode.Escape: // esc
+                case EngineKeyCode.Q: // Q
                     _engine.State.QuitEngine = _engine.Hud.QuitEngineConfirmation();
                     break;
             }
@@ -156,7 +157,7 @@ namespace Roton.Emulation.Super
                 _engine.SetGameMode();
         }
 
-        public void HandlePlayerInput(IActor actor, int hotkey)
+        public void HandlePlayerInput(IActor actor)
         {
             // todo: this
         }
@@ -174,6 +175,18 @@ namespace Roton.Emulation.Super
         public void CleanUpPassageMovement()
         {
             _engine.Tiles[_engine.Player.Location].CopyFrom(_engine.Player.UnderTile);
+        }
+
+        public void ForcePlayerColor(int index)
+        {
+            // Super does not enforce player's background color.
+        }
+
+        public string[] GetMessageLines()
+        {
+            return string.IsNullOrEmpty(_engine.State.Message2)
+                ? new[] {string.Empty, _engine.State.Message} 
+                : new[] {_engine.State.Message, _engine.State.Message2};
         }
     }
 }

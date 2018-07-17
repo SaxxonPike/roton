@@ -8,8 +8,8 @@ namespace Roton.Emulation.Original
     [ContextEngine(ContextEngine.Original)]
     public sealed class OriginalGameSerializer : GameSerializer
     {
-        public OriginalGameSerializer(IMemory memory)
-            : base(memory)
+        public OriginalGameSerializer(IMemory memory, IHeap heap)
+            : base(memory, heap)
         {
         }
 

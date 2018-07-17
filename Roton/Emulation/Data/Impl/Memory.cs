@@ -7,10 +7,9 @@ namespace Roton.Emulation.Data.Impl
     [ContextEngine(ContextEngine.Super)]
     public sealed class Memory : IMemory
     {
-        public Memory()
+        public Memory(IHeap heap)
         {
             Bytes = new byte[Length];
-            Heap = new Heap();
             Reset();
         }
 
@@ -26,8 +25,6 @@ namespace Roton.Emulation.Data.Impl
             Array.Copy(Bytes, result, Length);
             return result;
         }
-
-        public IHeap Heap { get; }
 
         public byte[] Read(int offset, int length)
         {

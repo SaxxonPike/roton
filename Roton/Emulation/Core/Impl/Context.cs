@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data.Impl;
+﻿using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
@@ -7,40 +8,41 @@ namespace Roton.Emulation.Core.Impl
     [ContextEngine(ContextEngine.Super)]
     public sealed class Context : IContext
     {
-        private readonly IEngine _engine;
+        private readonly IFacts _facts;
 
-        private const int MaxGameCycle = 420;
-
-        public Context(IEngine engine)
+        public Context(IEngine engine, IFacts facts)
         {
-            _engine = engine;
+            Engine = engine;
+            _facts = facts;
         }
 
+        public IEngine Engine { get; }
+        
         public void ExecuteOnce()
         {
-            if (_engine.State.EditorMode)
+            if (Engine.State.EditorMode)
             {
                 // simulate a game cycle for visuals only
-                _engine.State.ActIndex = 0;
-                _engine.State.GameCycle++;
-                if (_engine.State.GameCycle >= MaxGameCycle)
+                Engine.State.ActIndex = 0;
+                Engine.State.GameCycle++;
+                if (Engine.State.GameCycle >= _facts.MaxGameCycle)
                 {
-                    _engine.State.GameCycle = 0;
+                    Engine.State.GameCycle = 0;
                 }
 
-                foreach (var actor in _engine.Actors)
+                foreach (var actor in Engine.Actors)
                 {
-                    if (actor.Cycle > 0 && _engine.State.ActIndex%actor.Cycle == _engine.State.GameCycle%actor.Cycle)
+                    if (actor.Cycle > 0 && Engine.State.ActIndex%actor.Cycle == Engine.State.GameCycle%actor.Cycle)
                     {
-                        _engine.UpdateBoard(actor.Location);
+                        Engine.UpdateBoard(actor.Location);
                     }
-                    _engine.State.ActIndex++;
+                    Engine.State.ActIndex++;
                 }
             }
         }
 
-        public void Start() => _engine.Start();
+        public void Start() => Engine.Start();
 
-        public void Stop() => _engine.Stop();
+        public void Stop() => Engine.Stop();
     }
 }
