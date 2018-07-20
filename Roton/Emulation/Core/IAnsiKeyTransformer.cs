@@ -5,6 +5,6 @@ namespace Roton.Emulation.Core
 {
     public interface IAnsiKeyTransformer
     {
-        IEnumerable<byte> GetBytes(AnsiKey ansiKey, AnsiKeyModifier ansiKeyModifier);
+        IEnumerable<byte> GetBytes(IKeyPress keyPress);
     }
 }

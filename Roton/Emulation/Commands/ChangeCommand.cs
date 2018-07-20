@@ -41,7 +41,7 @@ namespace Roton.Emulation.Commands
 
             if (!success)
             {
-                _engine.RaiseError($"Bad #CHANGE");
+                _engine.RaiseError("Bad #CHANGE");
             }
         }
     }

@@ -40,6 +40,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IFacts> _facts;
         private readonly Lazy<IMemory> _memory;
         private readonly Lazy<IHeap> _heap;
+        private readonly Lazy<IAnsiKeyTransformer> _ansiKeyTransformer;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
@@ -69,7 +70,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
-            Lazy<IHeap> heap)
+            Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer)
         {
             _clock = clock;
             _actors = actors;
@@ -105,6 +106,7 @@ namespace Roton.Emulation.Core.Impl
             _facts = facts;
             _memory = memory;
             _heap = heap;
+            _ansiKeyTransformer = ansiKeyTransformer;
         }
 
         private IBoards Boards => _boards.Value;
@@ -137,7 +139,7 @@ namespace Roton.Emulation.Core.Impl
 
         private Thread Thread { get; set; }
 
-        private bool ThreadActive { get; set; }
+        public bool ThreadActive { get; set; }
 
         public IActionList ActionList
             => _actionList.Value;
@@ -569,7 +571,7 @@ namespace Roton.Emulation.Core.Impl
         public IFacts Facts => _facts.Value;
 
         public IHeap Heap => _heap.Value;
-        
+
         public IMemory Memory => _memory.Value;
 
         public void StepOnce()
@@ -702,6 +704,7 @@ namespace Roton.Emulation.Core.Impl
                 }
                 catch (IOException e)
                 {
+                    Hud.ShowScroll();
                     return new byte[0];
                 }
             }
@@ -725,7 +728,8 @@ namespace Roton.Emulation.Core.Impl
 
                     var newBoards = Enumerable
                         .Range(0, numBoards + 1)
-                        .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)));
+                        .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)))
+                        .ToList();
 
                     Boards.Clear();
 
@@ -759,7 +763,7 @@ namespace Roton.Emulation.Core.Impl
 
             sourceTile.CopyFrom(underTile);
             actor.Location.CopyFrom(target);
-            if (targetTile.Id == ElementList.PlayerId) 
+            if (targetTile.Id == ElementList.PlayerId)
                 ForcePlayerColor(index);
 
             UpdateBoard(target);
@@ -787,7 +791,7 @@ namespace Roton.Emulation.Core.Impl
                     }
                 }
             }
-            
+
             if (index == 0)
                 Hud.UpdateCamera();
         }
@@ -971,12 +975,29 @@ namespace Roton.Emulation.Core.Impl
 
         public IRandom Random => _random.Value;
 
-        public EngineKeyCode ReadKey()
-        {
-            var key = Keyboard.GetKey();
-            State.KeyPressed = key;
-            return State.KeyPressed;
-        }
+//        private EngineKeyCode GetKeyCode()
+//        {
+//            if (!Keyboard.KeyIsAvailable)
+//                return EngineKeyCode.None;
+//            
+//            var keyPress = Keyboard.GetKey();
+//            if (keyPress >= 0x80 && Keyboard.KeyIsAvailable)
+//            {
+//                keyPress = Keyboard.GetKey();
+//                keyPress |= 0x80;
+//            }
+//
+//            State.KeyShift = Keyboard.Shift;
+//            
+//            return (EngineKeyCode) keyPress;
+//        }
+//        
+//        public EngineKeyCode ReadKey()
+//        {
+//            var key = GetKeyCode();
+//            State.KeyPressed = key;
+//            return State.KeyPressed;
+//        }
 
         public void RemoveActor(int index)
         {
@@ -1526,7 +1547,7 @@ namespace Roton.Emulation.Core.Impl
 
                     if (step)
                         break;
-                    
+
                     WaitForTick();
                 }
 
@@ -1563,7 +1584,7 @@ namespace Roton.Emulation.Core.Impl
                 State.StartBoard = World.BoardIndex;
                 SetBoard(0);
                 State.Init = false;
-            }                
+            }
 
             var element = ElementList[State.PlayerElement];
             Tiles[Player.Location].SetTo(element.Id, element.Color);
@@ -1656,7 +1677,22 @@ namespace Roton.Emulation.Core.Impl
             return value;
         }
 
-        private void ReadInput()
+        private IAnsiKeyTransformer AnsiKeyTransformer => _ansiKeyTransformer.Value;
+
+        private EngineKeyCode ConvertKey(IKeyPress keyPress)
+        {
+            var bytes = AnsiKeyTransformer.GetBytes(keyPress)?.ToList();
+
+            if (bytes == null || bytes.Count == 0)
+                return EngineKeyCode.None;
+
+            if (bytes.Count > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
+                return (EngineKeyCode) (bytes[1] | 0x80);
+
+            return (EngineKeyCode) bytes[0];
+        }
+
+        public void ReadInput()
         {
             State.KeyShift = false;
             State.KeyArrow = false;
@@ -1664,30 +1700,29 @@ namespace Roton.Emulation.Core.Impl
             State.KeyVector.SetTo(0, 0);
 
             var key = Keyboard.GetKey();
-            if (key >= 0)
-            {
-                State.KeyPressed = key;
-                State.KeyShift = Keyboard.Shift;
+            if (key == null || key.Key == AnsiKey.None)
+                return;
 
-                switch (key)
-                {
-                    case EngineKeyCode.Left:
-                        State.KeyVector.CopyFrom(Vector.West);
-                        State.KeyArrow = true;
-                        break;
-                    case EngineKeyCode.Right:
-                        State.KeyVector.CopyFrom(Vector.East);
-                        State.KeyArrow = true;
-                        break;
-                    case EngineKeyCode.Up:
-                        State.KeyVector.CopyFrom(Vector.North);
-                        State.KeyArrow = true;
-                        break;
-                    case EngineKeyCode.Down:
-                        State.KeyVector.CopyFrom(Vector.South);
-                        State.KeyArrow = true;
-                        break;
-                }
+            State.KeyPressed = ConvertKey(key);
+
+            switch (State.KeyPressed)
+            {
+                case EngineKeyCode.Left:
+                    State.KeyVector.CopyFrom(Vector.West);
+                    State.KeyArrow = true;
+                    break;
+                case EngineKeyCode.Right:
+                    State.KeyVector.CopyFrom(Vector.East);
+                    State.KeyArrow = true;
+                    break;
+                case EngineKeyCode.Up:
+                    State.KeyVector.CopyFrom(Vector.North);
+                    State.KeyArrow = true;
+                    break;
+                case EngineKeyCode.Down:
+                    State.KeyVector.CopyFrom(Vector.South);
+                    State.KeyArrow = true;
+                    break;
             }
         }
 
@@ -1739,7 +1774,7 @@ namespace Roton.Emulation.Core.Impl
                     using (var reader = new StreamReader(stream))
                     {
                         State.DefaultWorldName = reader.ReadLine();
-                    }                    
+                    }
                 }
             }
 

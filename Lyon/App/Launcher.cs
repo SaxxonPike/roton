@@ -37,24 +37,10 @@ namespace Lyon.App
                 _presenter.UpdateViewport();
             }
 
-            private void UpdateKey(KeyboardKeyEventArgs e)
-            {
-                _openTkKeyBuffer.Alt = e.Alt;
-                _openTkKeyBuffer.Control = e.Control;
-                _openTkKeyBuffer.Shift = e.Shift;
-            }
-
             protected override void OnKeyDown(KeyboardKeyEventArgs e)
             {
-                _openTkKeyBuffer.Press(e.Key);
-                UpdateKey(e);
+                _openTkKeyBuffer.Press(e);
                 base.OnKeyDown(e);
-            }
-
-            protected override void OnKeyPress(KeyPressEventArgs e)
-            {
-                _openTkKeyBuffer.Press(e.KeyChar);
-                base.OnKeyPress(e);
             }
 
             protected override void OnUpdateFrame(FrameEventArgs e)

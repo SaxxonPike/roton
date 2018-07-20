@@ -14,8 +14,8 @@ namespace Roton.Emulation.Super
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
 
-        public SuperHud(IEngine engine, ITerminal terminal)
-            : base(engine)
+        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll)
+            : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;

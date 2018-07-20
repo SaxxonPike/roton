@@ -71,7 +71,7 @@ namespace Roton.Emulation.Core
         void PushThroughTransporter(IXyPair location, IXyPair vector);
         void PutTile(IXyPair location, IXyPair vector, ITile kind);
         void RaiseError(string error);
-        EngineKeyCode ReadKey();
+        void ReadInput();
         void RemoveActor(int index);
         void RemoveItem(IXyPair location);
         IXyPair Rnd();
@@ -102,5 +102,6 @@ namespace Roton.Emulation.Core
         IMemory Memory { get; }
         void StepOnce();
         string[] GetMessageLines();
+        bool ThreadActive { get; }
     }
 }

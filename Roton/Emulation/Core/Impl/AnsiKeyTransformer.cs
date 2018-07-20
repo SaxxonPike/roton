@@ -26,7 +26,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private static readonly IDictionary<AnsiKey, AnsiKeyMap> _map = new Dictionary<AnsiKey, AnsiKeyMap>
+        private static readonly IDictionary<AnsiKey, AnsiKeyMap> Map = new Dictionary<AnsiKey, AnsiKeyMap>
         {
             {AnsiKey.None, new AnsiKeyMap(new byte[] {}, new byte[] {}, new byte[] {}, new byte[] {})},
             {AnsiKey.A, new AnsiKeyMap(new byte[] {97}, new byte[] {65}, new byte[] {1}, new byte[] {0, 30})},
@@ -123,20 +123,13 @@ namespace Roton.Emulation.Core.Impl
             {AnsiKey.Pause, new AnsiKeyMap(new byte[] {}, new byte[] {}, new byte[] {0, 0}, new byte[] {})},
         };
 
-        public IEnumerable<byte> GetBytes(AnsiKey ansiKey, AnsiKeyModifier ansiKeyModifier)
+        public IEnumerable<byte> GetBytes(IKeyPress keyPress)
         {
-            var map = _map.ContainsKey(ansiKey) ? _map[ansiKey] : _map[AnsiKey.None];
-            switch (ansiKeyModifier)
-            {
-                case AnsiKeyModifier.Shift:
-                    return map.Shift;
-                case AnsiKeyModifier.Ctrl:
-                    return map.Ctrl;
-                case AnsiKeyModifier.Alt:
-                    return map.Alt;
-                default:
-                    return map.Natural;
-            }
+            var map = Map.ContainsKey(keyPress.Key) ? Map[keyPress.Key] : Map[AnsiKey.None];
+            return keyPress.Shift ? map.Shift :
+                keyPress.Control ? map.Ctrl :
+                keyPress.Alt ? map.Alt :
+                map.Natural;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Roton.Emulation.Core
         void RedrawBoard();
         string SaveGame();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);
-        IScrollResult ShowScroll(IEnumerable<string> lines);
+        IScrollResult ShowScroll(params string[] lines);
         void UpdateBorder();
         void UpdateCamera();
         void UpdateStatus();

@@ -1,3 +1,4 @@
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -135,7 +136,7 @@ namespace Roton.Emulation.Super
                     break;
                 default:
                     _engine.State.KeyVector.SetTo(0, 0);
-                    _engine.Hud.ShowScroll(context.Message);
+                    _engine.Hud.ShowScroll(context.Message.ToArray());
                     break;
             }
         }

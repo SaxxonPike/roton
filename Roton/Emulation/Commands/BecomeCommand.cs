@@ -21,7 +21,7 @@ namespace Roton.Emulation.Commands
             var kind = _engine.Parser.GetKind(context);
             if (kind == null)
             {
-                _engine.RaiseError($"Bad #BECOME");
+                _engine.RaiseError("Bad #BECOME");
                 return;
             }
 
