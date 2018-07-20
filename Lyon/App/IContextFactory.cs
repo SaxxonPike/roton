@@ -6,6 +6,6 @@ namespace Lyon.App
 {
     public interface IContextFactory
     {
-        IContext Create(ContextEngine contextEngine, IFileSystem fileSystem, IConfig config);
+        IContext Create(ContextEngine contextEngine, IConfig config);
     }
 }

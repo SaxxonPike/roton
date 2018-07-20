@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl
 
     [ContextEngine(ContextEngine.Original)]
     [ContextEngine(ContextEngine.Super)]
-    public class AnsiKeyTransformer : IAnsiKeyTransformer
+    public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
     {
         private class AnsiKeyMap
         {

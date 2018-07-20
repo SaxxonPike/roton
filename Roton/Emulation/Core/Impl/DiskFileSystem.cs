@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class DiskFileSystem : IFileSystem
+    public sealed class DiskFileSystem : IFileSystem
     {
         private readonly string _basePath;
 
@@ -18,6 +18,12 @@ namespace Roton.Emulation.Core.Impl
             _basePath = basePath ?? Environment.CurrentDirectory;
         }
 
+        public bool IsWriteable => true;
+
+        public bool FileExists(string path) => File.Exists(Path.IsPathRooted(path)
+            ? path
+            : Path.Combine(_basePath, path));
+
         public byte[] GetFile(string path)
         {
             return File.ReadAllBytes(Path.IsPathRooted(path)
@@ -28,8 +34,8 @@ namespace Roton.Emulation.Core.Impl
         public IEnumerable<string> GetFileNames(string path)
         {
             return Directory.GetFiles(Path.IsPathRooted(path)
-                ? path
-                : Path.Combine(_basePath, path))
+                    ? path
+                    : Path.Combine(_basePath, path))
                 .Select(p => new FileInfo(p).Name);
         }
 

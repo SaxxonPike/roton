@@ -6,7 +6,6 @@ using AutoFixture.Dsl;
 using Lyon.App;
 using Moq;
 using NUnit.Framework;
-using OpenTK.Input;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
@@ -31,7 +30,7 @@ namespace Roton.Test.Infrastructure
         }
 
         protected IContext Context { get; private set; }
-        protected TestFileSystem FileSystem { get; private set; }
+        protected FixedFileSystem FileSystem { get; private set; }
         protected Config Config { get; private set; }
         protected Mock<ITerminal> TerminalMock { get; private set; }
         protected TestKeyboard Keyboard { get; private set; }
@@ -79,7 +78,7 @@ namespace Roton.Test.Infrastructure
         public void __SetUpContext()
         {
             // Test dependencies
-            FileSystem = new TestFileSystem();
+            FileSystem = new FixedFileSystem(true);
             Config = new Config();
             TerminalMock = new Mock<ITerminal>();
             Keyboard = new TestKeyboard();
@@ -95,7 +94,7 @@ namespace Roton.Test.Infrastructure
 
             // Inner container
             var contextFactory = new ContextFactory(container);
-            Context = contextFactory.Create(ContextEngine, FileSystem, Config);
+            Context = contextFactory.Create(ContextEngine, Config);
 
             // Preconfiguration
             Engine.ClearWorld();

@@ -6,7 +6,6 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Draws;
-using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;

@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Infrastructure
 {

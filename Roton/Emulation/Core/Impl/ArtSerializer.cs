@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl
 {
     [ContextEngine(ContextEngine.Super)]
-    public class ArtSerializer : IArtSerializer
+    public sealed class ArtSerializer : IArtSerializer
     {
         private readonly IMemory _memory;
         private readonly ITerminal _terminal;

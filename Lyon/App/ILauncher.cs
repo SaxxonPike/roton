@@ -6,6 +6,6 @@ namespace Lyon.App
 {
     public interface ILauncher
     {
-        void Launch(ContextEngine contextEngine, IFileSystem fileSystem, IConfig config);
+        void Launch(ContextEngine contextEngine, IConfig config);
     }
 }

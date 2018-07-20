@@ -12,10 +12,9 @@ namespace Roton.Interface.Video.Scenes.Composition
         private readonly AnsiChar _blankCharacter;
         private readonly Encoding _codePage437 = Encoding.GetEncoding(437);
 
-        public SceneComposer(int columns, int rows)
+        public SceneComposer()
         {
             _blankCharacter = new AnsiChar();
-            SetSize(columns, rows, false);
         }
 
         public virtual void SetSize(int width, int height, bool wide)

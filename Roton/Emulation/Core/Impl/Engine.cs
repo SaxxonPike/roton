@@ -41,6 +41,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IMemory> _memory;
         private readonly Lazy<IHeap> _heap;
         private readonly Lazy<IAnsiKeyTransformer> _ansiKeyTransformer;
+        private readonly Lazy<IScrollFormatter> _scrollFormatter;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
@@ -70,7 +71,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
-            Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer)
+            Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter)
         {
             _clock = clock;
             _actors = actors;
@@ -107,6 +108,7 @@ namespace Roton.Emulation.Core.Impl
             _memory = memory;
             _heap = heap;
             _ansiKeyTransformer = ansiKeyTransformer;
+            _scrollFormatter = scrollFormatter;
         }
 
         private IBoards Boards => _boards.Value;
@@ -128,6 +130,8 @@ namespace Roton.Emulation.Core.Impl
         private IInterpreter Interpreter => _interpreter.Value;
 
         private IKeyboard Keyboard => _keyboard.Value;
+
+        private IScrollFormatter ScrollFormatter => _scrollFormatter.Value;
 
         private ITimers Timers => _timers.Value;
 
@@ -694,6 +698,11 @@ namespace Roton.Emulation.Core.Impl
 
         public IItemList ItemList => _items.Value;
 
+        private void ShowFormattedScroll(string error)
+        {
+            Hud.ShowScroll(ScrollFormatter.Format(error));
+        }
+
         public void LoadWorld(string name)
         {
             byte[] TryLoadWorld()
@@ -704,7 +713,7 @@ namespace Roton.Emulation.Core.Impl
                 }
                 catch (IOException e)
                 {
-                    Hud.ShowScroll();
+                    ShowFormattedScroll(e.ToString());
                     return new byte[0];
                 }
             }
@@ -1109,6 +1118,18 @@ namespace Roton.Emulation.Core.Impl
 
         public void ShowHelp(string filename)
         {
+            try
+            {
+                var text = Disk
+                    .GetFile($"{filename}.HLP")
+                    .ToStringValue()
+                    .Split('\xD');
+                Hud.ShowScroll(text);
+            }
+            catch (Exception e)
+            {
+                ShowFormattedScroll(e.ToString());
+            }
         }
 
         public void ShowInGameHelp()
@@ -1765,7 +1786,11 @@ namespace Roton.Emulation.Core.Impl
 
             ClearWorld();
 
-            if (Facts.ConfigFileName != null)
+            if (Config.DefaultWorld != null)
+            {
+                State.DefaultWorldName = Config.DefaultWorld;
+            }
+            else if (Facts.ConfigFileName != null)
             {
                 var zztCfg = Disk.GetFile(Facts.ConfigFileName);
                 if (zztCfg != null && zztCfg.Length > 0)
@@ -1835,13 +1860,16 @@ namespace Roton.Emulation.Core.Impl
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
                     MainLoop(gameEnded, false);
-                    if (!ThreadActive) break;
+                    
+                    if (!ThreadActive) 
+                        break;
 
-                    var hotkey = State.KeyPressed;
                     var startPlaying = Features.HandleTitleInput();
-                    if (startPlaying) gameEnded = PlayWorld();
+                    if (startPlaying) 
+                        gameEnded = PlayWorld();
 
-                    if (gameEnded || State.QuitEngine) break;
+                    if (gameEnded || State.QuitEngine) 
+                        break;
                 }
 
                 if (State.QuitEngine) break;

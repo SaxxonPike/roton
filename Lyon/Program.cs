@@ -2,6 +2,7 @@
 using Autofac;
 using Lyon.App;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
 using Roton.Interface.Infrastructure;
 using Roton.Interface.Input;
@@ -25,6 +26,10 @@ namespace Lyon
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterInstance(new CommandLine {Args = args})
+                .As<ICommandLine>()
+                .SingleInstance();
+
             Register(builder);
 
             var container = builder.Build();
@@ -39,7 +44,7 @@ namespace Lyon
             builder.RegisterType<AssemblyResourceService>()
                 .As<IAssemblyResourceService>()
                 .SingleInstance();
-            
+
             builder.RegisterType<InterfaceResourceService>()
                 .As<IInterfaceResourceService>()
                 .SingleInstance();
@@ -51,6 +56,7 @@ namespace Lyon
                     var resource = e.Context.Resolve<IInterfaceResourceService>();
                     e.Instance.SetFont(resource.GetFontData());
                     e.Instance.SetPalette(resource.GetPaletteData());
+                    e.Instance.SetScene(80, 25, false);
                 })
                 .SingleInstance();
 

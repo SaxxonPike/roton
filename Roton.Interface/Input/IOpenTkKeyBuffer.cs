@@ -1,6 +1,5 @@
 ﻿using OpenTK.Input;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 
 namespace Roton.Interface.Input
 {

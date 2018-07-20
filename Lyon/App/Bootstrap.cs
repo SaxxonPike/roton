@@ -21,21 +21,18 @@ namespace Lyon.App
                 ? args[0]
                 : null;
 
-            var fileSystem = fileName != null
-                ? _fileSystemFactory.Create(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName))
-                : _fileSystemFactory.Create(Environment.CurrentDirectory, null);
-
             var config = new Config
             {
                 DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
-                RandomSeed = null
+                RandomSeed = null,
+                HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory
             };
 
             if (fileName == null || fileName.EndsWith(".zzt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.Original, fileSystem, config);
+                _launcher.Launch(ContextEngine.Original, config);
 
             else if (fileName.EndsWith(".szt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.Super, fileSystem, config);
+                _launcher.Launch(ContextEngine.Super, config);
         }
     }
 }

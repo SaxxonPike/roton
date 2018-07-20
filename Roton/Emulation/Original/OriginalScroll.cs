@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original
 {
     [ContextEngine(ContextEngine.Original)]
-    public class OriginalScroll : Scroll
+    public sealed class OriginalScroll : Scroll
     {
         private readonly IEngine _engine;
 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
@@ -20,5 +22,10 @@ namespace Roton.Emulation.Super
 
         public byte[] GetMemoryData() 
             => _resource.System.GetFile("memory-szzt.bin");
+        
+        public IDictionary<string, byte[]> GetStaticFiles()
+            => _resource.Root
+                .GetFileNames("")
+                .ToDictionary(f => f, f => _resource.Root.GetFile(f));
     }
 }

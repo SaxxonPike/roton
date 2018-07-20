@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
@@ -118,7 +117,7 @@ namespace Roton.Emulation.Core.Impl
             {
                 _engine.WaitForTick();
                 _engine.ReadInput();
-                switch (_engine.State.KeyPressed)
+                switch (_engine.State.KeyPressed.ToUpperCase())
                 {
                     case EngineKeyCode.Y:
                         return true;

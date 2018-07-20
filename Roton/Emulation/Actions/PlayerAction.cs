@@ -125,8 +125,7 @@ namespace Roton.Emulation.Actions
 
             // Hotkey logic
 
-            var hotkey = _engine.State.KeyPressed;
-            switch (hotkey)
+            switch (_engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Q:
                 case EngineKeyCode.Escape:

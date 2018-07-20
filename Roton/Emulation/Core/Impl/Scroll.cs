@@ -113,7 +113,6 @@ namespace Roton.Emulation.Core.Impl
             var top = Top + 3;
             var lineCount = message.Count;
             var x = Left + 3;
-            var right = Left + Width - 3;
             var y = top;
 
             while (y <= bottom)
@@ -178,5 +177,9 @@ namespace Roton.Emulation.Core.Impl
                 SelectedLine = line
             };
         }
+
+        public int TextWidth => Width - 4;
+
+        public int TextHeight => Height - 4;
     }
 }

@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super
 {
     [ContextEngine(ContextEngine.Super)]
-    public class SuperScroll : Scroll
+    public sealed class SuperScroll : Scroll
     {
         private readonly ITerminal _terminal;
 

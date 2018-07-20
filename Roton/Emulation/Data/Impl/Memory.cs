@@ -7,7 +7,7 @@ namespace Roton.Emulation.Data.Impl
     [ContextEngine(ContextEngine.Super)]
     public sealed class Memory : IMemory
     {
-        public Memory(IHeap heap)
+        public Memory()
         {
             Bytes = new byte[Length];
             Reset();

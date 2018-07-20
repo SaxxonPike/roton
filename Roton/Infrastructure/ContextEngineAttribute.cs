@@ -4,7 +4,7 @@ using Roton.Emulation.Data.Impl;
 namespace Roton.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ContextEngineAttribute : Attribute
+    public sealed class ContextEngineAttribute : Attribute
     {
         public ContextEngine ContextEngine { get; }
         public string Name { get; }

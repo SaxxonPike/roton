@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Emulation.Core.Impl;
 
 namespace Roton.Emulation.Core
 {

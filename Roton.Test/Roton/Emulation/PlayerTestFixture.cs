@@ -3,7 +3,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Infrastructure;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation

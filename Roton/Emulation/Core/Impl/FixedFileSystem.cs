@@ -5,32 +5,34 @@ namespace Roton.Emulation.Core.Impl
 {
     public sealed class FixedFileSystem : IFileSystem
     {
-        private readonly IFileSystem _fallbackFileSystem;
         private readonly IDictionary<string, byte[]> _files;
 
-        public FixedFileSystem(IDictionary<string, byte[]> files = null, IFileSystem fallback = null)
+        public FixedFileSystem(bool writeable, IDictionary<string, byte[]> files = null)
         {
-            _fallbackFileSystem = fallback;
             _files = files ?? new Dictionary<string, byte[]>();
+            IsWriteable = writeable;
+        }
+
+        public bool IsWriteable { get; }
+
+        public bool FileExists(string path)
+        {
+            return _files.ContainsKey(path);
         }
 
         public byte[] GetFile(string path)
         {
-            if (path == null)
-                return null;
-            
-            return _files.ContainsKey(path) ? _files[path] : _fallbackFileSystem.GetFile(path);
+            return path == null ? null : _files[path];
         }
 
         public IEnumerable<string> GetFileNames(string path)
         {
-            return _files.Keys.Concat(_fallbackFileSystem?.GetFileNames(path) ?? Enumerable.Empty<string>());
+            return _files.Keys;
         }
 
         public void PutFile(string path, byte[] data)
         {
             _files[path] = data.ToArray();
-            _fallbackFileSystem.PutFile(path, data);
         }
     }
 }
