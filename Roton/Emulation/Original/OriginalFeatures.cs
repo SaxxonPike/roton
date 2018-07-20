@@ -135,6 +135,11 @@ namespace Roton.Emulation.Original
             return new[] {_engine.State.Message};
         }
 
+        public void ShowAbout()
+        {
+            _engine.ShowHelp("ABOUT");
+        }
+
         public bool HandleTitleInput()
         {
             switch (_engine.State.KeyPressed.ToUpperCase())

@@ -128,7 +128,7 @@ namespace Roton.Test.Infrastructure
 
         protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
-        protected void Type(AnsiKey ekc) => Keyboard.Type(new KeyPress {Key = ekc});
+        protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress {Key = ekc});
 
         protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
 

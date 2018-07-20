@@ -189,5 +189,9 @@ namespace Roton.Emulation.Super
                 ? new[] {string.Empty, _engine.State.Message} 
                 : new[] {_engine.State.Message, _engine.State.Message2};
         }
+
+        public void ShowAbout()
+        {
+        }
     }
 }

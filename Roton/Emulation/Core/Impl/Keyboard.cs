@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Roton.Emulation.Core.Impl
 {
@@ -17,7 +18,13 @@ namespace Roton.Emulation.Core.Impl
                 ? _queue.Dequeue()
                 : null;
 
+        public int BufferLength
+            => _queue.Count;
+
         protected void Enqueue(IKeyPress keyPress)
-            => _queue.Enqueue(keyPress);
+        {
+            if (_queue.Count(q => q.Key == keyPress.Key) < 3)
+                _queue.Enqueue(keyPress);
+        }
     }
 }

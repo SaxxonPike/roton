@@ -718,7 +718,12 @@ namespace Roton.Emulation.Core.Impl
                 }
             }
 
-            using (var stream = new MemoryStream(TryLoadWorld()))
+            var worldData = TryLoadWorld();
+
+            if (worldData == null || worldData.Length == 0)
+                return;
+
+            using (var stream = new MemoryStream(worldData))
             {
                 if (stream.Length == 0)
                     return;
@@ -1771,10 +1776,7 @@ namespace Roton.Emulation.Core.Impl
                 result.Y = 0;
         }
 
-        private void ShowAbout()
-        {
-            ShowHelp("ABOUT");
-        }
+        private void ShowAbout() => Features.ShowAbout();
 
         private void StartInit()
         {
