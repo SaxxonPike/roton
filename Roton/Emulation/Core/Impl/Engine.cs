@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
@@ -711,7 +712,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     return Disk.GetFile(Features.GetWorldName(name));
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     ShowFormattedScroll(e.ToString());
                     return new byte[0];
@@ -1810,6 +1811,7 @@ namespace Roton.Emulation.Core.Impl
 
         private void StartMain()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             ValidateDependencies();
             StartInit();
             TitleScreenLoop();

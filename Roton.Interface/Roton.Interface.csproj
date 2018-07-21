@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="3.0.0" />
-    <PackageReference Include="OpenTK.GLControl" Version="3.0.0" />
+    <PackageReference Include="OpenTK.NETCore" Version="1.1.2749.6433" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\resources.zip" />
