@@ -37,24 +37,10 @@ namespace Lyon.App
                 _presenter.UpdateViewport();
             }
 
-            private void UpdateKey(KeyboardKeyEventArgs e)
-            {
-                _openTkKeyBuffer.Alt = e.Alt;
-                _openTkKeyBuffer.Control = e.Control;
-                _openTkKeyBuffer.Shift = e.Shift;
-            }
-
             protected override void OnKeyDown(KeyboardKeyEventArgs e)
             {
-                _openTkKeyBuffer.Press(e.Key);
-                UpdateKey(e);
+                _openTkKeyBuffer.Press(e);
                 base.OnKeyDown(e);
-            }
-
-            protected override void OnKeyPress(KeyPressEventArgs e)
-            {
-                _openTkKeyBuffer.Press(e.KeyChar);
-                base.OnKeyPress(e);
             }
 
             protected override void OnUpdateFrame(FrameEventArgs e)
@@ -105,9 +91,9 @@ namespace Lyon.App
             SetSize(e.Width, e.Height, e.Wide);
         }
 
-        public void Launch(ContextEngine contextEngine, IFileSystem fileSystem, IConfig config)
+        public void Launch(ContextEngine contextEngine, IConfig config)
         {
-            var context = _contextFactory.Create(contextEngine, fileSystem, config);
+            var context = _contextFactory.Create(contextEngine, config);
             _window = _window ?? new Window(_composerProxy, context, _keyboard);
             _window.Run();
             context.Stop();

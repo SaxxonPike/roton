@@ -111,7 +111,7 @@ namespace Roton.Emulation.Core.Impl
             var savedCode = new Dictionary<int, int>();
 
             // backed up memory (so we don't modify the working version)
-            var mem = new Memory(_heap);
+            var mem = new Memory();
             mem.Write(ActorDataOffset, _memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
 
             for (var i = 0; i <= count; i++)

@@ -9,7 +9,7 @@ namespace Roton.Emulation.Core.Impl
         public Resource(byte[] data)
         {
             if (data == null || data.Length == 0)
-                throw new Exception($"Can't resolve resource.");
+                throw new Exception("Can\'t resolve resource.");
             _data = data;
         }
         

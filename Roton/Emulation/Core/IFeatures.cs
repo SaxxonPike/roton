@@ -20,5 +20,6 @@ namespace Roton.Emulation.Core
         void CleanUpPassageMovement();
         void ForcePlayerColor(int index);
         string[] GetMessageLines();
+        void ShowAbout();
     }
 }

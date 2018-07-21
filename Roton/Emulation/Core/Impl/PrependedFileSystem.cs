@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class PrependedFileSystem : IFileSystem
+    public sealed class PrependedFileSystem : IFileSystem
     {
         private readonly IFileSystem _baseFileSystem;
         private readonly string _basePath;
@@ -12,6 +12,11 @@ namespace Roton.Emulation.Core.Impl
             _baseFileSystem = baseFileSystem;
             _basePath = basePath;
         }
+
+        public bool IsWriteable => _baseFileSystem.IsWriteable;
+
+        public bool FileExists(string path)
+            => _baseFileSystem.FileExists($"{_basePath}{path}");
 
         public byte[] GetFile(string path) 
             => _baseFileSystem.GetFile($"{_basePath}{path}");

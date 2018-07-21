@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
@@ -8,10 +7,12 @@ namespace Roton.Emulation.Core.Impl
     public abstract class Hud : IHud
     {
         private readonly IEngine _engine;
+        private readonly IScroll _scroll;
 
-        protected Hud(IEngine engine)
+        protected Hud(IEngine engine, IScroll scroll)
         {
             _engine = engine;
+            _scroll = scroll;
         }
 
         public virtual void ClearPausing()
@@ -95,14 +96,8 @@ namespace Roton.Emulation.Core.Impl
             return currentValue;
         }
 
-        public virtual IScrollResult ShowScroll(IEnumerable<string> lines)
-        {
-            // TODO: Actually implement scroll window
-            
-            // Fallback scroll implementation
-            //MessageBox.Show(string.Join(Environment.NewLine, lines));
-            return new ScrollResult {SelectedLine = -1};
-        }
+        public IScrollResult ShowScroll(params string[] lines) 
+            => _scroll.Show(lines);
 
         public virtual void UpdateBorder()
         {
@@ -121,8 +116,8 @@ namespace Roton.Emulation.Core.Impl
             while (true)
             {
                 _engine.WaitForTick();
-                var key = _engine.ReadKey();
-                switch (key)
+                _engine.ReadInput();
+                switch (_engine.State.KeyPressed.ToUpperCase())
                 {
                     case EngineKeyCode.Y:
                         return true;

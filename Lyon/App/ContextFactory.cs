@@ -31,10 +31,9 @@ namespace Lyon.App
                 default:
                     throw new Exception($"Unknown {nameof(ContextEngine)}: {contextEngine}");
             }
-
         }
 
-        public IContext Create(ContextEngine contextEngine, IFileSystem fileSystem, IConfig config)
+        public IContext Create(ContextEngine contextEngine, IConfig config)
         {
             var scope = _rootLifetimeScope.BeginLifetimeScope(builder =>
             {
@@ -44,8 +43,11 @@ namespace Lyon.App
                 builder.RegisterTypes(contextMetadataService.GetTypes().ToArray())
                     .AsImplementedInterfaces()
                     .SingleInstance();
-                
-                builder.RegisterInstance(fileSystem).As<IFileSystem>().SingleInstance();
+
+                builder.Register(c => c.Resolve<IFileSystemFactory>().Create(config.HomePath))
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+
                 builder.RegisterInstance(config).As<IConfig>().SingleInstance();
             });
 

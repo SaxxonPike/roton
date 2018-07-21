@@ -92,9 +92,4 @@ namespace Roton.Emulation.Core.Impl
             Initialized = false;
         }
     }
-
-    public interface IClock
-    {
-        int Tick { get; }
-    }
 }

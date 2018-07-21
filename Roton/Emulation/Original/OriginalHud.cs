@@ -14,8 +14,8 @@ namespace Roton.Emulation.Original
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
 
-        public OriginalHud(IEngine engine, ITerminal terminal)
-            : base(engine)
+        public OriginalHud(IEngine engine, ITerminal terminal, IScroll scroll)
+            : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;

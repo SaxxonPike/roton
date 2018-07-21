@@ -1,17 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Lyon.App;
 using Moq;
 using NUnit.Framework;
-using OpenTK.Input;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
@@ -19,6 +19,7 @@ using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
+using Random = System.Random;
 
 namespace Roton.Test.Infrastructure
 {
@@ -30,7 +31,7 @@ namespace Roton.Test.Infrastructure
         }
 
         protected IContext Context { get; private set; }
-        protected TestFileSystem FileSystem { get; private set; }
+        protected FixedFileSystem FileSystem { get; private set; }
         protected Config Config { get; private set; }
         protected Mock<ITerminal> TerminalMock { get; private set; }
         protected TestKeyboard Keyboard { get; private set; }
@@ -70,15 +71,17 @@ namespace Roton.Test.Infrastructure
 
         protected void StepAllKeys()
         {
-            while (State.KeyPressed != 0 || Keyboard.HasKey)
+            while (State.KeyPressed != 0 || Keyboard.KeyIsAvailable)
                 Step();
         }
         
         [SetUp]
         public void __SetUpContext()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            
             // Test dependencies
-            FileSystem = new TestFileSystem();
+            FileSystem = new FixedFileSystem(true);
             Config = new Config();
             TerminalMock = new Mock<ITerminal>();
             Keyboard = new TestKeyboard();
@@ -94,7 +97,7 @@ namespace Roton.Test.Infrastructure
 
             // Inner container
             var contextFactory = new ContextFactory(container);
-            Context = contextFactory.Create(ContextEngine, FileSystem, Config);
+            Context = contextFactory.Create(ContextEngine, Config);
 
             // Preconfiguration
             Engine.ClearWorld();
@@ -128,7 +131,7 @@ namespace Roton.Test.Infrastructure
 
         protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
-        protected void Type(EngineKeyCode ekc) => Keyboard.Type(new KeyPress {Code = ekc});
+        protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress {Key = ekc});
 
         protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
 

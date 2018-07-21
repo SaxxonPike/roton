@@ -34,6 +34,18 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
+        // TODO: make zips writeable
+        public bool IsWriteable => false;
+
+        public bool FileExists(string path)
+        {
+            using (var archiveStream = new MemoryStream(_file))
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
+            {
+                return archive.Entries.Any(e => e.FullName.Equals(path));
+            }            
+        }
+
         public byte[] GetFile(string filename)
         {
             using (var archiveStream = new MemoryStream(_file))

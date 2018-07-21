@@ -42,7 +42,7 @@ namespace Lyon.App
 
             _sceneComposer = new Lazy<IBitmapSceneComposer>(() =>
             {
-                var result = new BitmapSceneComposer(GlyphComposer, PaletteComposer, width, height);
+                var result = new BitmapSceneComposer(GlyphComposer, PaletteComposer);
                 result.AfterSetSize += (sender, e) => AfterSetSize?.Invoke(sender, e);
                 return result;
             });

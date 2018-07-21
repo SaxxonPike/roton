@@ -1,3 +1,4 @@
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -53,7 +54,7 @@ namespace Roton.Emulation.Original
             else
             {
                 _engine.State.KeyVector.SetTo(0, 0);
-                _engine.Hud.ShowScroll(context.Message);
+                _engine.Hud.ShowScroll(context.Message.ToArray());
             }
         }
 
@@ -134,9 +135,14 @@ namespace Roton.Emulation.Original
             return new[] {_engine.State.Message};
         }
 
+        public void ShowAbout()
+        {
+            _engine.ShowHelp("ABOUT");
+        }
+
         public bool HandleTitleInput()
         {
-            switch (_engine.State.KeyPressed)
+            switch (_engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.P:
                     return true;

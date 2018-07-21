@@ -1,31 +1,25 @@
-﻿using System.Collections.Generic;
-using System.IO;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
+using Roton.Infrastructure;
 
 namespace Lyon.App
 {
     public class FileSystemFactory : IFileSystemFactory
     {
-        public IFileSystem Create(string path, string defaultWorld)
-        {
-            var files = new Dictionary<string, byte[]>
-            {
-                ["ZZT.CFG"] = GetBytes(defaultWorld ?? string.Empty)
-            };
-            
-            return new FixedFileSystem(files, new DiskFileSystem(path));
-        }
+        private readonly IAssemblyResourceService _assemblyResourceService;
 
-        private byte[] GetBytes(string contents)
+        public FileSystemFactory(IAssemblyResourceService assemblyResourceService)
         {
-            using (var output = new MemoryStream())
-            using (var config = new StreamWriter(output))
+            _assemblyResourceService = assemblyResourceService;
+        }
+        
+        public IFileSystem Create(string path)
+        {
+            return new AggregateFileSystem(new[]
             {
-                config.Write(contents);
-                config.Flush();
-                return output.ToArray();
-            }            
+                new DiskFileSystem(path),
+                _assemblyResourceService.GetFromAssemblyOf<IEngine>().Root
+            });
         }
     }
 }

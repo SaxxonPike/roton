@@ -84,6 +84,14 @@ namespace Roton.Emulation.Infrastructure
         }
 
         /// <summary>
+        ///     Get the uppercase representation of an input key.
+        /// </summary>
+        public static EngineKeyCode ToUpperCase(this EngineKeyCode value)
+        {
+            return (EngineKeyCode) ((int) value).ToUpperCase();
+        }
+
+        /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as a byte.
         /// </summary>
         public static int ToUpperCase(this byte value)

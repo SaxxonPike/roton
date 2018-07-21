@@ -17,9 +17,7 @@ namespace Roton.Interface.Video.Scenes.Composition
 
         public BitmapSceneComposer(
             IGlyphComposer glyphComposer,
-            IPaletteComposer paletteComposer,
-            int columns,
-            int rows) : base(columns, rows)
+            IPaletteComposer paletteComposer)
         {
             _glyphComposer = new CachedGlyphComposer(glyphComposer);
             _colors = paletteComposer.ComposeAllColors().Select(c => c.ToArgb()).ToArray();

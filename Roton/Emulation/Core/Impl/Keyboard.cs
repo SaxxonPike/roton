@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Roton.Emulation.Core;
+using System.Linq;
 
-namespace Roton.Test.Infrastructure
+namespace Roton.Emulation.Core.Impl
 {
-    public class TestKeyboard : IKeyboard
+    public abstract class Keyboard : IKeyboard
     {
         private readonly Queue<IKeyPress> _queue = new Queue<IKeyPress>();
 
@@ -21,7 +21,10 @@ namespace Roton.Test.Infrastructure
         public int BufferLength
             => _queue.Count;
 
-        public void Press(IKeyPress keyPress)
-            => _queue.Enqueue(keyPress);
+        protected void Enqueue(IKeyPress keyPress)
+        {
+            if (_queue.Count(q => q.Key == keyPress.Key) < 3)
+                _queue.Enqueue(keyPress);
+        }
     }
 }
