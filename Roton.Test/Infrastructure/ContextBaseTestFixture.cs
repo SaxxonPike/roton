@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
@@ -77,6 +78,8 @@ namespace Roton.Test.Infrastructure
         [SetUp]
         public void __SetUpContext()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            
             // Test dependencies
             FileSystem = new FixedFileSystem(true);
             Config = new Config();
