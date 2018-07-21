@@ -7,12 +7,10 @@ namespace Lyon.App
     public class Bootstrap : IBootstrap
     {
         private readonly ILauncher _launcher;
-        private readonly IFileSystemFactory _fileSystemFactory;
 
-        public Bootstrap(ILauncher launcher, IFileSystemFactory fileSystemFactory)
+        public Bootstrap(ILauncher launcher)
         {
             _launcher = launcher;
-            _fileSystemFactory = fileSystemFactory;
         }
 
         public void Boot(string[] args)

@@ -98,7 +98,7 @@ namespace Roton.Emulation.Core.Impl
 
         private void RenderBlank(int y)
         {
-            var x = Left + 3;
+            var x = Left + 2;
             var right = Left + Width - 3;
             var blank = new AnsiChar(0x20, 0x1E);
             
@@ -106,9 +106,16 @@ namespace Roton.Emulation.Core.Impl
                 _terminal.Plot(x2, y, blank);                                
         }
 
+        private void RenderPips(int y)
+        {
+            _terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
+            _terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
+        }
+
         private void RenderContent(IList<string> message, int offset)
         {
-            var line = offset - (Height - 4) / 2;
+            var center = (Height - 4) / 2;
+            var line = offset - center;
             var bottom = Height + Top - 2;
             var top = Top + 3;
             var lineCount = message.Count;
@@ -120,10 +127,24 @@ namespace Roton.Emulation.Core.Impl
                 RenderBlank(y);
                 if (line >= 0 && line < lineCount)
                     _terminal.Write(x, y, message[line], 0x1E);
+                else if (line == -1 || line == lineCount)
+                    RenderDots(y);
                 
                 y++;
                 line++;
             }
+
+            RenderPips(top + center);
+        }
+
+        private void RenderDots(int y)
+        {
+            var x = Left + 7;
+            var right = Left + Width - 3;
+            var dot = new AnsiChar(0x07, 0x1E);
+            
+            for (var x2 = x; x2 <= right; x2 += 5)
+                _terminal.Plot(x2, y, dot);                                
         }
 
         private int MainLoop(IList<string> message)

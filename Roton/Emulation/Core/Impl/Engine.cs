@@ -1721,7 +1721,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void ReadInput()
         {
-            State.KeyShift = false;
+            //State.KeyShift = false;
             State.KeyArrow = false;
             State.KeyPressed = 0;
             State.KeyVector.SetTo(0, 0);
@@ -1731,6 +1731,7 @@ namespace Roton.Emulation.Core.Impl
                 return;
 
             State.KeyPressed = ConvertKey(key);
+            State.KeyShift = key.Shift;
 
             switch (State.KeyPressed)
             {
