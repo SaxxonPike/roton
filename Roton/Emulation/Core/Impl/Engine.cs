@@ -712,7 +712,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     return Disk.GetFile(Features.GetWorldName(name));
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
                     ShowFormattedScroll(e.ToString());
                     return new byte[0];
