@@ -32,11 +32,12 @@ namespace Lyon
 
             Register(builder);
 
-            var container = builder.Build();
-
-            container
-                .Resolve<IBootstrap>()
-                .Boot(args);
+            using (var container = builder.Build())
+            {
+                container
+                    .Resolve<IBootstrap>()
+                    .Boot(args);                
+            }
         }
 
         private static void Register(ContainerBuilder builder)

@@ -196,7 +196,7 @@ namespace Roton.Emulation.Actions
             {
                 if (_engine.World.Health > 0)
                 {
-                    if (_engine.GetPlayerTimeElapsed(100))
+                    if (_engine.Timers.TimeLimit.Clock(100))
                     {
                         _engine.World.TimePassed++;
                         if (_engine.Board.TimeLimit - 10 == _engine.World.TimePassed)

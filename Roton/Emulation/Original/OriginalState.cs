@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -12,7 +13,10 @@ namespace Roton.Emulation.Original
     {
         private readonly IMemory _memory;
 
-        public OriginalState(IMemory memory, IHeap heap, IEngineResourceService engineResourceService)
+        public OriginalState(
+            IMemory memory, 
+            IHeap heap, 
+            IEngineResourceService engineResourceService)
         {
             _memory = memory;
             memory.Write(0x0000, engineResourceService.GetMemoryData());
@@ -21,7 +25,7 @@ namespace Roton.Emulation.Original
             EdgeTile = new MemoryTile(_memory, 0x0074);
             KeyVector = new MemoryVector(_memory, 0x7C68);
             LineChars = new ByteString(_memory, 0x0098);
-            SoundBuffer = new Int16List(_memory, 0x7E91, 127);
+            SoundBuffer = new SoundBufferList(memory, 0x7E90);
             StarChars = new ByteString(_memory, 0x0336);
             TransporterHChars = new ByteString(_memory, 0x0236);
             TransporterVChars = new ByteString(_memory, 0x0136);
@@ -217,13 +221,7 @@ namespace Roton.Emulation.Original
             set => _memory.WriteBool(0x4AC5, value);
         }
 
-        public IList<int> SoundBuffer { get; }
-
-        public int SoundBufferLength
-        {
-            get => _memory.Read8(0x7E90);
-            set => _memory.Write8(0x7E90, value);
-        }
+        public ISoundBufferList SoundBuffer { get; }
 
         public bool SoundPlaying
         {

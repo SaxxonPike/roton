@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [ContextEngine(ContextEngine.Original)]
     [ContextEngine(ContextEngine.Super)]
-    public sealed class Engine : IEngine
+    public sealed class Engine : IEngine, IDisposable
     {
         private readonly Lazy<IActionList> _actionList;
         private readonly Lazy<IActors> _actors;
@@ -43,6 +44,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IHeap> _heap;
         private readonly Lazy<IAnsiKeyTransformer> _ansiKeyTransformer;
         private readonly Lazy<IScrollFormatter> _scrollFormatter;
+        private readonly Lazy<ISpeaker> _speaker;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IFlags> _flags;
@@ -61,9 +63,9 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<ITimers> _timers;
         private readonly Lazy<IWorld> _world;
 
-        private int _clockTick;
+        private int _ticksToRun;
 
-        public Engine(Lazy<IClock> clock, Lazy<IActors> actors, Lazy<IAlerts> alerts, Lazy<IBoard> board,
+        public Engine(Lazy<IClockFactory> clockFactory, Lazy<IActors> actors, Lazy<IAlerts> alerts, Lazy<IBoard> board,
             Lazy<IFileSystem> fileSystem, Lazy<IElementList> elements,
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
@@ -72,9 +74,16 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
-            Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter)
+            Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
+            Lazy<ISpeaker> speaker)
         {
-            _clock = clock;
+            _clock = new Lazy<IClock>(() =>
+            {
+                var clock = clockFactory.Value.Create(10, 718);
+                clock.OnTick += ClockTick;
+                return clock;
+            });
+
             _actors = actors;
             _alerts = alerts;
             _board = board;
@@ -110,21 +119,26 @@ namespace Roton.Emulation.Core.Impl
             _heap = heap;
             _ansiKeyTransformer = ansiKeyTransformer;
             _scrollFormatter = scrollFormatter;
+            _speaker = speaker;
         }
+
+        private void ClockTick(object sender, EventArgs args)
+        {
+            if (_ticksToRun < 3) _ticksToRun++;
+            if (!ThreadActive) Clock.Stop();
+        }
+        
+        private IClock Clock => _clock.Value;
 
         private IBoards Boards => _boards.Value;
 
         private ITile BorderTile => State.BorderTile;
 
-        private IClock Clock => _clock.Value;
-
-        private int ClockBase => Clock.Tick & 0x7FFF;
-
         private IFileSystem Disk => _fileSystem.Value;
 
         private IFeatures Features => _features.Value;
 
-        public IFlags Flags => _flags.Value;
+        private ISpeaker Speaker => _speaker.Value;
 
         private IGameSerializer GameSerializer => _gameSerializer.Value;
 
@@ -134,13 +148,7 @@ namespace Roton.Emulation.Core.Impl
 
         private IScrollFormatter ScrollFormatter => _scrollFormatter.Value;
 
-        private ITimers Timers => _timers.Value;
-
-        private int ClockTick
-        {
-            get => _clockTick;
-            set => _clockTick = value & 0x7FFF;
-        }
+        public ITimers Timers => _timers.Value;
 
         private Thread Thread { get; set; }
 
@@ -277,7 +285,7 @@ namespace Roton.Emulation.Core.Impl
             World.TimePassed = Facts.DefaultTimePassed;
             World.Stones = Facts.DefaultStones;
             World.Keys.Clear();
-            Flags.Clear();
+            World.Flags.Clear();
             SetBoard(0);
             Board.Name = Facts.DefaultBoardTitle;
             World.Name = Facts.DefaultWorldTitle;
@@ -411,7 +419,120 @@ namespace Roton.Emulation.Core.Impl
 
         public ISound EncodeMusic(string music)
         {
-            return new Sound();
+            var speed = 1;
+            var octave = 3;
+            var result = new List<int>();
+            var isNote = false;
+            var note = -1;
+
+            foreach (var c in music.ToUpperInvariant())
+            {
+                if (!isNote)
+                {
+                    note = -1;
+                }
+                else
+                {
+                    switch (c)
+                    {
+                        case '!':
+                            note--;
+                            isNote = false;
+                            continue;
+                        case '#':
+                            note++;
+                            isNote = false;
+                            continue;
+                    }
+
+                    result.Add(note + octave * 12);
+                    result.Add(speed);
+                }
+
+                switch (c)
+                {
+                    case 'T':
+                        speed = 1;
+                        break;
+                    case 'S':
+                        speed = 2;
+                        break;
+                    case 'I':
+                        speed = 4;
+                        break;
+                    case 'Q':
+                        speed = 8;
+                        break;
+                    case 'H':
+                        speed = 16;
+                        break;
+                    case 'W':
+                        speed = 32;
+                        break;
+                    case '.':
+                        speed = speed * 3 / 2;
+                        break;
+                    case '3':
+                        speed = speed / 3;
+                        break;
+                    case '+':
+                        break;
+                    case '-':
+                        break;
+                    case 'C':
+                        note = 0;
+                        isNote = true;
+                        break;
+                    case 'D':
+                        note = 2;
+                        isNote = true;
+                        break;
+                    case 'E':
+                        note = 4;
+                        isNote = true;
+                        break;
+                    case 'F':
+                        note = 5;
+                        isNote = true;
+                        break;
+                    case 'G':
+                        note = 7;
+                        isNote = true;
+                        break;
+                    case 'A':
+                        note = 9;
+                        isNote = true;
+                        break;
+                    case 'B':
+                        note = 11;
+                        isNote = true;
+                        break;
+                    case 'X':
+                        result.Add(0);
+                        result.Add(speed);
+                        break;
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        result.Add(0xF0 | (c - 0x30));
+                        result.Add(speed);
+                        break;
+                }
+            }
+
+            if (isNote)
+            {
+                result.Add(note + octave * 12);
+                result.Add(speed);
+            }
+
+            return new Sound(result.Take(255).ToArray());
         }
 
         public void EnterBoard()
@@ -627,18 +748,6 @@ namespace Roton.Emulation.Core.Impl
             return new Vector(State.Vector4[index], State.Vector4[index + 4]);
         }
 
-        public bool GetPlayerTimeElapsed(int interval)
-        {
-            var result = false;
-            while (GetTimeDifference(ClockTick, State.PlayerTime) > 0)
-            {
-                result = true;
-                State.PlayerTime = (State.PlayerTime + interval) & 0x7FFF;
-            }
-
-            return result;
-        }
-
         public void HandlePlayerInput(IActor actor)
         {
             Features.HandlePlayerInput(actor);
@@ -847,6 +956,21 @@ namespace Roton.Emulation.Core.Impl
 
         public void PlaySound(int priority, ISound sound, int offset, int length)
         {
+            if (State.GameOver)
+                return;
+
+            var soundIsNotPlaying = !State.SoundPlaying;
+            var soundIsMusic = priority == -1;
+            var soundIsHigherPriority = State.SoundPriority != -1 && priority >= State.SoundPriority;
+
+            if (!(soundIsNotPlaying || soundIsMusic || soundIsHigherPriority))
+                return;
+
+            if (!soundIsMusic)
+                State.SoundBuffer.Clear();
+
+            State.SoundBuffer.Enqueue(sound);
+            State.SoundPlaying = true;
         }
 
         public void PlotTile(IXyPair location, ITile tile)
@@ -1204,9 +1328,9 @@ namespace Roton.Emulation.Core.Impl
         {
             if (!ThreadActive)
             {
+                _ticksToRun = 0;
                 ThreadActive = true;
                 Thread = new Thread(StartMain);
-                ClockTick = Clock.Tick;
                 Thread.Start();
             }
         }
@@ -1280,9 +1404,13 @@ namespace Roton.Emulation.Core.Impl
 
         public void WaitForTick()
         {
-            while (ClockTick == ClockBase && ThreadActive) Thread.Sleep(1);
+            if (Clock == null)
+                return;
 
-            ClockTick++;
+            while (_ticksToRun <= 0)
+                Thread.Sleep(1);
+
+            _ticksToRun--;
         }
 
         public IWorld World
@@ -1424,15 +1552,6 @@ namespace Roton.Emulation.Core.Impl
         private IXyPair GetConveyorVector(int index)
         {
             return new Vector(State.Vector8[index], State.Vector8[index + 8]);
-        }
-
-        private int GetTimeDifference(int now, int then)
-        {
-            now &= 0x7FFF;
-            then &= 0x7FFF;
-            if (now < 0x4000 && then >= 0x4000) now += 0x8000;
-
-            return now - then;
         }
 
         private string GetWorldName(string baseName)
@@ -1594,6 +1713,31 @@ namespace Roton.Emulation.Core.Impl
                     Tiles[Player.Location].SetTo(element.Id, element.Color);
                     State.GameOver = false;
                     break;
+                }
+
+                // In the original engine, this has its own interrupt.
+                if (State.SoundPlaying)
+                {
+                    if (State.SoundTicks <= 0)
+                    {
+                        if (State.SoundBuffer.Count > 0)
+                        {
+                            var sound = State.SoundBuffer.Dequeue();
+                            State.SoundTicks = sound.Duration << 2;
+                            if (sound.Note >= 0xF0)
+                                Speaker.PlayDrum(sound.Note - 0xF0);
+                            else
+                                Speaker.PlayNote(sound.Note);
+                        }
+                        else
+                        {
+                            State.SoundPlaying = false;
+                            Speaker.Stop();
+                        }
+                    }
+
+                    if (State.SoundPlaying)
+                        State.SoundTicks--;
                 }
             }
         }
@@ -1808,6 +1952,7 @@ namespace Roton.Emulation.Core.Impl
             }
 
             SetGameMode();
+            Clock.Start();
         }
 
         private void StartMain()
@@ -1865,15 +2010,15 @@ namespace Roton.Emulation.Core.Impl
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
                     MainLoop(gameEnded, false);
-                    
-                    if (!ThreadActive) 
+
+                    if (!ThreadActive)
                         break;
 
                     var startPlaying = Features.HandleTitleInput();
-                    if (startPlaying) 
+                    if (startPlaying)
                         gameEnded = PlayWorld();
 
-                    if (gameEnded || State.QuitEngine) 
+                    if (gameEnded || State.QuitEngine)
                         break;
                 }
 
@@ -1885,6 +2030,11 @@ namespace Roton.Emulation.Core.Impl
         {
             GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             World.BoardIndex = boardIndex;
+        }
+
+        public void Dispose()
+        {
+            Clock?.Dispose();
         }
     }
 }

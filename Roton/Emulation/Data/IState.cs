@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data
@@ -10,7 +11,7 @@ namespace Roton.Emulation.Data
         ITile EdgeTile { get; }
         IXyPair KeyVector { get; }
         IList<int> LineChars { get; }
-        IList<int> SoundBuffer { get; }
+        ISoundBufferList SoundBuffer { get; }
         IList<int> StarChars { get; }
         IList<int> TransporterHChars { get; }
         IList<int> TransporterVChars { get; }
@@ -46,7 +47,6 @@ namespace Roton.Emulation.Data
         int PlayerElement { get; set; }
         int PlayerTime { get; set; }
         bool QuitEngine { get; set; }
-        int SoundBufferLength { get; set; }
         bool SoundPlaying { get; set; }
         int SoundPriority { get; set; }
         int SoundTicks { get; set; }
