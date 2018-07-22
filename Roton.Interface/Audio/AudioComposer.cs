@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 
-namespace Roton.Interface.Audio.Composition
+namespace Roton.Interface.Audio
 {
-    public class AudioComposer : IAudioComposer
+    public class AudioComposer : IAudioComposer, ISpeaker
     {
         private const double AccumulatorMultiplier = 1000;
 
@@ -26,6 +27,7 @@ namespace Roton.Interface.Audio.Composition
         public AudioComposer(IDrumBank drumBank, int outputSampleRate, int samplesPerDrumFrequency)
         {
             _drumBank = drumBank;
+            SampleRate = outputSampleRate;
             _samplesPerDrumFrequency = samplesPerDrumFrequency;
             _accumulatorLimit = (int)(outputSampleRate * AccumulatorMultiplier);
 
@@ -33,64 +35,62 @@ namespace Roton.Interface.Audio.Composition
 
             _frequencyDutyCycleTable =
                 Enumerable.Range(0, 12 * 6)
-                .Select(i => outputSampleRate * AccumulatorMultiplier / (440d * Math.Pow(2d, (i - 33d) / 12)))
+                .Select(i => 2 * outputSampleRate * AccumulatorMultiplier / (440d * Math.Pow(2d, (double)(i - 33) / 12)))
                 .Select(i => (int)i)
                 .ToArray();
-
-            SampleRate = outputSampleRate;
         }
 
         public IEnumerable<int> ComposeAudio()
         {
-            if (!_generating)
-                yield return 0;
-
-            if (_drumSoundSamplesRemaining > 0)
+            while (true)
             {
-                _drumSoundSamplesRemaining--;
-                if (_drumSoundSamplesRemaining <= 0)
+                if (!_generating)
+                    yield return 0;
+
+                if (_drumSoundSamplesRemaining > 0)
                 {
-                    if (_drumSoundFrequenciesRemaining <= 0)
+                    _drumSoundSamplesRemaining--;
+                    if (_drumSoundSamplesRemaining <= 0)
                     {
-                        _generating = false;
-                        yield return 0;
+                        if (_drumSoundFrequenciesRemaining <= 0)
+                        {
+                            _generating = false;
+                            yield return 0;
+                        }
+                        else
+                        {
+                            _drumSoundFrequenciesRemaining--;
+                            _drumSoundFrequencyIndex++;
+                            _accumulatorAmount = _currentDrumSound[_drumSoundFrequencyIndex] * (int)AccumulatorMultiplier * 2;
+                            _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
+                        }
                     }
-                    else
+                }
+
+                if (_generating)
+                {
+                    _accumulator += _accumulatorAmount;
+                    while (_accumulator > _accumulatorLimit)
                     {
-                        _drumSoundFrequenciesRemaining--;
-                        _drumSoundFrequencyIndex++;
-                        _accumulatorAmount = _currentDrumSound[_drumSoundFrequencyIndex];
-                        _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
+                        _accumulator -= _accumulatorLimit;
+                        _dutyLevel = !_dutyLevel;
                     }
-                    _drumSoundFrequencyIndex++;
+                    yield return _dutyLevel ? 1 : -1;
+                }
+                else
+                {
+                    yield return 0;
                 }
             }
-
-            if (_generating)
-            {
-                _accumulator += _accumulatorAmount;
-                while (_accumulator > _accumulatorLimit)
-                {
-                    _accumulator -= _accumulatorLimit;
-                    _dutyLevel = !_dutyLevel;
-                }
-            }
-
-            yield return _dutyLevel ? 1 : -1;
         }
-
-        public int SampleRate { get; }
 
         public void PlayDrum(int index)
         {
             _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
             _currentDrumSound = _drumBank[index];
-            if (_currentDrumSound == null)
-                return;
-
             _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
             _drumSoundFrequencyIndex = 0;
-            _accumulatorAmount = _currentDrumSound[0];
+            _accumulatorAmount = _currentDrumSound[0] * (int)AccumulatorMultiplier;
             _generating = true;
         }
 
@@ -105,5 +105,7 @@ namespace Roton.Interface.Audio.Composition
         {
             _generating = false;
         }
+
+        public int SampleRate { get; }
     }
 }

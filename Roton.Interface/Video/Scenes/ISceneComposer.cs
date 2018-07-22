@@ -1,7 +1,7 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Interface.Events;
 
-namespace Roton.Interface.Video.Scenes.Composition
+namespace Roton.Interface.Video.Scenes
 {
     public interface ISceneComposer : ITerminal
     {

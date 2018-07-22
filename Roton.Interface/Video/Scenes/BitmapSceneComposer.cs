@@ -4,7 +4,7 @@ using Roton.Interface.Extensions;
 using Roton.Interface.Video.Glyphs;
 using Roton.Interface.Video.Palettes;
 
-namespace Roton.Interface.Video.Scenes.Composition
+namespace Roton.Interface.Video.Scenes
 {
     public class BitmapSceneComposer : SceneComposer, IBitmapSceneComposer
     {

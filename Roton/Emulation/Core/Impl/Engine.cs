@@ -45,9 +45,9 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IAnsiKeyTransformer> _ansiKeyTransformer;
         private readonly Lazy<IScrollFormatter> _scrollFormatter;
         private readonly Lazy<ISpeaker> _speaker;
+        private readonly Lazy<IDrumBank> _drumBank;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
-        private readonly Lazy<IFlags> _flags;
         private readonly Lazy<IGameSerializer> _gameSerializer;
         private readonly Lazy<IHud> _hud;
         private readonly Lazy<IInteractionList> _interactionList;
@@ -69,13 +69,13 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IFileSystem> fileSystem, Lazy<IElementList> elements,
             Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
-            Lazy<IConfig> config, Lazy<IFlags> flags, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
+            Lazy<IConfig> config, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
             Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-            Lazy<ISpeaker> speaker)
+            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -97,7 +97,6 @@ namespace Roton.Emulation.Core.Impl
             _timers = timers;
             _parser = parser;
             _config = config;
-            _flags = flags;
             _conditions = conditions;
             _directions = directions;
             _colors = colors;
@@ -120,6 +119,7 @@ namespace Roton.Emulation.Core.Impl
             _ansiKeyTransformer = ansiKeyTransformer;
             _scrollFormatter = scrollFormatter;
             _speaker = speaker;
+            _drumBank = drumBank;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -149,6 +149,8 @@ namespace Roton.Emulation.Core.Impl
         private IScrollFormatter ScrollFormatter => _scrollFormatter.Value;
 
         public ITimers Timers => _timers.Value;
+        
+        public IDrumBank DrumBank => _drumBank.Value;
 
         private Thread Thread { get; set; }
 

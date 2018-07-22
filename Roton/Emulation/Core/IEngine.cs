@@ -102,5 +102,6 @@ namespace Roton.Emulation.Core
         string[] GetMessageLines();
         bool ThreadActive { get; }
         ITimers Timers { get; }
+        IDrumBank DrumBank { get; }
     }
 }

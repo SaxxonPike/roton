@@ -4,15 +4,15 @@ using System.Linq;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using Roton.Emulation.Core;
-using Roton.Interface.Audio.Composition;
+using Roton.Interface.Audio;
 
-namespace Roton.Interface.Audio.Presentation
+namespace Lyon.Presenters
 {
-    public class OpenAlAudioPresenter : IDisposable, IAudioPresenter
+    public class AudioPresenter : IDisposable, IAudioPresenter
     {
-        private readonly IClockFactory _clockFactory;
-        private readonly IAudioComposer _audioComposer;
-        private const int BufferSampleCount = 128;
+        private readonly Func<IClockFactory> _getClockFactory;
+        private readonly Func<IAudioComposer> _getAudioComposer;
+        private const int BufferSampleCount = 512;
         private bool _isDisposed;
         private readonly int _alSourceHandle;
         private readonly Queue<int> _alBufferHandles;
@@ -21,10 +21,13 @@ namespace Roton.Interface.Audio.Presentation
         private const short MidLevel = 0;
         private double _volume;
 
-        public OpenAlAudioPresenter(IClockFactory clockFactory, IAudioComposer audioComposer)
+        private IClockFactory ClockFactory => _getClockFactory();
+        private IAudioComposer AudioComposer => _getAudioComposer();
+
+        public AudioPresenter(Func<IClockFactory> getClockFactory, Func<IAudioComposer> getAudioComposer)
         {
-            _clockFactory = clockFactory;
-            _audioComposer = audioComposer;
+            _getClockFactory = getClockFactory;
+            _getAudioComposer = getAudioComposer;
             _alBufferHandles = new Queue<int>();
             _context = new AudioContext();
             _context.MakeCurrent();
@@ -42,7 +45,7 @@ namespace Roton.Interface.Audio.Presentation
             if (_clock != null)
                 return;
             
-            _clock = _clockFactory.Create(_audioComposer.SampleRate, BufferSampleCount);
+            _clock = ClockFactory.Create(BufferSampleCount, AudioComposer.SampleRate);
             _clock.OnTick += (sender, e) => Update();
             _clock.Start();
         }
@@ -58,7 +61,7 @@ namespace Roton.Interface.Audio.Presentation
 
         private void Update()
         {
-            var data = _audioComposer
+            var data = AudioComposer
                 .ComposeAudio()
                 .Take(BufferSampleCount)
                 .Select(s => s == 0 ? MidLevel : (s > 0 ? _highLevel : _lowLevel))
@@ -81,7 +84,7 @@ namespace Roton.Interface.Audio.Presentation
             var alBufferHandle = AL.GenBuffer();
             AssertIfError();
             _alBufferHandles.Enqueue(alBufferHandle);
-            AL.BufferData(alBufferHandle, ALFormat.Mono16, data, data.Length, _audioComposer.SampleRate);
+            AL.BufferData(alBufferHandle, ALFormat.Mono16, data, data.Length, AudioComposer.SampleRate);
             AssertIfError();
             AL.SourceQueueBuffer(_alSourceHandle, alBufferHandle);
             AssertIfError();

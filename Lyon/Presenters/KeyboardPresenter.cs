@@ -3,9 +3,9 @@ using OpenTK.Input;
 using Roton.Emulation.Core.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
-namespace Roton.Interface.Input
+namespace Lyon.Presenters
 {
-    public class OpenTkKeyBuffer : Keyboard, IOpenTkKeyBuffer
+    public class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {
         private static readonly IDictionary<Key, AnsiKey> Map = new Dictionary<Key, AnsiKey>
         {

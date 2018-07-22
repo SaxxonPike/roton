@@ -1,15 +1,16 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Roton.Interface.Video.Scenes.Composition;
+using Roton.Interface.Video;
+using Roton.Interface.Video.Scenes;
 
-namespace Roton.Interface.Video.Scenes.Presentation
+namespace Lyon.Presenters
 {
     /// <summary>
     /// Basic OpenGL 3.0 renderer. This sceneComposer does not support shaders or
     /// anything as long as it supports frame buffer objects (FBOs).
     /// </summary>
-    public class OpenGlScenePresenter : IOpenGlScenePresenter
+    public class ScenePresenter : IScenePresenter
     {
         private readonly Func<IBitmapSceneComposer> _getBitmapSceneComposer;
         private readonly Func<IOpenGlScenePresenterWindow> _getOpenGlWindow;
@@ -17,12 +18,7 @@ namespace Roton.Interface.Video.Scenes.Presentation
         private bool _glReady => OpenTK.Graphics.GraphicsContext.CurrentContext != null;
         private bool _initted;
 
-        public OpenGlScenePresenter(IBitmapSceneComposer bitmapSceneComposer, IOpenGlScenePresenterWindow openGlWindow) 
-            : this(() => bitmapSceneComposer, () => openGlWindow)
-        {
-        }
-
-        public OpenGlScenePresenter(Func<IBitmapSceneComposer> getBitmapSceneComposer, Func<IOpenGlScenePresenterWindow> getOpenGlWindow)
+        public ScenePresenter(Func<IBitmapSceneComposer> getBitmapSceneComposer, Func<IOpenGlScenePresenterWindow> getOpenGlWindow)
         {
             _getBitmapSceneComposer = getBitmapSceneComposer;
             _getOpenGlWindow = getOpenGlWindow;

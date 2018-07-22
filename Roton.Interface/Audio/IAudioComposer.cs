@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Roton.Emulation.Core;
 
-namespace Roton.Interface.Audio.Composition
+namespace Roton.Interface.Audio
 {
     public interface IAudioComposer : ISpeaker
     {

@@ -1,9 +1,9 @@
-﻿namespace Roton.Interface.Video.Scenes.Presentation
+﻿namespace Lyon.Presenters
 {
     /// <summary>
     /// The OpenGL rendering interface.
     /// </summary>
-    public interface IOpenGlScenePresenter
+    public interface IScenePresenter
     {
         /// <summary>
         /// Renders the scene.

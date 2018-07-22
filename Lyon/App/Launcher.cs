@@ -1,13 +1,12 @@
 ﻿using System;
+using Lyon.Presenters;
 using OpenTK;
 using OpenTK.Input;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
-using Roton.Interface.Input;
 using Roton.Interface.Video;
-using Roton.Interface.Video.Scenes.Presentation;
 
 namespace Lyon.App
 {
@@ -16,17 +15,17 @@ namespace Lyon.App
         private class Window : GameWindow, IOpenGlScenePresenterWindow
         {
             private readonly IContext _context;
-            private readonly IOpenTkKeyBuffer _openTkKeyBuffer;
-            private readonly IOpenGlScenePresenter _presenter;
+            private readonly IKeyboardPresenter _keyboardPresenter;
+            private readonly IScenePresenter _scenePresenter;
 
             public Window(
                 IComposerProxy composerProxy,
                 IContext context,
-                IOpenTkKeyBuffer openTkKeyBuffer)
+                IKeyboardPresenter keyboardPresenter)
             {
                 _context = context;
-                _openTkKeyBuffer = openTkKeyBuffer;
-                _presenter = new OpenGlScenePresenter(() => composerProxy.SceneComposer, () => this);
+                _keyboardPresenter = keyboardPresenter;
+                _scenePresenter = new ScenePresenter(() => composerProxy.SceneComposer, () => this);
                 _context.Start();
             }
 
@@ -34,12 +33,12 @@ namespace Lyon.App
             {
                 Width = width;
                 Height = height;
-                _presenter.UpdateViewport();
+                _scenePresenter.UpdateViewport();
             }
 
             protected override void OnKeyDown(KeyboardKeyEventArgs e)
             {
-                _openTkKeyBuffer.Press(e);
+                _keyboardPresenter.Press(e);
                 base.OnKeyDown(e);
             }
 
@@ -51,30 +50,33 @@ namespace Lyon.App
 
             protected override void OnRenderFrame(FrameEventArgs e)
             {
-                _presenter.Render();
+                _scenePresenter.Render();
                 base.OnRenderFrame(e);
             }
 
             protected override void OnResize(EventArgs e)
             {
                 base.OnResize(e);
-                _presenter.UpdateViewport();
+                _scenePresenter.UpdateViewport();
             }
         }
 
         private Window _window;
         private readonly IComposerProxy _composerProxy;
-        private readonly IOpenTkKeyBuffer _keyboard;
+        private readonly IKeyboardPresenter _keyboardPresenter;
         private readonly IContextFactory _contextFactory;
+        private readonly IClockFactory _clockFactory;
 
         public Launcher(
             IComposerProxy composerProxy,
-            IOpenTkKeyBuffer keyboard,
-            IContextFactory contextFactory)
+            IKeyboardPresenter keyboardPresenter,
+            IContextFactory contextFactory,
+            IClockFactory clockFactory)
         {
             _composerProxy = composerProxy;
-            _keyboard = keyboard;
+            _keyboardPresenter = keyboardPresenter;
             _contextFactory = contextFactory;
+            _clockFactory = clockFactory;
 
             _composerProxy.AfterSetSize += OnSetSize;
         }
@@ -93,10 +95,17 @@ namespace Lyon.App
 
         public void Launch(ContextEngine contextEngine, IConfig config)
         {
-            var context = _contextFactory.Create(contextEngine, config);
-            _window = _window ?? new Window(_composerProxy, context, _keyboard);
-            _window.Run();
-            context.Stop();
+            using (var audioPresenter = new AudioPresenter(() => _clockFactory, () => _composerProxy.AudioComposer))
+            {
+                var context = _contextFactory.Create(contextEngine, config);
+                
+                _composerProxy.SetSound(context.Engine.DrumBank, 44100, 128);
+                audioPresenter.Start();
+                
+                _window = _window ?? new Window(_composerProxy, context, _keyboardPresenter);
+                _window.Run();
+                context.Stop();                
+            }
         }
     }
 }
