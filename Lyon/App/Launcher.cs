@@ -96,7 +96,7 @@ namespace Lyon.App
             {
                 var context = _contextFactory.Create(contextEngine, config);
                 
-                _composerProxy.SetSound(context.Engine.DrumBank, 44100, 128);
+                _composerProxy.SetSound(context.Engine.DrumBank, 44100, 64);
                 audioPresenter.Start();
                 
                 _window = _window ?? new Window(_composerProxy, context, _keyboardPresenter);

@@ -1411,8 +1411,43 @@ namespace Roton.Emulation.Core.Impl
         {
             if (Clock == null)
                 return;
+            
+            if (State.SoundPlaying)
+            {
+                if (State.SoundTicks <= 0)
+                {
+                    if (State.SoundBuffer.Count > 0)
+                    {
+                        var sound = State.SoundBuffer.Dequeue();
+                        State.SoundTicks = sound.Duration << 2;
+                        if (sound.Note >= 0xF0)
+                        {
+                            Speaker.PlayDrum(sound.Note - 0xF0);                                
+                        }
+                        else if (sound.Note > 0x00)
+                        {
+                            var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                            Speaker.PlayNote(actualNote);                                
+                        }
+                        else
+                        {
+                            Speaker.StopNote();                                
+                        }
+                    }
+                    else
+                    {
+                        State.SoundPlaying = false;
+                        Speaker.StopNote();
+                    }
+                }
 
-            while (_ticksToRun <= 0)
+                if (State.SoundPlaying)
+                    State.SoundTicks--;
+            }
+                
+            Speaker.Tick();
+
+            while (_ticksToRun <= 0 && ThreadActive)
                 Thread.Sleep(1);
 
             _ticksToRun--;
@@ -1719,42 +1754,6 @@ namespace Roton.Emulation.Core.Impl
                     State.GameOver = false;
                     break;
                 }
-
-                // In the original engine, this has its own interrupt.
-                if (State.SoundPlaying)
-                {
-                    if (State.SoundTicks <= 0)
-                    {
-                        if (State.SoundBuffer.Count > 0)
-                        {
-                            var sound = State.SoundBuffer.Dequeue();
-                            State.SoundTicks = sound.Duration << 2;
-                            if (sound.Note >= 0xF0)
-                            {
-                                Speaker.PlayDrum(sound.Note - 0xF0);                                
-                            }
-                            else if (sound.Note > 0x00)
-                            {
-                                var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
-                                Speaker.PlayNote(actualNote);                                
-                            }
-                            else
-                            {
-                                Speaker.StopNote();                                
-                            }
-                        }
-                        else
-                        {
-                            State.SoundPlaying = false;
-                            Speaker.StopNote();
-                        }
-                    }
-
-                    if (State.SoundPlaying)
-                        State.SoundTicks--;
-                }
-                
-                Speaker.Tick();
             }
         }
 

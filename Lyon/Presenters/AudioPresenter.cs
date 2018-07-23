@@ -23,7 +23,6 @@ namespace Lyon.Presenters
         private readonly List<byte> _buffer;
         private int _bufferCount;
         private readonly AudioContext _context;
-        private readonly FileStream _log;
 
         private IAudioComposer AudioComposer => _getAudioComposer();
 
@@ -37,9 +36,6 @@ namespace Lyon.Presenters
 
             _alSourceHandle = AL.GenSource();
             AL.Source(_alSourceHandle, ALSourcef.Gain, 1.0f);
-
-            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "audiolog.bin");
-            _log = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite);
         }
 
         public void Start()
@@ -69,8 +65,6 @@ namespace Lyon.Presenters
                 .ToArray();
             _buffer.AddRange(data);
             
-            _log.Write(data, 0, data.Length);
-
             // Unload spent OpenAL buffers.
             AL.GetSource(_alSourceHandle, ALGetSourcei.BuffersProcessed, out var buffersToUnload);
             AssertIfError();
@@ -83,9 +77,11 @@ namespace Lyon.Presenters
                 AL.DeleteBuffers(bufferIds);
                 AssertIfError();
             }
+            
+            AL.GetSource(_alSourceHandle, ALGetSourcei.SourceState, out var sourceStateValue);
+            var sourceState = (ALSourceState) sourceStateValue;
 
             // Transfer the buffer to OpenAL if it is large enough.
-            _context.Process();
             while (_buffer.Count >= BufferSampleCount)
             {
                 if (_bufferCount < 20)
@@ -100,14 +96,20 @@ namespace Lyon.Presenters
                     AssertIfError();
                     AL.SourceQueueBuffer(_alSourceHandle, alBufferHandle);
                     AssertIfError();
-                    AL.SourcePlay(_alSourceHandle);
-                    AssertIfError();                                                    
-                    _context.Process();
                     _bufferCount++;
+                }
+
+                if (sourceState != ALSourceState.Playing && _bufferCount > 1)
+                {
+                    if (_bufferCount > 1)
+                        AL.SourcePlay(_alSourceHandle);
+                    AssertIfError();                    
                 }
                 
                 _buffer.RemoveRange(0, BufferSampleCount);
             }
+            
+            _context.Process();
         }
 
         public void Stop()
@@ -142,9 +144,6 @@ namespace Lyon.Presenters
             _isDisposed = true;
             Stop();
             _context.Dispose();
-            
-            _log.Close();
-            _log.Dispose();
         }
     }
 }
