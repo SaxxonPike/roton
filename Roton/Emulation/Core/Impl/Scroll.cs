@@ -167,14 +167,30 @@ namespace Roton.Emulation.Core.Impl
                         return false;
                     case EngineKeyCode.Enter:
                         return true;
+                    case EngineKeyCode.PageUp:
+                        result.Index -= Height - 5;
+                        update = true;                            
+                        break;
+                    case EngineKeyCode.PageDown:
+                        result.Index += Height - 5;
+                        update = true;                            
+                        break;
                     case EngineKeyCode.Up:
                         result.Index--;
-                        update = true;
+                        update = true;                            
                         break;
                     case EngineKeyCode.Down:
                         result.Index++;
-                        update = true;
+                        update = true;                            
                         break;
+                }
+
+                if (update)
+                {
+                    if (result.Index >= message.Count)
+                        result.Index = message.Count - 1;
+                    if (result.Index < 0)
+                        result.Index = 0;                    
                 }
 
                 _engine.WaitForTick();
