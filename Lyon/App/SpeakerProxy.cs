@@ -18,7 +18,10 @@ namespace Lyon.App
         public void PlayNote(int note) =>
             _composerProxy.AudioComposer?.PlayNote(note);
 
-        public void Stop() =>
-            _composerProxy.AudioComposer?.Stop();
+        public void StopNote() =>
+            _composerProxy.AudioComposer?.StopNote();
+
+        public void Tick() =>
+            _composerProxy.AudioComposer?.Tick();
     }
 }

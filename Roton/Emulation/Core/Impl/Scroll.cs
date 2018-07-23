@@ -147,16 +147,15 @@ namespace Roton.Emulation.Core.Impl
                 _terminal.Plot(x2, y, dot);                                
         }
 
-        private int MainLoop(IList<string> message)
+        private bool MainLoop(IList<string> message, ScrollResult result)
         {
-            var offset = 0;
             var update = true;
 
             while (_engine.ThreadActive)
             {
                 if (update)
                 {
-                    RenderContent(message, offset);
+                    RenderContent(message, result.Index);
                     update = false;
                 }
 
@@ -165,15 +164,15 @@ namespace Roton.Emulation.Core.Impl
                 switch (_engine.State.KeyPressed)
                 {
                     case EngineKeyCode.Escape:
-                        return -1;
+                        return false;
                     case EngineKeyCode.Enter:
-                        return -1;
+                        return true;
                     case EngineKeyCode.Up:
-                        offset--;
+                        result.Index--;
                         update = true;
                         break;
                     case EngineKeyCode.Down:
-                        offset++;
+                        result.Index++;
                         update = true;
                         break;
                 }
@@ -181,26 +180,74 @@ namespace Roton.Emulation.Core.Impl
                 _engine.WaitForTick();
             }
 
-            return -1;
+            return false;
         }
 
         public IScrollResult Show(IEnumerable<string> message)
         {
             var msg = message.ToList();
             var buffer = GetScreenBuffer();
+            
+            var result = new ScrollResult
+            {
+                Index = 0,
+                Label = null,
+                Cancelled = false
+            };
 
             Open();
-            var line = MainLoop(msg);
+            
+            while (true)
+            {
+                var selected = MainLoop(msg, result);
+                if (!selected)
+                {
+                    result.Cancelled = true;
+                    break;
+                }
+
+                var innerJump = SelectLine(msg, result);
+                if (!innerJump)
+                    break;                    
+            }
+            
             Close(buffer);
 
-            return new ScrollResult
-            {
-                SelectedLine = line
-            };
+            return result;
         }
 
         public int TextWidth => Width - 4;
 
         public int TextHeight => Height - 4;
+
+        private bool SelectLine(IReadOnlyList<string> message, ScrollResult result)
+        {
+            if (result.Index < 0)
+                return false;
+            
+            var line = message[result.Index];
+
+            if (!line.StartsWith("!") || !line.Contains(";")) 
+                return false;
+            
+            var label = "";
+            label = line
+                .Substring(1, line.IndexOf(';') - 1)
+                .ToUpperInvariant();
+            result.Label = label;
+            label = $":{label};";
+            
+            for (var i = 0; i < message.Count; i++)
+            {
+                line = message[i];
+                if (!line.ToUpperInvariant().StartsWith(label)) 
+                    continue;
+                
+                result.Index = i;
+                return true;
+            }
+
+            return false;
+        }        
     }
 }

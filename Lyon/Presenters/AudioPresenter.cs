@@ -1,53 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using Roton.Emulation.Core;
 using Roton.Interface.Audio;
+using Roton.Interface.Events;
 
 namespace Lyon.Presenters
 {
     public class AudioPresenter : IDisposable, IAudioPresenter
     {
-        private readonly Func<IClockFactory> _getClockFactory;
         private readonly Func<IAudioComposer> _getAudioComposer;
         private const int BufferSampleCount = 512;
         private bool _isDisposed;
         private readonly int _alSourceHandle;
-        private readonly Queue<int> _alBufferHandles;
         private short _highLevel;
         private short _lowLevel;
         private const short MidLevel = 0;
         private double _volume;
+        private bool _running;
+        private readonly List<byte> _buffer;
+        private int _bufferCount;
+        private readonly AudioContext _context;
+        private readonly FileStream _log;
 
-        private IClockFactory ClockFactory => _getClockFactory();
         private IAudioComposer AudioComposer => _getAudioComposer();
 
-        public AudioPresenter(Func<IClockFactory> getClockFactory, Func<IAudioComposer> getAudioComposer)
+        public AudioPresenter(Func<IAudioComposer> getAudioComposer)
         {
-            _getClockFactory = getClockFactory;
+            _buffer = new List<byte>();
             _getAudioComposer = getAudioComposer;
-            _alBufferHandles = new Queue<int>();
             _context = new AudioContext();
             _context.MakeCurrent();
             Volume = 0.2;
 
             _alSourceHandle = AL.GenSource();
             AL.Source(_alSourceHandle, ALSourcef.Gain, 1.0f);
-        }
 
-        private readonly AudioContext _context;
-        private IClock _clock;
+            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "audiolog.bin");
+            _log = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite);
+        }
 
         public void Start()
         {
-            if (_clock != null)
+            if (_running)
                 return;
-            
-            _clock = ClockFactory.Create(BufferSampleCount, AudioComposer.SampleRate);
-            _clock.OnTick += (sender, e) => Update();
-            _clock.Start();
+
+            _running = true;
+            AudioComposer.BufferReady += Update;
         }
 
         private void AssertIfError()
@@ -59,43 +60,63 @@ namespace Lyon.Presenters
             }
         }
 
-        private void Update()
+        private void Update(object sender, AudioComposerDataEventArgs e)
         {
-            var data = AudioComposer
-                .ComposeAudio()
-                .Take(BufferSampleCount)
+            // Buffer incoming data.
+            var data = e.Data
                 .Select(s => s == 0 ? MidLevel : (s > 0 ? _highLevel : _lowLevel))
                 .SelectMany(s => new[] { (byte)(s & 0xFF), (byte)((s >> 8) & 0xFF) })
                 .ToArray();
+            _buffer.AddRange(data);
+            
+            _log.Write(data, 0, data.Length);
 
+            // Unload spent OpenAL buffers.
             AL.GetSource(_alSourceHandle, ALGetSourcei.BuffersProcessed, out var buffersToUnload);
             AssertIfError();
             if (buffersToUnload > 0)
             {
-                AL.SourceUnqueueBuffers(_alSourceHandle, buffersToUnload);
+                _bufferCount -= buffersToUnload;
+                
+                var bufferIds = AL.SourceUnqueueBuffers(_alSourceHandle, buffersToUnload);
                 AssertIfError();
-                for (var i = 0; i < buffersToUnload; i++)
-                {
-                    var bufferToDelete = _alBufferHandles.Dequeue();
-                    AL.DeleteBuffer(bufferToDelete);
-                }
+                AL.DeleteBuffers(bufferIds);
+                AssertIfError();
             }
 
-            var alBufferHandle = AL.GenBuffer();
-            AssertIfError();
-            _alBufferHandles.Enqueue(alBufferHandle);
-            AL.BufferData(alBufferHandle, ALFormat.Mono16, data, data.Length, AudioComposer.SampleRate);
-            AssertIfError();
-            AL.SourceQueueBuffer(_alSourceHandle, alBufferHandle);
-            AssertIfError();
-            AL.SourcePlay(_alSourceHandle);
-            AssertIfError();
+            // Transfer the buffer to OpenAL if it is large enough.
             _context.Process();
+            while (_buffer.Count >= BufferSampleCount)
+            {
+                if (_bufferCount < 20)
+                {
+                    var output = _buffer
+                        .Take(BufferSampleCount)
+                        .ToArray();
+                    
+                    var alBufferHandle = AL.GenBuffer();
+                    AssertIfError();
+                    AL.BufferData(alBufferHandle, ALFormat.Mono16, output, output.Length, AudioComposer.SampleRate);
+                    AssertIfError();
+                    AL.SourceQueueBuffer(_alSourceHandle, alBufferHandle);
+                    AssertIfError();
+                    AL.SourcePlay(_alSourceHandle);
+                    AssertIfError();                                                    
+                    _context.Process();
+                    _bufferCount++;
+                }
+                
+                _buffer.RemoveRange(0, BufferSampleCount);
+            }
         }
 
         public void Stop()
         {
-            _clock.Stop();
+            if (!_running)
+                return;
+
+            AudioComposer.BufferReady -= Update;
+            _running = false;
         }
 
         public double Volume {
@@ -121,6 +142,9 @@ namespace Lyon.Presenters
             _isDisposed = true;
             Stop();
             _context.Dispose();
+            
+            _log.Close();
+            _log.Dispose();
         }
     }
 }

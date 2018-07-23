@@ -439,15 +439,14 @@ namespace Roton.Emulation.Core.Impl
                     {
                         case '!':
                             note--;
-                            isNote = false;
-                            continue;
+                            break;
                         case '#':
                             note++;
-                            isNote = false;
-                            continue;
+                            break;
                     }
 
-                    result.Add(note + octave * 12);
+                    isNote = false;
+                    result.Add(note + (octave << 4));
                     result.Add(speed);
                 }
 
@@ -478,8 +477,12 @@ namespace Roton.Emulation.Core.Impl
                         speed = speed / 3;
                         break;
                     case '+':
+                        if (octave < 6)
+                            octave++;
                         break;
                     case '-':
+                        if (octave > 1)
+                            octave--;
                         break;
                     case 'C':
                         note = 0;
@@ -530,11 +533,11 @@ namespace Roton.Emulation.Core.Impl
 
             if (isNote)
             {
-                result.Add(note + octave * 12);
+                result.Add(note + (octave << 4));
                 result.Add(speed);
             }
 
-            return new Sound(result.Take(255).ToArray());
+            return new Sound(result.Take(254).ToArray());
         }
 
         public void EnterBoard()
@@ -1727,20 +1730,31 @@ namespace Roton.Emulation.Core.Impl
                             var sound = State.SoundBuffer.Dequeue();
                             State.SoundTicks = sound.Duration << 2;
                             if (sound.Note >= 0xF0)
-                                Speaker.PlayDrum(sound.Note - 0xF0);
+                            {
+                                Speaker.PlayDrum(sound.Note - 0xF0);                                
+                            }
+                            else if (sound.Note > 0x00)
+                            {
+                                var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                                Speaker.PlayNote(actualNote);                                
+                            }
                             else
-                                Speaker.PlayNote(sound.Note);
+                            {
+                                Speaker.StopNote();                                
+                            }
                         }
                         else
                         {
                             State.SoundPlaying = false;
-                            Speaker.Stop();
+                            Speaker.StopNote();
                         }
                     }
 
                     if (State.SoundPlaying)
                         State.SoundTicks--;
                 }
+                
+                Speaker.Tick();
             }
         }
 

@@ -54,7 +54,9 @@ namespace Roton.Emulation.Original
             else
             {
                 _engine.State.KeyVector.SetTo(0, 0);
-                _engine.Hud.ShowScroll(context.Message.ToArray());
+                var result = _engine.Hud.ShowScroll(context.Message.ToArray());
+                if (!result.Cancelled && result.Label != null)
+                    context.NextLine = _engine.BroadcastLabel(context.Index, result.Label, false);
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
@@ -43,15 +44,22 @@ namespace Roton.Emulation.Core.Impl
 
         public ISoundNote Dequeue()
         {
+            var remaining = Memory.Read8(Offset);
+            if (remaining <= 0)
+                throw new Exception("No notes available in queue!");
+            
             var result = new SoundNote
             {
                 Note = Memory.Read8(Offset + 1),
                 Duration = Memory.Read8(Offset + 2)
             };
-            var remaining = Memory.Read8(Offset) - 2;
-            var index = Offset + 1;
-            while (remaining-- > 0)
-                Memory.Write8(index, Memory.Read8(index + 2));
+
+            remaining -= 2;
+            Memory.Write8(Offset, remaining);
+            
+            for (var i = 0; i < remaining; i++)
+                Memory.Write8(Offset + 1 + i, Memory.Read8(Offset + 3 + i));
+            
             return result;
         }
 

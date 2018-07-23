@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Interface.Events;
 
 namespace Roton.Interface.Audio
 {
-    public class AudioComposer : IAudioComposer, ISpeaker
+    public class AudioComposer : IAudioComposer
     {
-        private const double AccumulatorMultiplier = 1000;
+        public event EventHandler<AudioComposerDataEventArgs> BufferReady;
+        
+        private const int AccumulatorMultiplier = 1000;
 
         private readonly IDrumBank _drumBank;
         private readonly int _samplesPerDrumFrequency;
@@ -22,30 +25,40 @@ namespace Roton.Interface.Audio
         private int _accumulatorAmount;
         private bool _generating;
         private bool _dutyLevel;
-        private int _accumulator;
+        private int _toneAccumulator;
+        private int _bufferAccumulator;
+        private readonly int _bufferNumerator;
+        private readonly int _bufferDenominator;
 
         public AudioComposer(IDrumBank drumBank, int outputSampleRate, int samplesPerDrumFrequency)
         {
             _drumBank = drumBank;
             SampleRate = outputSampleRate;
             _samplesPerDrumFrequency = samplesPerDrumFrequency;
-            _accumulatorLimit = (int)(outputSampleRate * AccumulatorMultiplier);
+            _accumulatorLimit = outputSampleRate * AccumulatorMultiplier;
 
-            // base note is C-2 (24) but our 440 frequency reference is A-2 (33)
+            // base note is C-2 but our 440 frequency reference is A-2
 
             _frequencyDutyCycleTable =
-                Enumerable.Range(0, 12 * 6)
-                .Select(i => 2 * outputSampleRate * AccumulatorMultiplier / (440d * Math.Pow(2d, (double)(i - 33) / 12)))
+                Enumerable.Range(0, 12 * 7)
+                .Select(i => 440d * Math.Pow(2d, (double)(i - 45) / 12) * (double)AccumulatorMultiplier * 2d)
                 .Select(i => (int)i)
                 .ToArray();
+
+            _bufferDenominator = 718;
+            _bufferNumerator = outputSampleRate * 10;
         }
 
-        public IEnumerable<int> ComposeAudio()
+        private IEnumerable<int> ComposeAudio()
         {
-            while (true)
+            while (_bufferAccumulator > _bufferDenominator)
             {
+                _bufferAccumulator -= _bufferDenominator;
                 if (!_generating)
+                {
                     yield return 0;
+                    continue;
+                }
 
                 if (_drumSoundSamplesRemaining > 0)
                 {
@@ -56,12 +69,13 @@ namespace Roton.Interface.Audio
                         {
                             _generating = false;
                             yield return 0;
+                            continue;
                         }
                         else
                         {
                             _drumSoundFrequenciesRemaining--;
                             _drumSoundFrequencyIndex++;
-                            _accumulatorAmount = _currentDrumSound[_drumSoundFrequencyIndex] * (int)AccumulatorMultiplier * 2;
+                            _accumulatorAmount = _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
                             _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
                         }
                     }
@@ -69,10 +83,10 @@ namespace Roton.Interface.Audio
 
                 if (_generating)
                 {
-                    _accumulator += _accumulatorAmount;
-                    while (_accumulator > _accumulatorLimit)
+                    _toneAccumulator += _accumulatorAmount;
+                    while (_toneAccumulator > _accumulatorLimit)
                     {
-                        _accumulator -= _accumulatorLimit;
+                        _toneAccumulator -= _accumulatorLimit;
                         _dutyLevel = !_dutyLevel;
                     }
                     yield return _dutyLevel ? 1 : -1;
@@ -90,7 +104,7 @@ namespace Roton.Interface.Audio
             _currentDrumSound = _drumBank[index];
             _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
             _drumSoundFrequencyIndex = 0;
-            _accumulatorAmount = _currentDrumSound[0] * (int)AccumulatorMultiplier;
+            _accumulatorAmount = _currentDrumSound[0] * AccumulatorMultiplier;
             _generating = true;
         }
 
@@ -98,12 +112,23 @@ namespace Roton.Interface.Audio
         {
             _drumSoundSamplesRemaining = 0;
             _accumulatorAmount = _frequencyDutyCycleTable[note];
+            _toneAccumulator = 0;
             _generating = true;
         }
 
-        public void Stop()
+        public void StopNote()
         {
             _generating = false;
+        }
+
+        public void Tick()
+        {
+            _bufferAccumulator += _bufferNumerator;
+            var args = new AudioComposerDataEventArgs
+            {
+                Data = ComposeAudio().ToArray()
+            };
+            BufferReady?.Invoke(this, args);
         }
 
         public int SampleRate { get; }

@@ -65,18 +65,15 @@ namespace Lyon.App
         private readonly IComposerProxy _composerProxy;
         private readonly IKeyboardPresenter _keyboardPresenter;
         private readonly IContextFactory _contextFactory;
-        private readonly IClockFactory _clockFactory;
 
         public Launcher(
             IComposerProxy composerProxy,
             IKeyboardPresenter keyboardPresenter,
-            IContextFactory contextFactory,
-            IClockFactory clockFactory)
+            IContextFactory contextFactory)
         {
             _composerProxy = composerProxy;
             _keyboardPresenter = keyboardPresenter;
             _contextFactory = contextFactory;
-            _clockFactory = clockFactory;
 
             _composerProxy.AfterSetSize += OnSetSize;
         }
@@ -95,7 +92,7 @@ namespace Lyon.App
 
         public void Launch(ContextEngine contextEngine, IConfig config)
         {
-            using (var audioPresenter = new AudioPresenter(() => _clockFactory, () => _composerProxy.AudioComposer))
+            using (var audioPresenter = new AudioPresenter(() => _composerProxy.AudioComposer))
             {
                 var context = _contextFactory.Create(contextEngine, config);
                 

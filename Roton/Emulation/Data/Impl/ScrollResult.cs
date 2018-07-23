@@ -2,6 +2,8 @@
 {
     public sealed class ScrollResult : IScrollResult
     {
-        public int SelectedLine { get; set; }
+        public int Index { get; set; }
+        public string Label { get; set; }
+        public bool Cancelled { get; set; }
     }
 }
