@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using Roton.Interface.Audio;
-using Roton.Interface.Events;
+using Roton.Composers.Audio;
 
 namespace Lyon.Presenters
 {

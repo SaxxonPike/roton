@@ -5,7 +5,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roton.Interface\Roton.Interface.csproj" />
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,12 @@ namespace Roton.Emulation.Original
 
         public byte[] GetMemoryData() 
             => _resource.System.GetFile("memory-zzt.bin");
+        
+        public byte[] GetPaletteData() 
+            => _resource.System.GetFile("palette.bin");
+
+        public byte[] GetFontData() 
+            => _resource.System.GetFile("font.bin");
 
         public IDictionary<string, byte[]> GetStaticFiles()
             => _resource.Root

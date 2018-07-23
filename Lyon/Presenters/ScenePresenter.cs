@@ -1,8 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Roton.Interface.Video;
-using Roton.Interface.Video.Scenes;
+using Roton.Composers.Video.Scenes;
 
 namespace Lyon.Presenters
 {

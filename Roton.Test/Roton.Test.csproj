@@ -13,7 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lyon\Lyon.csproj" />
-    <ProjectReference Include="..\Roton.Interface\Roton.Interface.csproj" />
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
 </Project>

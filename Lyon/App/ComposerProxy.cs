@@ -1,10 +1,10 @@
 ﻿using System;
+using Roton.Composers.Audio;
+using Roton.Composers.Video;
+using Roton.Composers.Video.Glyphs;
+using Roton.Composers.Video.Palettes;
+using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Data;
-using Roton.Interface.Audio;
-using Roton.Interface.Events;
-using Roton.Interface.Video.Glyphs;
-using Roton.Interface.Video.Palettes;
-using Roton.Interface.Video.Scenes;
 
 namespace Lyon.App
 {

@@ -5,8 +5,6 @@ using Lyon.Presenters;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
-using Roton.Interface.Infrastructure;
-using Roton.Interface.Video.Glyphs;
 
 namespace Lyon
 {
@@ -19,9 +17,7 @@ namespace Lyon
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterAssemblyTypes(
-                    typeof(ILauncher).Assembly,
-                    typeof(IGlyphComposer).Assembly)
+            builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
                 .Where(t => !t.IsAbstract && t.IsClass)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
@@ -46,15 +42,11 @@ namespace Lyon
                 .As<IAssemblyResourceService>()
                 .SingleInstance();
 
-            builder.RegisterType<InterfaceResourceService>()
-                .As<IInterfaceResourceService>()
-                .SingleInstance();
-
             builder.RegisterType<ComposerProxy>()
                 .As<IComposerProxy>()
                 .OnActivated(e =>
                 {
-                    var resource = e.Context.Resolve<IInterfaceResourceService>();
+                    var resource = e.Context.Resolve<IEngineResourceService>();
                     e.Instance.SetFont(resource.GetFontData());
                     e.Instance.SetPalette(resource.GetPaletteData());
                     e.Instance.SetScene(80, 25, false);

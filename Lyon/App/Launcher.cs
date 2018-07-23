@@ -2,11 +2,10 @@
 using Lyon.Presenters;
 using OpenTK;
 using OpenTK.Input;
+using Roton.Composers.Video;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Interface.Events;
-using Roton.Interface.Video;
 
 namespace Lyon.App
 {
