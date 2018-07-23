@@ -4,6 +4,7 @@
     {
         void PlayDrum(int drum);
         void PlayNote(int note);
-        void Stop();
+        void Tick();
+        void StopNote();
     }
 }

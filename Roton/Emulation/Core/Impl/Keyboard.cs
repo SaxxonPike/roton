@@ -23,7 +23,7 @@ namespace Roton.Emulation.Core.Impl
 
         protected void Enqueue(IKeyPress keyPress)
         {
-            if (_queue.Count(q => q.Key == keyPress.Key) < 3)
+            if (_queue.Count(q => q.Key == keyPress.Key) < 2)
                 _queue.Enqueue(keyPress);
         }
     }

@@ -1,71 +1,53 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
     public sealed class Clock : IClock
     {
-        private int _maxLaggedTicks;
+        private readonly long _numerator;
+        private readonly long _denominator;
+        private bool _running;
 
-        private int _tick;
-
-        private bool Initialized { get; set; }
-
-        private int MaxLaggedTicks
+        public Clock(long numerator, long denominator)
         {
-            get
-            {
-                if (_maxLaggedTicks <= 0)
-                {
-                    _maxLaggedTicks = 5;
-                }
-                return _maxLaggedTicks;
-            }
+            _numerator = numerator;
+            _denominator = denominator;
         }
 
-        public int Tick
+        private bool _initialized;
+
+        public event EventHandler OnTick;
+
+        public void Start()
         {
-            get
-            {
-                if (!Initialized)
-                {
-                    Initialize();
-                }
-                ResetShutdown();
-                return _tick;
-            }
-            set => _tick = value;
+            Initialize();
         }
 
-        private int TicksUntilShutdown { get; set; }
+        public void Stop()
+        {
+            _running = false;
+        }
 
         private void Initialize()
         {
-            if (!Initialized)
+            if (!_initialized)
             {
-                Initialized = true;
+                _running = true;
+                _initialized = true;
                 var thread = new Thread(ThreadLoop);
                 thread.Start();
             }
         }
 
-        private void ResetShutdown()
-        {
-            TicksUntilShutdown = 50;
-        }
-
         private void ThreadLoop()
         {
             var timer = new Stopwatch();
-            var frequency = Stopwatch.Frequency*10L/718L;
+            var frequency = Stopwatch.Frequency * _numerator / _denominator;
             var lastTime = timer.ElapsedTicks;
-            ResetShutdown();
             timer.Start();
-            while (TicksUntilShutdown > 0)
+            while (_running)
             {
                 var currentTime = timer.ElapsedTicks;
                 if (lastTime > currentTime)
@@ -74,22 +56,21 @@ namespace Roton.Emulation.Core.Impl
                     lastTime = currentTime;
                 }
 
-                var timesRun = 0;
-                while (timesRun < MaxLaggedTicks && currentTime - lastTime > frequency)
+                while (currentTime - lastTime > frequency)
                 {
                     lastTime += frequency;
-                    _tick++;
-                    timesRun++;
+                    OnTick?.Invoke(this, EventArgs.Empty);
                 }
+
                 Thread.Sleep(1);
-                TicksUntilShutdown--;
             }
-            UnInitialize();
+
+            _initialized = false;
         }
 
-        private void UnInitialize()
+        public void Dispose()
         {
-            Initialized = false;
+            Stop();
         }
     }
 }

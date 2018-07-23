@@ -1,9 +1,9 @@
 ﻿using OpenTK.Input;
 using Roton.Emulation.Core;
 
-namespace Roton.Interface.Input
+namespace Lyon.Presenters
 {
-    public interface IOpenTkKeyBuffer : IKeyboard
+    public interface IKeyboardPresenter : IKeyboard
     {
         bool Press(KeyboardKeyEventArgs data);
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Interface.Video.Scenes.Composition
+namespace Roton.Interface.Video.Scenes
 {
     /// <summary>
     /// A scene composer that renders to a bitmap.

@@ -2,7 +2,7 @@
 using Roton.Emulation.Data.Impl;
 using Roton.Interface.Events;
 
-namespace Roton.Interface.Video.Scenes.Composition
+namespace Roton.Interface.Video.Scenes
 {
     public class SceneComposer : ISceneComposer
     {

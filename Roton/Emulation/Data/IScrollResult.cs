@@ -2,6 +2,8 @@
 {
     public interface IScrollResult
     {
-        int SelectedLine { get; }
+        int Index { get; }
+        string Label { get; }
+        bool Cancelled { get; }
     }
 }

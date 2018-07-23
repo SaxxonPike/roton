@@ -1,11 +1,11 @@
 ﻿using System;
 using Autofac;
 using Lyon.App;
+using Lyon.Presenters;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
 using Roton.Interface.Infrastructure;
-using Roton.Interface.Input;
 using Roton.Interface.Video.Glyphs;
 
 namespace Lyon
@@ -32,11 +32,12 @@ namespace Lyon
 
             Register(builder);
 
-            var container = builder.Build();
-
-            container
-                .Resolve<IBootstrap>()
-                .Boot(args);
+            using (var container = builder.Build())
+            {
+                container
+                    .Resolve<IBootstrap>()
+                    .Boot(args);                
+            }
         }
 
         private static void Register(ContainerBuilder builder)
@@ -60,9 +61,10 @@ namespace Lyon
                 })
                 .SingleInstance();
 
+            builder.RegisterType<ClockFactory>().As<IClockFactory>().SingleInstance();
             builder.RegisterType<SpeakerProxy>().As<ISpeaker>().SingleInstance();
             builder.RegisterType<TerminalProxy>().As<ITerminal>().SingleInstance();
-            builder.RegisterType<OpenTkKeyBuffer>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<KeyboardPresenter>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }

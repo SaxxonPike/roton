@@ -56,7 +56,6 @@ namespace Roton.Emulation.Core
         bool FindTile(ITile kind, IXyPair location);
         void ForcePlayerColor(int index);
         IXyPair GetCardinalVector(int index);
-        bool GetPlayerTimeElapsed(int interval);
         void HandlePlayerInput(IActor actor);
         void Harm(int index);
         void LoadWorld(string name);
@@ -102,5 +101,7 @@ namespace Roton.Emulation.Core
         void StepOnce();
         string[] GetMessageLines();
         bool ThreadActive { get; }
+        ITimers Timers { get; }
+        IDrumBank DrumBank { get; }
     }
 }

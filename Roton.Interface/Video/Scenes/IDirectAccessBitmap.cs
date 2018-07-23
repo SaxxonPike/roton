@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Interface.Video.Scenes.Composition
+namespace Roton.Interface.Video.Scenes
 {
     /// <summary>
     /// A wrapper for the .NET Framework Bitmap object which allows for direct pixel access.
