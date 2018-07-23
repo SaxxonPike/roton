@@ -80,7 +80,10 @@ namespace Roton.Emulation.Core.Impl
             _clock = new Lazy<IClock>(() =>
             {
                 var clock = clockFactory.Value.Create(10, 718);
-                clock.OnTick += ClockTick;
+                
+                if (clock != null)
+                    clock.OnTick += ClockTick;
+                
                 return clock;
             });
 

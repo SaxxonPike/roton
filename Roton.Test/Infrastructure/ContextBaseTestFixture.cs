@@ -30,6 +30,7 @@ namespace Roton.Test.Infrastructure
             ContextEngine = contextEngine;
         }
 
+        protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
         protected IContext Context { get; private set; }
         protected FixedFileSystem FileSystem { get; private set; }
         protected Config Config { get; private set; }
@@ -86,6 +87,7 @@ namespace Roton.Test.Infrastructure
             TerminalMock = new Mock<ITerminal>();
             Keyboard = new TestKeyboard();
             SpeakerMock = new Mock<ISpeaker>();
+            ClockFactoryMock = new Mock<IClockFactory>();
 
             // Outer container
             var builder = new ContainerBuilder();
@@ -93,6 +95,7 @@ namespace Roton.Test.Infrastructure
             builder.Register(c => Keyboard).As<IKeyboard>();
             builder.Register(c => SpeakerMock.Object).As<ISpeaker>();
             builder.RegisterType<AssemblyResourceService>().As<IAssemblyResourceService>();
+            builder.Register(c => ClockFactoryMock.Object).As<IClockFactory>();
             var container = builder.Build();
 
             // Inner container
