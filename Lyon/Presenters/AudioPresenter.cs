@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotSDL.Audio;
-using Roton.Interface.Audio;
-using Roton.Interface.Events;
+using Roton.Composers.Audio;
 
 namespace Lyon.Presenters
 {

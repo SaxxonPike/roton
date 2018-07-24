@@ -1,7 +1,7 @@
 ﻿using System;
 using DotSDL.Graphics;
-using Roton.Interface.Video;
-using Roton.Interface.Video.Scenes;
+using Lyon.App;
+using Roton.Composers.Video.Scenes;
 
 namespace Lyon.Presenters
 {
@@ -11,9 +11,9 @@ namespace Lyon.Presenters
     public class ScenePresenter : IScenePresenter
     {
         private readonly Func<IBitmapSceneComposer> _getBitmapSceneComposer;
-        private readonly Func<IScenePresenterWindow> _getWindow;
+        private readonly Func<IWindow> _getWindow;
 
-        public ScenePresenter(Func<IBitmapSceneComposer> getBitmapSceneComposer, Func<IScenePresenterWindow> getWindow)
+        public ScenePresenter(Func<IBitmapSceneComposer> getBitmapSceneComposer, Func<IWindow> getWindow)
         {
             _getBitmapSceneComposer = getBitmapSceneComposer;
             _getWindow = getWindow;
