@@ -1,9 +1,8 @@
 ﻿using System;
-using DotSDL.Graphics;
 using Lyon.App;
 using Roton.Composers.Video.Scenes;
 
-namespace Lyon.Presenters
+namespace Lyon.Presenters.Impl
 {
     /// <summary>
     /// Basic SDL renderer.

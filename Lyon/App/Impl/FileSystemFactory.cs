@@ -2,7 +2,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
 
-namespace Lyon.App
+namespace Lyon.App.Impl
 {
     public class FileSystemFactory : IFileSystemFactory
     {

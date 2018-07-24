@@ -2,7 +2,7 @@
 using System.IO;
 using Roton.Emulation.Data.Impl;
 
-namespace Lyon.App
+namespace Lyon.App.Impl
 {
     public class Bootstrap : IBootstrap
     {

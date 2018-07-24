@@ -8,7 +8,7 @@ using Roton.Emulation.Original;
 using Roton.Emulation.Super;
 using Roton.Infrastructure;
 
-namespace Lyon.App
+namespace Lyon.App.Impl
 {
     public class ContextFactory : IContextFactory
     {
@@ -37,8 +37,11 @@ namespace Lyon.App
             var scope = _rootLifetimeScope.BeginLifetimeScope(builder =>
             {
                 var contextMetadataService = GetContextMetadataService(contextEngine);
-                builder.RegisterInstance(contextMetadataService).As<IContextMetadataService>()
+                
+                builder.RegisterInstance(contextMetadataService)
+                    .As<IContextMetadataService>()
                     .SingleInstance();
+                
                 builder.RegisterTypes(contextMetadataService.GetTypes().ToArray())
                     .AsImplementedInterfaces()
                     .SingleInstance();

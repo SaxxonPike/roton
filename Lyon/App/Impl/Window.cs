@@ -2,9 +2,8 @@
 using DotSDL.Events;
 using DotSDL.Graphics;
 using Lyon.Presenters;
-using Roton.Emulation.Core;
 
-namespace Lyon.App
+namespace Lyon.App.Impl
 {
     public class Window : SdlWindow, IWindow
     {

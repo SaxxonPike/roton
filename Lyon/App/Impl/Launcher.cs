@@ -1,11 +1,8 @@
 ﻿using System;
 using Lyon.Presenters;
-using Roton.Composers.Video;
-using Roton.Composers.Video.Glyphs;
-using Roton.Composers.Video.Scenes.Impl;
 using Roton.Emulation.Core;
 
-namespace Lyon.App
+namespace Lyon.App.Impl
 {
     public class Launcher : ILauncher
     {

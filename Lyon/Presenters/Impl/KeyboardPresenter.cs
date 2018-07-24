@@ -4,7 +4,7 @@ using DotSDL.Input.Keyboard;
 using Roton.Emulation.Core.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
-namespace Lyon.Presenters
+namespace Lyon.Presenters.Impl
 {
     public class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {

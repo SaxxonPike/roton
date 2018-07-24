@@ -4,7 +4,7 @@ using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
-using Lyon.App;
+using Lyon.App.Impl;
 using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Cheats;

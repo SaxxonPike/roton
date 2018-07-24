@@ -5,7 +5,7 @@ using DotSDL.Audio;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.Impl;
 
-namespace Lyon.Presenters
+namespace Lyon.Presenters.Impl
 {
     public class AudioPresenter : IDisposable, IAudioPresenter
     {

@@ -1,12 +1,8 @@
 ﻿using System;
 using Autofac;
 using Lyon.App;
-using Lyon.Presenters;
-using Roton.Composers.Video.Glyphs;
-using Roton.Composers.Video.Palettes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
-using Roton.Infrastructure;
 
 namespace Lyon
 {
@@ -28,25 +24,12 @@ namespace Lyon
                 .As<ICommandLine>()
                 .SingleInstance();
 
-            Register(builder);
-
             using (var container = builder.Build())
             {
                 container
                     .Resolve<IBootstrap>()
                     .Boot(args);                
             }
-        }
-
-        private static void Register(ContainerBuilder builder)
-        {
-            builder.RegisterType<AssemblyResourceService>()
-                .As<IAssemblyResourceService>()
-                .SingleInstance();
-
-            builder.RegisterType<AudioPresenter>()
-                .As<IAudioPresenter>()
-                .SingleInstance();
         }
     }
 }
