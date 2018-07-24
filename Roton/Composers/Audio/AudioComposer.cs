@@ -47,7 +47,7 @@ namespace Roton.Composers.Audio
             _bufferNumerator = outputSampleRate * 10;
         }
 
-        private IEnumerable<int> ComposeAudio()
+        private IEnumerable<float> ComposeAudio()
         {
             while (_bufferAccumulator > _bufferDenominator)
             {

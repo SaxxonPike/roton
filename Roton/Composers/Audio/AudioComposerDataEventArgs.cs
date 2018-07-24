@@ -4,6 +4,6 @@ namespace Roton.Composers.Audio
 {
     public class AudioComposerDataEventArgs : EventArgs
     {
-        public int[] Data { get; set; }
+        public float[] Data { get; set; }
     }
 }

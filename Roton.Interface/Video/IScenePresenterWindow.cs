@@ -1,6 +1,6 @@
-﻿namespace Lyon.Presenters
+﻿namespace Roton.Interface.Video
 {
-    public interface IOpenGlScenePresenterWindow
+    public interface IScenePresenterWindow
     {
         void MakeCurrent();
         void SwapBuffers();

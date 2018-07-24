@@ -1,8 +1,7 @@
 ﻿using System;
+using DotSDL.Events;
+using DotSDL.Graphics;
 using Lyon.Presenters;
-using OpenTK;
-using OpenTK.Input;
-using Roton.Composers.Video;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -11,53 +10,53 @@ namespace Lyon.App
 {
     public class Launcher : ILauncher
     {
-        private class Window : GameWindow, IOpenGlScenePresenterWindow
+        private class Window : SdlWindow, IScenePresenterWindow
         {
+            public int Width => WindowWidth;
+            public int Height => WindowHeight;
+            
             private readonly IContext _context;
             private readonly IKeyboardPresenter _keyboardPresenter;
             private readonly IScenePresenter _scenePresenter;
 
             public Window(
-                IComposerProxy composerProxy,
-                IContext context,
-                IKeyboardPresenter keyboardPresenter)
+                IComposerProxy     composerProxy,
+                IContext           context,
+                IKeyboardPresenter keyboardPresenter) : base("Roton",
+                                                             new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
+                                                             640, 350)
             {
                 _context = context;
                 _keyboardPresenter = keyboardPresenter;
                 _scenePresenter = new ScenePresenter(() => composerProxy.SceneComposer, () => this);
                 _context.Start();
+
+                KeyPressed += OnKeyDown;
             }
 
             public void SetSize(int width, int height)
             {
-                Width = width;
-                Height = height;
                 _scenePresenter.UpdateViewport();
             }
 
-            protected override void OnKeyDown(KeyboardKeyEventArgs e)
+            private void OnKeyDown(object obj, KeyboardEvent e)
             {
                 _keyboardPresenter.Press(e);
-                base.OnKeyDown(e);
             }
 
-            protected override void OnUpdateFrame(FrameEventArgs e)
+            public override IntPtr GetCanvasPointer()
+            {
+                var bitmap = _scenePresenter.Render();
+                return bitmap.Bits.Length == 0 ? IntPtr.Zero : bitmap.BitsPointer;
+            }
+
+            protected override void OnUpdate()
             {
                 _context.ExecuteOnce();
-                base.OnUpdateFrame(e);
             }
 
-            protected override void OnRenderFrame(FrameEventArgs e)
-            {
-                _scenePresenter.Render();
-                base.OnRenderFrame(e);
-            }
-
-            protected override void OnResize(EventArgs e)
-            {
-                base.OnResize(e);
-                _scenePresenter.UpdateViewport();
-            }
+            public void MakeCurrent() { }
+            public void SwapBuffers() { }
         }
 
         private Window _window;
@@ -99,8 +98,8 @@ namespace Lyon.App
                 audioPresenter.Start();
                 
                 _window = _window ?? new Window(_composerProxy, context, _keyboardPresenter);
-                _window.Run();
-                context.Stop();                
+                _window.Start(14);
+                context.Stop();
             }
         }
     }

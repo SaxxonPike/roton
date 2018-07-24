@@ -1,0 +1,3 @@
+[submodule "DotSDL"]
+	path = DotSDL
+	url = git@github.com:Spectere/DotSDL.git
