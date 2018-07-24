@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Interface", "Roton.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Test", "Roton.Test\Roton.Test.csproj", "{F87DC9C8-B22C-4A29-AB64-D529828950DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSDL", "DotSDL\DotSDL\DotSDL.csproj", "{91D97E4A-CA8C-4569-A5F2-52CD4DFAD3F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D97E4A-CA8C-4569-A5F2-52CD4DFAD3F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D97E4A-CA8C-4569-A5F2-52CD4DFAD3F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D97E4A-CA8C-4569-A5F2-52CD4DFAD3F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D97E4A-CA8C-4569-A5F2-52CD4DFAD3F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

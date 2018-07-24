@@ -1,10 +1,10 @@
-﻿using OpenTK.Input;
+﻿using DotSDL.Events;
 using Roton.Emulation.Core;
 
 namespace Lyon.Presenters
 {
     public interface IKeyboardPresenter : IKeyboard
     {
-        bool Press(KeyboardKeyEventArgs data);
+        bool Press(KeyboardEvent data);
     }
 }

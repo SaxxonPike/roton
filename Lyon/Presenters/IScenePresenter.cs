@@ -1,14 +1,16 @@
-﻿namespace Lyon.Presenters
+﻿using Roton.Interface.Video.Scenes;
+
+namespace Lyon.Presenters
 {
     /// <summary>
-    /// The OpenGL rendering interface.
+    /// The rendering interface.
     /// </summary>
     public interface IScenePresenter
     {
         /// <summary>
         /// Renders the scene.
         /// </summary>
-        void Render();
+        IDirectAccessBitmap Render();
 
         /// <summary>
         /// Updates the viewport of the renderer. This should be called when
