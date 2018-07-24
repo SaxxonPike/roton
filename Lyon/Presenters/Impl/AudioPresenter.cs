@@ -9,17 +9,13 @@ namespace Lyon.Presenters.Impl
 {
     public class AudioPresenter : IDisposable, IAudioPresenter
     {
-        private readonly Lazy<IAudioComposer> _audioComposer;
         private bool _isDisposed;
         private bool _running;
         private readonly List<double> _buffer;
         private readonly Playback _audio;
 
-        private IAudioComposer AudioComposer => _audioComposer.Value;
-
-        public AudioPresenter(Lazy<IAudioComposer> audioComposer)
+        public AudioPresenter()
         {
-            _audioComposer = audioComposer;
             _buffer = new List<double>();
             _audio = new Playback(44100, AudioFormat.Integer16, 1);
             Volume = 0.2;
@@ -43,13 +39,12 @@ namespace Lyon.Presenters.Impl
                 return;
 
             _running = true;
-            AudioComposer.BufferReady += Update;
         }
 
-        private void Update(object sender, AudioComposerDataEventArgs e)
+        public void Update(IEnumerable<float> buffer)
         {
             // Buffer incoming data.
-            var data = e.Data.Select(i => i * Volume).ToArray();
+            var data = buffer.Select(i => i * Volume).ToArray();
             _buffer.AddRange(data);
         }
 
@@ -58,7 +53,6 @@ namespace Lyon.Presenters.Impl
             if (!_running)
                 return;
 
-            AudioComposer.BufferReady -= Update;
             _running = false;
         }
 

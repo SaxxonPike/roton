@@ -9,13 +9,11 @@ namespace Lyon.Presenters.Impl
     /// </summary>
     public class ScenePresenter : IScenePresenter
     {
-        private readonly Func<IBitmapSceneComposer> _getBitmapSceneComposer;
-        private readonly Func<IWindow> _getWindow;
+        private readonly Lazy<ISceneComposer> _sceneComposer;
 
-        public ScenePresenter(Func<IBitmapSceneComposer> getBitmapSceneComposer, Func<IWindow> getWindow)
+        public ScenePresenter(Lazy<ISceneComposer> sceneComposer)
         {
-            _getBitmapSceneComposer = getBitmapSceneComposer;
-            _getWindow = getWindow;
+            _sceneComposer = sceneComposer;
         }
 
         /// <summary>
@@ -30,8 +28,7 @@ namespace Lyon.Presenters.Impl
         /// </summary>
         public IBitmap Render()
         {
-            var composer = _getBitmapSceneComposer();
-            return composer?.Bitmap;
+            return _sceneComposer.Value.Bitmap;
         }
 
         /// <summary>

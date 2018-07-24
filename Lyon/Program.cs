@@ -1,6 +1,9 @@
 ﻿using System;
 using Autofac;
 using Lyon.App;
+using Lyon.Presenters;
+using Lyon.Presenters.Impl;
+using Roton.Composers.Audio;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 
@@ -24,11 +27,14 @@ namespace Lyon
                 .As<ICommandLine>()
                 .SingleInstance();
 
+            builder.RegisterType<AudioPresenter>()
+                .As<IAudioPresenter>();
+
             using (var container = builder.Build())
             {
                 container
                     .Resolve<IBootstrap>()
-                    .Boot(args);                
+                    .Boot(args);
             }
         }
     }

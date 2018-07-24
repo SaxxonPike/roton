@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Autofac;
+using Roton.Composers.Audio;
+using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -37,7 +39,7 @@ namespace Lyon.App.Impl
             var scope = _rootLifetimeScope.BeginLifetimeScope(builder =>
             {
                 var contextMetadataService = GetContextMetadataService(contextEngine);
-                
+
                 builder.RegisterInstance(contextMetadataService)
                     .As<IContextMetadataService>()
                     .SingleInstance();
@@ -49,6 +51,14 @@ namespace Lyon.App.Impl
                 builder.Register(c => c.Resolve<IFileSystemFactory>().Create(config.HomePath))
                     .AsImplementedInterfaces()
                     .SingleInstance();
+
+                builder.Register(c => c.Resolve<IAudioComposerFactory>().Get())
+                    .As<IAudioComposer>()
+                    .As<ISpeaker>();
+
+                builder.Register(c => c.Resolve<ISceneComposerFactory>().Get())
+                    .As<ISceneComposer>()
+                    .As<ITerminal>();
 
                 builder.RegisterInstance(config).As<IConfig>().SingleInstance();
             });

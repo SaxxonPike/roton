@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Lyon.Presenters
 {
     public interface IAudioPresenter
@@ -5,5 +7,6 @@ namespace Lyon.Presenters
         double Volume { get; set; }
         void Start();
         void Stop();
+        void Update(IEnumerable<float> buffer);
     }
 }
