@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace Roton.Composers.Video.Glyphs
+namespace Roton.Composers.Video.Glyphs.Impl
 {
     public class VgaGlyphComposer : IGlyphComposer
     {

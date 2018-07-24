@@ -1,37 +1,15 @@
-using System.Collections.Generic;
-using System.Linq;
-using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original
 {
     [ContextEngine(ContextEngine.Original)]
-    public sealed class OriginalEngineResourceService : IEngineResourceService
+    public sealed class OriginalEngineResourceService : EngineResourceService
     {
-        private readonly IResource _resource;
-
         public OriginalEngineResourceService(IAssemblyResourceService assemblyResourceService)
+            : base(assemblyResourceService, "elements-zzt.bin", "memory-zzt.bin")
         {
-            _resource = assemblyResourceService
-                .GetFromAssemblyOf<OriginalEngineResourceService>();
         }
-
-        public byte[] GetElementData() 
-            => _resource.System.GetFile("elements-zzt.bin");
-
-        public byte[] GetMemoryData() 
-            => _resource.System.GetFile("memory-zzt.bin");
-        
-        public byte[] GetPaletteData() 
-            => _resource.System.GetFile("palette.bin");
-
-        public byte[] GetFontData() 
-            => _resource.System.GetFile("font.bin");
-
-        public IDictionary<string, byte[]> GetStaticFiles()
-            => _resource.Root
-                .GetFileNames("")
-                .ToDictionary(f => f, f => _resource.Root.GetFile(f));
     }
 }

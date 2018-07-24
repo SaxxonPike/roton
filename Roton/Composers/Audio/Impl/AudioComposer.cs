@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Data;
 
-namespace Roton.Composers.Audio
+namespace Roton.Composers.Audio.Impl
 {
     public class AudioComposer : IAudioComposer
     {
@@ -28,12 +28,12 @@ namespace Roton.Composers.Audio
         private readonly int _bufferNumerator;
         private readonly int _bufferDenominator;
 
-        public AudioComposer(IDrumBank drumBank, int outputSampleRate, int samplesPerDrumFrequency)
+        public AudioComposer(IDrumBank drumBank, IConfig config)
         {
             _drumBank = drumBank;
-            SampleRate = outputSampleRate;
-            _samplesPerDrumFrequency = samplesPerDrumFrequency;
-            _accumulatorLimit = outputSampleRate * AccumulatorMultiplier;
+            SampleRate = config.AudioSampleRate;
+            _samplesPerDrumFrequency = config.AudioDrumRate;
+            _accumulatorLimit = SampleRate * AccumulatorMultiplier;
 
             // base note is C-2 but our 440 frequency reference is A-2
 
@@ -44,7 +44,7 @@ namespace Roton.Composers.Audio
                 .ToArray();
 
             _bufferDenominator = 718;
-            _bufferNumerator = outputSampleRate * 10;
+            _bufferNumerator = SampleRate * 10;
         }
 
         private IEnumerable<float> ComposeAudio()

@@ -1,4 +1,4 @@
-﻿namespace Roton.Composers.Video.Glyphs
+﻿namespace Roton.Composers.Video.Glyphs.Impl
 {
     public class BitmapFont
     {

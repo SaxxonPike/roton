@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Actions;
+﻿using System;
+using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
@@ -14,6 +15,8 @@ namespace Roton.Emulation.Core
 {
     public interface IEngine
     {
+        event EventHandler Tick;
+        
         IActors Actors { get; }
         IAlerts Alerts { get; }
         IBoard Board { get; }

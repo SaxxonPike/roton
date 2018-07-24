@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace Roton.Composers.Video.Palettes
+namespace Roton.Composers.Video.Palettes.Impl
 {
-    public class VgaPaletteComposer : IPaletteComposer
+    public sealed class VgaPaletteComposer : IPaletteComposer
     {
         private readonly byte[] _data;
 

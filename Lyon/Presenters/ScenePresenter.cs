@@ -29,10 +29,10 @@ namespace Lyon.Presenters
         /// <summary>
         /// Renders the scene.
         /// </summary>
-        public IDirectAccessBitmap Render()
+        public IBitmap Render()
         {
             var composer = _getBitmapSceneComposer();
-            return composer?.DirectAccessBitmap;
+            return composer?.Bitmap;
         }
 
         /// <summary>

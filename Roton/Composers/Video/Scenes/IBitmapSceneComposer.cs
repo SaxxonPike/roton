@@ -10,7 +10,7 @@ namespace Roton.Composers.Video.Scenes
         /// <summary>
         /// The underlying bitmap.
         /// </summary>
-        IDirectAccessBitmap DirectAccessBitmap { get; }
+        IBitmap Bitmap { get; }
 
         /// <summary>
         /// If true, blinking characters will be replaced with a solid background color.

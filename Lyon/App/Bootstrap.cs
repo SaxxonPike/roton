@@ -7,10 +7,12 @@ namespace Lyon.App
     public class Bootstrap : IBootstrap
     {
         private readonly ILauncher _launcher;
+        private readonly IContextFactory _contextFactory;
 
-        public Bootstrap(ILauncher launcher)
+        public Bootstrap(ILauncher launcher, IContextFactory contextFactory)
         {
             _launcher = launcher;
+            _contextFactory = contextFactory;
         }
 
         public void Boot(string[] args)
@@ -23,14 +25,16 @@ namespace Lyon.App
             {
                 DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
                 RandomSeed = null,
-                HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory
+                HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
+                AudioDrumRate = 64,
+                AudioSampleRate = 44100
             };
 
             if (fileName == null || fileName.EndsWith(".zzt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.Original, config);
+                _launcher.Launch(_contextFactory.Create(ContextEngine.Original, config));
 
             else if (fileName.EndsWith(".szt", StringComparison.OrdinalIgnoreCase))
-                _launcher.Launch(ContextEngine.Super, config);
+                _launcher.Launch(_contextFactory.Create(ContextEngine.Super, config));
         }
     }
 }

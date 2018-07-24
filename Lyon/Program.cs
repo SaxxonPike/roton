@@ -2,6 +2,8 @@
 using Autofac;
 using Lyon.App;
 using Lyon.Presenters;
+using Roton.Composers.Video.Glyphs;
+using Roton.Composers.Video.Palettes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
@@ -42,21 +44,9 @@ namespace Lyon
                 .As<IAssemblyResourceService>()
                 .SingleInstance();
 
-            builder.RegisterType<ComposerProxy>()
-                .As<IComposerProxy>()
-                .OnActivated(e =>
-                {
-                    var resource = e.Context.Resolve<IEngineResourceService>();
-                    e.Instance.SetFont(resource.GetFontData());
-                    e.Instance.SetPalette(resource.GetPaletteData());
-                    e.Instance.SetScene(80, 25, false);
-                })
+            builder.RegisterType<AudioPresenter>()
+                .As<IAudioPresenter>()
                 .SingleInstance();
-
-            builder.RegisterType<ClockFactory>().As<IClockFactory>().SingleInstance();
-            builder.RegisterType<SpeakerProxy>().As<ISpeaker>().SingleInstance();
-            builder.RegisterType<TerminalProxy>().As<ITerminal>().SingleInstance();
-            builder.RegisterType<KeyboardPresenter>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }

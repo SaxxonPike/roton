@@ -10,7 +10,7 @@ namespace Lyon.Presenters
         /// <summary>
         /// Renders the scene.
         /// </summary>
-        IDirectAccessBitmap Render();
+        IBitmap Render();
 
         /// <summary>
         /// Updates the viewport of the renderer. This should be called when

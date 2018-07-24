@@ -5,7 +5,7 @@ namespace Roton.Composers.Video.Scenes
     /// <summary>
     /// A wrapper for the .NET Framework Bitmap object which allows for direct pixel access.
     /// </summary>
-    public interface IDirectAccessBitmap : IDisposable
+    public interface IBitmap : IDisposable
     {
         /// <summary>
         /// Raw bits.

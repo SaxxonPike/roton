@@ -9,5 +9,7 @@ namespace Roton.Emulation.Core
         AnsiChar Read(int x, int y);
         void SetSize(int width, int height, bool wide);
         void Write(int x, int y, string value, int color);
+        void SetFont(byte[] data);
+        void SetPalette(byte[] data);
     }
 }

@@ -4,9 +4,12 @@ using System.IO;
 using System.Reflection;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Infrastructure
 {
+    [ContextEngine(ContextEngine.Original)]
+    [ContextEngine(ContextEngine.Super)]
     public class AssemblyResourceService : IAssemblyResourceService
     {
         private readonly IDictionary<Assembly, IResource> _cache = new Dictionary<Assembly, IResource>();

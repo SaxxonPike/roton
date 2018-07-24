@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Roton.Composers.Extensions;
 
-namespace Roton.Composers.Video.Glyphs
+namespace Roton.Composers.Video.Glyphs.Impl
 {
     public class CachedGlyphComposer : IGlyphComposer
     {

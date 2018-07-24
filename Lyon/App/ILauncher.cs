@@ -1,10 +1,9 @@
-﻿using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+﻿using Roton.Emulation.Core;
 
 namespace Lyon.App
 {
     public interface ILauncher
     {
-        void Launch(ContextEngine contextEngine, IConfig config);
+        void Launch(IContext context);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Composers.Audio
+namespace Roton.Composers.Audio.Impl
 {
     public class AudioComposerDataEventArgs : EventArgs
     {

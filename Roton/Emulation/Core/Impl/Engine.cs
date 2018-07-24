@@ -181,6 +181,8 @@ namespace Roton.Emulation.Core.Impl
             return -1;
         }
 
+        public event EventHandler Tick;
+        
         public IActors Actors => _actors.Value;
 
         public int Adjacent(IXyPair location, int id)
@@ -1448,7 +1450,7 @@ namespace Roton.Emulation.Core.Impl
                     State.SoundTicks--;
             }
                 
-            Speaker.Tick();
+            Tick?.Invoke(this, EventArgs.Empty);
 
             while (_ticksToRun <= 0 && ThreadActive)
                 Thread.Sleep(1);

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Roton.Composers.Video.Scenes
+namespace Roton.Composers.Video.Scenes.Impl
 {
-    public sealed class DirectAccessBitmap : IDirectAccessBitmap
+    public sealed class Bitmap : IBitmap
     {
         public int[] Bits { get; }
         private bool Disposed { get; set; }
@@ -13,7 +13,7 @@ namespace Roton.Composers.Video.Scenes
         private GCHandle BitsHandle { get; }
         public IntPtr BitsPointer { get; private set; }
 
-        public DirectAccessBitmap(int width, int height)
+        public Bitmap(int width, int height)
         {
             Width = width;
             Height = height;
