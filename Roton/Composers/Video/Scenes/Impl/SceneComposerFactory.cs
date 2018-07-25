@@ -22,7 +22,9 @@ namespace Roton.Composers.Video.Scenes.Impl
 
         public ISceneComposer Get()
         {
-            return new SceneComposer(_paletteComposerFactory, _glyphComposerFactory);
+            var composer = new SceneComposer(_paletteComposerFactory, _glyphComposerFactory);
+            composer.SetSize(80, 25, false);
+            return composer;
         }
     }
 }
