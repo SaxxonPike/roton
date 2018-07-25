@@ -7,6 +7,6 @@ namespace Roton.Composers.Audio
     public interface IAudioComposer : ISpeaker
     {
         event EventHandler<AudioComposerDataEventArgs> BufferReady;
-        int SampleRate { get; }
+        int SampleRate { get; set; }
     }
 }

@@ -8,5 +8,6 @@ namespace Lyon.Presenters
         void Start();
         void Stop();
         void Update(IEnumerable<float> buffer);
+        int SampleRate { get; }
     }
 }

@@ -42,8 +42,13 @@ namespace Lyon.Autofac
                 .OnActivated(x =>
                 {
                     var presenter = x.Context.Resolve<IAudioPresenter>();
-                    x.Instance.BufferReady += (s, a) => presenter?.Update(a.Data);
-                    presenter?.Start();
+                    if (presenter != null)
+                    {
+                        x.Instance.BufferReady += (s, a) => presenter.Update(a.Data);
+                        presenter.Start();
+
+                        x.Instance.SampleRate = presenter.SampleRate;                        
+                    }
 
                     var engine = x.Context.Resolve<IEngine>();
                     engine.Tick += (s, a) => x.Instance.Tick();

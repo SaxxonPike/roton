@@ -48,6 +48,8 @@ namespace Lyon.Presenters.Impl
             _buffer.AddRange(data);
         }
 
+        public int SampleRate => _audio.Frequency;
+
         public void Stop()
         {
             if (!_running)
