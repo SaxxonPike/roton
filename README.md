@@ -13,20 +13,16 @@ Roton is an emulation of the ZZT and Super ZZT game creation engines written in 
 Any modern version of Visual Studio or Jetbrains Rider can be used to build everything. There are no special
 instructions; just build and go.
 
-##### Mac OS X and Linux
+##### macOS and Linux
 
-*This information may be out of date. Gotta nudge Spectere to fill this out.*
+In order to compile Roton on Linux or macOS, the only thing you need to install is the
+[.NET Core SDK v2.0](https://github.com/dotnet/core/blob/master/release-notes/download-archives/2.1.2-download.md)
+(newer versions should also work). After cloning the repository, enter the directory with Roton.sln and type
+`dotnet build`. The .NET Core SDK will then retrieve all of the packages that it needs to build Lyon and Roton.
+After the build process completes, type `dotnet run --project Lyon` to run the newly built project.
 
-As long as you have a version of MonoDevelop or Xamarin Studio that supports Visual Studio 2013 projects, NuGet
-packages, and the .NET Framework 4.0, the process is almost automatic.
-
-The only bit of manual work that will be done in order to run Lyon is to copy the OpenTK.dll file from
-Roton.OpenGL/bin/Debug (or Release) into the appropriate subdirectory inside of Lyon/bin, as MonoDevelop/Xamarin doesn't
-appear to properly resolve nested assembly dependencies. This will need to be done every time that the OpenTK library
-is updated.
-
-The project has been tested in MonoDevelop 5.7.0 under Gentoo Linux (using the dotnet overlay) and Linux Mint 17.1
-(using Xamarin's package repository), as well as Xamarin Studio 5.7.0 for Mac OS X. Older versions may work as well.
+IDEs that support .NET Core, such as JetBrains Rider or Visual Studio Code, should be able to manage the build
+process as long as the SDK is installed.
 
 ### Where can I learn more about ZZT?
 
