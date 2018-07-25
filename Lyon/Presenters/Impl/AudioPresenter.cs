@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotSDL.Audio;
+using Roton.Emulation.Data;
 
 namespace Lyon.Presenters.Impl
 {
@@ -12,10 +13,10 @@ namespace Lyon.Presenters.Impl
         private readonly List<double> _buffer;
         private readonly Playback _audio;
 
-        public AudioPresenter()
+        public AudioPresenter(IConfig config)
         {
             _buffer = new List<double>();
-            _audio = new Playback(44100, AudioFormat.Integer16, 1);
+            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, 1);
             Volume = 0.2;
             
             _audio.BufferEmpty += BufferEmpty;
