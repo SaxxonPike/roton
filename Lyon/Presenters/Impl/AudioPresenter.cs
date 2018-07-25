@@ -18,15 +18,16 @@ namespace Lyon.Presenters.Impl
             _buffer = new List<double>();
             _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, 1);
             Volume = 0.2;
-            
+
             _audio.BufferEmpty += BufferEmpty;
             _audio.Play();
         }
 
-        private void BufferEmpty(object sender, AudioBuffer e) {
-            if(_buffer.Count < _audio.BufferSizeSamples) 
+        private void BufferEmpty(object sender, AudioBuffer e)
+        {
+            if (_buffer.Count < _audio.BufferSizeSamples)
                 return;
-            
+
             var samples = _buffer.Take(_audio.BufferSizeSamples).ToArray();
             Array.Copy(samples, e.Samples, Math.Min(_audio.BufferSizeSamples, e.Samples.Length));
             _buffer.RemoveRange(0, _audio.BufferSizeSamples);
