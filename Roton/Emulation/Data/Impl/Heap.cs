@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roton.Infrastructure;
+using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl
 {

@@ -17,7 +17,7 @@ using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
-using Roton.Infrastructure;
+using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl
 {

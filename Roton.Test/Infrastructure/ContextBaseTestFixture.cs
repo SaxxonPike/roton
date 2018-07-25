@@ -4,7 +4,7 @@ using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
-using Lyon.App.Impl;
+using Lyon.Autofac;
 using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Cheats;
@@ -19,6 +19,7 @@ using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
+using Roton.Infrastructure.Impl;
 using Random = System.Random;
 
 namespace Roton.Test.Infrastructure
@@ -96,11 +97,11 @@ namespace Roton.Test.Infrastructure
             builder.Register(c => SpeakerMock.Object).As<ISpeaker>();
             builder.RegisterType<AssemblyResourceService>().As<IAssemblyResourceService>();
             builder.Register(c => ClockFactoryMock.Object).As<IClockFactory>();
+            builder.RegisterModule(new RotonModule(ContextEngine));
             var container = builder.Build();
 
             // Inner container
-            var contextFactory = new ContextFactory(container);
-            Context = contextFactory.Create(ContextEngine, Config);
+            Context = container.Resolve<IContext>();
 
             // Preconfiguration
             Engine.ClearWorld();

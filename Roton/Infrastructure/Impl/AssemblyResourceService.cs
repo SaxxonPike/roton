@@ -6,7 +6,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure.Impl
 {
     [ContextEngine(ContextEngine.Original)]
     [ContextEngine(ContextEngine.Super)]

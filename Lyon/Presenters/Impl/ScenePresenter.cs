@@ -1,5 +1,4 @@
 ﻿using System;
-using Lyon.App;
 using Roton.Composers.Video.Scenes;
 
 namespace Lyon.Presenters.Impl

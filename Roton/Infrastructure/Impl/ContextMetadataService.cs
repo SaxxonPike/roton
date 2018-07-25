@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure.Impl
 {
     public abstract class ContextMetadataService : IContextMetadataService
     {

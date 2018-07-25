@@ -1,11 +1,12 @@
 ﻿using System;
+using System.IO;
 using Autofac;
 using Lyon.App;
-using Lyon.Presenters;
-using Lyon.Presenters.Impl;
-using Roton.Composers.Audio;
+using Lyon.Autofac;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 
 namespace Lyon
 {
@@ -16,25 +17,36 @@ namespace Lyon
         [STAThread]
         private static void Main(string[] args)
         {
+            var fileName = args.Length > 0
+                ? args[0]
+                : null;
+
+            var config = new Config
+            {
+                DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
+                RandomSeed = null,
+                HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
+                AudioDrumRate = 64,
+                AudioSampleRate = 44100
+            };
+
+            var selector = new ContextEngineSelector();
+            var contextEngine = selector.Get(fileName);
+
             var builder = new ContainerBuilder();
-
-            builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
-                .Where(t => !t.IsAbstract && t.IsClass)
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterInstance(new CommandLine {Args = args})
-                .As<ICommandLine>()
-                .SingleInstance();
-
-            builder.RegisterType<AudioPresenter>()
-                .As<IAudioPresenter>();
-
+            
+            builder.RegisterInstance(config)
+                .As<IConfig>()
+                .SingleInstance();            
+            
+            builder.RegisterModule(new RotonModule(contextEngine));
+            builder.RegisterModule(new LyonModule(args));
+            
             using (var container = builder.Build())
             {
                 container
-                    .Resolve<IBootstrap>()
-                    .Boot(args);
+                    .Resolve<ILauncher>()
+                    .Launch(container.Resolve<IContext>());
             }
         }
     }

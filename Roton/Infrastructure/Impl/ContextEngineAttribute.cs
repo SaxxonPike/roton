@@ -1,7 +1,7 @@
 using System;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure.Impl
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class ContextEngineAttribute : Attribute
