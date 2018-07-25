@@ -1,9 +1,5 @@
-using Roton.Infrastructure.Impl;
-
 namespace Roton.Emulation.Data.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
     public class Config : IConfig
     {
         public string DefaultWorld { get; set; }

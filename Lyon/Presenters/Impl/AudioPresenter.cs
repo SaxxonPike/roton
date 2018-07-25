@@ -25,12 +25,13 @@ namespace Lyon.Presenters.Impl
 
         private void BufferEmpty(object sender, AudioBuffer e)
         {
-            if (_buffer.Count < _audio.BufferSizeSamples)
+            if (_buffer.Count < e.Samples.Length)
                 return;
 
-            var samples = _buffer.Take(_audio.BufferSizeSamples).ToArray();
-            Array.Copy(samples, e.Samples, Math.Min(_audio.BufferSizeSamples, e.Samples.Length));
-            _buffer.RemoveRange(0, _audio.BufferSizeSamples);
+            var count = Math.Min(_buffer.Count, e.Samples.Length);
+            var samples = _buffer.Take(count).ToArray();
+            Array.Copy(samples, e.Samples, count);
+            _buffer.RemoveRange(0, count);
         }
 
         public void Start()
