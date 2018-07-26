@@ -96,8 +96,8 @@ namespace Roton.Emulation.Core.Impl
             return currentValue;
         }
 
-        public IScrollResult ShowScroll(params string[] lines) 
-            => _scroll.Show(lines);
+        public IScrollResult ShowScroll(string title, params string[] lines) 
+            => _scroll.Show(title, lines);
 
         public virtual void UpdateBorder()
         {

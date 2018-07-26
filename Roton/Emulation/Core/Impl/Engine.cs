@@ -552,14 +552,16 @@ namespace Roton.Emulation.Core.Impl
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
-            var context = new OopContext(index, instructionSource, name, this);
+            var context = new OopContext(index, instructionSource, name, this)
+            {
+                Moved = false,
+                Repeat = false,
+                Died = false,
+                Finished = false,
+                CommandsExecuted = 0
+            };
 
             context.PreviousInstruction = context.Instruction;
-            context.Moved = false;
-            context.Repeat = false;
-            context.Died = false;
-            context.Finished = false;
-            context.CommandsExecuted = 0;
 
             while (true)
             {
@@ -820,7 +822,7 @@ namespace Roton.Emulation.Core.Impl
 
         private void ShowFormattedScroll(string error)
         {
-            Hud.ShowScroll(ScrollFormatter.Format(error));
+            Hud.ShowScroll("Roton Error", ScrollFormatter.Format(error));
         }
 
         public void LoadWorld(string name)
@@ -1265,7 +1267,7 @@ namespace Roton.Emulation.Core.Impl
                     .GetFile($"{filename}.HLP")
                     .ToStringValue()
                     .Split('\xD');
-                Hud.ShowScroll(text);
+                Hud.ShowScroll(filename, text);
             }
             catch (Exception e)
             {

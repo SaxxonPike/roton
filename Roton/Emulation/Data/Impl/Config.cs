@@ -7,5 +7,6 @@ namespace Roton.Emulation.Data.Impl
         public int? RandomSeed { get; set; }
         public int AudioSampleRate { get; set; }
         public int AudioDrumRate { get; set; }
+        public int AudioBufferSize { get; set; }
     }
 }

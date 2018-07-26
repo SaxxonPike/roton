@@ -27,7 +27,8 @@ namespace Lyon
                 RandomSeed = null,
                 HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
                 AudioDrumRate = 64,
-                AudioSampleRate = 44100
+                AudioSampleRate = 44100,
+                AudioBufferSize = 4096
             };
 
             var selector = new ContextEngineSelector();

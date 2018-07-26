@@ -7,5 +7,6 @@
         int? RandomSeed { get; }
         int AudioSampleRate { get; }
         int AudioDrumRate { get; }
+        int AudioBufferSize { get; }
     }
 }

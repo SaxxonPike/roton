@@ -11,12 +11,13 @@ namespace Lyon.Presenters.Impl
         private bool _isDisposed;
         private bool _running;
         private readonly List<double> _buffer;
+        private readonly object _bufferLock = new object();
         private readonly Playback _audio;
 
         public AudioPresenter(IConfig config)
         {
             _buffer = new List<double>();
-            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono);
+            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono, (ushort)config.AudioBufferSize);
             Volume = 0.2;
 
             _audio.BufferEmpty += BufferEmpty;
@@ -25,13 +26,16 @@ namespace Lyon.Presenters.Impl
 
         private void BufferEmpty(object sender, AudioBuffer e)
         {
-            if (_buffer.Count < e.Samples.Length)
-                return;
+            lock (_bufferLock)
+            {
+                if (_buffer.Count < e.Samples.Length)
+                    return;
 
-            var count = Math.Min(_buffer.Count, e.Length);
-            var samples = _buffer.Take(count).ToArray();
-            Array.Copy(samples, e.Samples[Channel.Mono], count);
-            _buffer.RemoveRange(0, count);
+                var count = Math.Min(_buffer.Count, e.Length);
+                var samples = _buffer.Take(count).ToArray();
+                Array.Copy(samples, e.Samples[Channel.Mono], count);
+                _buffer.RemoveRange(0, count);                
+            }
         }
 
         public void Start()
@@ -46,7 +50,8 @@ namespace Lyon.Presenters.Impl
         {
             // Buffer incoming data.
             var data = buffer.Select(i => i * Volume).ToArray();
-            _buffer.AddRange(data);
+            lock (_bufferLock)
+                _buffer.AddRange(data);
         }
 
         public int SampleRate => _audio.Frequency;

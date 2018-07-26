@@ -5,7 +5,7 @@ namespace Roton.Emulation.Core
 {
     public interface IScroll
     {
-        IScrollResult Show(IEnumerable<string> message);
+        IScrollResult Show(string title, IEnumerable<string> message);
         int TextWidth { get; }
         int TextHeight { get; }
     }

@@ -64,7 +64,7 @@ namespace Roton.Emulation.Core.Impl
             for (var y = Height / 2; y >= 0; y--)
             {
                 var topY = Top + y;
-                var bottomY = Top + Height - y;
+                var bottomY = Top + Height - y - 1;
 
                 RenderLine(ScrollCharsTop, topY);
                 RenderLine(ScrollCharsBottom, bottomY);
@@ -75,6 +75,7 @@ namespace Roton.Emulation.Core.Impl
                 _engine.WaitForTick();
             }
 
+            RenderLine(ScrollCharsMid, Top + Height - 2);
             RenderLine(ScrollCharsSplit, Top + 2);
         }
 
@@ -94,6 +95,29 @@ namespace Roton.Emulation.Core.Impl
             }
 
             RenderBuffer(buffer, Top + Height / 2);
+        }
+
+        private void RenderName(string name, IList<string> message, int offset)
+        {
+            var line = message[offset];
+            var title = name;
+            var pips = false;
+
+            if (line.Length > 0 && (line[0] == ':' || line[0] == '!'))
+            {
+                title = "Press ENTER to select this";
+                pips = true;
+            }
+
+            var x = Left + (Width / 2) - (title.Length / 2);
+            _terminal.Write(x, Top + 1, title, 0x1E);
+
+            // Avoid putting these directly in the string for unicode conversion reasons
+            if (pips)
+            {
+                _terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
+                _terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
+            }
         }
 
         private void RenderBlank(int y)
@@ -139,7 +163,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void RenderContent(IList<string> message, int offset)
+        private void RenderContent(string title, IList<string> message, int offset)
         {
             var center = (Height - 4) / 2;
             var line = offset - center;
@@ -147,6 +171,8 @@ namespace Roton.Emulation.Core.Impl
             var top = Top + 3;
             var lineCount = message.Count;
             var y = top;
+            
+            RenderBlank(Top + 1);
 
             while (y <= bottom)
             {
@@ -160,6 +186,7 @@ namespace Roton.Emulation.Core.Impl
                 line++;
             }
 
+            RenderName(title, message, offset);
             RenderPips(top + center);
         }
 
@@ -173,7 +200,7 @@ namespace Roton.Emulation.Core.Impl
                 _terminal.Plot(x2, y, dot);                                
         }
 
-        private bool MainLoop(IList<string> message, ScrollResult result)
+        private bool MainLoop(string title, IList<string> message, ScrollResult result)
         {
             var update = true;
 
@@ -181,7 +208,7 @@ namespace Roton.Emulation.Core.Impl
             {
                 if (update)
                 {
-                    RenderContent(message, result.Index);
+                    RenderContent(title, message, result.Index);
                     update = false;
                 }
 
@@ -225,7 +252,7 @@ namespace Roton.Emulation.Core.Impl
             return false;
         }
 
-        public IScrollResult Show(IEnumerable<string> message)
+        public IScrollResult Show(string title, IEnumerable<string> message)
         {
             var msg = message.ToList();
             var buffer = GetScreenBuffer();
@@ -241,7 +268,7 @@ namespace Roton.Emulation.Core.Impl
             
             while (true)
             {
-                var selected = MainLoop(msg, result);
+                var selected = MainLoop(title, msg, result);
                 if (!selected)
                 {
                     result.Cancelled = true;

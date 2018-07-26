@@ -20,6 +20,7 @@ namespace Lyon.App.Impl
             Lazy<IKeyboardPresenter> keyboardPresenter,
             Lazy<IScenePresenter> scenePresenter) : base("Roton",
             new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
+            1280, 700,
             640, 350)
         {
             _keyboardPresenter = keyboardPresenter;
