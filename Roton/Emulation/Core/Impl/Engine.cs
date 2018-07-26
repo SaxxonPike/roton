@@ -274,7 +274,7 @@ namespace Roton.Emulation.Core.Impl
         public void ClearSound()
         {
             State.SoundPlaying = false;
-            StopSound();
+            Speaker.StopNote();
         }
 
         public void ClearWorld()
@@ -946,16 +946,24 @@ namespace Roton.Emulation.Core.Impl
                 vector.SetTo(0, 1);
             else if (underId == ElementList.RiverWId)
                 vector.SetTo(-1, 0);
-            else if (underId == ElementList.RiverEId) vector.SetTo(1, 0);
-
-            var actorTile = Tiles[actor.Location];
-            if (actorTile.Id == ElementList.PlayerId)
-                InteractionList.Get(actorTile.Id).Interact(actor.Location.Sum(vector), 0, vector);
+            else if (underId == ElementList.RiverEId) 
+                vector.SetTo(1, 0);
 
             if (vector.IsNonZero())
             {
+                var actorTile = Tiles[actor.Location];
+                if (actorTile.Id == ElementList.PlayerId)
+                {
+                    var targetLocation = actor.Location.Sum(vector);
+                    InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, vector);                
+                }
+            }
+            
+            if (vector.IsNonZero())
+            {
                 var target = actor.Location.Sum(vector);
-                if (ElementAt(target).IsFloor) MoveActor(index, target);
+                if (ElementAt(target).IsFloor) 
+                    MoveActor(index, target);
             }
         }
 
@@ -970,7 +978,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void PlaySound(int priority, ISound sound, int offset, int length)
         {
-            if (State.GameOver)
+            if (State.GameOver || State.GameQuiet)
                 return;
 
             var soundIsNotPlaying = !State.SoundPlaying;
@@ -1253,10 +1261,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        public void ShowInGameHelp()
-        {
-            ShowHelp("GAME");
-        }
+        public void ShowInGameHelp() => Features.ShowInGameHelp();
 
         public ISounds Sounds => _sounds.Value;
 
@@ -1519,7 +1524,7 @@ namespace Roton.Emulation.Core.Impl
             return tile.Color & 0x0F;
         }
 
-        private int Distance(IXyPair a, IXyPair b)
+        private static int Distance(IXyPair a, IXyPair b)
         {
             return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
         }
@@ -1947,10 +1952,6 @@ namespace Roton.Emulation.Core.Impl
             Exited?.Invoke(this, EventArgs.Empty);
         }
 
-        private void StopSound()
-        {
-        }
-
         private void TitleScreenLoop()
         {
             State.QuitEngine = false;
@@ -1967,6 +1968,7 @@ namespace Roton.Emulation.Core.Impl
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
                     MainLoop(gameEnded);
+                    gameEnded = false;
 
                     if (!ThreadActive)
                         break;

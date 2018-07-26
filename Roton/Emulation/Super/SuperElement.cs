@@ -4,7 +4,6 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
     public sealed class SuperElement : Element
     {
         public SuperElement(IMemory memory, int index)

@@ -95,7 +95,7 @@ namespace Roton.Emulation.Super
 
         public bool HandleTitleInput()
         {
-            switch (_engine.State.KeyPressed)
+            switch (_engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Enter: // Enter
                     return true;

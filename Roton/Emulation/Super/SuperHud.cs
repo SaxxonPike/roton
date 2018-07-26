@@ -25,9 +25,9 @@ namespace Roton.Emulation.Super
 
         private Location16 OldCamera { get; }
 
-        private int ViewportHeight => 25;
+        private const int ViewportHeight = 25;
 
-        private int ViewportWidth => 40;
+        private const int ViewportWidth = 40;
 
         protected override bool Confirm(string message)
         {
@@ -165,12 +165,8 @@ namespace Roton.Emulation.Super
             }
         }
 
-        private bool IsWithinCamera(IXyPair loc)
+        private static bool IsWithinCamera(IXyPair loc)
         {
-//            x += 0x0E + 1;
-//            y += 0x02 + 1;
-//            x -= _engine.Board.Camera.X;
-//            y -= _engine.Board.Camera.Y;
             return loc.X >= 0x0E && loc.X <= 0x25 && loc.Y >= 0x02 && loc.Y <= 0x15;
         }
 

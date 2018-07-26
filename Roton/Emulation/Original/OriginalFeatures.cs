@@ -67,7 +67,7 @@ namespace Roton.Emulation.Original
 
         public void HandlePlayerInput(IActor actor)
         {
-            switch (_engine.State.KeyPressed)
+            switch (_engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.T:
                     if (_engine.World.TorchCycles <= 0)
@@ -151,6 +151,7 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.W:
                     break;
                 case EngineKeyCode.A:
+                    ShowAbout();
                     break;
                 case EngineKeyCode.E:
                     break;
@@ -159,6 +160,7 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.R:
                     break;
                 case EngineKeyCode.H:
+                    ShowInGameHelp();
                     break;
                 case EngineKeyCode.QuestionMark:
                     _engine.Hud.EnterCheat();

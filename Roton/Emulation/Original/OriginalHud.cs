@@ -26,11 +26,11 @@ namespace Roton.Emulation.Original
 
         private Location[] FadeMatrix { get; }
 
-        private int ViewportHeight => 25;
+        private const int ViewportHeight = 25;
 
-        private int ViewportTileCount => ViewportWidth * ViewportHeight;
+        private const int ViewportTileCount = ViewportWidth * ViewportHeight;
 
-        private int ViewportWidth => 60;
+        private const int ViewportWidth = 60;
 
         public override void ClearPausing()
         {
@@ -231,7 +231,7 @@ namespace Roton.Emulation.Original
             _terminal.SetSize(_engine.State.EditorMode ? 60 : 80, 25, false);
         }
 
-        private string IntToString(int i)
+        private static string IntToString(int i)
         {
             return i + " ";
         }

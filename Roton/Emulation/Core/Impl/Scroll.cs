@@ -109,7 +109,7 @@ namespace Roton.Emulation.Core.Impl
                 pips = true;
             }
 
-            var x = Left + (Width / 2) - (title.Length / 2);
+            var x = Left + Width / 2 - title.Length / 2;
             _terminal.Write(x, Top + 1, title, 0x1E);
 
             // Avoid putting these directly in the string for unicode conversion reasons
@@ -125,9 +125,9 @@ namespace Roton.Emulation.Core.Impl
             var x = Left + 2;
             var right = Left + Width - 3;
             var blank = new AnsiChar(0x20, 0x1E);
-            
+
             for (var x2 = x; x2 <= right; x2++)
-                _terminal.Plot(x2, y, blank);                                
+                _terminal.Plot(x2, y, blank);
         }
 
         private void RenderPips(int y)
@@ -145,7 +145,7 @@ namespace Roton.Emulation.Core.Impl
             if (text[0] == '$')
             {
                 var actualText = text.Substring(1);
-                _terminal.Write(Left + (Width / 2) - (actualText.Length / 2), y, actualText, 0x1F);
+                _terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
             }
             else if (text[0] == ':')
             {
@@ -171,7 +171,7 @@ namespace Roton.Emulation.Core.Impl
             var top = Top + 3;
             var lineCount = message.Count;
             var y = top;
-            
+
             RenderBlank(Top + 1);
 
             while (y <= bottom)
@@ -181,7 +181,7 @@ namespace Roton.Emulation.Core.Impl
                     RenderText(message[line], y);
                 else if (line == -1 || line == lineCount)
                     RenderDots(y);
-                
+
                 y++;
                 line++;
             }
@@ -195,9 +195,9 @@ namespace Roton.Emulation.Core.Impl
             var x = Left + 7;
             var right = Left + Width - 3;
             var dot = new AnsiChar(0x07, 0x1E);
-            
+
             for (var x2 = x; x2 <= right; x2 += 5)
-                _terminal.Plot(x2, y, dot);                                
+                _terminal.Plot(x2, y, dot);
         }
 
         private bool MainLoop(string title, IList<string> message, ScrollResult result)
@@ -222,19 +222,19 @@ namespace Roton.Emulation.Core.Impl
                         return true;
                     case EngineKeyCode.PageUp:
                         result.Index -= Height - 5;
-                        update = true;                            
+                        update = true;
                         break;
                     case EngineKeyCode.PageDown:
                         result.Index += Height - 5;
-                        update = true;                            
+                        update = true;
                         break;
                     case EngineKeyCode.Up:
                         result.Index--;
-                        update = true;                            
+                        update = true;
                         break;
                     case EngineKeyCode.Down:
                         result.Index++;
-                        update = true;                            
+                        update = true;
                         break;
                 }
 
@@ -243,7 +243,7 @@ namespace Roton.Emulation.Core.Impl
                     if (result.Index >= message.Count)
                         result.Index = message.Count - 1;
                     if (result.Index < 0)
-                        result.Index = 0;                    
+                        result.Index = 0;
                 }
 
                 _engine.WaitForTick();
@@ -256,7 +256,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var msg = message.ToList();
             var buffer = GetScreenBuffer();
-            
+
             var result = new ScrollResult
             {
                 Index = 0,
@@ -265,7 +265,7 @@ namespace Roton.Emulation.Core.Impl
             };
 
             Open();
-            
+
             while (true)
             {
                 var selected = MainLoop(title, msg, result);
@@ -277,9 +277,9 @@ namespace Roton.Emulation.Core.Impl
 
                 var innerJump = SelectLine(msg, result);
                 if (!innerJump)
-                    break;                    
+                    break;
             }
-            
+
             Close(buffer);
 
             return result;
@@ -289,34 +289,33 @@ namespace Roton.Emulation.Core.Impl
 
         public int TextHeight => Height - 4;
 
-        private bool SelectLine(IReadOnlyList<string> message, ScrollResult result)
+        private static bool SelectLine(IReadOnlyList<string> message, ScrollResult result)
         {
             if (result.Index < 0)
                 return false;
-            
+
             var line = message[result.Index];
 
-            if (!line.StartsWith("!") || !line.Contains(";")) 
+            if (!line.StartsWith("!") || !line.Contains(";"))
                 return false;
-            
-            var label = "";
-            label = line
+
+            var label = line
                 .Substring(1, line.IndexOf(';') - 1)
                 .ToUpperInvariant();
             result.Label = label;
             label = $":{label};";
-            
+
             for (var i = 0; i < message.Count; i++)
             {
                 line = message[i];
-                if (!line.ToUpperInvariant().StartsWith(label)) 
+                if (!line.ToUpperInvariant().StartsWith(label))
                     continue;
-                
+
                 result.Index = i;
                 return true;
             }
 
             return false;
-        }        
+        }
     }
 }

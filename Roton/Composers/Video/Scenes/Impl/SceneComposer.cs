@@ -126,7 +126,7 @@ namespace Roton.Composers.Video.Scenes.Impl
             var charTotal = Columns * Rows;
             _chars = new AnsiChar[charTotal];
 
-            InitializeNewBitmap();
+            InitializeFont();
 
             Resized?.Invoke(this, new ResizedEventArgs {Width = width, Height = height, Wide = wide});
         }

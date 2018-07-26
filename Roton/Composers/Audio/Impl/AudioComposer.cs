@@ -58,14 +58,12 @@ namespace Roton.Composers.Audio.Impl
                             yield return 0;
                             continue;
                         }
-                        else
-                        {
-                            _drumSoundFrequenciesRemaining--;
-                            _drumSoundFrequencyIndex++;
-                            _accumulatorAmount =
-                                _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
-                            _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-                        }
+
+                        _drumSoundFrequenciesRemaining--;
+                        _drumSoundFrequencyIndex++;
+                        _accumulatorAmount =
+                            _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
+                        _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
                     }
                 }
 
