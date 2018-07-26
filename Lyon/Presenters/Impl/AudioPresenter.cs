@@ -16,7 +16,7 @@ namespace Lyon.Presenters.Impl
         public AudioPresenter(IConfig config)
         {
             _buffer = new List<double>();
-            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, 1);
+            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono);
             Volume = 0.2;
 
             _audio.BufferEmpty += BufferEmpty;
@@ -28,9 +28,9 @@ namespace Lyon.Presenters.Impl
             if (_buffer.Count < e.Samples.Length)
                 return;
 
-            var count = Math.Min(_buffer.Count, e.Samples.Length);
+            var count = Math.Min(_buffer.Count, e.Length);
             var samples = _buffer.Take(count).ToArray();
-            Array.Copy(samples, e.Samples, count);
+            Array.Copy(samples, e.Samples[Channel.Mono], count);
             _buffer.RemoveRange(0, count);
         }
 
