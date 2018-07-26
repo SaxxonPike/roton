@@ -112,9 +112,9 @@ namespace Lyon.Presenters.Impl
             Enqueue(new KeyPress
             {
                 Key = Map[data.Keycode],
-                Shift = data.Keymod == Keymod.Shift,
-                Control = data.Keymod == Keymod.Ctrl,
-                Alt = data.Keymod == Keymod.Alt
+                Shift = data.Keymod.HasFlag(Keymod.LShift) | data.Keymod.HasFlag(Keymod.RShift),
+                Control = data.Keymod.HasFlag(Keymod.LCtrl) | data.Keymod.HasFlag(Keymod.RCtrl),
+                Alt = data.Keymod.HasFlag(Keymod.LAlt) | data.Keymod.HasFlag(Keymod.RAlt)
             });
 
             return true;
