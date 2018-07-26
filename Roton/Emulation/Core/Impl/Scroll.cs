@@ -112,6 +112,33 @@ namespace Roton.Emulation.Core.Impl
             _terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
         }
 
+        private void RenderText(string text, int y)
+        {
+            var x = Left + 4;
+            if (text.Length < 1)
+                return;
+
+            if (text[0] == '$')
+            {
+                var actualText = text.Substring(1);
+                _terminal.Write(Left + (Width / 2) - (actualText.Length / 2), y, actualText, 0x1F);
+            }
+            else if (text[0] == ':')
+            {
+                // do nothing
+            }
+            else if (text[0] == '!')
+            {
+                var actualText = text.Substring(text.IndexOf(';') + 1);
+                _terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
+                _terminal.Write(Left + 6, y, actualText, 0x1F);
+            }
+            else
+            {
+                _terminal.Write(x, y, text, 0x1E);
+            }
+        }
+
         private void RenderContent(IList<string> message, int offset)
         {
             var center = (Height - 4) / 2;
@@ -119,14 +146,13 @@ namespace Roton.Emulation.Core.Impl
             var bottom = Height + Top - 2;
             var top = Top + 3;
             var lineCount = message.Count;
-            var x = Left + 3;
             var y = top;
 
             while (y <= bottom)
             {
                 RenderBlank(y);
                 if (line >= 0 && line < lineCount)
-                    _terminal.Write(x, y, message[line], 0x1E);
+                    RenderText(message[line], y);
                 else if (line == -1 || line == lineCount)
                     RenderDots(y);
                 
