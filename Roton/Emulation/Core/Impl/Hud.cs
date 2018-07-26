@@ -91,7 +91,7 @@ namespace Roton.Emulation.Core.Impl
             return string.Empty;
         }
 
-        public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue)
+        public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
         {
             return currentValue;
         }

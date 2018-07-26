@@ -845,7 +845,10 @@ namespace Roton.Emulation.Core.Impl
             var worldData = TryLoadWorld();
 
             if (worldData == null || worldData.Length == 0)
+            {
+                ShowDosError();
                 return;
+            };
 
             using (var stream = new MemoryStream(worldData))
             {
@@ -878,6 +881,20 @@ namespace Roton.Emulation.Core.Impl
 
             UnpackBoard(World.BoardIndex);
             State.WorldLoaded = true;
+        }
+
+        private void ShowDosError()
+        {
+            Hud.ShowScroll("Error",
+                "$DOS Error:",
+                "",
+                "This may be caused by missing",
+                "files or a bad disk. If you",
+                "are trying to save a game,",
+                "your disk may be full -- try",
+                "using a blank, formatted disk",
+                "for saving the game!"
+            );
         }
 
         public void LockActor(int index)
@@ -1741,7 +1758,10 @@ namespace Roton.Emulation.Core.Impl
                     return;
 
                 if (State.DefaultWorldName.Length > 0)
-                    LoadWorld(State.DefaultWorldName);
+                {
+                    State.AboutShown = true;
+                    LoadWorld(State.DefaultWorldName);                    
+                }
 
                 State.StartBoard = World.BoardIndex;
                 SetBoard(0);

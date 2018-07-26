@@ -127,6 +127,7 @@ namespace Roton.Composers.Video.Scenes.Impl
             _chars = new AnsiChar[charTotal];
 
             InitializeFont();
+            InitializeNewBitmap();
 
             Resized?.Invoke(this, new ResizedEventArgs {Width = width, Height = height, Wide = wide});
         }
@@ -194,13 +195,25 @@ namespace Roton.Composers.Video.Scenes.Impl
                 return;
 
             var charTotal = Columns * Rows;
-            _stride = Columns * _glyphComposer.MaxWidth;
-            _offsetLookUpTable = Enumerable.Range(0, charTotal)
+            var stride = Columns * _glyphComposer.MaxWidth;
+            var height = Rows * _glyphComposer.MaxHeight;
+            
+            if (Bitmap != null)
+            {
+                if (Bitmap.Height == height && Bitmap.Width == stride)
+                    return;
+            }
+
+            var offsetLookUpTable = Enumerable.Range(0, charTotal)
                 .Select(i =>
-                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * _stride * (i / Columns))
+                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
                 .ToArray();
-            Bitmap?.Dispose();
-            Bitmap = new Bitmap(_stride, Rows * _glyphComposer.MaxHeight);
+
+            var oldBitmap = Bitmap;
+            _stride = stride;
+            _offsetLookUpTable = offsetLookUpTable;
+            Bitmap = new Bitmap(stride, height);
+            oldBitmap?.Dispose();
         }
 
         private void InitializeFont()

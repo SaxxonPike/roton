@@ -73,7 +73,7 @@ namespace Roton.Emulation.Original
             DrawString(0x3D, 2, @"    - - - - -      ", 0x1F);
             if (_engine.TitleScreen)
             {
-                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed);
+                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
                 DrawString(0x3E, 0x15, @" S ", 0x70);
                 DrawString(0x3E, 0x07, @" W ", 0x30);
                 DrawString(0x41, 0x07, @" World:", 0x1E);
@@ -246,44 +246,117 @@ namespace Roton.Emulation.Original
             }
         }
 
-        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue)
+        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
         {
-            string minIndicator;
-            string maxIndicator;
-            if (message.Length >= 3 && message[message.Length - 3] == ';')
+            void DrawPip(int col)
             {
-                minIndicator = message[message.Length - 1].ToString();
-                maxIndicator = message[message.Length - 2].ToString();
-                message = message.Substring(0, message.IndexOf(';') - 1);
+                DrawStatusLine(y + 1);
+                
+                if (barText == null)
+                {
+                    DrawChar(x + currentValue + 1,
+                        y + 1,
+                        new AnsiChar(0x1F, 0x1F));
+                }
+                else
+                {
+                    DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
+                        y + 1, 
+                        new AnsiChar(0x1F, 0x1F));
+                }
+            }
+            
+            DrawStatusLine(y);
+            DrawStatusLine(y + 2);
+            
+            if (barText == null)
+            {
+                string minIndicator;
+                string maxIndicator;
+                if (message.Length >= 3 && message[message.Length - 3] == ';')
+                {
+                    minIndicator = message[message.Length - 2].ToString();
+                    maxIndicator = message[message.Length - 1].ToString();
+                    message = message.Substring(0, message.IndexOf(';') - 1);
+                }
+                else
+                {
+                    minIndicator = @"1";
+                    maxIndicator = @"9";
+                }
+
+                DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
+                DrawString(x, y + 2, minIndicator + @"....:...." + maxIndicator, 0x1E);
             }
             else
             {
-                minIndicator = @"1";
-                maxIndicator = @"9";
+                DrawString(x, y + 2, barText, 0x1E);
             }
 
-            DrawStatusLine(y);
-            DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
-            DrawStatusLine(y + 1);
-            DrawStatusLine(y + 2);
-            DrawString(x, y + 2, minIndicator + @"....:...." + maxIndicator, 0x1E);
-            while (true)
+            if (!performSelection)
             {
-                if (performSelection)
+                DrawPip(0x1F);
+                return currentValue;
+            }
+            
+            DrawPip(0x9F);
+            
+            while (_engine.ThreadActive)
+            {
+                var update = false;
+                    
+                _engine.ReadInput();
+
+                switch (_engine.State.KeyPressed)
                 {
-                    // todo: selection shit
-                    // cancel it for now
-                    performSelection = false;
+                    case EngineKeyCode.None:
+                        _engine.WaitForTick();
+                        continue;
+                    case EngineKeyCode.Left:
+                        if (barText == null)
+                        {
+                            if (currentValue > 0)
+                                currentValue--;
+                        }
+                        else
+                        {
+                            if (currentValue > 0)
+                                currentValue = 0;
+                        }
+                        update = true;
+                        break;
+                    case EngineKeyCode.Right:
+                        if (barText == null)
+                        {
+                            if (currentValue < 8)
+                                currentValue++;
+                        }
+                        else
+                        {
+                            if (currentValue < 0x80)
+                                currentValue = 0x80;
+                        }
+                        update = true;
+                        break;
                 }
 
-                if (!performSelection || _engine.State.KeyShift || _engine.State.KeyPressed == EngineKeyCode.Enter ||
+                if (update)
+                {
+                    DrawStatusLine(y + 1);
+                    DrawPip(0x9F);
+                }
+                    
+                if (_engine.State.KeyShift || _engine.State.KeyPressed == EngineKeyCode.Enter ||
                     _engine.State.KeyPressed == EngineKeyCode.Escape)
                 {
                     break;
                 }
+                
+                _engine.WaitForTick();
             }
 
-            DrawChar(x + currentValue + 1, y + 1, new AnsiChar(0x1F, 0x1F));
+            DrawPip(0x1F);
+            
             return currentValue;
         }
 

@@ -156,6 +156,8 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.E:
                     break;
                 case EngineKeyCode.S:
+                    _engine.State.GameSpeed = _engine.Hud.SelectParameter(
+                        true, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
                     break;
                 case EngineKeyCode.R:
                     break;
