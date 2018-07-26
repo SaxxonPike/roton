@@ -1822,10 +1822,9 @@ namespace Roton.Emulation.Core.Impl
 
             if (World.IsLocked)
             {
-                var file = LoadFile(GetWorldName(string.IsNullOrWhiteSpace(World.Name)
-                    ? State.WorldFileName
-                    : World.Name));
-                if (file != null)
+                LoadWorld(World.Name);
+                
+                if (State.WorldLoaded)
                 {
                     gameIsActive = State.WorldLoaded;
                     State.StartBoard = World.BoardIndex;
