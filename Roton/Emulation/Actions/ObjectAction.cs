@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,30 +9,31 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x24)]
     public sealed class ObjectAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public ObjectAction(IEngine engine)
+        public ObjectAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             if (actor.Instruction >= 0)
             {
-                _engine.ExecuteCode(index, actor, @"Interaction");
+                Engine.ExecuteCode(index, actor, @"Interaction");
             }
             if (actor.Vector.IsZero()) return;
 
             var target = actor.Location.Sum(actor.Vector);
-            if (_engine.Tiles.ElementAt(target).IsFloor)
+            if (Engine.Tiles.ElementAt(target).IsFloor)
             {
-                _engine.MoveActor(index, target);
+                Engine.MoveActor(index, target);
             }
             else
             {
-                _engine.BroadcastLabel(-index, KnownLabels.Thud, false);
+                Engine.BroadcastLabel(-index, KnownLabels.Thud, false);
             }
         }
     }

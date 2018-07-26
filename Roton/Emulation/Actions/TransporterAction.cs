@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,16 +9,17 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x1E)]
     public sealed class TransporterAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public TransporterAction(IEngine engine)
+        public TransporterAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            _engine.UpdateBoard(_engine.Actors[index].Location);
+            Engine.UpdateBoard(Engine.Actors[index].Location);
         }
     }
 }

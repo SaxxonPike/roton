@@ -22,7 +22,7 @@ namespace Roton.Composers.Audio.Impl
         
         public IAudioComposer Get()
         {
-            return new AudioComposer(_drumBank.Value, _config.Value);
+            return new AudioComposer(_drumBank, _config.Value);
         }
     }
 }

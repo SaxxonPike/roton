@@ -8,5 +8,6 @@
         int AudioSampleRate { get; }
         int AudioDrumRate { get; }
         int AudioBufferSize { get; }
+        int VideoScale { get; }
     }
 }

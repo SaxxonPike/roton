@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,31 +9,32 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x29)]
     public sealed class LionAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public LionAction(IEngine engine)
+        public LionAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 >= _engine.Random.Synced(10)
-                ? _engine.Seek(actor.Location)
-                : _engine.Rnd());
+            vector.CopyFrom(actor.P1 >= Engine.Random.GetNext(10)
+                ? Engine.Seek(actor.Location)
+                : Engine.Rnd());
 
             var target = actor.Location.Sum(vector);
-            var element = _engine.Tiles.ElementAt(target);
+            var element = Engine.Tiles.ElementAt(target);
             if (element.IsFloor)
             {
-                _engine.MoveActor(index, target);
+                Engine.MoveActor(index, target);
             }
-            else if (element.Id == _engine.ElementList.PlayerId)
+            else if (element.Id == Engine.ElementList.PlayerId)
             {
-                _engine.Attack(index, target);
+                Engine.Attack(index, target);
             }
         }
     }

@@ -206,7 +206,7 @@ namespace Roton.Emulation.Original
 
         private void GenerateFadeMatrix()
         {
-            var rnd = new Randomizer(new RandomState());
+            var rnd = _engine.Random;
             var index = 0;
             for (var x = 0; x < ViewportWidth; x++)
             {

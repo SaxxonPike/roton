@@ -4,6 +4,6 @@ namespace Lyon.App
 {
     public interface ILauncher
     {
-        void Launch(IContext context);
+        void Launch(IEngine context);
     }
 }

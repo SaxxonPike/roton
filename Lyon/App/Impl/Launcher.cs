@@ -1,9 +1,12 @@
 ﻿using System;
 using Lyon.Presenters;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl
 {
+    [ContextEngine(ContextEngine.Startup)]
     public class Launcher : ILauncher
     {
         private readonly Lazy<IWindow> _window;
@@ -20,12 +23,18 @@ namespace Lyon.App.Impl
         private IWindow Window => _window.Value;
         private IAudioPresenter AudioPresenter => _audioPresenter.Value;
 
-        public void Launch(IContext context)
+        private void OnExited(object sender, EventArgs e)
+        {
+            Window.Close();
+        }
+
+        public void Launch(IEngine engine)
         {
             AudioPresenter.Start();
-            context.Start();
+            engine.Exited += OnExited;
+            engine.Start();
             Window.Start(14);
-            context.Stop();
+            engine.Stop();
             AudioPresenter.Stop();
         }
     }

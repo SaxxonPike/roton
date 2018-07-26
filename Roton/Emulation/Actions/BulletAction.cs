@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,71 +9,72 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x45)]
     public sealed class BulletAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public BulletAction(IEngine engine)
+        public BulletAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var canRicochet = true;
             while (true)
             {
                 var target = actor.Location.Sum(actor.Vector);
-                var element = _engine.Tiles.ElementAt(target);
-                if (element.IsFloor || element.Id == _engine.ElementList.WaterId)
+                var element = Engine.Tiles.ElementAt(target);
+                if (element.IsFloor || element.Id == Engine.ElementList.WaterId)
                 {
-                    _engine.MoveActor(index, target);
+                    Engine.MoveActor(index, target);
                     break;
                 }
 
-                if (canRicochet && element.Id == _engine.ElementList.RicochetId)
+                if (canRicochet && element.Id == Engine.ElementList.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetOpposite();
-                    _engine.PlaySound(1, _engine.Sounds.Ricochet);
+                    Engine.PlaySound(1, Engine.Sounds.Ricochet);
                     continue;
                 }
 
-                if (element.Id == _engine.ElementList.BreakableId ||
-                    element.IsDestructible && (element.Id == _engine.ElementList.PlayerId || actor.P1 == 0))
+                if (element.Id == Engine.ElementList.BreakableId ||
+                    element.IsDestructible && (element.Id == Engine.ElementList.PlayerId || actor.P1 == 0))
                 {
                     if (element.Points != 0)
                     {
-                        _engine.World.Score += element.Points;
-                        _engine.UpdateStatus();
+                        Engine.World.Score += element.Points;
+                        Engine.UpdateStatus();
                     }
 
-                    _engine.Attack(index, target);
+                    Engine.Attack(index, target);
                     break;
                 }
 
                 if (canRicochet &&
-                    _engine.Tiles[actor.Location.Sum(actor.Vector.Clockwise())].Id == _engine.ElementList.RicochetId)
+                    Engine.Tiles[actor.Location.Sum(actor.Vector.Clockwise())].Id == Engine.ElementList.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetCounterClockwise();
-                    _engine.PlaySound(1, _engine.Sounds.Ricochet);
+                    Engine.PlaySound(1, Engine.Sounds.Ricochet);
                     continue;
                 }
 
                 if (canRicochet &&
-                    _engine.Tiles[actor.Location.Sum(actor.Vector.CounterClockwise())].Id == _engine.ElementList.RicochetId)
+                    Engine.Tiles[actor.Location.Sum(actor.Vector.CounterClockwise())].Id == Engine.ElementList.RicochetId)
                 {
                     canRicochet = false;
                     actor.Vector.SetClockwise();
-                    _engine.PlaySound(1, _engine.Sounds.Ricochet);
+                    Engine.PlaySound(1, Engine.Sounds.Ricochet);
                     continue;
                 }
 
-                _engine.RemoveActor(index);
-                _engine.State.ActIndex--;
-                if (element.Id == _engine.ElementList.ObjectId || element.Id == _engine.ElementList.ScrollId)
+                Engine.RemoveActor(index);
+                Engine.State.ActIndex--;
+                if (element.Id == Engine.ElementList.ObjectId || element.Id == Engine.ElementList.ScrollId)
                 {
-                    _engine.BroadcastLabel(-_engine.Actors.ActorIndexAt(target), KnownLabels.Shot, false);
+                    Engine.BroadcastLabel(-Engine.Actors.ActorIndexAt(target), KnownLabels.Shot, false);
                 }
 
                 break;

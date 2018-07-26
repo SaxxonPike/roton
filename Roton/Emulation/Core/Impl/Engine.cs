@@ -55,7 +55,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IItemList> _items;
         private readonly Lazy<IKeyboard> _keyboard;
         private readonly Lazy<IParser> _parser;
-        private readonly Lazy<IRandom> _random;
+        private readonly Lazy<IRandomizer> _randomizer;
         private readonly Lazy<ISounds> _sounds;
         private readonly Lazy<IState> _state;
         private readonly Lazy<ITargetList> _targets;
@@ -64,10 +64,11 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IWorld> _world;
 
         private int _ticksToRun;
+        private bool _step;
 
         public Engine(Lazy<IClockFactory> clockFactory, Lazy<IActors> actors, Lazy<IAlerts> alerts, Lazy<IBoard> board,
             Lazy<IFileSystem> fileSystem, Lazy<IElementList> elements,
-            Lazy<IInterpreter> interpreter, Lazy<IRandom> random, Lazy<IKeyboard> keyboard,
+            Lazy<IInterpreter> interpreter, Lazy<IRandomizer> randomizer, Lazy<IKeyboard> keyboard,
             Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
             Lazy<IConfig> config, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
             Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
@@ -93,7 +94,7 @@ namespace Roton.Emulation.Core.Impl
             _fileSystem = fileSystem;
             _elements = elements;
             _interpreter = interpreter;
-            _random = random;
+            _randomizer = randomizer;
             _keyboard = keyboard;
             _tiles = tiles;
             _sounds = sounds;
@@ -128,7 +129,8 @@ namespace Roton.Emulation.Core.Impl
         private void ClockTick(object sender, EventArgs args)
         {
             if (_ticksToRun < 3) _ticksToRun++;
-            if (!ThreadActive) Clock.Stop();
+            if (!ThreadActive) 
+                Clock.Stop();
         }
         
         private IClock Clock => _clock.Value;
@@ -157,7 +159,7 @@ namespace Roton.Emulation.Core.Impl
 
         private Thread Thread { get; set; }
 
-        public bool ThreadActive { get; set; }
+        public bool ThreadActive => Thread != null || _step;
 
         public IActionList ActionList
             => _actionList.Value;
@@ -181,6 +183,7 @@ namespace Roton.Emulation.Core.Impl
             return -1;
         }
 
+        public event EventHandler Exited;
         public event EventHandler Tick;
         
         public IActors Actors => _actors.Value;
@@ -714,10 +717,9 @@ namespace Roton.Emulation.Core.Impl
 
         public void StepOnce()
         {
-            var oldThreadActive = ThreadActive;
-            ThreadActive = true;
-            MainLoop(true, true);
-            ThreadActive = oldThreadActive;
+            _step = true;
+            MainLoop(true);
+            _step = false;
         }
 
         public string[] GetMessageLines() => Features.GetMessageLines();
@@ -1125,31 +1127,7 @@ namespace Roton.Emulation.Core.Impl
             PlaySound(5, Sounds.Error);
         }
 
-        public IRandom Random => _random.Value;
-
-//        private EngineKeyCode GetKeyCode()
-//        {
-//            if (!Keyboard.KeyIsAvailable)
-//                return EngineKeyCode.None;
-//            
-//            var keyPress = Keyboard.GetKey();
-//            if (keyPress >= 0x80 && Keyboard.KeyIsAvailable)
-//            {
-//                keyPress = Keyboard.GetKey();
-//                keyPress |= 0x80;
-//            }
-//
-//            State.KeyShift = Keyboard.Shift;
-//            
-//            return (EngineKeyCode) keyPress;
-//        }
-//        
-//        public EngineKeyCode ReadKey()
-//        {
-//            var key = GetKeyCode();
-//            State.KeyPressed = key;
-//            return State.KeyPressed;
-//        }
+        public IRandomizer Random => _randomizer.Value;
 
         public void RemoveActor(int index)
         {
@@ -1202,7 +1180,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var result = new Vector();
             result.CopyFrom(
-                Random.Synced(2) == 0
+                Random.GetNext(2) == 0
                     ? vector.Clockwise()
                     : vector.CounterClockwise());
             return result;
@@ -1211,7 +1189,7 @@ namespace Roton.Emulation.Core.Impl
         public IXyPair Seek(IXyPair location)
         {
             var result = new Vector();
-            if (Random.Synced(2) == 0 || Player.Location.Y == location.Y)
+            if (Random.GetNext(2) == 0 || Player.Location.Y == location.Y)
                 result.X = (Player.Location.X - location.X).Polarity();
 
             if (result.X == 0) result.Y = (Player.Location.Y - location.Y).Polarity();
@@ -1339,10 +1317,9 @@ namespace Roton.Emulation.Core.Impl
 
         public void Start()
         {
-            if (!ThreadActive)
+            if (Thread == null)
             {
                 _ticksToRun = 0;
-                ThreadActive = true;
                 Thread = new Thread(StartMain);
                 Thread.Start();
             }
@@ -1352,7 +1329,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void Stop()
         {
-            if (ThreadActive) ThreadActive = false;
+            Thread = null;
         }
 
         public ITargetList TargetList => _targets.Value;
@@ -1398,7 +1375,7 @@ namespace Roton.Emulation.Core.Impl
                                 if (element.IsDestructible || element.Id == ElementList.StarId) Destroy(target);
 
                                 if (element.Id == ElementList.EmptyId || element.Id == ElementList.BreakableId)
-                                    Tiles[target].SetTo(ElementList.BreakableId, Random.Synced(7) + 9);
+                                    Tiles[target].SetTo(ElementList.BreakableId, Random.GetNext(7) + 9);
                             }
                             else
                             {
@@ -1603,11 +1580,6 @@ namespace Roton.Emulation.Core.Impl
             return new Vector(State.Vector8[index], State.Vector8[index + 8]);
         }
 
-        private string GetWorldName(string baseName)
-        {
-            return Features.GetWorldName(baseName);
-        }
-
         private void InitializeElements(bool showInvisibles)
         {
             ElementList.Reset();
@@ -1619,24 +1591,11 @@ namespace Roton.Emulation.Core.Impl
             ElementList[ElementList.PlayerId].Character = 0x02;
         }
 
-        private byte[] LoadFile(string filename)
-        {
-            try
-            {
-                return Disk.GetFile(filename);
-            }
-            catch (Exception)
-            {
-                // TODO: This kind of error handling is bad.
-                return null;
-            }
-        }
-
-        private void MainLoop(bool doFade, bool step)
+        private void MainLoop(bool doFade)
         {
             var alternating = false;
 
-            if (!step)
+            if (!_step)
             {
                 Hud.CreateStatusText();
                 Hud.UpdateStatus();
@@ -1722,7 +1681,7 @@ namespace Roton.Emulation.Core.Impl
 
                             State.GamePaused = false;
                             Hud.ClearPausing();
-                            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
+                            State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);
                             World.IsLocked = true;
                         }
                     }
@@ -1740,7 +1699,7 @@ namespace Roton.Emulation.Core.Impl
                             ReadInput();
                         }
 
-                    if (step)
+                    if (_step)
                         break;
 
                     WaitForTick();
@@ -1773,6 +1732,9 @@ namespace Roton.Emulation.Core.Impl
                 if (!State.AboutShown)
                     ShowAbout();
 
+                if (!ThreadActive)
+                    return;
+
                 if (State.DefaultWorldName.Length > 0)
                     LoadWorld(State.DefaultWorldName);
 
@@ -1794,7 +1756,7 @@ namespace Roton.Emulation.Core.Impl
 
             State.GameWaitTime = State.GameSpeed << 1;
             State.BreakGameLoop = false;
-            State.GameCycle = Random.Synced(Facts.MainLoopRandomCycleRange);
+            State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);
             State.ActIndex = State.ActorCount + 1;
         }
 
@@ -1845,7 +1807,7 @@ namespace Roton.Emulation.Core.Impl
                 EnterBoard();
                 State.PlayerElement = ElementList.PlayerId;
                 State.GamePaused = true;
-                MainLoop(true, false);
+                MainLoop(true);
             }
 
             return gameIsActive;
@@ -1938,9 +1900,9 @@ namespace Roton.Emulation.Core.Impl
 
         private void Rnd(IXyPair result)
         {
-            result.X = Random.Synced(3) - 1;
+            result.X = Random.GetNext(3) - 1;
             if (result.X == 0)
-                result.Y = (Random.Synced(2) << 1) - 1;
+                result.Y = (Random.GetNext(2) << 1) - 1;
             else
                 result.Y = 0;
         }
@@ -1980,37 +1942,9 @@ namespace Roton.Emulation.Core.Impl
 
         private void StartMain()
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            ValidateDependencies();
             StartInit();
             TitleScreenLoop();
-        }
-
-        private void ValidateDependencies()
-        {
-            if (ActionList == null) throw new Exception($"{nameof(ActionList)} cannot be null.");
-            if (Actors == null) throw new Exception($"{nameof(Actors)} cannot be null.");
-            if (Alerts == null) throw new Exception($"{nameof(Alerts)} cannot be null.");
-            if (Board == null) throw new Exception($"{nameof(Board)} cannot be null.");
-            if (CheatList == null) throw new Exception($"{nameof(CheatList)} cannot be null.");
-            if (Colors == null) throw new Exception($"{nameof(Colors)} cannot be null.");
-            if (CommandList == null) throw new Exception($"{nameof(CommandList)} cannot be null.");
-            if (ConditionList == null) throw new Exception($"{nameof(ConditionList)} cannot be null.");
-            if (Config == null) throw new Exception($"{nameof(Config)} cannot be null.");
-            if (DirectionList == null) throw new Exception($"{nameof(DirectionList)} cannot be null.");
-            if (ElementList == null) throw new Exception($"{nameof(ElementList)} cannot be null.");
-            if (Hud == null) throw new Exception($"{nameof(Hud)} cannot be null.");
-            if (ItemList == null) throw new Exception($"{nameof(ItemList)} cannot be null.");
-            if (Parser == null) throw new Exception($"{nameof(Parser)} cannot be null.");
-            if (Random == null) throw new Exception($"{nameof(Random)} cannot be null.");
-            if (Sounds == null) throw new Exception($"{nameof(Sounds)} cannot be null.");
-            if (State == null) throw new Exception($"{nameof(State)} cannot be null.");
-            if (TargetList == null) throw new Exception($"{nameof(TargetList)} cannot be null.");
-            if (Tiles == null) throw new Exception($"{nameof(Tiles)} cannot be null.");
-            if (World == null) throw new Exception($"{nameof(World)} cannot be null.");
-            if (DrawList == null) throw new Exception($"{nameof(DrawList)} cannot be null.");
-            if (InteractionList == null) throw new Exception($"{nameof(InteractionList)} cannot be null.");
-            if (Facts == null) throw new Exception($"{nameof(Facts)} cannot be null.");
+            Exited?.Invoke(this, EventArgs.Empty);
         }
 
         private void StopSound()
@@ -2032,7 +1966,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     State.PlayerElement = ElementList.MonitorId;
                     State.GamePaused = false;
-                    MainLoop(gameEnded, false);
+                    MainLoop(gameEnded);
 
                     if (!ThreadActive)
                         break;

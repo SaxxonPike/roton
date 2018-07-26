@@ -21,20 +21,19 @@ namespace Lyon.Autofac
 
             var cmsf = new ContextMetadataServiceFactory();
 
-            builder.RegisterInstance(cmsf)
-                .As<IContextMetadataServiceFactory>()
-                .SingleInstance();
-
             builder.Register(c => cmsf.Get(_contextEngine))
                 .As<IContextMetadataService>()
+                .AutoActivate()
                 .SingleInstance();
             
             builder.RegisterTypes(cmsf.Get(ContextEngine.Startup).GetTypes().ToArray())
                 .AsImplementedInterfaces()
+                .AutoActivate()
                 .SingleInstance();
             
             builder.RegisterTypes(cmsf.Get(_contextEngine).GetTypes().ToArray())
                 .AsImplementedInterfaces()
+                .AutoActivate()
                 .SingleInstance();
         }
     }

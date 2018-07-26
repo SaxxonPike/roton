@@ -19,7 +19,7 @@ namespace Roton.Emulation.Directions
         public IXyPair Execute(IOopContext context)
         {
             var direction = _engine.Parser.GetDirection(context);
-            return _engine.Random.Synced(2) == 0
+            return _engine.Random.GetNext(2) == 0
                 ? direction.Clockwise()
                 : direction.CounterClockwise();
         }

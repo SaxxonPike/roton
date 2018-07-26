@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
@@ -9,20 +10,27 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super)]
     public sealed class ActionList : IActionList
     {
-        private readonly IDictionary<int, IAction> _actions = new Dictionary<int, IAction>();
+        private readonly Lazy<IDictionary<int, IAction>> _actions;
+        private IDictionary<int, IAction> Actions => _actions.Value;
 
-        public ActionList(IContextMetadataService contextMetadataService, IEnumerable<IAction> actions)
+        public ActionList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<IAction>> actions)
         {
-            foreach (var action in actions)
+            _actions = new Lazy<IDictionary<int, IAction>>(() =>
             {
-                foreach (var attribute in contextMetadataService.GetMetadata(action))
-                    _actions.Add(attribute.Id, action);
-            }
+                var result = new Dictionary<int, IAction>();
+                foreach (var action in actions.Value)
+                {
+                    foreach (var attribute in contextMetadataService.Value.GetMetadata(action))
+                        result.Add(attribute.Id, action);
+                }
+
+                return result;
+            });
         }
         
         public IAction Get(int index)
         {
-            return _actions.ContainsKey(index) ? _actions[index] : _actions[-1];
+            return Actions.ContainsKey(index) ? Actions[index] : Actions[-1];
         }
 
     }

@@ -2,10 +2,13 @@
 using DotSDL.Events;
 using DotSDL.Input.Keyboard;
 using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl
 {
+    [ContextEngine(ContextEngine.Startup)]
     public class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {
         private static readonly IDictionary<Keycode, AnsiKey> Map = new Dictionary<Keycode, AnsiKey>

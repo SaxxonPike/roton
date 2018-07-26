@@ -1,4 +1,6 @@
-﻿using Roton.Emulation.Data.Impl;
+﻿using System;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl
@@ -7,25 +9,29 @@ namespace Roton.Emulation.Core.Impl
     [ContextEngine(ContextEngine.Super)]
     public sealed class Randomizer : IRandomizer
     {
-        private readonly IRandomState _state;
+        private readonly Lazy<IRandomState> _randomState;
+        private IRandomState RandomState => _randomState.Value;
 
-        public Randomizer(IRandomState initialState)
+        public Randomizer(Lazy<IConfig> config)
         {
-            _state = initialState;
+            _randomState = new Lazy<IRandomState>(() => 
+                config.Value.RandomSeed.HasValue ? 
+                new RandomState(config.Value.RandomSeed.Value) :
+                new RandomState());
         }
 
         public int GetNext(int exclusiveUpperBound)
         {
             unchecked
             {
-                var newState = _state.State * 33797 + 1;
-                _state.State = newState;
+                var newState = RandomState.State * 33797 + 1;
+                RandomState.State = newState;
             }
 
             if (exclusiveUpperBound == 0)
                 return 0;
 
-            return ((_state.State >> 16) & 0xFFFF) % exclusiveUpperBound;
+            return ((RandomState.State >> 16) & 0xFFFF) % exclusiveUpperBound;
         }
     }
 }

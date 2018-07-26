@@ -15,6 +15,7 @@ namespace Roton.Emulation.Core
 {
     public interface IEngine
     {
+        event EventHandler Exited;
         event EventHandler Tick;
         
         IActors Actors { get; }
@@ -31,7 +32,7 @@ namespace Roton.Emulation.Core
         IItemList ItemList { get; }
         IParser Parser { get; }
         IActor Player { get; }
-        IRandom Random { get; }
+        IRandomizer Random { get; }
         ISounds Sounds { get; }
         IState State { get; }
         ITargetList TargetList { get; }
@@ -103,8 +104,8 @@ namespace Roton.Emulation.Core
         IMemory Memory { get; }
         void StepOnce();
         string[] GetMessageLines();
-        bool ThreadActive { get; }
         ITimers Timers { get; }
         IDrumBank DrumBank { get; }
+        bool ThreadActive { get; }
     }
 }

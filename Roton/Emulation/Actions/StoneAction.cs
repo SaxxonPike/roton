@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -7,19 +8,20 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x40)]
     public sealed class StoneAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public StoneAction(IEngine engine)
+        public StoneAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
 
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
-            _engine.Tiles[actor.Location].Color =
-                (_engine.Tiles[actor.Location].Color & 0x70) + _engine.Random.Synced(7) + 9;
-            _engine.UpdateBoard(_engine.Actors[index].Location);
+            var actor = Engine.Actors[index];
+            Engine.Tiles[actor.Location].Color =
+                (Engine.Tiles[actor.Location].Color & 0x70) + Engine.Random.GetNext(7) + 9;
+            Engine.UpdateBoard(Engine.Actors[index].Location);
         }
     }
 }

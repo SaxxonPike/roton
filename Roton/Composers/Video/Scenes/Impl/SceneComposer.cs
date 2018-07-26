@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Palettes;
 using Roton.Composers.Video.Palettes.Impl;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Composers.Video.Scenes.Impl
 {
@@ -16,7 +16,6 @@ namespace Roton.Composers.Video.Scenes.Impl
         public event EventHandler<SceneUpdatedEventArgs> SceneUpdated;
         
         private readonly AnsiChar _blankCharacter;
-        private readonly Encoding _codePage437 = Encoding.GetEncoding(437);
         private readonly IGlyphComposerFactory _glyphComposerFactory;
         private readonly IPaletteComposerFactory _paletteComposerFactory;
         private int[] _colors;
@@ -39,7 +38,6 @@ namespace Roton.Composers.Video.Scenes.Impl
         )
         {
             _blankCharacter = new AnsiChar();
-
             _paletteComposerFactory = paletteComposerFactory;
             _glyphComposerFactory = glyphComposerFactory;
 
@@ -135,7 +133,7 @@ namespace Roton.Composers.Video.Scenes.Impl
 
         public void Write(int x, int y, string value, int color)
         {
-            foreach (var b in _codePage437.GetBytes(value ?? string.Empty))
+            foreach (var b in (value ?? string.Empty).ToBytes())
             {
                 if (y >= Rows)
                     break;
@@ -208,7 +206,7 @@ namespace Roton.Composers.Video.Scenes.Impl
         private void InitializeFont()
         {
             var oldGlyphComposer = _glyphComposer;
-            _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide ? 2 : 1, 1);
+            _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide);
             
             if (oldGlyphComposer != null)
             {
