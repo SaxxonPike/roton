@@ -981,6 +981,7 @@ namespace Roton.Emulation.Core.Impl
 
             State.SoundBuffer.Enqueue(sound);
             State.SoundPlaying = true;
+            State.SoundPriority = priority;
         }
 
         public void PlotTile(IXyPair location, ITile tile)
@@ -1442,6 +1443,7 @@ namespace Roton.Emulation.Core.Impl
                     else
                     {
                         State.SoundPlaying = false;
+                        State.SoundPriority = 0;
                         Speaker.StopNote();
                     }
                 }
