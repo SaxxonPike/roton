@@ -13,7 +13,7 @@ namespace Lyon.App.Impl
     {
         private readonly Lazy<IKeyboardPresenter> _keyboardPresenter;
         private readonly Lazy<IScenePresenter> _scenePresenter;
-        private bool _closed;
+        private bool _closeWindow;
 
         public int Width => WindowWidth;
         public int Height => WindowHeight;
@@ -52,11 +52,7 @@ namespace Lyon.App.Impl
 
         public void Close()
         {
-            if (_closed)
-                return;
-            
-            _closed = true;
-            Stop();
+            _closeWindow = true;
         }
 
         private void OnKeyDown(object obj, KeyboardEvent e)
@@ -72,6 +68,8 @@ namespace Lyon.App.Impl
 
         protected override void OnUpdate()
         {
+            if(_closeWindow)
+                Stop();
         }
 
         public void MakeCurrent()
