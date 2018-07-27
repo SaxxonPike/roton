@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,21 +9,22 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x2D)]
     public sealed class CentipedeSegmentAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public CentipedeSegmentAction(IEngine engine)
+        public CentipedeSegmentAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             if (actor.Leader < 0)
             {
                 if (actor.Leader < -1)
                 {
-                    _engine.Tiles[actor.Location].Id = _engine.ElementList.HeadId;
+                    Engine.Tiles[actor.Location].Id = Engine.ElementList.HeadId;
                 }
                 else
                 {

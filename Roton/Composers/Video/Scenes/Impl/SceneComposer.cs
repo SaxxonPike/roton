@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Palettes;
 using Roton.Composers.Video.Palettes.Impl;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Composers.Video.Scenes.Impl
 {
@@ -16,7 +16,6 @@ namespace Roton.Composers.Video.Scenes.Impl
         public event EventHandler<SceneUpdatedEventArgs> SceneUpdated;
         
         private readonly AnsiChar _blankCharacter;
-        private readonly Encoding _codePage437 = Encoding.GetEncoding(437);
         private readonly IGlyphComposerFactory _glyphComposerFactory;
         private readonly IPaletteComposerFactory _paletteComposerFactory;
         private int[] _colors;
@@ -39,7 +38,6 @@ namespace Roton.Composers.Video.Scenes.Impl
         )
         {
             _blankCharacter = new AnsiChar();
-
             _paletteComposerFactory = paletteComposerFactory;
             _glyphComposerFactory = glyphComposerFactory;
 
@@ -128,6 +126,7 @@ namespace Roton.Composers.Video.Scenes.Impl
             var charTotal = Columns * Rows;
             _chars = new AnsiChar[charTotal];
 
+            InitializeFont();
             InitializeNewBitmap();
 
             Resized?.Invoke(this, new ResizedEventArgs {Width = width, Height = height, Wide = wide});
@@ -135,7 +134,7 @@ namespace Roton.Composers.Video.Scenes.Impl
 
         public void Write(int x, int y, string value, int color)
         {
-            foreach (var b in _codePage437.GetBytes(value ?? string.Empty))
+            foreach (var b in (value ?? string.Empty).ToBytes())
             {
                 if (y >= Rows)
                     break;
@@ -196,19 +195,30 @@ namespace Roton.Composers.Video.Scenes.Impl
                 return;
 
             var charTotal = Columns * Rows;
-            _stride = Columns * _glyphComposer.MaxWidth;
+            var stride = Columns * _glyphComposer.MaxWidth;
+            var height = Rows * _glyphComposer.MaxHeight;
+            
             _offsetLookUpTable = Enumerable.Range(0, charTotal)
                 .Select(i =>
-                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * _stride * (i / Columns))
+                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
                 .ToArray();
-            Bitmap?.Dispose();
-            Bitmap = new Bitmap(_stride, Rows * _glyphComposer.MaxHeight);
+
+            if (Bitmap != null)
+            {
+                if (Bitmap.Height == height && Bitmap.Width == stride)
+                    return;
+            }
+
+            var oldBitmap = Bitmap;
+            _stride = stride;
+            Bitmap = new Bitmap(stride, height);
+            oldBitmap?.Dispose();
         }
 
         private void InitializeFont()
         {
             var oldGlyphComposer = _glyphComposer;
-            _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide ? 2 : 1, 1);
+            _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide);
             
             if (oldGlyphComposer != null)
             {

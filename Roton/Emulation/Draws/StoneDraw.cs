@@ -17,7 +17,7 @@ namespace Roton.Emulation.Draws
         
         public AnsiChar Draw(IXyPair location)
         {
-            return new AnsiChar(0x41 + _engine.Random.NonSynced(0x1A), _engine.Tiles[location].Color);
+            return new AnsiChar(0x41 + _engine.Random.GetNext(0x1A), _engine.Tiles[location].Color);
         }
     }
 }

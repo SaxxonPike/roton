@@ -13,12 +13,16 @@ namespace Roton.Emulation.Original
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
+        private readonly ICheatHud _cheatHud;
+        private readonly IChoiceHud _choiceHud;
 
-        public OriginalHud(IEngine engine, ITerminal terminal, IScroll scroll)
+        public OriginalHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud, IChoiceHud choiceHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
+            _cheatHud = cheatHud;
+            _choiceHud = choiceHud;
             _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
@@ -26,11 +30,11 @@ namespace Roton.Emulation.Original
 
         private Location[] FadeMatrix { get; }
 
-        private int ViewportHeight => 25;
+        private const int ViewportHeight = 25;
 
-        private int ViewportTileCount => ViewportWidth * ViewportHeight;
+        private const int ViewportTileCount = ViewportWidth * ViewportHeight;
 
-        private int ViewportWidth => 60;
+        private const int ViewportWidth = 60;
 
         public override void ClearPausing()
         {
@@ -73,11 +77,11 @@ namespace Roton.Emulation.Original
             DrawString(0x3D, 2, @"    - - - - -      ", 0x1F);
             if (_engine.TitleScreen)
             {
-                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed);
+                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
                 DrawString(0x3E, 0x15, @" S ", 0x70);
                 DrawString(0x3E, 0x07, @" W ", 0x30);
                 DrawString(0x41, 0x07, @" World:", 0x1E);
-                DrawString(0x45, 0x08, _engine.World.Name.Length <= 0 ? _engine.Facts.UntitledWorldName : _engine.World.Name, 0x1F);
+                CreateStatusWorld();
                 DrawString(0x3E, 0x0B, @" P ", 0x70);
                 DrawString(0x41, 0x0B, @" Play", 0x1F);
                 DrawString(0x3E, 0x0C, @" R ", 0x30);
@@ -130,6 +134,12 @@ namespace Roton.Emulation.Original
                 DrawString(0x3E, 0x17, @" Q ", 0x70);
                 DrawString(0x41, 0x17, @" Quit", 0x1F);
             }
+        }
+
+        public override void CreateStatusWorld()
+        {
+            DrawStatusLine(0x08);
+            DrawString(0x45, 0x08, _engine.World.Name.Length <= 0 ? _engine.Facts.UntitledWorldName : _engine.World.Name, 0x1F);
         }
 
         public override void DrawChar(int x, int y, AnsiChar ac)
@@ -206,7 +216,7 @@ namespace Roton.Emulation.Original
 
         private void GenerateFadeMatrix()
         {
-            var rnd = new Randomizer(new RandomState());
+            var rnd = _engine.Random;
             var index = 0;
             for (var x = 0; x < ViewportWidth; x++)
             {
@@ -231,7 +241,7 @@ namespace Roton.Emulation.Original
             _terminal.SetSize(_engine.State.EditorMode ? 60 : 80, 25, false);
         }
 
-        private string IntToString(int i)
+        private static string IntToString(int i)
         {
             return i + " ";
         }
@@ -244,47 +254,6 @@ namespace Roton.Emulation.Original
                 DrawTileCommon(location.X, location.Y, _engine.Draw(location.Sum(1, 1)));
                 FadeWait(i);
             }
-        }
-
-        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue)
-        {
-            string minIndicator;
-            string maxIndicator;
-            if (message.Length >= 3 && message[message.Length - 3] == ';')
-            {
-                minIndicator = message[message.Length - 1].ToString();
-                maxIndicator = message[message.Length - 2].ToString();
-                message = message.Substring(0, message.IndexOf(';') - 1);
-            }
-            else
-            {
-                minIndicator = @"1";
-                maxIndicator = @"9";
-            }
-
-            DrawStatusLine(y);
-            DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
-            DrawStatusLine(y + 1);
-            DrawStatusLine(y + 2);
-            DrawString(x, y + 2, minIndicator + @"....:...." + maxIndicator, 0x1E);
-            while (true)
-            {
-                if (performSelection)
-                {
-                    // todo: selection shit
-                    // cancel it for now
-                    performSelection = false;
-                }
-
-                if (!performSelection || _engine.State.KeyShift || _engine.State.KeyPressed == EngineKeyCode.Enter ||
-                    _engine.State.KeyPressed == EngineKeyCode.Escape)
-                {
-                    break;
-                }
-            }
-
-            DrawChar(x + currentValue + 1, y + 1, new AnsiChar(0x1F, 0x1F));
-            return currentValue;
         }
 
         public override void UpdateBorder()
@@ -349,8 +318,24 @@ namespace Roton.Emulation.Original
             }
 
             DrawString(0x41, 0x0F, _engine.State.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
-            
-            // TODO: draw debug info if +DEBUG
+
+            if (_engine.World.Flags.Contains("DEBUG"))
+                DrawString(0x3E, 0x04, $"Used: {_engine.MemoryUsage}", 0x1E);
+        }
+
+        public override string EnterCheat()
+        {
+            DrawStatusLine(4);
+            DrawStatusLine(5);
+            var cheat = _cheatHud.Show(0x3F, 0x04);
+            DrawStatusLine(4);
+            DrawStatusLine(5);
+            return cheat;
+        }
+
+        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
+        {
+            return _choiceHud.Show(performSelection, x, y, message, currentValue, barText);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core
@@ -23,10 +24,11 @@ namespace Roton.Emulation.Core
         bool QuitEngineConfirmation();
         void RedrawBoard();
         string SaveGame();
-        int SelectParameter(bool performSelection, int x, int y, string message, int currentValue);
+        int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText);
         IScrollResult ShowScroll(string title, params string[] lines);
         void UpdateBorder();
         void UpdateCamera();
         void UpdateStatus();
+        void CreateStatusWorld();
     }
 }

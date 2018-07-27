@@ -2,10 +2,13 @@
 using DotSDL.Events;
 using DotSDL.Input.Keyboard;
 using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl
 {
+    [ContextEngine(ContextEngine.Startup)]
     public class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {
         private static readonly IDictionary<Keycode, AnsiKey> Map = new Dictionary<Keycode, AnsiKey>
@@ -101,11 +104,16 @@ namespace Lyon.Presenters.Impl
             {Keycode.Slash, AnsiKey.Slash},
             {Keycode.Space, AnsiKey.Space},
             {Keycode.Tab, AnsiKey.Tab},
-            {Keycode.Up, AnsiKey.Up}
+            {Keycode.Up, AnsiKey.Up},
+            {Keycode.Question, AnsiKey.Slash},
+            {Keycode.Equals, AnsiKey.Equals}
         };
 
         public bool Press(KeyboardEvent data)
         {
+            if (data.Keycode == 0)
+                return false;
+            
             if (!Map.ContainsKey(data.Keycode))
                 return false;
             

@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -9,16 +10,17 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x1D)]
     public sealed class BlinkWallAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public BlinkWallAction(IEngine engine)
+        public BlinkWallAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
 
             if (actor.P3 == 0)
                 actor.P3 = actor.P1 + 1;
@@ -29,19 +31,19 @@ namespace Roton.Emulation.Actions
 
                 var erasedRay = false;
                 var target = actor.Location.Sum(actor.Vector);
-                var emptyElement = _engine.ElementList.EmptyId;
+                var emptyElement = Engine.ElementList.EmptyId;
 
                 var rayElement = actor.Vector.X == 0
-                    ? _engine.ElementList.BlinkRayVId
-                    : _engine.ElementList.BlinkRayHId;
+                    ? Engine.ElementList.BlinkRayVId
+                    : Engine.ElementList.BlinkRayHId;
 
-                var color = _engine.Tiles[actor.Location].Color;
+                var color = Engine.Tiles[actor.Location].Color;
                 var rayTile = new Tile(rayElement, color);
 
-                while (_engine.Tiles[target].Matches(rayTile))
+                while (Engine.Tiles[target].Matches(rayTile))
                 {
-                    _engine.Tiles[target].Id = emptyElement;
-                    _engine.UpdateBoard(target);
+                    Engine.Tiles[target].Id = emptyElement;
+                    Engine.UpdateBoard(target);
                     target.Add(actor.Vector);
                     erasedRay = true;
                 }
@@ -51,57 +53,57 @@ namespace Roton.Emulation.Actions
 
                 do
                 {
-                    if (_engine.Tiles.ElementAt(target).IsDestructible)
+                    if (Engine.Tiles.ElementAt(target).IsDestructible)
                     {
-                        _engine.Destroy(target);
+                        Engine.Destroy(target);
                     }
 
-                    if (_engine.Tiles[target].Id == _engine.ElementList.PlayerId)
+                    if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
                     {
-                        var playerIndex = _engine.Actors.ActorIndexAt(target);
+                        var playerIndex = Engine.Actors.ActorIndexAt(target);
                         IXyPair testVector;
 
                         if (actor.Vector.Y == 0)
                         {
                             testVector = new Vector(0, 1);
-                            if (_engine.Tiles[target.Difference(testVector)].Id == emptyElement)
+                            if (Engine.Tiles[target.Difference(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Difference(testVector));
+                                Engine.MoveActor(playerIndex, target.Difference(testVector));
                             }
-                            else if (_engine.Tiles[target.Sum(testVector)].Id == emptyElement)
+                            else if (Engine.Tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                Engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
                         else
                         {
                             testVector = new Vector(1, 0);
-                            if (_engine.Tiles[target.Sum(testVector)].Id == emptyElement)
+                            if (Engine.Tiles[target.Sum(testVector)].Id == emptyElement)
                             {
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                Engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
-                            else if (_engine.Tiles[target.Difference(testVector)].Id == emptyElement)
+                            else if (Engine.Tiles[target.Difference(testVector)].Id == emptyElement)
                             {
                                 // "sum" is not a mistake; this is an original engine bug
-                                _engine.MoveActor(playerIndex, target.Sum(testVector));
+                                Engine.MoveActor(playerIndex, target.Sum(testVector));
                             }
                         }
 
-                        if (_engine.Tiles[target].Id == _engine.ElementList.PlayerId)
+                        if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
                         {
-                            while (_engine.World.Health > 0)
+                            while (Engine.World.Health > 0)
                             {
-                                _engine.Harm(0);
+                                Engine.Harm(0);
                             }
 
                             blocked = true;
                         }
                     }
 
-                    if (_engine.Tiles[target].Id == emptyElement)
+                    if (Engine.Tiles[target].Id == emptyElement)
                     {
-                        _engine.Tiles[target].CopyFrom(rayTile);
-                        _engine.UpdateBoard(target);
+                        Engine.Tiles[target].CopyFrom(rayTile);
+                        Engine.UpdateBoard(target);
                     }
                     else
                     {

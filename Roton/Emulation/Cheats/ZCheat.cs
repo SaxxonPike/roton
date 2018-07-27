@@ -14,7 +14,7 @@ namespace Roton.Emulation.Cheats
             _engine = engine;
         }
 
-        public void Execute()
+        public void Execute(string name, bool clear)
         {
             _engine.World.Stones++;
         }

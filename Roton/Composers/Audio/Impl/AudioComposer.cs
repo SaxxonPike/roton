@@ -9,29 +9,33 @@ namespace Roton.Composers.Audio.Impl
     {
         public event EventHandler<AudioComposerDataEventArgs> BufferReady;
 
-        private const int AccumulatorMultiplier = 1000;
+        private const long AccumulatorMultiplier = 10000;
 
-        private readonly IDrumBank _drumBank;
+        private readonly Lazy<IDrumBank> _drumBank;
+        private readonly IConfig _config;
         private readonly int _samplesPerDrumFrequency;
-        private int[] _frequencyDutyCycleTable;
-        private int _accumulatorLimit;
+        private long[] _frequencyDutyCycleTable;
+        private long _accumulatorLimit;
 
         private int _drumSoundSamplesRemaining;
         private int _drumSoundFrequenciesRemaining;
         private int _drumSoundFrequencyIndex;
         private IDrumSound _currentDrumSound;
-        private int _accumulatorAmount;
+        private long _accumulatorAmount;
         private bool _generating;
         private bool _dutyLevel;
-        private int _toneAccumulator;
-        private int _bufferAccumulator;
-        private int _bufferNumerator;
-        private int _bufferDenominator;
+        private long _toneAccumulator;
+        private long _bufferAccumulator;
+        private long _bufferNumerator;
+        private long _bufferDenominator;
         private int _sampleRate;
+        private int _stepCounter;
+        private int _stepLength;
 
-        public AudioComposer(IDrumBank drumBank, IConfig config)
+        public AudioComposer(Lazy<IDrumBank> drumBank, IConfig config)
         {
             _drumBank = drumBank;
+            _config = config;
             SampleRate = config.AudioSampleRate;
             _samplesPerDrumFrequency = config.AudioDrumRate;
         }
@@ -41,6 +45,14 @@ namespace Roton.Composers.Audio.Impl
             while (_bufferAccumulator > _bufferDenominator)
             {
                 _bufferAccumulator -= _bufferDenominator;
+
+                if (_stepCounter > 0)
+                {
+                    _stepCounter--;
+                    yield return 1;
+                    continue;
+                }
+                
                 if (!_generating)
                 {
                     yield return 0;
@@ -58,14 +70,12 @@ namespace Roton.Composers.Audio.Impl
                             yield return 0;
                             continue;
                         }
-                        else
-                        {
-                            _drumSoundFrequenciesRemaining--;
-                            _drumSoundFrequencyIndex++;
-                            _accumulatorAmount =
-                                _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
-                            _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-                        }
+
+                        _drumSoundFrequenciesRemaining--;
+                        _drumSoundFrequencyIndex++;
+                        _accumulatorAmount =
+                            _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
+                        _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
                     }
                 }
 
@@ -90,7 +100,7 @@ namespace Roton.Composers.Audio.Impl
         public void PlayDrum(int index)
         {
             _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-            _currentDrumSound = _drumBank[index];
+            _currentDrumSound = _drumBank.Value[index];
             _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
             _drumSoundFrequencyIndex = 0;
             _accumulatorAmount = _currentDrumSound[0] * AccumulatorMultiplier;
@@ -103,6 +113,11 @@ namespace Roton.Composers.Audio.Impl
             _accumulatorAmount = _frequencyDutyCycleTable[note];
             _toneAccumulator = 0;
             _generating = true;
+        }
+
+        public void PlayStep()
+        {
+            _stepCounter = _stepLength;
         }
 
         public void StopNote()
@@ -131,12 +146,13 @@ namespace Roton.Composers.Audio.Impl
             _frequencyDutyCycleTable =
                 Enumerable.Range(0, 12 * 7)
                     .Select(i => 440d * Math.Pow(2d, (double) (i - 45) / 12) * (double) AccumulatorMultiplier * 2d)
-                    .Select(i => (int) i)
+                    .Select(i => (long) i)
                     .ToArray();
 
-            _bufferDenominator = 718;
-            _bufferNumerator = _sampleRate * 10;
+            _bufferDenominator = _config.MasterClockDenominator;
+            _bufferNumerator = _sampleRate * _config.MasterClockNumerator;
             _bufferAccumulator = 0;
+            _stepLength = (_sampleRate / 22050) + 1;
         }
 
         public int SampleRate

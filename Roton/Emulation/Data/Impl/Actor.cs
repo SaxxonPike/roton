@@ -4,8 +4,6 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
     public sealed class Actor : IActor
     {
         private readonly IMemory _memory;

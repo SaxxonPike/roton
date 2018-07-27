@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,19 +9,20 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x03)]
     public sealed class MonitorAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public MonitorAction(IEngine engine)
+        public MonitorAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            if (_engine.State.KeyPressed != 0)
-                _engine.State.BreakGameLoop = true;
+            if (Engine.State.KeyPressed != 0)
+                Engine.State.BreakGameLoop = true;
             
-            _engine.MoveActorOnRiver(index);
+            Engine.MoveActorOnRiver(index);
         }
     }
 }

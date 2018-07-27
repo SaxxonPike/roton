@@ -60,6 +60,6 @@ namespace Roton.Emulation.Data.Impl
         Torch,
         Transporter,
         Water,
-        Web,
+        Web
     }
 }

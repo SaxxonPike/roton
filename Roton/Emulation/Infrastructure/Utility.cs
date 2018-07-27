@@ -4,7 +4,7 @@ namespace Roton.Emulation.Infrastructure
 {
     public static class Utility
     {
-        private static readonly Encoding CodePage437 = Encoding.GetEncoding(437);
+        private static readonly Encoding CodePage437 = CodePagesEncodingProvider.Instance.GetEncoding(437);
 
         /// <summary>
         ///     Return the absolute difference between this value and another specified value.

@@ -1,11 +1,14 @@
 ﻿using System;
 using Roton.Composers.Video.Scenes;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl
 {
     /// <summary>
     /// Basic SDL renderer.
     /// </summary>
+    [ContextEngine(ContextEngine.Startup)]
     public class ScenePresenter : IScenePresenter
     {
         private readonly Lazy<ISceneComposer> _sceneComposer;

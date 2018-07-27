@@ -34,7 +34,7 @@ namespace Roton.Emulation.Infrastructure
         X = 0x58,
         Y = 0x59,
         Z = 0x5A,
-        QuestionMark = 0x7C,
+        QuestionMark = 0x3F,
         F1 = 0xBB,
         F2 = 0xBC,
         F3 = 0xBD,

@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -7,32 +8,33 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Original, 0x26)]
     public sealed class SharkAction : IAction
     {
-        private readonly IEngine _engine;
-        
-        public SharkAction(IEngine engine)
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
+
+        public SharkAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
 
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 > _engine.Random.Synced(10)
-                ? _engine.Seek(actor.Location)
-                : _engine.Rnd());
+            vector.CopyFrom(actor.P1 > Engine.Random.GetNext(10)
+                ? Engine.Seek(actor.Location)
+                : Engine.Rnd());
 
             var target = actor.Location.Sum(vector);
-            var targetElement = _engine.Tiles.ElementAt(target);
+            var targetElement = Engine.Tiles.ElementAt(target);
 
-            if (targetElement.Id == _engine.ElementList.WaterId || targetElement.Id == _engine.ElementList.LavaId)
+            if (targetElement.Id == Engine.ElementList.WaterId || targetElement.Id == Engine.ElementList.LavaId)
             {
-                _engine.MoveActor(index, target);
+                Engine.MoveActor(index, target);
             }
-            else if (targetElement.Id == _engine.ElementList.PlayerId)
+            else if (targetElement.Id == Engine.ElementList.PlayerId)
             {
-                _engine.Attack(index, target);
+                Engine.Attack(index, target);
             }
         }
     }

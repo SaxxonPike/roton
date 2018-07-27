@@ -13,26 +13,29 @@ namespace Roton.Emulation.Super
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
+        private readonly ICheatHud _cheatHud;
 
-        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll)
+        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
+            _cheatHud = cheatHud;
 
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
 
         private Location16 OldCamera { get; }
 
-        private int ViewportHeight => 25;
+        private const int ViewportHeight = 25;
 
-        private int ViewportWidth => 40;
+        private const int ViewportWidth = 40;
 
         protected override bool Confirm(string message)
         {
-            DrawString(0x10, 0x18, message, 0x1F);
-            DrawChar(0x10 + message.Length, 0x18, new AnsiChar(0x5F, 0x9E));
+            UpdateBorder();
+            DrawString(0x0F, 0x18, message, 0x1F);
+            DrawChar(0x0F + message.Length, 0x18, new AnsiChar(0x5F, 0x9E));
             var result = base.Confirm(message);
             UpdateBorder();
             return result;
@@ -165,12 +168,8 @@ namespace Roton.Emulation.Super
             }
         }
 
-        private bool IsWithinCamera(IXyPair loc)
+        private static bool IsWithinCamera(IXyPair loc)
         {
-//            x += 0x0E + 1;
-//            y += 0x02 + 1;
-//            x -= _engine.Board.Camera.X;
-//            y -= _engine.Board.Camera.Y;
             return loc.X >= 0x0E && loc.X <= 0x25 && loc.Y >= 0x02 && loc.Y <= 0x15;
         }
 
@@ -299,11 +298,14 @@ namespace Roton.Emulation.Super
             {
                 var keyChar = _engine.World.Keys[i] ? _engine.ElementList[0x08].Character : 0x20;
                 var x = i & 0x3;
-                var y = x >> 2;
+                var y = i >> 2;
                 DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
             }
 
             DrawString(0x03, 0x0A, _engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
+            
+            if (_engine.World.Flags.Contains("DEBUG"))
+                DrawString(0x0E, 0x00, $"Used: {_engine.MemoryUsage}", 0x1E);            
         }
 
         private string StoneText
@@ -320,6 +322,14 @@ namespace Roton.Emulation.Super
 
                 return string.Empty;
             }
+        }
+
+        public override string EnterCheat()
+        {
+            UpdateBorder();
+            var cheat = _cheatHud.Show(0x0F, 0x17);
+            UpdateBorder();
+            return cheat;
         }
     }
 }

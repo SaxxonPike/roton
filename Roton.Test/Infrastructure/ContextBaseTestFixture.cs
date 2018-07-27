@@ -32,7 +32,6 @@ namespace Roton.Test.Infrastructure
         }
 
         protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
-        protected IContext Context { get; private set; }
         protected FixedFileSystem FileSystem { get; private set; }
         protected Config Config { get; private set; }
         protected Mock<ITerminal> TerminalMock { get; private set; }
@@ -42,7 +41,7 @@ namespace Roton.Test.Infrastructure
         private Random Rand { get; } = new Random();
         private Fixture Fixture { get; } = new Fixture();
 
-        protected IEngine Engine => Context.Engine;
+        protected IEngine Engine { get; private set; }
         protected IActors Actors => Engine.Actors;
         protected IAlerts Alerts => Engine.Alerts;
         protected IBoard Board => Engine.Board;
@@ -59,7 +58,7 @@ namespace Roton.Test.Infrastructure
         protected IMemory Memory => Engine.Memory;
         protected IParser Parser => Engine.Parser;
         protected IActor Player => Engine.Player;
-        protected IRandom Random => Engine.Random;
+        protected IRandomizer Random => Engine.Random;
         protected ISounds Sounds => Engine.Sounds;
         protected IState State => Engine.State;
         protected ITargetList TargetList => Engine.TargetList;
@@ -80,8 +79,6 @@ namespace Roton.Test.Infrastructure
         [SetUp]
         public void __SetUpContext()
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            
             // Test dependencies
             FileSystem = new FixedFileSystem(true);
             Config = new Config();
@@ -101,7 +98,7 @@ namespace Roton.Test.Infrastructure
             var container = builder.Build();
 
             // Inner container
-            Context = container.Resolve<IContext>();
+            Engine = container.Resolve<IEngine>();
 
             // Preconfiguration
             Engine.ClearWorld();

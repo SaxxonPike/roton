@@ -150,7 +150,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void PackTiles(ITiles tiles, BinaryWriter target)
+        private static void PackTiles(ITiles tiles, BinaryWriter target)
         {
             var firstTile = tiles[new Location(1, 1)];
             var count = 0;
@@ -225,7 +225,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void UnpackTiles(ITiles tiles, BinaryReader source)
+        private static void UnpackTiles(ITiles tiles, BinaryReader source)
         {
             var count = 0;
             var id = 0;

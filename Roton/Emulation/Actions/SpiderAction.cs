@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,25 +9,26 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x3E)]
     public sealed class SpiderAction : IAction
     {
-        private readonly IEngine _engine;
-        
-        public SpiderAction(IEngine engine)
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
+
+        public SpiderAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
 
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var vector = new Vector();
 
-            vector.CopyFrom(actor.P1 <= _engine.Random.Synced(10)
-                ? _engine.Rnd()
-                : _engine.Seek(actor.Location));
+            vector.CopyFrom(actor.P1 <= Engine.Random.GetNext(10)
+                ? Engine.Rnd()
+                : Engine.Seek(actor.Location));
 
             if (!ActSpiderAttemptDirection(index, vector))
             {
-                var i = (_engine.Random.Synced(2) << 1) - 1;
+                var i = (Engine.Random.GetNext(2) << 1) - 1;
                 if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap()))
                 {
                     if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap().Opposite()))
@@ -39,19 +41,19 @@ namespace Roton.Emulation.Actions
 
         private bool ActSpiderAttemptDirection(int index, IXyPair vector)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var target = actor.Location.Sum(vector);
-            var targetElement = _engine.Tiles.ElementAt(target).Id;
+            var targetElement = Engine.Tiles.ElementAt(target).Id;
 
-            if (targetElement == _engine.ElementList.WebId)
+            if (targetElement == Engine.ElementList.WebId)
             {
-                _engine.MoveActor(index, target);
+                Engine.MoveActor(index, target);
                 return true;
             }
 
-            if (targetElement == _engine.ElementList.PlayerId)
+            if (targetElement == Engine.ElementList.PlayerId)
             {
-                _engine.Attack(index, target);
+                Engine.Attack(index, target);
                 return true;
             }
 

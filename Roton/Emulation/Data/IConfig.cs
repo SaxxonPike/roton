@@ -8,5 +8,8 @@
         int AudioSampleRate { get; }
         int AudioDrumRate { get; }
         int AudioBufferSize { get; }
+        int VideoScale { get; }
+        int MasterClockNumerator { get; }
+        int MasterClockDenominator { get; }
     }
 }

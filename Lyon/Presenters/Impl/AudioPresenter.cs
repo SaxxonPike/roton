@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using DotSDL.Audio;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl
 {
+    [ContextEngine(ContextEngine.Startup)]
     public class AudioPresenter : IDisposable, IAudioPresenter
     {
         private bool _isDisposed;

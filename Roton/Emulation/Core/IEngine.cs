@@ -15,6 +15,7 @@ namespace Roton.Emulation.Core
 {
     public interface IEngine
     {
+        event EventHandler Exited;
         event EventHandler Tick;
         
         IActors Actors { get; }
@@ -31,7 +32,7 @@ namespace Roton.Emulation.Core
         IItemList ItemList { get; }
         IParser Parser { get; }
         IActor Player { get; }
-        IRandom Random { get; }
+        IRandomizer Random { get; }
         ISounds Sounds { get; }
         IState State { get; }
         ITargetList TargetList { get; }
@@ -65,8 +66,7 @@ namespace Roton.Emulation.Core
         void LockActor(int index);
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
-        void PlaySound(int priority, ISound sound);
-        void PlaySound(int priority, ISound sound, int offset, int length);
+        void PlaySound(int priority, ISound sound, int? offset = null, int? length = null);
         void PlotTile(IXyPair location, ITile tile);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
@@ -103,8 +103,11 @@ namespace Roton.Emulation.Core
         IMemory Memory { get; }
         void StepOnce();
         string[] GetMessageLines();
-        bool ThreadActive { get; }
         ITimers Timers { get; }
         IDrumBank DrumBank { get; }
+        bool ThreadActive { get; }
+        int MemoryUsage { get; }
+        void Cheat();
+        void PlayStep();
     }
 }

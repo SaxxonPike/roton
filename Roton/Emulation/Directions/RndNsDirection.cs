@@ -18,7 +18,7 @@ namespace Roton.Emulation.Directions
 
         public IXyPair Execute(IOopContext context)
         {
-            return _engine.Random.Synced(2) == 0
+            return _engine.Random.GetNext(2) == 0
                 ? Vector.North
                 : Vector.South;
         }

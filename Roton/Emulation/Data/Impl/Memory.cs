@@ -15,9 +15,9 @@ namespace Roton.Emulation.Data.Impl
 
         private byte[] Bytes { get; }
 
-        private int Length => 0x1 << 16;
+        private const int Length = 0x1 << 16;
 
-        private int Mask => Length - 1;
+        private const int Mask = Length - 1;
 
         public byte[] Dump()
         {

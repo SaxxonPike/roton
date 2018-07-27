@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,18 +9,19 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x10)]
     public sealed class ClockwiseConveyorAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public ClockwiseConveyorAction(IEngine engine)
+        public ClockwiseConveyorAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
-            _engine.UpdateBoard(actor.Location);
-            _engine.Convey(actor.Location, 1);
+            var actor = Engine.Actors[index];
+            Engine.UpdateBoard(actor.Location);
+            Engine.Convey(actor.Location, 1);
         }
     }
 }

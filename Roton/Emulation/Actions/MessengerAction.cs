@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,27 +9,28 @@ namespace Roton.Emulation.Actions
     [ContextEngine(ContextEngine.Super, 0x02)]
     public sealed class MessengerAction : IAction
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public MessengerAction(IEngine engine)
+        public MessengerAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
         
         public void Act(int index)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             if (actor.Location.X == 0)
             {
-                _engine.Hud.DrawMessage(new Message(_engine.GetMessageLines()), actor.P2 % 7 + 9);
+                Engine.Hud.DrawMessage(new Message(Engine.GetMessageLines()), actor.P2 % 7 + 9);
                 actor.P2--;
                 if (actor.P2 > 0) return;
 
-                _engine.RemoveActor(index);
-                _engine.State.ActIndex--;
-                _engine.Hud.UpdateBorder();
-                _engine.State.Message = string.Empty;
-                _engine.State.Message2 = string.Empty;
+                Engine.RemoveActor(index);
+                Engine.State.ActIndex--;
+                Engine.Hud.UpdateBorder();
+                Engine.State.Message = string.Empty;
+                Engine.State.Message2 = string.Empty;
             }
         }
     }

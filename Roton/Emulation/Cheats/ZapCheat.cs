@@ -15,7 +15,7 @@ namespace Roton.Emulation.Cheats
             _engine = engine;
         }
 
-        public void Execute()
+        public void Execute(string name, bool clear)
         {
             for (var i = 0; i < 4; i++)
             {

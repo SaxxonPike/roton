@@ -120,7 +120,7 @@ namespace Roton.Emulation.Core.Impl
             {AnsiKey.Tab, new AnsiKeyMap(new byte[] {9}, new byte[] {0, 15}, new byte[] {0, 148}, new byte[] {0, 165})},
             {AnsiKey.Space, new AnsiKeyMap(new byte[] {32}, new byte[] {32}, new byte[] {32}, new byte[] {32})},
             {AnsiKey.PrintScreen, new AnsiKeyMap(new byte[] {}, new byte[] {}, new byte[] {0, 114}, new byte[] {})},
-            {AnsiKey.Pause, new AnsiKeyMap(new byte[] {}, new byte[] {}, new byte[] {0, 0}, new byte[] {})},
+            {AnsiKey.Pause, new AnsiKeyMap(new byte[] {}, new byte[] {}, new byte[] {0, 0}, new byte[] {})}
         };
 
         public IEnumerable<byte> GetBytes(IKeyPress keyPress)

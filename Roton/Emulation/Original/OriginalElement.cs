@@ -4,7 +4,6 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original
 {
-    [ContextEngine(ContextEngine.Original)]
     public sealed class OriginalElement : Element
     {
         public OriginalElement(IMemory memory, int index)

@@ -95,7 +95,7 @@ namespace Roton.Emulation.Super
 
         public bool HandleTitleInput()
         {
-            switch (_engine.State.KeyPressed)
+            switch (_engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Enter: // Enter
                     return true;
@@ -143,23 +143,6 @@ namespace Roton.Emulation.Super
             }
         }
 
-        public void Init()
-        {
-            _engine.State.GameSpeed = 4;
-            _engine.State.DefaultSaveName = "SAVED";
-            _engine.State.DefaultBoardName = "TEMP";
-            _engine.State.DefaultWorldName = "MONSTER";
-            if (!_engine.State.WorldLoaded)
-            {
-                _engine.ClearWorld();
-            }
-
-            if (_engine.State.EditorMode)
-                _engine.SetEditorMode();
-            else
-                _engine.SetGameMode();
-        }
-
         public void HandlePlayerInput(IActor actor)
         {
             // todo: this
@@ -188,12 +171,14 @@ namespace Roton.Emulation.Super
         public string[] GetMessageLines()
         {
             return string.IsNullOrEmpty(_engine.State.Message2)
-                ? new[] {string.Empty, _engine.State.Message} 
+                ? new[] {string.Empty, _engine.State.Message}
                 : new[] {_engine.State.Message, _engine.State.Message2};
         }
 
         public void ShowAbout()
         {
         }
+
+        public int BaseMemoryUsage => 203044;
     }
 }
