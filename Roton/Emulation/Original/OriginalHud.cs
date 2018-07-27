@@ -320,7 +320,7 @@ namespace Roton.Emulation.Original
             DrawString(0x41, 0x0F, _engine.State.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
 
             if (_engine.World.Flags.Contains("DEBUG"))
-                DrawString(0x3E, 0x04, $"Used: {_engine.Heap.Size + _engine.BaseMemoryUsage}", 0x1E);
+                DrawString(0x3E, 0x04, $"Used: {_engine.MemoryUsage}", 0x1E);
         }
 
         public override string EnterCheat()

@@ -305,7 +305,7 @@ namespace Roton.Emulation.Super
             DrawString(0x03, 0x0A, _engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             
             if (_engine.World.Flags.Contains("DEBUG"))
-                DrawString(0x0E, 0x00, $"Used: {_engine.Heap.Size + _engine.BaseMemoryUsage}", 0x1E);            
+                DrawString(0x0E, 0x00, $"Used: {_engine.MemoryUsage}", 0x1E);            
         }
 
         private string StoneText

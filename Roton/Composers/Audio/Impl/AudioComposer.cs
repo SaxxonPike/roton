@@ -12,6 +12,7 @@ namespace Roton.Composers.Audio.Impl
         private const int AccumulatorMultiplier = 1000;
 
         private readonly Lazy<IDrumBank> _drumBank;
+        private readonly IConfig _config;
         private readonly int _samplesPerDrumFrequency;
         private int[] _frequencyDutyCycleTable;
         private int _accumulatorLimit;
@@ -28,10 +29,13 @@ namespace Roton.Composers.Audio.Impl
         private int _bufferNumerator;
         private int _bufferDenominator;
         private int _sampleRate;
+        private int _stepCounter;
+        private int _stepLength;
 
         public AudioComposer(Lazy<IDrumBank> drumBank, IConfig config)
         {
             _drumBank = drumBank;
+            _config = config;
             SampleRate = config.AudioSampleRate;
             _samplesPerDrumFrequency = config.AudioDrumRate;
         }
@@ -41,6 +45,14 @@ namespace Roton.Composers.Audio.Impl
             while (_bufferAccumulator > _bufferDenominator)
             {
                 _bufferAccumulator -= _bufferDenominator;
+
+                if (_stepCounter > 0)
+                {
+                    _stepCounter--;
+                    yield return 1;
+                    continue;
+                }
+                
                 if (!_generating)
                 {
                     yield return 0;
@@ -103,6 +115,11 @@ namespace Roton.Composers.Audio.Impl
             _generating = true;
         }
 
+        public void PlayStep()
+        {
+            _stepCounter = _stepLength;
+        }
+
         public void StopNote()
         {
             _generating = false;
@@ -132,9 +149,10 @@ namespace Roton.Composers.Audio.Impl
                     .Select(i => (int) i)
                     .ToArray();
 
-            _bufferDenominator = 718;
-            _bufferNumerator = _sampleRate * 10;
+            _bufferDenominator = _config.MasterClockDenominator;
+            _bufferNumerator = _sampleRate * _config.MasterClockNumerator;
             _bufferAccumulator = 0;
+            _stepLength = (_sampleRate / 22050) + 1;
         }
 
         public int SampleRate

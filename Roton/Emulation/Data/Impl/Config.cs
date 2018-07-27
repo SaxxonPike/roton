@@ -9,5 +9,7 @@ namespace Roton.Emulation.Data.Impl
         public int AudioDrumRate { get; set; }
         public int AudioBufferSize { get; set; }
         public int VideoScale { get; set; }
+        public int MasterClockNumerator { get; set; }
+        public int MasterClockDenominator { get; set; }
     }
 }

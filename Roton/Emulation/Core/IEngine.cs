@@ -106,7 +106,8 @@ namespace Roton.Emulation.Core
         ITimers Timers { get; }
         IDrumBank DrumBank { get; }
         bool ThreadActive { get; }
-        int BaseMemoryUsage { get; }
+        int MemoryUsage { get; }
         void Cheat();
+        void PlayStep();
     }
 }

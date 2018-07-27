@@ -80,7 +80,9 @@ namespace Roton.Emulation.Core.Impl
         {
             _clock = new Lazy<IClock>(() =>
             {
-                var clock = clockFactory.Value.Create(10, 718);
+                var clock = clockFactory.Value.Create(
+                    _config.Value.MasterClockNumerator, 
+                    _config.Value.MasterClockDenominator);
                 
                 if (clock != null)
                     clock.OnTick += ClockTick;
@@ -161,7 +163,7 @@ namespace Roton.Emulation.Core.Impl
 
         public bool ThreadActive => Thread != null || _step;
 
-        public int BaseMemoryUsage => Features.BaseMemoryUsage;
+        public int MemoryUsage => Features.BaseMemoryUsage + Heap.Size + Boards.Sum(b => b.Data.Length);
         
         public void Cheat()
         {
@@ -193,6 +195,14 @@ namespace Roton.Emulation.Core.Impl
             
             // TODO: figure out the actual priority of this sound
             PlaySound(3, Sounds.Cheat);
+        }
+
+        public void PlayStep()
+        {
+            if (State.GameOver || State.GameQuiet || State.SoundPlaying)
+                return;
+
+            Speaker.PlayStep();
         }
 
         public IActionList ActionList

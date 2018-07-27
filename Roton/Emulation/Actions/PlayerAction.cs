@@ -114,7 +114,7 @@ namespace Roton.Emulation.Actions
                     {
                         if (!Engine.State.SoundPlaying)
                         {
-                            // TODO: player step sound plays here
+                            Engine.PlayStep();
                         }
 
                         if (Engine.Tiles.ElementAt(actor.Location.Sum(Engine.State.KeyVector)).IsFloor)
