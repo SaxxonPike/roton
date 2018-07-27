@@ -9,25 +9,25 @@ namespace Roton.Composers.Audio.Impl
     {
         public event EventHandler<AudioComposerDataEventArgs> BufferReady;
 
-        private const int AccumulatorMultiplier = 1000;
+        private const long AccumulatorMultiplier = 10000;
 
         private readonly Lazy<IDrumBank> _drumBank;
         private readonly IConfig _config;
         private readonly int _samplesPerDrumFrequency;
-        private int[] _frequencyDutyCycleTable;
-        private int _accumulatorLimit;
+        private long[] _frequencyDutyCycleTable;
+        private long _accumulatorLimit;
 
         private int _drumSoundSamplesRemaining;
         private int _drumSoundFrequenciesRemaining;
         private int _drumSoundFrequencyIndex;
         private IDrumSound _currentDrumSound;
-        private int _accumulatorAmount;
+        private long _accumulatorAmount;
         private bool _generating;
         private bool _dutyLevel;
-        private int _toneAccumulator;
-        private int _bufferAccumulator;
-        private int _bufferNumerator;
-        private int _bufferDenominator;
+        private long _toneAccumulator;
+        private long _bufferAccumulator;
+        private long _bufferNumerator;
+        private long _bufferDenominator;
         private int _sampleRate;
         private int _stepCounter;
         private int _stepLength;
@@ -146,7 +146,7 @@ namespace Roton.Composers.Audio.Impl
             _frequencyDutyCycleTable =
                 Enumerable.Range(0, 12 * 7)
                     .Select(i => 440d * Math.Pow(2d, (double) (i - 45) / 12) * (double) AccumulatorMultiplier * 2d)
-                    .Select(i => (int) i)
+                    .Select(i => (long) i)
                     .ToArray();
 
             _bufferDenominator = _config.MasterClockDenominator;
