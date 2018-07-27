@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "DIE")]
-    [ContextEngine(ContextEngine.Super, "DIE")]
+    [Context(Context.Original, "DIE")]
+    [Context(Context.Super, "DIE")]
     public sealed class DieCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

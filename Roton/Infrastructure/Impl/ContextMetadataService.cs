@@ -7,18 +7,18 @@ namespace Roton.Infrastructure.Impl
 {
     public abstract class ContextMetadataService : IContextMetadataService
     {
-        private readonly ContextEngine _contextEngine;
+        private readonly Context _context;
 
-        protected ContextMetadataService(ContextEngine contextEngine)
+        protected ContextMetadataService(Context context)
         {
-            _contextEngine = contextEngine;
+            _context = context;
         }
 
-        public IEnumerable<ContextEngineAttribute> GetMetadata(object obj) => obj
+        public IEnumerable<ContextAttribute> GetMetadata(object obj) => obj
             .GetType()
             .GetCustomAttributes(true)
-            .OfType<ContextEngineAttribute>()
-            .Where(a => a.ContextEngine == _contextEngine)
+            .OfType<ContextAttribute>()
+            .Where(a => a.Context == _context)
             .ToList();
 
         public IEnumerable<Type> GetTypes() => GetType()
@@ -26,8 +26,8 @@ namespace Roton.Infrastructure.Impl
             .GetTypes()
             .Where(t => t
                 .GetCustomAttributes(true)
-                .OfType<ContextEngineAttribute>()
-                .Any(a => a.ContextEngine == _contextEngine))
+                .OfType<ContextAttribute>()
+                .Any(a => a.Context == _context))
             .ToList();
     }
 }

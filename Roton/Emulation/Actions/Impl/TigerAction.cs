@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x2A)]
-    [ContextEngine(ContextEngine.Super, 0x2A)]
+    [Context(Context.Original, 0x2A)]
+    [Context(Context.Super, 0x2A)]
     public sealed class TigerAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

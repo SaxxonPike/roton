@@ -7,7 +7,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original
 {
-    [ContextEngine(ContextEngine.Original)]
+    [Context(Context.Original)]
     public sealed class OriginalFeatures : IFeatures
     {
         private readonly IEngine _engine;

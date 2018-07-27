@@ -3,8 +3,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public sealed class DefaultAction : IAction
     {
         public void Act(int index)

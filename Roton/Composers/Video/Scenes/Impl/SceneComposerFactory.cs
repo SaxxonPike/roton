@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Composers.Video.Scenes.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public sealed class SceneComposerFactory : ISceneComposerFactory
     {
         private readonly IGlyphComposerFactory _glyphComposerFactory;

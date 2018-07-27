@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x1E)]
-    [ContextEngine(ContextEngine.Super, 0x1E)]
+    [Context(Context.Original, 0x1E)]
+    [Context(Context.Super, 0x1E)]
     public sealed class TransporterAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

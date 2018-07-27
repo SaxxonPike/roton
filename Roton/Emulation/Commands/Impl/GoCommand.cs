@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "GO")]
-    [ContextEngine(ContextEngine.Super, "GO")]
+    [Context(Context.Original, "GO")]
+    [Context(Context.Super, "GO")]
     public sealed class GoCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

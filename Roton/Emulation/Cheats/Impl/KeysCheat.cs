@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Cheats.Impl
 {
-    [ContextEngine(ContextEngine.Original, "KEYS")]
-    [ContextEngine(ContextEngine.Super, "KEYS")]
+    [Context(Context.Original, "KEYS")]
+    [Context(Context.Super, "KEYS")]
     public sealed class KeysCheat : ICheat
     {
         private readonly Lazy<IEngine> _engine;

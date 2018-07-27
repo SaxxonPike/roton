@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x2D)]
-    [ContextEngine(ContextEngine.Super, 0x2D)]
+    [Context(Context.Original, 0x2D)]
+    [Context(Context.Super, 0x2D)]
     public sealed class CentipedeSegmentAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

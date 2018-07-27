@@ -8,7 +8,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original
 {
-    [ContextEngine(ContextEngine.Original)]
+    [Context(Context.Original)]
     public sealed class OriginalHud : Hud
     {
         private readonly IEngine _engine;

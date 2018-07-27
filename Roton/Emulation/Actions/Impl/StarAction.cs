@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x0F)]
-    [ContextEngine(ContextEngine.Super, 0x48)]
+    [Context(Context.Original, 0x0F)]
+    [Context(Context.Super, 0x48)]
     public sealed class StarAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

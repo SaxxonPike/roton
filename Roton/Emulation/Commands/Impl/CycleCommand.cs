@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "CYCLE")]
-    [ContextEngine(ContextEngine.Super, "CYCLE")]
+    [Context(Context.Original, "CYCLE")]
+    [Context(Context.Super, "CYCLE")]
     public sealed class CycleCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

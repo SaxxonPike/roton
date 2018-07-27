@@ -4,7 +4,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperAlerts : Alerts
     {
         private readonly IColors _colors;

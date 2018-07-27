@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Cheats.Impl
 {
-    [ContextEngine(ContextEngine.Original, "GEMS")]
-    [ContextEngine(ContextEngine.Super, "GEMS")]
+    [Context(Context.Original, "GEMS")]
+    [Context(Context.Super, "GEMS")]
     public sealed class GemsCheat : ICheat
     {
         private readonly Lazy<IEngine> _engine;

@@ -3,11 +3,11 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Infrastructure
 {
-    [TestFixture(ContextEngine.Original)]
-    [TestFixture(ContextEngine.Super)]
+    [TestFixture(Context.Original)]
+    [TestFixture(Context.Super)]
     public abstract class AllContextBaseTestFixture : ContextBaseTestFixture
     {
-        protected AllContextBaseTestFixture(ContextEngine contextEngine) : base(contextEngine)
+        protected AllContextBaseTestFixture(Context context) : base(context)
         {
         }
     }

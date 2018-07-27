@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "CHANGE")]
-    [ContextEngine(ContextEngine.Super, "CHANGE")]
+    [Context(Context.Original, "CHANGE")]
+    [Context(Context.Super, "CHANGE")]
     public sealed class ChangeCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

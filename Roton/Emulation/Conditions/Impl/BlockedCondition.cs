@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Conditions.Impl
 {
-    [ContextEngine(ContextEngine.Original, "BLOCKED")]
-    [ContextEngine(ContextEngine.Super, "BLOCKED")]
+    [Context(Context.Original, "BLOCKED")]
+    [Context(Context.Super, "BLOCKED")]
     public sealed class BlockedCondition : ICondition
     {
         private readonly Lazy<IEngine> _engine;

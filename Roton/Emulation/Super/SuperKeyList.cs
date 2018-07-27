@@ -4,7 +4,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperKeyList : KeyList
     {
         public SuperKeyList(IMemory memory) : base(memory, 0x7850)

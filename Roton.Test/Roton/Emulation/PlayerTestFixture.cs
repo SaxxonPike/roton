@@ -9,7 +9,7 @@ namespace Roton.Test.Roton.Emulation
 {
     public class PlayerTestFixture : AllContextBaseTestFixture
     {
-        public PlayerTestFixture(ContextEngine contextEngine) : base(contextEngine)
+        public PlayerTestFixture(Context context) : base(context)
         {
         }
 

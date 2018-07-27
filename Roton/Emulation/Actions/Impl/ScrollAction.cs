@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x0A)]
-    [ContextEngine(ContextEngine.Super, 0x0A)]
+    [Context(Context.Original, 0x0A)]
+    [Context(Context.Super, 0x0A)]
     public sealed class ScrollAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

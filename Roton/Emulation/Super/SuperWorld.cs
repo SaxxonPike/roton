@@ -4,7 +4,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperWorld : IWorld
     {
         public SuperWorld(IMemory memory, IKeyList keyList, IFlags flags)

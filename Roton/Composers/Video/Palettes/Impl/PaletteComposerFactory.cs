@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Composers.Video.Palettes.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public sealed class PaletteComposerFactory : IPaletteComposerFactory
     {
         private readonly Lazy<IComposerResourceService> _composerResourceService;

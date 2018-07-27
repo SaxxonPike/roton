@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x25)]
-    [ContextEngine(ContextEngine.Super, 0x25)]
+    [Context(Context.Original, 0x25)]
+    [Context(Context.Super, 0x25)]
     public sealed class SlimeAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

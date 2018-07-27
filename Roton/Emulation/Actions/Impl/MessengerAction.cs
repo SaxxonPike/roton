@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x02)]
-    [ContextEngine(ContextEngine.Super, 0x02)]
+    [Context(Context.Original, 0x02)]
+    [Context(Context.Super, 0x02)]
     public sealed class MessengerAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

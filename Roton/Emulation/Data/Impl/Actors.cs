@@ -1,19 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl
 {
     public abstract class Actors : FixedList<IActor>, IActors
     {
-        protected Actors(IMemory memory, int capacity)
+        protected Actors(Lazy<IMemory> memory, int capacity)
         {
-            Memory = memory;
+            _memory = memory;
             Capacity = capacity;
         }
 
         private IDictionary<int, IActor> Cache { get; } = new Dictionary<int, IActor>();
 
-        protected IMemory Memory { get; }
+        private readonly Lazy<IMemory> _memory;
+
+        protected IMemory Memory => _memory.Value;
 
         public int Capacity { get; }
 
@@ -23,13 +26,12 @@ namespace Roton.Emulation.Data.Impl
 
         protected sealed override IActor GetItem(int index)
         {
-            IActor actor;
-            Cache.TryGetValue(index, out actor);
-            if (actor == null)
-            {
-                actor = GetActor(index);
-                Cache[index] = actor;
-            }
+            Cache.TryGetValue(index, out var actor);
+            if (actor != null) 
+                return actor;
+            
+            actor = GetActor(index);
+            Cache[index] = actor;
             return actor;
         }
 

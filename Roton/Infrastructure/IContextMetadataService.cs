@@ -6,7 +6,7 @@ namespace Roton.Infrastructure
 {
     public interface IContextMetadataService
     {
-        IEnumerable<ContextEngineAttribute> GetMetadata(object obj);
+        IEnumerable<ContextAttribute> GetMetadata(object obj);
         IEnumerable<Type> GetTypes();
     }
 }

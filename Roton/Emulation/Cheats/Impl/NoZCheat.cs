@@ -5,7 +5,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Cheats.Impl
 {
-    [ContextEngine(ContextEngine.Super, "NOZ")]
+    [Context(Context.Super, "NOZ")]
     public sealed class NoZCheat : ICheat
     {
         private readonly Lazy<IEngine> _engine;

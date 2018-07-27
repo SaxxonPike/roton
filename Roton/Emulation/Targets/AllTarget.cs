@@ -4,8 +4,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Targets
 {
-    [ContextEngine(ContextEngine.Original, "ALL")]
-    [ContextEngine(ContextEngine.Super, "ALL")]
+    [Context(Context.Original, "ALL")]
+    [Context(Context.Super, "ALL")]
     public sealed class AllTarget : ITarget
     {
         private readonly IActors _actors;

@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x23)]
-    [ContextEngine(ContextEngine.Super, 0x23)]
+    [Context(Context.Original, 0x23)]
+    [Context(Context.Super, 0x23)]
     public sealed class RuffianAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

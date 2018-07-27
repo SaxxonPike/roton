@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "ZAP")]
-    [ContextEngine(ContextEngine.Super, "ZAP")]
+    [Context(Context.Original, "ZAP")]
+    [Context(Context.Super, "ZAP")]
     public sealed class ZapCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

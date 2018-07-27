@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "BECOME")]
-    [ContextEngine(ContextEngine.Super, "BECOME")]
+    [Context(Context.Original, "BECOME")]
+    [Context(Context.Super, "BECOME")]
     public sealed class BecomeCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "CHAR")]
-    [ContextEngine(ContextEngine.Super, "CHAR")]
+    [Context(Context.Original, "CHAR")]
+    [Context(Context.Super, "CHAR")]
     public sealed class CharCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

@@ -6,8 +6,8 @@ namespace Roton.Emulation.Core.Impl
 {
     // Source: http://www.lagmonster.org/docs/DOS7/v-ansi-keys.html
 
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
     {
         private class AnsiKeyMap

@@ -4,8 +4,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "IDLE")]
-    [ContextEngine(ContextEngine.Super, "IDLE")]
+    [Context(Context.Original, "IDLE")]
+    [Context(Context.Super, "IDLE")]
     public sealed class IdleCommand : ICommand
     {
         public void Execute(IOopContext context)

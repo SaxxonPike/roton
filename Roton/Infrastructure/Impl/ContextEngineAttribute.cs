@@ -4,36 +4,36 @@ using Roton.Emulation.Data.Impl;
 namespace Roton.Infrastructure.Impl
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class ContextEngineAttribute : Attribute
+    public sealed class ContextAttribute : Attribute
     {
-        public ContextEngine ContextEngine { get; }
+        public Context Context { get; }
         public string Name { get; }
         public int Id { get; }
 
-        public ContextEngineAttribute(ContextEngine contextEngine)
+        public ContextAttribute(Context context)
         {
-            ContextEngine = contextEngine;
+            Context = context;
             Name = string.Empty;
             Id = -1;
         }
         
-        public ContextEngineAttribute(ContextEngine contextEngine, string name)
+        public ContextAttribute(Context context, string name)
         {
-            ContextEngine = contextEngine;
+            Context = context;
             Name = name;
             Id = -1;
         }
         
-        public ContextEngineAttribute(ContextEngine contextEngine, int id)
+        public ContextAttribute(Context context, int id)
         {
-            ContextEngine = contextEngine;
+            Context = context;
             Name = string.Empty;
             Id = id;
         }
         
-        public ContextEngineAttribute(ContextEngine contextEngine, string name, int id)
+        public ContextAttribute(Context context, string name, int id)
         {
-            ContextEngine = contextEngine;
+            Context = context;
             Name = name;
             Id = id;
         }

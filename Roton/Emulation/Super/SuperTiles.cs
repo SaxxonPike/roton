@@ -4,7 +4,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperTiles : Tiles
     {
         public SuperTiles(IMemory memory, IElementList elementList)

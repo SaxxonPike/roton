@@ -8,11 +8,11 @@ namespace Lyon.Autofac
 {
     public class RotonModule : Module
     {
-        private readonly ContextEngine _contextEngine;
+        private readonly Context _context;
 
-        public RotonModule(ContextEngine contextEngine)
+        public RotonModule(Context context)
         {
-            _contextEngine = contextEngine;
+            _context = context;
         }
         
         protected override void Load(ContainerBuilder builder)
@@ -21,17 +21,17 @@ namespace Lyon.Autofac
 
             var cmsf = new ContextMetadataServiceFactory();
 
-            builder.Register(c => cmsf.Get(_contextEngine))
+            builder.Register(c => cmsf.Get(_context))
                 .As<IContextMetadataService>()
                 .AutoActivate()
                 .SingleInstance();
             
-            builder.RegisterTypes(cmsf.Get(ContextEngine.Startup).GetTypes().ToArray())
+            builder.RegisterTypes(cmsf.Get(Context.Startup).GetTypes().ToArray())
                 .AsImplementedInterfaces()
                 .AutoActivate()
                 .SingleInstance();
             
-            builder.RegisterTypes(cmsf.Get(_contextEngine).GetTypes().ToArray())
+            builder.RegisterTypes(cmsf.Get(_context).GetTypes().ToArray())
                 .AsImplementedInterfaces()
                 .AutoActivate()
                 .SingleInstance();

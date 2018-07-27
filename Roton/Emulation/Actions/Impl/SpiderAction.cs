@@ -6,7 +6,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Super, 0x3E)]
+    [Context(Context.Super, 0x3E)]
     public sealed class SpiderAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

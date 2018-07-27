@@ -31,8 +31,8 @@ namespace Lyon.Autofac
             builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
                 .Where(t => !t.IsAbstract && 
                             t.IsClass && 
-                            t.GetCustomAttributes<ContextEngineAttribute>()
-                                .Any(a => a.ContextEngine == ContextEngine.Startup))
+                            t.GetCustomAttributes<ContextAttribute>()
+                                .Any(a => a.Context == Context.Startup))
                 .AsImplementedInterfaces()
                 .AutoActivate()
                 .SingleInstance();

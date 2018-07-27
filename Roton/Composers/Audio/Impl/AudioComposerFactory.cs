@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Composers.Audio.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public class AudioComposerFactory : IAudioComposerFactory
     {
         private readonly Lazy<IDrumBank> _drumBank;

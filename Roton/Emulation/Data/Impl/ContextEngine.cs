@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl
 {
-    public enum ContextEngine
+    public enum Context
     {
         Startup,
         Original,

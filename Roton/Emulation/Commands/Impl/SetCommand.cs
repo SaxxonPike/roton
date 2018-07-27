@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "SET")]
-    [ContextEngine(ContextEngine.Super, "SET")]
+    [Context(Context.Original, "SET")]
+    [Context(Context.Super, "SET")]
     public sealed class SetCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

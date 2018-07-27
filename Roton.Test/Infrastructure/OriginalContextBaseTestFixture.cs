@@ -6,7 +6,7 @@ namespace Roton.Test.Infrastructure
     [TestFixture]
     public abstract class OriginalContextBaseTestFixture : ContextBaseTestFixture
     {
-        protected OriginalContextBaseTestFixture() : base(ContextEngine.Original)
+        protected OriginalContextBaseTestFixture() : base(Context.Original)
         {
         }
     }

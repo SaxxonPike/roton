@@ -4,6 +4,6 @@ namespace Roton.Infrastructure
 {
     public interface IContextMetadataServiceFactory
     {
-        IContextMetadataService Get(ContextEngine contextEngine);
+        IContextMetadataService Get(Context context);
     }
 }

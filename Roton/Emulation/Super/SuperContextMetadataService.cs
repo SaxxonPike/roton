@@ -3,10 +3,10 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperContextMetadataService : ContextMetadataService
     {
-        public SuperContextMetadataService() : base(ContextEngine.Super)
+        public SuperContextMetadataService() : base(Context.Super)
         {
         }
     }

@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "TRY")]
-    [ContextEngine(ContextEngine.Super, "TRY")]
+    [Context(Context.Original, "TRY")]
+    [Context(Context.Super, "TRY")]
     public sealed class TryCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

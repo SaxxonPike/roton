@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Conditions.Impl
 {
-    [ContextEngine(ContextEngine.Original, "ENERGIZED")]
-    [ContextEngine(ContextEngine.Super, "ENERGIZED")]
+    [Context(Context.Original, "ENERGIZED")]
+    [Context(Context.Super, "ENERGIZED")]
     public sealed class EnergizedCondition : ICondition
     {
         private readonly Lazy<IEngine> _engine;

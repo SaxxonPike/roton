@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Conditions.Impl
 {
-    [ContextEngine(ContextEngine.Original, "NOT")]
-    [ContextEngine(ContextEngine.Super, "NOT")]
+    [Context(Context.Original, "NOT")]
+    [Context(Context.Super, "NOT")]
     public sealed class NotCondition : ICondition
     {
         private readonly Lazy<IEngine> _engine;

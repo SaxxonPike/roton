@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "SEND")]
-    [ContextEngine(ContextEngine.Super, "SEND")]
+    [Context(Context.Original, "SEND")]
+    [Context(Context.Super, "SEND")]
     public sealed class SendCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

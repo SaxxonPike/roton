@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "PLAY")]
-    [ContextEngine(ContextEngine.Super, "PLAY")]
+    [Context(Context.Original, "PLAY")]
+    [Context(Context.Super, "PLAY")]
     public sealed class PlayCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

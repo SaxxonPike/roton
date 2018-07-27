@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "RESTORE")]
-    [ContextEngine(ContextEngine.Super, "RESTORE")]
+    [Context(Context.Original, "RESTORE")]
+    [Context(Context.Super, "RESTORE")]
     public sealed class RestoreCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

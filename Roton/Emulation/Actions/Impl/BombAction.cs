@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x0D)]
-    [ContextEngine(ContextEngine.Super, 0x0D)]
+    [Context(Context.Original, 0x0D)]
+    [Context(Context.Super, 0x0D)]
     public sealed class BombAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

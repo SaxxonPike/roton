@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Composers.Video.Glyphs.Impl
 {
-    [ContextEngine(ContextEngine.Original)]
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Original)]
+    [Context(Context.Super)]
     public sealed class GlyphComposerFactory : IGlyphComposerFactory
     {
         private readonly Lazy<IComposerResourceService> _composerResourceService;

@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "END")]
-    [ContextEngine(ContextEngine.Super, "END")]
+    [Context(Context.Original, "END")]
+    [Context(Context.Super, "END")]
     public sealed class EndCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

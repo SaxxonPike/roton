@@ -26,9 +26,9 @@ namespace Roton.Test.Infrastructure
 {
     public abstract class ContextBaseTestFixture
     {
-        protected ContextBaseTestFixture(ContextEngine contextEngine)
+        protected ContextBaseTestFixture(Context context)
         {
-            ContextEngine = contextEngine;
+            Context = context;
         }
 
         protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
@@ -94,7 +94,7 @@ namespace Roton.Test.Infrastructure
             builder.Register(c => SpeakerMock.Object).As<ISpeaker>();
             builder.RegisterType<AssemblyResourceService>().As<IAssemblyResourceService>();
             builder.Register(c => ClockFactoryMock.Object).As<IClockFactory>();
-            builder.RegisterModule(new RotonModule(ContextEngine));
+            builder.RegisterModule(new RotonModule(Context));
             var container = builder.Build();
 
             // Inner container
@@ -106,7 +106,7 @@ namespace Roton.Test.Infrastructure
             State.Init = false;
         }
 
-        protected ContextEngine ContextEngine { get; }
+        protected Context Context { get; }
 
         protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
 

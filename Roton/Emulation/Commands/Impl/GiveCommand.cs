@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "GIVE")]
-    [ContextEngine(ContextEngine.Super, "GIVE")]
+    [Context(Context.Original, "GIVE")]
+    [Context(Context.Super, "GIVE")]
     public sealed class GiveCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

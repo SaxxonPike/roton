@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "CLEAR")]
-    [ContextEngine(ContextEngine.Super, "CLEAR")]
+    [Context(Context.Original, "CLEAR")]
+    [Context(Context.Super, "CLEAR")]
     public sealed class ClearCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

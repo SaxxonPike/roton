@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x28)]
-    [ContextEngine(ContextEngine.Super, 0x28)]
+    [Context(Context.Original, 0x28)]
+    [Context(Context.Super, 0x28)]
     public sealed class PusherAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

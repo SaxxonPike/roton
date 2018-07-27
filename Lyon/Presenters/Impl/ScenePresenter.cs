@@ -8,7 +8,7 @@ namespace Lyon.Presenters.Impl
     /// <summary>
     /// Basic SDL renderer.
     /// </summary>
-    [ContextEngine(ContextEngine.Startup)]
+    [Context(Context.Startup)]
     public class ScenePresenter : IScenePresenter
     {
         private readonly Lazy<ISceneComposer> _sceneComposer;

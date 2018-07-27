@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "UNLOCK")]
-    [ContextEngine(ContextEngine.Super, "UNLOCK")]
+    [Context(Context.Original, "UNLOCK")]
+    [Context(Context.Super, "UNLOCK")]
     public sealed class UnlockCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

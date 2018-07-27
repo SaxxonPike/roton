@@ -4,7 +4,7 @@ namespace Roton.Infrastructure.Impl
 {
     public class StartupContextMetadataService : ContextMetadataService
     {
-        public StartupContextMetadataService() : base(ContextEngine.Startup)
+        public StartupContextMetadataService() : base(Context.Startup)
         {
         }
     }

@@ -5,7 +5,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Cheats.Impl
 {
-    [ContextEngine(ContextEngine.Original, "TORCHES")]
+    [Context(Context.Original, "TORCHES")]
     public sealed class TorchesCheat : ICheat
     {
         private readonly Lazy<IEngine> _engine;

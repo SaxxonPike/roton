@@ -4,6 +4,6 @@ namespace Roton.Infrastructure
 {
     public interface IContextEngineSelector
     {
-        ContextEngine Get(string filename);
+        Context Get(string filename);
     }
 }

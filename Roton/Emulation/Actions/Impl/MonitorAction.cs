@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x03)]
-    [ContextEngine(ContextEngine.Super, 0x03)]
+    [Context(Context.Original, 0x03)]
+    [Context(Context.Super, 0x03)]
     public sealed class MonitorAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

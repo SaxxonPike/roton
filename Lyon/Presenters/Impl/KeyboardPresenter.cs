@@ -8,7 +8,7 @@ using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl
 {
-    [ContextEngine(ContextEngine.Startup)]
+    [Context(Context.Startup)]
     public class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {
         private static readonly IDictionary<Keycode, AnsiKey> Map = new Dictionary<Keycode, AnsiKey>

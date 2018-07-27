@@ -6,7 +6,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl
 {
-    [ContextEngine(ContextEngine.Startup)]
+    [Context(Context.Startup)]
     public class Launcher : ILauncher
     {
         private readonly Lazy<IWindow> _window;

@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Cheats.Impl
 {
-    [ContextEngine(ContextEngine.Original, "ZAP")]
-    [ContextEngine(ContextEngine.Super, "ZAP")]
+    [Context(Context.Original, "ZAP")]
+    [Context(Context.Super, "ZAP")]
     public sealed class ZapCheat : ICheat
     {
         private readonly Lazy<IEngine> _engine;

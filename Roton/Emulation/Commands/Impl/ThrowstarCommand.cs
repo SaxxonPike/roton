@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "THROWSTAR")]
-    [ContextEngine(ContextEngine.Super, "THROWSTAR")]
+    [Context(Context.Original, "THROWSTAR")]
+    [Context(Context.Super, "THROWSTAR")]
     public sealed class ThrowstarCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

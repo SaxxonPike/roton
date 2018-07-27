@@ -5,8 +5,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl
 {
-    [ContextEngine(ContextEngine.Original, 0x12)]
-    [ContextEngine(ContextEngine.Super, 0x45)]
+    [Context(Context.Original, 0x12)]
+    [Context(Context.Super, 0x45)]
     public sealed class BulletAction : IAction
     {
         private readonly Lazy<IEngine> _engine;

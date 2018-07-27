@@ -4,8 +4,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Targets
 {
-    [ContextEngine(ContextEngine.Original, "OTHERS")]
-    [ContextEngine(ContextEngine.Super, "OTHERS")]
+    [Context(Context.Original, "OTHERS")]
+    [Context(Context.Super, "OTHERS")]
     public sealed class OthersTarget : ITarget
     {
         private readonly IActors _actors;

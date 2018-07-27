@@ -6,8 +6,8 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Commands.Impl
 {
-    [ContextEngine(ContextEngine.Original, "BIND")]
-    [ContextEngine(ContextEngine.Super, "BIND")]
+    [Context(Context.Original, "BIND")]
+    [Context(Context.Super, "BIND")]
     public sealed class BindCommand : ICommand
     {
         private readonly Lazy<IEngine> _engine;

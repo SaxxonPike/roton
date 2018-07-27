@@ -7,18 +7,18 @@ namespace Roton.Infrastructure.Impl
 {
     public sealed class ContextMetadataServiceFactory : IContextMetadataServiceFactory
     {
-        public IContextMetadataService Get(ContextEngine contextEngine)
+        public IContextMetadataService Get(Context context)
         {
-            switch (contextEngine)
+            switch (context)
             {
-                case ContextEngine.Startup:
+                case Context.Startup:
                     return new StartupContextMetadataService();
-                case ContextEngine.Original:
+                case Context.Original:
                     return new OriginalContextMetadataService();
-                case ContextEngine.Super:
+                case Context.Super:
                     return new SuperContextMetadataService();
                 default:
-                    throw new Exception($"Unknown {nameof(ContextEngine)}: {contextEngine}");
+                    throw new Exception($"Unknown {nameof(Context)}: {context}");
             }
         }
     }

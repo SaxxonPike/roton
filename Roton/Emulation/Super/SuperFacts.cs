@@ -3,7 +3,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super
 {
-    [ContextEngine(ContextEngine.Super)]
+    [Context(Context.Super)]
     public sealed class SuperFacts : Facts
     {
         public override int AmmoPerPickup => 20;
