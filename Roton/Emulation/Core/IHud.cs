@@ -29,5 +29,6 @@ namespace Roton.Emulation.Core
         void UpdateBorder();
         void UpdateCamera();
         void UpdateStatus();
+        void CreateStatusWorld();
     }
 }

@@ -161,6 +161,40 @@ namespace Roton.Emulation.Core.Impl
 
         public bool ThreadActive => Thread != null || _step;
 
+        public int BaseMemoryUsage => Features.BaseMemoryUsage;
+        
+        public void Cheat()
+        {
+            var cheatText = Hud.EnterCheat().ToUpper();
+            var clear = false;
+
+            if (!ThreadActive)
+                return;
+
+            if (!string.IsNullOrEmpty(cheatText))
+            {
+                if (cheatText[0] == '-')
+                {
+                    cheatText = cheatText.Substring(1);
+                    while (World.Flags.Contains(cheatText))
+                        World.Flags.Remove(cheatText);
+                    clear = true;
+                }
+                else if (cheatText[0] == '+')
+                {
+                    cheatText = cheatText.Substring(1);
+                    World.Flags.Add(cheatText);
+                }
+            }
+            
+            var cheat = CheatList.Get(cheatText);
+            cheat?.Execute(cheatText, clear);
+            Hud.UpdateStatus();
+            
+            // TODO: figure out the actual priority of this sound
+            PlaySound(3, Sounds.Cheat);
+        }
+
         public IActionList ActionList
             => _actionList.Value;
 
@@ -849,6 +883,8 @@ namespace Roton.Emulation.Core.Impl
                 ShowDosError();
                 return;
             };
+            
+            Hud.CreateStatusWorld();
 
             using (var stream = new MemoryStream(worldData))
             {
@@ -988,12 +1024,7 @@ namespace Roton.Emulation.Core.Impl
 
         public IActor Player => Actors[0];
 
-        public void PlaySound(int priority, ISound sound)
-        {
-            PlaySound(priority, sound, 0, sound.Length);
-        }
-
-        public void PlaySound(int priority, ISound sound, int offset, int length)
+        public void PlaySound(int priority, ISound sound, int? offset = null, int? length = null)
         {
             if (State.GameOver || State.GameQuiet)
                 return;
@@ -1008,7 +1039,7 @@ namespace Roton.Emulation.Core.Impl
             if (!soundIsMusic)
                 State.SoundBuffer.Clear();
 
-            State.SoundBuffer.Enqueue(sound);
+            State.SoundBuffer.Enqueue(sound, offset, length);
             State.SoundPlaying = true;
             State.SoundPriority = priority;
         }
@@ -1940,6 +1971,7 @@ namespace Roton.Emulation.Core.Impl
             State.DefaultSaveName = Facts.DefaultSavedGameName;
             State.DefaultBoardName = Facts.DefaultBoardName;
             State.DefaultWorldName = Config.DefaultWorld ?? Facts.DefaultWorldName;
+            State.ForestIndex = 2;
             State.Init = true;
 
             ClearWorld();

@@ -104,11 +104,16 @@ namespace Lyon.Presenters.Impl
             {Keycode.Slash, AnsiKey.Slash},
             {Keycode.Space, AnsiKey.Space},
             {Keycode.Tab, AnsiKey.Tab},
-            {Keycode.Up, AnsiKey.Up}
+            {Keycode.Up, AnsiKey.Up},
+            {Keycode.Question, AnsiKey.Slash},
+            {Keycode.Equals, AnsiKey.Equals}
         };
 
         public bool Press(KeyboardEvent data)
         {
+            if (data.Keycode == 0)
+                return false;
+            
             if (!Map.ContainsKey(data.Keycode))
                 return false;
             

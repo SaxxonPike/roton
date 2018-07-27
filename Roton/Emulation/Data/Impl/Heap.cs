@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl
@@ -17,6 +18,8 @@ namespace Roton.Emulation.Data.Impl
         }
 
         private IDictionary<int, byte[]> Entries { get; }
+
+        public int Size => Entries.Where(e => e.Value != null).Sum(e => e.Value.Length);
 
         public int Allocate(byte[] data)
         {

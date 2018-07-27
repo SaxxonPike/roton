@@ -60,11 +60,6 @@ namespace Roton.Emulation.Original
             }
         }
 
-        public void Init()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void HandlePlayerInput(IActor actor)
         {
             switch (_engine.State.KeyPressed.ToUpperCase())
@@ -142,6 +137,8 @@ namespace Roton.Emulation.Original
             _engine.ShowHelp("ABOUT");
         }
 
+        public int BaseMemoryUsage => 205791;
+
         public bool HandleTitleInput()
         {
             switch (_engine.State.KeyPressed.ToUpperCase())
@@ -156,6 +153,7 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.E:
                     break;
                 case EngineKeyCode.S:
+                    _engine.Hud.CreateStatusText();
                     _engine.State.GameSpeed = _engine.Hud.SelectParameter(
                         true, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
                     break;

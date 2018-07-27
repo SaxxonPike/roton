@@ -14,9 +14,9 @@ namespace Roton.Emulation.Cheats
             _engine = engine;
         }
 
-        public void Execute()
+        public void Execute(string name, bool clear)
         {
-            _engine.Board.IsDark = true;
+            _engine.Board.IsDark = !clear;
             _engine.Hud.RedrawBoard();
         }
     }

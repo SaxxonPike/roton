@@ -198,20 +198,19 @@ namespace Roton.Composers.Video.Scenes.Impl
             var stride = Columns * _glyphComposer.MaxWidth;
             var height = Rows * _glyphComposer.MaxHeight;
             
+            _offsetLookUpTable = Enumerable.Range(0, charTotal)
+                .Select(i =>
+                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
+                .ToArray();
+
             if (Bitmap != null)
             {
                 if (Bitmap.Height == height && Bitmap.Width == stride)
                     return;
             }
 
-            var offsetLookUpTable = Enumerable.Range(0, charTotal)
-                .Select(i =>
-                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
-                .ToArray();
-
             var oldBitmap = Bitmap;
             _stride = stride;
-            _offsetLookUpTable = offsetLookUpTable;
             Bitmap = new Bitmap(stride, height);
             oldBitmap?.Dispose();
         }

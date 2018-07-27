@@ -153,7 +153,7 @@ namespace Roton.Emulation.Actions
                     Engine.ShowInGameHelp();
                     break;
                 case EngineKeyCode.QuestionMark:
-                    Engine.Hud.EnterCheat();
+                    Engine.Cheat();
                     break;
                 default:
                     Engine.HandlePlayerInput(actor);

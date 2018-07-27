@@ -24,7 +24,7 @@ namespace Lyon.App.Impl
         public Window(
             IConfig config,
             Lazy<IKeyboardPresenter> keyboardPresenter,
-            Lazy<IScenePresenter> scenePresenter) : base("Roton",
+            Lazy<IScenePresenter> scenePresenter) : base("Lyon",
             new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
             640 * config.VideoScale, 350 * config.VideoScale,
             640, 350)

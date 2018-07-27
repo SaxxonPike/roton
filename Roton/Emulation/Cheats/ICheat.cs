@@ -2,6 +2,6 @@ namespace Roton.Emulation.Cheats
 {
     public interface ICheat
     {
-        void Execute();
+        void Execute(string name, bool clear);
     }
 }

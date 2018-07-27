@@ -66,7 +66,6 @@ namespace Roton.Emulation.Core.Impl
 
         public virtual string EnterCheat()
         {
-            // TODO: cheat hud
             return string.Empty;
         }
 
@@ -78,7 +77,7 @@ namespace Roton.Emulation.Core.Impl
 
         public virtual bool QuitEngineConfirmation()
         {
-            return Confirm("Quit Roton? ");
+            return Confirm("Quit to DOS? ");
         }
 
         public virtual void RedrawBoard()
@@ -111,9 +110,13 @@ namespace Roton.Emulation.Core.Impl
         {
         }
 
+        public virtual void CreateStatusWorld()
+        {
+        }
+
         protected virtual bool Confirm(string message)
         {
-            while (true)
+            while (_engine.ThreadActive)
             {
                 _engine.WaitForTick();
                 _engine.ReadInput();
@@ -126,6 +129,8 @@ namespace Roton.Emulation.Core.Impl
                         return false;
                 }
             }
+
+            return true;
         }
     }
 }

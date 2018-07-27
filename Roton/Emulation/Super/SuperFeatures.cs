@@ -143,23 +143,6 @@ namespace Roton.Emulation.Super
             }
         }
 
-        public void Init()
-        {
-            _engine.State.GameSpeed = 4;
-            _engine.State.DefaultSaveName = "SAVED";
-            _engine.State.DefaultBoardName = "TEMP";
-            _engine.State.DefaultWorldName = "MONSTER";
-            if (!_engine.State.WorldLoaded)
-            {
-                _engine.ClearWorld();
-            }
-
-            if (_engine.State.EditorMode)
-                _engine.SetEditorMode();
-            else
-                _engine.SetGameMode();
-        }
-
         public void HandlePlayerInput(IActor actor)
         {
             // todo: this
@@ -195,5 +178,7 @@ namespace Roton.Emulation.Super
         public void ShowAbout()
         {
         }
+
+        public int BaseMemoryUsage => 203044;
     }
 }

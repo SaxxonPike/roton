@@ -13,7 +13,6 @@ namespace Roton.Emulation.Core
         bool HandleTitleInput();
         void ShowInGameHelp();
         void ExecuteMessage(IOopContext context);
-        void Init();
         void HandlePlayerInput(IActor actor);
         bool CanPutTile(IXyPair location);
         void ClearForest(IXyPair location);
@@ -21,5 +20,6 @@ namespace Roton.Emulation.Core
         void ForcePlayerColor(int index);
         string[] GetMessageLines();
         void ShowAbout();
+        int BaseMemoryUsage { get; }
     }
 }

@@ -28,15 +28,18 @@ namespace Roton.Emulation.Core.Impl
             Memory.Write8(Offset + index + 1, value);
         }
 
-        public void Enqueue(ISound sound)
+        public void Enqueue(ISound sound, int? offset = null, int? length = null)
         {
-            var totalLength = sound.Length + Memory.Read8(Offset);
+            var inLength = length ?? sound.Length;
+            var inOffset = offset ?? 0;
+            
+            var totalLength = inLength + Memory.Read8(Offset);
             if (totalLength >= 255)
                 return;
 
-            var sourceIndex = 0;
+            var sourceIndex = inOffset;
             var targetIndex = Memory.Read8(Offset) + 1 + Offset;
-            var remaining = sound.Length;
+            var remaining = inLength;
             while (remaining-- > 0)
                 Memory.Write8(targetIndex++, sound[sourceIndex++]);
             Memory.Write8(Offset, totalLength);

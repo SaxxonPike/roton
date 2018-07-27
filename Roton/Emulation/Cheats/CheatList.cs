@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
@@ -9,22 +10,31 @@ namespace Roton.Emulation.Cheats
     [ContextEngine(ContextEngine.Super)]
     public sealed class CheatList : ICheatList
     {
-        private readonly IDictionary<string, ICheat> _cheats = new Dictionary<string, ICheat>();
+        private readonly Lazy<IDictionary<string, ICheat>> _cheats;
 
-        public CheatList(IContextMetadataService contextMetadataService, IEnumerable<ICheat> cheats)
+        public CheatList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<ICheat>> cheats)
         {
-            foreach (var cheat in cheats)
+            _cheats = new Lazy<IDictionary<string, ICheat>>(() =>
             {
-                foreach (var attribute in contextMetadataService.GetMetadata(cheat))
-                    _cheats.Add(attribute.Name, cheat);
-            }
+                var result = new Dictionary<string, ICheat>();
+
+                foreach (var cheat in cheats.Value)
+                {
+                    foreach (var attribute in contextMetadataService.Value.GetMetadata(cheat))
+                        result.Add(attribute.Name, cheat);
+                }
+
+                return result;
+            });
         }
-        
+
+        private IDictionary<string, ICheat> Cheats => _cheats.Value;
+
         public ICheat Get(string name)
         {
-            return _cheats.ContainsKey(name)
-                ? _cheats[name]
+            return Cheats.ContainsKey(name)
+                ? Cheats[name]
                 : null;
-        }        
+        }
     }
 }

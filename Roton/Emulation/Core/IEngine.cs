@@ -66,8 +66,7 @@ namespace Roton.Emulation.Core
         void LockActor(int index);
         void MoveActor(int index, IXyPair location);
         void MoveActorOnRiver(int index);
-        void PlaySound(int priority, ISound sound);
-        void PlaySound(int priority, ISound sound, int offset, int length);
+        void PlaySound(int priority, ISound sound, int? offset = null, int? length = null);
         void PlotTile(IXyPair location, ITile tile);
         void Push(IXyPair location, IXyPair vector);
         void PushThroughTransporter(IXyPair location, IXyPair vector);
@@ -107,5 +106,7 @@ namespace Roton.Emulation.Core
         ITimers Timers { get; }
         IDrumBank DrumBank { get; }
         bool ThreadActive { get; }
+        int BaseMemoryUsage { get; }
+        void Cheat();
     }
 }

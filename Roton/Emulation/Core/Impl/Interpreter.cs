@@ -16,22 +16,6 @@ namespace Roton.Emulation.Core.Impl
             _engine = engine;
         }
 
-        public void Cheat(string input)
-        {
-            if (input == null)
-                return;
-
-            _engine.CheatList.Get(input.ToUpperInvariant())?.Execute();
-
-            if (input.Length < 2)
-                return;
-
-            if (input.StartsWith("+"))
-                _engine.World.Flags.Add(input.Substring(1));
-            else if (input.StartsWith("-"))
-                _engine.World.Flags.Remove(input.Substring(1));
-        }
-
         public void Execute(IOopContext context)
         {
             while (true)
