@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <OutputType>exe</OutputType>
     <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotSDL\DotSDL\DotSDL.csproj" />
