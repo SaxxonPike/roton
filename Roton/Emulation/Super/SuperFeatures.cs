@@ -122,24 +122,21 @@ namespace Roton.Emulation.Super
             _engine.BroadcastLabel(0, _engine.Facts.HintLabel, false);
         }
 
-        public void ExecuteMessage(IOopContext context)
+        public IScrollResult ExecuteMessage(IOopContext context)
         {
             switch (context.Message.Count)
             {
                 case 1:
                     _engine.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
-                    break;
+                    return null;
                 case 2:
                     _engine.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
-                    break;
+                    return null;
                 case 0:
-                    break;
+                    return null;
                 default:
                     _engine.State.KeyVector.SetTo(0, 0);
-                    var result = _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
-                    if (!result.Cancelled && result.Label != null)
-                        context.NextLine = _engine.BroadcastLabel(context.Index, result.Label, false);
-                    break;
+                    return _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
             }
         }
 

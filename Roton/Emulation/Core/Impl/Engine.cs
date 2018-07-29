@@ -1312,7 +1312,9 @@ namespace Roton.Emulation.Core.Impl
                     .ToStringValue()
                     .Replace("\xD\xA", "\xD")
                     .Split('\xD');
-                Hud.ShowScroll(filename, text);
+                var result = Hud.ShowScroll(filename, text);
+                if (result?.Label?.StartsWith("-") ?? false)
+                    ShowHelp(result.Label.Substring(1));
             }
             catch (Exception e)
             {
@@ -1625,7 +1627,13 @@ namespace Roton.Emulation.Core.Impl
 
         private void ExecuteMessage(IOopContext context)
         {
-            Features.ExecuteMessage(context);
+            var result = Features.ExecuteMessage(context);
+            if (!result.Cancelled && result.Label != null)
+            {
+                if (result.Label.StartsWith("-"))
+                    ShowHelp(result.Label.Substring(1));
+                context.NextLine = BroadcastLabel(context.Index, result.Label, false);                            
+            }
         }
 
         private void FadeBoard(AnsiChar ac)

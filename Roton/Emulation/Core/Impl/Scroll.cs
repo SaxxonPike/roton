@@ -149,7 +149,11 @@ namespace Roton.Emulation.Core.Impl
             }
             else if (text[0] == ':')
             {
-                // do nothing
+                if (text.Contains(';'))
+                {
+                    var actualText = text.Substring(text.IndexOf(';') + 1);
+                    _terminal.Write(x, y, actualText, 0x1F);                    
+                }
             }
             else if (text[0] == '!')
             {
