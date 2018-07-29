@@ -45,18 +45,17 @@ namespace Roton.Emulation.Original
             _engine.UpdateStatus();
         }
 
-        public void ExecuteMessage(IOopContext context)
+        public IScrollResult ExecuteMessage(IOopContext context)
         {
             if (context.Message.Count == 1)
             {
                 _engine.SetMessage(0xC8, new Message(context.Message));
+                return null;
             }
             else
             {
                 _engine.State.KeyVector.SetTo(0, 0);
-                var result = _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
-                if (!result.Cancelled && result.Label != null)
-                    context.NextLine = _engine.BroadcastLabel(context.Index, result.Label, false);
+                return _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
             }
         }
 

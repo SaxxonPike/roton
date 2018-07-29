@@ -1310,8 +1310,11 @@ namespace Roton.Emulation.Core.Impl
                 var text = Disk
                     .GetFile($"{filename}.HLP")
                     .ToStringValue()
+                    .Replace("\xD\xA", "\xD")
                     .Split('\xD');
-                Hud.ShowScroll(filename, text);
+                var result = Hud.ShowScroll(filename, text);
+                if (result?.Label?.StartsWith("-") ?? false)
+                    ShowHelp(result.Label.Substring(1));
             }
             catch (Exception e)
             {
@@ -1624,7 +1627,13 @@ namespace Roton.Emulation.Core.Impl
 
         private void ExecuteMessage(IOopContext context)
         {
-            Features.ExecuteMessage(context);
+            var result = Features.ExecuteMessage(context);
+            if (!result.Cancelled && result.Label != null)
+            {
+                if (result.Label.StartsWith("-"))
+                    ShowHelp(result.Label.Substring(1));
+                context.NextLine = BroadcastLabel(context.Index, result.Label, false);                            
+            }
         }
 
         private void FadeBoard(AnsiChar ac)
@@ -1716,13 +1725,13 @@ namespace Roton.Emulation.Core.Impl
                         State.KeyPressed = 0;
                     }
 
-                    if (!State.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero() && State.KeyArrow)
                     {
                         var target = Player.Location.Sum(State.KeyVector);
                         InteractionList.Get(ElementAt(target).Id).Interact(target, 0, State.KeyVector);
                     }
 
-                    if (!State.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero() && State.KeyArrow)
                     {
                         var target = Player.Location.Sum(State.KeyVector);
                         if (ElementAt(target).IsFloor)

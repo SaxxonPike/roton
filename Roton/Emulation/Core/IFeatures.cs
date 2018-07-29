@@ -12,7 +12,7 @@ namespace Roton.Emulation.Core
         void EnterBoard();
         bool HandleTitleInput();
         void ShowInGameHelp();
-        void ExecuteMessage(IOopContext context);
+        IScrollResult ExecuteMessage(IOopContext context);
         void HandlePlayerInput(IActor actor);
         bool CanPutTile(IXyPair location);
         void ClearForest(IXyPair location);
