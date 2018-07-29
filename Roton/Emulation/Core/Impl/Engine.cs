@@ -1310,6 +1310,7 @@ namespace Roton.Emulation.Core.Impl
                 var text = Disk
                     .GetFile($"{filename}.HLP")
                     .ToStringValue()
+                    .Replace("\xD\xA", "\xD")
                     .Split('\xD');
                 Hud.ShowScroll(filename, text);
             }
@@ -1716,13 +1717,13 @@ namespace Roton.Emulation.Core.Impl
                         State.KeyPressed = 0;
                     }
 
-                    if (!State.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero() && State.KeyArrow)
                     {
                         var target = Player.Location.Sum(State.KeyVector);
                         InteractionList.Get(ElementAt(target).Id).Interact(target, 0, State.KeyVector);
                     }
 
-                    if (!State.KeyVector.IsZero())
+                    if (!State.KeyVector.IsZero() && State.KeyArrow)
                     {
                         var target = Player.Location.Sum(State.KeyVector);
                         if (ElementAt(target).IsFloor)
