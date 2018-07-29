@@ -63,7 +63,7 @@ namespace Roton.Emulation.Actions.Impl
 
             if (Engine.State.KeyVector.IsNonZero())
             {
-                if (Engine.State.KeyShift || Engine.State.KeyPressed == EngineKeyCode.Space)
+                if ((Engine.State.KeyArrow && Engine.State.KeyShift) || Engine.State.KeyPressed == EngineKeyCode.Space)
                 {
                     // Shooting logic
 
@@ -103,7 +103,7 @@ namespace Roton.Emulation.Actions.Impl
                         }
                     }
                 }
-                else
+                else if (Engine.State.KeyArrow)
                 {
                     // Movement logic
 

@@ -1919,7 +1919,6 @@ namespace Roton.Emulation.Core.Impl
             //State.KeyShift = false;
             State.KeyArrow = false;
             State.KeyPressed = 0;
-            State.KeyVector.SetTo(0, 0);
 
             var key = Keyboard.GetKey();
             if (key == null || key.Key == AnsiKey.None)
