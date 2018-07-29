@@ -2,7 +2,7 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Targets
+namespace Roton.Emulation.Targets.Impl
 {
     [Context(Context.Original, "SELF")]
     [Context(Context.Super, "SELF")]

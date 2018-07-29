@@ -1,23 +1,25 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Targets
+namespace Roton.Emulation.Targets.Impl
 {
     [Context(Context.Original, "ALL")]
     [Context(Context.Super, "ALL")]
     public sealed class AllTarget : ITarget
     {
-        private readonly IActors _actors;
+        private readonly Lazy<IActors> _actors;
+        private IActors Actors => _actors.Value;
 
-        public AllTarget(IActors actors)
+        public AllTarget(Lazy<IActors> actors)
         {
             _actors = actors;
         }
 
         public bool Execute(ISearchContext context)
         {
-            return context.SearchIndex < _actors.Count;
+            return context.SearchIndex < Actors.Count;
         }
     }
 }
