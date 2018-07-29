@@ -4,7 +4,7 @@ using Roton.Emulation.Data.Impl;
 namespace Roton.Infrastructure.Impl
 {
     [Context(Context.Startup)]
-    public class ContextEngineSelector : IContextEngineSelector
+    public sealed class ContextEngineSelector : IContextEngineSelector
     {
         public Context Get(string filename)
         {

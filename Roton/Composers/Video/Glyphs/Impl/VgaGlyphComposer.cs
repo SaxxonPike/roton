@@ -2,12 +2,12 @@ using System.Linq;
 
 namespace Roton.Composers.Video.Glyphs.Impl
 {
-    public class VgaGlyphComposer : IGlyphComposer
+    public sealed class VgaGlyphComposer : IGlyphComposer
     {
         private readonly int[] _data;
         private readonly int _height;
 
-        public VgaGlyphComposer(BitmapFont font)
+        public VgaGlyphComposer(IBitmapFont font)
         {
             _data = font.Data.Select(i => (int)i).ToArray();
             _height = font.Height;

@@ -2,7 +2,7 @@
 
 namespace Roton.Composers.Video.Glyphs.Impl
 {
-    public class ScaledGlyphComposer : IGlyphComposer
+    public sealed class ScaledGlyphComposer : IGlyphComposer
     {
         private readonly IGlyphComposer _glyphComposer;
         private readonly int _scaleX;

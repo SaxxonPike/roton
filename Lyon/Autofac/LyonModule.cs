@@ -15,7 +15,7 @@ using Module = Autofac.Module;
 
 namespace Lyon.Autofac
 {
-    public class LyonModule : Module
+    public sealed class LyonModule : Module
     {
         private readonly string[] _args;
 

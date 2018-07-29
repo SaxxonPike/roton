@@ -9,7 +9,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public class ScrollFormatter : IScrollFormatter
+    public sealed class ScrollFormatter : IScrollFormatter
     {
         private readonly IScroll _scroll;
 

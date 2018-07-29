@@ -6,7 +6,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Lyon.Autofac
 {
-    public class RotonModule : Module
+    public sealed class RotonModule : Module
     {
         private readonly Context _context;
 

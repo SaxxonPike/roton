@@ -6,7 +6,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Actions.Impl
 {
     [Context(Context.Super, 0x3C)]
-    public class DragonPupAction : IAction
+    public sealed class DragonPupAction : IAction
     {
         private readonly Lazy<IEngine> _engine;
         private IEngine Engine => _engine.Value;

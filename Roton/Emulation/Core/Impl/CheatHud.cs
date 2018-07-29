@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public class CheatHud : ICheatHud
+    public sealed class CheatHud : ICheatHud
     {
         private readonly Lazy<ITerminal> _terminal;
         private readonly Lazy<IEngine> _engine;

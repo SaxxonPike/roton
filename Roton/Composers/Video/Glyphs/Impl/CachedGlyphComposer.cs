@@ -3,7 +3,7 @@ using Roton.Composers.Extensions;
 
 namespace Roton.Composers.Video.Glyphs.Impl
 {
-    public class CachedGlyphComposer : IGlyphComposer
+    public sealed class CachedGlyphComposer : IGlyphComposer
     {
         private readonly IList<IGlyph> _glyphs;
 

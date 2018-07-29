@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public class ChoiceHud : IChoiceHud
+    public sealed class ChoiceHud : IChoiceHud
     {
         private readonly Lazy<ITerminal> _terminal;
         private readonly Lazy<IEngine> _engine;

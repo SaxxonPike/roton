@@ -5,7 +5,7 @@ using Roton.Emulation.Data;
 
 namespace Roton.Composers.Audio.Impl
 {
-    public class AudioComposer : IAudioComposer
+    public sealed class AudioComposer : IAudioComposer
     {
         public event EventHandler<AudioComposerDataEventArgs> BufferReady;
 

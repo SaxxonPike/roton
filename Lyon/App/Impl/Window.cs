@@ -9,7 +9,7 @@ using Roton.Infrastructure.Impl;
 namespace Lyon.App.Impl
 {
     [Context(Context.Startup)]
-    public class Window : SdlWindow, IWindow
+    public sealed class Window : SdlWindow, IWindow
     {
         private readonly Lazy<IKeyboardPresenter> _keyboardPresenter;
         private readonly Lazy<IScenePresenter> _scenePresenter;

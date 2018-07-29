@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl
 {
-    public class Executable : IExecutable
+    public sealed class Executable : IExecutable
     {
         public int Instruction { get; set; }
     }

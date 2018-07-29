@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roton.Composers.Video.Glyphs.Impl
 {
-    public class Glyph : IGlyph
+    public sealed class Glyph : IGlyph
     {
         public Glyph(int index, int width, int height, IEnumerable<int> data)
         {

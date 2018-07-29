@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl
 {
-    public class AggregateFileSystem : IFileSystem
+    public sealed class AggregateFileSystem : IFileSystem
     {
         private readonly IEnumerable<IFileSystem> _fileSystems;
 

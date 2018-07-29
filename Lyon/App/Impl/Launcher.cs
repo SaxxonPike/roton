@@ -7,7 +7,7 @@ using Roton.Infrastructure.Impl;
 namespace Lyon.App.Impl
 {
     [Context(Context.Startup)]
-    public class Launcher : ILauncher
+    public sealed class Launcher : ILauncher
     {
         private readonly Lazy<IWindow> _window;
         private readonly Lazy<IAudioPresenter> _audioPresenter;

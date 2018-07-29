@@ -9,7 +9,7 @@ using Roton.Infrastructure.Impl;
 namespace Lyon.Presenters.Impl
 {
     [Context(Context.Startup)]
-    public class AudioPresenter : IDisposable, IAudioPresenter
+    public sealed class AudioPresenter : IDisposable, IAudioPresenter
     {
         private bool _isDisposed;
         private bool _running;
