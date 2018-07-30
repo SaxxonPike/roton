@@ -3,7 +3,6 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original

@@ -1,6 +1,5 @@
 ﻿using System;
 using Roton.Emulation.Core;
-using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl
 {

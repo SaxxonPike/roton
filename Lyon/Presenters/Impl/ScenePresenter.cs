@@ -19,13 +19,6 @@ namespace Lyon.Presenters.Impl
         }
 
         /// <summary>
-        /// Initializes the SDL renderer.
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
         /// Renders the scene.
         /// </summary>
         public IBitmap Render()

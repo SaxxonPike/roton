@@ -9,7 +9,6 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 using Module = Autofac.Module;
 

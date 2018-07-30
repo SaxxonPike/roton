@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
-using FluentAssertions;
 using Lyon.Autofac;
 using Moq;
 using NUnit.Framework;
