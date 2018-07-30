@@ -5,10 +5,12 @@ using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl
 {
+    /// <inheritdoc />
     /// <summary>
     /// Basic SDL renderer.
     /// </summary>
     [Context(Context.Startup)]
+    // ReSharper disable once UnusedMember.Global
     public sealed class ScenePresenter : IScenePresenter
     {
         private readonly Lazy<ISceneComposer> _sceneComposer;

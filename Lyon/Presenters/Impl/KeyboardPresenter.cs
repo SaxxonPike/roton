@@ -9,6 +9,7 @@ using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 namespace Lyon.Presenters.Impl
 {
     [Context(Context.Startup)]
+    // ReSharper disable once UnusedMember.Global
     public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {
         private static readonly IDictionary<Keycode, AnsiKey> Map = new Dictionary<Keycode, AnsiKey>
