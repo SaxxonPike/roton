@@ -4,6 +4,7 @@ using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
+using FluentAssertions;
 using Lyon.Autofac;
 using Moq;
 using NUnit.Framework;
@@ -89,12 +90,28 @@ namespace Roton.Test.Infrastructure
 
             // Outer container
             var builder = new ContainerBuilder();
-            builder.Register(c => TerminalMock.Object).As<ITerminal>();
-            builder.Register(c => Keyboard).As<IKeyboard>();
-            builder.Register(c => SpeakerMock.Object).As<ISpeaker>();
-            builder.RegisterType<AssemblyResourceService>().As<IAssemblyResourceService>();
-            builder.Register(c => ClockFactoryMock.Object).As<IClockFactory>();
             builder.RegisterModule(new RotonModule(Context));
+            builder.Register(c => FileSystem)
+                .As<IFileSystem>()
+                .SingleInstance();
+            builder.Register(c => TerminalMock.Object)
+                .As<ITerminal>()
+                .SingleInstance();
+            builder.Register(c => Keyboard)
+                .As<IKeyboard>()
+                .SingleInstance();
+            builder.Register(c => SpeakerMock.Object)
+                .As<ISpeaker>()
+                .SingleInstance();
+            builder.RegisterType<AssemblyResourceService>()
+                .As<IAssemblyResourceService>()
+                .SingleInstance();
+            builder.Register(c => ClockFactoryMock.Object)
+                .As<IClockFactory>()
+                .SingleInstance();
+            builder.Register(c => Config)
+                .As<IConfig>()
+                .SingleInstance();
             var container = builder.Build();
 
             // Inner container

@@ -1628,7 +1628,7 @@ namespace Roton.Emulation.Core.Impl
         private void ExecuteMessage(IOopContext context)
         {
             var result = Features.ExecuteMessage(context);
-            if (!result.Cancelled && result.Label != null)
+            if (result != null && !result.Cancelled && result.Label != null)
             {
                 if (result.Label.StartsWith("-"))
                     ShowHelp(result.Label.Substring(1));
