@@ -894,8 +894,6 @@ namespace Roton.Emulation.Core.Impl
                 return;
             }
             
-            Hud.CreateStatusWorld();
-
             using (var stream = new MemoryStream(worldData))
             {
                 if (stream.Length == 0)
@@ -925,6 +923,7 @@ namespace Roton.Emulation.Core.Impl
                 }
             }
 
+            Hud.CreateStatusWorld();
             UnpackBoard(World.BoardIndex);
             State.WorldLoaded = true;
         }
