@@ -22,7 +22,7 @@ namespace Roton.Emulation.Targets.Impl
             if (context.SearchIndex >= Actors.Count)
                 return false;
 
-            if (context.SearchIndex == context.SearchOffset)
+            if (context.SearchIndex == context.Index)
                 context.SearchIndex++;
 
             return context.SearchIndex < Actors.Count;

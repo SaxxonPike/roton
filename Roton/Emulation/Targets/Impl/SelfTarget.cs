@@ -13,7 +13,7 @@ namespace Roton.Emulation.Targets.Impl
             if (context.SearchOffset <= 0)
                 return false;
 
-            if (context.SearchIndex > context.SearchOffset)
+            if (context.SearchIndex > context.Index)
                 return false;
 
             context.SearchIndex = context.SearchOffset;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -9,25 +10,32 @@ namespace Roton.Emulation.Core.Impl
     [Context(Context.Super)]
     public sealed class Interpreter : IInterpreter
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private readonly Lazy<ITracer> _tracer;
+        
+        private IEngine Engine => _engine.Value;
+        private ITracer Tracer => _tracer.Value;
 
-        public Interpreter(IEngine engine)
+        public Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer)
         {
             _engine = engine;
+            _tracer = tracer;
         }
 
         public void Execute(IOopContext context)
         {
             while (true)
             {
+                Tracer?.Trace(context);
+                
                 context.Resume = false;
                 context.Executed = true;
 
-                var name = _engine.Parser.ReadWord(context.Index, context);
+                var name = Engine.Parser.ReadWord(context.Index, context);
                 if (name.Length == 0)
                     break;
 
-                var command = _engine.CommandList.Get(name);
+                var command = Engine.CommandList.Get(name);
 
                 if (command != null)
                 {
@@ -35,11 +43,11 @@ namespace Roton.Emulation.Core.Impl
                 }
                 else
                 {
-                    if (!_engine.BroadcastLabel(context.Index, name, false))
+                    if (!Engine.BroadcastLabel(context.Index, name, false))
                     {
                         if (!name.Contains(':'))
                         {
-                            _engine.RaiseError($"Bad command {name}");
+                            Engine.RaiseError($"Bad command {name}");
                         }
                     }
                     else
@@ -66,7 +74,7 @@ namespace Roton.Emulation.Core.Impl
                 {
                     if (context.NextLine && context.Instruction > 0)
                     {
-                        _engine.Parser.ReadLine(context.Index, context);
+                        Engine.Parser.ReadLine(context.Index, context);
                     }
                     break;
                 }

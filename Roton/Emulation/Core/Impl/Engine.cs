@@ -284,7 +284,8 @@ namespace Roton.Emulation.Core.Impl
             {
                 SearchIndex = 0,
                 SearchOffset = 0,
-                SearchTarget = label
+                SearchTarget = label,
+                Index = sender
             };
 
             while (ExecuteLabel(sender, info, "\x000D:"))

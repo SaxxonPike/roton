@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Autofac;
 using AutoFixture;
 using AutoFixture.Dsl;
@@ -36,6 +37,7 @@ namespace Roton.Test.Infrastructure
         protected Mock<ITerminal> TerminalMock { get; private set; }
         protected TestKeyboard Keyboard { get; private set; }
         protected Mock<ISpeaker> SpeakerMock { get; private set; }
+        protected ITracer Tracer { get; private set; }
 
         private Random Rand { get; } = new Random();
         private Fixture Fixture { get; } = new Fixture();
@@ -85,6 +87,7 @@ namespace Roton.Test.Infrastructure
             Keyboard = new TestKeyboard();
             SpeakerMock = new Mock<ISpeaker>();
             ClockFactoryMock = new Mock<IClockFactory>();
+            Tracer = new TestTracer(TestContext.Out);
 
             // Outer container
             var builder = new ContainerBuilder();
@@ -110,6 +113,10 @@ namespace Roton.Test.Infrastructure
             builder.Register(c => Config)
                 .As<IConfig>()
                 .SingleInstance();
+            builder.Register(c => Tracer)
+                .As<ITracer>()
+                .SingleInstance();
+            
             var container = builder.Build();
 
             // Inner container

@@ -11,7 +11,6 @@ namespace Roton.Emulation.Data
         bool Died { get; set; }
         bool Executed { get; set; }
         bool Finished { get; set; }
-        int Index { get; set; }
         bool Moved { get; set; }
         string Name { get; set; }
         bool NextLine { get; set; }
