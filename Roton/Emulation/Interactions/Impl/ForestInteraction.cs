@@ -23,8 +23,8 @@ namespace Roton.Emulation.Interactions.Impl
             Engine.ClearForest(location);
             Engine.UpdateBoard(location);
 
-            var forestIndex = Engine.State.ForestIndex;
             var forestSongLength = Engine.Sounds.Forest.Length;
+            var forestIndex = Engine.State.ForestIndex % forestSongLength;
             Engine.State.ForestIndex = (forestIndex + 2) % forestSongLength;
             Engine.PlaySound(3, Engine.Sounds.Forest, forestIndex, 2);
 
