@@ -1,18 +1,18 @@
-﻿using System;
+using System;
+using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Actions.Impl
+namespace Roton.Emulation.Original
 {
     [Context(Context.Original, 0x24)]
-    [Context(Context.Super, 0x24)]
-    public sealed class ObjectAction : IAction
+    public class OriginalObjectAction : IAction
     {
         private readonly Lazy<IEngine> _engine;
         private IEngine Engine => _engine.Value;
 
-        public ObjectAction(Lazy<IEngine> engine)
+        public OriginalObjectAction(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
@@ -24,7 +24,9 @@ namespace Roton.Emulation.Actions.Impl
             {
                 Engine.ExecuteCode(index, actor, @"Interaction");
             }
-            if (actor.Vector.IsZero()) return;
+            
+            if (actor.Vector.IsZero()) 
+                return;
 
             var target = actor.Location.Sum(actor.Vector);
             if (Engine.Tiles.ElementAt(target).IsFloor)

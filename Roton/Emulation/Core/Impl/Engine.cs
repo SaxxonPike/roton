@@ -45,6 +45,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IScrollFormatter> _scrollFormatter;
         private readonly Lazy<ISpeaker> _speaker;
         private readonly Lazy<IDrumBank> _drumBank;
+        private readonly Lazy<IObjectMover> _objectMover;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -75,7 +76,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank)
+            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -125,6 +126,7 @@ namespace Roton.Emulation.Core.Impl
             _scrollFormatter = scrollFormatter;
             _speaker = speaker;
             _drumBank = drumBank;
+            _objectMover = objectMover;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -133,6 +135,8 @@ namespace Roton.Emulation.Core.Impl
             if (!ThreadActive) 
                 Clock.Stop();
         }
+
+        private IObjectMover ObjectMover => _objectMover.Value;
         
         private IClock Clock => _clock.Value;
 
@@ -617,9 +621,8 @@ namespace Roton.Emulation.Core.Impl
 
                 context.NextLine = true;
                 context.PreviousInstruction = context.Instruction;
-
-                var command = ReadActorCodeByte(index, context);
-                switch (command)
+                context.Command = ReadActorCodeByte(index, context);
+                switch (context.Command)
                 {
                     case 0x3A: // :
                     case 0x27: // '
@@ -628,22 +631,22 @@ namespace Roton.Emulation.Core.Impl
                         break;
                     case 0x2F: // /
                     case 0x3F: // ?
-                        if (command == 0x2F)
+                        if (context.Command == 0x2F)
                             context.Repeat = true;
 
                         var vector = Parser.GetDirection(context);
                         if (vector == null)
                         {
                             RaiseError("Bad direction");
+                            break;
                         }
-                        else
-                        {
-                            ExecuteDirection(context, vector);
-                            ReadActorCodeByte(index, context);
-                            if (State.OopByte != 0x0D)
-                                context.Instruction--;
-                            context.Moved = true;
-                        }
+                        
+                        ObjectMover.ExecuteDirection(context, vector);
+
+                        ReadActorCodeByte(index, context);
+                        if (State.OopByte != 0x0D)
+                            context.Instruction--;
+                        context.Moved = true;
 
                         break;
                     case 0x23: // #
@@ -657,7 +660,7 @@ namespace Roton.Emulation.Core.Impl
                         context.Finished = true;
                         break;
                     default:
-                        context.Message.Add(command.ToStringValue() + Parser.ReadLine(context.Index, context));
+                        context.Message.Add(context.Command.ToStringValue() + Parser.ReadLine(context.Index, context));
                         break;
                 }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
@@ -10,52 +11,53 @@ namespace Roton.Emulation.Super
     [Context(Context.Super)]
     public sealed class SuperFeatures : IFeatures
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public SuperFeatures(IEngine engine)
+        public SuperFeatures(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
 
         public void LockActor(int index)
         {
-            _engine.Actors[index].P3 = 1;
+            Engine.Actors[index].P3 = 1;
         }
 
         public void UnlockActor(int index)
         {
-            _engine.Actors[index].P3 = 0;
+            Engine.Actors[index].P3 = 0;
         }
 
         public bool IsActorLocked(int index)
         {
-            return _engine.Actors[index].P3 != 0;
+            return Engine.Actors[index].P3 != 0;
         }
 
         public void RemoveItem(IXyPair location)
         {
-            var result = new Tile(_engine.ElementList.FloorId, 0x00);
+            var result = new Tile(Engine.ElementList.FloorId, 0x00);
             var finished = false;
 
             for (var i = 0; i < 4; i++)
             {
-                var targetVector = _engine.GetCardinalVector(i);
+                var targetVector = Engine.GetCardinalVector(i);
                 var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
-                var adjacentTile = _engine.Tiles[targetLocation];
-                if (_engine.ElementList[adjacentTile.Id].Cycle >= 0)
-                    adjacentTile = _engine.ActorAt(targetLocation).UnderTile;
+                var adjacentTile = Engine.Tiles[targetLocation];
+                if (Engine.ElementList[adjacentTile.Id].Cycle >= 0)
+                    adjacentTile = Engine.ActorAt(targetLocation).UnderTile;
                 var adjacentElement = adjacentTile.Id;
 
-                if (adjacentElement == _engine.ElementList.EmptyId ||
-                    adjacentElement == _engine.ElementList.SliderEwId ||
-                    adjacentElement == _engine.ElementList.SliderNsId ||
-                    adjacentElement == _engine.ElementList.BoulderId)
+                if (adjacentElement == Engine.ElementList.EmptyId ||
+                    adjacentElement == Engine.ElementList.SliderEwId ||
+                    adjacentElement == Engine.ElementList.SliderNsId ||
+                    adjacentElement == Engine.ElementList.BoulderId)
                 {
                     finished = true;
                     result.Color = 0;
                 }
 
-                if (adjacentElement == _engine.ElementList.FloorId)
+                if (adjacentElement == Engine.ElementList.FloorId)
                 {
                     result.Color = adjacentTile.Color;
                 }
@@ -68,10 +70,10 @@ namespace Roton.Emulation.Super
 
             if (result.Color == 0)
             {
-                result.Id = _engine.ElementList.EmptyId;
+                result.Id = Engine.ElementList.EmptyId;
             }
 
-            _engine.Tiles[location].CopyFrom(result);
+            Engine.Tiles[location].CopyFrom(result);
         }
 
         public string GetWorldName(string baseName)
@@ -81,21 +83,21 @@ namespace Roton.Emulation.Super
 
         public void EnterBoard()
         {
-            _engine.BroadcastLabel(0, KnownLabels.Enter, false);
-            _engine.Board.Entrance.CopyFrom(_engine.Actors.Player.Location);
-            if (_engine.Board.IsDark && _engine.Alerts.Dark)
+            Engine.BroadcastLabel(0, KnownLabels.Enter, false);
+            Engine.Board.Entrance.CopyFrom(Engine.Actors.Player.Location);
+            if (Engine.Board.IsDark && Engine.Alerts.Dark)
             {
-                _engine.SetMessage(0xC8, _engine.Alerts.DarkMessage);
-                _engine.Alerts.Dark = false;
+                Engine.SetMessage(0xC8, Engine.Alerts.DarkMessage);
+                Engine.Alerts.Dark = false;
             }
 
-            _engine.World.TimePassed = 0;
-            _engine.Hud.UpdateStatus();
+            Engine.World.TimePassed = 0;
+            Engine.Hud.UpdateStatus();
         }
 
         public bool HandleTitleInput()
         {
-            switch (_engine.State.KeyPressed.ToUpperCase())
+            switch (Engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Enter: // Enter
                     return true;
@@ -110,7 +112,7 @@ namespace Roton.Emulation.Super
                     break;
                 case EngineKeyCode.Escape: // esc
                 case EngineKeyCode.Q: // Q
-                    _engine.State.QuitEngine = _engine.Hud.QuitEngineConfirmation();
+                    Engine.State.QuitEngine = Engine.Hud.QuitEngineConfirmation();
                     break;
             }
 
@@ -119,7 +121,7 @@ namespace Roton.Emulation.Super
 
         public void ShowInGameHelp()
         {
-            _engine.BroadcastLabel(0, _engine.Facts.HintLabel, false);
+            Engine.BroadcastLabel(0, Engine.Facts.HintLabel, false);
         }
 
         public IScrollResult ExecuteMessage(IOopContext context)
@@ -127,16 +129,16 @@ namespace Roton.Emulation.Super
             switch (context.Message.Count)
             {
                 case 1:
-                    _engine.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
+                    Engine.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
                     return null;
                 case 2:
-                    _engine.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
+                    Engine.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
                     return null;
                 case 0:
                     return null;
                 default:
-                    _engine.State.KeyVector.SetTo(0, 0);
-                    return _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
+                    Engine.State.KeyVector.SetTo(0, 0);
+                    return Engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
             }
         }
 
@@ -152,12 +154,12 @@ namespace Roton.Emulation.Super
 
         public void ClearForest(IXyPair location)
         {
-            _engine.Tiles[location].SetTo(_engine.ElementList.FloorId, 0x02);
+            Engine.Tiles[location].SetTo(Engine.ElementList.FloorId, 0x02);
         }
 
         public void CleanUpPassageMovement()
         {
-            _engine.Tiles[_engine.Player.Location].CopyFrom(_engine.Player.UnderTile);
+            Engine.Tiles[Engine.Player.Location].CopyFrom(Engine.Player.UnderTile);
         }
 
         public void ForcePlayerColor(int index)
@@ -167,9 +169,9 @@ namespace Roton.Emulation.Super
 
         public string[] GetMessageLines()
         {
-            return string.IsNullOrEmpty(_engine.State.Message2)
-                ? new[] {string.Empty, _engine.State.Message}
-                : new[] {_engine.State.Message, _engine.State.Message2};
+            return string.IsNullOrEmpty(Engine.State.Message2)
+                ? new[] {string.Empty, Engine.State.Message}
+                : new[] {Engine.State.Message, Engine.State.Message2};
         }
 
         public void ShowAbout()

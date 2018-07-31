@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
@@ -10,84 +11,87 @@ namespace Roton.Emulation.Original
     [Context(Context.Original)]
     public sealed class OriginalFeatures : IFeatures
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
+        private IEngine Engine => _engine.Value;
 
-        public OriginalFeatures(IEngine engine)
+        public OriginalFeatures(Lazy<IEngine> engine)
         {
             _engine = engine;
         }
+        
+        
 
         public void LockActor(int index)
         {
-            _engine.Actors[index].P2 = 1;
+            Engine.Actors[index].P2 = 1;
         }
 
         public void UnlockActor(int index)
         {
-            _engine.Actors[index].P2 = 0;
+            Engine.Actors[index].P2 = 0;
         }
 
         public bool IsActorLocked(int index)
         {
-            return _engine.Actors[index].P2 != 0;
+            return Engine.Actors[index].P2 != 0;
         }
 
         public void EnterBoard()
         {
-            _engine.Board.Entrance.CopyFrom(_engine.Player.Location);
-            if (_engine.Board.IsDark && _engine.Alerts.Dark)
+            Engine.Board.Entrance.CopyFrom(Engine.Player.Location);
+            if (Engine.Board.IsDark && Engine.Alerts.Dark)
             {
-                _engine.SetMessage(0xC8, _engine.Alerts.DarkMessage);
-                _engine.Alerts.Dark = false;
+                Engine.SetMessage(0xC8, Engine.Alerts.DarkMessage);
+                Engine.Alerts.Dark = false;
             }
 
-            _engine.World.TimePassed = 0;
-            _engine.UpdateStatus();
+            Engine.World.TimePassed = 0;
+            Engine.UpdateStatus();
         }
 
         public IScrollResult ExecuteMessage(IOopContext context)
         {
             if (context.Message.Count == 1)
             {
-                _engine.SetMessage(0xC8, new Message(context.Message));
+                Engine.SetMessage(0xC8, new Message(context.Message));
                 return null;
             }
             else
             {
-                _engine.State.KeyVector.SetTo(0, 0);
-                return _engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
+                Engine.State.KeyVector.SetTo(0, 0);
+                return Engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
             }
         }
 
         public void HandlePlayerInput(IActor actor)
         {
-            switch (_engine.State.KeyPressed.ToUpperCase())
+            switch (Engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.T:
-                    if (_engine.World.TorchCycles <= 0)
+                    if (Engine.World.TorchCycles <= 0)
                     {
-                        if (_engine.World.Torches <= 0)
+                        if (Engine.World.Torches <= 0)
                         {
-                            if (_engine.Alerts.NoTorches)
+                            if (Engine.Alerts.NoTorches)
                             {
-                                _engine.SetMessage(0xC8, _engine.Alerts.NoTorchMessage);
-                                _engine.Alerts.NoTorches = false;
+                                Engine.SetMessage(0xC8, Engine.Alerts.NoTorchMessage);
+                                Engine.Alerts.NoTorches = false;
                             }
                         }
-                        else if (!_engine.Board.IsDark)
+                        else if (!Engine.Board.IsDark)
                         {
-                            if (_engine.Alerts.NotDark)
+                            if (Engine.Alerts.NotDark)
                             {
-                                _engine.SetMessage(0xC8, _engine.Alerts.NotDarkMessage);
-                                _engine.Alerts.NotDark = false;
+                                Engine.SetMessage(0xC8, Engine.Alerts.NotDarkMessage);
+                                Engine.Alerts.NotDark = false;
                             }
                         }
                         else
                         {
-                            _engine.World.Torches--;
-                            _engine.World.TorchCycles = 0xC8;
-                            _engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                            _engine.Hud.UpdateStatus();
+                            Engine.World.Torches--;
+                            Engine.World.TorchCycles = 0xC8;
+                            Engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                            Engine.Hud.UpdateStatus();
                         }
                     }
 
@@ -100,47 +104,47 @@ namespace Roton.Emulation.Original
         public bool CanPutTile(IXyPair location)
         {
             // do not allow #put on the bottom row
-            return location.Y < _engine.Tiles.Height;
+            return location.Y < Engine.Tiles.Height;
         }
 
         public void ClearForest(IXyPair location)
         {
-            _engine.RemoveItem(location);
+            Engine.RemoveItem(location);
         }
 
         public void CleanUpPassageMovement()
         {
-            _engine.Tiles[_engine.Player.Location].SetTo(_engine.ElementList.EmptyId, 0);
+            Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.EmptyId, 0);
         }
 
         public void ForcePlayerColor(int index)
         {
-            var actor = _engine.Actors[index];
-            var playerElement = _engine.ElementList[_engine.ElementList.PlayerId];
-            if (_engine.Tiles[actor.Location].Color == playerElement.Color &&
-                playerElement.Character == _engine.Facts.PlayerCharacter) 
+            var actor = Engine.Actors[index];
+            var playerElement = Engine.ElementList[Engine.ElementList.PlayerId];
+            if (Engine.Tiles[actor.Location].Color == playerElement.Color &&
+                playerElement.Character == Engine.Facts.PlayerCharacter) 
                 return;
             
-            playerElement.Character = _engine.Facts.PlayerCharacter;
-            _engine.Tiles[actor.Location].Color = playerElement.Color;
-            _engine.UpdateBoard(actor.Location);
+            playerElement.Character = Engine.Facts.PlayerCharacter;
+            Engine.Tiles[actor.Location].Color = playerElement.Color;
+            Engine.UpdateBoard(actor.Location);
         }
 
         public string[] GetMessageLines()
         {
-            return new[] {_engine.State.Message};
+            return new[] {Engine.State.Message};
         }
 
         public void ShowAbout()
         {
-            _engine.ShowHelp("ABOUT");
+            Engine.ShowHelp("ABOUT");
         }
 
         public int BaseMemoryUsage => 205791;
-
+        
         public bool HandleTitleInput()
         {
-            switch (_engine.State.KeyPressed.ToUpperCase())
+            switch (Engine.State.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.P:
                     return true;
@@ -152,9 +156,9 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.E:
                     break;
                 case EngineKeyCode.S:
-                    _engine.Hud.CreateStatusText();
-                    _engine.State.GameSpeed = _engine.Hud.SelectParameter(
-                        true, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
+                    Engine.Hud.CreateStatusText();
+                    Engine.State.GameSpeed = Engine.Hud.SelectParameter(
+                        true, 0x42, 0x15, @"Game speed:;FS", Engine.State.GameSpeed, null);
                     break;
                 case EngineKeyCode.R:
                     break;
@@ -162,11 +166,11 @@ namespace Roton.Emulation.Original
                     ShowInGameHelp();
                     break;
                 case EngineKeyCode.QuestionMark:
-                    _engine.Hud.EnterCheat();
+                    Engine.Hud.EnterCheat();
                     break;
                 case EngineKeyCode.Escape:
                 case EngineKeyCode.Q:
-                    _engine.State.QuitEngine = _engine.Hud.QuitEngineConfirmation();
+                    Engine.State.QuitEngine = Engine.Hud.QuitEngineConfirmation();
                     break;
             }
 
@@ -175,13 +179,13 @@ namespace Roton.Emulation.Original
 
         public void RemoveItem(IXyPair location)
         {
-            _engine.Tiles[location].Id = _engine.ElementList.EmptyId;
-            _engine.UpdateBoard(location);
+            Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
+            Engine.UpdateBoard(location);
         }
 
         public void ShowInGameHelp()
         {
-            _engine.ShowHelp("GAME");
+            Engine.ShowHelp("GAME");
         }
 
         public string GetWorldName(string baseName)

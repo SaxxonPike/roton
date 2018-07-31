@@ -64,5 +64,7 @@ namespace Roton.Emulation.Data.Impl
         public int SearchOffset { get; set; }
 
         public string SearchTarget { get; set; }
+        
+        public int Command { get; set; }
     }
 }
