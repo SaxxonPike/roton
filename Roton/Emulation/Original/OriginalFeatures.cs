@@ -142,6 +142,26 @@ namespace Roton.Emulation.Original
 
         public int BaseMemoryUsage => 205791;
         
+        public void CleanUpPauseMovement()
+        {
+            var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
+            
+            if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
+            {
+                Engine.MoveActor(0, target);
+            }
+            else
+            {
+                Engine.UpdateBoard(Engine.Player.Location);
+                Engine.Player.Location.Add(Engine.State.KeyVector);
+                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId,
+                    Engine.ElementList[Engine.ElementList.PlayerId].Color);
+                Engine.UpdateBoard(Engine.Player.Location);
+                Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
+                Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
+            }
+        }
+
         public bool HandleTitleInput()
         {
             switch (Engine.State.KeyPressed.ToUpperCase())

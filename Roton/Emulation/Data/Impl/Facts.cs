@@ -11,7 +11,8 @@ namespace Roton.Emulation.Data.Impl
         public string DefaultBoardName => "TEMP";
         public abstract string DefaultWorldName { get; }
         public string UntitledWorldName => "Untitled";
-        public string HintLabel => "HINT";
+        public string HintLabel => "ALL:HINT";
+        public string EnterLabel => "ALL:ENTER";
         public abstract string ConfigFileName { get; }
         public int DefaultGameSpeed => 4;
         public int DefaultAmmo => 0;

@@ -41,5 +41,6 @@ namespace Roton.Emulation.Data
         string BombedLabel { get; }
         int MaxGameCycle { get; }
         AnsiChar ErrorFadeTile { get; }
+        string EnterLabel { get; }
     }
 }

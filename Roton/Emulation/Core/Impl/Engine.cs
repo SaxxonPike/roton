@@ -214,7 +214,8 @@ namespace Roton.Emulation.Core.Impl
         public IActor ActorAt(IXyPair location)
         {
             return Actors
-                .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y);
+                .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y) ??
+                Actors[-1];
         }
 
         public int ActorIndexAt(IXyPair location)
@@ -1739,21 +1740,7 @@ namespace Roton.Emulation.Core.Impl
                         var target = Player.Location.Sum(State.KeyVector);
                         if (ElementAt(target).IsFloor)
                         {
-                            if (ElementAt(Player.Location).Id == ElementList.PlayerId)
-                            {
-                                MoveActor(0, target);
-                            }
-                            else
-                            {
-                                UpdateBoard(Player.Location);
-                                Player.Location.Add(State.KeyVector);
-                                Tiles[Player.Location].SetTo(ElementList.PlayerId,
-                                    ElementList[ElementList.PlayerId].Color);
-                                UpdateBoard(Player.Location);
-                                UpdateRadius(Player.Location, RadiusMode.Update);
-                                UpdateRadius(Player.Location.Difference(State.KeyVector), RadiusMode.Update);
-                            }
-
+                            Features.CleanUpPauseMovement();
                             State.GamePaused = false;
                             Hud.ClearPausing();
                             State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);

@@ -83,14 +83,9 @@ namespace Roton.Emulation.Super
 
         public void EnterBoard()
         {
-            Engine.BroadcastLabel(0, KnownLabels.Enter, false);
+            Engine.BroadcastLabel(0, Engine.Facts.EnterLabel, false);
             Engine.Board.Entrance.CopyFrom(Engine.Actors.Player.Location);
-            if (Engine.Board.IsDark && Engine.Alerts.Dark)
-            {
-                Engine.SetMessage(0xC8, Engine.Alerts.DarkMessage);
-                Engine.Alerts.Dark = false;
-            }
-
+            Engine.Hud.UpdateCamera();
             Engine.World.TimePassed = 0;
             Engine.Hud.UpdateStatus();
         }
@@ -155,6 +150,27 @@ namespace Roton.Emulation.Super
         public void ClearForest(IXyPair location)
         {
             Engine.Tiles[location].SetTo(Engine.ElementList.FloorId, 0x02);
+        }
+
+        public void CleanUpPauseMovement()
+        {
+            var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
+            
+            if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
+            {
+                Engine.MoveActor(0, target);
+            }
+            else
+            {
+                Engine.UpdateBoard(Engine.Player.Location);
+                Engine.Player.Location.Add(Engine.State.KeyVector);
+                Engine.Player.UnderTile.CopyFrom(Engine.Tiles[Engine.Player.Location]);
+                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId,
+                    Engine.ElementList[Engine.ElementList.PlayerId].Color);
+                Engine.UpdateBoard(Engine.Player.Location);
+                Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
+                Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
+            }
         }
 
         public void CleanUpPassageMovement()

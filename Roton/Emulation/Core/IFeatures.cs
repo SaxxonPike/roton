@@ -21,5 +21,6 @@ namespace Roton.Emulation.Core
         string[] GetMessageLines();
         void ShowAbout();
         int BaseMemoryUsage { get; }
+        void CleanUpPauseMovement();
     }
 }
