@@ -29,5 +29,6 @@ namespace Roton.Emulation.Core
         void UpdateCamera();
         void UpdateStatus();
         void CreateStatusWorld();
+        string EnterHighScore(int score);
     }
 }

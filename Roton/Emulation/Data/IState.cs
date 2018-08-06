@@ -10,14 +10,14 @@ namespace Roton.Emulation.Data
         IActor DefaultActor { get; }
         ITile EdgeTile { get; }
         IXyPair KeyVector { get; }
-        IList<int> LineChars { get; }
+        IReadOnlyList<int> LineChars { get; }
         ISoundBufferList SoundBuffer { get; }
-        IList<int> StarChars { get; }
-        IList<int> TransporterHChars { get; }
-        IList<int> TransporterVChars { get; }
-        IList<int> Vector4 { get; }
-        IList<int> Vector8 { get; }
-        IList<int> WebChars { get; }
+        IReadOnlyList<int> StarChars { get; }
+        IReadOnlyList<int> TransporterHChars { get; }
+        IReadOnlyList<int> TransporterVChars { get; }
+        IReadOnlyList<int> Vector4 { get; }
+        IReadOnlyList<int> Vector8 { get; }
+        IReadOnlyList<int> WebChars { get; }
         bool AboutShown { get; set; }
         int ActIndex { get; set; }
         int ActorCount { get; set; }

@@ -1600,6 +1600,8 @@ namespace Roton.Emulation.Core.Impl
 
         private void EnterHighScore(int score)
         {
+            var name = Hud.EnterHighScore(score);
+            // TODO: implement
         }
 
         private void ExecuteDeath(IOopContext context)

@@ -7,6 +7,6 @@ namespace Roton.Composers.Video.Glyphs
         int Index { get; }
         int Width { get; }
         int Height { get; }
-        IList<int> Data { get; }
+        IReadOnlyList<int> Data { get; }
     }
 }

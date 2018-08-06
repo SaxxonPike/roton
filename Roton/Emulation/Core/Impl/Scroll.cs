@@ -97,7 +97,7 @@ namespace Roton.Emulation.Core.Impl
             RenderBuffer(buffer, Top + Height / 2);
         }
 
-        private void RenderName(string name, IList<string> message, int offset)
+        private void RenderName(string name, IReadOnlyList<string> message, int offset)
         {
             var line = message[offset];
             var title = name;
@@ -167,7 +167,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void RenderContent(string title, IList<string> message, int offset)
+        private void RenderContent(string title, IReadOnlyList<string> message, int offset)
         {
             var center = (Height - 4) / 2;
             var line = offset - center;
@@ -204,7 +204,7 @@ namespace Roton.Emulation.Core.Impl
                 _terminal.Plot(x2, y, dot);
         }
 
-        private bool MainLoop(string title, IList<string> message, ScrollResult result)
+        private bool MainLoop(string title, IReadOnlyList<string> message, ScrollResult result)
         {
             var update = true;
 

@@ -8,12 +8,4 @@ namespace Roton.Emulation.Core
         void Enqueue(ISound sound, int? offset = null, int? length = null);
         ISoundNote Dequeue();
     }
-
-    public interface ISoundNote
-    {
-        int Note { get; }
-        int Duration { get; }
-    }
-    
-    
 }

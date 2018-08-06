@@ -14,14 +14,22 @@ namespace Roton.Emulation.Original
         private readonly ITerminal _terminal;
         private readonly ICheatHud _cheatHud;
         private readonly IChoiceHud _choiceHud;
+        private readonly IHighScoreHud _highScoreHud;
 
-        public OriginalHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud, IChoiceHud choiceHud)
+        public OriginalHud(
+            IEngine engine, 
+            ITerminal terminal, 
+            IScroll scroll, 
+            ICheatHud cheatHud, 
+            IChoiceHud choiceHud,
+            IHighScoreHud highScoreHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
             _cheatHud = cheatHud;
             _choiceHud = choiceHud;
+            _highScoreHud = highScoreHud;
             _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
@@ -335,6 +343,12 @@ namespace Roton.Emulation.Original
         public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
         {
             return _choiceHud.Show(performSelection, x, y, message, currentValue, barText);
+        }
+
+        public override string EnterHighScore(int score)
+        {
+            _highScoreHud.Show(3, 16, 34, 5);
+            return base.EnterHighScore(score);
         }
     }
 }

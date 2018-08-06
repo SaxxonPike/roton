@@ -114,6 +114,11 @@ namespace Roton.Emulation.Core.Impl
         {
         }
 
+        public virtual string EnterHighScore(int score)
+        {
+            return null;
+        }
+
         protected virtual bool Confirm(string message)
         {
             while (_engine.ThreadActive)
