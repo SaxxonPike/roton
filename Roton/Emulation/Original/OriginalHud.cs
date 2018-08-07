@@ -250,7 +250,7 @@ namespace Roton.Emulation.Original
 
         private static string IntToString(int i)
         {
-            return i + " ";
+            return $"{i} ";
         }
 
         public override void RedrawBoard()

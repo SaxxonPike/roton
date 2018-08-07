@@ -532,7 +532,7 @@ namespace Roton.Emulation.Core.Impl
                         context.Finished = true;
                         break;
                     default:
-                        context.Message.Add(context.Command.ToStringValue() + Parser.ReadLine(context.Index, context));
+                        context.Message.Add($"{context.Command.ToStringValue()}{Parser.ReadLine(context.Index, context)}");
                         break;
                 }
 
@@ -794,7 +794,7 @@ namespace Roton.Emulation.Core.Impl
         {
             Hud.ShowScroll("Error",
                 "$DOS Error:",
-                "",
+                string.Empty,
                 "This may be caused by missing",
                 "files or a bad disk. If you",
                 "are trying to save a game,",

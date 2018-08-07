@@ -70,9 +70,9 @@ namespace Roton.Emulation.Super
                 DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
                 DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
                 DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
-                DrawString(0x00, 0x03, @" " + arrows + @"       ", 0x6F);
+                DrawString(0x00, 0x03, $@" {arrows}       ", 0x6F);
                 DrawString(0x00, 0x04, @"   Move     ", 0x6E);
-                DrawString(0x00, 0x05, @" Shift+" + arrows + @" ", 0x6F);
+                DrawString(0x00, 0x05, $@" Shift+{arrows} ", 0x6F);
                 DrawString(0x00, 0x06, @"   Shoot    ", 0x6B);
                 DrawString(0x00, 0x07, @"   Hint     ", 0x6E);
                 DrawString(0x01, 0x07, @"H", 0x6F);
