@@ -51,7 +51,6 @@ namespace Roton.Emulation.Core
         void Destroy(IXyPair location);
         AnsiChar Draw(IXyPair location);
         IElement ElementAt(IXyPair location);
-        ISound EncodeMusic(string music);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         bool ExecuteLabel(int sender, ISearchContext context, string prefix);
@@ -107,6 +106,7 @@ namespace Roton.Emulation.Core
         IDrumBank DrumBank { get; }
         bool ThreadActive { get; }
         int MemoryUsage { get; }
+        IMusicEncoder MusicEncoder { get; }
         void Cheat();
         void PlayStep();
     }

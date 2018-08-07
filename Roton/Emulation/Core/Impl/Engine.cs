@@ -46,6 +46,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<ISpeaker> _speaker;
         private readonly Lazy<IDrumBank> _drumBank;
         private readonly Lazy<IObjectMover> _objectMover;
+        private readonly Lazy<IMusicEncoder> _musicEncoder;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -76,7 +77,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover)
+            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -127,6 +128,7 @@ namespace Roton.Emulation.Core.Impl
             _speaker = speaker;
             _drumBank = drumBank;
             _objectMover = objectMover;
+            _musicEncoder = musicEncoder;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -137,6 +139,8 @@ namespace Roton.Emulation.Core.Impl
         }
 
         private IObjectMover ObjectMover => _objectMover.Value;
+
+        public IMusicEncoder MusicEncoder => _musicEncoder.Value;
         
         private IClock Clock => _clock.Value;
 
@@ -475,127 +479,6 @@ namespace Roton.Emulation.Core.Impl
         }
 
         public IElementList ElementList => _elements.Value;
-
-        public ISound EncodeMusic(string music)
-        {
-            var speed = 1;
-            var octave = 3;
-            var result = new List<int>();
-            var isNote = false;
-            var note = -1;
-
-            foreach (var c in music.ToUpperInvariant())
-            {
-                if (!isNote)
-                {
-                    note = -1;
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case '!':
-                            note--;
-                            break;
-                        case '#':
-                            note++;
-                            break;
-                    }
-
-                    isNote = false;
-                    result.Add(note + (octave << 4));
-                    result.Add(speed);
-                }
-
-                switch (c)
-                {
-                    case 'T':
-                        speed = 1;
-                        break;
-                    case 'S':
-                        speed = 2;
-                        break;
-                    case 'I':
-                        speed = 4;
-                        break;
-                    case 'Q':
-                        speed = 8;
-                        break;
-                    case 'H':
-                        speed = 16;
-                        break;
-                    case 'W':
-                        speed = 32;
-                        break;
-                    case '.':
-                        speed = speed * 3 / 2;
-                        break;
-                    case '3':
-                        speed = speed / 3;
-                        break;
-                    case '+':
-                        if (octave < 6)
-                            octave++;
-                        break;
-                    case '-':
-                        if (octave > 1)
-                            octave--;
-                        break;
-                    case 'C':
-                        note = 0;
-                        isNote = true;
-                        break;
-                    case 'D':
-                        note = 2;
-                        isNote = true;
-                        break;
-                    case 'E':
-                        note = 4;
-                        isNote = true;
-                        break;
-                    case 'F':
-                        note = 5;
-                        isNote = true;
-                        break;
-                    case 'G':
-                        note = 7;
-                        isNote = true;
-                        break;
-                    case 'A':
-                        note = 9;
-                        isNote = true;
-                        break;
-                    case 'B':
-                        note = 11;
-                        isNote = true;
-                        break;
-                    case 'X':
-                        result.Add(0);
-                        result.Add(speed);
-                        break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        result.Add(0xF0 | (c - 0x30));
-                        result.Add(speed);
-                        break;
-                }
-            }
-
-            if (isNote)
-            {
-                result.Add(note + (octave << 4));
-                result.Add(speed);
-            }
-
-            return new Sound(result.Take(254).ToArray());
-        }
 
         public void EnterBoard()
         {
@@ -1609,25 +1492,6 @@ namespace Roton.Emulation.Core.Impl
             var location = context.Actor.Location.Clone();
             Harm(context.Index);
             PlotTile(location, context.DeathTile);
-        }
-
-        private void ExecuteDirection(IOopContext context, IXyPair vector)
-        {
-            if (vector.IsZero())
-            {
-                context.Repeat = false;
-            }
-            else
-            {
-                var target = context.Actor.Location.Sum(vector);
-                if (!ElementAt(target).IsFloor) Push(target, vector);
-
-                if (ElementAt(target).IsFloor)
-                {
-                    MoveActor(context.Index, target);
-                    context.Repeat = false;
-                }
-            }
         }
 
         private void ExecuteMessage(IOopContext context)
