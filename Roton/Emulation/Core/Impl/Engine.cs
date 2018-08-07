@@ -314,15 +314,9 @@ namespace Roton.Emulation.Core.Impl
 
         public ICheatList CheatList => _cheats.Value;
 
-        public void CleanUpPassageMovement()
-        {
-            Features.CleanUpPassageMovement();
-        }
+        public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
-        public void ClearForest(IXyPair location)
-        {
-            Features.ClearForest(location);
-        }
+        public void ClearForest(IXyPair location) => Features.ClearForest(location);
 
         public void ClearSound()
         {
@@ -473,17 +467,11 @@ namespace Roton.Emulation.Core.Impl
 
         public IDrawList DrawList => _drawList.Value;
 
-        public IElement ElementAt(IXyPair location)
-        {
-            return ElementList[Tiles[location].Id];
-        }
+        public IElement ElementAt(IXyPair location) => ElementList[Tiles[location].Id];
 
         public IElementList ElementList => _elements.Value;
 
-        public void EnterBoard()
-        {
-            Features.EnterBoard();
-        }
+        public void EnterBoard() => Features.EnterBoard();
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
@@ -683,20 +671,11 @@ namespace Roton.Emulation.Core.Impl
             return false;
         }
 
-        public void ForcePlayerColor(int index)
-        {
-            Features.ForcePlayerColor(index);
-        }
+        public void ForcePlayerColor(int index) => Features.ForcePlayerColor(index);
 
-        public IXyPair GetCardinalVector(int index)
-        {
-            return new Vector(State.Vector4[index], State.Vector4[index + 4]);
-        }
+        public IXyPair GetCardinalVector(int index) => new Vector(State.Vector4[index], State.Vector4[index + 4]);
 
-        public void HandlePlayerInput(IActor actor)
-        {
-            Features.HandlePlayerInput(actor);
-        }
+        public void HandlePlayerInput(IActor actor) => Features.HandlePlayerInput(actor);
 
         public void Harm(int index)
         {
@@ -748,15 +727,11 @@ namespace Roton.Emulation.Core.Impl
 
         public IHud Hud => _hud.Value;
 
-        public IInteractionList InteractionList
-            => _interactionList.Value;
+        public IInteractionList InteractionList => _interactionList.Value;
 
         public IItemList ItemList => _items.Value;
 
-        private void ShowFormattedScroll(string error)
-        {
-            Hud.ShowScroll("Roton Error", ScrollFormatter.Format(error));
-        }
+        private void ShowFormattedScroll(string error) => Hud.ShowScroll("Roton Error", ScrollFormatter.Format(error));
 
         public void LoadWorld(string name)
         {
@@ -829,10 +804,7 @@ namespace Roton.Emulation.Core.Impl
             );
         }
 
-        public void LockActor(int index)
-        {
-            Features.LockActor(index);
-        }
+        public void LockActor(int index) => Features.LockActor(index);
 
         public void MoveActor(int index, IXyPair target)
         {
@@ -1116,10 +1088,7 @@ namespace Roton.Emulation.Core.Impl
             State.ActorCount--;
         }
 
-        public void RemoveItem(IXyPair location)
-        {
-            Features.RemoveItem(location);
-        }
+        public void RemoveItem(IXyPair location) => Features.RemoveItem(location);
 
         public IXyPair Rnd()
         {
@@ -1290,15 +1259,9 @@ namespace Roton.Emulation.Core.Impl
 
         public bool TitleScreen => State.PlayerElement != ElementList.PlayerId;
 
-        public void UnlockActor(int index)
-        {
-            Features.UnlockActor(index);
-        }
+        public void UnlockActor(int index) => Features.UnlockActor(index);
 
-        public void UpdateBoard(IXyPair location)
-        {
-            DrawTile(location, Draw(location));
-        }
+        public void UpdateBoard(IXyPair location) => DrawTile(location, Draw(location));
 
         public void UpdateRadius(IXyPair location, RadiusMode mode)
         {
@@ -1339,10 +1302,7 @@ namespace Roton.Emulation.Core.Impl
                 }
         }
 
-        public void UpdateStatus()
-        {
-            Hud.UpdateStatus();
-        }
+        public void UpdateStatus() => Hud.UpdateStatus();
 
         public void WaitForTick()
         {
@@ -1394,10 +1354,7 @@ namespace Roton.Emulation.Core.Impl
         public IWorld World
             => _world.Value;
 
-        private bool ActorIsLocked(int index)
-        {
-            return Features.IsActorLocked(index);
-        }
+        private bool ActorIsLocked(int index) => Features.IsActorLocked(index);
 
         public void ClearBoard()
         {
@@ -1471,15 +1428,9 @@ namespace Roton.Emulation.Core.Impl
             return tile.Color & 0x0F;
         }
 
-        private static int Distance(IXyPair a, IXyPair b)
-        {
-            return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
-        }
+        private static int Distance(IXyPair a, IXyPair b) => (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
-        private void DrawTile(IXyPair location, AnsiChar ac)
-        {
-            Hud.DrawTile(location.X - 1, location.Y - 1, ac);
-        }
+        private void DrawTile(IXyPair location, AnsiChar ac) => Hud.DrawTile(location.X - 1, location.Y - 1, ac);
 
         private void EnterHighScore(int score)
         {
@@ -1505,10 +1456,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void FadeBoard(AnsiChar ac)
-        {
-            Hud.FadeBoard(ac);
-        }
+        private void FadeBoard(AnsiChar ac) => Hud.FadeBoard(ac);
 
         public void FadeRed()
         {
@@ -1516,10 +1464,7 @@ namespace Roton.Emulation.Core.Impl
             Hud.RedrawBoard();
         }
 
-        private IXyPair GetConveyorVector(int index)
-        {
-            return new Vector(State.Vector8[index], State.Vector8[index + 8]);
-        }
+        private IXyPair GetConveyorVector(int index) => new Vector(State.Vector8[index], State.Vector8[index + 8]);
 
         private void InitializeElements(bool showInvisibles)
         {
