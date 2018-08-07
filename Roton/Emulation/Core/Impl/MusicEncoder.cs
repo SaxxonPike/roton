@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public class MusicEncoder : IMusicEncoder
+    public sealed class MusicEncoder : IMusicEncoder
     {
         public ISound Encode(string music)
         {

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public class Tracer : ITracer
+    public sealed class Tracer : ITracer
     {
         public void Trace(IOopContext oopContext)
         {

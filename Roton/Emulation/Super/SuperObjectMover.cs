@@ -7,7 +7,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super
 {
     [Context(Context.Super)]
-    public class SuperObjectMover : IObjectMover
+    public sealed class SuperObjectMover : IObjectMover
     {
         private readonly Lazy<IEngine> _engine;
         private IEngine Engine => _engine.Value;
