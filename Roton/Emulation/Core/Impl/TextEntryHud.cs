@@ -7,12 +7,12 @@ namespace Roton.Emulation.Core.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
-    public sealed class CheatHud : ICheatHud
+    public sealed class TextEntryHud : ITextEntryHud
     {
         private readonly Lazy<ITerminal> _terminal;
         private readonly Lazy<IEngine> _engine;
 
-        public CheatHud(Lazy<ITerminal> terminal, Lazy<IEngine> engine)
+        public TextEntryHud(Lazy<ITerminal> terminal, Lazy<IEngine> engine)
         {
             _terminal = terminal;
             _engine = engine;
@@ -21,7 +21,7 @@ namespace Roton.Emulation.Core.Impl
         private ITerminal Terminal => _terminal.Value;
         private IEngine Engine => _engine.Value;
         
-        public string Show(int x, int y)
+        public string Show(int x, int y, int maxLength, int color)
         {
             var update = true;
             var cheat = string.Empty;
@@ -32,9 +32,9 @@ namespace Roton.Emulation.Core.Impl
                 if (update)
                 {
                     update = false;
-                    Terminal.Write(x, y, "            ", 0x1F);
+                    Terminal.Write(x, y, new string(' ', maxLength + 1), 0x1F);
                     Terminal.Plot(x + cheat.Length, y, new AnsiChar(0x1F, 0x1F));
-                    Terminal.Write(x, y + 1, "           ", 0x0F);
+                    Terminal.Write(x, y + 1, new string(' ', maxLength), color);
                     Terminal.Write(x, y + 1, cheat, 0x0F);
                 }
                 
@@ -78,7 +78,7 @@ namespace Roton.Emulation.Core.Impl
             }
 
             for (var i = 0; i < 3; i++)
-                Terminal.Write(x, y + i, "            ", 0x1F);
+                Terminal.Write(x, y + i, new string(' ', maxLength + 1), 0x1F);
             return cheat;
         }
     }

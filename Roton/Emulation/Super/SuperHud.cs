@@ -13,14 +13,14 @@ namespace Roton.Emulation.Super
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
-        private readonly ICheatHud _cheatHud;
+        private readonly ITextEntryHud _textEntryHud;
 
-        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud)
+        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ITextEntryHud textEntryHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
-            _cheatHud = cheatHud;
+            _textEntryHud = textEntryHud;
 
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
@@ -327,7 +327,7 @@ namespace Roton.Emulation.Super
         public override string EnterCheat()
         {
             UpdateBorder();
-            var cheat = _cheatHud.Show(0x0F, 0x17);
+            var cheat = _textEntryHud.Show(0x0F, 0x17, 11, 0x0F);
             UpdateBorder();
             return cheat;
         }

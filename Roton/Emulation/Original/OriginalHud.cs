@@ -12,7 +12,7 @@ namespace Roton.Emulation.Original
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
-        private readonly ICheatHud _cheatHud;
+        private readonly ITextEntryHud _textEntryHud;
         private readonly IChoiceHud _choiceHud;
         private readonly IHighScoreHud _highScoreHud;
 
@@ -20,14 +20,14 @@ namespace Roton.Emulation.Original
             IEngine engine, 
             ITerminal terminal, 
             IScroll scroll, 
-            ICheatHud cheatHud, 
+            ITextEntryHud textEntryHud, 
             IChoiceHud choiceHud,
             IHighScoreHud highScoreHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
-            _cheatHud = cheatHud;
+            _textEntryHud = textEntryHud;
             _choiceHud = choiceHud;
             _highScoreHud = highScoreHud;
             _terminal = terminal;
@@ -334,7 +334,7 @@ namespace Roton.Emulation.Original
         {
             DrawStatusLine(4);
             DrawStatusLine(5);
-            var cheat = _cheatHud.Show(0x3F, 0x04);
+            var cheat = _textEntryHud.Show(0x3F, 0x04, 11, 0x0F);
             DrawStatusLine(4);
             DrawStatusLine(5);
             return cheat;
