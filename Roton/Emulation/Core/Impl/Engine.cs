@@ -328,7 +328,7 @@ namespace Roton.Emulation.Core.Impl
         {
             State.BoardCount = 0;
             Boards.Clear();
-            ResetAlerts();
+            Alerts.Reset();
             ClearBoard();
             Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
             World.BoardIndex = 0;
@@ -1755,21 +1755,6 @@ namespace Roton.Emulation.Core.Impl
                     State.KeyArrow = true;
                     break;
             }
-        }
-
-        private void ResetAlerts()
-        {
-            Alerts.AmmoPickup = true;
-            Alerts.Dark = true;
-            Alerts.EnergizerPickup = true;
-            Alerts.FakeWall = true;
-            Alerts.Forest = true;
-            Alerts.GemPickup = true;
-            Alerts.OutOfAmmo = true;
-            Alerts.CantShootHere = true;
-            Alerts.NotDark = true;
-            Alerts.NoTorches = true;
-            Alerts.TorchPickup = true;
         }
 
         private void Rnd(IXyPair result)
