@@ -13,6 +13,7 @@ namespace Roton.Emulation.Super
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
+        private readonly IScroll _scroll;
         private readonly ITextEntryHud _textEntryHud;
 
         public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ITextEntryHud textEntryHud)
@@ -20,6 +21,7 @@ namespace Roton.Emulation.Super
         {
             _engine = engine;
             _terminal = terminal;
+            _scroll = scroll;
             _textEntryHud = textEntryHud;
 
             OldCamera = new Location16(short.MinValue, short.MinValue);
@@ -327,9 +329,20 @@ namespace Roton.Emulation.Super
         public override string EnterCheat()
         {
             UpdateBorder();
-            var cheat = _textEntryHud.Show(0x0F, 0x17, 11, 0x0F);
+            var cheat = _textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
             UpdateBorder();
             return cheat;
+        }
+
+        public override string EnterHighScore(int score)
+        {
+            string name = null;
+            _scroll.Show($"New high score for {_engine.World.Name}",
+                new[] {" Enter your name:", string.Empty, string.Empty, string.Empty},
+                false,
+                0,
+                s => name = _textEntryHud.Show(12, 13, 15, 0x1E, 0x1F));
+            return name;
         }
     }
 }

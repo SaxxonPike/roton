@@ -12,9 +12,10 @@ namespace Roton.Emulation.Original
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
+        private readonly IScroll _scroll;
         private readonly ITextEntryHud _textEntryHud;
         private readonly IChoiceHud _choiceHud;
-        private readonly IHighScoreHud _highScoreHud;
+        private readonly ILongTextEntryHud _longTextEntryHud;
 
         public OriginalHud(
             IEngine engine, 
@@ -22,14 +23,15 @@ namespace Roton.Emulation.Original
             IScroll scroll, 
             ITextEntryHud textEntryHud, 
             IChoiceHud choiceHud,
-            IHighScoreHud highScoreHud)
+            ILongTextEntryHud longTextEntryHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
+            _scroll = scroll;
             _textEntryHud = textEntryHud;
             _choiceHud = choiceHud;
-            _highScoreHud = highScoreHud;
+            _longTextEntryHud = longTextEntryHud;
             _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
@@ -334,7 +336,7 @@ namespace Roton.Emulation.Original
         {
             DrawStatusLine(4);
             DrawStatusLine(5);
-            var cheat = _textEntryHud.Show(0x3F, 0x04, 11, 0x0F);
+            var cheat = _textEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F);
             DrawStatusLine(4);
             DrawStatusLine(5);
             return cheat;
@@ -347,8 +349,18 @@ namespace Roton.Emulation.Original
 
         public override string EnterHighScore(int score)
         {
-            _highScoreHud.Show(3, 16, 34, 5);
-            return base.EnterHighScore(score);
+            string name = null;
+            _scroll.Show($"New high score for {_engine.World.Name}",
+                new []
+                {
+                    "Score  Name",
+                    "-----  ----------------------------------",
+                    "12345  Deeeeez"
+                }, 
+                false,
+                2,
+                s => name = _longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
+            return name;
         }
     }
 }

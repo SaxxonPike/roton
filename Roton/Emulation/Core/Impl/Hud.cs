@@ -100,7 +100,7 @@ namespace Roton.Emulation.Core.Impl
             _scroll.Show(title, fileName);
 
         public IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines) =>
-            _scroll.Show(title, lines, isHelp);
+            _scroll.Show(title, lines, isHelp, 0);
 
         public virtual void UpdateBorder()
         {

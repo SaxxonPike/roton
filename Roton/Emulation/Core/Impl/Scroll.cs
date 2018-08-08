@@ -340,14 +340,14 @@ namespace Roton.Emulation.Core.Impl
             return state;
         }
         
-        public IScrollState Show(string title, IEnumerable<string> message, bool isHelp) 
-            => Show(title, message, isHelp, ShowLoop);
+        public IScrollState Show(string title, IEnumerable<string> message, bool isHelp, int index) 
+            => Show(title, message, isHelp, index, ShowLoop);
 
-        public IScrollState Show(string title, IEnumerable<string> message, bool isHelp, Action<IScrollState> mainLoop)
+        public IScrollState Show(string title, IEnumerable<string> message, bool isHelp, int index, Action<IScrollState> mainLoop)
         {
             var state = new ScrollState
             {
-                Index = 0,
+                Index = index,
                 Label = null,
                 Cancelled = false,
                 Lines = message.ToList(),

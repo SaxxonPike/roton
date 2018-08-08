@@ -21,7 +21,7 @@ namespace Roton.Emulation.Core.Impl
         private ITerminal Terminal => _terminal.Value;
         private IEngine Engine => _engine.Value;
         
-        public string Show(int x, int y, int maxLength, int color)
+        public string Show(int x, int y, int maxLength, int textColor, int pipColor)
         {
             var update = true;
             var cheat = string.Empty;
@@ -32,10 +32,10 @@ namespace Roton.Emulation.Core.Impl
                 if (update)
                 {
                     update = false;
-                    Terminal.Write(x, y, new string(' ', maxLength + 1), 0x1F);
-                    Terminal.Plot(x + cheat.Length, y, new AnsiChar(0x1F, 0x1F));
-                    Terminal.Write(x, y + 1, new string(' ', maxLength), color);
-                    Terminal.Write(x, y + 1, cheat, 0x0F);
+                    Terminal.Write(x, y, new string(' ', maxLength + 1), pipColor);
+                    Terminal.Plot(x + cheat.Length, y, new AnsiChar(0x1F, pipColor));
+                    Terminal.Write(x, y + 1, new string(' ', maxLength), textColor);
+                    Terminal.Write(x, y + 1, cheat, textColor);
                 }
                 
                 Engine.WaitForTick();
@@ -48,7 +48,7 @@ namespace Roton.Emulation.Core.Impl
                 var keyChar = (int) key;
                 if (keyChar >= 0x20 && keyChar <= 0x7F)
                 {
-                    if (cheat.Length < 11)
+                    if (cheat.Length < maxLength)
                     {
                         cheat = cheat + (char) key;
                         update = true;
@@ -78,7 +78,7 @@ namespace Roton.Emulation.Core.Impl
             }
 
             for (var i = 0; i < 3; i++)
-                Terminal.Write(x, y + i, new string(' ', maxLength + 1), 0x1F);
+                Terminal.Write(x, y + i, new string(' ', maxLength + 1), pipColor);
             return cheat;
         }
     }
