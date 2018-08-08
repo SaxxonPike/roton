@@ -49,7 +49,7 @@ namespace Roton.Emulation.Original
             Engine.UpdateStatus();
         }
 
-        public IScrollResult ExecuteMessage(IOopContext context)
+        public IScrollState ExecuteMessage(IOopContext context)
         {
             if (context.Message.Count == 1)
             {
@@ -59,7 +59,7 @@ namespace Roton.Emulation.Original
             else
             {
                 Engine.State.KeyVector.SetTo(0, 0);
-                return Engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
+                return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
             }
         }
 
@@ -137,7 +137,7 @@ namespace Roton.Emulation.Original
 
         public void ShowAbout()
         {
-            Engine.ShowHelp("ABOUT");
+            Engine.ShowHelp("About Roton...", "ABOUT");
         }
 
         public int BaseMemoryUsage => 205791;
@@ -205,7 +205,7 @@ namespace Roton.Emulation.Original
 
         public void ShowInGameHelp()
         {
-            Engine.ShowHelp("GAME");
+            Engine.ShowHelp("Playing Roton", "GAME");
         }
 
         public string GetWorldName(string baseName)

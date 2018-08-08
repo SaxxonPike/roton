@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using System.Collections.Generic;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core
@@ -24,7 +25,8 @@ namespace Roton.Emulation.Core
         void RedrawBoard();
         string SaveGame();
         int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText);
-        IScrollResult ShowScroll(string title, params string[] lines);
+        IScrollState ShowHelp(string title, string fileName);
+        IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines);
         void UpdateBorder();
         void UpdateCamera();
         void UpdateStatus();

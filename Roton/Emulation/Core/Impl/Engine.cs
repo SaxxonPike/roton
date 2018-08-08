@@ -148,7 +148,7 @@ namespace Roton.Emulation.Core.Impl
 
         private ITile BorderTile => State.BorderTile;
 
-        private IFileSystem Disk => _fileSystem.Value;
+        public IFileSystem Disk => _fileSystem.Value;
 
         private IFeatures Features => _features.Value;
 
@@ -731,7 +731,7 @@ namespace Roton.Emulation.Core.Impl
 
         public IItemList ItemList => _items.Value;
 
-        private void ShowFormattedScroll(string error) => Hud.ShowScroll("Roton Error", ScrollFormatter.Format(error));
+        private void ShowFormattedScroll(string error) => Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
         public void LoadWorld(string name)
         {
@@ -792,15 +792,18 @@ namespace Roton.Emulation.Core.Impl
 
         private void ShowDosError()
         {
-            Hud.ShowScroll("Error",
-                "$DOS Error:",
-                string.Empty,
-                "This may be caused by missing",
-                "files or a bad disk. If you",
-                "are trying to save a game,",
-                "your disk may be full -- try",
-                "using a blank, formatted disk",
-                "for saving the game!"
+            Hud.ShowScroll(false, "Error",
+                new[]
+                {
+                    "$DOS Error:",
+                    string.Empty,
+                    "This may be caused by missing",
+                    "files or a bad disk. If you",
+                    "are trying to save a game,",
+                    "your disk may be full -- try",
+                    "using a blank, formatted disk",
+                    "for saving the game!"
+                }
             );
         }
 
@@ -1158,24 +1161,7 @@ namespace Roton.Emulation.Core.Impl
             State.Message2 = bottomMessage;
         }
 
-        public void ShowHelp(string filename)
-        {
-            try
-            {
-                var text = Disk
-                    .GetFile($"{filename}.HLP")
-                    .ToStringValue()
-                    .Replace("\xD\xA", "\xD")
-                    .Split('\xD');
-                var result = Hud.ShowScroll(filename, text);
-                if (result?.Label?.StartsWith("-") ?? false)
-                    ShowHelp(result.Label.Substring(1));
-            }
-            catch (Exception e)
-            {
-                ShowFormattedScroll(e.ToString());
-            }
-        }
+        public void ShowHelp(string title, string filename) => Hud.ShowHelp(title, filename);
 
         public void ShowInGameHelp() => Features.ShowInGameHelp();
 
@@ -1449,11 +1435,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var result = Features.ExecuteMessage(context);
             if (result != null && !result.Cancelled && result.Label != null)
-            {
-                if (result.Label.StartsWith("-"))
-                    ShowHelp(result.Label.Substring(1));
                 context.NextLine = BroadcastLabel(context.Index, result.Label, false);                            
-            }
         }
 
         private void FadeBoard(AnsiChar ac) => Hud.FadeBoard(ac);

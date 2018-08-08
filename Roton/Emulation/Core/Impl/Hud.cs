@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using System.Collections.Generic;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
@@ -95,8 +96,11 @@ namespace Roton.Emulation.Core.Impl
             return currentValue;
         }
 
-        public IScrollResult ShowScroll(string title, params string[] lines) 
-            => _scroll.Show(title, lines);
+        public IScrollState ShowHelp(string title, string fileName) => 
+            _scroll.Show(title, fileName);
+
+        public IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines) =>
+            _scroll.Show(title, lines, isHelp);
 
         public virtual void UpdateBorder()
         {

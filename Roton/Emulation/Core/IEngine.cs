@@ -81,7 +81,7 @@ namespace Roton.Emulation.Core
         void SetEditorMode();
         void SetGameMode();
         void SetMessage(int duration, IMessage message);
-        void ShowHelp(string name);
+        void ShowHelp(string title, string filename);
         void ShowInGameHelp();
         void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source);
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
@@ -107,6 +107,7 @@ namespace Roton.Emulation.Core
         bool ThreadActive { get; }
         int MemoryUsage { get; }
         IMusicEncoder MusicEncoder { get; }
+        IFileSystem Disk { get; }
         void Cheat();
         void PlayStep();
     }
