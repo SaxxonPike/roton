@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
@@ -13,14 +14,16 @@ namespace Roton.Emulation.Super
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
-        private readonly ICheatHud _cheatHud;
+        private readonly IScroll _scroll;
+        private readonly ITextEntryHud _textEntryHud;
 
-        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud)
+        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ITextEntryHud textEntryHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
-            _cheatHud = cheatHud;
+            _scroll = scroll;
+            _textEntryHud = textEntryHud;
 
             OldCamera = new Location16(short.MinValue, short.MinValue);
         }
@@ -70,9 +73,9 @@ namespace Roton.Emulation.Super
                 DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
                 DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
                 DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
-                DrawString(0x00, 0x03, @" " + arrows + @"       ", 0x6F);
+                DrawString(0x00, 0x03, $@" {arrows}       ", 0x6F);
                 DrawString(0x00, 0x04, @"   Move     ", 0x6E);
-                DrawString(0x00, 0x05, @" Shift+" + arrows + @" ", 0x6F);
+                DrawString(0x00, 0x05, $@" Shift+{arrows} ", 0x6F);
                 DrawString(0x00, 0x06, @"   Shoot    ", 0x6B);
                 DrawString(0x00, 0x07, @"   Hint     ", 0x6E);
                 DrawString(0x01, 0x07, @"H", 0x6F);
@@ -327,9 +330,41 @@ namespace Roton.Emulation.Super
         public override string EnterCheat()
         {
             UpdateBorder();
-            var cheat = _cheatHud.Show(0x0F, 0x17);
+            var cheat = _textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
             UpdateBorder();
             return cheat;
+        }
+
+        public override string EnterHighScore(IHighScoreList highScoreList, int score)
+        {
+            if (!highScoreList.Any(hs => hs.Score <= score))
+            {
+                return null;                
+            }
+            
+            string name = null;
+            _scroll.Show($"New high score for {_engine.World.Name}",
+                new[] {string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty},
+                false,
+                3,
+                s => name = _textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
+            return name;
+        }
+
+        public override void ShowHighScores(IHighScoreList highScoreList)
+        {
+            var nameList = new List<string>
+            {
+                "Score  Name",
+                "-----  --------------------",
+            };
+            
+            nameList.AddRange(
+                highScoreList
+                    .Where(hs => !string.IsNullOrEmpty(hs.Name))
+                    .Select(hs => $"{hs.Score.ToString().PadLeft(5)}  {hs.Name}"));
+
+            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
         }
     }
 }

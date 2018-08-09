@@ -76,10 +76,9 @@ namespace Roton.Emulation.Super
             Engine.Tiles[location].CopyFrom(result);
         }
 
-        public string GetWorldName(string baseName)
-        {
-            return $"{baseName}.SZT";
-        }
+        public string GetWorldName(string baseName) => $"{baseName}.SZT";
+
+        public string GetHighScoreName(string baseName) => $"{baseName}.HGS";
 
         public void EnterBoard()
         {
@@ -119,7 +118,7 @@ namespace Roton.Emulation.Super
             Engine.BroadcastLabel(0, Engine.Facts.HintLabel, false);
         }
 
-        public IScrollResult ExecuteMessage(IOopContext context)
+        public IScrollState ExecuteMessage(IOopContext context)
         {
             switch (context.Message.Count)
             {
@@ -133,7 +132,7 @@ namespace Roton.Emulation.Super
                     return null;
                 default:
                     Engine.State.KeyVector.SetTo(0, 0);
-                    return Engine.Hud.ShowScroll(context.Name, context.Message.ToArray());
+                    return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
             }
         }
 

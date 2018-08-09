@@ -42,5 +42,7 @@ namespace Roton.Emulation.Data
         int MaxGameCycle { get; }
         AnsiChar ErrorFadeTile { get; }
         string EnterLabel { get; }
+        int HighScoreNameLength { get; }
+        int HighScoreNameCount { get; }
     }
 }

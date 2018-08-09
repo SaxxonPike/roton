@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl
 {
-    public abstract class FixedList<T> : IList<T>
+    public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
     {
         public virtual void Add(T item)
         {

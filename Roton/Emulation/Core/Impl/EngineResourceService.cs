@@ -29,7 +29,7 @@ namespace Roton.Emulation.Core.Impl
 
         public IDictionary<string, byte[]> GetStaticFiles()
             => Resource.Root
-                .GetFileNames("")
+                .GetFileNames(string.Empty)
                 .ToDictionary(f => f, f => Resource.Root.GetFile(f));
     }
 }

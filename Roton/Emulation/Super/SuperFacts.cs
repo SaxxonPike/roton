@@ -9,6 +9,7 @@ namespace Roton.Emulation.Super
         public override int AmmoPerPickup => 20;
         public override int HealthPerGem => 10;
         public override string DefaultWorldName => "MONSTER";
+        public override int HighScoreNameLength => 60;
         public override string ConfigFileName => null;
     }
 }

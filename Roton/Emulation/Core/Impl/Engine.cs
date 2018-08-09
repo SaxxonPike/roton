@@ -46,6 +46,8 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<ISpeaker> _speaker;
         private readonly Lazy<IDrumBank> _drumBank;
         private readonly Lazy<IObjectMover> _objectMover;
+        private readonly Lazy<IMusicEncoder> _musicEncoder;
+        private readonly Lazy<IHighScoreListFactory> _highScoreListFactory;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -76,7 +78,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover)
+            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder,
+            Lazy<IHighScoreListFactory> highScoreListFactory)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -127,6 +130,8 @@ namespace Roton.Emulation.Core.Impl
             _speaker = speaker;
             _drumBank = drumBank;
             _objectMover = objectMover;
+            _musicEncoder = musicEncoder;
+            _highScoreListFactory = highScoreListFactory;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -136,7 +141,11 @@ namespace Roton.Emulation.Core.Impl
                 Clock.Stop();
         }
 
+        private IHighScoreListFactory HighScoreListFactory => _highScoreListFactory.Value;
+
         private IObjectMover ObjectMover => _objectMover.Value;
+
+        public IMusicEncoder MusicEncoder => _musicEncoder.Value;
         
         private IClock Clock => _clock.Value;
 
@@ -144,7 +153,7 @@ namespace Roton.Emulation.Core.Impl
 
         private ITile BorderTile => State.BorderTile;
 
-        private IFileSystem Disk => _fileSystem.Value;
+        public IFileSystem Disk => _fileSystem.Value;
 
         private IFeatures Features => _features.Value;
 
@@ -206,6 +215,17 @@ namespace Roton.Emulation.Core.Impl
                 return;
 
             Speaker.PlayStep();
+        }
+
+        public string GetHighScoreName(string fileName) => Features.GetHighScoreName(fileName);
+        
+        public void ShowHighScores()
+        {
+            var list = HighScoreListFactory.Load();
+            if (list == null) 
+                return;
+            
+            Hud.ShowHighScores(list);
         }
 
         public IActionList ActionList
@@ -310,15 +330,9 @@ namespace Roton.Emulation.Core.Impl
 
         public ICheatList CheatList => _cheats.Value;
 
-        public void CleanUpPassageMovement()
-        {
-            Features.CleanUpPassageMovement();
-        }
+        public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
-        public void ClearForest(IXyPair location)
-        {
-            Features.ClearForest(location);
-        }
+        public void ClearForest(IXyPair location) => Features.ClearForest(location);
 
         public void ClearSound()
         {
@@ -330,7 +344,7 @@ namespace Roton.Emulation.Core.Impl
         {
             State.BoardCount = 0;
             Boards.Clear();
-            ResetAlerts();
+            Alerts.Reset();
             ClearBoard();
             Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
             World.BoardIndex = 0;
@@ -469,138 +483,11 @@ namespace Roton.Emulation.Core.Impl
 
         public IDrawList DrawList => _drawList.Value;
 
-        public IElement ElementAt(IXyPair location)
-        {
-            return ElementList[Tiles[location].Id];
-        }
+        public IElement ElementAt(IXyPair location) => ElementList[Tiles[location].Id];
 
         public IElementList ElementList => _elements.Value;
 
-        public ISound EncodeMusic(string music)
-        {
-            var speed = 1;
-            var octave = 3;
-            var result = new List<int>();
-            var isNote = false;
-            var note = -1;
-
-            foreach (var c in music.ToUpperInvariant())
-            {
-                if (!isNote)
-                {
-                    note = -1;
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case '!':
-                            note--;
-                            break;
-                        case '#':
-                            note++;
-                            break;
-                    }
-
-                    isNote = false;
-                    result.Add(note + (octave << 4));
-                    result.Add(speed);
-                }
-
-                switch (c)
-                {
-                    case 'T':
-                        speed = 1;
-                        break;
-                    case 'S':
-                        speed = 2;
-                        break;
-                    case 'I':
-                        speed = 4;
-                        break;
-                    case 'Q':
-                        speed = 8;
-                        break;
-                    case 'H':
-                        speed = 16;
-                        break;
-                    case 'W':
-                        speed = 32;
-                        break;
-                    case '.':
-                        speed = speed * 3 / 2;
-                        break;
-                    case '3':
-                        speed = speed / 3;
-                        break;
-                    case '+':
-                        if (octave < 6)
-                            octave++;
-                        break;
-                    case '-':
-                        if (octave > 1)
-                            octave--;
-                        break;
-                    case 'C':
-                        note = 0;
-                        isNote = true;
-                        break;
-                    case 'D':
-                        note = 2;
-                        isNote = true;
-                        break;
-                    case 'E':
-                        note = 4;
-                        isNote = true;
-                        break;
-                    case 'F':
-                        note = 5;
-                        isNote = true;
-                        break;
-                    case 'G':
-                        note = 7;
-                        isNote = true;
-                        break;
-                    case 'A':
-                        note = 9;
-                        isNote = true;
-                        break;
-                    case 'B':
-                        note = 11;
-                        isNote = true;
-                        break;
-                    case 'X':
-                        result.Add(0);
-                        result.Add(speed);
-                        break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        result.Add(0xF0 | (c - 0x30));
-                        result.Add(speed);
-                        break;
-                }
-            }
-
-            if (isNote)
-            {
-                result.Add(note + (octave << 4));
-                result.Add(speed);
-            }
-
-            return new Sound(result.Take(254).ToArray());
-        }
-
-        public void EnterBoard()
-        {
-            Features.EnterBoard();
-        }
+        public void EnterBoard() => Features.EnterBoard();
 
         public void ExecuteCode(int index, IExecutable instructionSource, string name)
         {
@@ -661,7 +548,7 @@ namespace Roton.Emulation.Core.Impl
                         context.Finished = true;
                         break;
                     default:
-                        context.Message.Add(context.Command.ToStringValue() + Parser.ReadLine(context.Index, context));
+                        context.Message.Add($"{context.Command.ToStringValue()}{Parser.ReadLine(context.Index, context)}");
                         break;
                 }
 
@@ -800,20 +687,11 @@ namespace Roton.Emulation.Core.Impl
             return false;
         }
 
-        public void ForcePlayerColor(int index)
-        {
-            Features.ForcePlayerColor(index);
-        }
+        public void ForcePlayerColor(int index) => Features.ForcePlayerColor(index);
 
-        public IXyPair GetCardinalVector(int index)
-        {
-            return new Vector(State.Vector4[index], State.Vector4[index + 4]);
-        }
+        public IXyPair GetCardinalVector(int index) => new Vector(State.Vector4[index], State.Vector4[index + 4]);
 
-        public void HandlePlayerInput(IActor actor)
-        {
-            Features.HandlePlayerInput(actor);
-        }
+        public void HandlePlayerInput(IActor actor) => Features.HandlePlayerInput(actor);
 
         public void Harm(int index)
         {
@@ -865,15 +743,11 @@ namespace Roton.Emulation.Core.Impl
 
         public IHud Hud => _hud.Value;
 
-        public IInteractionList InteractionList
-            => _interactionList.Value;
+        public IInteractionList InteractionList => _interactionList.Value;
 
         public IItemList ItemList => _items.Value;
 
-        private void ShowFormattedScroll(string error)
-        {
-            Hud.ShowScroll("Roton Error", ScrollFormatter.Format(error));
-        }
+        private void ShowFormattedScroll(string error) => Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
         public void LoadWorld(string name)
         {
@@ -934,22 +808,22 @@ namespace Roton.Emulation.Core.Impl
 
         private void ShowDosError()
         {
-            Hud.ShowScroll("Error",
-                "$DOS Error:",
-                "",
-                "This may be caused by missing",
-                "files or a bad disk. If you",
-                "are trying to save a game,",
-                "your disk may be full -- try",
-                "using a blank, formatted disk",
-                "for saving the game!"
+            Hud.ShowScroll(false, "Error",
+                new[]
+                {
+                    "$DOS Error:",
+                    string.Empty,
+                    "This may be caused by missing",
+                    "files or a bad disk. If you",
+                    "are trying to save a game,",
+                    "your disk may be full -- try",
+                    "using a blank, formatted disk",
+                    "for saving the game!"
+                }
             );
         }
 
-        public void LockActor(int index)
-        {
-            Features.LockActor(index);
-        }
+        public void LockActor(int index) => Features.LockActor(index);
 
         public void MoveActor(int index, IXyPair target)
         {
@@ -1233,10 +1107,7 @@ namespace Roton.Emulation.Core.Impl
             State.ActorCount--;
         }
 
-        public void RemoveItem(IXyPair location)
-        {
-            Features.RemoveItem(location);
-        }
+        public void RemoveItem(IXyPair location) => Features.RemoveItem(location);
 
         public IXyPair Rnd()
         {
@@ -1306,24 +1177,7 @@ namespace Roton.Emulation.Core.Impl
             State.Message2 = bottomMessage;
         }
 
-        public void ShowHelp(string filename)
-        {
-            try
-            {
-                var text = Disk
-                    .GetFile($"{filename}.HLP")
-                    .ToStringValue()
-                    .Replace("\xD\xA", "\xD")
-                    .Split('\xD');
-                var result = Hud.ShowScroll(filename, text);
-                if (result?.Label?.StartsWith("-") ?? false)
-                    ShowHelp(result.Label.Substring(1));
-            }
-            catch (Exception e)
-            {
-                ShowFormattedScroll(e.ToString());
-            }
-        }
+        public void ShowHelp(string title, string filename) => Hud.ShowHelp(title, filename);
 
         public void ShowInGameHelp() => Features.ShowInGameHelp();
 
@@ -1407,15 +1261,9 @@ namespace Roton.Emulation.Core.Impl
 
         public bool TitleScreen => State.PlayerElement != ElementList.PlayerId;
 
-        public void UnlockActor(int index)
-        {
-            Features.UnlockActor(index);
-        }
+        public void UnlockActor(int index) => Features.UnlockActor(index);
 
-        public void UpdateBoard(IXyPair location)
-        {
-            DrawTile(location, Draw(location));
-        }
+        public void UpdateBoard(IXyPair location) => DrawTile(location, Draw(location));
 
         public void UpdateRadius(IXyPair location, RadiusMode mode)
         {
@@ -1456,10 +1304,7 @@ namespace Roton.Emulation.Core.Impl
                 }
         }
 
-        public void UpdateStatus()
-        {
-            Hud.UpdateStatus();
-        }
+        public void UpdateStatus() => Hud.UpdateStatus();
 
         public void WaitForTick()
         {
@@ -1511,10 +1356,7 @@ namespace Roton.Emulation.Core.Impl
         public IWorld World
             => _world.Value;
 
-        private bool ActorIsLocked(int index)
-        {
-            return Features.IsActorLocked(index);
-        }
+        private bool ActorIsLocked(int index) => Features.IsActorLocked(index);
 
         public void ClearBoard()
         {
@@ -1588,18 +1430,23 @@ namespace Roton.Emulation.Core.Impl
             return tile.Color & 0x0F;
         }
 
-        private static int Distance(IXyPair a, IXyPair b)
-        {
-            return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
-        }
+        private static int Distance(IXyPair a, IXyPair b) => (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
-        private void DrawTile(IXyPair location, AnsiChar ac)
-        {
-            Hud.DrawTile(location.X - 1, location.Y - 1, ac);
-        }
+        private void DrawTile(IXyPair location, AnsiChar ac) => Hud.DrawTile(location.X - 1, location.Y - 1, ac);
 
         private void EnterHighScore(int score)
         {
+            var list = HighScoreListFactory.Load();
+            if (list == null) 
+                return;
+            
+            var name = Hud.EnterHighScore(list, score);
+            if (name == null) 
+                return;
+            
+            list.Add(name, score);
+            HighScoreListFactory.Save(list);
+            ShowHighScores();
         }
 
         private void ExecuteDeath(IOopContext context)
@@ -1609,40 +1456,14 @@ namespace Roton.Emulation.Core.Impl
             PlotTile(location, context.DeathTile);
         }
 
-        private void ExecuteDirection(IOopContext context, IXyPair vector)
-        {
-            if (vector.IsZero())
-            {
-                context.Repeat = false;
-            }
-            else
-            {
-                var target = context.Actor.Location.Sum(vector);
-                if (!ElementAt(target).IsFloor) Push(target, vector);
-
-                if (ElementAt(target).IsFloor)
-                {
-                    MoveActor(context.Index, target);
-                    context.Repeat = false;
-                }
-            }
-        }
-
         private void ExecuteMessage(IOopContext context)
         {
             var result = Features.ExecuteMessage(context);
             if (result != null && !result.Cancelled && result.Label != null)
-            {
-                if (result.Label.StartsWith("-"))
-                    ShowHelp(result.Label.Substring(1));
                 context.NextLine = BroadcastLabel(context.Index, result.Label, false);                            
-            }
         }
 
-        private void FadeBoard(AnsiChar ac)
-        {
-            Hud.FadeBoard(ac);
-        }
+        private void FadeBoard(AnsiChar ac) => Hud.FadeBoard(ac);
 
         public void FadeRed()
         {
@@ -1650,10 +1471,7 @@ namespace Roton.Emulation.Core.Impl
             Hud.RedrawBoard();
         }
 
-        private IXyPair GetConveyorVector(int index)
-        {
-            return new Vector(State.Vector8[index], State.Vector8[index + 8]);
-        }
+        private IXyPair GetConveyorVector(int index) => new Vector(State.Vector8[index], State.Vector8[index + 8]);
 
         private void InitializeElements(bool showInvisibles)
         {
@@ -1944,21 +1762,6 @@ namespace Roton.Emulation.Core.Impl
                     State.KeyArrow = true;
                     break;
             }
-        }
-
-        private void ResetAlerts()
-        {
-            Alerts.AmmoPickup = true;
-            Alerts.Dark = true;
-            Alerts.EnergizerPickup = true;
-            Alerts.FakeWall = true;
-            Alerts.Forest = true;
-            Alerts.GemPickup = true;
-            Alerts.OutOfAmmo = true;
-            Alerts.CantShootHere = true;
-            Alerts.NotDark = true;
-            Alerts.NoTorches = true;
-            Alerts.TorchPickup = true;
         }
 
         private void Rnd(IXyPair result)

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
@@ -12,16 +13,26 @@ namespace Roton.Emulation.Original
     {
         private readonly IEngine _engine;
         private readonly ITerminal _terminal;
-        private readonly ICheatHud _cheatHud;
+        private readonly IScroll _scroll;
+        private readonly ITextEntryHud _textEntryHud;
         private readonly IChoiceHud _choiceHud;
+        private readonly ILongTextEntryHud _longTextEntryHud;
 
-        public OriginalHud(IEngine engine, ITerminal terminal, IScroll scroll, ICheatHud cheatHud, IChoiceHud choiceHud)
+        public OriginalHud(
+            IEngine engine,
+            ITerminal terminal,
+            IScroll scroll,
+            ITextEntryHud textEntryHud,
+            IChoiceHud choiceHud,
+            ILongTextEntryHud longTextEntryHud)
             : base(engine, scroll)
         {
             _engine = engine;
             _terminal = terminal;
-            _cheatHud = cheatHud;
+            _scroll = scroll;
+            _textEntryHud = textEntryHud;
             _choiceHud = choiceHud;
+            _longTextEntryHud = longTextEntryHud;
             _terminal = terminal;
             FadeMatrix = new Location[ViewportTileCount];
             GenerateFadeMatrix();
@@ -138,7 +149,8 @@ namespace Roton.Emulation.Original
         public override void CreateStatusWorld()
         {
             DrawStatusLine(0x08);
-            DrawString(0x45, 0x08, _engine.World.Name.Length <= 0 ? _engine.Facts.UntitledWorldName : _engine.World.Name, 0x1F);
+            DrawString(0x45, 0x08,
+                _engine.World.Name.Length <= 0 ? _engine.Facts.UntitledWorldName : _engine.World.Name, 0x1F);
         }
 
         public override void DrawChar(int x, int y, AnsiChar ac)
@@ -149,9 +161,9 @@ namespace Roton.Emulation.Original
         public override void DrawMessage(IMessage message, int color)
         {
             var text = message.Text.FirstOrDefault();
-            if (string.IsNullOrEmpty(text)) 
+            if (string.IsNullOrEmpty(text))
                 return;
-            
+
             var x = (60 - text.Length) / 2;
             DrawString(x, 24, $" {text} ", color);
         }
@@ -242,7 +254,7 @@ namespace Roton.Emulation.Original
 
         private static string IntToString(int i)
         {
-            return i + " ";
+            return $"{i} ";
         }
 
         public override void RedrawBoard()
@@ -272,9 +284,9 @@ namespace Roton.Emulation.Original
 
         public override void UpdateStatus()
         {
-            if (_engine.TitleScreen) 
+            if (_engine.TitleScreen)
                 return;
-            
+
             if (_engine.Board.TimeLimit <= 0)
             {
                 DrawStatusLine(6);
@@ -326,15 +338,74 @@ namespace Roton.Emulation.Original
         {
             DrawStatusLine(4);
             DrawStatusLine(5);
-            var cheat = _cheatHud.Show(0x3F, 0x04);
+            var cheat = _textEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F);
             DrawStatusLine(4);
             DrawStatusLine(5);
             return cheat;
         }
 
-        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
+        public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
+            string barText)
         {
             return _choiceHud.Show(performSelection, x, y, message, currentValue, barText);
+        }
+
+        public override string EnterHighScore(IHighScoreList highScoreList, int score)
+        {
+            var index = -1;
+            
+            var nameList = new List<string>
+            {
+                "Score  Name",
+                "-----  ----------------------------------",
+            };
+
+            var nameIndex = 2;
+            
+            foreach (var hs in highScoreList)
+            {
+                if (index < 0 && hs.Score <= score)
+                {
+                    index = nameIndex;
+                    nameList.Add($"{score.ToString().PadLeft(5)}  -- You! --");
+                }
+
+                if (!string.IsNullOrEmpty(hs.Name))
+                {
+                    nameList.Add($"{hs.Score.ToString().PadLeft(5)}  {hs.Name}");
+                    nameIndex++;                    
+                }
+            }
+
+            if (index >= 0)
+            {
+                string name = null;
+                _scroll.Show($"New high score for {_engine.World.Name}",
+                    nameList,
+                    false,
+                    2,
+                    s => name = _longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
+                return name;
+            }
+
+            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
+            return null;
+        }
+
+        public override void ShowHighScores(IHighScoreList highScoreList)
+        {
+            var nameList = new List<string>
+            {
+                "Score  Name",
+                "-----  ----------------------------------",
+            };
+            
+            nameList.AddRange(
+                highScoreList
+                    .Where(hs => !string.IsNullOrEmpty(hs.Name))
+                    .Select(hs => $"{hs.Score.ToString().PadLeft(5)}  {hs.Name}"));
+
+            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
         }
     }
 }

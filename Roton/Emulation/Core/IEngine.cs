@@ -51,7 +51,6 @@ namespace Roton.Emulation.Core
         void Destroy(IXyPair location);
         AnsiChar Draw(IXyPair location);
         IElement ElementAt(IXyPair location);
-        ISound EncodeMusic(string music);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
         bool ExecuteLabel(int sender, ISearchContext context, string prefix);
@@ -82,7 +81,7 @@ namespace Roton.Emulation.Core
         void SetEditorMode();
         void SetGameMode();
         void SetMessage(int duration, IMessage message);
-        void ShowHelp(string name);
+        void ShowHelp(string title, string filename);
         void ShowInGameHelp();
         void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source);
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
@@ -107,7 +106,11 @@ namespace Roton.Emulation.Core
         IDrumBank DrumBank { get; }
         bool ThreadActive { get; }
         int MemoryUsage { get; }
+        IMusicEncoder MusicEncoder { get; }
+        IFileSystem Disk { get; }
         void Cheat();
         void PlayStep();
+        string GetHighScoreName(string fileName);
+        void ShowHighScores();
     }
 }

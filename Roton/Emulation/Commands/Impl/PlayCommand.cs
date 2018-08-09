@@ -21,7 +21,7 @@ namespace Roton.Emulation.Commands.Impl
         public void Execute(IOopContext context)
         {
             var notes = Engine.Parser.ReadLine(context.Index, context);
-            var sound = Engine.EncodeMusic(notes);
+            var sound = Engine.MusicEncoder.Encode(notes);
             Engine.PlaySound(-1, sound);
             context.NextLine = false;
         }

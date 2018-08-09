@@ -82,7 +82,7 @@ namespace Roton.Emulation.Core.Impl
                 }
 
                 DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
-                DrawString(x, y + 2, minIndicator + @"....:...." + maxIndicator, 0x1E);
+                DrawString(x, y + 2, $@"{minIndicator}....:....{maxIndicator}", 0x1E);
             }
             else
             {

@@ -175,7 +175,7 @@ namespace Roton.Emulation.Original
 
         public IXyPair KeyVector { get; }
 
-        public IList<int> LineChars { get; }
+        public IReadOnlyList<int> LineChars { get; }
 
         public string Message
         {
@@ -241,7 +241,7 @@ namespace Roton.Emulation.Original
             set => _memory.Write8(0x7E8F, value);
         }
 
-        public IList<int> StarChars { get; }
+        public IReadOnlyList<int> StarChars { get; }
 
         public int StartBoard
         {
@@ -249,15 +249,15 @@ namespace Roton.Emulation.Original
             set => _memory.Write16(0x4ACA, value);
         }
 
-        public IList<int> TransporterHChars { get; }
+        public IReadOnlyList<int> TransporterHChars { get; }
 
-        public IList<int> TransporterVChars { get; }
+        public IReadOnlyList<int> TransporterVChars { get; }
 
-        public IList<int> Vector4 { get; }
+        public IReadOnlyList<int> Vector4 { get; }
 
-        public IList<int> Vector8 { get; }
+        public IReadOnlyList<int> Vector8 { get; }
 
-        public IList<int> WebChars { get; } = new List<int>();
+        public IReadOnlyList<int> WebChars { get; } = new List<int>();
 
         public string WorldFileName
         {

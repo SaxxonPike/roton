@@ -23,7 +23,7 @@ namespace Roton.Emulation.Interactions.Impl
             var scrollIndex = Engine.ActorIndexAt(location);
             var actor = Engine.Actors[scrollIndex];
 
-            Engine.PlaySound(2, Engine.EncodeMusic("c-c+d-d+e-e+f-f+g-g"));
+            Engine.PlaySound(2, Engine.MusicEncoder.Encode("c-c+d-d+e-e+f-f+g-g"));
             Engine.ExecuteCode(scrollIndex, actor, "Scroll");
             Engine.RemoveActor(scrollIndex);
         }
