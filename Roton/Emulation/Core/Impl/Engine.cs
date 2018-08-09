@@ -1446,6 +1446,7 @@ namespace Roton.Emulation.Core.Impl
             
             list.Add(name, score);
             HighScoreListFactory.Save(list);
+            ShowHighScores();
         }
 
         private void ExecuteDeath(IOopContext context)

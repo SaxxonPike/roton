@@ -344,10 +344,10 @@ namespace Roton.Emulation.Super
             
             string name = null;
             _scroll.Show($"New high score for {_engine.World.Name}",
-                new[] {" Enter your name:", string.Empty, string.Empty, string.Empty},
+                new[] {string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty},
                 false,
-                0,
-                s => name = _textEntryHud.Show(12, 13, 15, 0x1E, 0x1F));
+                3,
+                s => name = _textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
             return name;
         }
 
