@@ -69,7 +69,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void PutFile(string path, byte[] data)
         {
-            File.WriteAllBytes(path, data);
+            File.WriteAllBytes(GetBestMatch(AdjustPath(path)), data);
         }
     }
 }

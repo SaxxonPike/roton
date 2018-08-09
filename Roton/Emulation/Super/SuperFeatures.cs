@@ -76,10 +76,9 @@ namespace Roton.Emulation.Super
             Engine.Tiles[location].CopyFrom(result);
         }
 
-        public string GetWorldName(string baseName)
-        {
-            return $"{baseName}.SZT";
-        }
+        public string GetWorldName(string baseName) => $"{baseName}.SZT";
+
+        public string GetHighScoreName(string baseName) => $"{baseName}.HGS";
 
         public void EnterBoard()
         {

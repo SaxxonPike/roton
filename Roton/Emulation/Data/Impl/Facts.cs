@@ -13,6 +13,8 @@ namespace Roton.Emulation.Data.Impl
         public string UntitledWorldName => "Untitled";
         public string HintLabel => "ALL:HINT";
         public string EnterLabel => "ALL:ENTER";
+        public abstract int HighScoreNameLength { get; }
+        public int HighScoreNameCount => 30;
         public abstract string ConfigFileName { get; }
         public int DefaultGameSpeed => 4;
         public int DefaultAmmo => 0;

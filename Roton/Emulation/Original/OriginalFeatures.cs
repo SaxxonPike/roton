@@ -36,6 +36,8 @@ namespace Roton.Emulation.Original
             return Engine.Actors[index].P2 != 0;
         }
 
+        public string GetHighScoreName(string baseName) => $"{baseName}.HI";
+
         public void EnterBoard()
         {
             Engine.Board.Entrance.CopyFrom(Engine.Player.Location);
@@ -183,7 +185,7 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.R:
                     break;
                 case EngineKeyCode.H:
-                    ShowInGameHelp();
+                    Engine.ShowHighScores();
                     break;
                 case EngineKeyCode.QuestionMark:
                     Engine.Hud.EnterCheat();

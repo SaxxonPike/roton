@@ -47,6 +47,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IDrumBank> _drumBank;
         private readonly Lazy<IObjectMover> _objectMover;
         private readonly Lazy<IMusicEncoder> _musicEncoder;
+        private readonly Lazy<IHighScoreListFactory> _highScoreListFactory;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -77,7 +78,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder)
+            Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder,
+            Lazy<IHighScoreListFactory> highScoreListFactory)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -129,6 +131,7 @@ namespace Roton.Emulation.Core.Impl
             _drumBank = drumBank;
             _objectMover = objectMover;
             _musicEncoder = musicEncoder;
+            _highScoreListFactory = highScoreListFactory;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -137,6 +140,8 @@ namespace Roton.Emulation.Core.Impl
             if (!ThreadActive) 
                 Clock.Stop();
         }
+
+        private IHighScoreListFactory HighScoreListFactory => _highScoreListFactory.Value;
 
         private IObjectMover ObjectMover => _objectMover.Value;
 
@@ -210,6 +215,17 @@ namespace Roton.Emulation.Core.Impl
                 return;
 
             Speaker.PlayStep();
+        }
+
+        public string GetHighScoreName(string fileName) => Features.GetHighScoreName(fileName);
+        
+        public void ShowHighScores()
+        {
+            var list = HighScoreListFactory.Load();
+            if (list == null) 
+                return;
+            
+            Hud.ShowHighScores(list);
         }
 
         public IActionList ActionList
@@ -1420,8 +1436,16 @@ namespace Roton.Emulation.Core.Impl
 
         private void EnterHighScore(int score)
         {
-            var name = Hud.EnterHighScore(score);
-            // TODO: implement
+            var list = HighScoreListFactory.Load();
+            if (list == null) 
+                return;
+            
+            var name = Hud.EnterHighScore(list, score);
+            if (name == null) 
+                return;
+            
+            list.Add(name, score);
+            HighScoreListFactory.Save(list);
         }
 
         private void ExecuteDeath(IOopContext context)

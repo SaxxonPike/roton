@@ -9,6 +9,7 @@ namespace Roton.Emulation.Core
         bool IsActorLocked(int index);
         void RemoveItem(IXyPair location);
         string GetWorldName(string baseName);
+        string GetHighScoreName(string baseName);
         void EnterBoard();
         bool HandleTitleInput();
         void ShowInGameHelp();

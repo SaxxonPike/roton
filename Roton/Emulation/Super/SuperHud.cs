@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
@@ -334,8 +335,13 @@ namespace Roton.Emulation.Super
             return cheat;
         }
 
-        public override string EnterHighScore(int score)
+        public override string EnterHighScore(IHighScoreList highScoreList, int score)
         {
+            if (!highScoreList.Any(hs => hs.Score <= score))
+            {
+                return null;                
+            }
+            
             string name = null;
             _scroll.Show($"New high score for {_engine.World.Name}",
                 new[] {" Enter your name:", string.Empty, string.Empty, string.Empty},
@@ -343,6 +349,22 @@ namespace Roton.Emulation.Super
                 0,
                 s => name = _textEntryHud.Show(12, 13, 15, 0x1E, 0x1F));
             return name;
+        }
+
+        public override void ShowHighScores(IHighScoreList highScoreList)
+        {
+            var nameList = new List<string>
+            {
+                "Score  Name",
+                "-----  --------------------",
+            };
+            
+            nameList.AddRange(
+                highScoreList
+                    .Where(hs => !string.IsNullOrEmpty(hs.Name))
+                    .Select(hs => $"{hs.Score.ToString().PadLeft(5)}  {hs.Name}"));
+
+            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
         }
     }
 }

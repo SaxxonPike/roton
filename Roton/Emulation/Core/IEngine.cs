@@ -110,5 +110,7 @@ namespace Roton.Emulation.Core
         IFileSystem Disk { get; }
         void Cheat();
         void PlayStep();
+        string GetHighScoreName(string fileName);
+        void ShowHighScores();
     }
 }

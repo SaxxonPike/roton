@@ -118,9 +118,13 @@ namespace Roton.Emulation.Core.Impl
         {
         }
 
-        public virtual string EnterHighScore(int score)
+        public virtual string EnterHighScore(IHighScoreList highScoreList, int score)
         {
             return null;
+        }
+
+        public virtual void ShowHighScores(IHighScoreList highScoreList)
+        {
         }
 
         protected virtual bool Confirm(string message)
