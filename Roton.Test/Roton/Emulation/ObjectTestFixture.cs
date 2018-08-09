@@ -106,11 +106,11 @@ namespace Roton.Test.Roton.Emulation
             Type(AnsiKey.Up);
             StepAllKeys();
 
+            actors[0].P1.Should().Be(14);
             actors[1].P1.Should().Be(14);
             actors[2].P1.Should().Be(14);
-            actors[3].P1.Should().Be(14);
-            actors[4].P1.Should().Be(13);
-            actors[5].P1.Should().Be(14);
+            actors[3].P1.Should().Be(13);
+            actors[4].P1.Should().Be(14);
         }
         
         [Test]
