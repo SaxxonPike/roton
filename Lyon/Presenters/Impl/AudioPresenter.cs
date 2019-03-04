@@ -37,7 +37,7 @@ namespace Lyon.Presenters.Impl
 
                 var count = Math.Min(_buffer.Count, e.Length);
                 var samples = _buffer.Take(count).ToArray();
-                Buffer.BlockCopy(samples, 0, e.Samples[Channel.Mono], 0, count);
+                Buffer.BlockCopy(samples, 0, e.Samples[Channel.Mono], 0, count * 8);
                 _buffer.RemoveRange(0, count);                
             }
         }
