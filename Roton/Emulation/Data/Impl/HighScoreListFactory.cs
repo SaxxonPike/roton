@@ -62,7 +62,7 @@ namespace Roton.Emulation.Data.Impl
                     var nameBuffer = new byte[Facts.HighScoreNameLength];
                     var name = hs.Name.ToBytes();
                     var score = unchecked((short) hs.Score);
-                    Array.Copy(name, nameBuffer, Math.Min(nameLength, nameBuffer.Length));
+                    Buffer.BlockCopy(name, 0, nameBuffer, 0, Math.Min(nameLength, nameBuffer.Length));
                     writer.Write(nameLength);
                     writer.Write(nameBuffer);
                     writer.Write(score);

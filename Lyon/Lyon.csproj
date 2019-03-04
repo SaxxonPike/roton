@@ -10,6 +10,6 @@
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac" Version="4.9.1" />
   </ItemGroup>
 </Project>

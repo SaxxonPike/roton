@@ -101,7 +101,7 @@ namespace Roton.Emulation.Data.Impl
                         if (data[i] == 0x0D)
                         {
                             var nameData = new byte[i - 1];
-                            Array.Copy(data, 1, nameData, 0, nameData.Length);
+                            Buffer.BlockCopy(data, 1, nameData, 0, nameData.Length);
                             name = nameData.ToStringValue();
                             break;
                         }

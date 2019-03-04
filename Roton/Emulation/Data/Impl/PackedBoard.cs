@@ -21,7 +21,7 @@ namespace Roton.Emulation.Data.Impl
                 {
                     int nameLength = Data[0];
                     var nameData = new byte[nameLength];
-                    Array.Copy(Data, 1, nameData, 0, nameLength);
+                    Buffer.BlockCopy(Data, 1, nameData, 0, nameLength);
                     return nameData.ToStringValue();
                 }
                 return string.Empty;
@@ -33,7 +33,7 @@ namespace Roton.Emulation.Data.Impl
                     var nameData = value.ToBytes();
                     var nameLength = (byte) (nameData.Length & 0xFF);
                     Data[0] = nameLength;
-                    Array.Copy(nameData, 0, Data, 1, nameLength);
+                    Buffer.BlockCopy(nameData, 0, Data, 1, nameLength);
                 }
             }
         }

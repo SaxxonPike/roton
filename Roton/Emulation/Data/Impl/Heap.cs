@@ -24,7 +24,7 @@ namespace Roton.Emulation.Data.Impl
         public int Allocate(byte[] data)
         {
             var dataCopy = new byte[data.Length];
-            Array.Copy(data, dataCopy, dataCopy.Length);
+            Buffer.BlockCopy(data, 0, dataCopy, 0, dataCopy.Length);
             var index = _nextEntry;
             Entries[index] = dataCopy;
             SetNextEntry();

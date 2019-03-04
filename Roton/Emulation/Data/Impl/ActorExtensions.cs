@@ -36,7 +36,7 @@ namespace Roton.Emulation.Data.Impl
             var code = self.Code;
             var newCode = value.ToBytes();
             Array.Resize(ref code, newCode.Length);
-            Array.Copy(newCode, code, newCode.Length);
+            Buffer.BlockCopy(newCode, 0, code, 0, newCode.Length);
         }
 
         public static void SetCodeAsString(this IActor self, string value)

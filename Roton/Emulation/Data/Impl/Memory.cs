@@ -22,7 +22,7 @@ namespace Roton.Emulation.Data.Impl
         public byte[] Dump()
         {
             var result = new byte[Length];
-            Array.Copy(Bytes, result, Length);
+            Buffer.BlockCopy(Bytes, 0, result, 0, Length);
             return result;
         }
 

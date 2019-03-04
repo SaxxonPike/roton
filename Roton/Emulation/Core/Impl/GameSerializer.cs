@@ -81,7 +81,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var worldBytes = new byte[WorldDataCapacity - 4];
             var worldData = _memory.Read(WorldDataOffset, WorldDataSize);
-            Array.Copy(worldData, 0, worldBytes, 0, WorldDataSize);
+            Buffer.BlockCopy(worldData, 0, worldBytes, 0, WorldDataSize);
             target.Write(worldBytes, 0, worldBytes.Length);
         }
 
