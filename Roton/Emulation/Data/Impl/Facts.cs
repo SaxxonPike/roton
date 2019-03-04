@@ -1,3 +1,5 @@
+using Roton.Emulation.Core.Impl;
+
 namespace Roton.Emulation.Data.Impl
 {
     public abstract class Facts : IFacts
@@ -15,7 +17,6 @@ namespace Roton.Emulation.Data.Impl
         public string EnterLabel => "ALL:ENTER";
         public abstract int HighScoreNameLength { get; }
         public int HighScoreNameCount => 30;
-        public abstract string ConfigFileName { get; }
         public int DefaultGameSpeed => 4;
         public int DefaultAmmo => 0;
         public int DefaultGems => 0;

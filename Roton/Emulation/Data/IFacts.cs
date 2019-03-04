@@ -14,7 +14,6 @@ namespace Roton.Emulation.Data
         string DefaultWorldName { get; }
         string UntitledWorldName { get; }
         string HintLabel { get; }
-        string ConfigFileName { get; }
         int DefaultGameSpeed { get; }
         int DefaultAmmo { get; }
         int DefaultGems { get; }

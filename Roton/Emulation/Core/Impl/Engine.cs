@@ -48,6 +48,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IObjectMover> _objectMover;
         private readonly Lazy<IMusicEncoder> _musicEncoder;
         private readonly Lazy<IHighScoreListFactory> _highScoreListFactory;
+        private readonly Lazy<IConfigFileService> _configFileService;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -79,7 +80,7 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
             Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder,
-            Lazy<IHighScoreListFactory> highScoreListFactory)
+            Lazy<IHighScoreListFactory> highScoreListFactory, Lazy<IConfigFileService> configFileService)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -132,6 +133,7 @@ namespace Roton.Emulation.Core.Impl
             _objectMover = objectMover;
             _musicEncoder = musicEncoder;
             _highScoreListFactory = highScoreListFactory;
+            _configFileService = configFileService;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -1786,20 +1788,14 @@ namespace Roton.Emulation.Core.Impl
 
             ClearWorld();
 
-            if (Config.DefaultWorld != null)
+            var cfg = _configFileService.Value.Load();
+            if (Config.DefaultWorld == null && cfg != null)
             {
-                State.DefaultWorldName = Config.DefaultWorld;
-            }
-            else if (Facts.ConfigFileName != null)
-            {
-                var zztCfg = Disk.GetFile(Facts.ConfigFileName);
-                if (zztCfg != null && zztCfg.Length > 0)
+                if (!string.IsNullOrEmpty(cfg.WorldName))
                 {
-                    using (var stream = new MemoryStream(zztCfg))
-                    using (var reader = new StreamReader(stream))
-                    {
-                        State.DefaultWorldName = reader.ReadLine();
-                    }
+                    State.DefaultWorldName = cfg.WorldName.StartsWith("*")
+                        ? cfg.WorldName.Substring(1)
+                        : cfg.WorldName;
                 }
             }
 

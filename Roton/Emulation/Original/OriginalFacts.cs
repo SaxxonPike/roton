@@ -10,6 +10,5 @@ namespace Roton.Emulation.Original
         public override int HealthPerGem => 1;
         public override string DefaultWorldName => "TOWN";
         public override int HighScoreNameLength => 50;
-        public override string ConfigFileName => "ZZT.CFG";
     }
 }
