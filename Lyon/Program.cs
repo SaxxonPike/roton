@@ -28,7 +28,7 @@ namespace Lyon
                 HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
                 AudioDrumRate = 64,
                 AudioSampleRate = 44100,
-                AudioBufferSize = 4096,
+                AudioBufferSize = 2048,
                 VideoScale = 2,
                 MasterClockNumerator = 100,
                 MasterClockDenominator = 7275

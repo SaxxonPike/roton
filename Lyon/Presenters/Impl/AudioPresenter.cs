@@ -24,7 +24,7 @@ namespace Lyon.Presenters.Impl
             _buffer = new List<double>();
             _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono,
                 (ushort) config.AudioBufferSize);
-            Volume = 0.2;
+            Volume = 0.1;
 
             _audio.BufferEmpty += BufferEmpty;
             _audio.Play();
