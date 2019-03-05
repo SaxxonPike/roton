@@ -38,13 +38,13 @@ namespace Roton.Emulation.Core.Impl
 
                 if (data >= 0x00 && data <= 0x0F)
                 {
-                    output.Color = (output.Color & 0xF0) | data;
+                    output = new AnsiChar(output.Char, (output.Color & 0xF0) | data);
                     continue;
                 }
 
                 if (data >= 0x10 && data <= 0x17)
                 {
-                    output.Color = (output.Color & 0x0F) | ((data & 0x0F) << 4);
+                    output = new AnsiChar(output.Char, (output.Color & 0x0F) | ((data & 0x0F) << 4));
                     continue;
                 }
 
@@ -56,15 +56,15 @@ namespace Roton.Emulation.Core.Impl
                         break;
                     case 0x19:
                         count = _memory.Read8(offset++) + 1;
-                        output.Char = 0x20;
+                        output = new AnsiChar(0x20, output.Color);
                         break;
                     case 0x1A:
                         count = _memory.Read8(offset++) + 1;
-                        output.Char = _memory.Read8(offset++);
+                        output = new AnsiChar(_memory.Read8(offset++), output.Color);
                         break;
                     default:
                         count = 1;
-                        output.Char = data;
+                        output = new AnsiChar(data, output.Color);
                         break;
                 }
             }

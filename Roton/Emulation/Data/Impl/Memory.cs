@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl
 {
     [Context(Context.Original)]
     [Context(Context.Super)]
+    [DebuggerStepThrough]
     public sealed class Memory : IMemory
     {
         public Memory()
@@ -39,7 +41,7 @@ namespace Roton.Emulation.Data.Impl
         public int Read8(int offset)
         {
             var result = 0;
-            result |= Bytes[(offset + 0) & Mask];
+            result |= Bytes[offset & Mask];
             return result;
         }
 

@@ -2,8 +2,8 @@
 {
     public struct AnsiChar
     {
-        public int Char;
-        public int Color;
+        public readonly int Char;
+        public readonly int Color;
 
         public AnsiChar(int newChar, int newColor)
         {
