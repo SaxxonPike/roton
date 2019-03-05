@@ -1851,7 +1851,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void Dispose()
         {
-            Clock?.Dispose();
+            Clock?.Stop();
         }
     }
 }

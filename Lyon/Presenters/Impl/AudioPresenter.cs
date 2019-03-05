@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using DotSDL.Audio;
 using Roton.Emulation.Data;
@@ -21,7 +22,8 @@ namespace Lyon.Presenters.Impl
         public AudioPresenter(IConfig config)
         {
             _buffer = new List<double>();
-            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono, (ushort)config.AudioBufferSize);
+            _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono,
+                (ushort) config.AudioBufferSize);
             Volume = 0.2;
 
             _audio.BufferEmpty += BufferEmpty;
@@ -33,12 +35,15 @@ namespace Lyon.Presenters.Impl
             lock (_bufferLock)
             {
                 if (_buffer.Count < e.Samples.Length)
+                {
+                    Debug.WriteLine($"Audio buffer underflow: need {e.Samples.Length}, got {_buffer.Count}");
                     return;
+                }
 
                 var count = Math.Min(_buffer.Count, e.Length);
                 var samples = _buffer.Take(count).ToArray();
                 Buffer.BlockCopy(samples, 0, e.Samples[Channel.Mono], 0, count * 8);
-                _buffer.RemoveRange(0, count);                
+                _buffer.RemoveRange(0, count);
             }
         }
 
