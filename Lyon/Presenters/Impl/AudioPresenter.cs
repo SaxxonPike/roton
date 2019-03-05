@@ -34,9 +34,9 @@ namespace Lyon.Presenters.Impl
         {
             lock (_bufferLock)
             {
-                if (_buffer.Count < e.Samples.Length)
+                if (_buffer.Count < e.Length)
                 {
-                    Debug.WriteLine($"Audio buffer underflow: need {e.Samples.Length}, got {_buffer.Count}");
+                    Debug.WriteLine($"Audio buffer underflow: need {e.Length}, got {_buffer.Count}");
                     return;
                 }
 
