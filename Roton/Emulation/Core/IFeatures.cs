@@ -23,5 +23,6 @@ namespace Roton.Emulation.Core
         void ShowAbout();
         int BaseMemoryUsage { get; }
         void CleanUpPauseMovement();
+        string OpenWorld();
     }
 }

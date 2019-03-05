@@ -49,6 +49,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly Lazy<IMusicEncoder> _musicEncoder;
         private readonly Lazy<IHighScoreListFactory> _highScoreListFactory;
         private readonly Lazy<IConfigFileService> _configFileService;
+        private readonly Lazy<IFileDialog> _fileDialog;
         private readonly Lazy<IFeatures> _features;
         private readonly Lazy<IFileSystem> _fileSystem;
         private readonly Lazy<IGameSerializer> _gameSerializer;
@@ -80,7 +81,8 @@ namespace Roton.Emulation.Core.Impl
             Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
             Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
             Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder,
-            Lazy<IHighScoreListFactory> highScoreListFactory, Lazy<IConfigFileService> configFileService)
+            Lazy<IHighScoreListFactory> highScoreListFactory, Lazy<IConfigFileService> configFileService,
+            Lazy<IFileDialog> fileDialog)
         {
             _clock = new Lazy<IClock>(() =>
             {
@@ -134,6 +136,7 @@ namespace Roton.Emulation.Core.Impl
             _musicEncoder = musicEncoder;
             _highScoreListFactory = highScoreListFactory;
             _configFileService = configFileService;
+            _fileDialog = fileDialog;
         }
 
         private void ClockTick(object sender, EventArgs args)
@@ -1182,6 +1185,23 @@ namespace Roton.Emulation.Core.Impl
         public void ShowHelp(string title, string filename) => Hud.ShowHelp(title, filename);
 
         public void ShowInGameHelp() => Features.ShowInGameHelp();
+
+        public void OpenWorld()
+        {
+            var name = Features.OpenWorld();
+            if (!string.IsNullOrEmpty(name))
+            {
+                LoadWorld(name);
+                State.StartBoard = World.BoardIndex;
+                SetBoard(0);
+                FadePurple();
+            }
+        }
+
+        public string ShowLoad(string title, string extension)
+        {
+            return _fileDialog.Value.Open(title, extension);
+        }
 
         public ISounds Sounds => _sounds.Value;
 

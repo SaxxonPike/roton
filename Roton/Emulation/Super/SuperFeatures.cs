@@ -96,6 +96,7 @@ namespace Roton.Emulation.Super
                 case EngineKeyCode.Enter: // Enter
                     return true;
                 case EngineKeyCode.W: // W
+                    Engine.OpenWorld();
                     break;
                 case EngineKeyCode.R: // R
                     break;
@@ -170,6 +171,11 @@ namespace Roton.Emulation.Super
                 Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
                 Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
             }
+        }
+
+        public string OpenWorld()
+        {
+            return Engine.ShowLoad("ZZT Worlds", "szt");
         }
 
         public void CleanUpPassageMovement()

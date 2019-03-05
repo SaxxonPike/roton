@@ -83,6 +83,7 @@ namespace Roton.Emulation.Core
         void SetMessage(int duration, IMessage message);
         void ShowHelp(string title, string filename);
         void ShowInGameHelp();
+        void OpenWorld();
         void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source);
         bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
         void Start();
@@ -112,5 +113,6 @@ namespace Roton.Emulation.Core
         void PlayStep();
         string GetHighScoreName(string fileName);
         void ShowHighScores();
+        string ShowLoad(string title, string extension);
     }
 }

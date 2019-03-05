@@ -26,7 +26,11 @@ namespace Roton.Emulation.Core.Impl
                                                       ? path
                                                       : Path.Combine(_basePath, path);
 
-        public bool FileExists(string path) => File.Exists(GetBestMatch(AdjustPath(path)));
+        public bool FileExists(string path)
+        {
+            var adjustedPath = AdjustPath(path);
+            return Directory.Exists(adjustedPath) || File.Exists(GetBestMatch(adjustedPath));
+        }
 
         /// <summary>
         /// Selects the nearest match for a specified file in a case-sensitive file system.

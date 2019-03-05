@@ -164,6 +164,11 @@ namespace Roton.Emulation.Original
             }
         }
 
+        public string OpenWorld()
+        {
+            return Engine.ShowLoad("ZZT Worlds", "zzt");
+        }
+
         public bool HandleTitleInput()
         {
             switch (Engine.State.KeyPressed.ToUpperCase())
@@ -171,6 +176,7 @@ namespace Roton.Emulation.Original
                 case EngineKeyCode.P:
                     return true;
                 case EngineKeyCode.W:
+                    Engine.OpenWorld();
                     break;
                 case EngineKeyCode.A:
                     ShowAbout();
