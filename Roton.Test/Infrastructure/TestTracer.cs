@@ -15,7 +15,12 @@ namespace Roton.Test.Infrastructure
             _writer = writer;
         }
 
-        public void Trace(IOopContext oopContext)
+        public void TraceInput(EngineKeyCode keyCode)
+        {
+            _writer.WriteLine($"TRACE KEY  {keyCode}");
+        }
+
+        public void TraceOop(IOopContext oopContext)
         {
             var code = oopContext.Actor.Code;
             var offset = oopContext.Instruction;
@@ -30,7 +35,7 @@ namespace Roton.Test.Infrastructure
 
             var line = code.Skip(offset).Take(end - offset).ToArray().ToStringValue();
             
-            _writer.WriteLine($"TRACE  [{oopContext.Actor}] {line}");
+            _writer.WriteLine($"TRACE OOP  [{oopContext.Actor}] {line}");
         }
     }
 }

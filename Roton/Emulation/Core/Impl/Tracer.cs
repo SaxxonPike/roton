@@ -1,5 +1,6 @@
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl
@@ -8,9 +9,12 @@ namespace Roton.Emulation.Core.Impl
     [Context(Context.Super)]
     public sealed class Tracer : ITracer
     {
-        public void Trace(IOopContext oopContext)
+        public void TraceInput(EngineKeyCode keyCode)
         {
-            // Default implementation does nothing for now..
+        }
+
+        public void TraceOop(IOopContext oopContext)
+        {
         }
     }
 }

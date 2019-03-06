@@ -26,7 +26,7 @@ namespace Roton.Emulation.Core.Impl
         {
             while (true)
             {
-                Tracer?.Trace(context);
+                Tracer?.TraceOop(context);
                 
                 context.Resume = false;
                 context.Executed = true;
