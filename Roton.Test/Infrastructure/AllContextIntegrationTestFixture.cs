@@ -5,9 +5,9 @@ namespace Roton.Test.Infrastructure
 {
     [TestFixture(Context.Original)]
     [TestFixture(Context.Super)]
-    public abstract class AllContextBaseTestFixture : ContextBaseTestFixture
+    public abstract class AllContextIntegrationTestFixture : ContextBaseIntegrationTestFixture
     {
-        protected AllContextBaseTestFixture(Context context) : base(context)
+        protected AllContextIntegrationTestFixture(Context context) : base(context)
         {
         }
     }

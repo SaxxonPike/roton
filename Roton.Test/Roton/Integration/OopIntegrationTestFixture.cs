@@ -5,11 +5,11 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
 using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Emulation
+namespace Roton.Test.Roton.Integration
 {
-    public class OopTestFixture : AllContextBaseTestFixture
+    public class OopIntegrationTestFixture : AllContextIntegrationTestFixture
     {
-        public OopTestFixture(Context context) : base(context)
+        public OopIntegrationTestFixture(Context context) : base(context)
         {
         }
 

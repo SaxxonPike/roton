@@ -24,9 +24,9 @@ using Random = System.Random;
 
 namespace Roton.Test.Infrastructure
 {
-    public abstract class ContextBaseTestFixture
+    public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
     {
-        protected ContextBaseTestFixture(Context context)
+        protected ContextBaseIntegrationTestFixture(Context context)
         {
             Context = context;
         }
@@ -40,7 +40,6 @@ namespace Roton.Test.Infrastructure
         protected ITracer Tracer { get; private set; }
 
         private Random Rand { get; } = new Random();
-        private Fixture Fixture { get; } = new Fixture();
 
         protected IEngine Engine { get; private set; }
         protected IActors Actors => Engine.Actors;
@@ -161,13 +160,5 @@ namespace Roton.Test.Infrastructure
         protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
 
         protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
-
-        protected T Create<T>() => Fixture.Create<T>();
-
-        protected IEnumerable<T> CreateMany<T>() => Fixture.CreateMany<T>();
-        
-        protected IEnumerable<T> CreateMany<T>(int count) => Fixture.CreateMany<T>(count);
-
-        protected ICustomizationComposer<T> Build<T>() => Fixture.Build<T>();
     }
 }
