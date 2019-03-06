@@ -173,5 +173,38 @@ namespace Roton.Test.Roton.Integration
             TileAt(4, 3).Color.Should().Be(underColor, "scroll should leave behind under tile color");
             Message.Should().BeEmpty("no message should be displayed");
         }
+        
+        [Test]
+        public void Player_ShouldBeAbleToActivateBomb_WhenBombIsNotActivated()
+        {
+            if (ElementList.BombId < 0)
+                Assert.Pass("Bomb does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            var actorIndex = SpawnTo(4, 3, ElementList.BombId);
+            var actor = Actors[actorIndex];
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should not move for bomb activation");
+            TileAt(4, 3).Id.Should().Be(ElementList.BombId, "bomb should be present after activation");
+            Message.Should().BeEquivalentTo(Alerts.BombMessage.Text, "correct message should be displayed");
+            actor.P1.Should().Be(8, "bomb should have the maximum timer set");
+        }
+        
+        [Test]
+        public void Player_ShouldBeAbleToMoveBomb_WhenBombIsAlreadyActivated()
+        {
+            if (ElementList.BombId < 0)
+                Assert.Pass("Bomb does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            var actorIndex = SpawnTo(4, 3, ElementList.BombId);
+            var actor = Actors[actorIndex];
+            actor.P1 = 8;
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should move for activated bomb");
+            TileAt(5, 3).Id.Should().Be(ElementList.BombId, "bomb should have moved while activated");
+        }
     }
 }
