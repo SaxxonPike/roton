@@ -22,7 +22,7 @@ namespace Roton.Test.Roton.Emulation.Conditions
         [TestCase(0, 5, true)]
         [TestCase(-1, -1, false)]
         [TestCase(1, 1, false)]
-        public void Execute_ReturnsCorrectResult(int objectXVector, int objectYVector, bool expected)
+        public void Execute_ShouldReturnWhetherObjectXOrYMatchesPlayerXOrY(int objectXVector, int objectYVector, bool expected)
         {
             // Arrange.
             var playerLocation = Create<Location>();

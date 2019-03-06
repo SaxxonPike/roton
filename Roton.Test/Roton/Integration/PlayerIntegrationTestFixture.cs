@@ -17,14 +17,14 @@ namespace Roton.Test.Roton.Integration
         public void __Setup()
         {
             if (ElementList.PlayerId < 0)
-                Assert.Inconclusive();
+                Assert.Fail("Player does not exist in this context");
         }
 
         [Test]
         public void Player_ShouldBeAbleToPickUpAmmo()
         {
             if (ElementList.AmmoId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Ammo does not exist in this context");
 
             MovePlayerTo(3, 3);
             PlotTo(4, 3, ElementList.AmmoId);
@@ -39,7 +39,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToPickUpTorch()
         {
             if (ElementList.TorchId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Torch does not exist in this context");
 
             MovePlayerTo(3, 3);
             PlotTo(4, 3, ElementList.TorchId);
@@ -54,7 +54,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToPickUpGem()
         {
             if (ElementList.GemId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Gem does not exist in this context");
 
             MovePlayerTo(3, 3);
             PlotTo(4, 3, ElementList.GemId);
@@ -71,7 +71,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToPickUpKey_WhenKeyIsNotPossessed()
         {
             if (ElementList.KeyId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Key does not exist in this context");
 
             var keyColor = RandomInt(1, 7);
             MovePlayerTo(3, 3);
@@ -88,7 +88,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldNotBeAbleToPickUpKey_WhenKeyIsPossessed()
         {
             if (ElementList.KeyId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Key does not exist in this context");
 
             var keyColor = RandomInt(1, 7);
             World.Keys[keyColor - 1] = true;
@@ -105,7 +105,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToUseDoor_WhenKeyIsPossessed()
         {
             if (ElementList.DoorId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Door does not exist in this context");
 
             var keyColor = RandomInt(1, 7);
             World.Keys[keyColor - 1] = true;
@@ -123,7 +123,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldNotBeAbleToUseDoor_WhenKeyIsNotPossessed()
         {
             if (ElementList.DoorId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Door does not exist in this context");
 
             var keyColor = RandomInt(1, 7);
             MovePlayerTo(3, 3);
@@ -139,7 +139,7 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToUseScroll_WhenScrollIsOneLine()
         {
             if (ElementList.ScrollId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Scroll does not exist in this context");
 
             MovePlayerTo(3, 3);
             var actorIndex = SpawnTo(4, 3, ElementList.ScrollId);
@@ -155,9 +155,9 @@ namespace Roton.Test.Roton.Integration
         public void Player_ShouldBeAbleToUseScroll_WhenScrollIsMultiLine()
         {
             if (ElementList.ScrollId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Scroll does not exist in this context");
             if (ElementList.FakeId < 0)
-                Assert.Inconclusive();
+                Assert.Pass("Fake does not exist in this context");
 
             MovePlayerTo(3, 3);
             var underColor = RandomInt(0x00, 0xFF);
