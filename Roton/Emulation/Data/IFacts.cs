@@ -43,5 +43,6 @@ namespace Roton.Emulation.Data
         string EnterLabel { get; }
         int HighScoreNameLength { get; }
         int HighScoreNameCount { get; }
+        int EnergyCyclesPerEnergizer { get; }
     }
 }

@@ -206,5 +206,22 @@ namespace Roton.Test.Roton.Integration
             TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should move for activated bomb");
             TileAt(5, 3).Id.Should().Be(ElementList.BombId, "bomb should have moved while activated");
         }
+
+        [Test]
+        public void Player_ShouldBeAbleToUseEnergizer()
+        {
+            if (ElementList.EnergizerId < 0)
+                Assert.Pass("Energizer does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            PlotTo(4, 3, ElementList.EnergizerId);
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            World.EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1, "player should have correct number of energy cycles");
+            TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
+            Message.Should()
+                .BeEquivalentTo(Alerts.EnergizerMessage.Text, "correct message should be displayed");
+        }
+
     }
 }

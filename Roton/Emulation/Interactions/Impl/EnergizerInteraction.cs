@@ -22,7 +22,7 @@ namespace Roton.Emulation.Interactions.Impl
         {
             Engine.PlaySound(9, Engine.Sounds.Energizer);
             Engine.RemoveItem(location);
-            Engine.World.EnergyCycles = 0x4B;
+            Engine.World.EnergyCycles = Engine.Facts.EnergyCyclesPerEnergizer;
             Engine.Hud.UpdateStatus();
             Engine.UpdateBoard(location);
             if (Engine.Alerts.EnergizerPickup)
