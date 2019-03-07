@@ -1390,7 +1390,7 @@ namespace Roton.Emulation.Core.Impl
             // board properties
             Board.Name = string.Empty;
             State.Message = string.Empty;
-            Board.MaximumShots = 0xFF;
+            Board.MaximumShots = Facts.DefaultMaximumShots;
             Board.IsDark = false;
             Board.RestartOnZap = false;
             Board.TimeLimit = 0;
