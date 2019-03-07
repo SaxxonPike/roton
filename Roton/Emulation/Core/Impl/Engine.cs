@@ -1330,9 +1330,6 @@ namespace Roton.Emulation.Core.Impl
 
         public void WaitForTick()
         {
-            if (Clock == null)
-                return;
-            
             if (State.SoundPlaying)
             {
                 if (State.SoundTicks <= 0)
@@ -1367,6 +1364,9 @@ namespace Roton.Emulation.Core.Impl
                     State.SoundTicks--;
             }
                 
+            if (Clock == null)
+                return;
+            
             Tick?.Invoke(this, EventArgs.Empty);
 
             while (_ticksToRun <= 0 && ThreadActive)
