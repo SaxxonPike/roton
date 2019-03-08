@@ -238,5 +238,52 @@ namespace Roton.Test.Roton.Integration
             Message.Should()
                 .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");
         }
+
+        [Test]
+        public void Player_ShouldBeAbleToInteractWithBullet()
+        {
+            if (ElementList.BulletId < 0)
+                Assert.Pass("Star does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            // why not spawn? because the bullet moves! and a zero vector causes it to self destruct
+            PlotTo(4, 3, ElementList.BulletId);
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the star");
+            TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
+            Message.Should()
+                .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");
+        }
+
+        [Test]
+        public void Player_ShouldBeAbleToInteractWithWater()
+        {
+            if (ElementList.WaterId < 0)
+                Assert.Pass("Water does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            PlotTo(4, 3, ElementList.WaterId);
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
+            Message.Should()
+                .BeEquivalentTo(Alerts.WaterMessage.Text, "correct message should be displayed");
+        }
+        
+        [Test]
+        public void Player_ShouldBeAbleToInteractWithLava()
+        {
+            if (ElementList.LavaId < 0)
+                Assert.Pass("Lava does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            PlotTo(4, 3, ElementList.LavaId);
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
+            Message.Should()
+                .BeEquivalentTo(Alerts.WaterMessage.Text, "correct message should be displayed");
+        }
     }
 }
