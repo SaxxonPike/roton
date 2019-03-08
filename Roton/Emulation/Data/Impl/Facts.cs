@@ -19,6 +19,7 @@ namespace Roton.Emulation.Data.Impl
         public int HighScoreNameCount => 30;
         public int EnergyCyclesPerEnergizer => 0x4B;
         public int DefaultMaximumShots => 255;
+        public int BombCountdownStart => 9;
         public int DefaultGameSpeed => 4;
         public int DefaultAmmo => 0;
         public int DefaultGems => 0;

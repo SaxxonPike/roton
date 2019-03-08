@@ -188,7 +188,7 @@ namespace Roton.Test.Roton.Integration
             TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should not move for bomb activation");
             TileAt(4, 3).Id.Should().Be(ElementList.BombId, "bomb should be present after activation");
             Message.Should().BeEquivalentTo(Alerts.BombMessage.Text, "correct message should be displayed");
-            actor.P1.Should().Be(8, "bomb should have the maximum timer set");
+            actor.P1.Should().Be(Engine.Facts.BombCountdownStart - 1, "bomb should have the maximum timer set");
         }
         
         [Test]
@@ -200,7 +200,7 @@ namespace Roton.Test.Roton.Integration
             MovePlayerTo(3, 3);
             var actorIndex = SpawnTo(4, 3, ElementList.BombId);
             var actor = Actors[actorIndex];
-            actor.P1 = 8;
+            actor.P1 = Engine.Facts.BombCountdownStart;
             Type(AnsiKey.Right);
             StepAllKeys();
             TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should move for activated bomb");
@@ -223,5 +223,20 @@ namespace Roton.Test.Roton.Integration
                 .BeEquivalentTo(Alerts.EnergizerMessage.Text, "correct message should be displayed");
         }
 
+        [Test]
+        public void Player_ShouldBeAbleToInteractWithStar()
+        {
+            if (ElementList.StarId < 0)
+                Assert.Pass("Star does not exist in this context");
+
+            MovePlayerTo(3, 3);
+            SpawnTo(4, 3, ElementList.StarId);
+            Type(AnsiKey.Right);
+            StepAllKeys();
+            World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the star");
+            TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
+            Message.Should()
+                .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");
+        }
     }
 }

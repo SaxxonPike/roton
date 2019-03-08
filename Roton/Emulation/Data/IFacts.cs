@@ -45,5 +45,6 @@ namespace Roton.Emulation.Data
         int HighScoreNameCount { get; }
         int EnergyCyclesPerEnergizer { get; }
         int DefaultMaximumShots { get; }
+        int BombCountdownStart { get; }
     }
 }

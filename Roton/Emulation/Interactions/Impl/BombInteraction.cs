@@ -22,7 +22,7 @@ namespace Roton.Emulation.Interactions.Impl
             var actor = Engine.ActorAt(location);
             if (actor.P1 == 0)
             {
-                actor.P1 = 9;
+                actor.P1 = Engine.Facts.BombCountdownStart;
                 Engine.UpdateBoard(location);
                 Engine.SetMessage(0xC8, Engine.Alerts.BombMessage);
                 Engine.PlaySound(4, Engine.Sounds.BombActivate);
