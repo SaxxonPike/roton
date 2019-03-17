@@ -191,8 +191,20 @@ namespace Roton.Test.Roton.Integration
                 },
                 new[]
                 {
+                    "@blue",
+                    "'label",
+                    "#end"
+                },
+                new[]
+                {
                     "@green",
                     "#restore blue:label",
+                    ":label",
+                    "#end"
+                },
+                new[]
+                {
+                    "@green",
                     ":label",
                     "#end"
                 }
@@ -217,8 +229,18 @@ namespace Roton.Test.Roton.Integration
                 "#end"
             ));
             actors[1].Code.ToStringValue().Should().Be(string.Join("\xD", 
+                "@blue",
+                ":label",
+                "#end"
+            ));
+            actors[2].Code.ToStringValue().Should().Be(string.Join("\xD", 
                 "@green",
                 "#restore blue:label",
+                "'label",
+                "#end"
+            ));
+            actors[3].Code.ToStringValue().Should().Be(string.Join("\xD", 
+                "@green",
                 "'label",
                 "#end"
             ));
