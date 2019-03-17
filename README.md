@@ -4,14 +4,15 @@
 
 ##### Description
 
-Roton is an emulation of the ZZT and Super ZZT game creation engines written in C#. Lyon is the
-executable frontend that presents the emulation via SDL.
+Roton is an emulation of the ZZT and Super ZZT game creation engines written in C#.
+
+Lyon is an application that runs an instance of Roton's emulation and presents it via SDL.
 
 ### Build instructions
 
 All platforms need the 
 [.NET Core SDK](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md).
-We developed with 2.0, but newer versions of v2.x should work fine.
+We developed with 2.2, but newer versions of v2.x should work fine.
 
 ##### Windows
 
@@ -21,9 +22,8 @@ and
 [Jetbrains Rider](https://www.jetbrains.com/rider/) 
 should work. Restore packages, build and run as usual.
 
-It can also be built and run from the command line. While in the directory where Roton.sln exists, run
-`dotnet build` to resolve dependencies and build the project, and `dotnet run --project Lyon` to start it.
-No IDE necessary if you do it this way, just make sure you have the .NET Core SDK linked above.
+It can also be built and run from the command line. We've included `publish.bat` for this purpose,
+which will build and plop out Lyon in the Deploy folder.
 
 ##### macOS and Linux
 
@@ -33,6 +33,9 @@ After the build process completes, type `dotnet run --project Lyon` to run the n
 
 IDEs that support .NET Core, such as JetBrains Rider or Visual Studio Code, should be able to manage the build
 process as long as the SDK is installed.
+
+It can also be built and run from the command line. We've included `publish.sh` for this purpose,
+which will build and plop out Lyon in the Deploy folder.
 
 ### Where can I learn more about ZZT?
 
