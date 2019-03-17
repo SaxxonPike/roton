@@ -14,8 +14,16 @@
     <PackageReference Include="Autofac" Version="4.9.1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Lyon.bat">
+    <Content Include="..\Deploy\Config.json">
+      <Link>Config.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Deploy\Lyon.bat">
       <Link>Lyon.bat</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Deploy\lyon.sh">
+      <Link>lyon.sh</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
