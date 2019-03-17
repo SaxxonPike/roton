@@ -30,7 +30,7 @@ namespace Roton.Emulation.Interactions.Impl
             if (!Engine.Alerts.GemPickup)
                 return;
 
-            Engine.SetMessage(0xC8, Engine.Alerts.GemMessage);
+            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.GemMessage);
             Engine.Alerts.GemPickup = false;
         }
     }

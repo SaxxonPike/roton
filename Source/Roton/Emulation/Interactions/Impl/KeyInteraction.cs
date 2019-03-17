@@ -24,7 +24,7 @@ namespace Roton.Emulation.Interactions.Impl
             var keyIndex = color - 1;
             if (Engine.World.Keys[keyIndex])
             {
-                Engine.SetMessage(0xC8, Engine.Alerts.KeyAlreadyMessage(color));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.KeyAlreadyMessage(color));
                 Engine.PlaySound(2, Engine.Sounds.KeyAlready);
             }
             else
@@ -32,7 +32,7 @@ namespace Roton.Emulation.Interactions.Impl
                 Engine.World.Keys[keyIndex] = true;
                 Engine.RemoveItem(location);
                 Engine.Hud.UpdateStatus();
-                Engine.SetMessage(0xC8, Engine.Alerts.KeyPickupMessage(color));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.KeyPickupMessage(color));
                 Engine.PlaySound(2, Engine.Sounds.Key);
             }
         }

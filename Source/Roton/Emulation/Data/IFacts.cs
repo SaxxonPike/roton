@@ -46,5 +46,9 @@ namespace Roton.Emulation.Data
         int EnergyCyclesPerEnergizer { get; }
         int DefaultMaximumShots { get; }
         int BombCountdownStart { get; }
+        string EnergizeLabel { get; }
+        string TouchLabel { get; }
+        string ThudLabel { get; }
+        string ShotLabel { get; }
     }
 }

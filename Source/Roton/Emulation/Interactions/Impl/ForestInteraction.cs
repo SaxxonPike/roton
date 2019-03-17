@@ -31,7 +31,7 @@ namespace Roton.Emulation.Interactions.Impl
             if (!Engine.Alerts.Forest)
                 return;
 
-            Engine.SetMessage(0xC8, Engine.Alerts.ForestMessage);
+            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.ForestMessage);
             Engine.Alerts.Forest = false;
         }
     }

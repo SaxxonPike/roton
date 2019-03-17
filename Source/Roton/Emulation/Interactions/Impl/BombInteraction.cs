@@ -24,7 +24,7 @@ namespace Roton.Emulation.Interactions.Impl
             {
                 actor.P1 = Engine.Facts.BombCountdownStart;
                 Engine.UpdateBoard(location);
-                Engine.SetMessage(0xC8, Engine.Alerts.BombMessage);
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.BombMessage);
                 Engine.PlaySound(4, Engine.Sounds.BombActivate);
             }
             else

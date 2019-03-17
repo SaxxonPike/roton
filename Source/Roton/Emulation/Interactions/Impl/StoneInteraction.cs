@@ -25,7 +25,7 @@ namespace Roton.Emulation.Interactions.Impl
             Engine.World.Stones++;
             Engine.Destroy(location);
             Engine.Hud.UpdateStatus();
-            Engine.SetMessage(0xC8, Engine.Alerts.StoneMessage);
+            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.StoneMessage);
         }
     }
 }

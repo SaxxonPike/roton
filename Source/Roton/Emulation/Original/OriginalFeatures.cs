@@ -43,7 +43,7 @@ namespace Roton.Emulation.Original
             Engine.Board.Entrance.CopyFrom(Engine.Player.Location);
             if (Engine.Board.IsDark && Engine.Alerts.Dark)
             {
-                Engine.SetMessage(0xC8, Engine.Alerts.DarkMessage);
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.DarkMessage);
                 Engine.Alerts.Dark = false;
             }
 
@@ -55,7 +55,7 @@ namespace Roton.Emulation.Original
         {
             if (context.Message.Count == 1)
             {
-                Engine.SetMessage(0xC8, new Message(context.Message));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message));
                 return null;
             }
             else
@@ -76,7 +76,7 @@ namespace Roton.Emulation.Original
                         {
                             if (Engine.Alerts.NoTorches)
                             {
-                                Engine.SetMessage(0xC8, Engine.Alerts.NoTorchMessage);
+                                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoTorchMessage);
                                 Engine.Alerts.NoTorches = false;
                             }
                         }
@@ -84,7 +84,7 @@ namespace Roton.Emulation.Original
                         {
                             if (Engine.Alerts.NotDark)
                             {
-                                Engine.SetMessage(0xC8, Engine.Alerts.NotDarkMessage);
+                                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NotDarkMessage);
                                 Engine.Alerts.NotDark = false;
                             }
                         }

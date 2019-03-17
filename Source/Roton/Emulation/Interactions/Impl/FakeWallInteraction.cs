@@ -23,7 +23,7 @@ namespace Roton.Emulation.Interactions.Impl
             if (!Engine.Alerts.FakeWall) return;
 
             Engine.Alerts.FakeWall = false;
-            Engine.SetMessage(0xC8, Engine.Alerts.FakeMessage);
+            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.FakeMessage);
         }
     }
 }

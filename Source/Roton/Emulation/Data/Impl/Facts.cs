@@ -20,6 +20,10 @@ namespace Roton.Emulation.Data.Impl
         public int EnergyCyclesPerEnergizer => 0x4B;
         public int DefaultMaximumShots => 255;
         public int BombCountdownStart => 9;
+        public string EnergizeLabel => "ALL:ENERGIZE";
+        public string TouchLabel => "TOUCH";
+        public string ThudLabel => "THUD";
+        public string ShotLabel => "SHOT";
         public int DefaultGameSpeed => 4;
         public int DefaultAmmo => 0;
         public int DefaultGems => 0;

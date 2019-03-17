@@ -23,7 +23,7 @@ namespace Roton.Emulation.Interactions.Impl
             Engine.Tiles[location].Id = Engine.ElementList.NormalId;
             Engine.UpdateBoard(location);
             Engine.PlaySound(3, Engine.Sounds.Invisible);
-            Engine.SetMessage(0x64, Engine.Alerts.InvisibleMessage);
+            Engine.SetMessage(Engine.Facts.ShortMessageDuration, Engine.Alerts.InvisibleMessage);
         }
     }
 }

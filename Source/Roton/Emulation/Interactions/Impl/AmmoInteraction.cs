@@ -28,7 +28,7 @@ namespace Roton.Emulation.Interactions.Impl
             if (!Engine.Alerts.AmmoPickup) 
                 return;
             
-            Engine.SetMessage(0xC8, Engine.Alerts.AmmoMessage);
+            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.AmmoMessage);
             Engine.Alerts.AmmoPickup = false;
         }
     }

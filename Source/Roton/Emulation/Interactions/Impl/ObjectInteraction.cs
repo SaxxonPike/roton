@@ -21,7 +21,7 @@ namespace Roton.Emulation.Interactions.Impl
         public void Interact(IXyPair location, int index, IXyPair vector)
         {
             var objectIndex = Engine.ActorIndexAt(location);
-            Engine.BroadcastLabel(-objectIndex, KnownLabels.Touch, false);
+            Engine.BroadcastLabel(-objectIndex, Engine.Facts.TouchLabel, false);
         }
     }
 }

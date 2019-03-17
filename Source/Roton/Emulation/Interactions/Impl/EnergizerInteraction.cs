@@ -28,10 +28,10 @@ namespace Roton.Emulation.Interactions.Impl
             if (Engine.Alerts.EnergizerPickup)
             {
                 Engine.Alerts.EnergizerPickup = false;
-                Engine.SetMessage(0xC8, Engine.Alerts.EnergizerMessage);
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.EnergizerMessage);
             }
 
-            Engine.BroadcastLabel(0, KnownLabels.Energize, false);
+            Engine.BroadcastLabel(0, Engine.Facts.EnergizeLabel, false);
         }
     }
 }

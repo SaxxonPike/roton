@@ -24,7 +24,7 @@ namespace Roton.Emulation.Interactions.Impl
             var keyIndex = color - 1;
             if (!Engine.World.Keys[keyIndex])
             {
-                Engine.SetMessage(0xC8, Engine.Alerts.DoorLockedMessage(color));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.DoorLockedMessage(color));
                 Engine.PlaySound(3, Engine.Sounds.DoorLocked);
             }
             else
@@ -32,7 +32,7 @@ namespace Roton.Emulation.Interactions.Impl
                 Engine.World.Keys[keyIndex] = false;
                 Engine.RemoveItem(location);
                 Engine.Hud.UpdateStatus();
-                Engine.SetMessage(0xC8, Engine.Alerts.DoorOpenMessage(color));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.DoorOpenMessage(color));
                 Engine.PlaySound(3, Engine.Sounds.DoorOpen);
             }
         }

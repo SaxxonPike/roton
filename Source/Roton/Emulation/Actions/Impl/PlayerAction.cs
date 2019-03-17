@@ -89,7 +89,7 @@ namespace Roton.Emulation.Actions.Impl
                         {
                             if (Engine.Alerts.OutOfAmmo)
                             {
-                                Engine.SetMessage(0xC8, Engine.Alerts.NoAmmoMessage);
+                                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoAmmoMessage);
                                 Engine.Alerts.OutOfAmmo = false;
                             }
                         }
@@ -98,7 +98,7 @@ namespace Roton.Emulation.Actions.Impl
                     {
                         if (Engine.Alerts.CantShootHere)
                         {
-                            Engine.SetMessage(0xC8, Engine.Alerts.NoShootMessage);
+                            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoShootMessage);
                             Engine.Alerts.CantShootHere = false;
                         }
                     }
@@ -203,7 +203,7 @@ namespace Roton.Emulation.Actions.Impl
                         Engine.World.TimePassed++;
                         if (Engine.Board.TimeLimit - 10 == Engine.World.TimePassed)
                         {
-                            Engine.SetMessage(0xC8, Engine.Alerts.TimeMessage);
+                            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.TimeMessage);
                             Engine.PlaySound(3, Engine.Sounds.TimeLow);
                         }
                         else if (Engine.World.TimePassed >= Engine.Board.TimeLimit)

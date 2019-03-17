@@ -124,10 +124,10 @@ namespace Roton.Emulation.Super
             switch (context.Message.Count)
             {
                 case 1:
-                    Engine.SetMessage(0xC8, new Message(string.Empty, context.Message[0]));
+                    Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(string.Empty, context.Message[0]));
                     return null;
                 case 2:
-                    Engine.SetMessage(0xC8, new Message(context.Message[0], context.Message[1]));
+                    Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message[0], context.Message[1]));
                     return null;
                 case 0:
                     return null;

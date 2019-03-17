@@ -35,7 +35,7 @@ namespace Roton.Emulation.Original
             }
             else
             {
-                Engine.BroadcastLabel(-index, KnownLabels.Thud, false);
+                Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
             }
         }
     }

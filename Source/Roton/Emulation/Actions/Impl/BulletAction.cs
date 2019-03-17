@@ -74,7 +74,7 @@ namespace Roton.Emulation.Actions.Impl
                 Engine.State.ActIndex--;
                 if (element.Id == Engine.ElementList.ObjectId || element.Id == Engine.ElementList.ScrollId)
                 {
-                    Engine.BroadcastLabel(-Engine.Actors.ActorIndexAt(target), KnownLabels.Shot, false);
+                    Engine.BroadcastLabel(-Engine.Actors.ActorIndexAt(target), Engine.Facts.ShotLabel, false);
                 }
 
                 break;

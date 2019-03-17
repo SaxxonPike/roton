@@ -13,8 +13,6 @@ namespace Roton.Emulation.Actions.Impl
         private readonly Lazy<IEngine> _engine;
         private IEngine Engine => _engine.Value;
 
-        public string KnownName => KnownNames.SpinningGun;
-
         public SpinningGunAction(Lazy<IEngine> engine)
         {
             _engine = engine;

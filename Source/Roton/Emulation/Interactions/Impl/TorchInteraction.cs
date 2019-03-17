@@ -24,7 +24,7 @@ namespace Roton.Emulation.Interactions.Impl
             Engine.Hud.UpdateStatus();
             if (Engine.Alerts.TorchPickup)
             {
-                Engine.SetMessage(0xC8, Engine.Alerts.TorchMessage);
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.TorchMessage);
                 Engine.Alerts.TorchPickup = false;
             }
 

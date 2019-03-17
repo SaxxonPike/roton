@@ -21,7 +21,7 @@ namespace Roton.Emulation.Interactions.Impl
         public void Interact(IXyPair location, int index, IXyPair vector)
         {
             Engine.PlaySound(3, Engine.Sounds.Water);
-            Engine.SetMessage(0x64, Engine.Alerts.WaterMessage);
+            Engine.SetMessage(Engine.Facts.ShortMessageDuration, Engine.Alerts.WaterMessage);
         }
     }
 }
