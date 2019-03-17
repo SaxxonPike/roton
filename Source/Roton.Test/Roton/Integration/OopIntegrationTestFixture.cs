@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration
@@ -143,6 +144,84 @@ namespace Roton.Test.Roton.Integration
             Step();
 
             World.Flags.Should().Contain("F2");
+        }
+
+        [Test]
+        public void ShortMovement_ShouldRunCommandsOnSameLine()
+        {
+            var index = SpawnTo(1, 1, ElementList.ObjectId);
+            var actor = Actors[index];
+            actor.Cycle = 1;
+            SetActorCode(index, 
+                "/i#set f2"
+            );
+            
+            Step(2);
+
+            World.Flags.Should().Contain("F2");
+        }
+        
+        [Test]
+        public void ShortMovement_ShouldRunCommandsOnSameLine_WhenPrecededByIf()
+        {
+            var index = SpawnTo(1, 1, ElementList.ObjectId);
+            var actor = Actors[index];
+            actor.Cycle = 1;
+            SetActorCode(index,
+                "#set f1",
+                "#if f1 /i#set f2"
+            );
+            
+            Step(2);
+
+            World.Flags.Should().Contain("F2");
+        }
+
+        [Test]
+        public void ZappingRemoteLabels_ShouldProduceExpectedCode()
+        {
+            var programs = new[]
+            {
+                new[]
+                {
+                    "@blue",
+                    "#zap green:label",
+                    "'label",
+                    "#end"
+                },
+                new[]
+                {
+                    "@green",
+                    "#restore blue:label",
+                    ":label",
+                    "#end"
+                }
+            };
+
+            var x = 1;
+            var actors = programs.Select(code =>
+            {
+                var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+                var actor = Actors[actorIndex];
+                actor.Cycle = 1;
+                SetActorCode(actorIndex, code);
+                return actor;
+            }).ToList();
+
+            Step(2);
+
+            actors[0].Code.ToStringValue().Should().Be(string.Join("\xD", 
+                "@blue",
+                "#zap green:label",
+                ":label",
+                "#end"
+            ));
+            actors[1].Code.ToStringValue().Should().Be(string.Join("\xD", 
+                "@green",
+                "#restore blue:label",
+                "'label",
+                "#end"
+            ));
         }
     }
 }

@@ -68,7 +68,16 @@ namespace Roton.Test.Infrastructure
         protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
         protected IEnumerable<string> Message => FullMessage.Where(m => m != string.Empty).ToArray();
 
-        protected void Step() => Engine.StepOnce();
+        protected void Step()
+        {
+            Engine.StepOnce();
+        }
+
+        protected void Step(int count)
+        {
+            for (var i = 0; i < count; i++)
+                Engine.StepOnce();
+        }
 
         protected void StepAllKeys()
         {

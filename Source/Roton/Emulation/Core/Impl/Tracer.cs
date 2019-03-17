@@ -16,5 +16,9 @@ namespace Roton.Emulation.Core.Impl
         public void TraceOop(IOopContext oopContext)
         {
         }
+
+        public void TraceStep()
+        {
+        }
     }
 }

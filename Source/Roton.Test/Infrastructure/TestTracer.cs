@@ -9,6 +9,7 @@ namespace Roton.Test.Infrastructure
     public class TestTracer : ITracer
     {
         private readonly TextWriter _writer;
+        private long _stepNumber;
 
         public TestTracer(TextWriter writer)
         {
@@ -17,7 +18,7 @@ namespace Roton.Test.Infrastructure
 
         public void TraceInput(EngineKeyCode keyCode)
         {
-            _writer.WriteLine($"TRACE KEY  {keyCode}");
+            _writer.WriteLine($"{_stepNumber:D8}: TRACE KEY  {keyCode}");
         }
 
         public void TraceOop(IOopContext oopContext)
@@ -35,7 +36,12 @@ namespace Roton.Test.Infrastructure
 
             var line = code.Skip(offset).Take(end - offset).ToArray().ToStringValue();
             
-            _writer.WriteLine($"TRACE OOP  [{oopContext.Actor}] {line}");
+            _writer.WriteLine($"{_stepNumber:D8}: TRACE OOP  [{oopContext.Actor}] {line}");
+        }
+
+        public void TraceStep()
+        {
+            _stepNumber++;
         }
     }
 }
