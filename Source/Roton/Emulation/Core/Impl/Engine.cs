@@ -1680,9 +1680,18 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void PackBoard()
+        public void PackBoard()
         {
             var board = new PackedBoard(GameSerializer.PackBoard(Tiles));
+            PackBoard(World.BoardIndex, board);
+        }
+
+        private void PackBoard(int boardIndex, IPackedBoard board)
+        {
+            // bit of a hack to make sure we don't go out of bounds
+            while (Boards.Count <= boardIndex)
+                Boards.Add(null);
+
             Boards[World.BoardIndex] = board;
         }
 
@@ -1863,7 +1872,7 @@ namespace Roton.Emulation.Core.Impl
             }
         }
 
-        private void UnpackBoard(int boardIndex)
+        public void UnpackBoard(int boardIndex)
         {
             GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
             World.BoardIndex = boardIndex;

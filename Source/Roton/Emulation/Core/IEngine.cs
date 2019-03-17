@@ -114,5 +114,7 @@ namespace Roton.Emulation.Core
         string GetHighScoreName(string fileName);
         void ShowHighScores();
         string ShowLoad(string title, string extension);
+        void PackBoard();
+        void UnpackBoard(int index);
     }
 }
