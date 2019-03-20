@@ -28,10 +28,12 @@ namespace Roton.Test.Roton.Emulation.Conditions
                 })
                 : null;
 
+            var actorLocation = new Location(1, 1);
+
             var actor = Mock<IActor>(mock =>
             {
                 mock.Setup(x => x.Location)
-                    .Returns(new Location(1, 1));
+                    .Returns(actorLocation);
             });
 
             var context = Mock<IOopContext>(mock =>
@@ -52,7 +54,7 @@ namespace Roton.Test.Roton.Emulation.Conditions
                     .Returns(direction?.Object);
             });
 
-            MockService<IEngine>(mock =>
+            var engine = MockService<IEngine>(mock =>
             {
                 mock.Setup(x => x.ElementAt(It.IsAny<IXyPair>()))
                     .Returns(element.Object);
@@ -64,7 +66,10 @@ namespace Roton.Test.Roton.Emulation.Conditions
             var observed = Subject.Execute(context.Object);
 
             // Assert.
-            observed.Should().Be(expected);
+            observed.Should().Be(expected, "result should reflect target tile's non-blocking status");
+            if (hasDirection)
+                engine.Verify(x => x.ElementAt(It.Is<IXyPair>(p => p.Matches(actorLocation.Sum(direction.Object)))),
+                    "correct direction needs to be checked");
         }
     }
 }
