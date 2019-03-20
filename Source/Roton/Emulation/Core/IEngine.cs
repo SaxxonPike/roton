@@ -21,6 +21,7 @@ namespace Roton.Emulation.Core
         IActors Actors { get; }
         IAlerts Alerts { get; }
         IBoard Board { get; }
+        IBoards Boards { get; }
         ICheatList CheatList { get; }
         IColors Colors { get; }
         ICommandList CommandList { get; }

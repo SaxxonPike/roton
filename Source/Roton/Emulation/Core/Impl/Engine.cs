@@ -156,7 +156,7 @@ namespace Roton.Emulation.Core.Impl
         
         private IClock Clock => _clock.Value;
 
-        private IBoards Boards => _boards.Value;
+        public IBoards Boards => _boards.Value;
 
         private ITile BorderTile => State.BorderTile;
 
