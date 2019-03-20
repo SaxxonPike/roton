@@ -219,7 +219,7 @@ namespace Roton.Emulation.Original
 
         private void FadeWait(int i)
         {
-            if ((i & 0x3F) == 0)
+            if ((i & 0x7F) == 0)
             {
                 _engine.WaitForTick();
             }
