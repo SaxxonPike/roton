@@ -24,10 +24,15 @@ namespace Roton.Emulation.Core.Impl
 
         public void Execute(IOopContext context)
         {
+            var firstLine = true;
+            
             while (true)
             {
-                Tracer?.TraceOop(context);
-                
+                if (firstLine)
+                    firstLine = false;
+                else
+                    Tracer?.TraceOop(context);
+
                 context.Resume = false;
                 context.Executed = true;
 

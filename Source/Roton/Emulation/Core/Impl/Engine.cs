@@ -166,7 +166,7 @@ namespace Roton.Emulation.Core.Impl
 
         private ISpeaker Speaker => _speaker.Value;
 
-        private IGameSerializer GameSerializer => _gameSerializer.Value;
+        public IGameSerializer GameSerializer => _gameSerializer.Value;
 
         private IInterpreter Interpreter => _interpreter.Value;
 
@@ -516,6 +516,8 @@ namespace Roton.Emulation.Core.Impl
                 if (context.Instruction < 0)
                     break;
 
+                Tracer?.TraceOop(context);
+                
                 context.NextLine = true;
                 context.PreviousInstruction = context.Instruction;
                 context.Command = ReadActorCodeByte(index, context);
@@ -612,7 +614,7 @@ namespace Roton.Emulation.Core.Impl
                 }
                 else
                 {
-                    context.SearchOffset = Parser.Search(context.SearchIndex, prefix + label);
+                    context.SearchOffset = Parser.Search(context.SearchIndex, 0, prefix + label);
                     if (context.SearchOffset < 0 && split > 0)
                     {
                         success = Parser.GetTarget(context);

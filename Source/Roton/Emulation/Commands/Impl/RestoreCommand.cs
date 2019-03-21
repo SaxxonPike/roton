@@ -31,7 +31,7 @@ namespace Roton.Emulation.Commands.Impl
                 while (context.SearchOffset >= 0)
                 {
                     Engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x3A;
-                    context.SearchOffset = Engine.Parser.Search(context.SearchIndex,
+                    context.SearchOffset = Engine.Parser.Search(context.SearchIndex, 0,
                         $"\xD\x27{Engine.State.OopWord}");
                 }
             }
