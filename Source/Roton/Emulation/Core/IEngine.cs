@@ -29,6 +29,7 @@ namespace Roton.Emulation.Core
         IConfig Config { get; }
         IDirectionList DirectionList { get; }
         IElementList ElementList { get; }
+        IGameSerializer GameSerializer { get; }
         IHud Hud { get; }
         IItemList ItemList { get; }
         IParser Parser { get; }

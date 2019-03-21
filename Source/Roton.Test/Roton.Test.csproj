@@ -18,4 +18,13 @@
     <ProjectReference Include="..\Lyon\Lyon.csproj" />
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="Resources\PreposterousMachines\1dCellularAutomaton.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\4x4Multiplier.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\Knight'sTour.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\MandelbrotRenderer.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\SineRenderer.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\TetrominoGame.brd" />
+	<EmbeddedResource Include="Resources\PreposterousMachines\TowerOfHanoi.brd" />
+  </ItemGroup>
 </Project>

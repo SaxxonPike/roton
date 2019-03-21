@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Moq;
@@ -30,5 +31,22 @@ namespace Roton.Test.Infrastructure
 
         [DebuggerStepThrough]
         protected ICustomizationComposer<T> Build<T>() => Fixture.Value.Build<T>();
+
+        protected Stream GetResource(string path)
+        {
+            var assembly = GetType().Assembly;
+            var fullPath = $"{assembly.GetName().Name}.Resources.{path}";
+            var result = assembly.GetManifestResourceStream(fullPath);
+            if (result == null)
+                throw new Exception($"Resource is missing: {fullPath}");
+            return result;
+        }
+
+        protected byte[] GetResourceFile(string path)
+        {
+            using (var resource = GetResource(path))
+            using (var reader = new BinaryReader(resource))
+                return reader.ReadBytes((int) resource.Length);
+        }
     }
 }

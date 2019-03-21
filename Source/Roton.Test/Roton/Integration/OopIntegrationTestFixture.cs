@@ -102,7 +102,7 @@ namespace Roton.Test.Roton.Integration
                 SetActorCode(actorIndex, code);
                 return actor;
             }).ToList();
-            
+
             MovePlayerTo(4, 2);
             Type(AnsiKey.Up);
             StepAllKeys();
@@ -113,34 +113,34 @@ namespace Roton.Test.Roton.Integration
             actors[3].P1.Should().Be(13);
             actors[4].P1.Should().Be(14);
         }
-        
+
         [Test]
         public void If_ShouldExecuteCurrentLine_WhenConditionIsMet()
         {
             var index = SpawnTo(1, 1, ElementList.ObjectId);
             var actor = Actors[index];
             actor.Cycle = 1;
-            SetActorCode(index, 
+            SetActorCode(index,
                 "#if blocked i set f1",
                 "#set f2"
-                );
-            
+            );
+
             Step();
 
             World.Flags.Should().Contain("F1", "F2");
         }
-        
+
         [Test]
         public void If_ShouldSkipToNextLine_WhenConditionIsNotMet()
         {
             var index = SpawnTo(1, 1, ElementList.ObjectId);
             var actor = Actors[index];
             actor.Cycle = 1;
-            SetActorCode(index, 
+            SetActorCode(index,
                 "#if not blocked i set f1",
                 "#set f2"
             );
-            
+
             Step();
 
             World.Flags.Should().Contain("F2");
@@ -152,15 +152,15 @@ namespace Roton.Test.Roton.Integration
             var index = SpawnTo(1, 1, ElementList.ObjectId);
             var actor = Actors[index];
             actor.Cycle = 1;
-            SetActorCode(index, 
+            SetActorCode(index,
                 "/i#set f2"
             );
-            
+
             Step(2);
 
             World.Flags.Should().Contain("F2");
         }
-        
+
         [Test]
         public void ShortMovement_ShouldRunCommandsOnSameLine_WhenPrecededByIf()
         {
@@ -171,40 +171,22 @@ namespace Roton.Test.Roton.Integration
                 "#set f1",
                 "#if f1 /i#set f2"
             );
-            
+
             Step(2);
 
             World.Flags.Should().Contain("F2");
         }
 
         [Test]
-        public void ZappingRemoteLabels_ShouldProduceExpectedCode()
+        public void ZappingOwnLabels_ShouldProduceExpectedCode()
         {
             var programs = new[]
             {
                 new[]
                 {
-                    "@blue",
-                    "#zap green:label",
-                    "'label",
-                    "#end"
-                },
-                new[]
-                {
-                    "@blue",
-                    "'label",
-                    "#end"
-                },
-                new[]
-                {
-                    "@green",
-                    "#restore blue:label",
+                    "@yellow",
+                    "#zap label",
                     ":label",
-                    "#end"
-                },
-                new[]
-                {
-                    "@green",
                     ":label",
                     "#end"
                 }
@@ -222,26 +204,124 @@ namespace Roton.Test.Roton.Integration
 
             Step(2);
 
-            actors[0].Code.ToStringValue().Should().Be(string.Join("\xD", 
+            actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
+                "@yellow",
+                "#zap label",
+                "'label",
+                ":label",
+                "#end"
+            ));
+        }
+
+        [Test]
+        public void RestoringOwnLabels_ShouldProduceExpectedCode()
+        {
+            var programs = new[]
+            {
+                new[]
+                {
+                    "@yellow",
+                    "#restore label",
+                    "'label",
+                    "'label",
+                    "#end"
+                }
+            };
+
+            var x = 1;
+            var actors = programs.Select(code =>
+            {
+                var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+                var actor = Actors[actorIndex];
+                actor.Cycle = 1;
+                SetActorCode(actorIndex, code);
+                return actor;
+            }).ToList();
+
+            Step(2);
+
+            actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
+                "@yellow",
+                "#restore label",
+                ":label",
+                ":label",
+                "#end"
+            ));
+        }
+
+        [Test]
+        public void ZappingRemoteLabels_ShouldProduceExpectedCode()
+        {
+            var programs = new[]
+            {
+                new[]
+                {
+                    "@blue",
+                    "#zap green:label",
+                    "'label",
+                    "'label",
+                    "#end"
+                },
+                new[]
+                {
+                    "@blue",
+                    "'label",
+                    "'label",
+                    "#end"
+                },
+                new[]
+                {
+                    "@green",
+                    "#restore blue:label",
+                    ":label",
+                    ":label",
+                    "#end"
+                },
+                new[]
+                {
+                    "@green",
+                    ":label",
+                    ":label",
+                    "#end"
+                }
+            };
+
+            var x = 1;
+            var actors = programs.Select(code =>
+            {
+                var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+                var actor = Actors[actorIndex];
+                actor.Cycle = 1;
+                SetActorCode(actorIndex, code);
+                return actor;
+            }).ToList();
+
+            Step(2);
+
+            actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
                 "@blue",
                 "#zap green:label",
                 ":label",
+                "'label",
                 "#end"
             ));
-            actors[1].Code.ToStringValue().Should().Be(string.Join("\xD", 
+            actors[1].Code.ToStringValue().Should().Be(string.Join("\xD",
                 "@blue",
-                ":label",
+                "'label",
+                "'label",
                 "#end"
             ));
-            actors[2].Code.ToStringValue().Should().Be(string.Join("\xD", 
+            actors[2].Code.ToStringValue().Should().Be(string.Join("\xD",
                 "@green",
                 "#restore blue:label",
                 "'label",
+                ":label",
                 "#end"
             ));
-            actors[3].Code.ToStringValue().Should().Be(string.Join("\xD", 
+            actors[3].Code.ToStringValue().Should().Be(string.Join("\xD",
                 "@green",
-                "'label",
+                ":label",
+                ":label",
                 "#end"
             ));
         }

@@ -19,22 +19,22 @@ namespace Roton.Emulation.Core.Impl
             _engine = engine;
         }
 
-        public int Search(int index, string term)
+        public int Search(int index, int offset, string term)
         {
             var result = -1;
             var termBytes = term.ToBytes();
             var actor = _engine.Actors[index];
-            var offset = new Executable {Instruction = 0};
+            var offs = new Executable {Instruction = offset};
 
-            while (offset.Instruction < actor.Length)
+            while (offs.Instruction < actor.Length)
             {
-                var oldOffset = offset.Instruction;
+                var oldOffset = offs.Instruction;
                 var termOffset = 0;
                 bool success;
 
                 while (true)
                 {
-                    ReadByte(index, offset);
+                    ReadByte(index, offs);
                     if (termBytes[termOffset].ToUpperCase() != _engine.State.OopByte.ToUpperCase())
                     {
                         success = false;
@@ -51,7 +51,7 @@ namespace Roton.Emulation.Core.Impl
 
                 if (success)
                 {
-                    ReadByte(index, offset);
+                    ReadByte(index, offs);
                     _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
                     if (!(_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A ||
                           _engine.State.OopByte == 0x5F))
@@ -62,7 +62,7 @@ namespace Roton.Emulation.Core.Impl
                 }
 
                 oldOffset++;
-                offset.Instruction = oldOffset;
+                offs.Instruction = oldOffset;
             }
 
             return result;

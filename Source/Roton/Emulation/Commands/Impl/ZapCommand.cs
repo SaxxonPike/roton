@@ -21,6 +21,7 @@ namespace Roton.Emulation.Commands.Impl
         public void Execute(IOopContext context)
         {
             Engine.Parser.ReadWord(context.Index, context);
+            context.SearchIndex = 0;
             while (true)
             {
                 context.SearchTarget = Engine.State.OopWord;
