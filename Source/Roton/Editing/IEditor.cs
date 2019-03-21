@@ -4,6 +4,6 @@ namespace Roton.Editing
 {
     public interface IEditor
     {
-        IBoards Boards { get; }
+        IEditorBoards Boards { get; }
     }
 }
