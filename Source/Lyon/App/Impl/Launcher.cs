@@ -1,4 +1,5 @@
 ﻿using System;
+using Lyon.Autofac;
 using Lyon.Presenters;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
@@ -6,7 +7,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl
 {
-    [Context(Context.Startup)]
+    [Service]
     public sealed class Launcher : ILauncher
     {
         private readonly Lazy<IWindow> _window;

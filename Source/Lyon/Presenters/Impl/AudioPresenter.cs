@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using DotSDL.Audio;
+using Lyon.Autofac;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl
 {
-    [Context(Context.Startup)]
+    [Service]
     // ReSharper disable once UnusedMember.Global
     public sealed class AudioPresenter : IDisposable, IAudioPresenter
     {

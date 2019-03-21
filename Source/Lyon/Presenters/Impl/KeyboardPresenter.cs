@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotSDL.Events;
 using DotSDL.Input.Keyboard;
+using Lyon.Autofac;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,7 +9,7 @@ using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl
 {
-    [Context(Context.Startup)]
+    [Service]
     // ReSharper disable once UnusedMember.Global
     public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
     {

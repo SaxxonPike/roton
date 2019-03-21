@@ -1,12 +1,11 @@
+using Lyon.Autofac;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl
 {
-    [Context(Context.Startup)]
+    [Service]
     public sealed class FileSystemFactory : IFileSystemFactory
     {
         private readonly IAssemblyResourceService _assemblyResourceService;

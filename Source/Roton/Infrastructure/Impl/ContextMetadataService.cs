@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data.Impl;
 
@@ -14,20 +15,12 @@ namespace Roton.Infrastructure.Impl
             _context = context;
         }
 
-        public IEnumerable<ContextAttribute> GetMetadata(object obj) => obj
-            .GetType()
-            .GetCustomAttributes(true)
-            .OfType<ContextAttribute>()
-            .Where(a => a.Context == _context)
-            .ToList();
+        [DebuggerStepThrough]
+        public IEnumerable<ContextAttribute> GetMetadata(object obj) => 
+            RotonTypes.GetMetadata(_context, obj);
 
-        public IEnumerable<Type> GetTypes() => GetType()
-            .Assembly
-            .GetTypes()
-            .Where(t => t
-                .GetCustomAttributes(true)
-                .OfType<ContextAttribute>()
-                .Any(a => a.Context == _context))
-            .ToList();
+        [DebuggerStepThrough]
+        public IEnumerable<Type> GetTypes() =>
+            RotonTypes.GetTypes(_context);
     }
 }

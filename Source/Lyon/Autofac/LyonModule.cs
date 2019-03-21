@@ -3,12 +3,14 @@ using System.Reflection;
 using Autofac;
 using Lyon.App;
 using Lyon.Presenters;
+using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 using Module = Autofac.Module;
 
@@ -27,13 +29,14 @@ namespace Lyon.Autofac
         {
             base.Load(builder);
             
-            builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
-                .Where(t => !t.IsAbstract && 
-                            t.IsClass && 
-                            t.GetCustomAttributes<ContextAttribute>()
-                                .Any(a => a.Context == Context.Startup))
+            builder.RegisterTypes(RotonTypes.GetTypes(Context.Startup))
                 .AsImplementedInterfaces()
                 .AutoActivate()
+                .SingleInstance();
+
+            builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
+                .Where(t => t.GetCustomAttributes<ServiceAttribute>().Any())
+                .AsImplementedInterfaces()
                 .SingleInstance();
 
             builder.RegisterInstance(new CommandLine {Args = _args})

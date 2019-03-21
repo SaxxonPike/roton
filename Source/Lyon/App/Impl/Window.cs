@@ -1,6 +1,7 @@
 ﻿using System;
 using DotSDL.Events;
 using DotSDL.Graphics;
+using Lyon.Autofac;
 using Lyon.Presenters;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -8,7 +9,7 @@ using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl
 {
-    [Context(Context.Startup)]
+    [Service]
     public sealed class Window : SdlWindow, IWindow
     {
         private readonly Lazy<IKeyboardPresenter> _keyboardPresenter;
