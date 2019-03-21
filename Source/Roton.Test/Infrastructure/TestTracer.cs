@@ -18,7 +18,7 @@ namespace Roton.Test.Infrastructure
 
         public void TraceInput(EngineKeyCode keyCode)
         {
-            _writer.WriteLine($"{_stepNumber:D8}: TRACE KEY  {keyCode}");
+            _writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
 
         public void TraceOop(IOopContext oopContext)
@@ -36,7 +36,7 @@ namespace Roton.Test.Infrastructure
 
             var line = code.Skip(offset).Take(end - offset).ToArray().ToStringValue();
             
-            _writer.WriteLine($"{_stepNumber:D8}: TRACE OOP  [{oopContext.Actor}] {line}");
+            _writer.WriteLine($"{_stepNumber:D8}:{oopContext.Index:D3} TRACE OOP  [{oopContext.Actor}] {line}");
         }
 
         public void TraceStep()

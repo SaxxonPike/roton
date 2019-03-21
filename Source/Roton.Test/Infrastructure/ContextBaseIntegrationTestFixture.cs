@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Autofac;
@@ -64,10 +65,21 @@ namespace Roton.Test.Infrastructure
         protected ITargetList TargetList => Engine.TargetList;
         protected ITiles Tiles => Engine.Tiles;
         protected IWorld World => Engine.World;
+        protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
         protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
         protected IEnumerable<string> Message => FullMessage.Where(m => m != string.Empty).ToArray();
 
+        protected void TouchActor(int actorIndex)
+        {
+            Engine.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
+        }
+        
+        protected void UnpackBoardResource(string path)
+        {
+            GameSerializer.UnpackBoard(Engine.Tiles, GameSerializer.LoadBoardData(GetResource(path)));
+        }
+        
         protected void Step()
         {
             Engine.StepOnce();
@@ -77,6 +89,27 @@ namespace Roton.Test.Infrastructure
         {
             for (var i = 0; i < count; i++)
                 Engine.StepOnce();
+        }
+
+        protected void DumpActorCode()
+        {
+            for (var i = 0; i < Actors.Count; i++)
+            {
+                var actor = Actors[i];
+                if (actor.Pointer == 0) 
+                    continue;
+
+                TestContext.Out.WriteLine($"Actor {i} code:");
+                var code = actor.Code.ToStringValue();
+                var reader = new StringReader(code);
+                while (true)
+                {
+                    var line = reader.ReadLine();
+                    if (line == null)
+                        break;
+                    TestContext.Out.WriteLine($"   |{line}");
+                }
+            }
         }
 
         protected void StepAllKeys()
