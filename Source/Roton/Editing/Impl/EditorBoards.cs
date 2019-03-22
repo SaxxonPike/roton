@@ -11,7 +11,7 @@ namespace Roton.Editing.Impl
         private readonly IEngine _engine;
         private readonly List<EditorBoard> _boards;
 
-        public EditorBoards(IEngine engine)
+        internal EditorBoards(IEngine engine)
         {
             _engine = engine;
             _boards = new List<EditorBoard>();

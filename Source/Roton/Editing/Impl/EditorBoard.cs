@@ -7,120 +7,67 @@ namespace Roton.Editing.Impl
     {
         private readonly IEngine _engine;
 
-        public EditorBoard(IEngine engine, int index)
+        internal EditorBoard(IEngine engine, int index)
         {
             _engine = engine;
             Index = index;
         }
 
-        private void EnforceBoard(int index)
+        internal void EnforceBoard()
         {
-            if (_engine.World.BoardIndex != index)
-                _engine.SetBoard(index);
+            if (_engine.World.BoardIndex != Index)
+                _engine.SetBoard(Index);
+        }
+
+        private IBoard Board
+        {
+            get
+            {
+                EnforceBoard();
+                return _engine.Board;
+            }
         }
 
         public int Index { get; set; }
 
-        public IXyPair Camera
-        {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.Camera;
-            }
-        }
+        public IXyPair Camera => Board.Camera;
 
-        public IXyPair Entrance
-        {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.Entrance;
-            }
-        }
+        public IXyPair Entrance => Board.Entrance;
 
         public int ExitEast
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.ExitEast;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.ExitEast = value;
-            }
+            get => Board.ExitEast;
+            set => Board.ExitEast = value;
         }
 
         public int ExitNorth
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.ExitNorth;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.ExitNorth = value;
-            }
+            get => Board.ExitNorth;
+            set => Board.ExitNorth = value;
         }
 
         public int ExitSouth
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.ExitSouth;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.ExitSouth = value;
-            }
+            get => Board.ExitSouth;
+            set => Board.ExitSouth = value;
         }
 
         public int ExitWest
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.ExitWest;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.ExitWest = value;
-            }
+            get => Board.ExitWest;
+            set => Board.ExitWest = value;
         }
 
         public bool IsDark
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.IsDark;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.IsDark = value;
-            }
+            get => Board.IsDark;
+            set => Board.IsDark = value;
         }
 
         public int MaximumShots
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.MaximumShots;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.MaximumShots = value;
-            }
+            get => Board.MaximumShots;
+            set => Board.MaximumShots = value;
         }
 
         public string Name
@@ -131,30 +78,14 @@ namespace Roton.Editing.Impl
 
         public bool RestartOnZap
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.RestartOnZap;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.RestartOnZap = value;
-            }
+            get => Board.RestartOnZap;
+            set => Board.RestartOnZap = value;
         }
 
         public int TimeLimit
         {
-            get
-            {
-                EnforceBoard(Index);
-                return _engine.Board.TimeLimit;
-            }
-            set
-            {
-                EnforceBoard(Index);
-                _engine.Board.TimeLimit = value;
-            }
+            get => Board.TimeLimit;
+            set => Board.TimeLimit = value;
         }
     }
 }
