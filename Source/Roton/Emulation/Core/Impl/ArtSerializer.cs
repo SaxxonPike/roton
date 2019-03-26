@@ -1,4 +1,6 @@
-﻿using Roton.Emulation.Data;
+﻿using System;
+using System.Diagnostics;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -7,13 +9,23 @@ namespace Roton.Emulation.Core.Impl
     [Context(Context.Super)]
     public sealed class ArtSerializer : IArtSerializer
     {
-        private readonly IMemory _memory;
-        private readonly ITerminal _terminal;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<ITerminal> _terminal;
 
-        public ArtSerializer(IMemory memory, ITerminal terminal)
+        public ArtSerializer(Lazy<IMemory> memory, Lazy<ITerminal> terminal)
         {
             _memory = memory;
             _terminal = terminal;
+        }
+
+        private IMemory Memory
+        {
+            [DebuggerStepThroughAttribute] get => _memory.Value;
+        }
+
+        private ITerminal Terminal
+        {
+            [DebuggerStepThroughAttribute] get => _terminal.Value;
         }
 
         public void Deserialize(int startOffset)
@@ -28,13 +40,13 @@ namespace Roton.Emulation.Core.Impl
             {
                 if (count > 0)
                 {
-                    _terminal.Plot(x, y, output);
+                    Terminal.Plot(x, y, output);
                     count--;
                     x++;
                     continue;
                 }
 
-                var data = _memory.Read8(offset++);
+                var data = Memory.Read8(offset++);
 
                 if (data >= 0x00 && data <= 0x0F)
                 {
@@ -55,12 +67,12 @@ namespace Roton.Emulation.Core.Impl
                         y++;
                         break;
                     case 0x19:
-                        count = _memory.Read8(offset++) + 1;
+                        count = Memory.Read8(offset++) + 1;
                         output = new AnsiChar(0x20, output.Color);
                         break;
                     case 0x1A:
-                        count = _memory.Read8(offset++) + 1;
-                        output = new AnsiChar(_memory.Read8(offset++), output.Color);
+                        count = Memory.Read8(offset++) + 1;
+                        output = new AnsiChar(Memory.Read8(offset++), output.Color);
                         break;
                     default:
                         count = 1;

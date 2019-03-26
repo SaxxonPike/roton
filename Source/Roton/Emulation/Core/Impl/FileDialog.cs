@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Roton.Emulation.Data.Impl;
@@ -19,9 +20,16 @@ namespace Roton.Emulation.Core.Impl
             _fileSystem = fileSystem;
         }
 
-        private IHud Hud => _hud.Value;
-        private IFileSystem FileSystem => _fileSystem.Value;
-        
+        private IHud Hud
+        {
+            [DebuggerStepThrough] get => _hud.Value;
+        }
+
+        private IFileSystem FileSystem
+        {
+            [DebuggerStepThrough] get => _fileSystem.Value;
+        }
+
         public string Open(string title, string extension)
         {
             var path = string.Empty;

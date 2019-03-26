@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
@@ -19,8 +20,11 @@ namespace Roton.Emulation.Core.Impl
             _resource = new Lazy<IResource>(assemblyResourceService.GetFromAssemblyOf<IEngine>);
         }
 
-        private IResource Resource => _resource.Value;
-        
+        private IResource Resource
+        {
+            [DebuggerStepThrough] get => _resource.Value;
+        }
+
         public byte[] GetPaletteData() 
             => Resource.System.GetFile(PaletteDataFileName);
 
