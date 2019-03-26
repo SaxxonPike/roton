@@ -87,7 +87,6 @@ namespace Roton.Emulation.Core.Impl
 
         public virtual string SaveGame()
         {
-            // TODO: Save game hud
             return string.Empty;
         }
 

@@ -366,5 +366,14 @@ namespace Roton.Emulation.Super
 
             _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
         }
+
+        public override string SaveGame()
+        {
+            DrawString(13, 24, "Save game:", 0x1F);
+            DrawString(33, 24, ".SAV", 0x0F);
+            var result = _textEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
+            UpdateBorder();
+            return result == null ? null : result + ".SAV";
+        }
     }
 }

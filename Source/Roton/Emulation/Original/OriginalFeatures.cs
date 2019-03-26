@@ -18,8 +18,6 @@ namespace Roton.Emulation.Original
         {
             _engine = engine;
         }
-        
-        
 
         public void LockActor(int index)
         {
