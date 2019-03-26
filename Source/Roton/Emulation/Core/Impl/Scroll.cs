@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -9,13 +10,23 @@ namespace Roton.Emulation.Core.Impl
 {
     public abstract class Scroll : IScroll
     {
-        private readonly IEngine _engine;
-        private readonly ITerminal _terminal;
+        private readonly Lazy<IEngine> _engine;
+        private readonly Lazy<ITerminal> _terminal;
 
-        protected Scroll(IEngine engine, ITerminal terminal)
+        protected Scroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal)
         {
             _engine = engine;
             _terminal = terminal;
+        }
+
+        protected IEngine Engine
+        {
+            [DebuggerStepThrough] get => _engine.Value;
+        }
+
+        protected ITerminal Terminal
+        {
+            [DebuggerStepThrough] get => _terminal.Value;
         }
 
         private static readonly int[] ScrollCharsTop =
@@ -50,12 +61,12 @@ namespace Roton.Emulation.Core.Impl
 
         private void RenderLine(IReadOnlyList<int> chars, int y)
         {
-            _terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
-            _terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
+            Terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
+            Terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
             for (var x = Left + 2; x < Left + Width - 2; x++)
-                _terminal.Plot(x, y, new AnsiChar(chars[2], 0x0F));
-            _terminal.Plot(Left + Width - 2, y, new AnsiChar(chars[3], 0x0F));
-            _terminal.Plot(Left + Width - 1, y, new AnsiChar(chars[4], 0x0F));
+                Terminal.Plot(x, y, new AnsiChar(chars[2], 0x0F));
+            Terminal.Plot(Left + Width - 2, y, new AnsiChar(chars[3], 0x0F));
+            Terminal.Plot(Left + Width - 1, y, new AnsiChar(chars[4], 0x0F));
         }
 
         protected abstract void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y);
@@ -73,7 +84,7 @@ namespace Roton.Emulation.Core.Impl
                 for (var y2 = topY + 1; y2 < bottomY - 1; y2++)
                     RenderLine(ScrollCharsMid, y2);
 
-                _engine.WaitForTick();
+                Engine.WaitForTick();
             }
 
             RenderLine(ScrollCharsMid, Top + Height - 2);
@@ -92,7 +103,7 @@ namespace Roton.Emulation.Core.Impl
                 RenderBuffer(buffer, topY);
                 RenderBuffer(buffer, bottomY);
 
-                _engine.WaitForTick();
+                Engine.WaitForTick();
             }
 
             RenderBuffer(buffer, Top + Height / 2);
@@ -110,13 +121,13 @@ namespace Roton.Emulation.Core.Impl
             }
 
             var x = Left + Width / 2 - title.Length / 2;
-            _terminal.Write(x, Top + 1, title, 0x1E);
+            Terminal.Write(x, Top + 1, title, 0x1E);
 
             // Avoid putting these directly in the string for unicode conversion reasons
             if (pips)
             {
-                _terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
-                _terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
+                Terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
+                Terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
             }
         }
 
@@ -127,13 +138,13 @@ namespace Roton.Emulation.Core.Impl
             var blank = new AnsiChar(0x20, 0x1E);
 
             for (var x2 = x; x2 <= right; x2++)
-                _terminal.Plot(x2, y, blank);
+                Terminal.Plot(x2, y, blank);
         }
 
         private void RenderPips(int y)
         {
-            _terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
-            _terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
+            Terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
+            Terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
         }
 
         private void RenderText(string text, int y)
@@ -145,25 +156,25 @@ namespace Roton.Emulation.Core.Impl
             if (text[0] == '$')
             {
                 var actualText = text.Substring(1);
-                _terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
+                Terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
             }
             else if (text[0] == ':')
             {
                 if (text.Contains(';'))
                 {
                     var actualText = text.Substring(text.IndexOf(';') + 1);
-                    _terminal.Write(x, y, actualText, 0x1F);                    
+                    Terminal.Write(x, y, actualText, 0x1F);                    
                 }
             }
             else if (text[0] == '!')
             {
                 var actualText = text.Substring(text.IndexOf(';') + 1);
-                _terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
-                _terminal.Write(Left + 6, y, actualText, 0x1F);
+                Terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
+                Terminal.Write(Left + 6, y, actualText, 0x1F);
             }
             else
             {
-                _terminal.Write(x, y, text, 0x1E);
+                Terminal.Write(x, y, text, 0x1E);
             }
         }
 
@@ -194,13 +205,13 @@ namespace Roton.Emulation.Core.Impl
                 {
                     if (line == -5)
                     {
-                        _terminal.Write(Left + 5, y, "Use            to view text,", 0x1A);
-                        _terminal.Write(Left + 9, y, "\u2191 \u2193, Enter", 0x1F);
+                        Terminal.Write(Left + 5, y, "Use            to view text,", 0x1A);
+                        Terminal.Write(Left + 9, y, "\u2191 \u2193, Enter", 0x1F);
                     }
                     else if (line == -4)
                     {
-                        _terminal.Write(Left + 20, y, "to print.", 0x1A);
-                        _terminal.Write(Left + 14, y, "Alt-P", 0x1F);
+                        Terminal.Write(Left + 20, y, "to print.", 0x1A);
+                        Terminal.Write(Left + 14, y, "Alt-P", 0x1F);
                     }
                 }
                 
@@ -223,14 +234,14 @@ namespace Roton.Emulation.Core.Impl
             var dot = new AnsiChar(0x07, 0x1E);
 
             for (var x2 = x; x2 <= right; x2 += 5)
-                _terminal.Plot(x2, y, dot);
+                Terminal.Plot(x2, y, dot);
         }
 
         private bool MainLoop(IScrollState state)
         {
             var update = false;
 
-            while (_engine.ThreadActive)
+            while (Engine.ThreadActive)
             {
                 if (update)
                 {
@@ -238,9 +249,9 @@ namespace Roton.Emulation.Core.Impl
                     update = false;
                 }
 
-                _engine.ReadInput();
+                Engine.ReadInput();
 
-                switch (_engine.State.KeyPressed)
+                switch (Engine.State.KeyPressed)
                 {
                     case EngineKeyCode.Escape:
                         return false;
@@ -272,7 +283,7 @@ namespace Roton.Emulation.Core.Impl
                         state.Index = 0;
                 }
 
-                _engine.WaitForTick();
+                Engine.WaitForTick();
             }
 
             return false;
@@ -280,7 +291,7 @@ namespace Roton.Emulation.Core.Impl
         
         private bool LoadHelpFile(IScrollState state, string filename)
         {
-            var text = _engine.Disk
+            var text = Engine.Disk
                 .GetFile($"{filename}.HLP")?
                 .ToStringValue()
                 .Replace("\xD\xA", "\xD")

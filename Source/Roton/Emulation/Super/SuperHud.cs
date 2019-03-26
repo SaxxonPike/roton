@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -12,20 +14,25 @@ namespace Roton.Emulation.Super
     [Context(Context.Super)]
     public sealed class SuperHud : Hud
     {
-        private readonly IEngine _engine;
-        private readonly ITerminal _terminal;
-        private readonly IScroll _scroll;
-        private readonly ITextEntryHud _textEntryHud;
+        private readonly Lazy<ITerminal> _terminal;
+        private readonly Lazy<ITextEntryHud> _textEntryHud;
 
-        public SuperHud(IEngine engine, ITerminal terminal, IScroll scroll, ITextEntryHud textEntryHud)
+        public SuperHud(Lazy<IEngine> engine, Lazy<ITerminal> terminal, Lazy<IScroll> scroll, Lazy<ITextEntryHud> textEntryHud)
             : base(engine, scroll)
         {
-            _engine = engine;
             _terminal = terminal;
-            _scroll = scroll;
             _textEntryHud = textEntryHud;
-
             OldCamera = new Location16(short.MinValue, short.MinValue);
+        }
+
+        private ITerminal Terminal
+        {
+            [DebuggerStepThrough] get => _terminal.Value;
+        }
+
+        private ITextEntryHud TextEntryHud
+        {
+            [DebuggerStepThrough] get => _textEntryHud.Value;
         }
 
         private Location16 OldCamera { get; }
@@ -55,7 +62,7 @@ namespace Roton.Emulation.Super
         public override void CreateStatusText()
         {
             CreateStatusBar();
-            if (_engine.TitleScreen)
+            if (Engine.TitleScreen)
             {
                 DrawString(0x04, 0x0A, @"Press", 0x1E);
                 DrawString(0x04, 0x0C, @"ENTER", 0x1F);
@@ -122,7 +129,7 @@ namespace Roton.Emulation.Super
 
         public override void DrawChar(int x, int y, AnsiChar ac)
         {
-            _terminal.Plot(x, y, ac);
+            Terminal.Plot(x, y, ac);
         }
 
         public override void DrawMessage(IMessage message, int color)
@@ -146,7 +153,7 @@ namespace Roton.Emulation.Super
 
         public override void DrawString(int x, int y, string text, int color)
         {
-            _terminal.Write(x, y, text, color);
+            Terminal.Write(x, y, text, color);
         }
 
         public override void DrawTile(int x, int y, AnsiChar ac)
@@ -156,18 +163,18 @@ namespace Roton.Emulation.Super
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            if (_engine.State.EditorMode)
+            if (Engine.State.EditorMode)
             {
                 if (x >= 0 && x < 96 && y >= 0 && y < 80)
                 {
-                    _terminal.Plot(x, y, ac);
+                    Terminal.Plot(x, y, ac);
                 }
             }
             else
             {
                 var loc = new Location(x, y).Sum(GetTranslation());
                 if (IsWithinCamera(loc))
-                    _terminal.Plot(loc.X, loc.Y, ac);
+                    Terminal.Plot(loc.X, loc.Y, ac);
             }
         }
 
@@ -178,30 +185,30 @@ namespace Roton.Emulation.Super
 
         private Vector GetTranslation()
         {
-            return new Vector(0x0F + -_engine.Board.Camera.X, 0x03 + -_engine.Board.Camera.Y);
+            return new Vector(0x0F + -Engine.Board.Camera.X, 0x03 + -Engine.Board.Camera.Y);
         }
 
         public override void Initialize()
         {
-            if (_engine.State.EditorMode)
+            if (Engine.State.EditorMode)
             {
-                _terminal.SetSize(96, 80, true);
+                Terminal.SetSize(96, 80, true);
             }
             else
             {
-                _terminal.SetSize(40, 25, true);
+                Terminal.SetSize(40, 25, true);
             }
         }
 
         public override void RedrawBoard()
         {
-            for (var x = 0; x < _engine.Tiles.Width; x++)
+            for (var x = 0; x < Engine.Tiles.Width; x++)
             {
-                for (var y = 0; y < _engine.Tiles.Height; y++)
+                for (var y = 0; y < Engine.Tiles.Height; y++)
                 {
                     var loc = new Location(x, y);
                     if (IsWithinCamera(loc.Sum(GetTranslation())))
-                        _engine.UpdateBoard(loc.Sum(1, 1));
+                        Engine.UpdateBoard(loc.Sum(1, 1));
                 }
             }
         }
@@ -219,7 +226,7 @@ namespace Roton.Emulation.Super
         public override void UpdateCamera()
         {
             var camera = new Location16();
-            camera.CopyFrom(_engine.Player.Location);
+            camera.CopyFrom(Engine.Player.Location);
             camera.Subtract(12, 10);
 
             if (camera.X < 1)
@@ -247,21 +254,21 @@ namespace Roton.Emulation.Super
 
             // todo: implement super smart redraw instead of redrawing everything
             OldCamera.CopyFrom(camera);
-            _engine.Board.Camera.CopyFrom(camera);
+            Engine.Board.Camera.CopyFrom(camera);
             RedrawBoard();
         }
 
         public override void UpdateStatus()
         {
-            if (_engine.TitleScreen)
+            if (Engine.TitleScreen)
                 return;
 
-            if (_engine.World.Health < 0)
+            if (Engine.World.Health < 0)
             {
-                _engine.World.Health = 0;
+                Engine.World.Health = 0;
             }
 
-            var healthRemaining = _engine.World.Health;
+            var healthRemaining = Engine.World.Health;
             for (var x = 7; x < 12; x++)
             {
                 if (healthRemaining >= 20)
@@ -280,9 +287,9 @@ namespace Roton.Emulation.Super
                 healthRemaining -= 20;
             }
 
-            DrawNumber(0x11, _engine.World.Gems);
-            DrawNumber(0x12, _engine.World.Ammo);
-            DrawNumber(0x15, _engine.World.Score);
+            DrawNumber(0x11, Engine.World.Gems);
+            DrawNumber(0x12, Engine.World.Ammo);
+            DrawNumber(0x15, Engine.World.Score);
             DrawString(0x00, 0x16, @"            ", 0x6F);
 
             var stoneText = StoneText;
@@ -292,30 +299,30 @@ namespace Roton.Emulation.Super
                 DrawString(0x01, 0x16, stoneText, 0x6F);
             }
 
-            if (_engine.World.Stones >= 0)
+            if (Engine.World.Stones >= 0)
             {
-                DrawNumber(0x16, _engine.World.Stones);
+                DrawNumber(0x16, Engine.World.Stones);
             }
 
             for (var i = 0; i < 7; i++)
             {
-                var keyChar = _engine.World.Keys[i] ? _engine.ElementList[0x08].Character : 0x20;
+                var keyChar = Engine.World.Keys[i] ? Engine.ElementList[0x08].Character : 0x20;
                 var x = i & 0x3;
                 var y = i >> 2;
                 DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
             }
 
-            DrawString(0x03, 0x0A, _engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
+            DrawString(0x03, 0x0A, Engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
             
-            if (_engine.World.Flags.Contains("DEBUG"))
-                DrawString(0x0E, 0x00, $"Used: {_engine.MemoryUsage}", 0x1E);            
+            if (Engine.World.Flags.Contains("DEBUG"))
+                DrawString(0x0E, 0x00, $"Used: {Engine.MemoryUsage}", 0x1E);            
         }
 
         private string StoneText
         {
             get
             {
-                foreach (var flag in _engine.World.Flags.Select(f => f.ToUpperInvariant()))
+                foreach (var flag in Engine.World.Flags.Select(f => f.ToUpperInvariant()))
                 {
                     if (flag.Length > 0 && flag.StartsWith("Z"))
                     {
@@ -330,7 +337,7 @@ namespace Roton.Emulation.Super
         public override string EnterCheat()
         {
             UpdateBorder();
-            var cheat = _textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
+            var cheat = TextEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
             UpdateBorder();
             return cheat;
         }
@@ -343,11 +350,11 @@ namespace Roton.Emulation.Super
             }
             
             string name = null;
-            _scroll.Show($"New high score for {_engine.World.Name}",
+            Scroll.Show($"New high score for {Engine.World.Name}",
                 new[] {string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty},
                 false,
                 3,
-                s => name = _textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
+                s => name = TextEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
             return name;
         }
 
@@ -364,7 +371,7 @@ namespace Roton.Emulation.Super
                     .Where(hs => !string.IsNullOrEmpty(hs.Name))
                     .Select(hs => $"{hs.Score.ToString().PadLeft(5)}  {hs.Name}"));
 
-            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
+            Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
         }
     }
 }

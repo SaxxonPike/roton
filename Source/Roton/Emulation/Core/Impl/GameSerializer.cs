@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -9,13 +10,23 @@ namespace Roton.Emulation.Core.Impl
 {
     public abstract class GameSerializer : IGameSerializer
     {
-        private readonly IHeap _heap;
-        private readonly IMemory _memory;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<IHeap> _heap;
 
-        protected GameSerializer(IMemory memory, IHeap heap)
+        protected GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap)
         {
-            _heap = heap;
             _memory = memory;
+            _heap = heap;
+        }
+
+        protected IMemory Memory
+        {
+            [DebuggerStepThrough] get => _memory.Value;
+        }
+
+        protected IHeap Heap
+        {
+            [DebuggerStepThrough] get => _heap.Value;
         }
 
         public abstract int ActorCapacity { get; }
@@ -45,7 +56,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var reader = new BinaryReader(source);
             var header = reader.ReadBytes(WorldDataCapacity - 4);
-            _memory.Write(WorldDataOffset, header, 0, WorldDataSize);
+            Memory.Write(WorldDataOffset, header, 0, WorldDataSize);
         }
 
         public byte[] PackBoard(ITiles tiles)
@@ -53,10 +64,10 @@ namespace Roton.Emulation.Core.Impl
             using (var mem = new MemoryStream())
             {
                 var writer = new BinaryWriter(mem);
-                writer.Write(_memory.Read(BoardNameOffset, BoardNameLength));
+                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength));
                 PackTiles(tiles, writer);
-                writer.Write(_memory.Read(BoardDataOffset, BoardDataLength));
-                var actorCount = _memory.Read16(ActorDataCountOffset);
+                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength));
+                var actorCount = Memory.Read16(ActorDataCountOffset);
                 writer.Write((short) actorCount);
                 PackActors(writer, actorCount);
                 writer.Flush();
@@ -80,7 +91,7 @@ namespace Roton.Emulation.Core.Impl
         public void SaveWorld(Stream target)
         {
             var worldBytes = new byte[WorldDataCapacity - 4];
-            var worldData = _memory.Read(WorldDataOffset, WorldDataSize);
+            var worldData = Memory.Read(WorldDataOffset, WorldDataSize);
             Buffer.BlockCopy(worldData, 0, worldBytes, 0, WorldDataSize);
             target.Write(worldBytes, 0, worldBytes.Length);
         }
@@ -90,11 +101,11 @@ namespace Roton.Emulation.Core.Impl
             using (var mem = new MemoryStream(data))
             {
                 var reader = new BinaryReader(mem);
-                _memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
+                Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
                 UnpackTiles(tiles, reader); // tiles
-                _memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
+                Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
                 int actorCount = reader.ReadInt16();
-                _memory.Write16(ActorDataCountOffset, actorCount); // actor count
+                Memory.Write16(ActorDataCountOffset, actorCount); // actor count
                 UnpackActors(reader, actorCount); // actors
             }
         }
@@ -112,16 +123,16 @@ namespace Roton.Emulation.Core.Impl
 
             // backed up memory (so we don't modify the working version)
             var mem = new Memory();
-            mem.Write(ActorDataOffset, _memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
+            mem.Write(ActorDataOffset, Memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
 
             for (var i = 0; i <= count; i++)
             {
-                var actor = new Actor(mem, _heap, ActorDataOffset + ActorDataLength * i);
+                var actor = new Actor(mem, Heap, ActorDataOffset + ActorDataLength * i);
                 byte[] code = null;
 
                 if (actor.Pointer != 0)
                 {
-                    code = _heap[actor.Pointer];
+                    code = Heap[actor.Pointer];
 
                     // check to see if the code needs to be stored
                     if (code != null)
@@ -140,7 +151,7 @@ namespace Roton.Emulation.Core.Impl
                 }
 
                 // write memory to stream
-                target.Write(_memory.Read(actor.Offset, ActorDataLength));
+                target.Write(Memory.Read(actor.Offset, ActorDataLength));
 
                 // write code if applicable
                 if (code != null)
@@ -193,19 +204,19 @@ namespace Roton.Emulation.Core.Impl
             }
 
             // clean out code heap (there are no cross-board references)
-            _heap.FreeAll();
+            Heap.FreeAll();
 
             // load all actors
             var actorList = new List<IActor>();
             for (var i = 0; i <= count; i++)
             {
-                var actor = new Actor(_memory, _heap, ActorDataOffset + ActorDataLength * i);
-                _memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
+                var actor = new Actor(Memory, Heap, ActorDataOffset + ActorDataLength * i);
+                Memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
                 actor.Pointer = 0;
                 if (actor.Length > 0)
                 {
                     var code = source.ReadBytes(actor.Length);
-                    var pointer = _heap.Allocate(code);
+                    var pointer = Heap.Allocate(code);
                     actor.Pointer = pointer;
                 }
 
@@ -217,7 +228,7 @@ namespace Roton.Emulation.Core.Impl
             {
                 if (actorList[i].Length < 0)
                 {
-                    var actorCodeSource = new Actor(_memory, _heap,
+                    var actorCodeSource = new Actor(Memory, Heap,
                         ActorDataOffset + -actorList[i].Length * ActorDataLength);
                     actorList[i].Length = actorCodeSource.Length;
                     actorList[i].Pointer = actorCodeSource.Pointer;

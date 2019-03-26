@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -9,11 +10,8 @@ namespace Roton.Emulation.Super
     [Context(Context.Super)]
     public sealed class SuperScroll : Scroll
     {
-        private readonly ITerminal _terminal;
-
-        public SuperScroll(IEngine engine, ITerminal terminal) : base(engine, terminal)
+        public SuperScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : base(engine, terminal)
         {
-            _terminal = terminal;
         }
 
         protected override int Width => 37;
@@ -28,7 +26,7 @@ namespace Roton.Emulation.Super
             
             for (var y = 0; y < Height; y++)
             for (var x = 0; x < Width; x++)
-                buffer[i++] = _terminal.Read(x + Left, y + Top);
+                buffer[i++] = Terminal.Read(x + Left, y + Top);
 
             return buffer;
         }
@@ -37,7 +35,7 @@ namespace Roton.Emulation.Super
         {
             var i = Width * (y - Top);
             for (var x = Left; x < Left + Width; x++)
-                _terminal.Plot(x, y, buffer[i++]);
+                Terminal.Plot(x, y, buffer[i++]);
         }
     }
 }

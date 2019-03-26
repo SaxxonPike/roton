@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -7,13 +9,23 @@ namespace Roton.Emulation.Core.Impl
 {
     public abstract class Hud : IHud
     {
-        private readonly IEngine _engine;
-        private readonly IScroll _scroll;
+        private readonly Lazy<IEngine> _engine;
+        private readonly Lazy<IScroll> _scroll;
 
-        protected Hud(IEngine engine, IScroll scroll)
+        protected Hud(Lazy<IEngine> engine, Lazy<IScroll> scroll)
         {
             _engine = engine;
             _scroll = scroll;
+        }
+
+        protected IEngine Engine
+        {
+            [DebuggerStepThrough] get => _engine.Value;
+        }
+
+        protected IScroll Scroll
+        {
+            [DebuggerStepThrough] get => _scroll.Value;
         }
 
         public virtual void ClearPausing()
@@ -97,10 +109,10 @@ namespace Roton.Emulation.Core.Impl
         }
 
         public IScrollState ShowHelp(string title, string fileName) => 
-            _scroll.Show(title, fileName);
+            Scroll.Show(title, fileName);
 
         public IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines) =>
-            _scroll.Show(title, lines, isHelp, 0);
+            Scroll.Show(title, lines, isHelp, 0);
 
         public virtual void UpdateBorder()
         {
@@ -129,11 +141,11 @@ namespace Roton.Emulation.Core.Impl
 
         protected virtual bool Confirm(string message)
         {
-            while (_engine.ThreadActive)
+            while (Engine.ThreadActive)
             {
-                _engine.WaitForTick();
-                _engine.ReadInput();
-                switch (_engine.State.KeyPressed.ToUpperCase())
+                Engine.WaitForTick();
+                Engine.ReadInput();
+                switch (Engine.State.KeyPressed.ToUpperCase())
                 {
                     case EngineKeyCode.Y:
                         return true;

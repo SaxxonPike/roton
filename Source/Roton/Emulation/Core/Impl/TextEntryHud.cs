@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
@@ -18,9 +19,16 @@ namespace Roton.Emulation.Core.Impl
             _engine = engine;
         }
 
-        private ITerminal Terminal => _terminal.Value;
-        private IEngine Engine => _engine.Value;
-        
+        private ITerminal Terminal
+        {
+            [DebuggerStepThrough] get => _terminal.Value;
+        }
+
+        private IEngine Engine
+        {
+            [DebuggerStepThrough] get => _engine.Value;
+        }
+
         public string Show(int x, int y, int maxLength, int textColor, int pipColor)
         {
             var update = true;

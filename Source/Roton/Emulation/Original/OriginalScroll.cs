@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -9,11 +10,8 @@ namespace Roton.Emulation.Original
     [Context(Context.Original)]
     public sealed class OriginalScroll : Scroll
     {
-        private readonly IEngine _engine;
-
-        public OriginalScroll(IEngine engine, ITerminal terminal) : base(engine, terminal)
+        public OriginalScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : base(engine, terminal)
         {
-            _engine = engine;
         }
 
         protected override int Width => 49;
@@ -29,7 +27,7 @@ namespace Roton.Emulation.Original
         protected override void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y)
         {
             for (var x = Left; x < Left + Width; x++)
-                _engine.UpdateBoard(new Location(x + 1, y + 1));
+                Engine.UpdateBoard(new Location(x + 1, y + 1));
         }
     }
 }

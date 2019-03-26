@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Roton.Emulation.Data.Impl;
@@ -11,11 +12,16 @@ namespace Roton.Emulation.Core.Impl
     [Context(Context.Super)]
     public sealed class ScrollFormatter : IScrollFormatter
     {
-        private readonly IScroll _scroll;
+        private readonly Lazy<IScroll> _scroll;
 
-        public ScrollFormatter(IScroll scroll)
+        public ScrollFormatter(Lazy<IScroll> scroll)
         {
             _scroll = scroll;
+        }
+
+        private IScroll Scroll
+        {
+            [DebuggerStepThrough] get => _scroll.Value;
         }
         
         public string[] Format(string text)
@@ -29,7 +35,7 @@ namespace Roton.Emulation.Core.Impl
                 var outLine = new StringBuilder();
                 foreach (var word in line.Split(' '))
                 {
-                    if (word.Length + 1 > _scroll.TextWidth)
+                    if (word.Length + 1 > Scroll.TextWidth)
                     {
                         output.Add(outLine.ToString());
                         outLine.Clear();

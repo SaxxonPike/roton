@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -11,34 +13,48 @@ namespace Roton.Emulation.Original
     [Context(Context.Original)]
     public sealed class OriginalHud : Hud
     {
-        private readonly IEngine _engine;
-        private readonly ITerminal _terminal;
-        private readonly IScroll _scroll;
-        private readonly ITextEntryHud _textEntryHud;
-        private readonly IChoiceHud _choiceHud;
-        private readonly ILongTextEntryHud _longTextEntryHud;
+        private readonly Lazy<ITerminal> _terminal;
+        private readonly Lazy<ITextEntryHud> _textEntryHud;
+        private readonly Lazy<IChoiceHud> _choiceHud;
+        private readonly Lazy<ILongTextEntryHud> _longTextEntryHud;
+        private readonly Location[] _fadeMatrix;
 
         public OriginalHud(
-            IEngine engine,
-            ITerminal terminal,
-            IScroll scroll,
-            ITextEntryHud textEntryHud,
-            IChoiceHud choiceHud,
-            ILongTextEntryHud longTextEntryHud)
+            Lazy<IEngine> engine,
+            Lazy<ITerminal> terminal,
+            Lazy<IScroll> scroll,
+            Lazy<ITextEntryHud> textEntryHud,
+            Lazy<IChoiceHud> choiceHud,
+            Lazy<ILongTextEntryHud> longTextEntryHud)
             : base(engine, scroll)
         {
-            _engine = engine;
             _terminal = terminal;
-            _scroll = scroll;
             _textEntryHud = textEntryHud;
             _choiceHud = choiceHud;
             _longTextEntryHud = longTextEntryHud;
-            _terminal = terminal;
-            FadeMatrix = new Location[ViewportTileCount];
-            GenerateFadeMatrix();
+            _fadeMatrix = new Location[ViewportTileCount];
+            InitializeFadeMatrix();
         }
 
-        private Location[] FadeMatrix { get; }
+        private ITerminal Terminal
+        {
+            [DebuggerStepThrough] get => _terminal.Value;
+        }
+
+        private ITextEntryHud TextEntryHud
+        {
+            [DebuggerStepThrough] get => _textEntryHud.Value;
+        }
+
+        private IChoiceHud ChoiceHud
+        {
+            [DebuggerStepThrough] get => _choiceHud.Value;
+        }
+
+        private ILongTextEntryHud LongTextEntryHud
+        {
+            [DebuggerStepThrough] get => _longTextEntryHud.Value;
+        }
 
         private const int ViewportHeight = 25;
 
@@ -85,9 +101,9 @@ namespace Roton.Emulation.Original
             DrawString(0x3D, 0, @"    - - - - -      ", 0x1F);
             DrawString(0x3E, 1, @"     Roton     ", 0x70);
             DrawString(0x3D, 2, @"    - - - - -      ", 0x1F);
-            if (_engine.TitleScreen)
+            if (Engine.TitleScreen)
             {
-                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", _engine.State.GameSpeed, null);
+                SelectParameter(false, 0x42, 0x15, @"Game speed:;FS", Engine.State.GameSpeed, null);
                 DrawString(0x3E, 0x15, @" S ", 0x70);
                 DrawString(0x3E, 0x07, @" W ", 0x30);
                 DrawString(0x41, 0x07, @" World:", 0x1E);
@@ -113,11 +129,11 @@ namespace Roton.Emulation.Original
                 DrawString(0x40, 0x0A, @"   Gems:", 0x1E);
                 DrawString(0x40, 0x0B, @"  Score:", 0x1E);
                 DrawString(0x40, 0x0C, @"   Keys:", 0x1E);
-                DrawChar(0x3E, 0x07, new AnsiChar(_engine.ElementList[0x04].Character, 0x1F));
-                DrawChar(0x3E, 0x08, new AnsiChar(_engine.ElementList[0x05].Character, 0x1B));
-                DrawChar(0x3E, 0x09, new AnsiChar(_engine.ElementList[0x06].Character, 0x16));
-                DrawChar(0x3E, 0x0A, new AnsiChar(_engine.ElementList[0x07].Character, 0x1B));
-                DrawChar(0x3E, 0x0C, new AnsiChar(_engine.ElementList[0x08].Character, 0x1F));
+                DrawChar(0x3E, 0x07, new AnsiChar(Engine.ElementList[0x04].Character, 0x1F));
+                DrawChar(0x3E, 0x08, new AnsiChar(Engine.ElementList[0x05].Character, 0x1B));
+                DrawChar(0x3E, 0x09, new AnsiChar(Engine.ElementList[0x06].Character, 0x16));
+                DrawChar(0x3E, 0x0A, new AnsiChar(Engine.ElementList[0x07].Character, 0x1B));
+                DrawChar(0x3E, 0x0C, new AnsiChar(Engine.ElementList[0x08].Character, 0x1F));
                 DrawString(0x3E, 0x0E, @" T ", 0x70);
                 DrawString(0x41, 0x0E, @" Torch", 0x1F);
                 DrawString(0x3E, 0x0F, @" B ", 0x30);
@@ -150,12 +166,12 @@ namespace Roton.Emulation.Original
         {
             DrawStatusLine(0x08);
             DrawString(0x45, 0x08,
-                _engine.World.Name.Length <= 0 ? _engine.Facts.UntitledWorldName : _engine.World.Name, 0x1F);
+                Engine.World.Name.Length <= 0 ? Engine.Facts.UntitledWorldName : Engine.World.Name, 0x1F);
         }
 
         public override void DrawChar(int x, int y, AnsiChar ac)
         {
-            _terminal.Plot(x, y, ac);
+            Terminal.Plot(x, y, ac);
         }
 
         public override void DrawMessage(IMessage message, int color)
@@ -178,13 +194,13 @@ namespace Roton.Emulation.Original
             var blankChar = new AnsiChar(0x20, 0x11);
             for (var x = 60; x < 80; x++)
             {
-                _terminal.Plot(x, y, blankChar);
+                Terminal.Plot(x, y, blankChar);
             }
         }
 
         public override void DrawString(int x, int y, string text, int color)
         {
-            _terminal.Write(x, y, text, color);
+            Terminal.Write(x, y, text, color);
         }
 
         public override void DrawTile(int x, int y, AnsiChar ac)
@@ -194,12 +210,12 @@ namespace Roton.Emulation.Original
 
         private void DrawTileAt(IXyPair location)
         {
-            DrawTileCommon(location.X, location.Y, _engine.Draw(location.Sum(1, 1)));
+            DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
         }
 
         private void DrawTileCommon(int x, int y, AnsiChar ac)
         {
-            _terminal.Plot(x, y, ac);
+            Terminal.Plot(x, y, ac);
         }
 
         public override void DrawTitleStatus()
@@ -211,7 +227,7 @@ namespace Roton.Emulation.Original
         {
             for (var i = 0; i < ViewportTileCount; i++)
             {
-                var location = FadeMatrix[i];
+                var location = _fadeMatrix[i];
                 DrawTileCommon(location.X, location.Y, ac);
                 FadeWait(i);
             }
@@ -221,35 +237,41 @@ namespace Roton.Emulation.Original
         {
             if ((i & 0x7F) == 0)
             {
-                _engine.WaitForTick();
+                Engine.WaitForTick();
             }
         }
 
-        private void GenerateFadeMatrix()
+        private void RandomizeFadeMatrix()
         {
-            var rnd = _engine.Random;
-            var index = 0;
-            for (var x = 0; x < ViewportWidth; x++)
-            {
-                for (var y = 0; y < ViewportHeight; y++)
-                {
-                    FadeMatrix[index++] = new Location(x, y);
-                }
-            }
-
+            var rnd = Engine.Random;
+            InitializeFadeMatrix();
+            
             for (var i = 0; i < ViewportTileCount; i++)
             {
                 var sourceIndex = i;
-                var targetIndex = rnd.GetNext(FadeMatrix.Length);
-                var temp = FadeMatrix[sourceIndex].Clone();
-                FadeMatrix[sourceIndex].CopyFrom(FadeMatrix[targetIndex]);
-                FadeMatrix[targetIndex].CopyFrom(temp);
+                var targetIndex = rnd.GetNext(_fadeMatrix.Length);
+                var temp = _fadeMatrix[sourceIndex].Clone();
+                _fadeMatrix[sourceIndex].CopyFrom(_fadeMatrix[targetIndex]);
+                _fadeMatrix[targetIndex].CopyFrom(temp);
             }
         }
 
         public override void Initialize()
         {
-            _terminal.SetSize(_engine.State.EditorMode ? 60 : 80, 25, false);
+            RandomizeFadeMatrix();
+            Terminal.SetSize(Engine.State.EditorMode ? 60 : 80, 25, false);
+        }
+
+        private void InitializeFadeMatrix()
+        {
+            var index = 0;
+            for (var x = 0; x < ViewportWidth; x++)
+            {
+                for (var y = 0; y < ViewportHeight; y++)
+                {
+                    _fadeMatrix[index++] = new Location(x, y);
+                }
+            }            
         }
 
         private static string IntToString(int i)
@@ -261,8 +283,8 @@ namespace Roton.Emulation.Original
         {
             for (var i = 0; i < ViewportTileCount; i++)
             {
-                var location = FadeMatrix[i];
-                DrawTileCommon(location.X, location.Y, _engine.Draw(location.Sum(1, 1)));
+                var location = _fadeMatrix[i];
+                DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
                 FadeWait(i);
             }
         }
@@ -284,35 +306,35 @@ namespace Roton.Emulation.Original
 
         public override void UpdateStatus()
         {
-            if (_engine.TitleScreen)
+            if (Engine.TitleScreen)
                 return;
 
-            if (_engine.Board.TimeLimit <= 0)
+            if (Engine.Board.TimeLimit <= 0)
             {
                 DrawStatusLine(6);
             }
             else
             {
                 DrawString(0x40, 0x06, @"   Time:", 0x1E);
-                DrawString(0x48, 0x06, IntToString(_engine.Board.TimeLimit - _engine.World.TimePassed), 0x1E);
+                DrawString(0x48, 0x06, IntToString(Engine.Board.TimeLimit - Engine.World.TimePassed), 0x1E);
             }
 
-            if (_engine.World.Health < 0)
+            if (Engine.World.Health < 0)
             {
-                _engine.World.Health = 0;
+                Engine.World.Health = 0;
             }
 
-            DrawString(0x48, 0x07, IntToString(_engine.World.Health), 0x1E);
-            DrawString(0x48, 0x08, IntToString(_engine.World.Ammo), 0x1E);
-            DrawString(0x48, 0x09, IntToString(_engine.World.Torches), 0x1E);
-            DrawString(0x48, 0x0A, IntToString(_engine.World.Gems), 0x1E);
-            DrawString(0x48, 0x0B, IntToString(_engine.World.Score), 0x1E);
-            if (_engine.World.TorchCycles > 0)
+            DrawString(0x48, 0x07, IntToString(Engine.World.Health), 0x1E);
+            DrawString(0x48, 0x08, IntToString(Engine.World.Ammo), 0x1E);
+            DrawString(0x48, 0x09, IntToString(Engine.World.Torches), 0x1E);
+            DrawString(0x48, 0x0A, IntToString(Engine.World.Gems), 0x1E);
+            DrawString(0x48, 0x0B, IntToString(Engine.World.Score), 0x1E);
+            if (Engine.World.TorchCycles > 0)
             {
                 for (var i = 2; i <= 5; i++)
                 {
                     DrawChar(0x49 + i, 0x09,
-                        _engine.World.TorchCycles / 40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
+                        Engine.World.TorchCycles / 40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
                 }
             }
             else
@@ -323,22 +345,22 @@ namespace Roton.Emulation.Original
             for (var i = 1; i <= 7; i++)
             {
                 DrawChar(0x47 + i, 0x0C,
-                    _engine.World.Keys[i - 1]
-                        ? new AnsiChar(_engine.ElementList[0x08].Character, 0x18 + i)
+                    Engine.World.Keys[i - 1]
+                        ? new AnsiChar(Engine.ElementList[0x08].Character, 0x18 + i)
                         : new AnsiChar(0x20, 0x1F));
             }
 
-            DrawString(0x41, 0x0F, _engine.State.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
+            DrawString(0x41, 0x0F, Engine.State.GameQuiet ? @" Be noisy" : @" Be quiet", 0x1F);
 
-            if (_engine.World.Flags.Contains("DEBUG"))
-                DrawString(0x3E, 0x04, $"Used: {_engine.MemoryUsage}", 0x1E);
+            if (Engine.World.Flags.Contains("DEBUG"))
+                DrawString(0x3E, 0x04, $"Used: {Engine.MemoryUsage}", 0x1E);
         }
 
         public override string EnterCheat()
         {
             DrawStatusLine(4);
             DrawStatusLine(5);
-            var cheat = _textEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F);
+            var cheat = TextEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F);
             DrawStatusLine(4);
             DrawStatusLine(5);
             return cheat;
@@ -347,7 +369,7 @@ namespace Roton.Emulation.Original
         public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
             string barText)
         {
-            return _choiceHud.Show(performSelection, x, y, message, currentValue, barText);
+            return ChoiceHud.Show(performSelection, x, y, message, currentValue, barText);
         }
 
         public override string EnterHighScore(IHighScoreList highScoreList, int score)
@@ -380,15 +402,15 @@ namespace Roton.Emulation.Original
             if (index >= 0)
             {
                 string name = null;
-                _scroll.Show($"New high score for {_engine.World.Name}",
+                Scroll.Show($"New high score for {Engine.World.Name}",
                     nameList,
                     false,
                     2,
-                    s => name = _longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
+                    s => name = LongTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
                 return name;
             }
 
-            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
+            Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
             return null;
         }
 
@@ -405,7 +427,7 @@ namespace Roton.Emulation.Original
                     .Where(hs => !string.IsNullOrEmpty(hs.Name))
                     .Select(hs => $"{hs.Score.ToString().PadLeft(5)}  {hs.Name}"));
 
-            _scroll.Show($"High scores for {_engine.World.Name}", nameList, false, 0);
+            Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
         }
     }
 }

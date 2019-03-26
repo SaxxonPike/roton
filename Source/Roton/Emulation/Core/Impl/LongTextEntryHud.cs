@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -17,9 +18,16 @@ namespace Roton.Emulation.Core.Impl
             _textEntryHud = textEntryHud;
         }
 
-        private ITerminal Terminal => _terminal.Value;
-        private ITextEntryHud TextEntryHud => _textEntryHud.Value;
-        
+        private ITerminal Terminal
+        {
+            [DebuggerStepThrough] get => _terminal.Value;
+        }
+
+        private ITextEntryHud TextEntryHud
+        {
+            [DebuggerStepThrough] get => _textEntryHud.Value;
+        }
+
         private static readonly int[] ScrollCharsTop =
         {
             0xC6, 0xD1, 0xCD, 0xD1, 0xB5

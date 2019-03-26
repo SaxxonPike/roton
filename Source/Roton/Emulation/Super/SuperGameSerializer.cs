@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core.Impl;
+﻿using System;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,7 +9,7 @@ namespace Roton.Emulation.Super
     [Context(Context.Super)]
     public sealed class SuperGameSerializer : GameSerializer
     {
-        public SuperGameSerializer(IMemory memory, IHeap heap)
+        public SuperGameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap)
             : base(memory, heap)
         {
         }

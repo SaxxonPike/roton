@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Roton.Emulation.Data;
@@ -12,18 +14,23 @@ namespace Roton.Emulation.Core.Impl
     [Context(Context.Super)]
     public sealed class Parser : IParser
     {
-        private readonly IEngine _engine;
+        private readonly Lazy<IEngine> _engine;
 
-        public Parser(IEngine engine)
+        public Parser(Lazy<IEngine> engine)
         {
             _engine = engine;
+        }
+
+        private IEngine Engine
+        {
+            [DebuggerStepThrough] get => _engine.Value;
         }
 
         public int Search(int index, int offset, string term)
         {
             var result = -1;
             var termBytes = term.ToBytes();
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var offs = new Executable {Instruction = offset};
 
             while (offs.Instruction < actor.Length)
@@ -35,7 +42,7 @@ namespace Roton.Emulation.Core.Impl
                 while (true)
                 {
                     ReadByte(index, offs);
-                    if (termBytes[termOffset].ToUpperCase() != _engine.State.OopByte.ToUpperCase())
+                    if (termBytes[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpperCase())
                     {
                         success = false;
                         break;
@@ -52,9 +59,9 @@ namespace Roton.Emulation.Core.Impl
                 if (success)
                 {
                     ReadByte(index, offs);
-                    _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
-                    if (!(_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A ||
-                          _engine.State.OopByte == 0x5F))
+                    Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+                    if (!(Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
+                          Engine.State.OopByte == 0x5F))
                     {
                         result = oldOffset;
                         break;
@@ -72,17 +79,17 @@ namespace Roton.Emulation.Core.Impl
 
         public int ReadByte(int index, IExecutable instructionSource)
         {
-            var actor = _engine.Actors[index];
+            var actor = Engine.Actors[index];
             var value = 0;
 
             if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
             {
-                _engine.State.OopByte = 0;
+                Engine.State.OopByte = 0;
             }
             else
             {
                 value = actor.Code[instructionSource.Instruction];
-                _engine.State.OopByte = value;
+                Engine.State.OopByte = value;
                 instructionSource.Instruction++;
             }
 
@@ -93,9 +100,9 @@ namespace Roton.Emulation.Core.Impl
         {
             var result = new StringBuilder();
             ReadByte(index, instructionSource);
-            while (_engine.State.OopByte != 0x00 && _engine.State.OopByte != 0x0D)
+            while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
             {
-                result.Append(_engine.State.OopByte.ToChar());
+                result.Append(Engine.State.OopByte.ToChar());
                 ReadByte(index, instructionSource);
             }
 
@@ -111,11 +118,11 @@ namespace Roton.Emulation.Core.Impl
             {
             }
 
-            _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
-            while (_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39)
+            Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+            while (Engine.State.OopByte >= 0x30 && Engine.State.OopByte <= 0x39)
             {
                 success = true;
-                result.Append(_engine.State.OopByte.ToChar());
+                result.Append(Engine.State.OopByte.ToChar());
                 ReadByte(index, instructionSource);
             }
 
@@ -126,15 +133,15 @@ namespace Roton.Emulation.Core.Impl
 
             if (!success)
             {
-                _engine.State.OopNumber = -1;
+                Engine.State.OopNumber = -1;
             }
             else
             {
                 int.TryParse(result.ToString(), out var resultInt);
-                _engine.State.OopNumber = resultInt;
+                Engine.State.OopNumber = resultInt;
             }
 
-            return _engine.State.OopNumber;
+            return Engine.State.OopNumber;
         }
 
         public string ReadWord(int index, IExecutable instructionSource)
@@ -144,24 +151,24 @@ namespace Roton.Emulation.Core.Impl
             while (true)
             {
                 ReadByte(index, instructionSource);
-                if (_engine.State.OopByte != 0x20)
+                if (Engine.State.OopByte != 0x20)
                 {
                     break;
                 }
             }
 
-            _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
+            Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
 
-            if (!(_engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39))
+            if (!(Engine.State.OopByte >= 0x30 && Engine.State.OopByte <= 0x39))
             {
-                while (_engine.State.OopByte >= 0x41 && _engine.State.OopByte <= 0x5A ||
-                       _engine.State.OopByte >= 0x30 && _engine.State.OopByte <= 0x39 ||
-                       _engine.State.OopByte == 0x3A ||
-                       _engine.State.OopByte == 0x5F)
+                while (Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
+                       Engine.State.OopByte >= 0x30 && Engine.State.OopByte <= 0x39 ||
+                       Engine.State.OopByte == 0x3A ||
+                       Engine.State.OopByte == 0x5F)
                 {
-                    result.Append(_engine.State.OopByte.ToChar());
+                    result.Append(Engine.State.OopByte.ToChar());
                     ReadByte(index, instructionSource);
-                    _engine.State.OopByte = _engine.State.OopByte.ToUpperCase();
+                    Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
                 }
             }
 
@@ -170,28 +177,28 @@ namespace Roton.Emulation.Core.Impl
                 instructionSource.Instruction--;
             }
 
-            _engine.State.OopWord = result.ToString();
-            return _engine.State.OopWord;
+            Engine.State.OopWord = result.ToString();
+            return Engine.State.OopWord;
         }
 
         public bool? GetCondition(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var condition = _engine.ConditionList.Get(name);
-            return condition?.Execute(oopContext) ?? _engine.World.Flags.Contains(name);
+            var condition = Engine.ConditionList.Get(name);
+            return condition?.Execute(oopContext) ?? Engine.World.Flags.Contains(name);
         }
 
         public IXyPair GetDirection(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var direction = _engine.DirectionList.Get(name);
+            var direction = Engine.DirectionList.Get(name);
             return direction?.Execute(oopContext);
         }
 
         public IItem GetItem(IOopContext oopContext)
         {
             var name = ReadWord(oopContext.Index, oopContext);
-            var item = _engine.ItemList.Get(name);
+            var item = Engine.ItemList.Get(name);
             return item;
         }
 
@@ -203,7 +210,7 @@ namespace Roton.Emulation.Core.Impl
 
             for (var i = 1; i < 8; i++)
             {
-                if (_engine.Colors[i].ToUpperInvariant() != word)
+                if (Engine.Colors[i].ToUpperInvariant() != word)
                     continue;
 
                 result.Color = i + 8;
@@ -211,7 +218,7 @@ namespace Roton.Emulation.Core.Impl
                 break;
             }
 
-            foreach (var element in _engine.ElementList.Where(e => e != null))
+            foreach (var element in Engine.ElementList.Where(e => e != null))
             {
                 if (new string(element.Name.ToUpperInvariant().Where(c => c >= 0x41 && c <= 0x5A).ToArray()) != word)
                     continue;
@@ -227,7 +234,7 @@ namespace Roton.Emulation.Core.Impl
         public bool GetTarget(ISearchContext context)
         {
             context.SearchIndex++;
-            var target = _engine.TargetList.Get(context.SearchTarget) ?? _engine.TargetList.Get(string.Empty);
+            var target = Engine.TargetList.Get(context.SearchTarget) ?? Engine.TargetList.Get(string.Empty);
             return target.Execute(context);
         }
     }

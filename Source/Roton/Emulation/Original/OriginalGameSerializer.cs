@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core.Impl;
+﻿using System;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,7 +9,7 @@ namespace Roton.Emulation.Original
     [Context(Context.Original)]
     public sealed class OriginalGameSerializer : GameSerializer
     {
-        public OriginalGameSerializer(IMemory memory, IHeap heap)
+        public OriginalGameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap)
             : base(memory, heap)
         {
         }
