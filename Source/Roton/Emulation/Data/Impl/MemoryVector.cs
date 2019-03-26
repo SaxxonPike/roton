@@ -2,7 +2,7 @@
 {
     public sealed class MemoryVector : IXyPair
     {
-        public MemoryVector(IMemory memory, int offset)
+        internal MemoryVector(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

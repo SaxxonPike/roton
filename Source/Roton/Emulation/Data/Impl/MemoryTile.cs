@@ -2,7 +2,7 @@
 {
     public sealed class MemoryTile : ITile
     {
-        public MemoryTile(IMemory memory, int offset)
+        internal MemoryTile(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

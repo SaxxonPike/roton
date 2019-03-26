@@ -5,7 +5,7 @@
         private readonly IMemory _memory;
         private readonly int _offset;
 
-        public MemoryDrumSound(IMemory memory, int offset, int index)
+        internal MemoryDrumSound(IMemory memory, int offset, int index)
         {
             _memory = memory;
             _offset = offset;

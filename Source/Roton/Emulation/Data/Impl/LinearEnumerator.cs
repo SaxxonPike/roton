@@ -6,7 +6,7 @@ namespace Roton.Emulation.Data.Impl
 {
     public sealed class LinearEnumerator<T> : IEnumerator<T>
     {
-        public LinearEnumerator(Func<int, T> getter, int count)
+        internal LinearEnumerator(Func<int, T> getter, int count)
         {
             Count = count;
             Getter = getter;

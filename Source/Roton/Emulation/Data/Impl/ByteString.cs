@@ -2,7 +2,7 @@
 {
     public sealed class ByteString : FixedList<int>
     {
-        public ByteString(IMemory memory, int offset)
+        internal ByteString(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

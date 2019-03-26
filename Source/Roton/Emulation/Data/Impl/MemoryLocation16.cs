@@ -2,7 +2,7 @@
 {
     public sealed class MemoryLocation16 : IXyPair
     {
-        public MemoryLocation16(IMemory memory, int offset)
+        internal MemoryLocation16(IMemory memory, int offset)
         {
             Memory = memory;
             Offset = offset;

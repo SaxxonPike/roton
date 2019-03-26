@@ -10,7 +10,7 @@ namespace Roton.Emulation.Data.Impl
         private readonly IExecutable _instructionSource;
         private readonly IEngine _engine;
 
-        public OopContext(
+        internal OopContext(
             int index,
             IExecutable instructionSource,
             string name,

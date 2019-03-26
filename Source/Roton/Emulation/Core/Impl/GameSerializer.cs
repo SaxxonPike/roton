@@ -19,12 +19,12 @@ namespace Roton.Emulation.Core.Impl
             _heap = heap;
         }
 
-        protected IMemory Memory
+        private IMemory Memory
         {
             [DebuggerStepThrough] get => _memory.Value;
         }
 
-        protected IHeap Heap
+        private IHeap Heap
         {
             [DebuggerStepThrough] get => _heap.Value;
         }

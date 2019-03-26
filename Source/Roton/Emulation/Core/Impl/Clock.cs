@@ -10,7 +10,7 @@ namespace Roton.Emulation.Core.Impl
         private readonly long _denominator;
         private bool _running;
 
-        public Clock(long numerator, long denominator)
+        internal Clock(long numerator, long denominator)
         {
             _numerator = numerator;
             _denominator = denominator;

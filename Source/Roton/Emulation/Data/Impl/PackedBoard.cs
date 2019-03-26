@@ -5,7 +5,7 @@ namespace Roton.Emulation.Data.Impl
 {
     public sealed class PackedBoard : IPackedBoard
     {
-        public PackedBoard(byte[] data)
+        internal PackedBoard(byte[] data)
         {
             Data = new byte[data.Length];
             data.CopyTo(Data, 0);

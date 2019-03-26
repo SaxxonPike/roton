@@ -9,7 +9,7 @@ namespace Roton.Emulation.Data.Impl
         private readonly int _count;
         private readonly List<IHighScore> _list;
 
-        public HighScoreList(int count)
+        internal HighScoreList(int count)
         {
             _count = count;
             _list = Enumerable

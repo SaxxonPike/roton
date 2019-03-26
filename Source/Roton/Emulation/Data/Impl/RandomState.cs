@@ -5,7 +5,7 @@ namespace Roton.Emulation.Data.Impl
 {
     public sealed class RandomState : IRandomState
     {
-        public RandomState()
+        internal RandomState()
         {
             var time = DateTimeOffset.Now;
             var seed = (time.Second << 24) |

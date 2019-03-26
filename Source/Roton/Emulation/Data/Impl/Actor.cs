@@ -8,7 +8,7 @@ namespace Roton.Emulation.Data.Impl
         private readonly IMemory _memory;
         private readonly IHeap _heap;
 
-        public Actor(IMemory memory, IHeap heap, int offset)
+        internal Actor(IMemory memory, IHeap heap, int offset)
         {
             _memory = memory;
             _heap = heap;

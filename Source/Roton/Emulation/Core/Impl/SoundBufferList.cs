@@ -9,7 +9,7 @@ namespace Roton.Emulation.Core.Impl
     {
         private readonly Lazy<IMemory> _memory;
 
-        public SoundBufferList(Lazy<IMemory> memory, int offset)
+        internal SoundBufferList(Lazy<IMemory> memory, int offset)
         {
             _memory = memory;
             Offset = offset;

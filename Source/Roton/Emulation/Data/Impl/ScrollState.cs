@@ -4,6 +4,10 @@ namespace Roton.Emulation.Data.Impl
 {
     public sealed class ScrollState : IScrollState
     {
+        internal ScrollState()
+        {
+        }
+        
         public string Title { get; set; }
         public bool IsHelp { get; set; }
         public int Index { get; set; }

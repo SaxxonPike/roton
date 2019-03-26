@@ -5,7 +5,7 @@
         private readonly IMemory _memory;
         private readonly int _offset;
 
-        public MemoryTimer(IMemory memory, int offset)
+        internal MemoryTimer(IMemory memory, int offset)
         {
             _memory = memory;
             _offset = offset;
