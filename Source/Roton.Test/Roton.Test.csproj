@@ -27,4 +27,9 @@
 	<EmbeddedResource Include="Resources\PreposterousMachines\TetrominoGame.brd" />
 	<EmbeddedResource Include="Resources\PreposterousMachines\TowerOfHanoi.brd" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Roton\Emulation\Infrastructure\Utility.cs">
+      <Link>Infrastructure\Utility.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

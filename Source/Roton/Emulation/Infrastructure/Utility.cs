@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Infrastructure
 {
-    public static class Utility
+    internal static class Utility
     {
         private static readonly Encoding CodePage437 = CodePagesEncodingProvider.Instance.GetEncoding(437);
 
