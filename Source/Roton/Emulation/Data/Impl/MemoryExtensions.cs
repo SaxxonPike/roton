@@ -66,7 +66,7 @@ namespace Roton.Emulation.Data.Impl
             unchecked
             {
                 var span = memory.Data;
-                var length = span[offset];
+                var length = span[offset & 0xFFFF];
                 var output = new byte[length];
                 for (var i = 0; i < length; i++)
                     output[i] = span[++offset & 0xFFFF];
