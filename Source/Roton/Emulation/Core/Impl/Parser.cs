@@ -158,17 +158,19 @@ namespace Roton.Emulation.Core.Impl
             }
 
             Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+            var oopByte = Engine.State.OopByte; 
 
-            if (!(Engine.State.OopByte >= 0x30 && Engine.State.OopByte <= 0x39))
+            if (!(oopByte >= 0x30 && oopByte <= 0x39))
             {
-                while (Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
-                       Engine.State.OopByte >= 0x30 && Engine.State.OopByte <= 0x39 ||
-                       Engine.State.OopByte == 0x3A ||
-                       Engine.State.OopByte == 0x5F)
+                while (oopByte >= 0x41 && oopByte <= 0x5A ||
+                       oopByte >= 0x30 && oopByte <= 0x39 ||
+                       oopByte == 0x3A ||
+                       oopByte == 0x5F)
                 {
-                    result.Append(Engine.State.OopByte.ToChar());
+                    result.Append(oopByte.ToChar());
                     ReadByte(index, instructionSource);
                     Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+                    oopByte = Engine.State.OopByte;
                 }
             }
 

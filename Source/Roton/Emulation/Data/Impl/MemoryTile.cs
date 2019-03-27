@@ -11,6 +11,11 @@ namespace Roton.Emulation.Data.Impl
             _memory = memory.Slice(offset);
         }
 
+        internal MemoryTile(Memory<byte> memory)
+        {
+            _memory = memory;
+        }
+
         public ITile Clone()
         {
             return new Tile(Id, Color);

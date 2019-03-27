@@ -4,20 +4,19 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class Tiles : FixedList<ITile>, ITiles
     {
+        private readonly IMemory _memory;
         private readonly IElementList _elementList;
 
         protected Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
         {
+            _memory = memory;
             _elementList = elementList;
-            Memory = memory;
             Offset = offset;
             Height = height;
             Width = width;
         }
 
         public override int Count => TotalWidth*TotalHeight;
-
-        private IMemory Memory { get; }
 
         private int Offset { get; }
 
@@ -33,7 +32,7 @@ namespace Roton.Emulation.Data.Impl
         
         protected override ITile GetItem(int index)
         {
-            return new MemoryTile(Memory, Offset + index*2);
+            return new MemoryTile(_memory.Slice(Offset + index * 2));
         }
 
         protected override void SetItem(int index, ITile value)
