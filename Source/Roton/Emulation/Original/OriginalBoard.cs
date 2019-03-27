@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using System.Runtime.CompilerServices;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -12,11 +13,12 @@ namespace Roton.Emulation.Original
         public OriginalBoard(IMemory memory)
         {
             _memory = memory;
+            Entrance = new MemoryLocation(_memory, 0x45A9);
         }
 
         public IXyPair Camera { get; } = new Location();
 
-        public IXyPair Entrance => new MemoryLocation(_memory, 0x45A9);
+        public IXyPair Entrance { get; }
 
         public int ExitEast
         {
