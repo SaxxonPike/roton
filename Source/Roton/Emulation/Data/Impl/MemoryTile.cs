@@ -2,15 +2,15 @@
 {
     public sealed class MemoryTile : ITile
     {
+        private readonly int _offset;
+
         internal MemoryTile(IMemory memory, int offset)
         {
+            _offset = offset;
             Memory = memory;
-            Offset = offset;
         }
 
         private IMemory Memory { get; }
-
-        private int Offset { get; }
 
         public ITile Clone()
         {
@@ -19,14 +19,14 @@
 
         public int Color
         {
-            get => Memory.Read8(Offset + 0x01);
-            set => Memory.Write8(Offset + 0x01, value);
+            get => Memory.Read8(_offset + 0x01);
+            set => Memory.Write8(_offset + 0x01, value);
         }
 
         public int Id
         {
-            get => Memory.Read8(Offset + 0x00);
-            set => Memory.Write8(Offset + 0x00, value);
+            get => Memory.Read8(_offset + 0x00);
+            set => Memory.Write8(_offset + 0x00, value);
         }
 
         public override string ToString()

@@ -2,15 +2,14 @@
 {
     public sealed class MemoryLocation : IXyPair
     {
+        private readonly IMemory _memory;
+        private readonly int _offset;
+
         internal MemoryLocation(IMemory memory, int offset)
         {
-            Memory = memory;
-            Offset = offset;
+            _memory = memory;
+            _offset = offset;
         }
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
 
         public IXyPair Clone()
         {
@@ -19,14 +18,14 @@
 
         public int X
         {
-            get => Memory.Read8(Offset + 0x00);
-            set => Memory.Write8(Offset + 0x00, value);
+            get => _memory.Read8(_offset + 0x00);
+            set => _memory.Write8(_offset + 0x00, value);
         }
 
         public int Y
         {
-            get => Memory.Read8(Offset + 0x01);
-            set => Memory.Write8(Offset + 0x01, value);
+            get => _memory.Read8(_offset + 0x01);
+            set => _memory.Write8(_offset + 0x01, value);
         }
 
         public override string ToString()

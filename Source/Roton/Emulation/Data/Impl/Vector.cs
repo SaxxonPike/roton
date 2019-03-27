@@ -18,11 +18,11 @@
             Y = y;
         }
 
-        public static IXyPair East => new Vector(1, 0);
-        public static IXyPair Idle => new Vector(0, 0);
-        public static IXyPair North => new Vector(0, -1);
-        public static IXyPair South => new Vector(0, 1);
-        public static IXyPair West => new Vector(-1, 0);
+        public static IXyPair East { get; } = new Vector(1, 0);
+        public static IXyPair Idle { get; } = new Vector(0, 0);
+        public static IXyPair North { get; } = new Vector(0, -1);
+        public static IXyPair South { get; } = new Vector(0, 1);
+        public static IXyPair West { get; } = new Vector(-1, 0);
 
         public IXyPair Clone()
         {

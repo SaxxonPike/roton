@@ -9,13 +9,13 @@ namespace Roton.Emulation.Data.Impl
     [DebuggerStepThrough]
     public sealed class Memory : IMemory
     {
+        private readonly byte[] _bytes;
+
         public Memory()
         {
-            Bytes = new byte[Length];
+            _bytes = new byte[Length];
             Reset();
         }
-
-        private byte[] Bytes { get; }
 
         private const int Length = 0x1 << 16;
 
@@ -24,46 +24,51 @@ namespace Roton.Emulation.Data.Impl
         public byte[] Dump()
         {
             var result = new byte[Length];
-            Buffer.BlockCopy(Bytes, 0, result, 0, Length);
+            Buffer.BlockCopy(_bytes, 0, result, 0, Length);
             return result;
         }
 
+        [DebuggerStepThrough]
         public byte[] Read(int offset, int length)
         {
             var result = new byte[length];
             for (var i = 0; i < length; i++)
             {
-                result[i] = Bytes[offset++ & Mask];
+                result[i] = _bytes[offset++ & Mask];
             }
             return result;
         }
 
+        [DebuggerStepThrough]
         public int Read8(int offset)
         {
             var result = 0;
-            result |= Bytes[offset & Mask];
+            result |= _bytes[offset & Mask];
             return result;
         }
 
+        [DebuggerStepThrough]
         public void Write(int offset, byte[] data)
         {
             var length = data.Length;
             for (var i = 0; i < length; i++)
             {
-                Bytes[offset++ & Mask] = data[i];
+                _bytes[offset++ & Mask] = data[i];
             }
         }
 
+        [DebuggerStepThrough]
         public void Write8(int offset, int value)
         {
-            Bytes[offset & Mask] = (byte) (value & 0xFF);
+            _bytes[offset & Mask] = (byte) (value & 0xFF);
         }
 
+        [DebuggerStepThrough]
         private void Reset()
         {
-            for (var i = 0; i < Bytes.Length; i++)
+            for (var i = 0; i < _bytes.Length; i++)
             {
-                Bytes[i] = 0x00;
+                _bytes[i] = 0x00;
             }
         }
     }
