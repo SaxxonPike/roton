@@ -31,7 +31,7 @@ namespace Roton.Emulation.Data.Impl
         public static string ReadString(this IMemory memory, int offset)
         {
             var length = memory.Read8(offset);
-            return memory.Read(offset + 1, length).ToStringValue();
+            return memory.Read(offset + 1, length).ToArray().ToStringValue();
         }
 
         [DebuggerStepThrough]

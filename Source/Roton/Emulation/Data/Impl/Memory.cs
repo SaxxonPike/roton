@@ -29,8 +29,11 @@ namespace Roton.Emulation.Data.Impl
         }
 
         [DebuggerStepThrough]
-        public byte[] Read(int offset, int length)
+        public ReadOnlySpan<byte> Read(int offset, int length)
         {
+            if (offset + length <= Length) 
+                return _bytes.AsSpan(offset, length);
+
             var result = new byte[length];
             for (var i = 0; i < length; i++)
             {
@@ -48,8 +51,14 @@ namespace Roton.Emulation.Data.Impl
         }
 
         [DebuggerStepThrough]
-        public void Write(int offset, byte[] data)
+        public void Write(int offset, ReadOnlySpan<byte> data)
         {
+            if (offset + data.Length <= Length)
+            {
+                data.CopyTo(_bytes.AsSpan(offset));
+                return;
+            }
+
             var length = data.Length;
             for (var i = 0; i < length; i++)
             {

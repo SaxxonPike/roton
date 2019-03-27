@@ -64,9 +64,9 @@ namespace Roton.Emulation.Core.Impl
             using (var mem = new MemoryStream())
             {
                 var writer = new BinaryWriter(mem);
-                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength));
+                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength).ToArray());
                 PackTiles(tiles, writer);
-                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength));
+                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength).ToArray());
                 var actorCount = Memory.Read16(ActorDataCountOffset);
                 writer.Write((short) actorCount);
                 PackActors(writer, actorCount);
@@ -92,7 +92,7 @@ namespace Roton.Emulation.Core.Impl
         {
             var worldBytes = new byte[WorldDataCapacity - 4];
             var worldData = Memory.Read(WorldDataOffset, WorldDataSize);
-            Buffer.BlockCopy(worldData, 0, worldBytes, 0, WorldDataSize);
+            worldData.CopyTo(worldBytes);
             target.Write(worldBytes, 0, worldBytes.Length);
         }
 
@@ -151,7 +151,7 @@ namespace Roton.Emulation.Core.Impl
                 }
 
                 // write memory to stream
-                target.Write(Memory.Read(actor.Offset, ActorDataLength));
+                target.Write(Memory.Read(actor.Offset, ActorDataLength).ToArray());
 
                 // write code if applicable
                 if (code != null)
