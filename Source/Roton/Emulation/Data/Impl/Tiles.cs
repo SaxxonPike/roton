@@ -4,21 +4,20 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class Tiles : FixedList<ITile>, ITiles
     {
-        private readonly IMemory _memory;
         private readonly IElementList _elementList;
+        private readonly IMemory _memory;
+        private readonly int _offset;
 
         protected Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
         {
-            _memory = memory;
             _elementList = elementList;
-            Offset = offset;
+            _memory = memory;
+            _offset = offset;
             Height = height;
             Width = width;
         }
 
-        public override int Count => TotalWidth*TotalHeight;
-
-        private int Offset { get; }
+        public override int Count => TotalWidth * TotalHeight;
 
         private int TotalHeight => Height + 2;
 
@@ -26,13 +25,13 @@ namespace Roton.Emulation.Data.Impl
 
         public int Height { get; }
 
-        public ITile this[IXyPair location] => this[location.X*TotalHeight + location.Y];
+        public ITile this[IXyPair location] => this[location.X * TotalHeight + location.Y];
 
         public int Width { get; }
-        
+
         protected override ITile GetItem(int index)
         {
-            return new MemoryTile(_memory.Slice(Offset + index * 2));
+            return new MemoryTile(_memory, _offset + index * 2);
         }
 
         protected override void SetItem(int index, ITile value)
@@ -44,7 +43,7 @@ namespace Roton.Emulation.Data.Impl
         {
             return $"TileGrid ({Width}x{Height})";
         }
-        
+
         public IElement ElementAt(IXyPair location)
         {
             return _elementList[this[location].Id];
@@ -83,6 +82,6 @@ namespace Roton.Emulation.Data.Impl
             if (element.Color < 0xF0) return element.Color & 7;
             if (element.Color == 0xFE) return ((tile.Color >> 4) & 0x0F) + 8;
             return tile.Color & 0x0F;
-        }        
+        }
     }
 }

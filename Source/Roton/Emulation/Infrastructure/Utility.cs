@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Roton.Emulation.Infrastructure
 {
@@ -9,6 +10,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Return the absolute difference between this value and another specified value.
         /// </summary>
+        [DebuggerStepThrough]
         public static int AbsDiff(this int a, int b)
         {
             var diff = a - b;
@@ -20,6 +22,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
         /// </summary>
+        [DebuggerStepThrough]
         public static int Polarity(this int value)
         {
             if (value > 0)
@@ -32,6 +35,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Return the squared result of an integer.
         /// </summary>
+        [DebuggerStepThrough]
         public static int Square(this int i)
         {
             return i*i;
@@ -40,6 +44,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Convert a string to a byte array using code page 437.
         /// </summary>
+        [DebuggerStepThrough]
         public static byte[] ToBytes(this string value)
         {
             return string.IsNullOrEmpty(value) 
@@ -50,6 +55,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Convert an integer to a character using code page 437.
         /// </summary>
+        [DebuggerStepThrough]
         public static char ToChar(this int value)
         {
             return CodePage437.GetChars(new[] {(byte) (value & 0xFF)})[0];
@@ -58,6 +64,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Get the lowercase representation of an ASCII char stored as a byte.
         /// </summary>
+        [DebuggerStepThrough]
         public static int ToLowerCase(this byte value)
         {
             if (value >= 0x41 && value <= 0x5A)
@@ -70,6 +77,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Convert an integer to a string using code page 437.
         /// </summary>
+        [DebuggerStepThrough]
         public static string ToStringValue(this int value)
         {
             return CodePage437.GetString(new[] {(byte) (value & 0xFF)});
@@ -78,6 +86,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Convert a byte array to a string using code page 437.
         /// </summary>
+        [DebuggerStepThrough]
         public static string ToStringValue(this byte[] value)
         {
             return CodePage437.GetString(value);
@@ -86,6 +95,7 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Get the uppercase representation of an input key.
         /// </summary>
+        [DebuggerStepThrough]
         public static EngineKeyCode ToUpperCase(this EngineKeyCode value)
         {
             return (EngineKeyCode) ((int) value).ToUpperCase();
@@ -94,18 +104,13 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as a byte.
         /// </summary>
-        public static int ToUpperCase(this byte value)
-        {
-            if (value >= 0x61 && value <= 0x7A)
-            {
-                value -= 0x20;
-            }
-            return value;
-        }
+        [DebuggerStepThrough]
+        public static int ToUpperCase(this byte value) => ToUpperCase((int) value);
 
         /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
+        [DebuggerStepThrough]
         public static int ToUpperCase(this int value)
         {
             if (value >= 0x61 && value <= 0x7A)
@@ -118,17 +123,19 @@ namespace Roton.Emulation.Infrastructure
         /// <summary>
         ///     Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
+        [DebuggerStepThrough]
         public static char ToUpperCase(this char input)
         {
-            var value = (int) input;
-            if (value >= 0x61 && value <= 0x7A)
+            unchecked
             {
-                value -= 0x20;
+                return (char) ToUpperCase((int)input);
             }
-
-            return (char) value;
         }
 
+        /// <summary>
+        /// Compares source string to another string, with the source UpperCased.
+        /// </summary>
+        [DebuggerStepThrough]
         public static bool CaseInsensitiveEqual(this string a, string b)
         {
             if ((a == null) != (b == null))
@@ -147,6 +154,10 @@ namespace Roton.Emulation.Infrastructure
             return true;
         }
 
+        /// <summary>
+        /// Compares source string to another string, with the source UpperCased, and only A-Z.
+        /// </summary>
+        [DebuggerStepThrough]
         public static bool CaseInsensitiveCharacterEqual(this string a, string b)
         {
             var i = 0;
