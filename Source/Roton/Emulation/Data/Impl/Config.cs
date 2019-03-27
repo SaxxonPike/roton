@@ -11,5 +11,6 @@ namespace Roton.Emulation.Data.Impl
         public int VideoScale { get; set; }
         public int MasterClockNumerator { get; set; }
         public int MasterClockDenominator { get; set; }
+        public bool FastMode { get; set; }
     }
 }

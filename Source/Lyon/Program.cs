@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Autofac;
 using Lyon.App;
 using Lyon.Autofac;
@@ -17,9 +18,8 @@ namespace Lyon
         [STAThread]
         private static void Main(string[] args)
         {
-            var fileName = args.Length > 0
-                ? args[0]
-                : null;
+            var fileName = args.TakeWhile(s => !s.StartsWith("--")).FirstOrDefault();
+            var switches = args.SkipWhile(s => !s.StartsWith("--")).Select(s => s.ToLower()).ToArray();
 
             var config = new Config
             {
@@ -31,7 +31,8 @@ namespace Lyon
                 AudioBufferSize = 2048,
                 VideoScale = 2,
                 MasterClockNumerator = 100,
-                MasterClockDenominator = 7275
+                MasterClockDenominator = 7275,
+                FastMode = args.Contains("--fast")
             };
 
             var selector = new ContextEngineSelector();

@@ -1,16 +1,15 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿using System;
+
+namespace Roton.Emulation.Data.Impl
 {
     public sealed class MemoryTile : ITile
     {
-        private readonly int _offset;
+        private readonly Memory<byte> _memory;
 
         internal MemoryTile(IMemory memory, int offset)
         {
-            _offset = offset;
-            Memory = memory;
+            _memory = memory.Slice(offset);
         }
-
-        private IMemory Memory { get; }
 
         public ITile Clone()
         {
@@ -19,14 +18,14 @@
 
         public int Color
         {
-            get => Memory.Read8(_offset + 0x01);
-            set => Memory.Write8(_offset + 0x01, value);
+            get => _memory.Span[0x01];
+            set => _memory.Write8(0x01, value);
         }
 
         public int Id
         {
-            get => Memory.Read8(_offset + 0x00);
-            set => Memory.Write8(_offset + 0x00, value);
+            get => _memory.Span[0x00];
+            set => _memory.Write8(0x00, value);
         }
 
         public override string ToString()

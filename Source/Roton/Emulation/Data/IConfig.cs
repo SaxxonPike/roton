@@ -11,5 +11,6 @@
         int VideoScale { get; }
         int MasterClockNumerator { get; }
         int MasterClockDenominator { get; }
+        bool FastMode { get; }
     }
 }

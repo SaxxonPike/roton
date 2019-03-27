@@ -1,20 +1,20 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿using System;
+
+namespace Roton.Emulation.Data.Impl
 {
     public sealed class MemoryTimer : ITimer
     {
-        private readonly IMemory _memory;
-        private readonly int _offset;
+        private readonly Memory<byte> _memory;
 
         internal MemoryTimer(IMemory memory, int offset)
         {
-            _memory = memory;
-            _offset = offset;
+            _memory = memory.Slice(offset);
         }
 
         public int Ticks
         {
-            get => _memory.Read16(_offset);
-            set => _memory.Write16(_offset, value);
+            get => _memory.Read16();
+            set => _memory.Write16(value);
         }
     }
 }

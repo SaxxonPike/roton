@@ -1334,51 +1334,72 @@ namespace Roton.Emulation.Core.Impl
 
         public void UpdateStatus() => Hud.UpdateStatus();
 
-        public void WaitForTick()
+        private void UpdateSound()
         {
-            if (State.SoundPlaying)
+            if (!State.SoundPlaying) 
+                return;
+
+            if (State.SoundTicks <= 0)
             {
-                if (State.SoundTicks <= 0)
+                if (State.SoundBuffer.Count > 0)
                 {
-                    if (State.SoundBuffer.Count > 0)
+                    var sound = State.SoundBuffer.Dequeue();
+                    State.SoundTicks = sound.Duration << 2;
+                    if (sound.Note >= 0xF0)
                     {
-                        var sound = State.SoundBuffer.Dequeue();
-                        State.SoundTicks = sound.Duration << 2;
-                        if (sound.Note >= 0xF0)
-                        {
-                            Speaker.PlayDrum(sound.Note - 0xF0);                                
-                        }
-                        else if (sound.Note > 0x00)
-                        {
-                            var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
-                            Speaker.PlayNote(actualNote);                                
-                        }
-                        else
-                        {
-                            Speaker.StopNote();                                
-                        }
+                        Speaker.PlayDrum(sound.Note - 0xF0);                                
+                    }
+                    else if (sound.Note > 0x00)
+                    {
+                        var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                        Speaker.PlayNote(actualNote);                                
                     }
                     else
                     {
-                        State.SoundPlaying = false;
-                        State.SoundPriority = 0;
-                        Speaker.StopNote();
+                        Speaker.StopNote();                                
                     }
                 }
-
-                if (State.SoundPlaying)
-                    State.SoundTicks--;
+                else
+                {
+                    State.SoundPlaying = false;
+                    State.SoundPriority = 0;
+                    Speaker.StopNote();
+                }
             }
+
+            if (State.SoundPlaying)
+                State.SoundTicks--;
+        }
+
+        public void WaitForTick()
+        {
+            var isFast = State.GameWaitTime <= 0 && Config.FastMode;
+
+            if (isFast)
+            {
+                while (_ticksToRun > 0)
+                {
+                    UpdateSound();
+                    if (Clock != null)
+                        Tick?.Invoke(this, EventArgs.Empty);
+                    _ticksToRun--;
+                }
+            }
+            else
+            {
+                UpdateSound();
                 
-            if (Clock == null)
-                return;
+                if (Clock == null)
+                    return;
             
-            Tick?.Invoke(this, EventArgs.Empty);
+                Tick?.Invoke(this, EventArgs.Empty);
+            
+                while (_ticksToRun <= 0 && ThreadActive)
+                    Thread.Sleep(1);
 
-            while (_ticksToRun <= 0 && ThreadActive)
-                Thread.Sleep(1);
-
-            _ticksToRun--;
+                if (_ticksToRun > 0)
+                    _ticksToRun--;
+            }
         }
 
         public IWorld World
@@ -1816,6 +1837,7 @@ namespace Roton.Emulation.Core.Impl
         private void StartInit()
         {
             State.GameSpeed = Facts.DefaultGameSpeed;
+            State.GameWaitTime = 1;
             State.DefaultSaveName = Facts.DefaultSavedGameName;
             State.DefaultBoardName = Facts.DefaultBoardName;
             State.DefaultWorldName = Config.DefaultWorld ?? Facts.DefaultWorldName;
