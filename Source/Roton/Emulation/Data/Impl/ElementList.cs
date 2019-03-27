@@ -5,16 +5,13 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class ElementList : FixedList<IElement>, IElementList
     {
-        protected ElementList(IMemory memory, int count)
+        protected ElementList(int count)
         {
             Count = count;
-            Memory = memory;
             Cache = new Dictionary<int, IElement>();
         }
 
         private IDictionary<int, IElement> Cache { get; }
-
-        protected IMemory Memory { get; }
 
         public virtual int AmmoId => -1;
         public virtual int BearId => -1;

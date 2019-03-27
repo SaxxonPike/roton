@@ -4,15 +4,14 @@ namespace Roton.Emulation.Data.Impl
 {
     public abstract class Flags : FixedList<string>, IFlags
     {
+        private readonly IMemory _memory;
+        private readonly int _offset;
+
         protected Flags(IMemory memory, int offset)
         {
-            Memory = memory;
-            Offset = offset;
+            _memory = memory;
+            _offset = offset;
         }
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
 
         public override void Add(string item)
         {
@@ -78,12 +77,12 @@ namespace Roton.Emulation.Data.Impl
 
         protected override string GetItem(int index)
         {
-            return Memory.ReadString(Offset + index*21);
+            return _memory.ReadString(_offset + index*21);
         }
 
         protected override void SetItem(int index, string value)
         {
-            Memory.WriteString(Offset + index*21, value);
+            _memory.WriteString(_offset + index*21, value);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Roton.Emulation.Original
         private readonly IMemory _memory;
 
         public OriginalElementList(IMemory memory, IEngineResourceService engineResourceService)
-            : base(memory, 54)
+            : base(54)
         {
             _memory = memory;
             _data = engineResourceService.GetElementData();
@@ -69,6 +69,6 @@ namespace Roton.Emulation.Original
         public override int WaterId => 0x13;
 
         protected override IElement GetElement(int index) 
-            => new OriginalElement(Memory, index);
+            => new OriginalElement(_memory, index);
     }
 }

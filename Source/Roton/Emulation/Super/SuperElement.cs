@@ -5,125 +5,130 @@ namespace Roton.Emulation.Super
 {
     public sealed class SuperElement : Element
     {
+        private readonly int _offset;
+        private readonly IMemory _memory;
+
         public SuperElement(IMemory memory, int index)
-            : base(memory, 0x7CAA + index * 0x00C2, index)
+            : base(index)
         {
+            _memory = memory;
+            _offset = 0x7CAA + index * 0x00C2;
         }
 
         public override string BoardEditText
         {
-            get => Memory.ReadString(Offset + 0x81);
-            set => Memory.WriteString(Offset + 0x81, value);
+            get => _memory.ReadString(_offset + 0x81);
+            set => _memory.WriteString(_offset + 0x81, value);
         }
 
         public override int Character
         {
-            get => Memory.Read8(Offset + 0x00);
-            set => Memory.Write8(Offset + 0x00, value);
+            get => _memory.Read8(_offset + 0x00);
+            set => _memory.Write8(_offset + 0x00, value);
         }
 
         public override string CodeEditText
         {
-            get => Memory.ReadString(Offset + 0xAB);
-            set => Memory.WriteString(Offset + 0xAB, value);
+            get => _memory.ReadString(_offset + 0xAB);
+            set => _memory.WriteString(_offset + 0xAB, value);
         }
 
         public override int Color
         {
-            get => Memory.Read8(Offset + 0x01);
-            set => Memory.Write8(Offset + 0x01, value);
+            get => _memory.Read8(_offset + 0x01);
+            set => _memory.Write8(_offset + 0x01, value);
         }
 
         public override int Cycle
         {
-            get => Memory.Read16(Offset + 0x0B);
-            set => Memory.Write16(Offset + 0x0B, value);
+            get => _memory.Read16(_offset + 0x0B);
+            set => _memory.Write16(_offset + 0x0B, value);
         }
 
         public override string EditorCategory
         {
-            get => Memory.ReadString(Offset + 0x2D);
-            set => Memory.WriteString(Offset + 0x2D, value);
+            get => _memory.ReadString(_offset + 0x2D);
+            set => _memory.WriteString(_offset + 0x2D, value);
         }
 
         public override bool HasDrawCode
         {
-            get => Memory.ReadBool(Offset + 0x06);
-            set => Memory.WriteBool(Offset + 0x06, value);
+            get => _memory.ReadBool(_offset + 0x06);
+            set => _memory.WriteBool(_offset + 0x06, value);
         }
 
         public override bool IsAlwaysVisible { get; set; }
 
         public override bool IsDestructible
         {
-            get => Memory.ReadBool(Offset + 0x02);
-            set => Memory.WriteBool(Offset + 0x02, value);
+            get => _memory.ReadBool(_offset + 0x02);
+            set => _memory.WriteBool(_offset + 0x02, value);
         }
 
         public override bool IsEditorFloor
         {
-            get => Memory.ReadBool(Offset + 0x04);
-            set => Memory.WriteBool(Offset + 0x04, value);
+            get => _memory.ReadBool(_offset + 0x04);
+            set => _memory.WriteBool(_offset + 0x04, value);
         }
 
         public override bool IsFloor
         {
-            get => Memory.ReadBool(Offset + 0x05);
-            set => Memory.WriteBool(Offset + 0x05, value);
+            get => _memory.ReadBool(_offset + 0x05);
+            set => _memory.WriteBool(_offset + 0x05, value);
         }
 
         public override bool IsPushable
         {
-            get => Memory.ReadBool(Offset + 0x03);
-            set => Memory.WriteBool(Offset + 0x03, value);
+            get => _memory.ReadBool(_offset + 0x03);
+            set => _memory.WriteBool(_offset + 0x03, value);
         }
 
         public override int MenuIndex
         {
-            get => Memory.Read16(Offset + 0x15);
-            set => Memory.Write16(Offset + 0x15, value);
+            get => _memory.Read16(_offset + 0x15);
+            set => _memory.Write16(_offset + 0x15, value);
         }
 
         public override int MenuKey
         {
-            get => Memory.Read8(Offset + 0x17);
-            set => Memory.Write8(Offset + 0x17, value);
+            get => _memory.Read8(_offset + 0x17);
+            set => _memory.Write8(_offset + 0x17, value);
         }
 
         public override string Name
         {
-            get => Memory.ReadString(Offset + 0x18);
-            set => Memory.WriteString(Offset + 0x18, value);
+            get => _memory.ReadString(_offset + 0x18);
+            set => _memory.WriteString(_offset + 0x18, value);
         }
 
         public override string P1EditText
         {
-            get => Memory.ReadString(Offset + 0x42);
-            set => Memory.WriteString(Offset + 0x42, value);
+            get => _memory.ReadString(_offset + 0x42);
+            set => _memory.WriteString(_offset + 0x42, value);
         }
 
         public override string P2EditText
         {
-            get => Memory.ReadString(Offset + 0x57);
-            set => Memory.WriteString(Offset + 0x57, value);
+            get => _memory.ReadString(_offset + 0x57);
+            set => _memory.WriteString(_offset + 0x57, value);
         }
 
         public override string P3EditText
         {
-            get => Memory.ReadString(Offset + 0x6C);
-            set => Memory.WriteString(Offset + 0x6C, value);
+            get => _memory.ReadString(_offset + 0x6C);
+            set => _memory.WriteString(_offset + 0x6C, value);
         }
 
         public override int Points
         {
-            get => Memory.Read16(Offset + 0xC0);
-            set => Memory.Write16(Offset + 0xC0, value);
+            get => _memory.Read16(_offset + 0xC0);
+            set => _memory.Write16(_offset + 0xC0, value);
         }
 
         public override string StepEditText
         {
-            get => Memory.ReadString(Offset + 0x96);
-            set => Memory.WriteString(Offset + 0x96, value);
+            get => _memory.ReadString(_offset + 0x96);
+            set => _memory.WriteString(_offset + 0x96, value);
         }
     }
 }

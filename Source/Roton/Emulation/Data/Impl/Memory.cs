@@ -8,11 +8,11 @@ namespace Roton.Emulation.Data.Impl
     [Context(Context.Original)]
     [Context(Context.Super)]
     [DebuggerStepThrough]
-    public sealed class Memory : IMemory
+    public sealed class _memory : IMemory
     {
         private readonly byte[] _data;
 
-        public Memory()
+        public _memory()
         {
             _data = new byte[0x10000];
         }

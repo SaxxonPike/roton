@@ -2,15 +2,14 @@
 {
     public abstract class Colors : FixedList<string>, IColors
     {
+        private readonly IMemory _memory;
+        private readonly int _offset;
+
         protected Colors(IMemory memory, int offset)
         {
-            Memory = memory;
-            Offset = offset;
+            _memory = memory;
+            _offset = offset;
         }
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
 
         public override void Clear()
         {
@@ -22,12 +21,12 @@
 
         protected override string GetItem(int index)
         {
-            return Memory.ReadString(Offset + index*9);
+            return _memory.ReadString(_offset + index * 9);
         }
 
         protected override void SetItem(int index, string value)
         {
-            Memory.WriteString(Offset + index*9, value);
+            _memory.WriteString(_offset + index * 9, value);
         }
     }
 }

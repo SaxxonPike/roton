@@ -2,26 +2,25 @@
 {
     public sealed class ByteString : FixedList<int>
     {
+        private readonly IMemory _memory;
+        private readonly int _offset;
+
         internal ByteString(IMemory memory, int offset)
         {
-            Memory = memory;
-            Offset = offset;
+            _memory = memory;
+            _offset = offset;
         }
 
-        public override int Count => Memory.Read8(Offset);
-
-        private IMemory Memory { get; }
-
-        private int Offset { get; }
+        public override int Count => _memory.Read8(_offset);
 
         protected override int GetItem(int index)
         {
-            return Memory.Read8(Offset + index + 1);
+            return _memory.Read8(_offset + index + 1);
         }
 
         protected override void SetItem(int index, int value)
         {
-            Memory.Write8(Offset + index + 1, value);
+            _memory.Write8(_offset + index + 1, value);
         }
     }
 }

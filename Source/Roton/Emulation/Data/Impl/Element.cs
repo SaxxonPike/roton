@@ -2,16 +2,11 @@
 {
     public abstract class Element : IElement
     {
-        protected Element(IMemory memory, int offset, int id)
+        protected Element(int id)
         {
-            Memory = memory;
-            Offset = offset;
             Id = id;
         }
 
-        protected IMemory Memory { get; }
-
-        protected int Offset { get; }
         public abstract string BoardEditText { get; set; }
         public abstract int Character { get; set; }
         public abstract string CodeEditText { get; set; }

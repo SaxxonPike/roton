@@ -12,7 +12,7 @@ namespace Roton.Emulation.Super
         private readonly byte[] _data;
 
         public SuperElementList(IMemory memory, IEngineResourceService engineResourceService)
-            : base(memory, 80)
+            : base(80)
         {
             _memory = memory;
             _data = engineResourceService.GetElementData();
@@ -133,9 +133,7 @@ namespace Roton.Emulation.Super
 
         public override int WebId => 0x3F;
 
-        protected override IElement GetElement(int index)
-        {
-            return new SuperElement(Memory, index);
-        }
+        protected override IElement GetElement(int index) => 
+            new SuperElement(_memory, index);
     }
 }
