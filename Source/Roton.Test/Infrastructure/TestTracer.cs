@@ -18,11 +18,17 @@ namespace Roton.Test.Infrastructure
 
         public void TraceInput(EngineKeyCode keyCode)
         {
+            if (!Enabled)
+                return;
+
             _writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
 
         public void TraceOop(IOopContext oopContext)
         {
+            if (!Enabled)
+                return;
+
             var code = oopContext.Actor.Code;
             var offset = oopContext.Instruction;
             var end = oopContext.Instruction;
@@ -41,7 +47,12 @@ namespace Roton.Test.Infrastructure
 
         public void TraceStep()
         {
+            if (!Enabled)
+                return;
+
             _stepNumber++;
         }
+
+        public bool Enabled { get; set; }
     }
 }

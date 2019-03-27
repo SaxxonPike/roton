@@ -212,7 +212,7 @@ namespace Roton.Emulation.Core.Impl
 
             for (var i = 1; i < 8; i++)
             {
-                if (Engine.Colors[i].ToUpperInvariant() != word)
+                if (!Engine.Colors[i].CaseInsensitiveEqual(word))
                     continue;
 
                 result.Color = i + 8;
@@ -222,7 +222,7 @@ namespace Roton.Emulation.Core.Impl
 
             foreach (var element in Engine.ElementList.Where(e => e != null))
             {
-                if (new string(element.Name.ToUpperInvariant().Where(c => c >= 0x41 && c <= 0x5A).ToArray()) != word)
+                if (!element.Name.CaseInsensitiveCharacterEqual(word))
                     continue;
 
                 success = true;

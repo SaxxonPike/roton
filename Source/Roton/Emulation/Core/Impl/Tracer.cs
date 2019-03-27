@@ -20,5 +20,7 @@ namespace Roton.Emulation.Core.Impl
         public void TraceStep()
         {
         }
+
+        public bool Enabled { get; set; }
     }
 }

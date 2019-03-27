@@ -117,6 +117,16 @@ namespace Roton.Test.Infrastructure
             while (State.KeyPressed != 0 || Keyboard.KeyIsAvailable)
                 Step();
         }
+
+        protected void DisableTracer()
+        {
+            Tracer.Enabled = false;
+        }
+
+        protected void EnableTracer()
+        {
+            Tracer.Enabled = true;
+        }
         
         [SetUp]
         public void __SetUpContext()

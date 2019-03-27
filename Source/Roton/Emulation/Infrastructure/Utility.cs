@@ -114,5 +114,63 @@ namespace Roton.Emulation.Infrastructure
             }
             return value;
         }
+        
+        /// <summary>
+        ///     Get the uppercase representation of an ASCII char stored as an integer.
+        /// </summary>
+        public static char ToUpperCase(this char input)
+        {
+            var value = (int) input;
+            if (value >= 0x61 && value <= 0x7A)
+            {
+                value -= 0x20;
+            }
+
+            return (char) value;
+        }
+
+        public static bool CaseInsensitiveEqual(this string a, string b)
+        {
+            if ((a == null) != (b == null))
+                return false;
+            if (a == null)
+                return true;
+            if (a.Length != b.Length)
+                return false;
+
+            for (var i = 0; i < a.Length; i++)
+            {
+                if (a[i].ToUpperCase() != b[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool CaseInsensitiveCharacterEqual(this string a, string b)
+        {
+            var i = 0;
+            var j = 0;
+            
+            if ((a == null) != (b == null))
+                return false;
+            if (a == null)
+                return true;
+
+            while (i < a.Length && j < b.Length)
+            {
+                var ai = a[i].ToUpperCase();
+                if (ai >= 0x41 && ai <= 0x5A)
+                {
+                    if (ai != b[j])
+                        return false;
+                    j++;
+                }
+
+                i++;
+            }
+
+            return i == a.Length && j == b.Length;
+        }
     }
 }

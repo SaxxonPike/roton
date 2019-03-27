@@ -6,8 +6,10 @@ namespace Roton.Test.Roton.Integration.ResourceTests
     public class PreposterousMachinesTestFixture : OriginalContextBaseIntegrationTestFixture
     {
         [Test]
+        [Explicit]
         public void Test_SineRenderer()
         {
+            DisableTracer();
             UnpackBoardResource("PreposterousMachines.SineRenderer.brd");
             DumpActorCode();
             Step(4);

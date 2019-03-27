@@ -8,5 +8,6 @@ namespace Roton.Emulation.Core
         void TraceInput(EngineKeyCode keyCode);
         void TraceOop(IOopContext oopContext);
         void TraceStep();
+        bool Enabled { get; set; }
     }
 }
