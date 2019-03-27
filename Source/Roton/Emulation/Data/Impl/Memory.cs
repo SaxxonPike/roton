@@ -50,6 +50,9 @@ namespace Roton.Emulation.Data.Impl
             return result;
         }
 
+        public Memory<byte> Slice(int offset) => _bytes.AsMemory(offset);
+        public Memory<byte> Slice(int offset, int length) => _bytes.AsMemory(offset, length);
+
         [DebuggerStepThrough]
         public void Write(int offset, ReadOnlySpan<byte> data)
         {
