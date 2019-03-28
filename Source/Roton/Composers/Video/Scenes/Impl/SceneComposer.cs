@@ -94,8 +94,11 @@ namespace Roton.Composers.Video.Scenes.Impl
                 return;
 
             var index = GetBufferOffset(x, y);
-            _chars[index] = ac;
-            Update(index, ac);
+            if (_chars[index] != ac)
+            {
+                _chars[index] = ac;
+                Update(index, ac);
+            }
         }
 
         public AnsiChar Read(int x, int y)
