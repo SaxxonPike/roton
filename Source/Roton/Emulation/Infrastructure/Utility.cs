@@ -168,11 +168,14 @@ namespace Roton.Emulation.Infrastructure
             if (a == null)
                 return true;
 
-            while (i < a.Length && j < b.Length)
+            while (i < a.Length)
             {
                 var ai = a[i].ToUpperCase();
                 if (ai >= 0x41 && ai <= 0x5A)
                 {
+                    if (j >= b.Length)
+                        break;
+
                     if (ai != b[j])
                         return false;
                     j++;
