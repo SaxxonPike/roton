@@ -20,7 +20,7 @@ namespace Roton.Emulation.Draws.Impl
         
         public AnsiChar Draw(IXyPair location)
         {
-            switch ((Engine.State.GameCycle / Engine.ElementList[Engine.ElementList.ClockwiseId].Cycle) & 0x3)
+            switch ((Engine.State.GameCycle / Engine.ElementList.Clockwise().Cycle) & 0x3)
             {
                 case 0:
                     return new AnsiChar(0xB3, Engine.Tiles[location].Color);

@@ -22,7 +22,7 @@ namespace Roton.Emulation.Actions.Impl
         public void Act(int index)
         {
             var actor = Engine.Actors[index];
-            var playerElement = Engine.ElementList[Engine.ElementList.PlayerId];
+            var playerElement = Engine.ElementList.Player();
 
             // Energizer graphics
 

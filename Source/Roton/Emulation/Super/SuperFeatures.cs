@@ -165,8 +165,7 @@ namespace Roton.Emulation.Super
                 Engine.UpdateBoard(Engine.Player.Location);
                 Engine.Player.Location.Add(Engine.State.KeyVector);
                 Engine.Player.UnderTile.CopyFrom(Engine.Tiles[Engine.Player.Location]);
-                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId,
-                    Engine.ElementList[Engine.ElementList.PlayerId].Color);
+                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
                 Engine.UpdateBoard(Engine.Player.Location);
                 Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
                 Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);

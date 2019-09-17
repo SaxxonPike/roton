@@ -1151,7 +1151,7 @@ namespace Roton.Emulation.Core.Impl
 
         public void SetBoard(int boardIndex)
         {
-            var element = ElementList[ElementList.PlayerId];
+            var element = ElementList.Player();
             Tiles[Player.Location].SetTo(element.Id, element.Color);
             PackBoard();
             UnpackBoard(boardIndex);
@@ -1457,7 +1457,7 @@ namespace Roton.Emulation.Core.Impl
             }
 
             // generate player actor
-            var element = ElementList[ElementList.PlayerId];
+            var element = ElementList.Player();
             State.ActorCount = 0;
             Player.Location.SetTo(Tiles.Width / 2, Tiles.Height / 2);
             Tiles[Player.Location].SetTo(element.Id, element.Color);
@@ -1527,9 +1527,9 @@ namespace Roton.Emulation.Core.Impl
 
             // this isn't all the initializations.
             // todo: replace this with the ability to completely reinitialize engine default memory
-            ElementList[ElementList.InvisibleId].Character = showInvisibles ? 0xB0 : 0x20;
-            ElementList[ElementList.InvisibleId].Color = 0xFF;
-            ElementList[ElementList.PlayerId].Character = 0x02;
+            ElementList.Invisible().Character = showInvisibles ? 0xB0 : 0x20;
+            ElementList.Invisible().Color = 0xFF;
+            ElementList.Player().Character = 0x02;
         }
 
         private void MainLoop(bool doFade)
@@ -1566,7 +1566,7 @@ namespace Roton.Emulation.Core.Impl
 
                     if (alternating)
                     {
-                        var playerElement = ElementList[ElementList.PlayerId];
+                        var playerElement = ElementList.Player();
                         DrawTile(Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                     }
                     else
@@ -1645,7 +1645,7 @@ namespace Roton.Emulation.Core.Impl
                         Hud.ClearTitleStatus();
                     }
 
-                    var element = ElementList[ElementList.PlayerId];
+                    var element = ElementList.Player();
                     Tiles[Player.Location].SetTo(element.Id, element.Color);
                     State.GameOver = false;
                     break;

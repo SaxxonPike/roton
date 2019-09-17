@@ -129,11 +129,11 @@ namespace Roton.Emulation.Original
                 DrawString(0x40, 0x0A, @"   Gems:", 0x1E);
                 DrawString(0x40, 0x0B, @"  Score:", 0x1E);
                 DrawString(0x40, 0x0C, @"   Keys:", 0x1E);
-                DrawChar(0x3E, 0x07, new AnsiChar(Engine.ElementList[0x04].Character, 0x1F));
-                DrawChar(0x3E, 0x08, new AnsiChar(Engine.ElementList[0x05].Character, 0x1B));
-                DrawChar(0x3E, 0x09, new AnsiChar(Engine.ElementList[0x06].Character, 0x16));
-                DrawChar(0x3E, 0x0A, new AnsiChar(Engine.ElementList[0x07].Character, 0x1B));
-                DrawChar(0x3E, 0x0C, new AnsiChar(Engine.ElementList[0x08].Character, 0x1F));
+                DrawChar(0x3E, 0x07, new AnsiChar(Engine.ElementList.Player().Character, 0x1F));
+                DrawChar(0x3E, 0x08, new AnsiChar(Engine.ElementList.Ammo().Character, 0x1B));
+                DrawChar(0x3E, 0x09, new AnsiChar(Engine.ElementList.Torch().Character, 0x16));
+                DrawChar(0x3E, 0x0A, new AnsiChar(Engine.ElementList.Gem().Character, 0x1B));
+                DrawChar(0x3E, 0x0C, new AnsiChar(Engine.ElementList.Key().Character, 0x1F));
                 DrawString(0x3E, 0x0E, @" T ", 0x70);
                 DrawString(0x41, 0x0E, @" Torch", 0x1F);
                 DrawString(0x3E, 0x0F, @" B ", 0x30);
@@ -346,7 +346,7 @@ namespace Roton.Emulation.Original
             {
                 DrawChar(0x47 + i, 0x0C,
                     Engine.World.Keys[i - 1]
-                        ? new AnsiChar(Engine.ElementList[0x08].Character, 0x18 + i)
+                        ? new AnsiChar(Engine.ElementList.Key().Character, 0x18 + i)
                         : new AnsiChar(0x20, 0x1F));
             }
 

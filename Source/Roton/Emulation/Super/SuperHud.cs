@@ -306,7 +306,7 @@ namespace Roton.Emulation.Super
 
             for (var i = 0; i < 7; i++)
             {
-                var keyChar = Engine.World.Keys[i] ? Engine.ElementList[0x08].Character : 0x20;
+                var keyChar = Engine.World.Keys[i] ? Engine.ElementList.Key().Character : 0x20;
                 var x = i & 0x3;
                 var y = i >> 2;
                 DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));

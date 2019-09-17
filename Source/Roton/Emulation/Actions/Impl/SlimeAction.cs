@@ -25,7 +25,7 @@ namespace Roton.Emulation.Actions.Impl
             {
                 var spawnCount = 0;
                 var color = Engine.Tiles[actor.Location].Color;
-                var slimeElement = Engine.ElementList[Engine.ElementList.SlimeId];
+                var slimeElement = Engine.ElementList.Slime();
                 var slimeTrailTile = new Tile(Engine.ElementList.BreakableId, color);
                 var source = actor.Location.Clone();
                 actor.P1 = 0;

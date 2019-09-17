@@ -120,7 +120,7 @@ namespace Roton.Emulation.Original
         public void ForcePlayerColor(int index)
         {
             var actor = Engine.Actors[index];
-            var playerElement = Engine.ElementList[Engine.ElementList.PlayerId];
+            var playerElement = Engine.ElementList.Player();
             if (Engine.Tiles[actor.Location].Color == playerElement.Color &&
                 playerElement.Character == Engine.Facts.PlayerCharacter) 
                 return;
@@ -154,8 +154,7 @@ namespace Roton.Emulation.Original
             {
                 Engine.UpdateBoard(Engine.Player.Location);
                 Engine.Player.Location.Add(Engine.State.KeyVector);
-                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId,
-                    Engine.ElementList[Engine.ElementList.PlayerId].Color);
+                Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
                 Engine.UpdateBoard(Engine.Player.Location);
                 Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
                 Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
