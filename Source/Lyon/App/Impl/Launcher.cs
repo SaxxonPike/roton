@@ -33,7 +33,7 @@ namespace Lyon.App.Impl
             AudioPresenter.Start();
             engine.Exited += OnExited;
             engine.Start();
-            Window.Start(14);
+            Window.Start(72.75f);
             engine.Stop();
             AudioPresenter.Stop();
         }

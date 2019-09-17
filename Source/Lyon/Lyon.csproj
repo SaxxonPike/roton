@@ -7,11 +7,11 @@
     <!--<RuntimeIdentifiers>win10-x64;osx.10.11-x64;ubuntu.16.04-x64</RuntimeIdentifiers>-->
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotSDL\DotSDL\DotSDL.csproj" />
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="DotSDL" Version="0.0.1-alpha" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Deploy\Config.json">

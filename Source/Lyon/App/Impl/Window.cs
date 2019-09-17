@@ -17,7 +17,7 @@ namespace Lyon.App.Impl
 
         public int Width => WindowWidth;
         public int Height => WindowHeight;
-        
+
         private IKeyboardPresenter KeyboardPresenter => _keyboardPresenter.Value;
         private IScenePresenter ScenePresenter => _scenePresenter.Value;
 
@@ -33,6 +33,11 @@ namespace Lyon.App.Impl
             _scenePresenter = scenePresenter;
             KeyPressed += OnKeyDown;
             Closed += OnClosed;
+
+            Background.GetCanvasPointer = () => {
+                var bitmap = ScenePresenter.Render();
+                return bitmap.Bits.Length == 0 ? IntPtr.Zero : bitmap.BitsPointer;
+            };
         }
 
         private void OnClosed(object sender, WindowEvent e)
@@ -45,9 +50,9 @@ namespace Lyon.App.Impl
             ScenePresenter.UpdateViewport();
         }
 
-        public void Start(int updateRate)
+        public void Start(float updateRate)
         {
-            base.Start((uint) updateRate);
+            base.Start(updateRate);
         }
 
         public void Close()
@@ -60,13 +65,7 @@ namespace Lyon.App.Impl
             KeyboardPresenter.Press(e);
         }
 
-        public override IntPtr GetCanvasPointer()
-        {
-            var bitmap = ScenePresenter.Render();
-            return bitmap.Bits.Length == 0 ? IntPtr.Zero : bitmap.BitsPointer;
-        }
-
-        protected override void OnUpdate()
+        protected override void OnUpdate(float delta)
         {
             if(_closeWindow)
                 Stop();

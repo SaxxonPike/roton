@@ -39,14 +39,14 @@ namespace Lyon
             var contextEngine = selector.Get(fileName);
 
             var builder = new ContainerBuilder();
-            
+
             builder.RegisterInstance(config)
                 .As<IConfig>()
-                .SingleInstance();            
-            
+                .SingleInstance();
+
             builder.RegisterModule(new RotonModule(contextEngine));
             builder.RegisterModule(new LyonModule(args));
-            
+
             using (var container = builder.Build())
             {
                 container
