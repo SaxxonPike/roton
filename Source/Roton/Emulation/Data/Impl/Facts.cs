@@ -1,5 +1,3 @@
-using Roton.Emulation.Core.Impl;
-
 namespace Roton.Emulation.Data.Impl
 {
     public abstract class Facts : IFacts

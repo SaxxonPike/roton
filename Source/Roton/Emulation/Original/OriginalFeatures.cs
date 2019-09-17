@@ -58,11 +58,9 @@ namespace Roton.Emulation.Original
                 Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message));
                 return null;
             }
-            else
-            {
-                Engine.State.KeyVector.SetTo(0, 0);
-                return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
-            }
+
+            Engine.State.KeyVector.SetTo(0, 0);
+            return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
         }
 
         public void HandlePlayerInput(IActor actor)

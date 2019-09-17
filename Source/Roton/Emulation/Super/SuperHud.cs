@@ -363,7 +363,7 @@ namespace Roton.Emulation.Super
             var nameList = new List<string>
             {
                 "Score  Name",
-                "-----  --------------------",
+                "-----  --------------------"
             };
             
             nameList.AddRange(

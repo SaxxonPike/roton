@@ -379,7 +379,7 @@ namespace Roton.Emulation.Original
             var nameList = new List<string>
             {
                 "Score  Name",
-                "-----  ----------------------------------",
+                "-----  ----------------------------------"
             };
 
             var nameIndex = 2;
@@ -419,7 +419,7 @@ namespace Roton.Emulation.Original
             var nameList = new List<string>
             {
                 "Score  Name",
-                "-----  ----------------------------------",
+                "-----  ----------------------------------"
             };
             
             nameList.AddRange(

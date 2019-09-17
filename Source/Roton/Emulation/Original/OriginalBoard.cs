@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 

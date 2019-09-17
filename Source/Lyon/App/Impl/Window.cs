@@ -15,9 +15,6 @@ namespace Lyon.App.Impl
         private readonly Lazy<IScenePresenter> _scenePresenter;
         private bool _closeWindow;
 
-        public int Width => WindowWidth;
-        public int Height => WindowHeight;
-
         private IKeyboardPresenter KeyboardPresenter => _keyboardPresenter.Value;
         private IScenePresenter ScenePresenter => _scenePresenter.Value;
 
@@ -48,11 +45,6 @@ namespace Lyon.App.Impl
         public void SetSize(int width, int height)
         {
             ScenePresenter.UpdateViewport();
-        }
-
-        public void Start(float updateRate)
-        {
-            base.Start(updateRate);
         }
 
         public void Close()
