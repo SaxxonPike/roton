@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -47,11 +48,19 @@ namespace Lyon
             builder.RegisterModule(new RotonModule(contextEngine));
             builder.RegisterModule(new LyonModule(args));
 
-            using (var container = builder.Build())
+            try
             {
-                container
-                    .Resolve<ILauncher>()
-                    .Launch(container.Resolve<IEngine>());
+                using (var container = builder.Build())
+                {
+                    container
+                        .Resolve<ILauncher>()
+                        .Launch(container.Resolve<IEngine>());
+                }
+            }
+            catch (Exception e)
+            {
+                if (Debugger.IsAttached)
+                    throw;
             }
         }
     }
