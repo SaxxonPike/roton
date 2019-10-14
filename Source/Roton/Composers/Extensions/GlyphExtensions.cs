@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Roton.Composers.Video.Glyphs;
+﻿using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Scenes;
 using Roton.Composers.Video.Scenes.Impl;
 
@@ -7,7 +6,7 @@ namespace Roton.Composers.Extensions
 {
     public static class GlyphExtensions
     {
-        public static IBitmap RenderToFastBitmap(this IGlyph glyph, Color foregroundColor, Color backgroundColor)
+        public static IBitmap RenderToFastBitmap(this IGlyph glyph, System.Drawing.Color foregroundColor, System.Drawing.Color backgroundColor)
         {
             var output = new Bitmap(glyph.Width, glyph.Height);
             var count = output.Bits.Length;

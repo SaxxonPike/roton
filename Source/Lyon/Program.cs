@@ -61,6 +61,7 @@ namespace Lyon
             {
                 if (Debugger.IsAttached)
                     throw;
+                Console.WriteLine(e);
             }
         }
     }
