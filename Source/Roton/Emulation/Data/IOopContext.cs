@@ -18,5 +18,6 @@ namespace Roton.Emulation.Data
         bool Repeat { get; set; }
         bool Resume { get; set; }
         int Command { get; set; }
+        int Index { get; }
     }
 }

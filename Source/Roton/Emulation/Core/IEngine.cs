@@ -39,12 +39,13 @@ namespace Roton.Emulation.Core
         ITargetList TargetList { get; }
         ITiles Tiles { get; }
         bool TitleScreen { get; }
+        ITracer Tracer { get; }
         IWorld World { get; }
         IActor ActorAt(IXyPair difference);
         int ActorIndexAt(IXyPair location);
         int Adjacent(IXyPair location, int id);
         void Attack(int index, IXyPair location);
-        bool BroadcastLabel(int sender, string label, bool force);
+        bool BroadcastLabel(int sender, string label, bool ignoreLock);
         void ClearBoard();
         void ClearSound();
         void ClearWorld();
@@ -54,7 +55,7 @@ namespace Roton.Emulation.Core
         IElement ElementAt(IXyPair location);
         void EnterBoard();
         void ExecuteCode(int index, IExecutable instructionSource, string name);
-        bool ExecuteLabel(int sender, ISearchContext context, string prefix);
+        bool ExecuteLabel(int sender, ISearchContext context, string term, string prefix);
         bool ExecuteTransaction(IOopContext context, bool take);
         void FadePurple();
         bool FindTile(ITile kind, IXyPair location);

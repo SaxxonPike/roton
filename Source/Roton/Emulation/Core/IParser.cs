@@ -9,12 +9,12 @@ namespace Roton.Emulation.Core
         IXyPair GetDirection(IOopContext oopContext);
         IItem GetItem(IOopContext oopContext);
         ITile GetKind(IOopContext oopContext);
-        bool GetTarget(ISearchContext context);
+        bool GetTarget(int index, ISearchContext context, string term);
         int ReadByte(int index, IExecutable instructionSource);
         string ReadLine(int index, IExecutable instructionSource);
         int ReadNumber(int index, IExecutable instructionSource);
         string ReadWord(int index, IExecutable instructionSource);
-        int Search(int index, int offset, string term);
+        int Search(int index, string term);
         int GetNumber(IOopContext context);
     }
 }

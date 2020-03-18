@@ -24,8 +24,7 @@ namespace Roton.Emulation.Commands.Impl
             context.SearchIndex = 0;
             while (true)
             {
-                context.SearchTarget = Engine.State.OopWord;
-                var result = Engine.ExecuteLabel(context.Index, context, "\xD\x3A");
+                var result = Engine.ExecuteLabel(context.Index, context, Engine.State.OopWord, "\xD\x3A");
                 if (!result)
                     break;
                 Engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x27;

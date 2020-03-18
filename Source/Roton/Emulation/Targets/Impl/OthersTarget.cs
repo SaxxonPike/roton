@@ -17,14 +17,15 @@ namespace Roton.Emulation.Targets.Impl
             _actors = actors;
         }
 
-        public bool Execute(ISearchContext context)
+        public bool Execute(int index, ISearchContext context, string term)
         {
             if (context.SearchIndex >= Actors.Count)
                 return false;
 
-            if (context.SearchIndex == context.Index)
-                context.SearchIndex++;
+            if (context.SearchIndex != index)
+                return true;
 
+            context.SearchIndex++;
             return context.SearchIndex < Actors.Count;
         }
     }

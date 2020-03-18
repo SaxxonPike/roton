@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using Lyon.Presenters;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
@@ -32,9 +34,13 @@ namespace Lyon.App.Impl
         {
             AudioPresenter.Start();
             engine.Exited += OnExited;
+            using var traceLog = new FileStream("trace.log", FileMode.Create);
+            using var traceWriter = new StreamWriter(traceLog);
+            engine.Tracer.Attach(traceWriter);
             engine.Start();
             Window.Start(72.75f);
             engine.Stop();
+            engine.Tracer.Detach(traceWriter);
             AudioPresenter.Stop();
         }
     }

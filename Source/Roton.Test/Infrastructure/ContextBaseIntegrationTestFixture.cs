@@ -117,12 +117,12 @@ namespace Roton.Test.Infrastructure
 
         protected void DisableTracer()
         {
-            Tracer.Enabled = false;
+            Tracer.Detach(TestContext.Out);
         }
 
         protected void EnableTracer()
         {
-            Tracer.Enabled = true;
+            Tracer.Attach(TestContext.Out);
         }
         
         [SetUp]
@@ -135,7 +135,7 @@ namespace Roton.Test.Infrastructure
             Keyboard = new TestKeyboard();
             SpeakerMock = new Mock<ISpeaker>();
             ClockFactoryMock = new Mock<IClockFactory>();
-            Tracer = new TestTracer(TestContext.Out);
+            Tracer = new Tracer();
 
             // Outer container
             var builder = new ContainerBuilder();

@@ -177,7 +177,7 @@ namespace Roton.Emulation.Core.Impl
         
         public IDrumBank DrumBank => _drumBank.Value;
 
-        private ITracer Tracer => _tracer.Value;
+        public ITracer Tracer => _tracer.Value;
 
         private Thread Thread { get; set; }
 
@@ -302,35 +302,33 @@ namespace Roton.Emulation.Core.Impl
 
         public IBoard Board => _board.Value;
 
-        public bool BroadcastLabel(int sender, string label, bool force)
+        public bool BroadcastLabel(int sender, string label, bool ignoreLock)
         {
-            var external = false;
+            var ignoreSelfLock = false;
             var success = false;
 
             if (sender < 0)
             {
-                external = true;
+                ignoreSelfLock = true;
                 sender = -sender;
             }
 
             var info = new SearchContext
             {
                 SearchIndex = 0,
-                SearchOffset = 0,
-                SearchTarget = label,
-                Index = sender
+                SearchOffset = 0
             };
 
-            while (ExecuteLabel(sender, info, "\x000D:"))
+            while (ExecuteLabel(sender, info, label, "\x000D:"))
             {
-                if (!ActorIsLocked(info.SearchIndex) || force || sender == info.SearchIndex && !external)
+                if (!ActorIsLocked(info.SearchIndex) || ignoreLock || sender == info.SearchIndex && !ignoreSelfLock)
                 {
-                    if (sender == info.SearchIndex) success = true;
-
+                    if (sender == info.SearchIndex) 
+                        success = true;
+                    
+                    Tracer.TraceBroadcast(sender, label, info.SearchIndex, ignoreLock, ignoreSelfLock);
                     Actors[info.SearchIndex].Instruction = info.SearchOffset;
                 }
-
-                info.SearchTarget = label;
             }
 
             return success;
@@ -583,48 +581,50 @@ namespace Roton.Emulation.Core.Impl
                 ExecuteDeath(context);
         }
 
-        public bool ExecuteLabel(int sender, ISearchContext context, string prefix)
+        public bool ExecuteLabel(int sender, ISearchContext context, string term, string prefix)
         {
-            var label = context.SearchTarget;
+            var label = term;
             var success = false;
             var split = label.IndexOf(':');
+            string target = null;
+
+            bool NextStat() => 
+                Parser.GetTarget(sender, context, target);
 
             if (split > 0)
             {
-                var target = label.Substring(0, split);
+                target = label.Substring(0, split);
                 label = label.Substring(split + 1);
-                context.SearchTarget = target;
-                success = Parser.GetTarget(context);
+                success = NextStat();
             }
             else if (context.SearchIndex < sender)
             {
+                label = term;
                 context.SearchIndex = sender;
                 split = 0;
                 success = true;
             }
-
-            while (true)
+            
+            while (success)
             {
-                if (!success) break;
-
                 if (label.ToUpper() == Facts.RestartLabel)
                 {
                     context.SearchOffset = 0;
                 }
                 else
                 {
-                    context.SearchOffset = Parser.Search(context.SearchIndex, 0, prefix + label);
+                    context.SearchOffset = Parser.Search(context.SearchIndex, prefix + label);
                     if (context.SearchOffset < 0 && split > 0)
                     {
-                        success = Parser.GetTarget(context);
+                        success = NextStat();
                         continue;
                     }
                 }
-
+            
                 success = context.SearchOffset >= 0;
                 break;
             }
-
+            
             return success;
         }
 

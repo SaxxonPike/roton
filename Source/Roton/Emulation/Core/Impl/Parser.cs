@@ -26,19 +26,19 @@ namespace Roton.Emulation.Core.Impl
             [DebuggerStepThrough] get => _engine.Value;
         }
 
-        public int Search(int index, int offset, string term)
+        public int Search(int index, string term)
         {
             var result = -1;
             var termBytes = term.ToBytes();
             var actor = Engine.Actors[index];
-            var offs = new Executable {Instruction = offset};
-
+            var offs = new Executable();
+            
             while (offs.Instruction < actor.Length)
             {
                 var oldOffset = offs.Instruction;
                 var termOffset = 0;
                 bool success;
-
+            
                 while (true)
                 {
                     ReadByte(index, offs);
@@ -47,7 +47,7 @@ namespace Roton.Emulation.Core.Impl
                         success = false;
                         break;
                     }
-
+            
                     termOffset++;
                     if (termOffset >= termBytes.Length)
                     {
@@ -55,7 +55,7 @@ namespace Roton.Emulation.Core.Impl
                         break;
                     }
                 }
-
+            
                 if (success)
                 {
                     ReadByte(index, offs);
@@ -67,11 +67,11 @@ namespace Roton.Emulation.Core.Impl
                         break;
                     }
                 }
-
+            
                 oldOffset++;
                 offs.Instruction = oldOffset;
             }
-
+            
             return result;
         }
 
@@ -233,11 +233,11 @@ namespace Roton.Emulation.Core.Impl
             return success ? result : null;
         }
 
-        public bool GetTarget(ISearchContext context)
+        public bool GetTarget(int index, ISearchContext context, string term)
         {
             context.SearchIndex++;
-            var target = Engine.TargetList.Get(context.SearchTarget) ?? Engine.TargetList.Get(string.Empty);
-            return target.Execute(context);
+            var target = Engine.TargetList.Get(term) ?? Engine.TargetList.Get(string.Empty);
+            return target.Execute(index, context, term);
         }
     }
 }

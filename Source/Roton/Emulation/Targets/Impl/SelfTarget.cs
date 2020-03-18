@@ -8,15 +8,15 @@ namespace Roton.Emulation.Targets.Impl
     [Context(Context.Super, "SELF")]
     public sealed class SelfTarget : ITarget
     {
-        public bool Execute(ISearchContext context)
+        public bool Execute(int index, ISearchContext context, string term)
         {
-            if (context.SearchOffset <= 0)
+            if (index <= 0)
                 return false;
 
-            if (context.SearchIndex > context.Index)
+            if (context.SearchIndex > index)
                 return false;
 
-            context.SearchIndex = context.SearchOffset;
+            context.SearchIndex = index;
             return true;
         }
     }
