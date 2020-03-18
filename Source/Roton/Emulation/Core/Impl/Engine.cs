@@ -251,7 +251,7 @@ namespace Roton.Emulation.Core.Impl
             var index = 0;
             foreach (var actor in Actors)
             {
-                if (actor.Location.X == location.X && actor.Location.Y == location.Y)
+                if (actor.Location.Matches(location))
                     return index;
                 index++;
             }

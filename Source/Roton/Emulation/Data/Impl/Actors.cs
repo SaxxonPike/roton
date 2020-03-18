@@ -10,9 +10,10 @@ namespace Roton.Emulation.Data.Impl
         {
             _memory = memory;
             Capacity = capacity;
+            Cache = new IActor[capacity];
         }
 
-        private IDictionary<int, IActor> Cache { get; } = new Dictionary<int, IActor>();
+        private IActor[] Cache { get; }
 
         private readonly Lazy<IMemory> _memory;
 
@@ -26,8 +27,11 @@ namespace Roton.Emulation.Data.Impl
 
         protected sealed override IActor GetItem(int index)
         {
-            Cache.TryGetValue(index, out var actor);
-            if (actor != null) 
+            if (index < 0 || index >= Capacity)
+                return GetActor(index);
+
+            var actor = Cache[index];
+            if (actor != null)
                 return actor;
             
             actor = GetActor(index);
