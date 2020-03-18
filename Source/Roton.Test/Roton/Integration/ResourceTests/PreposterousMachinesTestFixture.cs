@@ -9,7 +9,7 @@ namespace Roton.Test.Roton.Integration.ResourceTests
         [Explicit]
         public void Test_SineRenderer()
         {
-            DisableTracer();
+            EnableTracer();
             UnpackBoardResource("PreposterousMachines.SineRenderer.brd");
             DumpActorCode();
             Step(4);
@@ -17,6 +17,7 @@ namespace Roton.Test.Roton.Integration.ResourceTests
             Step(135);
             DumpActorCode();
             Step(1);
+            DisableTracer();
         }
     }
 }
