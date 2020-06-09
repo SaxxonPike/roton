@@ -26,14 +26,10 @@ namespace Roton.Emulation.Actions.Impl
             if (Engine.Player.Location.X == actor.Location.X ||
                 8 - actor.P1 < Engine.Player.Location.Y.AbsDiff(actor.Location.Y))
             {
-                if (8 - actor.P1 < Engine.Player.Location.X.AbsDiff(actor.Location.X))
-                {
-                    vector.SetTo(0, 0);
-                }
-                else
-                {
-                    vector.SetTo(0, (Engine.Player.Location.Y - actor.Location.Y).Polarity());
-                }
+                vector.SetTo(0,
+                    8 - actor.P1 < Engine.Player.Location.X.AbsDiff(actor.Location.X)
+                        ? 0
+                        : (Engine.Player.Location.Y - actor.Location.Y).Polarity());
             }
             else
             {

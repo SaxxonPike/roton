@@ -25,14 +25,9 @@ namespace Roton.Emulation.Actions.Impl
             {
                 if (actor.P2 + 8 <= Engine.Random.GetNext(17))
                 {
-                    if (actor.P1 >= Engine.Random.GetNext(9))
-                    {
-                        actor.Vector.CopyFrom(Engine.Seek(actor.Location));
-                    }
-                    else
-                    {
-                        actor.Vector.CopyFrom(Engine.Rnd());
-                    }
+                    actor.Vector.CopyFrom(actor.P1 >= Engine.Random.GetNext(9)
+                        ? Engine.Seek(actor.Location)
+                        : Engine.Rnd());
                 }
             }
             else

@@ -787,28 +787,26 @@ namespace Roton.Emulation.Core.Impl
                 if (stream.Length == 0)
                     return;
 
-                using (var reader = new BinaryReader(stream))
-                {
-                    var type = reader.ReadInt16();
-                    if (type != World.WorldType)
-                        throw new Exception("Incompatible world for this engine.");
+                using var reader = new BinaryReader(stream);
+                var type = reader.ReadInt16();
+                if (type != World.WorldType)
+                    throw new Exception("Incompatible world for this engine.");
 
-                    var numBoards = reader.ReadInt16();
-                    if (numBoards < 0)
-                        throw new Exception("Board count must be zero or greater.");
+                var numBoards = reader.ReadInt16();
+                if (numBoards < 0)
+                    throw new Exception("Board count must be zero or greater.");
 
-                    GameSerializer.LoadWorld(stream);
+                GameSerializer.LoadWorld(stream);
 
-                    var newBoards = Enumerable
-                        .Range(0, numBoards + 1)
-                        .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)))
-                        .ToList();
+                var newBoards = Enumerable
+                    .Range(0, numBoards + 1)
+                    .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)))
+                    .ToList();
 
-                    Boards.Clear();
+                Boards.Clear();
 
-                    foreach (var rawBoard in newBoards)
-                        Boards.Add(rawBoard);
-                }
+                foreach (var rawBoard in newBoards)
+                    Boards.Add(rawBoard);
             }
 
             Hud.CreateStatusWorld();

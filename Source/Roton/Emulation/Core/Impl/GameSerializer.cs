@@ -61,18 +61,16 @@ namespace Roton.Emulation.Core.Impl
 
         public byte[] PackBoard(ITiles tiles)
         {
-            using (var mem = new MemoryStream())
-            {
-                var writer = new BinaryWriter(mem);
-                writer.Write(Memory.Read(BoardNameOffset, BoardNameLength).ToArray());
-                PackTiles(tiles, writer);
-                writer.Write(Memory.Read(BoardDataOffset, BoardDataLength).ToArray());
-                var actorCount = Memory.Read16(ActorDataCountOffset);
-                writer.Write((short) actorCount);
-                PackActors(writer, actorCount);
-                writer.Flush();
-                return mem.ToArray();
-            }
+            using var mem = new MemoryStream();
+            var writer = new BinaryWriter(mem);
+            writer.Write(Memory.Read(BoardNameOffset, BoardNameLength).ToArray());
+            PackTiles(tiles, writer);
+            writer.Write(Memory.Read(BoardDataOffset, BoardDataLength).ToArray());
+            var actorCount = Memory.Read16(ActorDataCountOffset);
+            writer.Write((short) actorCount);
+            PackActors(writer, actorCount);
+            writer.Flush();
+            return mem.ToArray();
         }
 
         public void SaveBoardData(Stream target, byte[] data)
@@ -98,16 +96,14 @@ namespace Roton.Emulation.Core.Impl
 
         public void UnpackBoard(ITiles tiles, byte[] data)
         {
-            using (var mem = new MemoryStream(data))
-            {
-                var reader = new BinaryReader(mem);
-                Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
-                UnpackTiles(tiles, reader); // tiles
-                Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
-                int actorCount = reader.ReadInt16();
-                Memory.Write16(ActorDataCountOffset, actorCount); // actor count
-                UnpackActors(reader, actorCount); // actors
-            }
+            using var mem = new MemoryStream(data);
+            var reader = new BinaryReader(mem);
+            Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
+            UnpackTiles(tiles, reader); // tiles
+            Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
+            int actorCount = reader.ReadInt16();
+            Memory.Write16(ActorDataCountOffset, actorCount); // actor count
+            UnpackActors(reader, actorCount); // actors
         }
 
         public abstract int WorldDataCapacity { get; }

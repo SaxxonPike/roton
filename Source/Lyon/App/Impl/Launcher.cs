@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using Lyon.Presenters;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;

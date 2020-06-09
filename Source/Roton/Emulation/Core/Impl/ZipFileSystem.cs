@@ -24,14 +24,12 @@ namespace Roton.Emulation.Core.Impl
 
         public IEnumerable<string> GetDirectoryNames(string path)
         {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
-            {
-                return archive.Entries
-                    .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
-                    .Select(e => e.FullName.Split('/').Last())
-                    .ToList();
-            }
+            using var archiveStream = new MemoryStream(_file);
+            using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
+            return archive.Entries
+                .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
+                .Select(e => e.FullName.Split('/').Last())
+                .ToList();
         }
 
         // TODO: make zips writeable
@@ -39,42 +37,34 @@ namespace Roton.Emulation.Core.Impl
 
         public bool FileExists(string path)
         {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
-            {
-                return archive.Entries.Any(e => e.FullName.Equals(path));
-            }            
+            using var archiveStream = new MemoryStream(_file);
+            using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
+            return archive.Entries.Any(e => e.FullName.Equals(path));
         }
 
         public byte[] GetFile(string filename)
         {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
-            {
-                var entry = archive.Entries.FirstOrDefault(e => e.FullName == filename);
-                if (entry == null)
-                    return null;
+            using var archiveStream = new MemoryStream(_file);
+            using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
+            var entry = archive.Entries.FirstOrDefault(e => e.FullName == filename);
+            if (entry == null)
+                return null;
 
-                using (var outputStream = new MemoryStream())
-                using (var inputStream = entry.Open())
-                {
-                    inputStream.CopyTo(outputStream);
-                    outputStream.Flush();
-                    return outputStream.ToArray();
-                }
-            }
+            using var outputStream = new MemoryStream();
+            using var inputStream = entry.Open();
+            inputStream.CopyTo(outputStream);
+            outputStream.Flush();
+            return outputStream.ToArray();
         }
 
         public IEnumerable<string> GetFileNames(string path)
         {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read))
-            {
-                return archive.Entries
-                    .Where(e => e.FullName.StartsWith(path))
-                    .Select(e => e.FullName.Split('/').Last())
-                    .ToList();
-            }
+            using var archiveStream = new MemoryStream(_file);
+            using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
+            return archive.Entries
+                .Where(e => e.FullName.StartsWith(path))
+                .Select(e => e.FullName.Split('/').Last())
+                .ToList();
         }
 
         public string GetParentPath(string path)
@@ -87,19 +77,18 @@ namespace Roton.Emulation.Core.Impl
 
         public void PutFile(string filename, byte[] data)
         {
-            using (var archiveStream = new MemoryStream(_file))
-            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Update))
+            using var archiveStream = new MemoryStream(_file);
+            using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Update);
+            var entry = archive.CreateEntry(filename, CompressionLevel.Optimal);
+            using (var outputStream = entry.Open())
             {
-                var entry = archive.CreateEntry(filename, CompressionLevel.Optimal);
-                using (var outputStream = entry.Open())
-                using (var inputStream = new MemoryStream(data))
-                {
-                    inputStream.CopyTo(outputStream);
-                    outputStream.Flush();
-                }
-                archiveStream.Flush();
-                _file = archiveStream.ToArray();
+                using var inputStream = new MemoryStream(data);
+                inputStream.CopyTo(outputStream);
+                outputStream.Flush();
             }
+
+            archiveStream.Flush();
+            _file = archiveStream.ToArray();
         }
     }
 }

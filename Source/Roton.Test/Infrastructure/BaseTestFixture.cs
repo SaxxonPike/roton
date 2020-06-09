@@ -44,9 +44,9 @@ namespace Roton.Test.Infrastructure
 
         protected byte[] GetResourceFile(string path)
         {
-            using (var resource = GetResource(path))
-            using (var reader = new BinaryReader(resource))
-                return reader.ReadBytes((int) resource.Length);
+            using var resource = GetResource(path);
+            using var reader = new BinaryReader(resource);
+            return reader.ReadBytes((int) resource.Length);
         }
     }
 }

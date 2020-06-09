@@ -22,19 +22,17 @@ namespace Roton.Infrastructure.Impl
                 return _cache[assembly];
             
             var name = $"{assembly.GetName().Name}.Resources.resources.zip";
-            using (var stream = assembly.GetManifestResourceStream(name))
-            using (var mem = new MemoryStream())
-            {
-                if (stream == null)
-                    throw new Exception($"Reading resource failed: {name}");
+            using var stream = assembly.GetManifestResourceStream(name);
+            using var mem = new MemoryStream();
+            if (stream == null)
+                throw new Exception($"Reading resource failed: {name}");
                 
-                stream.CopyTo(mem);
+            stream.CopyTo(mem);
                 
-                var resource = new Resource(mem.ToArray());
-                _cache[assembly] = resource;
+            var resource = new Resource(mem.ToArray());
+            _cache[assembly] = resource;
                 
-                return resource;
-            }
+            return resource;
         }
     }
 }
