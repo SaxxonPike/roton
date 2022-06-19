@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <TargetFrameworks>net461;netcoreapp3.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
-    <PackageReference Include="Autofac.Extras.Moq" Version="4.3.0" />
-    <PackageReference Include="AutoFixture" Version="4.11.0" />
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
-    <PackageReference Include="Moq" Version="4.13.0" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="Autofac.Extras.Moq" Version="6.1.0" />
+    <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="FluentAssertions" Version="6.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Moq" Version="4.18.1" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
   <ItemGroup>

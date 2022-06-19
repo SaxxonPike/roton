@@ -28,12 +28,6 @@ namespace Roton.Test.Infrastructure
         }
 
         [DebuggerStepThrough]
-        protected void Inject<T>(T obj) where T : class
-        {
-            AutoMock.Value.Provide(obj);
-        }
-
-        [DebuggerStepThrough]
         protected T CreateService<T>(params Parameter[] parameters)
         {
             return AutoMock.Value.Create<T>(parameters);

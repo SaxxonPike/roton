@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>winexe</OutputType>
     <LangVersion>latest</LangVersion>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Roton\Roton.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
     <PackageReference Include="DotSDL" Version="0.0.1-alpha" />
   </ItemGroup>
   <ItemGroup>

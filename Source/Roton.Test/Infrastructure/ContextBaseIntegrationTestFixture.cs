@@ -140,28 +140,28 @@ namespace Roton.Test.Infrastructure
             // Outer container
             var builder = new ContainerBuilder();
             builder.RegisterModule(new RotonModule(Context));
-            builder.Register(c => FileSystem)
+            builder.Register(_ => FileSystem)
                 .As<IFileSystem>()
                 .SingleInstance();
-            builder.Register(c => TerminalMock.Object)
+            builder.Register(_ => TerminalMock.Object)
                 .As<ITerminal>()
                 .SingleInstance();
-            builder.Register(c => Keyboard)
+            builder.Register(_ => Keyboard)
                 .As<IKeyboard>()
                 .SingleInstance();
-            builder.Register(c => SpeakerMock.Object)
+            builder.Register(_ => SpeakerMock.Object)
                 .As<ISpeaker>()
                 .SingleInstance();
             builder.RegisterType<AssemblyResourceService>()
                 .As<IAssemblyResourceService>()
                 .SingleInstance();
-            builder.Register(c => ClockFactoryMock.Object)
+            builder.Register(_ => ClockFactoryMock.Object)
                 .As<IClockFactory>()
                 .SingleInstance();
-            builder.Register(c => Config)
+            builder.Register(_ => Config)
                 .As<IConfig>()
                 .SingleInstance();
-            builder.Register(c => Tracer)
+            builder.Register(_ => Tracer)
                 .As<ITracer>()
                 .SingleInstance();
             

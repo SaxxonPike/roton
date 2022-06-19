@@ -8,11 +8,20 @@ Roton is an emulation of the ZZT and Super ZZT game creation engines written in 
 
 Lyon is an application that runs an instance of Roton's emulation and presents it via SDL.
 
+### Target Frameworks
+
+- Lyon
+  - .NET Core 6
+- Roton
+  - .NET Standard 2 
+  - .NET Core 6
+  - .NET Framework 4.6.1
+    - This works as a convenience for now, but is deprecated and support will be removed in the near future.
+
 ### Build instructions
 
-All platforms need the 
-[.NET Core SDK](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md).
-We developed with 2.2, but newer versions of v2.x should work fine.
+The [.NET Core SDK](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md)
+is required.
 
 ##### Windows
 

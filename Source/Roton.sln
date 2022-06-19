@@ -9,6 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyon", "Lyon\Lyon.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roton.Test", "Roton.Test\Roton.Test.csproj", "{F87DC9C8-B22C-4A29-AB64-D529828950DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{ABB83496-AE05-4036-947B-9E1BACFF9218}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\publish.bat = ..\publish.bat
+		..\publish.sh = ..\publish.sh
+		..\publish-win32.bat = ..\publish-win32.bat
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

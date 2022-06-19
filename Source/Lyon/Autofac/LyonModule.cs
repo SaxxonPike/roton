@@ -55,14 +55,14 @@ namespace Lyon.Autofac
                     var presenter = x.Context.Resolve<IAudioPresenter>();
                     if (presenter != null)
                     {
-                        x.Instance.BufferReady += (s, a) => presenter.Update(a.Data);
+                        x.Instance.BufferReady += (_, a) => presenter.Update(a.Data);
                         presenter.Start();
 
                         x.Instance.SampleRate = presenter.SampleRate;                        
                     }
 
                     var engine = x.Context.Resolve<IEngine>();
-                    engine.Tick += (s, a) => x.Instance.Tick();
+                    engine.Tick += (_, _) => x.Instance.Tick();
                 });
 
             builder.Register(c => c.Resolve<ISceneComposerFactory>().Get())
