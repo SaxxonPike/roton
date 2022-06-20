@@ -1,9 +1,8 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿namespace Roton.Emulation.Data.Impl;
+
+public enum Context
 {
-    public enum Context
-    {
-        Startup,
-        Original,
-        Super
-    }
+    Startup,
+    Original,
+    Super
 }

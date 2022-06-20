@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IConfigFileService
 {
-    public interface IConfigFileService
-    {
-        IConfigFile Load();
-        void Save(IConfigFile configFile);
-    }
+    IConfigFile Load();
+    void Save(IConfigFile configFile);
 }

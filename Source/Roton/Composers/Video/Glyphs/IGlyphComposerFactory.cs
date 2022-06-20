@@ -1,7 +1,6 @@
-namespace Roton.Composers.Video.Glyphs
+namespace Roton.Composers.Video.Glyphs;
+
+public interface IGlyphComposerFactory
 {
-    public interface IGlyphComposerFactory
-    {
-        IGlyphComposer Get(byte[] data, bool wide);
-    }
+    IGlyphComposer Get(byte[] data, bool wide);
 }

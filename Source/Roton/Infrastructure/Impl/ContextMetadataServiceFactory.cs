@@ -3,23 +3,18 @@ using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Original;
 using Roton.Emulation.Super;
 
-namespace Roton.Infrastructure.Impl
+namespace Roton.Infrastructure.Impl;
+
+public sealed class ContextMetadataServiceFactory : IContextMetadataServiceFactory
 {
-    public sealed class ContextMetadataServiceFactory : IContextMetadataServiceFactory
+    public IContextMetadataService Get(Context context)
     {
-        public IContextMetadataService Get(Context context)
+        return context switch
         {
-            switch (context)
-            {
-                case Context.Startup:
-                    return new StartupContextMetadataService();
-                case Context.Original:
-                    return new OriginalContextMetadataService();
-                case Context.Super:
-                    return new SuperContextMetadataService();
-                default:
-                    throw new Exception($"Unknown {nameof(Context)}: {context}");
-            }
-        }
+            Context.Startup => new StartupContextMetadataService(),
+            Context.Original => new OriginalContextMetadataService(),
+            Context.Super => new SuperContextMetadataService(),
+            _ => throw new Exception($"Unknown {nameof(Context)}: {context}")
+        };
     }
 }

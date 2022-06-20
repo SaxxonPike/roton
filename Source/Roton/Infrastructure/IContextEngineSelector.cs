@@ -1,9 +1,8 @@
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure;
+
+public interface IContextEngineSelector
 {
-    public interface IContextEngineSelector
-    {
-        Context Get(string filename);
-    }
+    Context Get(string filename);
 }

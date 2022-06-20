@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IClock : IDisposable
 {
-    public interface IClock : IDisposable
-    {
-        event EventHandler OnTick;
-        void Start();
-        void Stop();
-    }
+    event EventHandler OnTick;
+    void Start();
+    void Stop();
 }

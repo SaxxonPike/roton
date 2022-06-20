@@ -1,9 +1,8 @@
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure;
+
+public interface IContextMetadataServiceFactory
 {
-    public interface IContextMetadataServiceFactory
-    {
-        IContextMetadataService Get(Context context);
-    }
+    IContextMetadataService Get(Context context);
 }

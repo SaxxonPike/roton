@@ -1,9 +1,8 @@
 using System;
 
-namespace Roton.Composers.Video.Palettes.Impl
+namespace Roton.Composers.Video.Palettes.Impl;
+
+public class PaletteDataChangedEventArgs : EventArgs
 {
-    public class PaletteDataChangedEventArgs : EventArgs
-    {
-        public byte[] Data { get; set; }
-    }
+    public byte[] Data { get; set; }
 }

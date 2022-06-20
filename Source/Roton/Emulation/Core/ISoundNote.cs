@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface ISoundNote
 {
-    public interface ISoundNote
-    {
-        int Note { get; }
-        int Duration { get; }
-    }
+    int Note { get; }
+    int Duration { get; }
 }

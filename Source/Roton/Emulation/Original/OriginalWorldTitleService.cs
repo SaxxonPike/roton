@@ -2,32 +2,23 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Original
+namespace Roton.Emulation.Original;
+
+[Context(Context.Original)]
+public class OriginalWorldTitleService : IWorldTitleService
 {
-    [Context(Context.Original)]
-    public class OriginalWorldTitleService : IWorldTitleService
+    public string GetTitle(string fileName)
     {
-        public string GetTitle(string fileName)
+        return fileName.ToUpperInvariant() switch
         {
-            switch (fileName.ToUpperInvariant())
-            {
-                case "TOWN":
-                    return "The Town of ZZT";
-                case "DEMO":
-                    return "Demo of the ZZT World Editor";
-                case "PHYSICS":
-                    return "The Physics Behind ZZT";
-                case "TOUR":
-                    return "Guided Tour ZZT's Other Worlds";
-                case "CAVES":
-                    return "The Caves of ZZT";
-                case "CITY":
-                    return "Underground City of ZZT";
-                case "DUNGEONS":
-                    return "The Dungeons of ZZT";
-                default:
-                    return null;
-            }
-        }
+            "TOWN" => "The Town of ZZT",
+            "DEMO" => "Demo of the ZZT World Editor",
+            "PHYSICS" => "The Physics Behind ZZT",
+            "TOUR" => "Guided Tour ZZT's Other Worlds",
+            "CAVES" => "The Caves of ZZT",
+            "CITY" => "Underground City of ZZT",
+            "DUNGEONS" => "The Dungeons of ZZT",
+            _ => null
+        };
     }
 }

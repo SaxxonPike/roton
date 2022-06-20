@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface ITextEntryHud
 {
-    public interface ITextEntryHud
-    {
-        string Show(int x, int y, int maxLength, int textColor, int pipColor);
-    }
+    string Show(int x, int y, int maxLength, int textColor, int pipColor);
 }

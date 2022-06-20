@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Targets
+namespace Roton.Emulation.Targets;
+
+public interface ITargetList
 {
-    public interface ITargetList
-    {
-        ITarget Get(string name);
-    }
+    ITarget Get(string name);
 }

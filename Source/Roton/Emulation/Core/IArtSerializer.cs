@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface IArtSerializer
 {
-    public interface IArtSerializer
-    {
-        void Deserialize(int startOffset);
-    }
+    void Deserialize(int startOffset);
 }

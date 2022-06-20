@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IClockFactory
 {
-    public interface IClockFactory
-    {
-        IClock Create(long numerator, long denominator);
-    }
+    IClock Create(long numerator, long denominator);
 }

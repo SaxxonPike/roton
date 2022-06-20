@@ -2,22 +2,21 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Targets.Impl
+namespace Roton.Emulation.Targets.Impl;
+
+[Context(Context.Original, "SELF")]
+[Context(Context.Super, "SELF")]
+public sealed class SelfTarget : ITarget
 {
-    [Context(Context.Original, "SELF")]
-    [Context(Context.Super, "SELF")]
-    public sealed class SelfTarget : ITarget
+    public bool Execute(ISearchContext context)
     {
-        public bool Execute(ISearchContext context)
-        {
-            if (context.SearchOffset <= 0)
-                return false;
+        if (context.SearchOffset <= 0)
+            return false;
 
-            if (context.SearchIndex > context.Index)
-                return false;
+        if (context.SearchIndex > context.Index)
+            return false;
 
-            context.SearchIndex = context.SearchOffset;
-            return true;
-        }
+        context.SearchIndex = context.SearchOffset;
+        return true;
     }
 }

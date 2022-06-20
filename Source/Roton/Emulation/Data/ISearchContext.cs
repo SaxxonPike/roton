@@ -1,10 +1,9 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface ISearchContext
 {
-    public interface ISearchContext
-    {
-        int Index { get; set; }
-        int SearchIndex { get; set; }
-        int SearchOffset { get; set; }
-        string SearchTarget { get; set; }
-    }
+    int Index { get; set; }
+    int SearchIndex { get; set; }
+    int SearchOffset { get; set; }
+    string SearchTarget { get; set; }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface IMemory
 {
-    public interface IMemory
-    {
-        byte[] Dump();
-        Span<byte> Data { get; }
-    }
+    byte[] Dump();
+    Span<byte> Data { get; }
 }

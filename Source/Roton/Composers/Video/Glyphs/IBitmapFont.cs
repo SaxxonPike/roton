@@ -1,9 +1,8 @@
-namespace Roton.Composers.Video.Glyphs
+namespace Roton.Composers.Video.Glyphs;
+
+public interface IBitmapFont
 {
-    public interface IBitmapFont
-    {
-        byte[] Data { get; }
-        int Height { get; }
-        int Width { get; }
-    }
+    byte[] Data { get; }
+    int Height { get; }
+    int Width { get; }
 }

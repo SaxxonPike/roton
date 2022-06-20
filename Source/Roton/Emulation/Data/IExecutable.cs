@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface IExecutable
 {
-    public interface IExecutable
-    {
-        int Instruction { get; set; }
-    }
+    int Instruction { get; set; }
 }

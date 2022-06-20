@@ -1,32 +1,31 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿namespace Roton.Emulation.Data.Impl;
+
+public abstract class Colors : FixedList<string>, IColors
 {
-    public abstract class Colors : FixedList<string>, IColors
+    private readonly IMemory _memory;
+    private readonly int _offset;
+
+    protected Colors(IMemory memory, int offset)
     {
-        private readonly IMemory _memory;
-        private readonly int _offset;
+        _memory = memory;
+        _offset = offset;
+    }
 
-        protected Colors(IMemory memory, int offset)
+    public override void Clear()
+    {
+        for (var i = 0; i < Count; i++)
         {
-            _memory = memory;
-            _offset = offset;
+            this[i] = string.Empty;
         }
+    }
 
-        public override void Clear()
-        {
-            for (var i = 0; i < Count; i++)
-            {
-                this[i] = string.Empty;
-            }
-        }
+    protected override string GetItem(int index)
+    {
+        return _memory.ReadString(_offset + index * 9);
+    }
 
-        protected override string GetItem(int index)
-        {
-            return _memory.ReadString(_offset + index * 9);
-        }
-
-        protected override void SetItem(int index, string value)
-        {
-            _memory.WriteString(_offset + index * 9, value);
-        }
+    protected override void SetItem(int index, string value)
+    {
+        _memory.WriteString(_offset + index * 9, value);
     }
 }

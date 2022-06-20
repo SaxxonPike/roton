@@ -1,7 +1,6 @@
-namespace Roton.Composers.Video.Scenes
+namespace Roton.Composers.Video.Scenes;
+
+public interface ISceneComposerFactory
 {
-    public interface ISceneComposerFactory
-    {
-        ISceneComposer Get();
-    }
+    ISceneComposer Get();
 }

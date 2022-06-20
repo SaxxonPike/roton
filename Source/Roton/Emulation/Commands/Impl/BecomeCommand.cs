@@ -4,31 +4,30 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "BECOME")]
+[Context(Context.Super, "BECOME")]
+public sealed class BecomeCommand : ICommand
 {
-    [Context(Context.Original, "BECOME")]
-    [Context(Context.Super, "BECOME")]
-    public sealed class BecomeCommand : ICommand
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public BecomeCommand(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public BecomeCommand(Lazy<IEngine> engine)
+    public void Execute(IOopContext context)
+    {
+        var kind = Engine.Parser.GetKind(context);
+        if (kind == null)
         {
-            _engine = engine;
+            Engine.RaiseError("Bad #BECOME");
+            return;
         }
 
-        public void Execute(IOopContext context)
-        {
-            var kind = Engine.Parser.GetKind(context);
-            if (kind == null)
-            {
-                Engine.RaiseError("Bad #BECOME");
-                return;
-            }
-
-            context.Died = true;
-            context.DeathTile.CopyFrom(kind);
-        }
+        context.Died = true;
+        context.DeathTile.CopyFrom(kind);
     }
 }

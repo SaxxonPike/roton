@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface ICheat
 {
-    public interface ICheat
-    {
-        void Execute();
-    }
+    void Execute();
 }

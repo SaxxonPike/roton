@@ -4,27 +4,26 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "CYCLE")]
+[Context(Context.Super, "CYCLE")]
+public sealed class CycleCommand : ICommand
 {
-    [Context(Context.Original, "CYCLE")]
-    [Context(Context.Super, "CYCLE")]
-    public sealed class CycleCommand : ICommand
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public CycleCommand(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public CycleCommand(Lazy<IEngine> engine)
+    public void Execute(IOopContext context)
+    {
+        var value = Engine.Parser.ReadNumber(context.Index, context);
+        if (value > 0)
         {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            var value = Engine.Parser.ReadNumber(context.Index, context);
-            if (value > 0)
-            {
-                context.Actor.Cycle = value;
-            }
+            context.Actor.Cycle = value;
         }
     }
 }

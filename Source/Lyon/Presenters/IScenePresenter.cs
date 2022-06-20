@@ -1,21 +1,20 @@
 ﻿using Roton.Composers.Video.Scenes;
 
-namespace Lyon.Presenters
+namespace Lyon.Presenters;
+
+/// <summary>
+/// The rendering interface.
+/// </summary>
+public interface IScenePresenter
 {
     /// <summary>
-    /// The rendering interface.
+    /// Renders the scene.
     /// </summary>
-    public interface IScenePresenter
-    {
-        /// <summary>
-        /// Renders the scene.
-        /// </summary>
-        IBitmap Render();
+    IBitmap Render();
 
-        /// <summary>
-        /// Updates the viewport of the renderer. This should be called when
-        /// the size of the renderer changes.
-        /// </summary>
-        void UpdateViewport();
-    }
+    /// <summary>
+    /// Updates the viewport of the renderer. This should be called when
+    /// the size of the renderer changes.
+    /// </summary>
+    void UpdateViewport();
 }

@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Interactions
+namespace Roton.Emulation.Interactions;
+
+public interface IInteractionList
 {
-    public interface IInteractionList
-    {
-        IInteraction Get(int index);
-    }
+    IInteraction Get(int index);
 }

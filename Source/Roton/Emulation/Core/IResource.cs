@@ -1,8 +1,7 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface IResource
 {
-    public interface IResource
-    {
-        IFileSystem Root { get; }
-        IFileSystem System { get; }
-    }
+    IFileSystem Root { get; }
+    IFileSystem System { get; }
 }

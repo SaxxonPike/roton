@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface IHighScore
 {
-    public interface IHighScore
-    {
-        string Name { get; set; }
-        int Score { get; set; }
-    }
+    string Name { get; set; }
+    int Score { get; set; }
 }

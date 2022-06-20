@@ -1,9 +1,8 @@
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Conditions
+namespace Roton.Emulation.Conditions;
+
+public interface ICondition
 {
-    public interface ICondition
-    {
-        bool? Execute(IOopContext context);
-    }
+    bool? Execute(IOopContext context);
 }

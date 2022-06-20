@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface ICommandLine
 {
-    public interface ICommandLine
-    {
-        string[] Args { get; }
-    }
+    string[] Args { get; }
 }

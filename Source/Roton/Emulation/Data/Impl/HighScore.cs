@@ -1,12 +1,11 @@
-namespace Roton.Emulation.Data.Impl
+namespace Roton.Emulation.Data.Impl;
+
+public class HighScore : IHighScore
 {
-    public class HighScore : IHighScore
+    internal HighScore()
     {
-        internal HighScore()
-        {
-        }
-        
-        public string Name { get; set; }
-        public int Score { get; set; }
     }
+        
+    public string Name { get; set; }
+    public int Score { get; set; }
 }

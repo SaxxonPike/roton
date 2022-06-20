@@ -2,11 +2,10 @@
 using Roton.Composers.Audio.Impl;
 using Roton.Emulation.Core;
 
-namespace Roton.Composers.Audio
+namespace Roton.Composers.Audio;
+
+public interface IAudioComposer : ISpeaker
 {
-    public interface IAudioComposer : ISpeaker
-    {
-        event EventHandler<AudioComposerDataEventArgs> BufferReady;
-        int SampleRate { get; set; }
-    }
+    event EventHandler<AudioComposerDataEventArgs> BufferReady;
+    int SampleRate { get; set; }
 }

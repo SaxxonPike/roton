@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface IMessage
 {
-    public interface IMessage
-    {
-        string[] Text { get; }
-    }
+    string[] Text { get; }
 }

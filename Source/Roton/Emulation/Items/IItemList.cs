@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Items
+namespace Roton.Emulation.Items;
+
+public interface IItemList
 {
-    public interface IItemList
-    {
-        IItem Get(string name);
-    }
+    IItem Get(string name);
 }

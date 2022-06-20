@@ -1,11 +1,10 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface ISpeaker
 {
-    public interface ISpeaker
-    {
-        void PlayDrum(int drum);
-        void PlayNote(int note);
-        void PlayStep();
-        void Tick();
-        void StopNote();
-    }
+    void PlayDrum(int drum);
+    void PlayNote(int note);
+    void PlayStep();
+    void Tick();
+    void StopNote();
 }

@@ -1,9 +1,8 @@
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IObjectMover
 {
-    public interface IObjectMover
-    {
-        void ExecuteDirection(IOopContext context, IXyPair vector);
-    }
+    void ExecuteDirection(IOopContext context, IXyPair vector);
 }

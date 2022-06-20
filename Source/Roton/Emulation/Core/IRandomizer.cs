@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface IRandomizer
 {
-    public interface IRandomizer
-    {
-        int GetNext(int exclusiveUpperBound);
-    }
+    int GetNext(int exclusiveUpperBound);
 }

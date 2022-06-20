@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface IKeyList : IEnumerable<bool>
 {
-    public interface IKeyList : IEnumerable<bool>
-    {
-        bool this[int index] { get; set; }
-        void Clear();
-    }
+    bool this[int index] { get; set; }
+    void Clear();
 }

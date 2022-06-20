@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Actions
+namespace Roton.Emulation.Actions;
+
+public interface IActionList
 {
-    public interface IActionList
-    {
-        IAction Get(int index);
-    }
+    IAction Get(int index);
 }

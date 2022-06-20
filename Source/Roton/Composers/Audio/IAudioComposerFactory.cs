@@ -1,7 +1,6 @@
-namespace Roton.Composers.Audio
+namespace Roton.Composers.Audio;
+
+public interface IAudioComposerFactory
 {
-    public interface IAudioComposerFactory
-    {
-        IAudioComposer Get();
-    }
+    IAudioComposer Get();
 }

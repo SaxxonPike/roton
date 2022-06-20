@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IChoiceHud
 {
-    public interface IChoiceHud
-    {
-        int Show(bool performSelection, int x, int y, string message, int currentValue, string barText);
-    }
+    int Show(bool performSelection, int x, int y, string message, int currentValue, string barText);
 }

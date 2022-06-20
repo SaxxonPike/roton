@@ -1,9 +1,8 @@
 ﻿using Roton.Emulation.Core;
 
-namespace Lyon.App
+namespace Lyon.App;
+
+public interface IFileSystemFactory
 {
-    public interface IFileSystemFactory
-    {
-        IFileSystem Create(string path);
-    }
+    IFileSystem Create(string path);
 }

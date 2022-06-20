@@ -1,9 +1,8 @@
-namespace Roton.Emulation.Core.Impl
+namespace Roton.Emulation.Core.Impl;
+
+public enum ConfigFileFormat
 {
-    public enum ConfigFileFormat
-    {
-        None,
-        Original30,
-        Original32
-    }
+    None,
+    Original30,
+    Original32
 }

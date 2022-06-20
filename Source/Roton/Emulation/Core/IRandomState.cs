@@ -1,8 +1,7 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface IRandomState
 {
-    public interface IRandomState
-    {
-        int Seed { get; }
-        int State { get; set; }
-    }
+    int Seed { get; }
+    int State { get; set; }
 }

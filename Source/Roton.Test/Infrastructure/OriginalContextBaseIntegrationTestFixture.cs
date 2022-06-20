@@ -1,13 +1,12 @@
 using NUnit.Framework;
 using Roton.Emulation.Data.Impl;
 
-namespace Roton.Test.Infrastructure
+namespace Roton.Test.Infrastructure;
+
+[TestFixture]
+public abstract class OriginalContextBaseIntegrationTestFixture : ContextBaseIntegrationTestFixture
 {
-    [TestFixture]
-    public abstract class OriginalContextBaseIntegrationTestFixture : ContextBaseIntegrationTestFixture
+    protected OriginalContextBaseIntegrationTestFixture() : base(Context.Original)
     {
-        protected OriginalContextBaseIntegrationTestFixture() : base(Context.Original)
-        {
-        }
     }
 }

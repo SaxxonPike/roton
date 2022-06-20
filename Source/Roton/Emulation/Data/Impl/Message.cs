@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Emulation.Data.Impl
+namespace Roton.Emulation.Data.Impl;
+
+public sealed class Message : IMessage
 {
-    public sealed class Message : IMessage
+    public Message()
     {
-        public Message()
-        {
-            Text = new[] {string.Empty};
-        }
-
-        public Message(IEnumerable<string> message)
-        {
-            Text = new List<string>(message).ToArray();
-        }
-
-        public Message(params string[] message)
-        {
-            Text = new List<string>(message).ToArray();
-        }
-
-        public string[] Text { get; }
+        Text = new[] {string.Empty};
     }
+
+    public Message(IEnumerable<string> message)
+    {
+        Text = new List<string>(message).ToArray();
+    }
+
+    public Message(params string[] message)
+    {
+        Text = new List<string>(message).ToArray();
+    }
+
+    public string[] Text { get; }
 }
