@@ -47,8 +47,12 @@ public sealed class Clock : IClock
         var frequency = Stopwatch.Frequency * _numerator / _denominator;
         var lastTime = timer.ElapsedTicks;
         timer.Start();
-        while (_running)
+
+        SpinWait.SpinUntil(() =>
         {
+            if (!_running)
+                return true;
+
             var currentTime = timer.ElapsedTicks;
             if (lastTime > currentTime)
             {
@@ -61,10 +65,10 @@ public sealed class Clock : IClock
                 lastTime += frequency;
                 OnTick?.Invoke(this, EventArgs.Empty);
             }
-
-            Thread.Sleep(1);
-        }
-
+            
+            return false;
+        });
+        
         _initialized = false;
     }
 

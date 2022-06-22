@@ -1376,13 +1376,18 @@ public sealed class Engine : IEngine, IDisposable
 
         if (isFast)
         {
-            while (_ticksToRun > 0)
+            SpinWait.SpinUntil(() =>
             {
+                if (_ticksToRun <= 0)
+                    return true;
+
                 UpdateSound();
                 if (Clock != null)
                     Tick?.Invoke(this, EventArgs.Empty);
                 _ticksToRun--;
-            }
+                
+                return false;
+            });
         }
         else
         {
@@ -1392,10 +1397,9 @@ public sealed class Engine : IEngine, IDisposable
                 return;
             
             Tick?.Invoke(this, EventArgs.Empty);
-            
-            while (_ticksToRun <= 0 && ThreadActive)
-                Thread.Sleep(1);
 
+            SpinWait.SpinUntil(() => _ticksToRun > 0 || !ThreadActive);
+            
             if (_ticksToRun > 0)
                 _ticksToRun--;
         }

@@ -16,9 +16,7 @@ public abstract class FixedStringList : FixedList<string>
     public override void Clear()
     {
         for (var i = 0; i < Count; i++)
-        {
             this[i] = string.Empty;
-        }
     }
 
     protected override string GetItem(int index)
