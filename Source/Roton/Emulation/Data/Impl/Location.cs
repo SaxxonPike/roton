@@ -3,7 +3,7 @@
 /// <summary>
 ///     An unsigned 8-bit (X,Y) pair.
 /// </summary>
-public class Location : IXyPair
+public sealed class Location : IXyPair
 {
     private int _x;
     private int _y;

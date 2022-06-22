@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public class Tile : ITile
+public sealed class Tile : ITile
 {
     public Tile()
     {

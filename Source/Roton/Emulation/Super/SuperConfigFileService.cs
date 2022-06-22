@@ -5,7 +5,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperConfigFileService : IConfigFileService
+public sealed class SuperConfigFileService : IConfigFileService
 {
     public IConfigFile Load()
     {

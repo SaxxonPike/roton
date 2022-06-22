@@ -2,6 +2,6 @@
 
 namespace Roton.Composers.Video.Scenes.Impl;
 
-public class SceneUpdatedEventArgs : EventArgs
+public sealed class SceneUpdatedEventArgs : EventArgs
 {
 }

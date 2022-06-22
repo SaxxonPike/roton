@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Data.Impl;
 
-public class Config : IConfig
+public sealed class Config : IConfig
 {
     public string DefaultWorld { get; set; }
     public string HomePath { get; set; }

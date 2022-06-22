@@ -9,7 +9,7 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class HighScoreListFactory : IHighScoreListFactory
+public sealed class HighScoreListFactory : IHighScoreListFactory
 {
     private readonly Lazy<IEngine> _engine;
     private readonly Lazy<IFacts> _facts;

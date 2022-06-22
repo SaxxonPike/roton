@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class FileDialog : IFileDialog
+public sealed class FileDialog : IFileDialog
 {
     private readonly Lazy<IHud> _hud;
     private readonly Lazy<IFileSystem> _fileSystem;

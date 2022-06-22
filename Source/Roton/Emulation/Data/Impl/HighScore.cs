@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Data.Impl;
 
-public class HighScore : IHighScore
+public sealed class HighScore : IHighScore
 {
     internal HighScore()
     {

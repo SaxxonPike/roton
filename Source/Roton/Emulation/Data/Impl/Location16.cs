@@ -3,7 +3,7 @@
 /// <summary>
 ///     A signed 16-bit (X,Y) pair.
 /// </summary>
-public class Location16 : IXyPair
+public sealed class Location16 : IXyPair
 {
     private int _x;
     private int _y;

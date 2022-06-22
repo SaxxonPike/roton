@@ -5,7 +5,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalWorldTitleService : IWorldTitleService
+public sealed class OriginalWorldTitleService : IWorldTitleService
 {
     public string GetTitle(string fileName)
     {

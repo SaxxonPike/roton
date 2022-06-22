@@ -10,7 +10,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalConfigFileService : IConfigFileService
+public sealed class OriginalConfigFileService : IConfigFileService
 {
     private const string ConfigFileName = "ZZT.CFG";
         

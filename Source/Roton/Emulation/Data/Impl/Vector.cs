@@ -3,7 +3,7 @@
 /// <summary>
 ///     A signed 16-bit (X,Y) pair.
 /// </summary>
-public class Vector : IXyPair
+public sealed class Vector : IXyPair
 {
     private int _x;
     private int _y;
