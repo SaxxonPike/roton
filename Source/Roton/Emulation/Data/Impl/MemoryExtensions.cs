@@ -151,8 +151,8 @@ public static class MemoryExtensions
         unchecked
         {
             var span = memory.Data;
-            var length = value.Length & 0xFF;
             var encodedString = value.ToBytes();
+            var length = encodedString.Length & 0xFF;
             span[offset++] = (byte) length;
             for (var i = 0; i < length; i++)
                 span[offset++] = encodedString[i];
