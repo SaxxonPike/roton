@@ -1,1 +1,1 @@
-dotnet publish -c Release -f netcoreapp3.0 -o ./Deploy ./Source/Lyon/Lyon.csproj
+dotnet publish -c Release -f net6.0 -o ./Deploy ./Source/Lyon/Lyon.csproj
