@@ -11,6 +11,8 @@ public interface IState
     ITile EdgeTile { get; }
     IXyPair KeyVector { get; }
     IReadOnlyList<int> LineChars { get; }
+    IReadOnlyList<string> ProgressAnimation { get; }
+    IReadOnlyList<int> ProgressColors { get; }
     ISoundBufferList SoundBuffer { get; }
     IReadOnlyList<int> StarChars { get; }
     IReadOnlyList<int> TransporterHChars { get; }

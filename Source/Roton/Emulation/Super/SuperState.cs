@@ -29,6 +29,8 @@ public sealed class SuperState : IState
         EdgeTile = new MemoryTile(Memory, 0x2260);
         KeyVector = new MemoryVector(Memory, 0xCC6E);
         LineChars = new ByteString(Memory, 0x22BA);
+        ProgressAnimation = new ProgressAnimation(Memory, 0x21C0);
+        ProgressColors = new Int8List(Memory, 0x21B8, 8);
         SoundBuffer = new SoundBufferList(memory, 0xCF9E);
         StarChars = new ByteString(Memory, 0x2064);
         TransporterHChars = new ByteString(Memory, 0x1F64);
@@ -176,6 +178,10 @@ public sealed class SuperState : IState
     public IXyPair KeyVector { get; }
 
     public IReadOnlyList<int> LineChars { get; }
+    
+    public IReadOnlyList<string> ProgressAnimation { get; }
+    
+    public IReadOnlyList<int> ProgressColors { get; }
 
     public string Message
     {

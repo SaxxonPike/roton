@@ -32,6 +32,8 @@ public sealed class OriginalState : IState
         EdgeTile = new MemoryTile(Memory, 0x0074);
         KeyVector = new MemoryVector(Memory, 0x7C68);
         LineChars = new ByteString(Memory, 0x0098);
+        ProgressAnimation = new ProgressAnimation(Memory, 0x00B2);
+        ProgressColors = new Int8List(Memory, 0x00AA, 8);
         SoundBuffer = new SoundBufferList(memory, 0x7E90);
         StarChars = new ByteString(Memory, 0x0336);
         TransporterHChars = new ByteString(Memory, 0x0236);
@@ -198,6 +200,10 @@ public sealed class OriginalState : IState
     public IXyPair KeyVector { get; }
 
     public IReadOnlyList<int> LineChars { get; }
+    
+    public IReadOnlyList<string> ProgressAnimation { get; }
+    
+    public IReadOnlyList<int> ProgressColors { get; }
 
     public string Message
     {
