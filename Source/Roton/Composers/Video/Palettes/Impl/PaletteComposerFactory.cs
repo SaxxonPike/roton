@@ -7,18 +7,12 @@ namespace Roton.Composers.Video.Palettes.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class PaletteComposerFactory : IPaletteComposerFactory
+public sealed class PaletteComposerFactory(Lazy<IComposerResourceService> composerResourceService)
+    : IPaletteComposerFactory
 {
-    private readonly Lazy<IComposerResourceService> _composerResourceService;
-
-    public PaletteComposerFactory(Lazy<IComposerResourceService> composerResourceService)
-    {
-        _composerResourceService = composerResourceService;
-    }
-        
     public IPaletteComposer Get(byte[] data)
     {
-        var result = new VgaPaletteComposer(data ?? _composerResourceService.Value.GetPaletteData());
+        var result = new VgaPaletteComposer(data ?? composerResourceService.Value.GetPaletteData());
         return new CachedPaletteComposer(result);
     }
 }

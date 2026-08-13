@@ -7,15 +7,9 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "KEYS")]
 [Context(Context.Super, "KEYS")]
-public sealed class KeysCheat : ICheat
+public sealed class KeysCheat(Lazy<IEngine> engine) : ICheat
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public KeysCheat(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(string name, bool clear)
     {

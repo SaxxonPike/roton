@@ -7,15 +7,9 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "TIME")]
 [Context(Context.Super, "TIME")]
-public sealed class TimeItem : IItem
+public sealed class TimeItem(Lazy<IEngine> engine) : IItem
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public TimeItem(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public int Value
     {

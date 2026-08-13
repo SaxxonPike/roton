@@ -2,17 +2,8 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Flags : FixedList<string>, IFlags
+public abstract class Flags(IMemory memory, int offset) : FixedList<string>, IFlags
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
-
-    protected Flags(IMemory memory, int offset)
-    {
-        _memory = memory;
-        _offset = offset;
-    }
-
     public override void Add(string item)
     {
         if (Contains(item))
@@ -80,11 +71,11 @@ public abstract class Flags : FixedList<string>, IFlags
 
     protected override string GetItem(int index)
     {
-        return _memory.ReadString(_offset + index*21);
+        return memory.ReadString(offset + index*21);
     }
 
     protected override void SetItem(int index, string value)
     {
-        _memory.WriteString(_offset + index*21, value);
+        memory.WriteString(offset + index*21, value);
     }
 }

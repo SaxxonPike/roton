@@ -3,20 +3,11 @@ using System.Diagnostics;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class KeyList : FixedList<bool>, IKeyList
+public abstract class KeyList(Lazy<IMemory> memory, int offset) : FixedList<bool>, IKeyList
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly int _offset;
-
-    protected KeyList(Lazy<IMemory> memory, int offset)
-    {
-        _memory = memory;
-        _offset = offset;
-    }
-
     private IMemory Memory
     {
-        [DebuggerStepThrough] get => _memory.Value;
+        [DebuggerStepThrough] get => memory.Value;
     }
 
     public override int Count => 7;
@@ -28,8 +19,8 @@ public abstract class KeyList : FixedList<bool>, IKeyList
     }
 
     protected override bool GetItem(int index) 
-        => Memory.ReadBool(_offset + index);
+        => Memory.ReadBool(offset + index);
 
     protected override void SetItem(int index, bool value) 
-        => Memory.WriteBool(_offset + index, value);
+        => Memory.WriteBool(offset + index, value);
 }

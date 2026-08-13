@@ -8,15 +8,9 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ANY")]
 [Context(Context.Super, "ANY")]
-public sealed class AnyCondition : ICondition
+public sealed class AnyCondition(Lazy<IEngine> engine) : ICondition
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public AnyCondition(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public bool? Execute(IOopContext context)
     {

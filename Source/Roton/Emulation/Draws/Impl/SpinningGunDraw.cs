@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public sealed class SpinningGunDraw : IDraw
+public sealed class SpinningGunDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public SpinningGunDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         switch (Engine.State.GameCycle & 0x7)

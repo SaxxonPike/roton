@@ -2,27 +2,17 @@
 
 namespace Roton.Emulation.Data;
 
-public sealed class Int16List : FixedList<int>
+public sealed class Int16List(IMemory memory, int offset, int count) : FixedList<int>
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
-
-    public Int16List(IMemory memory, int offset, int count)
-    {
-        _memory = memory;
-        _offset = offset;
-        Count = count;
-    }
-
-    public override int Count { get; }
+    public override int Count { get; } = count;
 
     protected override int GetItem(int index)
     {
-        return _memory.Read16(_offset + (index << 1));
+        return memory.Read16(offset + (index << 1));
     }
 
     protected override void SetItem(int index, int value)
     {
-        _memory.Write16(_offset + (index << 1), value);
+        memory.Write16(offset + (index << 1), value);
     }
 }

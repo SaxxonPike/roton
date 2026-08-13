@@ -8,15 +8,9 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "CONTACT")]
 [Context(Context.Super, "CONTACT")]
-public sealed class ContactCondition : ICondition
+public sealed class ContactCondition(Lazy<IEngine> engine) : ICondition
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public ContactCondition(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public bool? Execute(IOopContext context)
     {

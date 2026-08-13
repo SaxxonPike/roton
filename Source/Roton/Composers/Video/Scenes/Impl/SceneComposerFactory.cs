@@ -7,22 +7,14 @@ namespace Roton.Composers.Video.Scenes.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class SceneComposerFactory : ISceneComposerFactory
+public sealed class SceneComposerFactory(
+    IGlyphComposerFactory glyphComposerFactory,
+    IPaletteComposerFactory paletteComposerFactory)
+    : ISceneComposerFactory
 {
-    private readonly IGlyphComposerFactory _glyphComposerFactory;
-    private readonly IPaletteComposerFactory _paletteComposerFactory;
-
-    public SceneComposerFactory(
-        IGlyphComposerFactory glyphComposerFactory,
-        IPaletteComposerFactory paletteComposerFactory)
-    {
-        _glyphComposerFactory = glyphComposerFactory;
-        _paletteComposerFactory = paletteComposerFactory;
-    }
-
     public ISceneComposer Get()
     {
-        var composer = new SceneComposer(_paletteComposerFactory, _glyphComposerFactory);
+        var composer = new SceneComposer(paletteComposerFactory, glyphComposerFactory);
         composer.SetSize(80, 25, false);
         return composer;
     }

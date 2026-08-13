@@ -7,15 +7,9 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "HEALTH")]
 [Context(Context.Super, "HEALTH")]
-public sealed class HealthItem : IItem
+public sealed class HealthItem(Lazy<IEngine> engine) : IItem
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public HealthItem(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public int Value
     {

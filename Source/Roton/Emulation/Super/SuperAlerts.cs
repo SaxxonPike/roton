@@ -5,33 +5,22 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperAlerts : Alerts
+public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : Alerts
 {
-    private readonly IColors _colors;
-    private readonly IFacts _facts;
-    private readonly IMemory _memory;
-
-    public SuperAlerts(IMemory memory, IColors colors, IFacts facts)
-    {
-        _memory = memory;
-        _colors = colors;
-        _facts = facts;
-    }
-
-    public override IMessage AmmoMessage => new Message("Ammunition:", $"{_facts.AmmoPerPickup} shots");
+    public override IMessage AmmoMessage => new Message("Ammunition:", $"{facts.AmmoPerPickup} shots");
 
     public override bool AmmoPickup
     {
-        get => _memory.ReadBool(0x7C0B);
-        set => _memory.WriteBool(0x7C0B, value);
+        get => memory.ReadBool(0x7C0B);
+        set => memory.WriteBool(0x7C0B, value);
     }
 
     public override IMessage BombMessage { get; } = new Message("Bomb activated!");
 
     public override bool CantShootHere
     {
-        get => _memory.ReadBool(0x7C0D);
-        set => _memory.WriteBool(0x7C0D, value);
+        get => memory.ReadBool(0x7C0D);
+        set => memory.WriteBool(0x7C0D, value);
     }
 
     public override bool Dark
@@ -44,20 +33,20 @@ public sealed class SuperAlerts : Alerts
 
     public override IMessage DoorLockedMessage(int color)
     {
-        return new Message($"The {_colors[color]} door", "is locked!");
+        return new Message($"The {colors[color]} door", "is locked!");
     }
 
     public override IMessage DoorOpenMessage(int color)
     {
-        return new Message($"The {_colors[color]} door", "is now open.");
+        return new Message($"The {colors[color]} door", "is now open.");
     }
 
     public override IMessage EnergizerMessage { get; } = new Message("Shield:", "You are invincible");
 
     public override bool EnergizerPickup
     {
-        get => _memory.ReadBool(0x7C11);
-        set => _memory.WriteBool(0x7C11, value);
+        get => memory.ReadBool(0x7C11);
+        set => memory.WriteBool(0x7C11, value);
     }
 
     public override IMessage ErrorMessage(string error)
@@ -69,14 +58,14 @@ public sealed class SuperAlerts : Alerts
 
     public override bool FakeWall
     {
-        get => _memory.ReadBool(0x7C0F);
-        set => _memory.WriteBool(0x7C0F, value);
+        get => memory.ReadBool(0x7C0F);
+        set => memory.WriteBool(0x7C0F, value);
     }
 
     public override bool Forest
     {
-        get => _memory.ReadBool(0x7C0E);
-        set => _memory.WriteBool(0x7C0E, value);
+        get => memory.ReadBool(0x7C0E);
+        set => memory.WriteBool(0x7C0E, value);
     }
 
     public override IMessage ForestMessage { get; } = new Message("A path is cleared", "through the forest.");
@@ -85,20 +74,20 @@ public sealed class SuperAlerts : Alerts
 
     public override bool GemPickup
     {
-        get => _memory.ReadBool(0x7C10);
-        set => _memory.WriteBool(0x7C10, value);
+        get => memory.ReadBool(0x7C10);
+        set => memory.WriteBool(0x7C10, value);
     }
 
     public override IMessage InvisibleMessage { get; } = new Message("You are blocked", "by an invisible wall.");
 
     public override IMessage KeyAlreadyMessage(int color)
     {
-        return new Message("You already have a", $"{_colors[color]} key!");
+        return new Message("You already have a", $"{colors[color]} key!");
     }
 
     public override IMessage KeyPickupMessage(int color)
     {
-        return new Message("You now have the", $"{_colors[color]} key.");
+        return new Message("You now have the", $"{colors[color]} key.");
     }
 
     public override IMessage NoAmmoMessage { get; } = new Message("You don't have", "any ammo!");
@@ -124,8 +113,8 @@ public sealed class SuperAlerts : Alerts
 
     public override bool OutOfAmmo
     {
-        get => _memory.ReadBool(0x7C0C);
-        set => _memory.WriteBool(0x7C0C, value);
+        get => memory.ReadBool(0x7C0C);
+        set => memory.WriteBool(0x7C0C, value);
     }
 
     public override IMessage StoneMessage { get; } = new Message("You have found a", "Stone of Power!");

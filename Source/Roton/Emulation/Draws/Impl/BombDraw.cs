@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombDraw : IDraw
+public sealed class BombDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public BombDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         var p1 = Engine.ActorAt(location).P1;

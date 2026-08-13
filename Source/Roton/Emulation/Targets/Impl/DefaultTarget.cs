@@ -8,19 +8,11 @@ namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DefaultTarget : ITarget
+public sealed class DefaultTarget(Lazy<IActors> actors, Lazy<IParser> parser) : ITarget
 {
-    private readonly Lazy<IActors> _actors;
-    private IActors Actors => _actors.Value;
-        
-    private readonly Lazy<IParser> _parser;
-    private IParser Parser => _parser.Value;
+    private IActors Actors => actors.Value;
 
-    public DefaultTarget(Lazy<IActors> actors, Lazy<IParser> parser)
-    {
-        _actors = actors;
-        _parser = parser;
-    }
+    private IParser Parser => parser.Value;
 
     public bool Execute(int index, ISearchContext context, string term)
     {

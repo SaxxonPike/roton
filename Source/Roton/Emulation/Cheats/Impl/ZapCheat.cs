@@ -7,15 +7,9 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCheat : ICheat
+public sealed class ZapCheat(Lazy<IEngine> engine) : ICheat
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public ZapCheat(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(string name, bool clear)
     {

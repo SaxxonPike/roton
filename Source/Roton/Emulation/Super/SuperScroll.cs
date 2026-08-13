@@ -8,12 +8,8 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperScroll : Scroll
+public sealed class SuperScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : Scroll(engine, terminal)
 {
-    public SuperScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : base(engine, terminal)
-    {
-    }
-
     protected override int Width => 37;
     protected override int Height => 23;
     protected override int Left => 1;

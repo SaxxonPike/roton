@@ -7,15 +7,9 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x23)]
 [Context(Context.Super, 0x23)]
-public sealed class RuffianAction : IAction
+public sealed class RuffianAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public RuffianAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

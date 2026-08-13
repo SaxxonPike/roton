@@ -8,15 +8,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "TAKE")]
 [Context(Context.Super, "TAKE")]
-public sealed class TakeCommand : ICommand
+public sealed class TakeCommand(Lazy<IEngine> engine) : ICommand
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public TakeCommand(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(IOopContext context)
     {

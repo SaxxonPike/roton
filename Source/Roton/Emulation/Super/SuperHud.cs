@@ -12,30 +12,24 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperHud : Hud
+public sealed class SuperHud(
+    Lazy<IEngine> engine,
+    Lazy<ITerminal> terminal,
+    Lazy<IScroll> scroll,
+    Lazy<ITextEntryHud> textEntryHud)
+    : Hud(engine, scroll)
 {
-    private readonly Lazy<ITerminal> _terminal;
-    private readonly Lazy<ITextEntryHud> _textEntryHud;
-
-    public SuperHud(Lazy<IEngine> engine, Lazy<ITerminal> terminal, Lazy<IScroll> scroll, Lazy<ITextEntryHud> textEntryHud)
-        : base(engine, scroll)
-    {
-        _terminal = terminal;
-        _textEntryHud = textEntryHud;
-        OldCamera = new Location16(short.MinValue, short.MinValue);
-    }
-
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => _terminal.Value;
+        [DebuggerStepThrough] get => terminal.Value;
     }
 
     private ITextEntryHud TextEntryHud
     {
-        [DebuggerStepThrough] get => _textEntryHud.Value;
+        [DebuggerStepThrough] get => textEntryHud.Value;
     }
 
-    private Location16 OldCamera { get; }
+    private Location16 OldCamera { get; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
 

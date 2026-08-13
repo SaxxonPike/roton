@@ -8,15 +8,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "IF")]
 [Context(Context.Super, "IF")]
-public sealed class IfCommand : ICommand
+public sealed class IfCommand(Lazy<IEngine> engine) : ICommand
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public IfCommand(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(IOopContext context)
     {

@@ -6,15 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneAction : IAction
+public sealed class StoneAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public StoneAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

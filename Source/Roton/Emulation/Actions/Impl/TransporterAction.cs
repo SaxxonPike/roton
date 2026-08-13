@@ -7,16 +7,10 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterAction : IAction
+public sealed class TransporterAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public TransporterAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Act(int index)
     {
         Engine.UpdateBoard(Engine.Actors[index].Location);

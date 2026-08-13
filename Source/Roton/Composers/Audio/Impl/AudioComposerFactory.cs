@@ -7,21 +7,12 @@ namespace Roton.Composers.Audio.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class AudioComposerFactory : IAudioComposerFactory
+public sealed class AudioComposerFactory(
+    Lazy<IDrumBank> drumBank,
+    Lazy<IConfig> config) : IAudioComposerFactory
 {
-    private readonly Lazy<IDrumBank> _drumBank;
-    private readonly Lazy<IConfig> _config;
-
-    public AudioComposerFactory(
-        Lazy<IDrumBank> drumBank, 
-        Lazy<IConfig> config)
-    {
-        _drumBank = drumBank;
-        _config = config;
-    }
-        
     public IAudioComposer Get()
     {
-        return new AudioComposer(_drumBank, _config.Value);
+        return new AudioComposer(drumBank, config.Value);
     }
 }

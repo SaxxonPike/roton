@@ -12,16 +12,10 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x18)]
 [Context(Context.Super, 0x19)]
 [Context(Context.Super, 0x1A)]
-public sealed class PuzzleInteraction : IInteraction
+public sealed class PuzzleInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public PuzzleInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         Engine.Push(location, vector);

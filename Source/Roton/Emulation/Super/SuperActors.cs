@@ -6,17 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperActors : Actors
+public sealed class SuperActors(Lazy<IMemory> memory, Lazy<IHeap> heap) : Actors(memory, 129)
 {
-    private readonly Lazy<IHeap> _heap;
-
-    public SuperActors(Lazy<IMemory> memory, Lazy<IHeap> heap)
-        : base(memory, 129)
-    {
-        _heap = heap;
-    }
-
-    private IHeap Heap => _heap.Value;
+    private IHeap Heap => heap.Value;
 
     public override int Count
         => Memory.Read16(0x6AB3) + 1;

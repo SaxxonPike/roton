@@ -7,15 +7,9 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "GEMS")]
 [Context(Context.Super, "GEMS")]
-public sealed class GemsItem : IItem
+public sealed class GemsItem(Lazy<IEngine> engine) : IItem
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public GemsItem(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public int Value
     {

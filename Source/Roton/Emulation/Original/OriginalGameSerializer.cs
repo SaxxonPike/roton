@@ -7,13 +7,8 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalGameSerializer : GameSerializer
+public sealed class OriginalGameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : GameSerializer(memory, heap)
 {
-    public OriginalGameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap)
-        : base(memory, heap)
-    {
-    }
-
     public override int ActorCapacity => 152;
 
     public override int ActorDataCountOffset => 0x31CD;

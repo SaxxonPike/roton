@@ -1,12 +1,7 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public abstract class Element : IElement
+public abstract class Element(int id) : IElement
 {
-    protected Element(int id)
-    {
-        Id = id;
-    }
-
     public abstract string BoardEditText { get; set; }
     public abstract int Character { get; set; }
     public abstract string CodeEditText { get; set; }
@@ -14,7 +9,7 @@ public abstract class Element : IElement
     public abstract int Cycle { get; set; }
     public abstract string EditorCategory { get; set; }
     public abstract bool HasDrawCode { get; set; }
-    public int Id { get; }
+    public int Id { get; } = id;
     public abstract bool IsAlwaysVisible { get; set; }
     public abstract bool IsDestructible { get; set; }
     public abstract bool IsEditorFloor { get; set; }

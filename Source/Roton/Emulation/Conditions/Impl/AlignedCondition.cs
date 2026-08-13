@@ -8,15 +8,9 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ALLIGNED")]
 [Context(Context.Super, "ALLIGNED")]
-public sealed class AlignedCondition : ICondition
+public sealed class AlignedCondition(Lazy<IEngine> engine) : ICondition
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public AlignedCondition(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public bool? Execute(IOopContext context)
     {

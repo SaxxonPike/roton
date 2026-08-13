@@ -8,15 +8,9 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "SEEK")]
 [Context(Context.Super, "SEEK")]
-public sealed class SeekDirection : IDirection
+public sealed class SeekDirection(Lazy<IEngine> engine) : IDirection
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SeekDirection(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public IXyPair Execute(IOopContext context)
     {

@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterDraw : IDraw
+public sealed class TransporterDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public TransporterDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         var actor = Engine.ActorAt(location);

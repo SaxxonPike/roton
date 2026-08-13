@@ -7,15 +7,9 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "SCORE")]
 [Context(Context.Super, "SCORE")]
-public sealed class ScoreItem : IItem
+public sealed class ScoreItem(Lazy<IEngine> engine) : IItem
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public ScoreItem(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public int Value
     {

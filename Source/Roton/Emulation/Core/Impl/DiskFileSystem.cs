@@ -5,19 +5,14 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class DiskFileSystem : IFileSystem
+public sealed class DiskFileSystem(string basePath) : IFileSystem
 {
-    private readonly string _basePath;
+    private readonly string _basePath = !string.IsNullOrWhiteSpace(basePath)
+        ? basePath
+        : Environment.CurrentDirectory;
 
     public DiskFileSystem() : this(Environment.CurrentDirectory)
     {
-    }
-
-    public DiskFileSystem(string basePath)
-    {
-        _basePath = !string.IsNullOrWhiteSpace(basePath)
-            ? basePath
-            : Environment.CurrentDirectory;
     }
 
     public bool IsWriteable => true;

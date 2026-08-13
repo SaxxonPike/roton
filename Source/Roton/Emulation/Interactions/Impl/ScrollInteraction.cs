@@ -8,16 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
-public sealed class ScrollInteraction : IInteraction
+public sealed class ScrollInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public ScrollInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         var scrollIndex = Engine.ActorIndexAt(location);

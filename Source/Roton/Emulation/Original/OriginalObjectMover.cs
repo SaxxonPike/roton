@@ -7,16 +7,10 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalObjectMover : IObjectMover
+public sealed class OriginalObjectMover(Lazy<IEngine> engine) : IObjectMover
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public OriginalObjectMover(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void ExecuteDirection(IOopContext context, IXyPair vector)
     {
         if (vector.IsZero())

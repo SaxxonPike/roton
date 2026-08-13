@@ -7,15 +7,9 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "GEMS")]
 [Context(Context.Super, "GEMS")]
-public sealed class GemsCheat : ICheat
+public sealed class GemsCheat(Lazy<IEngine> engine) : ICheat
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public GemsCheat(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(string name, bool clear)
     {

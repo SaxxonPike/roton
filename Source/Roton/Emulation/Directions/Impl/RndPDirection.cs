@@ -8,15 +8,9 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RNDP")]
 [Context(Context.Super, "RNDP")]
-public sealed class RndPDirection : IDirection
+public sealed class RndPDirection(Lazy<IEngine> engine) : IDirection
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public RndPDirection(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public IXyPair Execute(IOopContext context)
     {

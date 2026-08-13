@@ -8,15 +8,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCommand : ICommand
+public sealed class ZapCommand(Lazy<IEngine> engine) : ICommand
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public ZapCommand(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(IOopContext context)
     {

@@ -5,67 +5,58 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalWorld : IWorld
+public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
 {
-    private readonly IMemory _memory;
-        
-    public OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags)
-    {
-        _memory = memory;
-        Keys = keyList;
-        Flags = flags;
-    }
-
     public int Ammo
     {
-        get => _memory.Read16(0x481E);
-        set => _memory.Write16(0x481E, value);
+        get => memory.Read16(0x481E);
+        set => memory.Write16(0x481E, value);
     }
 
     public int BoardIndex
     {
-        get => _memory.Read16(0x482B);
-        set => _memory.Write16(0x482B, value);
+        get => memory.Read16(0x482B);
+        set => memory.Write16(0x482B, value);
     }
 
     public int EnergyCycles
     {
-        get => _memory.Read16(0x4831);
-        set => _memory.Write16(0x4831, value);
+        get => memory.Read16(0x4831);
+        set => memory.Write16(0x4831, value);
     }
 
     public int Gems
     {
-        get => _memory.Read16(0x4820);
-        set => _memory.Write16(0x4820, value);
+        get => memory.Read16(0x4820);
+        set => memory.Write16(0x4820, value);
     }
 
     public int Health
     {
-        get => _memory.Read16(0x4829);
-        set => _memory.Write16(0x4829, value);
+        get => memory.Read16(0x4829);
+        set => memory.Write16(0x4829, value);
     }
 
     public bool IsLocked
     {
-        get => _memory.ReadBool(0x4922);
-        set => _memory.WriteBool(0x4922, value);
+        get => memory.ReadBool(0x4922);
+        set => memory.WriteBool(0x4922, value);
     }
 
-    public IFlags Flags { get; }
-        
-    public IKeyList Keys { get; }
+    public IFlags Flags { get; } = flags;
+
+    public IKeyList Keys { get; } = keyList;
 
     public string Name
     {
-        get => _memory.ReadString(0x4837);
-        set => _memory.WriteString(0x4837, value);
+        get => memory.ReadString(0x4837);
+        set => memory.WriteString(0x4837, value);
     }
 
     public int Score
     {
-        get => _memory.Read16(0x4835);
-        set => _memory.Write16(0x4835, value);
+        get => memory.Read16(0x4835);
+        set => memory.Write16(0x4835, value);
     }
 
     public int Stones
@@ -76,20 +67,20 @@ public sealed class OriginalWorld : IWorld
 
     public int TimePassed
     {
-        get => _memory.Read16(0x491E);
-        set => _memory.Write16(0x491E, value);
+        get => memory.Read16(0x491E);
+        set => memory.Write16(0x491E, value);
     }
 
     public int TorchCycles
     {
-        get => _memory.Read16(0x482F);
-        set => _memory.Write16(0x482F, value);
+        get => memory.Read16(0x482F);
+        set => memory.Write16(0x482F, value);
     }
 
     public int Torches
     {
-        get => _memory.Read16(0x482D);
-        set => _memory.Write16(0x482D, value);
+        get => memory.Read16(0x482D);
+        set => memory.Write16(0x482D, value);
     }
 
     public int WorldType => -1;

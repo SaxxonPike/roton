@@ -7,15 +7,9 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "TIME")]
 [Context(Context.Super, "TIME")]
-public sealed class TimeCheat : ICheat
+public sealed class TimeCheat(Lazy<IEngine> engine) : ICheat
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public TimeCheat(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(string name, bool clear)
     {

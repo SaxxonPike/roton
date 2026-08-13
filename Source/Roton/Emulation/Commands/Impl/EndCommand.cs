@@ -8,15 +8,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "END")]
 [Context(Context.Super, "END")]
-public sealed class EndCommand : ICommand
+public sealed class EndCommand(Lazy<IEngine> engine) : ICommand
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public EndCommand(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(IOopContext context)
     {

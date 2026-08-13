@@ -9,15 +9,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperFeatures : IFeatures
+public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SuperFeatures(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void LockActor(int index)
     {

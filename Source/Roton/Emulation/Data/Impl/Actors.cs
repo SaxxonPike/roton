@@ -3,22 +3,13 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Actors : FixedList<IActor>, IActors
+public abstract class Actors(Lazy<IMemory> memory, int capacity) : FixedList<IActor>, IActors
 {
-    protected Actors(Lazy<IMemory> memory, int capacity)
-    {
-        _memory = memory;
-        Capacity = capacity;
-        Cache = new IActor[capacity];
-    }
+    private IActor[] Cache { get; } = new IActor[capacity];
 
-    private IActor[] Cache { get; }
+    protected IMemory Memory => memory.Value;
 
-    private readonly Lazy<IMemory> _memory;
-
-    protected IMemory Memory => _memory.Value;
-
-    public int Capacity { get; }
+    public int Capacity { get; } = capacity;
 
     public IActor Player => this[0];
 

@@ -6,15 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Super, "Z")]
-public sealed class ZItem : IItem
+public sealed class ZItem(Lazy<IEngine> engine) : IItem
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public ZItem(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public int Value
     {

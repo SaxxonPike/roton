@@ -7,15 +7,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x3F)]
-public sealed class WebDraw : IDraw
+public sealed class WebDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-        
-    public WebDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public AnsiChar Draw(IXyPair location)
     {

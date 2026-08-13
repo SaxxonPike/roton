@@ -7,15 +7,9 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0C)]
 [Context(Context.Super, 0x0C)]
-public sealed class DuplicatorAction : IAction
+public sealed class DuplicatorAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public DuplicatorAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

@@ -8,15 +8,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
-public sealed class PutCommand : ICommand
+public sealed class PutCommand(Lazy<IEngine> engine) : ICommand
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public PutCommand(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Execute(IOopContext context)
     {

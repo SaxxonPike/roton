@@ -7,16 +7,10 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x11)]
 [Context(Context.Super, 0x11)]
-public sealed class CounterclockwiseConveyorAction : IAction
+public sealed class CounterclockwiseConveyorAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public CounterclockwiseConveyorAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Act(int index)
     {
         var actor = Engine.Actors[index];

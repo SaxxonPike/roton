@@ -8,25 +8,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class FileDialog : IFileDialog
+public sealed class FileDialog(Lazy<IHud> hud, Lazy<IFileSystem> fileSystem) : IFileDialog
 {
-    private readonly Lazy<IHud> _hud;
-    private readonly Lazy<IFileSystem> _fileSystem;
-
-    public FileDialog(Lazy<IHud> hud, Lazy<IFileSystem> fileSystem)
-    {
-        _hud = hud;
-        _fileSystem = fileSystem;
-    }
-
     private IHud Hud
     {
-        [DebuggerStepThrough] get => _hud.Value;
+        [DebuggerStepThrough] get => hud.Value;
     }
 
     private IFileSystem FileSystem
     {
-        [DebuggerStepThrough] get => _fileSystem.Value;
+        [DebuggerStepThrough] get => fileSystem.Value;
     }
 
     public string Open(string title, string extension)

@@ -26,16 +26,10 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x3E)]
 [Context(Context.Super, 0x45)]
 [Context(Context.Super, 0x48)]
-public sealed class EnemyInteraction : IInteraction
+public sealed class EnemyInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public EnemyInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         Engine.Attack(index, location);

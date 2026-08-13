@@ -7,25 +7,16 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Super)]
-public sealed class ArtSerializer : IArtSerializer
+public sealed class ArtSerializer(Lazy<IMemory> memory, Lazy<ITerminal> terminal) : IArtSerializer
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<ITerminal> _terminal;
-
-    public ArtSerializer(Lazy<IMemory> memory, Lazy<ITerminal> terminal)
-    {
-        _memory = memory;
-        _terminal = terminal;
-    }
-
     private IMemory Memory
     {
-        [DebuggerStepThrough] get => _memory.Value;
+        [DebuggerStepThrough] get => memory.Value;
     }
 
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => _terminal.Value;
+        [DebuggerStepThrough] get => terminal.Value;
     }
 
     public void Deserialize(int startOffset)

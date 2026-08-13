@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
-public sealed class StarDraw : IDraw
+public sealed class StarDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public StarDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         var tile = Engine.Tiles[location];

@@ -2,16 +2,10 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public struct AnsiChar : IEquatable<AnsiChar>
+public struct AnsiChar(int newChar, int newColor) : IEquatable<AnsiChar>
 {
-    public readonly int Char;
-    public readonly int Color;
-
-    public AnsiChar(int newChar, int newColor)
-    {
-        Char = newChar;
-        Color = newColor;
-    }
+    public readonly int Char = newChar;
+    public readonly int Color = newColor;
 
     public static bool operator ==(AnsiChar a, AnsiChar b) => 
         a.Char == b.Char && a.Color == b.Color;

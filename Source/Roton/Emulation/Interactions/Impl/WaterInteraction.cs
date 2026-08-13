@@ -8,16 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x13)]
 [Context(Context.Super, 0x13)]
-public sealed class WaterInteraction : IInteraction
+public sealed class WaterInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-        
-    public WaterInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
+    private IEngine Engine => engine.Value;
+
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         Engine.PlaySound(3, Engine.Sounds.Water);

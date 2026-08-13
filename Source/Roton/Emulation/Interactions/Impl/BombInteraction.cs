@@ -8,15 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombInteraction : IInteraction
+public sealed class BombInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public BombInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         var actor = Engine.ActorAt(location);

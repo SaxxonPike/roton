@@ -4,14 +4,9 @@ using System.Linq;
 namespace Roton.Emulation.Data.Impl;
 
 // TODO: This lives in memory *somewhere*, figure out where
-public abstract class TextContent : FixedStringList, ITextContent
+public abstract class TextContent(IMemory memory, int offset) : FixedStringList(memory, offset), ITextContent
 {
     private int _count;
-
-    protected TextContent(IMemory memory, int offset) 
-        : base(memory, offset)
-    {
-    }
 
     protected abstract int Capacity { get; }
     

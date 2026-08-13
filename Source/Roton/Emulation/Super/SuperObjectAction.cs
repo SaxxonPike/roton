@@ -7,16 +7,10 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x24)]
-public sealed class SuperObjectAction : IAction
+public sealed class SuperObjectAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public SuperObjectAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Act(int index)
     {
         var actor = Engine.Actors[index];

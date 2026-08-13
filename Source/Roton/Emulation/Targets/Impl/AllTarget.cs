@@ -7,15 +7,9 @@ namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original, "ALL")]
 [Context(Context.Super, "ALL")]
-public sealed class AllTarget : ITarget
+public sealed class AllTarget(Lazy<IActors> actors) : ITarget
 {
-    private readonly Lazy<IActors> _actors;
-    private IActors Actors => _actors.Value;
-
-    public AllTarget(Lazy<IActors> actors)
-    {
-        _actors = actors;
-    }
+    private IActors Actors => actors.Value;
 
     public bool Execute(int index, ISearchContext context, string term)
     {

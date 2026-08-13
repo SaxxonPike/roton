@@ -5,27 +5,19 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class EngineResourceService : IEngineResourceService
+public abstract class EngineResourceService(
+    IAssemblyResourceService assemblyResourceService,
+    string elementFileName,
+    string memoryFileName)
+    : IEngineResourceService
 {
-    private readonly string _elementFileName;
-    private readonly string _memoryFileName;
-    private readonly Lazy<IResource> _resource;
-
-    protected EngineResourceService(
-        IAssemblyResourceService assemblyResourceService,
-        string elementFileName,
-        string memoryFileName)
-    {
-        _elementFileName = elementFileName;
-        _memoryFileName = memoryFileName;
-        _resource = new Lazy<IResource>(assemblyResourceService.GetFromAssemblyOf<IEngine>);
-    }
+    private readonly Lazy<IResource> _resource = new(assemblyResourceService.GetFromAssemblyOf<IEngine>);
 
     private IResource Resource => _resource.Value;
 
-    public byte[] GetElementData() => Resource.System.GetFile(_elementFileName);
+    public byte[] GetElementData() => Resource.System.GetFile(elementFileName);
 
-    public byte[] GetMemoryData() => Resource.System.GetFile(_memoryFileName);
+    public byte[] GetMemoryData() => Resource.System.GetFile(memoryFileName);
 
     public IDictionary<string, byte[]> GetStaticFiles()
         => Resource.Root

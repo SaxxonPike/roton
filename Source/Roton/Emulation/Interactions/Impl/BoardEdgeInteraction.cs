@@ -8,15 +8,9 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x01)]
 [Context(Context.Super, 0x01)]
-public sealed class BoardEdgeInteraction : IInteraction
+public sealed class BoardEdgeInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public BoardEdgeInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Interact(IXyPair location, int index, IXyPair vector)
     {

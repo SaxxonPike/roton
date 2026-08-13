@@ -8,15 +8,9 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "BLOCKED")]
 [Context(Context.Super, "BLOCKED")]
-public sealed class BlockedCondition : ICondition
+public sealed class BlockedCondition(Lazy<IEngine> engine) : ICondition
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public BlockedCondition(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public bool? Execute(IOopContext context)
     {

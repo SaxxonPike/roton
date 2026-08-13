@@ -8,12 +8,8 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalScroll : Scroll
+public sealed class OriginalScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : Scroll(engine, terminal)
 {
-    public OriginalScroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : base(engine, terminal)
-    {
-    }
-
     protected override int Width => 49;
     protected override int Height => 19;
     protected override int Left => 5;

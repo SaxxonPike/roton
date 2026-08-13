@@ -3,17 +3,11 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class FixedFileSystem : IFileSystem
+public sealed class FixedFileSystem(bool writeable, IDictionary<string, byte[]> files = null) : IFileSystem
 {
-    private readonly IDictionary<string, byte[]> _files;
+    private readonly IDictionary<string, byte[]> _files = files ?? new Dictionary<string, byte[]>();
 
-    public FixedFileSystem(bool writeable, IDictionary<string, byte[]> files = null)
-    {
-        _files = files ?? new Dictionary<string, byte[]>();
-        IsWriteable = writeable;
-    }
-
-    public bool IsWriteable { get; }
+    public bool IsWriteable { get; } = writeable;
 
     public bool FileExists(string path)
     {

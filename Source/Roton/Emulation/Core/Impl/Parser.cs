@@ -12,18 +12,11 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Parser : IParser
+public sealed class Parser(Lazy<IEngine> engine) : IParser
 {
-    private readonly Lazy<IEngine> _engine;
-
-    public Parser(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => _engine.Value;
+        [DebuggerStepThrough] get => engine.Value;
     }
 
     public int Search(int index, string term)

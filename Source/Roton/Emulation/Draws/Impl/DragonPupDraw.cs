@@ -7,16 +7,10 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x3C)]
-public sealed class DragonPupDraw : IDraw
+public sealed class DragonPupDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public DragonPupDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         switch (Engine.State.GameCycle & 0x3)

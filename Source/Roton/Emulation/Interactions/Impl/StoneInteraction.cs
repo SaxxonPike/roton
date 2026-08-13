@@ -7,15 +7,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneInteraction : IInteraction
+public sealed class StoneInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-        
-    public StoneInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Interact(IXyPair location, int index, IXyPair vector)
     {

@@ -7,16 +7,10 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperObjectMover : IObjectMover
+public sealed class SuperObjectMover(Lazy<IEngine> engine) : IObjectMover
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public SuperObjectMover(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void ExecuteDirection(IOopContext context, IXyPair vector)
     {
         var count = Engine.Parser.ReadNumber(context.Index, context);

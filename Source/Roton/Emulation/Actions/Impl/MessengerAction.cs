@@ -7,16 +7,10 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x02)]
 [Context(Context.Super, 0x02)]
-public sealed class MessengerAction : IAction
+public sealed class MessengerAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public MessengerAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Act(int index)
     {
         var actor = Engine.Actors[index];

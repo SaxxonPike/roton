@@ -8,25 +8,16 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class Scroll : IScroll
+public abstract class Scroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : IScroll
 {
-    private readonly Lazy<IEngine> _engine;
-    private readonly Lazy<ITerminal> _terminal;
-
-    protected Scroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal)
-    {
-        _engine = engine;
-        _terminal = terminal;
-    }
-
     protected IEngine Engine
     {
-        [DebuggerStepThrough] get => _engine.Value;
+        [DebuggerStepThrough] get => engine.Value;
     }
 
     protected ITerminal Terminal
     {
-        [DebuggerStepThrough] get => _terminal.Value;
+        [DebuggerStepThrough] get => terminal.Value;
     }
 
     private static readonly int[] ScrollCharsTop =

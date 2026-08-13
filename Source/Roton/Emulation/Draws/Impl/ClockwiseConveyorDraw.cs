@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x10)]
 [Context(Context.Super, 0x10)]
-public sealed class ClockwiseConveyorDraw : IDraw
+public sealed class ClockwiseConveyorDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public ClockwiseConveyorDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         return ((Engine.State.GameCycle / Engine.ElementList.Clockwise().Cycle) & 0x3) switch

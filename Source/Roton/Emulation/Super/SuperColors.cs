@@ -5,12 +5,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperColors : Colors
+public sealed class SuperColors(IMemory memory) : Colors(memory, 0x21E7)
 {
-    public SuperColors(IMemory memory)
-        : base(memory, 0x21E7)
-    {
-    }
-
     public override int Count => 7;
 }

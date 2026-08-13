@@ -8,16 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x08)]
 [Context(Context.Super, 0x08)]
-public sealed class KeyInteraction : IInteraction
+public sealed class KeyInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public KeyInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         var color = Engine.Tiles[location].Color & 0x07;

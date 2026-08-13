@@ -8,15 +8,9 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "CCW")]
 [Context(Context.Super, "CCW")]
-public sealed class CcwDirection : IDirection
+public sealed class CcwDirection(Lazy<IEngine> engine) : IDirection
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public CcwDirection(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public IXyPair Execute(IOopContext context)
     {

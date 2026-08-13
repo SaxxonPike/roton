@@ -8,15 +8,9 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ENERGIZED")]
 [Context(Context.Super, "ENERGIZED")]
-public sealed class EnergizedCondition : ICondition
+public sealed class EnergizedCondition(Lazy<IEngine> engine) : ICondition
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public EnergizedCondition(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public bool? Execute(IOopContext context)
     {

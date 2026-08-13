@@ -7,15 +7,9 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
-public sealed class SlimeAction : IAction
+public sealed class SlimeAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SlimeAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

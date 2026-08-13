@@ -1,11 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public abstract class Colors : FixedStringList, IColors
+public abstract class Colors(IMemory memory, int offset) : FixedStringList(memory, offset), IColors
 {
-    protected Colors(IMemory memory, int offset) 
-        : base(memory, offset)
-    {
-    }
-
     protected override int ItemLength => 9;
 }

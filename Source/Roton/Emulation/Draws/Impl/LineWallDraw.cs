@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1F)]
 [Context(Context.Super, 0x1F)]
-public sealed class LineWallDraw : IDraw
+public sealed class LineWallDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public LineWallDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         return new AnsiChar(Engine.State.LineChars[Engine.Adjacent(location, Engine.ElementList.LineId)],

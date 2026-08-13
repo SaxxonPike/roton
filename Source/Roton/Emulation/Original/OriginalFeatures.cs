@@ -9,17 +9,10 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFeatures : IFeatures
+public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public OriginalFeatures(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
-        
 
     public void LockActor(int index)
     {

@@ -7,16 +7,10 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
-public sealed class ScrollAction : IAction
+public sealed class ScrollAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public ScrollAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Act(int index)
     {
         var actor = Engine.Actors[index];

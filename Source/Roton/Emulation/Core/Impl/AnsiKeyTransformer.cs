@@ -9,20 +9,12 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
 {
-    private class AnsiKeyMap
+    private class AnsiKeyMap(byte[] natural, byte[] shift, byte[] ctrl, byte[] alt)
     {
-        public byte[] Natural { get; }
-        public byte[] Shift { get; }
-        public byte[] Ctrl { get; }
-        public byte[] Alt { get; }
-
-        public AnsiKeyMap(byte[] natural, byte[] shift, byte[] ctrl, byte[] alt)
-        {
-            Natural = natural;
-            Shift = shift ?? natural;
-            Ctrl = ctrl ?? natural;
-            Alt = alt ?? natural;
-        }
+        public byte[] Natural { get; } = natural;
+        public byte[] Shift { get; } = shift ?? natural;
+        public byte[] Ctrl { get; } = ctrl ?? natural;
+        public byte[] Alt { get; } = alt ?? natural;
     }
 
     private static readonly IDictionary<AnsiKey, AnsiKeyMap> Map = new Dictionary<AnsiKey, AnsiKeyMap>

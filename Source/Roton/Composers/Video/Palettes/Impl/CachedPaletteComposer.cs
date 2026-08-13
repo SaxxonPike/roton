@@ -4,14 +4,9 @@ using Roton.Composers.Extensions;
 
 namespace Roton.Composers.Video.Palettes.Impl;
 
-public sealed class CachedPaletteComposer : IPaletteComposer
+public sealed class CachedPaletteComposer(IPaletteComposer paletteComposer) : IPaletteComposer
 {
-    private readonly Color[] _colors;
-
-    public CachedPaletteComposer(IPaletteComposer paletteComposer)
-    {
-        _colors = paletteComposer.ComposeAllColors().ToArray();
-    }
+    private readonly Color[] _colors = paletteComposer.ComposeAllColors().ToArray();
 
     public Color ComposeColor(int index)
     {

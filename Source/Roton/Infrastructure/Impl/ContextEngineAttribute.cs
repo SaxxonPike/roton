@@ -4,37 +4,21 @@ using Roton.Emulation.Data.Impl;
 namespace Roton.Infrastructure.Impl;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class ContextAttribute : Attribute
+public sealed class ContextAttribute(Context context, string name, int id) : Attribute
 {
-    public Context Context { get; }
-    public string Name { get; }
-    public int Id { get; }
+    public Context Context { get; } = context;
+    public string Name { get; } = name;
+    public int Id { get; } = id;
 
-    public ContextAttribute(Context context)
+    public ContextAttribute(Context context) : this(context, string.Empty, -1)
     {
-        Context = context;
-        Name = string.Empty;
-        Id = -1;
     }
         
-    public ContextAttribute(Context context, string name)
+    public ContextAttribute(Context context, string name) : this(context, name, -1)
     {
-        Context = context;
-        Name = name;
-        Id = -1;
     }
         
-    public ContextAttribute(Context context, int id)
+    public ContextAttribute(Context context, int id) : this(context, string.Empty, id)
     {
-        Context = context;
-        Name = string.Empty;
-        Id = id;
-    }
-        
-    public ContextAttribute(Context context, string name, int id)
-    {
-        Context = context;
-        Name = name;
-        Id = id;
     }
 }

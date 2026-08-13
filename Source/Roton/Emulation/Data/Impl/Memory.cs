@@ -10,12 +10,7 @@ namespace Roton.Emulation.Data.Impl;
 [DebuggerStepThrough]
 public sealed class Memory : IMemory
 {
-    private readonly byte[] _data;
-
-    public Memory()
-    {
-        _data = new byte[0x10000];
-    }
+    private readonly byte[] _data = new byte[0x10000];
 
     public byte[] Dump()
     {

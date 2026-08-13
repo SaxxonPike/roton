@@ -6,15 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x26)]
-public sealed class SharkAction : IAction
+public sealed class SharkAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SharkAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

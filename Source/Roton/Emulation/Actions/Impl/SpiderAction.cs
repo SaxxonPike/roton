@@ -7,15 +7,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Super, 0x3E)]
-public sealed class SpiderAction : IAction
+public sealed class SpiderAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SpiderAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

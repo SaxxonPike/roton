@@ -8,15 +8,9 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public sealed class SpinningGunAction : IAction
+public sealed class SpinningGunAction(Lazy<IEngine> engine) : IAction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
-
-    public SpinningGunAction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
+    private IEngine Engine => engine.Value;
 
     public void Act(int index)
     {

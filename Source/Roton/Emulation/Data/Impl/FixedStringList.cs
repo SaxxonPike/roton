@@ -1,16 +1,7 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public abstract class FixedStringList : FixedList<string>
+public abstract class FixedStringList(IMemory memory, int offset) : FixedList<string>
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
-
-    protected FixedStringList(IMemory memory, int offset)
-    {
-        _memory = memory;
-        _offset = offset;
-    }
-    
     protected abstract int ItemLength { get; }
 
     public override void Clear()
@@ -21,11 +12,11 @@ public abstract class FixedStringList : FixedList<string>
 
     protected override string GetItem(int index)
     {
-        return _memory.ReadString(_offset + index * ItemLength);
+        return memory.ReadString(offset + index * ItemLength);
     }
 
     protected override void SetItem(int index, string value)
     {
-        _memory.WriteString(_offset + index * ItemLength, value);
+        memory.WriteString(offset + index * ItemLength, value);
     }
 }

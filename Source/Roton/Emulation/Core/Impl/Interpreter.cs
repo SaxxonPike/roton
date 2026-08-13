@@ -9,25 +9,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Interpreter : IInterpreter
+public sealed class Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer) : IInterpreter
 {
-    private readonly Lazy<IEngine> _engine;
-    private readonly Lazy<ITracer> _tracer;
-        
-    public Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer)
-    {
-        _engine = engine;
-        _tracer = tracer;
-    }
-
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => _engine.Value;
+        [DebuggerStepThrough] get => engine.Value;
     }
 
     private ITracer Tracer
     {
-        [DebuggerStepThrough] get => _tracer.Value;
+        [DebuggerStepThrough] get => tracer.Value;
     }
 
     public void Execute(IOopContext context)

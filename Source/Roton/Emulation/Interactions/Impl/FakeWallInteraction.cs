@@ -8,16 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x1B)]
 [Context(Context.Super, 0x1B)]
-public sealed class FakeWallInteraction : IInteraction
+public sealed class FakeWallInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public FakeWallInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         if (!Engine.Alerts.FakeWall) return;

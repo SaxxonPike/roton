@@ -8,16 +8,10 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0E)]
 [Context(Context.Super, 0x0E)]
-public sealed class EnergizerInteraction : IInteraction
+public sealed class EnergizerInteraction(Lazy<IEngine> engine) : IInteraction
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public EnergizerInteraction(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public void Interact(IXyPair location, int index, IXyPair vector)
     {
         Engine.PlaySound(9, Engine.Sounds.Energizer);

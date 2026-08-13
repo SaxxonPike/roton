@@ -8,25 +8,16 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class GameSerializer : IGameSerializer
+public abstract class GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : IGameSerializer
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IHeap> _heap;
-
-    protected GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap)
-    {
-        _memory = memory;
-        _heap = heap;
-    }
-
     private IMemory Memory
     {
-        [DebuggerStepThrough] get => _memory.Value;
+        [DebuggerStepThrough] get => memory.Value;
     }
 
     private IHeap Heap
     {
-        [DebuggerStepThrough] get => _heap.Value;
+        [DebuggerStepThrough] get => heap.Value;
     }
 
     public abstract int ActorCapacity { get; }

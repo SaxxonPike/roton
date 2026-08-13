@@ -8,16 +8,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
-public sealed class BlinkWallDraw : IDraw
+public sealed class BlinkWallDraw(Lazy<IEngine> engine) : IDraw
 {
-    private readonly Lazy<IEngine> _engine;
-    private IEngine Engine => _engine.Value;
+    private IEngine Engine => engine.Value;
 
-    public BlinkWallDraw(Lazy<IEngine> engine)
-    {
-        _engine = engine;
-    }
-        
     public AnsiChar Draw(IXyPair location)
     {
         return new AnsiChar(0xCE, Engine.Tiles[location].Color);

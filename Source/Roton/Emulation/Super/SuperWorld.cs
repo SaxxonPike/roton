@@ -5,16 +5,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperWorld : IWorld
+public sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
 {
-    public SuperWorld(IMemory memory, IKeyList keyList, IFlags flags)
-    {
-        Memory = memory;
-        Keys = keyList;
-        Flags = flags;
-    }
-
-    private IMemory Memory { get; }
+    private IMemory Memory { get; } = memory;
 
     public int Ammo
     {
@@ -34,7 +27,7 @@ public sealed class SuperWorld : IWorld
         set => Memory.Write16(0x785D, value);
     }
 
-    public IFlags Flags { get; }
+    public IFlags Flags { get; } = flags;
 
     public int Gems
     {
@@ -54,7 +47,7 @@ public sealed class SuperWorld : IWorld
         set => Memory.WriteBool(0x79CC, value);
     }
 
-    public IKeyList Keys { get; }
+    public IKeyList Keys { get; } = keyList;
 
     public string Name
     {

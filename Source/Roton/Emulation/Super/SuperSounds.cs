@@ -5,12 +5,7 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperSounds : Sounds
+public sealed class SuperSounds(IMemory memory) : Sounds
 {
-    public SuperSounds(IMemory memory)
-    {
-        Forest = new SuperForestSound(memory, 0x1E5C, 8);
-    }
-
-    public override ISound Forest { get; }
+    public override ISound Forest { get; } = new SuperForestSound(memory, 0x1E5C, 8);
 }
