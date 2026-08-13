@@ -2,7 +2,6 @@
     <PropertyGroup>
         <LangVersion>default</LangVersion>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <OutputPath>../../Deploy</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>

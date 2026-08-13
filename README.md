@@ -2,14 +2,22 @@
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://raw.githubusercontent.com/SaxxonPike/roton/master/LICENSE)
 
-##### Description
+This C# project consists of two major components, **Roton** and **Lyon**.
 
-Roton is an emulation of the ZZT and Super ZZT game creation engines written in C#.
+### Roton
+
+Roton is an emulation of the ZZT and Super ZZT game creation engines.
+
+Target framework is .NET Standard 2.0. This means it should be compatible with any modern version of .NET
+and can be linked from .NET Framework 4.6.1+ projects as well.
+
+### Lyon
 
 Lyon is an application that runs an instance of Roton's emulation and presents it via SDL.
 We use [ppy/SDL3-CS](https://github.com/ppy/SDL3-CS) for this.
 
-Windows, MacOS and Linux are all supported.
+Target framework is .NET 10 or above. If you are able to install .NET 10, it is very likely you
+will also be able to run Lyon on your operating system.
 
 ### Target Frameworks
 
@@ -21,7 +29,7 @@ Windows, MacOS and Linux are all supported.
 ### Build instructions
 
 The [.NET Core SDK](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md)
-is required.
+is required. Output goes to `/Deploy`.
 
 Clone the repo:
 
@@ -43,10 +51,10 @@ Run unit tests:
 dotnet test Source/Roton.Test
 ```
 
-Run the game (from source):
+Build and run:
 
 ```
-dotnet run --project Source/Lyon
+dotnet run --project Source/Lyon <path-to-game>
 ```
 
 ### Where can I learn more about ZZT?
