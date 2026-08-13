@@ -11,6 +11,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="9.3.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
         <PackageReference Include="ppy.SDL3-CS" Version="2026.722.0" />
     </ItemGroup>
     <ItemGroup>
@@ -28,6 +29,10 @@
         </Content>
         <None Remove="TOWN.ZZT" />
         <Content Include="TOWN.ZZT">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="MONSTER.SZT" />
+        <Content Include="MONSTER.SZT">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

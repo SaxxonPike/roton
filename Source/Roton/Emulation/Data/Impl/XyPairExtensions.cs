@@ -4,142 +4,145 @@ namespace Roton.Emulation.Data.Impl;
 
 public static class XyPairExtensions
 {
-    public static void Add(this IXyPair pair, IXyPair other)
+    extension(IXyPair pair)
     {
-        pair.X += other.X;
-        pair.Y += other.Y;
-    }
+        public void Add(IXyPair other)
+        {
+            pair.X += other.X;
+            pair.Y += other.Y;
+        }
 
-    public static void Add(this IXyPair pair, int x, int y)
-    {
-        pair.X += x;
-        pair.Y += y;
-    }
+        public void Add(int x, int y)
+        {
+            pair.X += x;
+            pair.Y += y;
+        }
 
-    public static IXyPair Clockwise(this IXyPair pair)
-    {
-        var clone = pair.Clone();
-        clone.SetClockwise();
-        return clone;
-    }
+        public IXyPair Clockwise()
+        {
+            var clone = pair.Clone();
+            clone.SetClockwise();
+            return clone;
+        }
 
-    public static void CopyFrom(this IXyPair pair, IXyPair other)
-    {
-        pair.X = other.X;
-        pair.Y = other.Y;
-    }
+        public void CopyFrom(IXyPair other)
+        {
+            pair.X = other.X;
+            pair.Y = other.Y;
+        }
 
-    public static IXyPair CounterClockwise(this IXyPair pair)
-    {
-        var clone = pair.Clone();
-        clone.SetCounterClockwise();
-        return clone;
-    }
+        public IXyPair CounterClockwise()
+        {
+            var clone = pair.Clone();
+            clone.SetCounterClockwise();
+            return clone;
+        }
 
-    public static IXyPair Difference(this IXyPair pair, IXyPair other)
-    {
-        var clone = pair.Clone();
-        clone.Subtract(other);
-        return clone;
-    }
+        public IXyPair Difference(IXyPair other)
+        {
+            var clone = pair.Clone();
+            clone.Subtract(other);
+            return clone;
+        }
 
-    public static IXyPair Difference(this IXyPair pair, int x, int y)
-    {
-        var clone = pair.Clone();
-        clone.Subtract(x, y);
-        return clone;
-    }
+        public IXyPair Difference(int x, int y)
+        {
+            var clone = pair.Clone();
+            clone.Subtract(x, y);
+            return clone;
+        }
 
-    public static int DistanceTo(this IXyPair a, IXyPair b)
-    {
-        return (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
-    }
+        public int DistanceTo(IXyPair b)
+        {
+            return (pair.Y - b.Y).Square() * 2 + (pair.X - b.X).Square();
+        }
 
-    public static bool IsNonZero(this IXyPair pair)
-    {
-        return pair.X != 0 || pair.Y != 0;
-    }
+        public bool IsNonZero()
+        {
+            return pair.X != 0 || pair.Y != 0;
+        }
 
-    public static bool IsZero(this IXyPair pair)
-    {
-        return pair.X == 0 && pair.Y == 0;
-    }
+        public bool IsZero()
+        {
+            return pair.X == 0 && pair.Y == 0;
+        }
 
-    public static bool Matches(this IXyPair pair, IXyPair other)
-    {
-        return pair.X == other.X && pair.Y == other.Y;
-    }
+        public bool Matches(IXyPair other)
+        {
+            return pair.X == other.X && pair.Y == other.Y;
+        }
 
-    public static bool Matches(this IXyPair pair, int x, int y)
-    {
-        return pair.X == x && pair.Y == y;
-    }
+        public bool Matches(int x, int y)
+        {
+            return pair.X == x && pair.Y == y;
+        }
 
-    public static IXyPair Opposite(this IXyPair pair)
-    {
-        var clone = pair.Clone();
-        clone.SetOpposite();
-        return clone;
-    }
+        public IXyPair Opposite()
+        {
+            var clone = pair.Clone();
+            clone.SetOpposite();
+            return clone;
+        }
 
-    public static IXyPair Product(this IXyPair pair, int value)
-    {
-        var clone = pair.Clone();
-        clone.SetTo(clone.X * value, clone.Y * value);
-        return clone;
-    }
+        public IXyPair Product(int value)
+        {
+            var clone = pair.Clone();
+            clone.SetTo(clone.X * value, clone.Y * value);
+            return clone;
+        }
 
-    public static void SetClockwise(this IXyPair pair)
-    {
-        pair.SetTo(-pair.Y, pair.X);
-    }
+        public void SetClockwise()
+        {
+            pair.SetTo(-pair.Y, pair.X);
+        }
 
-    public static void SetCounterClockwise(this IXyPair pair)
-    {
-        pair.SetTo(pair.Y, -pair.X);
-    }
+        public void SetCounterClockwise()
+        {
+            pair.SetTo(pair.Y, -pair.X);
+        }
 
-    public static void SetOpposite(this IXyPair pair)
-    {
-        pair.SetTo(-pair.X, -pair.Y);
-    }
+        public void SetOpposite()
+        {
+            pair.SetTo(-pair.X, -pair.Y);
+        }
 
-    public static void SetTo(this IXyPair pair, int x, int y)
-    {
-        pair.X = x;
-        pair.Y = y;
-    }
+        public void SetTo(int x, int y)
+        {
+            pair.X = x;
+            pair.Y = y;
+        }
 
-    public static void Subtract(this IXyPair pair, IXyPair location)
-    {
-        pair.X -= location.X;
-        pair.Y -= location.Y;
-    }
+        public void Subtract(IXyPair location)
+        {
+            pair.X -= location.X;
+            pair.Y -= location.Y;
+        }
 
-    public static void Subtract(this IXyPair pair, int x, int y)
-    {
-        pair.X -= x;
-        pair.Y -= y;
-    }
+        public void Subtract(int x, int y)
+        {
+            pair.X -= x;
+            pair.Y -= y;
+        }
 
-    public static IXyPair Sum(this IXyPair pair, IXyPair other)
-    {
-        var clone = pair.Clone();
-        clone.Add(other);
-        return clone;
-    }
+        public IXyPair Sum(IXyPair other)
+        {
+            var clone = pair.Clone();
+            clone.Add(other);
+            return clone;
+        }
 
-    public static IXyPair Sum(this IXyPair pair, int x, int y)
-    {
-        var clone = pair.Clone();
-        clone.Add(x, y);
-        return clone;
-    }
+        public IXyPair Sum(int x, int y)
+        {
+            var clone = pair.Clone();
+            clone.Add(x, y);
+            return clone;
+        }
 
-    public static IXyPair Swap(this IXyPair pair)
-    {
-        var clone = pair.Clone();
-        clone.SetTo(pair.Y, pair.X);
-        return clone;
+        public IXyPair Swap()
+        {
+            var clone = pair.Clone();
+            clone.SetTo(pair.Y, pair.X);
+            return clone;
+        }
     }
 }

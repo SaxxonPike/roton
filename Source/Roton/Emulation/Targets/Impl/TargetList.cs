@@ -29,8 +29,8 @@ public sealed class TargetList : ITargetList
         
     public ITarget Get(string name)
     {
-        return _targets.Value.ContainsKey(name)
-            ? _targets.Value[name]
+        return _targets.Value.TryGetValue(name, out var value)
+            ? value
             : null;
     }        
 }

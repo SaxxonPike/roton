@@ -4,12 +4,13 @@ using System.Linq;
 namespace Roton.Emulation.Data.Impl;
 
 // TODO: This lives in memory *somewhere*, figure out where
-public abstract class TextContent(IMemory memory, int offset) : FixedStringList(memory, offset), ITextContent
+public abstract class TextContent(IMemory memory, int offset)
+    : FixedStringList(memory, offset), ITextContent
 {
     private int _count;
 
     protected abstract int Capacity { get; }
-    
+
     public override int Count => _count;
 
     public void SetText(IEnumerable<string> content)

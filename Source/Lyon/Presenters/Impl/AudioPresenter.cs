@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using DotSDL.Audio;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -16,12 +17,12 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
     private bool _isDisposed;
     private bool _running;
     private readonly List<double> _buffer;
-    private readonly object _bufferLock = new();
+    private readonly Lock _bufferLock = new();
     private readonly Playback _audio;
 
     public AudioPresenter(IConfig config)
     {
-        _buffer = new List<double>();
+        _buffer = [];
         _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono,
             (ushort) config.AudioBufferSize);
         Volume = 0.1;

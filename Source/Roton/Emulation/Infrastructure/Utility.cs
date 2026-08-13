@@ -101,7 +101,7 @@ internal static class Utility
         [DebuggerStepThrough]
         public bool CaseInsensitiveEqual(string b)
         {
-            if ((a == null) != (b == null))
+            if (a == null != (b == null))
                 return false;
 
             if (a == null)
@@ -128,7 +128,7 @@ internal static class Utility
             var i = 0;
             var j = 0;
 
-            if ((a == null) != (b == null))
+            if (a == null != (b == null))
                 return false;
 
             if (a == null)

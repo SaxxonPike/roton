@@ -115,12 +115,12 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
         if (data.Keycode == 0)
             return false;
 
-        if (!Map.ContainsKey(data.Keycode))
+        if (!Map.TryGetValue(data.Keycode, out var value))
             return false;
 
         Enqueue(new KeyPress
         {
-            Key = Map[data.Keycode],
+            Key = value,
             Shift = data.Keymod.HasFlag(Keymod.LShift) | data.Keymod.HasFlag(Keymod.RShift),
             Control = data.Keymod.HasFlag(Keymod.LCtrl) | data.Keymod.HasFlag(Keymod.RCtrl),
             Alt = data.Keymod.HasFlag(Keymod.LAlt) | data.Keymod.HasFlag(Keymod.RAlt)
