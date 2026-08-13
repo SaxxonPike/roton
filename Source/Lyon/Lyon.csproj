@@ -27,11 +27,9 @@
             <Link>lyon.sh</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="TOWN.ZZT" />
         <Content Include="TOWN.ZZT">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="MONSTER.SZT" />
         <Content Include="MONSTER.SZT">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
