@@ -2,6 +2,7 @@ namespace Roton.Emulation.Data.Impl;
 
 public abstract class Facts : IFacts
 {
+    public int MaxOopCommands => 33;
     public abstract int AmmoPerPickup { get; }
     public abstract int HealthPerGem { get; }
     public int ScorePerGem => 10;

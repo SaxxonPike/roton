@@ -564,7 +564,7 @@ public sealed class Engine : IEngine, IDisposable
                 context.Moved ||
                 context.Repeat ||
                 context.Died ||
-                context.CommandsExecuted > 32)
+                context.CommandsExecuted >= Facts.MaxOopCommands)
                 break;
         }
 

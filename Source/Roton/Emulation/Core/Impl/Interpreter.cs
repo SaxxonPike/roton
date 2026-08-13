@@ -34,7 +34,7 @@ public sealed class Interpreter : IInterpreter
     {
         var firstLine = true;
             
-        while (true)
+        while (context.CommandsExecuted < Engine.Facts.MaxOopCommands)
         {
             if (firstLine)
                 firstLine = false;

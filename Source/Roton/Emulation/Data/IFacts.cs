@@ -4,6 +4,7 @@ namespace Roton.Emulation.Data;
 
 public interface IFacts
 {
+    int MaxOopCommands { get; }
     int AmmoPerPickup { get; }
     int HealthPerGem { get; }
     int ScorePerGem { get; }
