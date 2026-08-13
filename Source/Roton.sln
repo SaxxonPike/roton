@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{ABB83496-AE05-4036-947B-9E1BACFF9218}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\.gitmodules = ..\.gitmodules
 		..\LICENSE = ..\LICENSE
 		..\publish.bat = ..\publish.bat
 		..\publish.sh = ..\publish.sh
