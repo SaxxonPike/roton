@@ -2,7 +2,9 @@
     <PropertyGroup>
         <LangVersion>default</LangVersion>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <NoWarn>$(NoWarn);NU1605</NoWarn>
+        <OutputPath>../../Deploy</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />

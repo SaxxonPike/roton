@@ -39,15 +39,8 @@ internal static class Utility
         /// Convert an integer to a character using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public char ToChar() =>
+        public char ToChar() => 
             CodePage437.GetChars([(byte)(a & 0xFF)])[0];
-
-        /// <summary>
-        /// Convert an integer to a string using code page 437.
-        /// </summary>
-        [DebuggerStepThrough]
-        public string ToStringValue() =>
-            CodePage437.GetString([(byte)(a & 0xFF)]);
 
         /// <summary>
         /// Get the uppercase representation of an ASCII char stored as an integer.
