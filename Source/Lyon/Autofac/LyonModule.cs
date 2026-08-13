@@ -22,24 +22,24 @@ public sealed class LyonModule : Module
     {
         _args = args;
     }
-        
+
     protected override void Load(ContainerBuilder builder)
     {
         base.Load(builder);
-            
+
         builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
-            .Where(t => !t.IsAbstract && 
-                        t.IsClass && 
+            .Where(t => !t.IsAbstract &&
+                        t.IsClass &&
                         t.GetCustomAttributes<ContextAttribute>()
                             .Any(a => a.Context == Context.Startup))
             .AsImplementedInterfaces()
             .AutoActivate()
             .SingleInstance();
 
-        builder.RegisterInstance(new CommandLine {Args = _args})
+        builder.RegisterInstance(new CommandLine { Args = _args })
             .As<ICommandLine>()
             .SingleInstance();
-            
+
         builder.Register(c => c.Resolve<IFileSystemFactory>().Create(c.Resolve<IConfig>().HomePath))
             .As<IFileSystem>()
             .AutoActivate()
@@ -58,7 +58,7 @@ public sealed class LyonModule : Module
                     x.Instance.BufferReady += (_, a) => presenter.Update(a.Data);
                     presenter.Start();
 
-                    x.Instance.SampleRate = presenter.SampleRate;                        
+                    x.Instance.SampleRate = presenter.SampleRate;
                 }
 
                 var engine = x.Context.Resolve<IEngine>();
@@ -69,6 +69,6 @@ public sealed class LyonModule : Module
             .As<ISceneComposer>()
             .As<ITerminal>()
             .AutoActivate()
-            .SingleInstance();            
+            .SingleInstance();
     }
 }

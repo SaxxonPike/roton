@@ -23,13 +23,15 @@ public sealed class Window : SdlWindow, IWindow
         Lazy<IKeyboardPresenter> keyboardPresenter,
         Lazy<IScenePresenter> scenePresenter) : base("Lyon",
         new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
-        640 * config.VideoScale, 350 * config.VideoScale,
+        640 * config.VideoScale, 480 * config.VideoScale,
         640, 350)
     {
         _keyboardPresenter = keyboardPresenter;
         _scenePresenter = scenePresenter;
         KeyPressed += OnKeyDown;
         Closed += OnClosed;
+
+        ScalingQuality = ScalingQuality.PixelArt;
 
         Background.GetCanvasPointer = () => {
             var bitmap = ScenePresenter.Render();
@@ -61,13 +63,5 @@ public sealed class Window : SdlWindow, IWindow
     {
         if(_closeWindow)
             Stop();
-    }
-
-    public void MakeCurrent()
-    {
-    }
-
-    public void SwapBuffers()
-    {
     }
 }

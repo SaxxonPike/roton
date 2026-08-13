@@ -12,4 +12,5 @@ public sealed class Config : IConfig
     public int MasterClockNumerator { get; set; }
     public int MasterClockDenominator { get; set; }
     public bool FastMode { get; set; }
+    public bool TraceOop { get; set; }
 }

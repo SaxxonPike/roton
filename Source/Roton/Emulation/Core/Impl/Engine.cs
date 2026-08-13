@@ -537,7 +537,7 @@ public sealed class Engine : IEngine, IDisposable
                         RaiseError("Bad direction");
                         break;
                     }
-                        
+
                     ObjectMover.ExecuteDirection(context, vector);
 
                     ReadActorCodeByte(index, context);

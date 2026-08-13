@@ -33,7 +33,8 @@ public static class Program
             VideoScale = 2,
             MasterClockNumerator = 100,
             MasterClockDenominator = 7275,
-            FastMode = switches.Contains("--fast")
+            FastMode = switches.Contains("--fast"),
+            TraceOop = switches.Contains("--trace"),
         };
 
         var selector = new ContextEngineSelector();
@@ -51,6 +52,12 @@ public static class Program
         try
         {
             using var container = builder.Build();
+
+            if (config.TraceOop)
+                container
+                    .Resolve<ITracer>()
+                    .Attach(Console.Out);
+            
             container
                 .Resolve<ILauncher>()
                 .Launch(container.Resolve<IEngine>());
