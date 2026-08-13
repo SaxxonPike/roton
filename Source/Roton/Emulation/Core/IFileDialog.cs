@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IFileDialog
 {
-    public interface IFileDialog
-    {
-        string Open(string title, string extension);
-    }
+    string Open(string title, string extension);
 }

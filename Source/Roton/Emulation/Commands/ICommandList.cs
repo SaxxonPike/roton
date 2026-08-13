@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Commands
+namespace Roton.Emulation.Commands;
+
+public interface ICommandList
 {
-    public interface ICommandList
-    {
-        ICommand Get(string name);
-    }
+    ICommand Get(string name);
 }

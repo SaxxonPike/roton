@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IWorldTitleService
 {
-    public interface IWorldTitleService
-    {
-        string GetTitle(string fileName);
-    }
+    string GetTitle(string fileName);
 }

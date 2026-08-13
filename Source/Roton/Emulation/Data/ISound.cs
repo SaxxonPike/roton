@@ -1,8 +1,7 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface ISound
 {
-    public interface ISound
-    {
-        int this[int index] { get; }
-        int Length { get; }
-    }
+    int this[int index] { get; }
+    int Length { get; }
 }

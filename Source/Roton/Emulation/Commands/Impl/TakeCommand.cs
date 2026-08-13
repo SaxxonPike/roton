@@ -4,24 +4,23 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "TAKE")]
+[Context(Context.Super, "TAKE")]
+public sealed class TakeCommand : ICommand
 {
-    [Context(Context.Original, "TAKE")]
-    [Context(Context.Super, "TAKE")]
-    public sealed class TakeCommand : ICommand
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public TakeCommand(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public TakeCommand(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            context.Resume = Engine.ExecuteTransaction(context, true);
-            Engine.Hud.UpdateStatus();
-        }
+    public void Execute(IOopContext context)
+    {
+        context.Resume = Engine.ExecuteTransaction(context, true);
+        Engine.Hud.UpdateStatus();
     }
 }

@@ -1,88 +1,87 @@
 ﻿using System.Linq;
 
-namespace Roton.Emulation.Data.Impl
+namespace Roton.Emulation.Data.Impl;
+
+public abstract class Flags : FixedList<string>, IFlags
 {
-    public abstract class Flags : FixedList<string>, IFlags
+    private readonly IMemory _memory;
+    private readonly int _offset;
+
+    protected Flags(IMemory memory, int offset)
     {
-        private readonly IMemory _memory;
-        private readonly int _offset;
+        _memory = memory;
+        _offset = offset;
+    }
 
-        protected Flags(IMemory memory, int offset)
+    public override void Add(string item)
+    {
+        var count = Count;
+        for (var i = 0; i < count; i++)
         {
-            _memory = memory;
-            _offset = offset;
+            if (!string.IsNullOrEmpty(GetItem(i)))
+                continue;
+
+            SetItem(i, item);
+            return;
         }
+    }
 
-        public override void Add(string item)
+    public override void Clear()
+    {
+        for (var i = 0; i < Count; i++)
         {
-            var count = Count;
-            for (var i = 0; i < count; i++)
-            {
-                if (!string.IsNullOrEmpty(GetItem(i)))
-                    continue;
-
-                SetItem(i, item);
-                return;
-            }
+            this[i] = string.Empty;
         }
+    }
 
-        public override void Clear()
+    public override bool Contains(string item)
+    {
+        var count = Count;
+        for (var i = 0; i < count; i++)
         {
-            for (var i = 0; i < Count; i++)
-            {
-                this[i] = string.Empty;
-            }
-        }
-
-        public override bool Contains(string item)
-        {
-            var count = Count;
-            for (var i = 0; i < count; i++)
-            {
-                if (GetItem(i) == item)
-                    return true;
-            }
-            return false;
-        }
-
-        public override bool Remove(string item)
-        {
-            var count = Count;
-            for (var i = 0; i < count; i++)
-            {
-                if (GetItem(i) != item)
-                    continue;
-
-                SetItem(i, string.Empty);
+            if (GetItem(i) == item)
                 return true;
-            }
-            return false;
         }
+        return false;
+    }
 
-        public string StoneText
+    public override bool Remove(string item)
+    {
+        var count = Count;
+        for (var i = 0; i < count; i++)
         {
-            get
+            if (GetItem(i) != item)
+                continue;
+
+            SetItem(i, string.Empty);
+            return true;
+        }
+        return false;
+    }
+
+    public string StoneText
+    {
+        get
+        {
+            foreach (var flag in this.Select(f => f.ToUpperInvariant()))
             {
-                foreach (var flag in this.Select(f => f.ToUpperInvariant()))
+                if (flag.Length > 0 && flag.StartsWith("Z"))
                 {
-                    if (flag.Length > 0 && flag.StartsWith("Z"))
-                    {
-                        return flag.Substring(1);
-                    }
+                    return flag.Substring(1);
                 }
-
-                return string.Empty;
             }
-        }
 
-        protected override string GetItem(int index)
-        {
-            return _memory.ReadString(_offset + index*21);
+            return string.Empty;
         }
+    }
 
-        protected override void SetItem(int index, string value)
-        {
-            _memory.WriteString(_offset + index*21, value);
-        }
+    protected override string GetItem(int index)
+    {
+        return _memory.ReadString(_offset + index*21);
+    }
+
+    protected override void SetItem(int index, string value)
+    {
+        _memory.WriteString(_offset + index*21, value);
     }
 }

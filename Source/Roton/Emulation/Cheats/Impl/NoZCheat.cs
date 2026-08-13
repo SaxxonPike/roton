@@ -3,22 +3,21 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Cheats.Impl
+namespace Roton.Emulation.Cheats.Impl;
+
+[Context(Context.Super, "NOZ")]
+public sealed class NoZCheat : ICheat
 {
-    [Context(Context.Super, "NOZ")]
-    public sealed class NoZCheat : ICheat
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public NoZCheat(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public NoZCheat(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public void Execute(string name, bool clear)
-        {
-            Engine.World.Stones = -1;
-        }
+    public void Execute(string name, bool clear)
+    {
+        Engine.World.Stones = -1;
     }
 }

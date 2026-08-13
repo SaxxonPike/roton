@@ -1,8 +1,7 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface IPackedBoard
 {
-    public interface IPackedBoard
-    {
-        byte[] Data { get; set; }
-        string Name { get; set; }
-    }
+    byte[] Data { get; set; }
+    string Name { get; set; }
 }

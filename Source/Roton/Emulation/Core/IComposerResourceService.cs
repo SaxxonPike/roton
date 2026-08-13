@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IComposerResourceService
 {
-    public interface IComposerResourceService
-    {
-        byte[] GetPaletteData();
-        byte[] GetFontData();
-    }
+    byte[] GetPaletteData();
+    byte[] GetFontData();
 }

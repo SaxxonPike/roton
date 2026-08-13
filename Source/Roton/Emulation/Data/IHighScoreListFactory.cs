@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface IHighScoreListFactory
 {
-    public interface IHighScoreListFactory
-    {
-        IHighScoreList Load();
-        void Save(IHighScoreList highScoreList);
-    }
+    IHighScoreList Load();
+    void Save(IHighScoreList highScoreList);
 }

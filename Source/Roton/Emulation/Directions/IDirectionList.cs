@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Directions
+namespace Roton.Emulation.Directions;
+
+public interface IDirectionList
 {
-    public interface IDirectionList
-    {
-        IDirection Get(string name);
-    }
+    IDirection Get(string name);
 }

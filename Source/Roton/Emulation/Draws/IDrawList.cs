@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Draws
+namespace Roton.Emulation.Draws;
+
+public interface IDrawList
 {
-    public interface IDrawList
-    {
-        IDraw Get(int index);
-    }
+    IDraw Get(int index);
 }

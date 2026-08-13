@@ -4,39 +4,38 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "GO")]
+[Context(Context.Super, "GO")]
+public sealed class GoCommand : ICommand
 {
-    [Context(Context.Original, "GO")]
-    [Context(Context.Super, "GO")]
-    public sealed class GoCommand : ICommand
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public GoCommand(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public GoCommand(Lazy<IEngine> engine)
+    public void Execute(IOopContext context)
+    {
+        var vector = Engine.Parser.GetDirection(context);
+        if (vector != null)
         {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            var vector = Engine.Parser.GetDirection(context);
-            if (vector != null)
+            var target = context.Actor.Location.Sum(vector);
+            if (!Engine.Tiles.ElementAt(target).IsFloor)
             {
-                var target = context.Actor.Location.Sum(vector);
-                if (!Engine.Tiles.ElementAt(target).IsFloor)
-                {
-                    Engine.Push(target, vector);
-                }
-                if (Engine.Tiles.ElementAt(target).IsFloor)
-                {
-                    Engine.MoveActor(context.Index, target);
-                    context.Moved = true;
-                }
-                else
-                {
-                    context.Repeat = true;
-                }
+                Engine.Push(target, vector);
+            }
+            if (Engine.Tiles.ElementAt(target).IsFloor)
+            {
+                Engine.MoveActor(context.Index, target);
+                context.Moved = true;
+            }
+            else
+            {
+                context.Repeat = true;
             }
         }
     }

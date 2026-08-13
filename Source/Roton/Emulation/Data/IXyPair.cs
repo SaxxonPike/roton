@@ -1,9 +1,8 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface IXyPair
 {
-    public interface IXyPair
-    {
-        int X { get; set; }
-        int Y { get; set; }
-        IXyPair Clone();
-    }
+    int X { get; set; }
+    int Y { get; set; }
+    IXyPair Clone();
 }

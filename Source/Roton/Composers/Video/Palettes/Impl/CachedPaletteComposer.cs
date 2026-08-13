@@ -2,20 +2,19 @@
 using System.Linq;
 using Roton.Composers.Extensions;
 
-namespace Roton.Composers.Video.Palettes.Impl
+namespace Roton.Composers.Video.Palettes.Impl;
+
+public sealed class CachedPaletteComposer : IPaletteComposer
 {
-    public sealed class CachedPaletteComposer : IPaletteComposer
+    private readonly Color[] _colors;
+
+    public CachedPaletteComposer(IPaletteComposer paletteComposer)
     {
-        private readonly Color[] _colors;
+        _colors = paletteComposer.ComposeAllColors().ToArray();
+    }
 
-        public CachedPaletteComposer(IPaletteComposer paletteComposer)
-        {
-            _colors = paletteComposer.ComposeAllColors().ToArray();
-        }
-
-        public Color ComposeColor(int index)
-        {
-            return _colors[index];
-        }
+    public Color ComposeColor(int index)
+    {
+        return _colors[index];
     }
 }

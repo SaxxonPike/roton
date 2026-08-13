@@ -1,7 +1,6 @@
-﻿namespace Roton.Emulation.Data
+﻿namespace Roton.Emulation.Data;
+
+public interface ITimer
 {
-    public interface ITimer
-    {
-        int Ticks { get; set; }
-    }
+    int Ticks { get; set; }
 }

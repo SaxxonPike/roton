@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface IDrumBank : IEnumerable<IDrumSound>
 {
-    public interface IDrumBank : IEnumerable<IDrumSound>
-    {
-        int Count { get; }
-        IDrumSound this[int index] { get; }
-    }
+    int Count { get; }
+    IDrumSound this[int index] { get; }
 }

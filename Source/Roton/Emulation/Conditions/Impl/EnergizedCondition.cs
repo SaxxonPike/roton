@@ -4,23 +4,22 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Conditions.Impl
+namespace Roton.Emulation.Conditions.Impl;
+
+[Context(Context.Original, "ENERGIZED")]
+[Context(Context.Super, "ENERGIZED")]
+public sealed class EnergizedCondition : ICondition
 {
-    [Context(Context.Original, "ENERGIZED")]
-    [Context(Context.Super, "ENERGIZED")]
-    public sealed class EnergizedCondition : ICondition
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public EnergizedCondition(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public EnergizedCondition(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public bool? Execute(IOopContext context)
-        {
-            return Engine.World.EnergyCycles > 0;
-        }
+    public bool? Execute(IOopContext context)
+    {
+        return Engine.World.EnergyCycles > 0;
     }
 }

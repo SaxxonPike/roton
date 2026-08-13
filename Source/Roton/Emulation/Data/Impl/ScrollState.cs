@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Emulation.Data.Impl
+namespace Roton.Emulation.Data.Impl;
+
+public sealed class ScrollState : IScrollState
 {
-    public sealed class ScrollState : IScrollState
+    internal ScrollState()
     {
-        internal ScrollState()
-        {
-        }
-        
-        public string Title { get; set; }
-        public bool IsHelp { get; set; }
-        public int Index { get; set; }
-        public string Label { get; set; }
-        public bool Cancelled { get; set; }
-        public IList<string> Lines { get; set; }
     }
+        
+    public string Title { get; set; }
+    public bool IsHelp { get; set; }
+    public int Index { get; set; }
+    public string Label { get; set; }
+    public bool Cancelled { get; set; }
+    public IList<string> Lines { get; set; }
 }

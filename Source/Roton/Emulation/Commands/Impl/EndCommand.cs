@@ -4,24 +4,23 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "END")]
+[Context(Context.Super, "END")]
+public sealed class EndCommand : ICommand
 {
-    [Context(Context.Original, "END")]
-    [Context(Context.Super, "END")]
-    public sealed class EndCommand : ICommand
+    private readonly Lazy<IEngine> _engine;
+    private IEngine Engine => _engine.Value;
+
+    public EndCommand(Lazy<IEngine> engine)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        _engine = engine;
+    }
 
-        public EndCommand(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            Engine.State.OopByte = 0;
-            context.Instruction = -1;
-        }
+    public void Execute(IOopContext context)
+    {
+        Engine.State.OopByte = 0;
+        context.Instruction = -1;
     }
 }

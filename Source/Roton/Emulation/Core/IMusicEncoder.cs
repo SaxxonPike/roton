@@ -1,9 +1,8 @@
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IMusicEncoder
 {
-    public interface IMusicEncoder
-    {
-        ISound Encode(string music);
-    }
+    ISound Encode(string music);
 }

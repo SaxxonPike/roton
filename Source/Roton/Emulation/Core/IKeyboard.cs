@@ -1,9 +1,8 @@
-﻿namespace Roton.Emulation.Core
+﻿namespace Roton.Emulation.Core;
+
+public interface IKeyboard
 {
-    public interface IKeyboard
-    {
-        void Clear();
-        bool KeyIsAvailable { get; }
-        IKeyPress GetKey();
-    }
+    void Clear();
+    bool KeyIsAvailable { get; }
+    IKeyPress GetKey();
 }

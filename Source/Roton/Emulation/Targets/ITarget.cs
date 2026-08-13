@@ -1,9 +1,8 @@
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Targets
+namespace Roton.Emulation.Targets;
+
+public interface ITarget
 {
-    public interface ITarget
-    {
-        bool Execute(ISearchContext context);
-    }
+    bool Execute(ISearchContext context);
 }

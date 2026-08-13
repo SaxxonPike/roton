@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Core.Impl
+namespace Roton.Emulation.Core.Impl;
+
+public enum ParameterType
 {
-    public enum ParameterType
-    {
-        Range,
-        Flag
-    }
+    Range,
+    Flag
 }

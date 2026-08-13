@@ -1,9 +1,8 @@
-﻿namespace Lyon.App
+﻿namespace Lyon.App;
+
+public interface IWindow
 {
-    public interface IWindow
-    {
-        void SetSize(int width, int height);
-        void Start(float updateRate);
-        void Close();
-    }
+    void SetSize(int width, int height);
+    void Start(float updateRate);
+    void Close();
 }

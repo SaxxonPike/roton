@@ -1,15 +1,14 @@
 ﻿using System.Drawing;
 
-namespace Roton.Composers.Video.Palettes
+namespace Roton.Composers.Video.Palettes;
+
+/// <summary>
+/// Interface for converting a color palette to 32-bit RGBA color values.
+/// </summary>
+public interface IPaletteComposer
 {
     /// <summary>
-    /// Interface for converting a color palette to 32-bit RGBA color values.
+    /// Retrieve the 32-bit RGBA color for a specific color index in the palette.
     /// </summary>
-    public interface IPaletteComposer
-    {
-        /// <summary>
-        /// Retrieve the 32-bit RGBA color for a specific color index in the palette.
-        /// </summary>
-        Color ComposeColor(int index);
-    }
+    Color ComposeColor(int index);
 }

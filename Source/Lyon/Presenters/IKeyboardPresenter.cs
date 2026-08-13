@@ -1,10 +1,9 @@
 ﻿using DotSDL.Events;
 using Roton.Emulation.Core;
 
-namespace Lyon.Presenters
+namespace Lyon.Presenters;
+
+public interface IKeyboardPresenter : IKeyboard
 {
-    public interface IKeyboardPresenter : IKeyboard
-    {
-        bool Press(KeyboardEvent data);
-    }
+    bool Press(KeyboardEvent data);
 }

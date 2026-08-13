@@ -1,9 +1,8 @@
 ﻿using Roton.Emulation.Core;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure;
+
+public interface IAssemblyResourceService
 {
-    public interface IAssemblyResourceService
-    {
-        IResource GetFromAssemblyOf<T>();
-    }
+    IResource GetFromAssemblyOf<T>();
 }
