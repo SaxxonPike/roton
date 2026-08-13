@@ -24,4 +24,7 @@ public interface IFeatures
     int BaseMemoryUsage { get; }
     void CleanUpPauseMovement();
     string OpenWorld();
+    void CleanUpOop(IOopContext context);
+    int GetColorMatchValue(int color);
+    void NotifyActorSentLabel(int index);
 }

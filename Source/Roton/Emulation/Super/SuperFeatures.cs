@@ -31,15 +31,16 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
     public void RemoveItem(IXyPair location)
     {
         var result = new Tile(Engine.ElementList.FloorId, 0x00);
-        var finished = false;
 
         for (var i = 0; i < 4; i++)
         {
             var targetVector = Engine.GetCardinalVector(i);
             var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
             var adjacentTile = Engine.Tiles[targetLocation];
+
             if (Engine.ElementList[adjacentTile.Id].Cycle >= 0)
                 adjacentTile = Engine.ActorAt(targetLocation).UnderTile;
+
             var adjacentElement = adjacentTile.Id;
 
             if (adjacentElement == Engine.ElementList.EmptyId ||
@@ -47,27 +48,18 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
                 adjacentElement == Engine.ElementList.SliderNsId ||
                 adjacentElement == Engine.ElementList.BoulderId)
             {
-                finished = true;
                 result.Color = 0;
+                break;
             }
 
             if (adjacentElement == Engine.ElementList.FloorId)
-            {
                 result.Color = adjacentTile.Color;
-            }
-
-            if (finished)
-            {
-                break;
-            }
         }
 
         if (result.Color == 0)
-        {
-            result.Id = Engine.ElementList.EmptyId;
-        }
-
-        Engine.Tiles[location].CopyFrom(result);
+            Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
+        else
+            Engine.Tiles[location].CopyFrom(result);
     }
 
     public string GetWorldName(string baseName) => $"{baseName}.SZT";
@@ -121,7 +113,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
                 Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(string.Empty, context.Message[0]));
                 return null;
             case 2:
-                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message[0], context.Message[1]));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration,
+                    new Message(context.Message[0], context.Message[1]));
                 return null;
             case 0:
                 return null;
@@ -149,7 +142,7 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
     public void CleanUpPauseMovement()
     {
         var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
-            
+
         if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
         {
             Engine.MoveActor(0, target);
@@ -171,6 +164,25 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
         return Engine.ShowLoad("ZZT Worlds", "szt");
     }
 
+    public void CleanUpOop(IOopContext context)
+    {
+        var location = context.Actor.Location.Clone();
+        Engine.PlotTile(location, context.DeathTile);
+    }
+
+    public int GetColorMatchValue(int color)
+    {
+        return color & 0x07;
+    }
+
+    public void NotifyActorSentLabel(int index)
+    {
+        // When an object receives a label, the current
+        // in-progress movement counter is reset.
+
+        Engine.Actors[index].P2 = 0;
+    }
+
     public void CleanUpPassageMovement()
     {
         Engine.Tiles[Engine.Player.Location].CopyFrom(Engine.Player.UnderTile);
@@ -184,8 +196,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
     public string[] GetMessageLines()
     {
         return string.IsNullOrEmpty(Engine.State.Message2)
-            ? new[] {string.Empty, Engine.State.Message}
-            : new[] {Engine.State.Message, Engine.State.Message2};
+            ? new[] { string.Empty, Engine.State.Message }
+            : new[] { Engine.State.Message, Engine.State.Message2 };
     }
 
     public void ShowAbout()

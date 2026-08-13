@@ -46,6 +46,7 @@ public interface IEngine
     int Adjacent(IXyPair location, int id);
     void Attack(int index, IXyPair location);
     bool BroadcastLabel(int sender, string label, bool ignoreLock);
+    void CleanUpOop(IOopContext context);
     void ClearBoard();
     void ClearSound();
     void ClearWorld();
@@ -61,12 +62,14 @@ public interface IEngine
     bool FindTile(ITile kind, IXyPair location);
     void ForcePlayerColor(int index);
     IXyPair GetCardinalVector(int index);
+    int GetColorMatchValue(int color);
     void HandlePlayerInput(IActor actor);
     void Harm(int index);
     void LoadWorld(string name);
     void LockActor(int index);
     void MoveActor(int index, IXyPair location);
     void MoveActorOnRiver(int index);
+    void NotifyActorSentLabel(int index);
     void PlaySound(int priority, ISound sound, int? offset = null, int? length = null);
     void PlotTile(IXyPair location, ITile tile);
     void Push(IXyPair location, IXyPair vector);

@@ -329,6 +329,7 @@ public sealed class Engine : IEngine, IDisposable
                 
                 Tracer.TraceBroadcast(sender, label, info.SearchIndex, ignoreLock, ignoreSelfLock);
                 Actors[info.SearchIndex].Instruction = info.SearchOffset;
+                NotifyActorSentLabel(info.SearchIndex);
             }
         }
 
@@ -579,8 +580,10 @@ public sealed class Engine : IEngine, IDisposable
             ExecuteMessage(context);
 
         if (context.Died)
-            ExecuteDeath(context);
+            CleanUpOop(context);
     }
+
+    public void CleanUpOop(IOopContext context) => Features.CleanUpOop(context);
 
     public bool ExecuteLabel(int sender, ISearchContext context, string term, string prefix)
     {
@@ -676,8 +679,12 @@ public sealed class Engine : IEngine, IDisposable
         Hud.RedrawBoard();
     }
 
+    public int GetColorMatchValue(int color) => Features.GetColorMatchValue(color);
+
     public bool FindTile(ITile kind, IXyPair location)
     {
+        var matchColor = GetColorMatchValue(kind.Color);
+
         location.X++;
         while (location.Y <= Tiles.Height)
         {
@@ -685,8 +692,11 @@ public sealed class Engine : IEngine, IDisposable
             {
                 var tile = Tiles[location];
                 if (tile.Id == kind.Id)
-                    if (kind.Color == 0 || ColorMatch(Tiles[location]) == kind.Color)
+                {
+                    var foundColor = GetColorMatchValue(ColorMatch(Tiles[location]));
+                    if (kind.Color == 0 || foundColor == matchColor)
                         return true;
+                }
 
                 location.X++;
             }
@@ -915,6 +925,8 @@ public sealed class Engine : IEngine, IDisposable
                 MoveActor(index, target);
         }
     }
+
+    public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
 
     public IParser Parser => _parser.Value;
 
@@ -1498,13 +1510,6 @@ public sealed class Engine : IEngine, IDisposable
         list.Add(name, score);
         HighScoreListFactory.Save(list);
         ShowHighScores();
-    }
-
-    private void ExecuteDeath(IOopContext context)
-    {
-        var location = context.Actor.Location.Clone();
-        Harm(context.Index);
-        PlotTile(location, context.DeathTile);
     }
 
     private void ExecuteMessage(IOopContext context)

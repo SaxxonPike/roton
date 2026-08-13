@@ -22,6 +22,9 @@ public static class Program
         var fileName = args.TakeWhile(s => !s.StartsWith("--")).FirstOrDefault();
         var switches = args.SkipWhile(s => !s.StartsWith("--")).Select(s => s.ToLower()).ToArray();
 
+        if (fileName != null)
+            fileName = Path.GetFullPath(fileName);
+        
         var config = new Config
         {
             DefaultWorld = Path.GetFileNameWithoutExtension(fileName),

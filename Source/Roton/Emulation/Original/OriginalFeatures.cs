@@ -115,9 +115,9 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
         var actor = Engine.Actors[index];
         var playerElement = Engine.ElementList.Player();
         if (Engine.Tiles[actor.Location].Color == playerElement.Color &&
-            playerElement.Character == Engine.Facts.PlayerCharacter) 
+            playerElement.Character == Engine.Facts.PlayerCharacter)
             return;
-            
+
         playerElement.Character = Engine.Facts.PlayerCharacter;
         Engine.Tiles[actor.Location].Color = playerElement.Color;
         Engine.UpdateBoard(actor.Location);
@@ -125,7 +125,7 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
 
     public string[] GetMessageLines()
     {
-        return new[] {Engine.State.Message};
+        return new[] { Engine.State.Message };
     }
 
     public void ShowAbout()
@@ -134,11 +134,11 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
     }
 
     public int BaseMemoryUsage => 205791;
-        
+
     public void CleanUpPauseMovement()
     {
         var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
-            
+
         if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
         {
             Engine.MoveActor(0, target);
@@ -157,6 +157,23 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
     public string OpenWorld()
     {
         return Engine.ShowLoad("ZZT Worlds", "zzt");
+    }
+
+    public void CleanUpOop(IOopContext context)
+    {
+        var location = context.Actor.Location.Clone();
+        Engine.Harm(context.Index);
+        Engine.PlotTile(location, context.DeathTile);
+    }
+
+    public int GetColorMatchValue(int color)
+    {
+        return color;
+    }
+
+    public void NotifyActorSentLabel(int index)
+    {
+        // Does nothing in the original engine.
     }
 
     public bool HandleTitleInput()
