@@ -1,16 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-  </PropertyGroup>
-  <ItemGroup> <!--  Condition=" '$(TargetFramework)' == 'netstandard2.0' " -->
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.Memory" Version="4.5.3" />
-    <PackageReference Include="System.Threading" Version="4.3.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.6.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\resources.zip" />
-  </ItemGroup>
+    <PropertyGroup>
+        <LangVersion>default</LangVersion>
+        <TargetFrameworks>net461;net10.0</TargetFrameworks>
+        <NoWarn>$(NoWarn);NU1605</NoWarn>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+        <PackageReference Include="System.IO.Compression" Version="4.3.0"/>
+        <PackageReference Include="System.Memory" Version="4.5.3"/>
+        <PackageReference Include="System.Threading" Version="4.3.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="4.6.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\resources.zip"/>
+    </ItemGroup>
 </Project>

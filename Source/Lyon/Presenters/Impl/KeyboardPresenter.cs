@@ -93,7 +93,7 @@ namespace Lyon.Presenters.Impl
             {Keycode.NumPadPeriod, AnsiKey.NumPeriod},
             {Keycode.NumPadPlus, AnsiKey.NumPlus},
             {Keycode.NumPadDivide, AnsiKey.NumSlash},
-            {Keycode.NumPadMuliply, AnsiKey.NumStar},
+            {Keycode.NumPadMultiply, AnsiKey.NumStar},
             {Keycode.PageDown, AnsiKey.PageDown},
             {Keycode.PageUp, AnsiKey.PageUp},
             {Keycode.Pause, AnsiKey.Pause},
