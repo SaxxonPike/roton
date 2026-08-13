@@ -15,6 +15,9 @@ public abstract class Flags : FixedList<string>, IFlags
 
     public override void Add(string item)
     {
+        if (Contains(item))
+            return;
+        
         var count = Count;
         for (var i = 0; i < count; i++)
         {

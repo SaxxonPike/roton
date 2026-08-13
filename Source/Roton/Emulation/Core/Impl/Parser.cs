@@ -26,19 +26,19 @@ public sealed class Parser : IParser
         [DebuggerStepThrough] get => _engine.Value;
     }
 
-    public int Search(int index, int offset, string term)
+    public int Search(int index, string term)
     {
         var result = -1;
         var termBytes = term.ToBytes();
         var actor = Engine.Actors[index];
-        var offs = new Executable {Instruction = offset};
-
+        var offs = new Executable();
+        
         while (offs.Instruction < actor.Length)
         {
             var oldOffset = offs.Instruction;
             var termOffset = 0;
             bool success;
-
+        
             while (true)
             {
                 ReadByte(index, offs);
@@ -47,7 +47,7 @@ public sealed class Parser : IParser
                     success = false;
                     break;
                 }
-
+        
                 termOffset++;
                 if (termOffset >= termBytes.Length)
                 {
@@ -55,22 +55,23 @@ public sealed class Parser : IParser
                     break;
                 }
             }
-
+        
             if (success)
             {
                 ReadByte(index, offs);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-                if (Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
+                if (!(Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
+                      Engine.State.OopByte == 0x5F))
                 {
                     result = oldOffset;
                     break;
                 }
             }
-
+        
             oldOffset++;
             offs.Instruction = oldOffset;
         }
-
+        
         return result;
     }
 
@@ -229,10 +230,10 @@ public sealed class Parser : IParser
         return success ? result : null;
     }
 
-    public bool GetTarget(ISearchContext context)
+    public bool GetTarget(int index, ISearchContext context, string term)
     {
         context.SearchIndex++;
-        var target = Engine.TargetList.Get(context.SearchTarget) ?? Engine.TargetList.Get(string.Empty);
-        return target.Execute(context);
+        var target = Engine.TargetList.Get(term) ?? Engine.TargetList.Get(string.Empty);
+        return target.Execute(index, context, term);
     }
 }

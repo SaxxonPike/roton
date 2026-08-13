@@ -115,27 +115,27 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
             Step();
     }
 
-    protected void DisableTracer()
-    {
-        Tracer.Enabled = false;
-    }
+        protected void DisableTracer()
+        {
+            Tracer.Detach(TestContext.Out);
+        }
 
-    protected void EnableTracer()
-    {
-        Tracer.Enabled = true;
-    }
+        protected void EnableTracer()
+        {
+            Tracer.Attach(TestContext.Out);
+        }
         
-    [SetUp]
-    public void __SetUpContext()
-    {
-        // Test dependencies
-        FileSystem = new FixedFileSystem(true);
-        Config = new Config();
-        TerminalMock = new Mock<ITerminal>();
-        Keyboard = new TestKeyboard();
-        SpeakerMock = new Mock<ISpeaker>();
-        ClockFactoryMock = new Mock<IClockFactory>();
-        Tracer = new TestTracer(TestContext.Out);
+        [SetUp]
+        public void __SetUpContext()
+        {
+            // Test dependencies
+            FileSystem = new FixedFileSystem(true);
+            Config = new Config();
+            TerminalMock = new Mock<ITerminal>();
+            Keyboard = new TestKeyboard();
+            SpeakerMock = new Mock<ISpeaker>();
+            ClockFactoryMock = new Mock<IClockFactory>();
+            Tracer = new Tracer();
 
         // Outer container
         var builder = new ContainerBuilder();

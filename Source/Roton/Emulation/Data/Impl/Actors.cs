@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
@@ -10,9 +9,10 @@ public abstract class Actors : FixedList<IActor>, IActors
     {
         _memory = memory;
         Capacity = capacity;
+        Cache = new IActor[capacity];
     }
 
-    private IDictionary<int, IActor> Cache { get; } = new Dictionary<int, IActor>();
+    private IActor[] Cache { get; }
 
     private readonly Lazy<IMemory> _memory;
 
@@ -26,7 +26,10 @@ public abstract class Actors : FixedList<IActor>, IActors
 
     protected sealed override IActor GetItem(int index)
     {
-        Cache.TryGetValue(index, out var actor);
+        if (index < 0 || index >= Capacity)
+            return GetActor(index);
+
+        var actor = Cache[index];
         if (actor != null) 
             return actor;
             

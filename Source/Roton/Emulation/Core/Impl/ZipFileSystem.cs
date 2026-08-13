@@ -81,11 +81,12 @@ public sealed class ZipFileSystem : IFileSystem
         using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Update);
         var entry = archive.CreateEntry(filename, CompressionLevel.Optimal);
         using (var outputStream = entry.Open())
-        using (var inputStream = new MemoryStream(data))
         {
+            using var inputStream = new MemoryStream(data);
             inputStream.CopyTo(outputStream);
             outputStream.Flush();
         }
+
         archiveStream.Flush();
         _file = archiveStream.ToArray();
     }

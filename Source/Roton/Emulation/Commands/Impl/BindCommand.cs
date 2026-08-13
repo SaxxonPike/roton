@@ -22,9 +22,7 @@ public sealed class BindCommand : ICommand
     {
         var search = new SearchContext();
         var target = Engine.Parser.ReadWord(context.Index, context);
-        search.SearchTarget = target;
-        search.Index = context.Index;
-        if (Engine.Parser.GetTarget(search))
+        if (Engine.Parser.GetTarget(context.Index, search, target))
         {
             var targetActor = Engine.Actors[search.SearchIndex];
             context.Actor.Pointer = targetActor.Pointer;

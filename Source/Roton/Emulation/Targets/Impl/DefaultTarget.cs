@@ -22,7 +22,7 @@ public sealed class DefaultTarget : ITarget
         _parser = parser;
     }
 
-    public bool Execute(ISearchContext context)
+    public bool Execute(int index, ISearchContext context, string term)
     {
         while (context.SearchIndex < Actors.Count)
         {
@@ -33,7 +33,7 @@ public sealed class DefaultTarget : ITarget
                 if (firstByte == 0x40)
                 {
                     var name = Parser.ReadWord(context.SearchIndex, instruction);
-                    if (name == context.SearchTarget)
+                    if (name == term)
                     {
                         return true;
                     }

@@ -23,22 +23,18 @@ public sealed class BearAction : IAction
         var actor = Engine.Actors[index];
         var vector = new Vector();
 
-        if (Engine.Player.Location.X == actor.Location.X ||
-            8 - actor.P1 < Engine.Player.Location.Y.AbsDiff(actor.Location.Y))
-        {
-            if (8 - actor.P1 < Engine.Player.Location.X.AbsDiff(actor.Location.X))
+            if (Engine.Player.Location.X == actor.Location.X ||
+                8 - actor.P1 < Engine.Player.Location.Y.AbsDiff(actor.Location.Y))
             {
-                vector.SetTo(0, 0);
+                vector.SetTo(0,
+                    8 - actor.P1 < Engine.Player.Location.X.AbsDiff(actor.Location.X)
+                        ? 0
+                        : (Engine.Player.Location.Y - actor.Location.Y).Polarity());
             }
             else
             {
-                vector.SetTo(0, (Engine.Player.Location.Y - actor.Location.Y).Polarity());
+                vector.SetTo((Engine.Player.Location.X - actor.Location.X).Polarity(), 0);
             }
-        }
-        else
-        {
-            vector.SetTo((Engine.Player.Location.X - actor.Location.X).Polarity(), 0);
-        }
 
         var target = actor.Location.Sum(vector);
         var targetElement = Engine.Tiles.ElementAt(target);

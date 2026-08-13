@@ -17,7 +17,7 @@ public sealed class AllTarget : ITarget
         _actors = actors;
     }
 
-    public bool Execute(ISearchContext context)
+    public bool Execute(int index, ISearchContext context, string term)
     {
         return context.SearchIndex < Actors.Count;
     }

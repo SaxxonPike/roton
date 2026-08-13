@@ -63,8 +63,8 @@ public sealed class HighScoreListFactory : IHighScoreListFactory
             writer.Write(nameLength);
             writer.Write(nameBuffer);
             writer.Write(score);
-        }   
-                
+        }
+
         writer.Flush();
         Engine.Disk.PutFile(Engine.GetHighScoreName(Engine.World.Name), stream.ToArray());
     }

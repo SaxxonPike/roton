@@ -24,15 +24,15 @@ public sealed class RestoreCommand : ICommand
         context.SearchIndex = 0;
         while (true)
         {
-            context.SearchTarget = Engine.State.OopWord;
-            var result = Engine.ExecuteLabel(context.Index, context, "\xD\x27");
+            
+            var result = Engine.ExecuteLabel(context.Index, context, Engine.State.OopWord,"\xD\x27");
             if (!result)
                 break;
 
             while (context.SearchOffset >= 0)
             {
                 Engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x3A;
-                context.SearchOffset = Engine.Parser.Search(context.SearchIndex, 0,
+                context.SearchOffset = Engine.Parser.Search(context.SearchIndex, 
                     $"\xD\x27{Engine.State.OopWord}");
             }
         }

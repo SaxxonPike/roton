@@ -33,7 +33,7 @@ public static class Program
             VideoScale = 2,
             MasterClockNumerator = 100,
             MasterClockDenominator = 7275,
-            FastMode = args.Contains("--fast")
+            FastMode = switches.Contains("--fast")
         };
 
         var selector = new ContextEngineSelector();
