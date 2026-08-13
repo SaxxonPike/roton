@@ -24,8 +24,8 @@ public sealed class Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer) : II
     public void Execute(IOopContext context)
     {
         var firstLine = true;
-            
-        while (context.CommandsExecuted < Engine.Facts.MaxOopCommands)
+
+        while (true)
         {
             if (firstLine)
                 firstLine = false;
@@ -80,6 +80,7 @@ public sealed class Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer) : II
                 {
                     Engine.Parser.ReadLine(context.Index, context);
                 }
+
                 break;
             }
         }
