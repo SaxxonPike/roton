@@ -1,13 +1,10 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
 /// <summary>
-///     An unsigned 8-bit (X,Y) pair.
+/// An unsigned 8-bit (X,Y) pair.
 /// </summary>
 public sealed class Location : IXyPair
 {
-    private int _x;
-    private int _y;
-
     public Location()
     {
     }
@@ -18,25 +15,21 @@ public sealed class Location : IXyPair
         Y = y;
     }
 
-    public IXyPair Clone()
-    {
-        return new Location(X, Y);
-    }
+    public IXyPair Clone() => 
+        new Location(X, Y);
 
     public int X
     {
-        get => _x;
-        set => _x = value & 0xFF;
+        get;
+        set => field = value & 0xFF;
     }
 
     public int Y
     {
-        get => _y;
-        set => _y = value & 0xFF;
+        get;
+        set => field = value & 0xFF;
     }
 
-    public override string ToString()
-    {
-        return $"({X}, {Y})";
-    }
+    public override string ToString() => 
+        $"({X}, {Y})";
 }

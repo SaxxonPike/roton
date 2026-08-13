@@ -1,13 +1,10 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
 /// <summary>
-///     A signed 16-bit (X,Y) pair.
+/// A signed 16-bit (X,Y) pair.
 /// </summary>
 public sealed class Vector : IXyPair
 {
-    private int _x;
-    private int _y;
-
     public Vector()
     {
     }
@@ -24,25 +21,21 @@ public sealed class Vector : IXyPair
     public static IXyPair South { get; } = new Vector(0, 1);
     public static IXyPair West { get; } = new Vector(-1, 0);
 
-    public IXyPair Clone()
-    {
-        return new Vector(X, Y);
-    }
+    public IXyPair Clone() => 
+        new Vector(X, Y);
 
     public int X
     {
-        get => _x;
-        set => _x = (value << 16) >> 16;
+        get;
+        set => field = (value << 16) >> 16;
     }
 
     public int Y
     {
-        get => _y;
-        set => _y = (value << 16) >> 16;
+        get;
+        set => field = (value << 16) >> 16;
     }
 
-    public override string ToString()
-    {
-        return $"[{X}, {Y}]";
-    }
+    public override string ToString() => 
+        $"[{X}, {Y}]";
 }
