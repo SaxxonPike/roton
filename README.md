@@ -7,44 +7,47 @@
 Roton is an emulation of the ZZT and Super ZZT game creation engines written in C#.
 
 Lyon is an application that runs an instance of Roton's emulation and presents it via SDL.
+We use [ppy/SDL3-CS](https://github.com/ppy/SDL3-CS) for this.
+
+Windows, MacOS and Linux are all supported.
 
 ### Target Frameworks
 
 - Lyon
-  - .NET Core 6
+  - .NET 10+
 - Roton
-  - .NET Standard 2 
-  - .NET Core 6
-  - .NET Framework 4.6.1
-    - This works as a convenience for now, but is deprecated and support will be removed in the near future.
+  - .NET Standard 2.0
 
 ### Build instructions
 
 The [.NET Core SDK](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md)
 is required.
 
-##### Windows
+Clone the repo:
 
-Clone the repository. Modern versions of 
-[Visual Studio](https://visualstudio.microsoft.com/) 
-and 
-[Jetbrains Rider](https://www.jetbrains.com/rider/) 
-should work. Restore packages, build and run as usual.
+```
+git clone https://github.com/SaxxonPike/roton.git
+cd roton
+```
 
-It can also be built and run from the command line. We've included `publish.bat` for this purpose,
-which will build and plop out Lyon in the Deploy folder.
+Restore NuGet packages and build:
 
-##### macOS and Linux
+```
+dotnet restore
+dotnet build
+```
 
-After cloning the repository, enter the directory with Roton.sln and type
-`dotnet build`. The .NET Core SDK will then retrieve all of the packages that it needs to build Lyon and Roton.
-After the build process completes, type `dotnet run --project Lyon` to run the newly built project.
+Run unit tests:
 
-IDEs that support .NET Core, such as JetBrains Rider or Visual Studio Code, should be able to manage the build
-process as long as the SDK is installed.
+```
+dotnet test Source/Roton.Test
+```
 
-It can also be built and run from the command line. We've included `publish.sh` for this purpose,
-which will build and plop out Lyon in the Deploy folder.
+Run the game (from source):
+
+```
+dotnet run --project Source/Lyon
+```
 
 ### Where can I learn more about ZZT?
 
@@ -69,5 +72,3 @@ Fixes to the frontend or SDL integration are very welcome!
 
 Get in touch with either @SaxxonPike or @Spectere once you've finished your work so it can be approved for inclusion
 in the master branch.
-
-
