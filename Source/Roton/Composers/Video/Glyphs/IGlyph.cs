@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Roton.Composers.Video.Glyphs
+namespace Roton.Composers.Video.Glyphs;
+
+public interface IGlyph
 {
-    public interface IGlyph
-    {
-        int Index { get; }
-        int Width { get; }
-        int Height { get; }
-        IReadOnlyList<int> Data { get; }
-    }
+    int Index { get; }
+    int Width { get; }
+    int Height { get; }
+    IReadOnlyList<int> Data { get; }
 }

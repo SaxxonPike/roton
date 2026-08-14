@@ -4,27 +4,20 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "WALK")]
+[Context(Context.Super, "WALK")]
+public sealed class WalkCommand(Lazy<IEngine> engine) : ICommand
 {
-    [Context(Context.Original, "WALK")]
-    [Context(Context.Super, "WALK")]
-    public sealed class WalkCommand : ICommand
+    private IEngine Engine => engine.Value;
+
+    public void Execute(IOopContext context)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public WalkCommand(Lazy<IEngine> engine)
+        var vector = Engine.Parser.GetDirection(context);
+        if (vector != null)
         {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            var vector = Engine.Parser.GetDirection(context);
-            if (vector != null)
-            {
-                context.Actor.Vector.CopyFrom(vector);
-            }
+            context.Actor.Vector.CopyFrom(vector);
         }
     }
 }

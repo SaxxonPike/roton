@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core.Impl
+namespace Roton.Emulation.Core.Impl;
+
+public sealed class CommandLine : ICommandLine
 {
-    public sealed class CommandLine : ICommandLine
-    {
-        public string[] Args { get; set; }
-    }
+    public string[] Args { get; set; }
 }

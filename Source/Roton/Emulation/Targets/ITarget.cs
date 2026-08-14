@@ -4,6 +4,6 @@ namespace Roton.Emulation.Targets
 {
     public interface ITarget
     {
-        bool Execute(ISearchContext context);
+        bool Execute(int index, ISearchContext context, string term);
     }
 }

@@ -3,25 +3,16 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Super
+namespace Roton.Emulation.Super;
+
+[Context(Context.Super)]
+public sealed class SuperActors(Lazy<IMemory> memory, Lazy<IHeap> heap) : Actors(memory, 129)
 {
-    [Context(Context.Super)]
-    public sealed class SuperActors : Actors
-    {
-        private readonly Lazy<IHeap> _heap;
+    private IHeap Heap => heap.Value;
 
-        public SuperActors(Lazy<IMemory> memory, Lazy<IHeap> heap)
-            : base(memory, 129)
-        {
-            _heap = heap;
-        }
+    public override int Count
+        => Memory.Read16(0x6AB3) + 1;
 
-        private IHeap Heap => _heap.Value;
-
-        public override int Count
-            => Memory.Read16(0x6AB3) + 1;
-
-        protected override IActor GetActor(int index)
-            => new Actor(Memory, Heap, 0x6AB5 + 0x0019 * index);
-    }
+    protected override IActor GetActor(int index)
+        => new Actor(Memory, Heap, 0x6AB5 + 0x0019 * index);
 }

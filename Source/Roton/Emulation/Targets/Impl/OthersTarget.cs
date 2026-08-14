@@ -3,29 +3,23 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Targets.Impl
+namespace Roton.Emulation.Targets.Impl;
+
+[Context(Context.Original, "OTHERS")]
+[Context(Context.Super, "OTHERS")]
+public sealed class OthersTarget(Lazy<IActors> actors) : ITarget
 {
-    [Context(Context.Original, "OTHERS")]
-    [Context(Context.Super, "OTHERS")]
-    public sealed class OthersTarget : ITarget
+    private IActors Actors => actors.Value;
+
+    public bool Execute(int index, ISearchContext context, string term)
     {
-        private readonly Lazy<IActors> _actors;
-        private IActors Actors => _actors.Value;
+        if (context.SearchIndex >= Actors.Count)
+            return false;
 
-        public OthersTarget(Lazy<IActors> actors)
-        {
-            _actors = actors;
-        }
+        if (context.SearchIndex != index)
+            return true;
 
-        public bool Execute(ISearchContext context)
-        {
-            if (context.SearchIndex >= Actors.Count)
-                return false;
-
-            if (context.SearchIndex == context.Index)
-                context.SearchIndex++;
-
-            return context.SearchIndex < Actors.Count;
-        }
+        context.SearchIndex++;
+        return context.SearchIndex < Actors.Count;
     }
 }

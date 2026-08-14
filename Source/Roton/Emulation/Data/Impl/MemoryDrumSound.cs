@@ -1,24 +1,23 @@
-﻿namespace Roton.Emulation.Data.Impl
+﻿namespace Roton.Emulation.Data.Impl;
+
+public sealed class MemoryDrumSound : FixedList<int>, IDrumSound
 {
-    public sealed class MemoryDrumSound : FixedList<int>, IDrumSound
+    private readonly IMemory _memory;
+    private readonly int _offset;
+
+    internal MemoryDrumSound(IMemory memory, int offset, int index)
     {
-        private readonly IMemory _memory;
-        private readonly int _offset;
+        _memory = memory;
+        _offset = offset;
+        Index = index;
+    }
 
-        internal MemoryDrumSound(IMemory memory, int offset, int index)
-        {
-            _memory = memory;
-            _offset = offset;
-            Index = index;
-        }
+    public int Index { get; }
 
-        public int Index { get; }
+    public override int Count => _memory.Read16(_offset);
 
-        public override int Count => _memory.Read16(_offset);
-
-        protected override int GetItem(int index)
-        {
-            return _memory.Read16(_offset + ((1 + index) << 1));
-        }
+    protected override int GetItem(int index)
+    {
+        return _memory.Read16(_offset + ((1 + index) << 1));
     }
 }

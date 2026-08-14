@@ -4,23 +4,16 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Directions.Impl
+namespace Roton.Emulation.Directions.Impl;
+
+[Context(Context.Original, "CW")]
+[Context(Context.Super, "CW")]
+public sealed class CwDirection(Lazy<IEngine> engine) : IDirection
 {
-    [Context(Context.Original, "CW")]
-    [Context(Context.Super, "CW")]
-    public sealed class CwDirection : IDirection
+    private IEngine Engine => engine.Value;
+
+    public IXyPair Execute(IOopContext context)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public CwDirection(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public IXyPair Execute(IOopContext context)
-        {
-            return Engine.Parser.GetDirection(context).Clockwise();
-        }
+        return Engine.Parser.GetDirection(context).Clockwise();
     }
 }

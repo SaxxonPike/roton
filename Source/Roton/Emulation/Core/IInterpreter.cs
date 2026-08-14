@@ -1,9 +1,8 @@
 ﻿using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IInterpreter
 {
-    public interface IInterpreter
-    {
-        void Execute(IOopContext context);
-    }
+    void Execute(IOopContext context);
 }

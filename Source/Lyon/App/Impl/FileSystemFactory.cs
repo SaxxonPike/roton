@@ -4,25 +4,24 @@ using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
-namespace Lyon.App.Impl
-{
-    [Context(Context.Startup)]
-    public sealed class FileSystemFactory : IFileSystemFactory
-    {
-        private readonly IAssemblyResourceService _assemblyResourceService;
+namespace Lyon.App.Impl;
 
-        public FileSystemFactory(IAssemblyResourceService assemblyResourceService)
-        {
-            _assemblyResourceService = assemblyResourceService;
-        }
+[Context(Context.Startup)]
+public sealed class FileSystemFactory : IFileSystemFactory
+{
+    private readonly IAssemblyResourceService _assemblyResourceService;
+
+    public FileSystemFactory(IAssemblyResourceService assemblyResourceService)
+    {
+        _assemblyResourceService = assemblyResourceService;
+    }
         
-        public IFileSystem Create(string path)
+    public IFileSystem Create(string path)
+    {
+        return new AggregateFileSystem(new[]
         {
-            return new AggregateFileSystem(new[]
-            {
-                new DiskFileSystem(path),
-                _assemblyResourceService.GetFromAssemblyOf<IEngine>().Root
-            });
-        }
+            new DiskFileSystem(path),
+            _assemblyResourceService.GetFromAssemblyOf<IEngine>().Root
+        });
     }
 }

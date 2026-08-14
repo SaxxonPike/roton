@@ -4,23 +4,16 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Draws.Impl
-{
-    [Context(Context.Super, 0x3F)]
-    public sealed class WebDraw : IDraw
-    {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-        
-        public WebDraw(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
+namespace Roton.Emulation.Draws.Impl;
 
-        public AnsiChar Draw(IXyPair location)
-        {
-            return new AnsiChar(Engine.State.WebChars[Engine.Adjacent(location, Engine.ElementList.WebId)],
-                Engine.Tiles[location].Color);
-        }
+[Context(Context.Super, 0x3F)]
+public sealed class WebDraw(Lazy<IEngine> engine) : IDraw
+{
+    private IEngine Engine => engine.Value;
+
+    public AnsiChar Draw(IXyPair location)
+    {
+        return new AnsiChar(Engine.State.WebChars[Engine.Adjacent(location, Engine.ElementList.WebId)],
+            Engine.Tiles[location].Color);
     }
 }

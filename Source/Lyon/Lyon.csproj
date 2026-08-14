@@ -1,30 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.0</TargetFrameworks>
-    <OutputType>winexe</OutputType>
-    <LangVersion>latest</LangVersion>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <!--<RuntimeIdentifiers>win10-x64;osx.10.11-x64;ubuntu.16.04-x64</RuntimeIdentifiers>-->
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Roton\Roton.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
-    <PackageReference Include="DotSDL" Version="0.0.1-alpha" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Deploy\Config.json">
-      <Link>Config.json</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Deploy\Lyon.bat">
-      <Link>Lyon.bat</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Deploy\lyon.sh">
-      <Link>lyon.sh</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <OutputType>exe</OutputType>
+        <LangVersion>default</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Include\DotSDL\DotSDL\DotSDL.csproj" />
+        <ProjectReference Include="..\Roton\Roton.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="9.3.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+        <PackageReference Include="ppy.SDL3-CS" Version="2026.722.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\Deploy\Config.json">
+            <Link>Config.json</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\Deploy\Lyon.bat">
+            <Link>Lyon.bat</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\Deploy\lyon.sh">
+            <Link>lyon.sh</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="TOWN.ZZT">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="MONSTER.SZT">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

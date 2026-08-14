@@ -4,35 +4,23 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Draws.Impl
-{
-    [Context(Context.Original, 0x0C)]
-    [Context(Context.Super, 0x0C)]
-    public sealed class DuplicatorDraw : IDraw
-    {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+namespace Roton.Emulation.Draws.Impl;
 
-        public DuplicatorDraw(Lazy<IEngine> engine)
+[Context(Context.Original, 0x0C)]
+[Context(Context.Super, 0x0C)]
+public sealed class DuplicatorDraw(Lazy<IEngine> engine) : IDraw
+{
+    private IEngine Engine => engine.Value;
+
+    public AnsiChar Draw(IXyPair location)
+    {
+        return Engine.ActorAt(location).P1 switch
         {
-            _engine = engine;
-        }
-        
-        public AnsiChar Draw(IXyPair location)
-        {
-            switch (Engine.ActorAt(location).P1)
-            {
-                case 2:
-                    return new AnsiChar(0xF9, Engine.Tiles[location].Color);
-                case 3:
-                    return new AnsiChar(0xF8, Engine.Tiles[location].Color);
-                case 4:
-                    return new AnsiChar(0x6F, Engine.Tiles[location].Color);
-                case 5:
-                    return new AnsiChar(0x4F, Engine.Tiles[location].Color);
-                default:
-                    return new AnsiChar(0xFA, Engine.Tiles[location].Color);
-            }
-        }
+            2 => new AnsiChar(0xF9, Engine.Tiles[location].Color),
+            3 => new AnsiChar(0xF8, Engine.Tiles[location].Color),
+            4 => new AnsiChar(0x6F, Engine.Tiles[location].Color),
+            5 => new AnsiChar(0x4F, Engine.Tiles[location].Color),
+            _ => new AnsiChar(0xFA, Engine.Tiles[location].Color)
+        };
     }
 }

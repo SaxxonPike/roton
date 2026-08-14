@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Cheats
+namespace Roton.Emulation.Cheats;
+
+public interface ICheatList
 {
-    public interface ICheatList
-    {
-        ICheat Get(string name);
-    }
+    ICheat Get(string name);
 }

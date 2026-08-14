@@ -1,9 +1,8 @@
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Directions
+namespace Roton.Emulation.Directions;
+
+public interface IDirection
 {
-    public interface IDirection
-    {
-        IXyPair Execute(IOopContext context);
-    }
+    IXyPair Execute(IOopContext context);
 }

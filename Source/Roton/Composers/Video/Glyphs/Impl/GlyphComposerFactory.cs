@@ -3,28 +3,20 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Composers.Video.Glyphs.Impl
+namespace Roton.Composers.Video.Glyphs.Impl;
+
+[Context(Context.Original)]
+[Context(Context.Super)]
+public sealed class GlyphComposerFactory(Lazy<IComposerResourceService> composerResourceService) : IGlyphComposerFactory
 {
-    [Context(Context.Original)]
-    [Context(Context.Super)]
-    public sealed class GlyphComposerFactory : IGlyphComposerFactory
+    public IGlyphComposer Get(byte[] data, bool wide)
     {
-        private readonly Lazy<IComposerResourceService> _composerResourceService;
+        IGlyphComposer result =
+            new AutoDetectBinaryGlyphComposer(data ?? composerResourceService.Value.GetFontData());
 
-        public GlyphComposerFactory(Lazy<IComposerResourceService> composerResourceService)
-        {
-            _composerResourceService = composerResourceService;
-        }
+        if (wide)
+            result = new ScaledGlyphComposer(result, 2, 1);
 
-        public IGlyphComposer Get(byte[] data, bool wide)
-        {
-            IGlyphComposer result =
-                new AutoDetectBinaryGlyphComposer(data ?? _composerResourceService.Value.GetFontData());
-
-            if (wide)
-                result = new ScaledGlyphComposer(result, 2, 1);
-
-            return new CachedGlyphComposer(result);
-        }
+        return new CachedGlyphComposer(result);
     }
 }

@@ -4,39 +4,32 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "PUT")]
+[Context(Context.Super, "PUT")]
+public sealed class PutCommand(Lazy<IEngine> engine) : ICommand
 {
-    [Context(Context.Original, "PUT")]
-    [Context(Context.Super, "PUT")]
-    public sealed class PutCommand : ICommand
+    private IEngine Engine => engine.Value;
+
+    public void Execute(IOopContext context)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
+        var vector = Engine.Parser.GetDirection(context);
+        var success = false;
 
-        public PutCommand(Lazy<IEngine> engine)
+        if (vector != null)
         {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            var vector = Engine.Parser.GetDirection(context);
-            var success = false;
-
-            if (vector != null)
+            var kind = Engine.Parser.GetKind(context);
+            if (kind != null)
             {
-                var kind = Engine.Parser.GetKind(context);
-                if (kind != null)
-                {
-                    success = true;
+                success = true;
                     
-                    var target = context.Actor.Location.Sum(vector);
-                    Engine.PutTile(target, vector, kind);
-                }
+                var target = context.Actor.Location.Sum(vector);
+                Engine.PutTile(target, vector, kind);
             }
-
-            if (!success)
-                Engine.RaiseError("Bad #PUT");
         }
+
+        if (!success)
+            Engine.RaiseError("Bad #PUT");
     }
 }

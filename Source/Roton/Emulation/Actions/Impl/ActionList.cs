@@ -4,34 +4,33 @@ using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Actions.Impl
+namespace Roton.Emulation.Actions.Impl;
+
+[Context(Context.Original)]
+[Context(Context.Super)]
+public sealed class ActionList : IActionList
 {
-    [Context(Context.Original)]
-    [Context(Context.Super)]
-    public sealed class ActionList : IActionList
+    private readonly Lazy<IDictionary<int, IAction>> _actions;
+    private IDictionary<int, IAction> Actions => _actions.Value;
+
+    public ActionList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<IAction>> actions)
     {
-        private readonly Lazy<IDictionary<int, IAction>> _actions;
-        private IDictionary<int, IAction> Actions => _actions.Value;
-
-        public ActionList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<IAction>> actions)
+        _actions = new Lazy<IDictionary<int, IAction>>(() =>
         {
-            _actions = new Lazy<IDictionary<int, IAction>>(() =>
+            var result = new Dictionary<int, IAction>();
+            foreach (var action in actions.Value)
             {
-                var result = new Dictionary<int, IAction>();
-                foreach (var action in actions.Value)
-                {
-                    foreach (var attribute in contextMetadataService.Value.GetMetadata(action))
-                        result.Add(attribute.Id, action);
-                }
+                foreach (var attribute in contextMetadataService.Value.GetMetadata(action))
+                    result.Add(attribute.Id, action);
+            }
 
-                return result;
-            });
-        }
-        
-        public IAction Get(int index)
-        {
-            return Actions.ContainsKey(index) ? Actions[index] : Actions[-1];
-        }
-
+            return result;
+        });
     }
+        
+    public IAction Get(int index)
+    {
+        return Actions.ContainsKey(index) ? Actions[index] : Actions[-1];
+    }
+
 }

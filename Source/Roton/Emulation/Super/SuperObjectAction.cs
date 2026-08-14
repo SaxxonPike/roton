@@ -4,53 +4,46 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Super
+namespace Roton.Emulation.Super;
+
+[Context(Context.Super, 0x24)]
+public sealed class SuperObjectAction(Lazy<IEngine> engine) : IAction
 {
-    [Context(Context.Super, 0x24)]
-    public sealed class SuperObjectAction : IAction
+    private IEngine Engine => engine.Value;
+
+    public void Act(int index)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public SuperObjectAction(Lazy<IEngine> engine)
+        var actor = Engine.Actors[index];
+        if (actor.P2 == 0 && actor.Instruction >= 0)
         {
-            _engine = engine;
+            Engine.ExecuteCode(index, actor, @"Interaction");
         }
-        
-        public void Act(int index)
+
+        if (actor.Vector.IsZero())
         {
-            var actor = Engine.Actors[index];
-            if (actor.P2 == 0 && actor.Instruction >= 0)
-            {
-                Engine.ExecuteCode(index, actor, @"Interaction");
-            }
+            if (actor.P2 > 0)
+                actor.P2--;
+            return;
+        }
 
-            if (actor.Vector.IsZero())
-            {
-                if (actor.P2 > 0)
-                    actor.P2--;
-                return;
-            }
-
-            var target = actor.Location.Sum(actor.Vector);
+        var target = actor.Location.Sum(actor.Vector);
             
-            if (!Engine.Tiles.ElementAt(target).IsFloor)
-                Engine.Push(target, actor.Vector);
+        if (!Engine.Tiles.ElementAt(target).IsFloor)
+            Engine.Push(target, actor.Vector);
 
-            if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (Engine.Tiles.ElementAt(target).IsFloor)
+        {
+            Engine.MoveActor(index, target);
+            if (actor.P2 > 0)
             {
-                Engine.MoveActor(index, target);
-                if (actor.P2 > 0)
-                {
-                    actor.P2--;
-                    if (actor.P2 == 0)
-                        actor.Vector.SetTo(0, 0);
-                }
+                actor.P2--;
+                if (actor.P2 == 0)
+                    actor.Vector.SetTo(0, 0);
             }
-            else
-            {
-                Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
-            }
-        }        
-    }
+        }
+        else
+        {
+            Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
+        }
+    }        
 }

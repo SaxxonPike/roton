@@ -3,28 +3,19 @@ using Roton.Composers.Video.Palettes;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Composers.Video.Scenes.Impl
+namespace Roton.Composers.Video.Scenes.Impl;
+
+[Context(Context.Original)]
+[Context(Context.Super)]
+public sealed class SceneComposerFactory(
+    IGlyphComposerFactory glyphComposerFactory,
+    IPaletteComposerFactory paletteComposerFactory)
+    : ISceneComposerFactory
 {
-    [Context(Context.Original)]
-    [Context(Context.Super)]
-    public sealed class SceneComposerFactory : ISceneComposerFactory
+    public ISceneComposer Get()
     {
-        private readonly IGlyphComposerFactory _glyphComposerFactory;
-        private readonly IPaletteComposerFactory _paletteComposerFactory;
-
-        public SceneComposerFactory(
-            IGlyphComposerFactory glyphComposerFactory,
-            IPaletteComposerFactory paletteComposerFactory)
-        {
-            _glyphComposerFactory = glyphComposerFactory;
-            _paletteComposerFactory = paletteComposerFactory;
-        }
-
-        public ISceneComposer Get()
-        {
-            var composer = new SceneComposer(_paletteComposerFactory, _glyphComposerFactory);
-            composer.SetSize(80, 25, false);
-            return composer;
-        }
+        var composer = new SceneComposer(paletteComposerFactory, glyphComposerFactory);
+        composer.SetSize(80, 25, false);
+        return composer;
     }
 }

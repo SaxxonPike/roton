@@ -1,8 +1,7 @@
-namespace Roton.Emulation.Data
+namespace Roton.Emulation.Data;
+
+public interface ITimers
 {
-    public interface ITimers
-    {
-        ITimer Player { get; }
-        ITimer TimeLimit { get; }
-    }
+    ITimer Player { get; }
+    ITimer TimeLimit { get; }
 }

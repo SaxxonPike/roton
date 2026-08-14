@@ -1,7 +1,6 @@
-namespace Roton.Composers.Video.Palettes
+namespace Roton.Composers.Video.Palettes;
+
+public interface IPaletteComposerFactory
 {
-    public interface IPaletteComposerFactory
-    {
-        IPaletteComposer Get(byte[] data);
-    }
+    IPaletteComposer Get(byte[] data);
 }

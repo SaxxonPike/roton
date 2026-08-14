@@ -6,44 +6,43 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Emulation.Conditions
+namespace Roton.Test.Roton.Emulation.Conditions;
+
+public class NotConditionTestFixture : UnitTestFixture<NotCondition>
 {
-    public class NotConditionTestFixture : UnitTestFixture<NotCondition>
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Execute_ShouldReturnInvertedInnerResult(bool innerResult)
     {
-        [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Execute_ShouldReturnInvertedInnerResult(bool innerResult)
+        // Arrange.
+        var parser = Mock<IParser>(mock =>
         {
-            // Arrange.
-            var parser = Mock<IParser>(mock =>
-            {
-                mock.Setup(x => x.GetCondition(It.IsAny<IOopContext>()))
-                    .Returns(innerResult);
-            });
+            mock.Setup(x => x.GetCondition(It.IsAny<IOopContext>()))
+                .Returns(innerResult);
+        });
             
-            var actor = Mock<IActor>(mock =>
-            {
-            });
+        var actor = Mock<IActor>(_ =>
+        {
+        });
             
-            var context = Mock<IOopContext>(mock =>
-            {
-                mock.Setup(x => x.Actor)
-                    .Returns(() => actor.Object);
-            });
+        var context = Mock<IOopContext>(mock =>
+        {
+            mock.Setup(x => x.Actor)
+                .Returns(() => actor.Object);
+        });
 
-            MockService<IEngine>(mock =>
-            {
-                mock.Setup(x => x.Parser)
-                    .Returns(() => parser.Object);
-            });
+        MockService<IEngine>(mock =>
+        {
+            mock.Setup(x => x.Parser)
+                .Returns(() => parser.Object);
+        });
 
-            // Act.
-            var observed = Subject.Execute(context.Object);
+        // Act.
+        var observed = Subject.Execute(context.Object);
             
-            // Assert.
-            var expected = !innerResult;
-            observed.Should().Be(expected);
-        }
+        // Assert.
+        var expected = !innerResult;
+        observed.Should().Be(expected);
     }
 }

@@ -1,38 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Roton.Emulation.Core.Impl
+namespace Roton.Emulation.Core.Impl;
+
+public sealed class FixedFileSystem(bool writeable, IDictionary<string, byte[]> files = null) : IFileSystem
 {
-    public sealed class FixedFileSystem : IFileSystem
+    private readonly IDictionary<string, byte[]> _files = files ?? new Dictionary<string, byte[]>();
+
+    public bool IsWriteable { get; } = writeable;
+
+    public bool FileExists(string path)
     {
-        private readonly IDictionary<string, byte[]> _files;
+        return _files.ContainsKey(path);
+    }
 
-        public FixedFileSystem(bool writeable, IDictionary<string, byte[]> files = null)
-        {
-            _files = files ?? new Dictionary<string, byte[]>();
-            IsWriteable = writeable;
-        }
+    public byte[] GetFile(string path)
+    {
+        return path == null ? null : _files[path];
+    }
 
-        public bool IsWriteable { get; }
+    public IEnumerable<string> GetFileNames(string path)
+    {
+        return _files.Keys;
+    }
 
-        public bool FileExists(string path)
-        {
-            return _files.ContainsKey(path);
-        }
-
-        public byte[] GetFile(string path)
-        {
-            return path == null ? null : _files[path];
-        }
-
-        public IEnumerable<string> GetFileNames(string path)
-        {
-            return _files.Keys;
-        }
-
-        public void PutFile(string path, byte[] data)
-        {
-            _files[path] = data.ToArray();
-        }
+    public void PutFile(string path, byte[] data)
+    {
+        _files[path] = data.ToArray();
     }
 }

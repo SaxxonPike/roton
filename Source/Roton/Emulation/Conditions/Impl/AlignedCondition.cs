@@ -4,24 +4,17 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Conditions.Impl
+namespace Roton.Emulation.Conditions.Impl;
+
+[Context(Context.Original, "ALLIGNED")]
+[Context(Context.Super, "ALLIGNED")]
+public sealed class AlignedCondition(Lazy<IEngine> engine) : ICondition
 {
-    [Context(Context.Original, "ALLIGNED")]
-    [Context(Context.Super, "ALLIGNED")]
-    public sealed class AlignedCondition : ICondition
+    private IEngine Engine => engine.Value;
+
+    public bool? Execute(IOopContext context)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public AlignedCondition(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public bool? Execute(IOopContext context)
-        {
-            return context.Actor.Location.X == Engine.Player.Location.X ||
-                   context.Actor.Location.Y == Engine.Player.Location.Y;
-        }
+        return context.Actor.Location.X == Engine.Player.Location.X ||
+               context.Actor.Location.Y == Engine.Player.Location.Y;
     }
 }

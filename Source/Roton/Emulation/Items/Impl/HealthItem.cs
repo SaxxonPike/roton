@@ -3,24 +3,17 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Items.Impl
+namespace Roton.Emulation.Items.Impl;
+
+[Context(Context.Original, "HEALTH")]
+[Context(Context.Super, "HEALTH")]
+public sealed class HealthItem(Lazy<IEngine> engine) : IItem
 {
-    [Context(Context.Original, "HEALTH")]
-    [Context(Context.Super, "HEALTH")]
-    public sealed class HealthItem : IItem
+    private IEngine Engine => engine.Value;
+
+    public int Value
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public HealthItem(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public int Value
-        {
-            get => Engine.World.Health;
-            set => Engine.World.Health = value;
-        }
+        get => Engine.World.Health;
+        set => Engine.World.Health = value;
     }
 }

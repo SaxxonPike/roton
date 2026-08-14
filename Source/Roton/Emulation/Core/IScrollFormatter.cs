@@ -1,7 +1,6 @@
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IScrollFormatter
 {
-    public interface IScrollFormatter
-    {
-        string[] Format(string text);
-    }
+    string[] Format(string text);
 }

@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Infrastructure
+namespace Roton.Infrastructure;
+
+public interface IContextMetadataService
 {
-    public interface IContextMetadataService
-    {
-        IEnumerable<ContextAttribute> GetMetadata(object obj);
-        IEnumerable<Type> GetTypes();
-    }
+    IEnumerable<ContextAttribute> GetMetadata(object obj);
+    IEnumerable<Type> GetTypes();
 }

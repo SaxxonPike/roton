@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace Roton.Emulation.Core
+namespace Roton.Emulation.Core;
+
+public interface IAnsiKeyTransformer
 {
-    public interface IAnsiKeyTransformer
-    {
-        IEnumerable<byte> GetBytes(IKeyPress keyPress);
-    }
+    IEnumerable<byte> GetBytes(IKeyPress keyPress);
 }

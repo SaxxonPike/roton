@@ -4,24 +4,17 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Roton.Emulation.Commands.Impl
+namespace Roton.Emulation.Commands.Impl;
+
+[Context(Context.Original, "GIVE")]
+[Context(Context.Super, "GIVE")]
+public sealed class GiveCommand(Lazy<IEngine> engine) : ICommand
 {
-    [Context(Context.Original, "GIVE")]
-    [Context(Context.Super, "GIVE")]
-    public sealed class GiveCommand : ICommand
+    private IEngine Engine => engine.Value;
+
+    public void Execute(IOopContext context)
     {
-        private readonly Lazy<IEngine> _engine;
-        private IEngine Engine => _engine.Value;
-
-        public GiveCommand(Lazy<IEngine> engine)
-        {
-            _engine = engine;
-        }
-
-        public void Execute(IOopContext context)
-        {
-            context.Resume = Engine.ExecuteTransaction(context, false);
-            Engine.Hud.UpdateStatus();
-        }
+        context.Resume = Engine.ExecuteTransaction(context, false);
+        Engine.Hud.UpdateStatus();
     }
 }
