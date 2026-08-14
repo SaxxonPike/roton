@@ -25,13 +25,13 @@ public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
                 int fontOffset = sourceData[3];
                 fontOffset <<= 8;
                 fontOffset |= sourceData[2];
-                font = new BitmapFont(sourceData.Skip(fontOffset).Take(fontHeight * 256).ToArray(), 8, fontHeight);
+                font = new BitmapFont([.. sourceData.Skip(fontOffset).Take(fontHeight * 256)], 8, fontHeight);
             }
             else if (sourceData[0] == 0xB8 && sourceData[1] == 0x63 && ((sourceData.Length - 139) & 0xFF) == 0)
             {
                 // fonted 2.0 (lesser known but still needs support)
                 var fontLength = sourceData.Length - 139;
-                font = new BitmapFont(sourceData.Skip(139).Take(fontLength).ToArray(), 8, fontLength >> 8);
+                font = new BitmapFont([.. sourceData.Skip(139).Take(fontLength)], 8, fontLength >> 8);
             }
         }
 

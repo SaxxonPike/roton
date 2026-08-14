@@ -781,7 +781,7 @@ public sealed class Engine : IEngine, IDisposable
             catch (IOException e)
             {
                 ShowFormattedScroll(e.ToString());
-                return Array.Empty<byte>();
+                return [];
             }
         }
 
@@ -829,8 +829,7 @@ public sealed class Engine : IEngine, IDisposable
     private void ShowDosError()
     {
         Hud.ShowScroll(false, "Error",
-            new[]
-            {
+            [
                 "$DOS Error:",
                 string.Empty,
                 "This may be caused by missing",
@@ -839,7 +838,7 @@ public sealed class Engine : IEngine, IDisposable
                 "your disk may be full -- try",
                 "using a blank, formatted disk",
                 "for saving the game!"
-            }
+            ]
         );
     }
 

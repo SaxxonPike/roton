@@ -130,7 +130,7 @@ public sealed class AudioComposer : IAudioComposer
         _bufferAccumulator += _bufferNumerator;
         var args = new AudioComposerDataEventArgs
         {
-            Data = ComposeAudio().ToArray()
+            Data = [.. ComposeAudio()]
         };
         BufferReady?.Invoke(this, args);
     }
@@ -144,10 +144,11 @@ public sealed class AudioComposer : IAudioComposer
         // base note is C-2 but our 440 frequency reference is A-2
 
         _frequencyDutyCycleTable =
-            Enumerable.Range(0, 12 * 7)
+        [
+            .. Enumerable.Range(0, 12 * 7)
                 .Select(i => 440d * Math.Pow(2d, (i - 45d) / 12d) * AccumulatorMultiplier * 2d)
-                .Select(i => (long) i)
-                .ToArray();
+                .Select(i => (long)i)
+        ];
 
         _bufferDenominator = _config.MasterClockDenominator;
         _bufferNumerator = _sampleRate * _config.MasterClockNumerator;

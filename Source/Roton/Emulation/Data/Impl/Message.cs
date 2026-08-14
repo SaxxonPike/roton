@@ -6,17 +6,17 @@ public sealed class Message : IMessage
 {
     public Message()
     {
-        Text = new[] {string.Empty};
+        Text = [string.Empty];
     }
 
     public Message(IEnumerable<string> message)
     {
-        Text = new List<string>(message).ToArray();
+        Text = [.. message];
     }
 
     public Message(params string[] message)
     {
-        Text = new List<string>(message).ToArray();
+        Text = [.. message];
     }
 
     public string[] Text { get; }

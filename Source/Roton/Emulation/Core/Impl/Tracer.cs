@@ -13,7 +13,7 @@ namespace Roton.Emulation.Core.Impl
     public sealed class Tracer : ITracer
     {
         private long _stepNumber;
-        private readonly List<TextWriter> _writers = new List<TextWriter>();
+        private readonly List<TextWriter> _writers = [];
 
         public void TraceInput(EngineKeyCode keyCode)
         {

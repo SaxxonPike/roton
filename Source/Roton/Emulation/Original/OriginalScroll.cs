@@ -17,7 +17,7 @@ public sealed class OriginalScroll(Lazy<IEngine> engine, Lazy<ITerminal> termina
         
     protected override IReadOnlyList<AnsiChar> GetScreenBuffer()
     {
-        return Array.Empty<AnsiChar>();
+        return [];
     }
 
     protected override void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y)

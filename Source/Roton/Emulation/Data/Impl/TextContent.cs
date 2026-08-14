@@ -16,7 +16,7 @@ public abstract class TextContent(IMemory memory, int offset)
     public void SetText(IEnumerable<string> content)
     {
         _count = 0;
-        foreach (var line in content ?? Enumerable.Empty<string>())
+        foreach (var line in content ?? [])
             SetItem(_count++, line);
     }
 

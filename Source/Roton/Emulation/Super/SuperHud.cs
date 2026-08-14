@@ -64,13 +64,12 @@ public sealed class SuperHud(
         }
         else
         {
-            var arrows = new string(new[]
-            {
+            var arrows = new string([
                 0x18.ToChar(),
                 0x19.ToChar(),
                 0x1A.ToChar(),
                 0x1B.ToChar()
-            });
+            ]);
             DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
             DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
             DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
@@ -433,7 +432,7 @@ public sealed class SuperHud(
 
         string name = null;
         Scroll.Show($"New high score for {Engine.World.Name}",
-            new[] { string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty },
+            [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
             _ => name = TextEntryHud.Show(12, 14, 15, 0x1E, 0x1F));

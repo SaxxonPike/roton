@@ -43,6 +43,6 @@ public sealed class ScrollFormatter(Lazy<IScroll> scroll) : IScrollFormatter
             output.Add(outLine.ToString());
         }
 
-        return output.ToArray();
+        return [.. output];
     }
 }

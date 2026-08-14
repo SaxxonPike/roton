@@ -24,12 +24,12 @@ public static class ActorExtensions
 
     public static string GetCodeAsString(this IActor self)
     {
-        return (self.Code ?? Array.Empty<byte>()).ToStringValue();
+        return (self.Code ?? []).ToStringValue();
     }
 
     public static void ModifyCodeAsString(this IActor self, string value)
     {
-        self.Code ??= Array.Empty<byte>();
+        self.Code ??= [];
         var code = self.Code;
         var newCode = value.ToBytes();
         Array.Resize(ref code, newCode.Length);

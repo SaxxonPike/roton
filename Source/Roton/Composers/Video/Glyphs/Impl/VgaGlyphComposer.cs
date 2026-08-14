@@ -9,7 +9,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
 
     public VgaGlyphComposer(IBitmapFont font)
     {
-        _data = font.Data.Select(i => (int)i).ToArray();
+        _data = [.. font.Data.Select(i => (int)i)];
         _height = font.Height;
         MaxWidth = font.Width;
         MaxHeight = font.Height;

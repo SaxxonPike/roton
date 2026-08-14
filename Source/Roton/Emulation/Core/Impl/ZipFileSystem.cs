@@ -26,10 +26,12 @@ public sealed class ZipFileSystem : IFileSystem
     {
         using var archiveStream = new MemoryStream(_file);
         using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
-        return archive.Entries
-            .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
-            .Select(e => e.FullName.Split('/').Last())
-            .ToList();
+        return
+        [
+            .. archive.Entries
+                .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
+                .Select(e => e.FullName.Split('/').Last())
+        ];
     }
 
     // TODO: make zips writeable
@@ -61,10 +63,12 @@ public sealed class ZipFileSystem : IFileSystem
     {
         using var archiveStream = new MemoryStream(_file);
         using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
-        return archive.Entries
-            .Where(e => e.FullName.StartsWith(path))
-            .Select(e => e.FullName.Split('/').Last())
-            .ToList();
+        return
+        [
+            .. archive.Entries
+                .Where(e => e.FullName.StartsWith(path))
+                .Select(e => e.FullName.Split('/').Last())
+        ];
     }
 
     public string GetParentPath(string path)

@@ -9,5 +9,5 @@ public sealed class Glyph(int index, int width, int height, IEnumerable<int> dat
     public int Index { get; } = index;
     public int Width { get; } = width;
     public int Height { get; } = height;
-    public IReadOnlyList<int> Data { get; } = data.ToArray();
+    public IReadOnlyList<int> Data { get; } = [.. data];
 }

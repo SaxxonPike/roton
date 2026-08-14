@@ -53,7 +53,7 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
         }
 
         Engine.State.KeyVector.SetTo(0, 0);
-        return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
+        return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
     }
 
     public void HandlePlayerInput(IActor actor)
@@ -125,7 +125,7 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
 
     public string[] GetMessageLines()
     {
-        return new[] { Engine.State.Message };
+        return [Engine.State.Message];
     }
 
     public void ShowAbout()

@@ -120,7 +120,7 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
                 return null;
             default:
                 Engine.State.KeyVector.SetTo(0, 0);
-                return Engine.Hud.ShowScroll(false, context.Name, context.Message.ToArray());
+                return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
         }
     }
 
@@ -206,8 +206,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
     public string[] GetMessageLines()
     {
         return string.IsNullOrEmpty(Engine.State.Message2)
-            ? new[] { string.Empty, Engine.State.Message }
-            : new[] { Engine.State.Message, Engine.State.Message2 };
+            ? [string.Empty, Engine.State.Message]
+            : [Engine.State.Message, Engine.State.Message2];
     }
 
     public void ShowAbout()
