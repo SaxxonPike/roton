@@ -12,6 +12,8 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 public sealed class ScrollFormatter(Lazy<IScroll> scroll) : IScrollFormatter
 {
+    private readonly char[] _newLineChars = Environment.NewLine.ToCharArray();
+
     private IScroll Scroll
     {
         [DebuggerStepThrough] get => scroll.Value;
@@ -21,7 +23,7 @@ public sealed class ScrollFormatter(Lazy<IScroll> scroll) : IScrollFormatter
     {
         var output = new List<string>();
         var lines = text
-            .Split(Environment.NewLine.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var line in lines)
         {
