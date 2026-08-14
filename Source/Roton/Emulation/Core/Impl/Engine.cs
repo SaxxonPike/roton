@@ -770,13 +770,13 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ShowFormattedScroll(string error) => Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
-    public void LoadWorld(string name)
+    public void LoadWorld(string name, bool savedGame)
     {
         byte[] TryLoadWorld()
         {
             try
             {
-                return Disk.GetFile(Features.GetWorldName(name));
+                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
             }
             catch (IOException e)
             {
@@ -1147,6 +1147,41 @@ public sealed class Engine : IEngine, IDisposable
         return result;
     }
 
+    public void SaveWorld(string name)
+    {
+        // Make sure the packed board data is up to date.
+
+        PackBoard();
+
+        using var stream = new MemoryStream();
+        using var writer = new BinaryWriter(stream);
+
+        // Write common world header.
+        
+        var type = (short)World.WorldType;
+        var numBoards = (short)(Boards.Count - 1);
+
+        writer.Write(type);
+        writer.Write(numBoards);
+
+        // Write world data.
+
+        GameSerializer.SaveWorld(stream);
+
+        // Write each packed board.
+        
+        foreach (var board in Boards)
+            GameSerializer.SaveBoardData(stream, board.Data);
+
+        stream.Flush();
+
+        // Save to disk. Extension depends on whether the game world has been
+        // modified in-game.
+
+        var fileName = World.IsLocked ? Features.GetSaveName(name) : Features.GetWorldName(name);
+        Disk.PutFile(fileName, stream.ToArray());
+    }
+
     public IXyPair Seek(IXyPair location)
     {
         var result = new Vector();
@@ -1205,13 +1240,26 @@ public sealed class Engine : IEngine, IDisposable
     public void OpenWorld()
     {
         var name = Features.OpenWorld();
-        if (!string.IsNullOrEmpty(name))
-        {
-            LoadWorld(name);
-            State.StartBoard = World.BoardIndex;
-            SetBoard(0);
-            FadePurple();
-        }
+        if (string.IsNullOrEmpty(name)) 
+            return;
+
+        LoadWorld(name, false);
+        State.StartBoard = World.BoardIndex;
+        SetBoard(0);
+        FadePurple();
+    }
+
+    public bool RestoreWorld()
+    {
+        var name = Features.RestoreWorld();
+        if (string.IsNullOrEmpty(name)) 
+            return false;
+
+        LoadWorld(name, true);
+        State.StartBoard = World.BoardIndex;
+        World.IsLocked = false;
+        SetBoard(State.StartBoard);
+        return true;
     }
 
     public string ShowLoad(string title, string extension)
@@ -1674,7 +1722,7 @@ public sealed class Engine : IEngine, IDisposable
             if (State.DefaultWorldName.Length > 0)
             {
                 State.AboutShown = true;
-                LoadWorld(State.DefaultWorldName);                    
+                LoadWorld(State.DefaultWorldName, false);
             }
 
             State.StartBoard = World.BoardIndex;
@@ -1730,13 +1778,22 @@ public sealed class Engine : IEngine, IDisposable
         Boards[World.BoardIndex] = board;
     }
 
+    private void StartPlaying()
+    {
+        SetBoard(State.StartBoard);
+        EnterBoard();
+        State.PlayerElement = ElementList.PlayerId;
+        State.GamePaused = true;
+        MainLoop(true);
+    }
+
     private bool PlayWorld()
     {
         var gameIsActive = false;
 
         if (World.IsLocked)
         {
-            LoadWorld(World.Name);
+            LoadWorld(World.Name, false);
                 
             if (State.WorldLoaded)
             {
@@ -1750,13 +1807,7 @@ public sealed class Engine : IEngine, IDisposable
         }
 
         if (gameIsActive)
-        {
-            SetBoard(State.StartBoard);
-            EnterBoard();
-            State.PlayerElement = ElementList.PlayerId;
-            State.GamePaused = true;
-            MainLoop(true);
-        }
+            StartPlaying();
 
         return gameIsActive;
     }

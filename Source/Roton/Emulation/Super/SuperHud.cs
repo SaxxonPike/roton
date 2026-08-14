@@ -488,4 +488,13 @@ public sealed class SuperHud(
                 Terminal.Plot(px, py, data);
         }
     }
+    
+    public override string SaveGame()
+    {
+        DrawString(13, 24, "Save game:", 0x1F);
+        DrawString(33, 24, ".SAV", 0x0F);
+        var result = TextEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
+        UpdateBorder();
+        return result;
+    }
 }

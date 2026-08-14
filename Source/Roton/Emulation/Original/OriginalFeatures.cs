@@ -159,6 +159,11 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
         return Engine.ShowLoad("ZZT Worlds", "zzt");
     }
 
+    public string RestoreWorld()
+    {
+        return Engine.ShowLoad("Saved Games", "sav");
+    }
+
     public void CleanUpOop(IOopContext context)
     {
         var location = context.Actor.Location.Clone();
@@ -174,6 +179,11 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
     public void NotifyActorSentLabel(int index)
     {
         // Does nothing in the original engine.
+    }
+
+    public string GetSaveName(string baseName)
+    {
+        return $"{baseName}.SAV";
     }
 
     public bool HandleTitleInput()
@@ -196,7 +206,7 @@ public sealed class OriginalFeatures(Lazy<IEngine> engine) : IFeatures
                     true, 0x42, 0x15, @"Game speed:;FS", Engine.State.GameSpeed, null);
                 break;
             case EngineKeyCode.R:
-                break;
+                return Engine.RestoreWorld();
             case EngineKeyCode.H:
                 Engine.ShowHighScores();
                 break;

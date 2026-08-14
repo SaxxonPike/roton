@@ -65,7 +65,7 @@ public interface IEngine
     int GetColorMatchValue(int color);
     void HandlePlayerInput(IActor actor);
     void Harm(int index);
-    void LoadWorld(string name);
+    void LoadWorld(string name, bool savedGame);
     void LockActor(int index);
     void MoveActor(int index, IXyPair location);
     void MoveActorOnRiver(int index);
@@ -81,6 +81,7 @@ public interface IEngine
     void RemoveItem(IXyPair location);
     IXyPair Rnd();
     IXyPair RndP(IXyPair vector);
+    void SaveWorld(string name);
     IXyPair Seek(IXyPair location);
     void SetBoard(int boardIndex);
     void SetEditorMode();
@@ -89,6 +90,7 @@ public interface IEngine
     void ShowHelp(string title, string filename);
     void ShowInGameHelp();
     void OpenWorld();
+    bool RestoreWorld();
     void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source);
     bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned);
     void Start();
