@@ -1283,6 +1283,8 @@ public sealed class Engine : IEngine, IDisposable
             actor.Location.CopyFrom(location);
             actor.Cycle = cycle;
             actor.UnderTile.CopyFrom(Tiles[location]);
+            actor.Instruction = 0;
+
             if (ElementAt(actor.Location).IsEditorFloor)
             {
                 var newColor = Tiles[actor.Location].Color & 0x70;
