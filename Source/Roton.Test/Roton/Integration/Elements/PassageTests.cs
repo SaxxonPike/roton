@@ -10,15 +10,15 @@ public class PassageTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Passage_ShouldPauseWhenEntering()
     {
+        // Place the player.
+        MovePlayerTo(3, 2);
+
         // Set up the passage.
         var passage = Actors[SpawnTo(2, 2, ElementList.PassageId, 1)];
         passage.P3 = 0;
-        MovePlayerTo(3, 2);
-
+        
         // Walk the player into the passage.
         Type(AnsiKey.Left);
-
-        // Play out steps.
         StepAllKeys();
 
         // Assert.
@@ -44,8 +44,6 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         // Walk the player into the passage and out of it on the destination board.
         Type(AnsiKey.Left);
         Type(AnsiKey.Right);
-
-        // Play out steps.
         StepAllKeys();
 
         // Assert.
@@ -60,6 +58,9 @@ public class PassageTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Passage_ShouldSendPlayerToSameBoard()
     {
+        // Place the player.
+        MovePlayerTo(3, 2);
+        
         // Set up left passage.
         var passage0 = Actors[SpawnTo(2, 2, ElementList.PassageId, 1)];
         passage0.P3 = 0;
@@ -73,11 +74,8 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         passage2.P3 = 0;
 
         // Walk the player into the passage and out of it.
-        MovePlayerTo(3, 2);
         Type(AnsiKey.Left);
         Type(AnsiKey.Right);
-
-        // Play out steps.
         StepAllKeys();
 
         // Assert.

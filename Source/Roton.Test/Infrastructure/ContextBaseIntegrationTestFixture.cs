@@ -177,6 +177,8 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
 
+    protected void FaceActor(int index, IXyPair vector) => Actors[index].Vector.CopyFrom(vector);
+
     protected void PlotTo(int x, int y, int id, int? color = null) =>
         Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
 
@@ -197,6 +199,9 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected ITile TileAt(int x, int y) =>
         Tiles[new Location(x, y)];
+
+    protected ITile TileAt(IXyPair xy) =>
+        Tiles[xy];
 
     protected void Type(AnsiKey ekc, KeyMod mod = 0) =>
         Keyboard.Press(new KeyPress { Key = ekc, Mod = mod });

@@ -11,14 +11,17 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToPickUpAmmo()
     {
-        if (ElementList.AmmoId < 0)
-            Assert.Pass("Ammo does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the ammo.
         PlotTo(4, 3, ElementList.AmmoId);
+
+        // Move the player into the ammo.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Ammo.Should().Be(Facts.DefaultAmmo + Facts.AmmoPerPickup,
             "ammo count should be correct");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -33,11 +36,17 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         if (ElementList.TorchId < 0)
             Assert.Pass("Torch does not exist in this context");
 
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the torch.
         PlotTo(4, 3, ElementList.TorchId);
+
+        // Move the player into the torch.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Torches.Should().Be(Facts.DefaultTorches + 1,
             "torch count should be correct");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -49,14 +58,17 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToPickUpGem()
     {
-        if (ElementList.GemId < 0)
-            Assert.Pass("Gem does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the gem.
         PlotTo(4, 3, ElementList.GemId);
+
+        // Move the player into the gem.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Health.Should().Be(Facts.DefaultHealth + Facts.HealthPerGem,
             "health should be correct");
         World.Gems.Should().Be(Facts.DefaultGems + 1,
@@ -72,15 +84,18 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToPickUpKey_WhenKeyIsNotPossessed()
     {
-        if (ElementList.KeyId < 0)
-            Assert.Pass("Key does not exist in this context");
-
-        var keyColor = RandomInt(1, 7);
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the key.
+        var keyColor = RandomInt(1, 7);
         PlotTo(4, 3, ElementList.KeyId, keyColor);
+
+        // Move the player into the key.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Keys[keyColor - 1].Should().BeTrue(
             "correct key should be obtained");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -92,16 +107,21 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldNotBeAbleToPickUpKey_WhenKeyIsPossessed()
     {
-        if (ElementList.KeyId < 0)
-            Assert.Pass("Key does not exist in this context");
-
-        var keyColor = RandomInt(1, 7);
-        World.Keys[keyColor - 1] = true;
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the key.
+        var keyColor = RandomInt(1, 7);
         PlotTo(4, 3, ElementList.KeyId, keyColor);
+
+        // Add the same color key to the player's inventory.
+        World.Keys[keyColor - 1] = true;
+
+        // Move the player into the key.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
         Message.Should().BeEquivalentTo(Alerts.KeyAlreadyMessage(keyColor).Text,
@@ -111,36 +131,44 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToUseDoor_WhenKeyIsPossessed()
     {
-        if (ElementList.DoorId < 0)
-            Assert.Pass("Door does not exist in this context");
-
-        var keyColor = RandomInt(1, 7);
-        World.Keys[keyColor - 1] = true;
+        // Place the player.
         MovePlayerTo(3, 3);
-        PlotTo(4, 3, ElementList.DoorId, keyColor << 4);
+
+        // Place the door.
+        var doorColor = RandomInt(1, 7);
+        PlotTo(4, 3, ElementList.DoorId, doorColor << 4);
+
+        // Add the same color key to the player's inventory.
+        World.Keys[doorColor - 1] = true;
+
+        // Move the player into the door.
         Type(AnsiKey.Right);
         StepAllKeys();
 
-        World.Keys[keyColor - 1].Should().BeFalse(
+        // Assert.
+        World.Keys[doorColor - 1].Should().BeFalse(
             "correct key should be consumed");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.DoorOpenMessage(keyColor).Text,
+        Message.Should().BeEquivalentTo(Alerts.DoorOpenMessage(doorColor).Text,
             "correct message should be displayed");
     }
 
     [Test]
     public void Player_ShouldNotBeAbleToUseDoor_WhenKeyIsNotPossessed()
     {
-        if (ElementList.DoorId < 0)
-            Assert.Pass("Door does not exist in this context");
-
-        var keyColor = RandomInt(1, 7);
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the door.
+        var keyColor = RandomInt(1, 7);
         PlotTo(4, 3, ElementList.DoorId, keyColor << 4);
+
+        // Move the player into the door.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be prevented from unlocking the door");
         Message.Should().BeEquivalentTo(Alerts.DoorLockedMessage(keyColor).Text,
@@ -150,16 +178,19 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToUseScroll_WhenScrollIsOneLine()
     {
-        if (ElementList.ScrollId < 0)
-            Assert.Pass("Scroll does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the scroll.
         var actorIndex = SpawnTo(4, 3, ElementList.ScrollId);
         var message = Create<string>();
         SetActorCode(actorIndex, message);
+
+        // Move the player into the scroll.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
         Message.Should().BeEquivalentTo([message],
@@ -169,21 +200,22 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToUseScroll_WhenScrollIsMultiLine()
     {
-        if (ElementList.ScrollId < 0)
-            Assert.Pass("Scroll does not exist in this context");
-        if (ElementList.FakeId < 0)
-            Assert.Pass("Fake does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the scroll.
         var underColor = RandomInt(0x00, 0xFF);
         PlotTo(4, 3, ElementList.FakeId, underColor);
         var actorIndex = SpawnTo(4, 3, ElementList.ScrollId);
         var message = CreateMany<string>(3).ToArray();
         SetActorCode(actorIndex, message);
+
+        // Move the player into the scroll.
         Type(AnsiKey.Right);
         Type(AnsiKey.Enter);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should not move after multi-line scroll");
         TileAt(4, 3).Id.Should().Be(ElementList.FakeId,
@@ -197,15 +229,18 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToActivateBomb_WhenBombIsNotActivated()
     {
-        if (ElementList.BombId < 0)
-            Assert.Pass("Bomb does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the bomb.
         var actorIndex = SpawnTo(4, 3, ElementList.BombId);
         var actor = Actors[actorIndex];
+
+        // Move the player into the bomb.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should not move for bomb activation");
         TileAt(4, 3).Id.Should().Be(ElementList.BombId,
@@ -219,16 +254,19 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToMoveBomb_WhenBombIsAlreadyActivated()
     {
-        if (ElementList.BombId < 0)
-            Assert.Pass("Bomb does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the bomb and light it.
         var actorIndex = SpawnTo(4, 3, ElementList.BombId);
         var actor = Actors[actorIndex];
         actor.P1 = Engine.Facts.BombCountdownStart;
+
+        // Move the player into the bomb.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should move for activated bomb");
         TileAt(5, 3).Id.Should().Be(ElementList.BombId,
@@ -238,14 +276,17 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToUseEnergizer()
     {
-        if (ElementList.EnergizerId < 0)
-            Assert.Pass("Energizer does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the energizer.
         PlotTo(4, 3, ElementList.EnergizerId);
+
+        // Move the player into the energizer.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1,
             "player should have correct number of energy cycles");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -257,14 +298,17 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToInteractWithStar()
     {
-        if (ElementList.StarId < 0)
-            Assert.Pass("Star does not exist in this context");
-
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the star.
         SpawnTo(4, 3, ElementList.StarId);
+
+        // Move the player into the star.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
             "player should take damage from the star");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -276,15 +320,22 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToInteractWithBullet()
     {
+        // Place the player.
         if (ElementList.BulletId < 0)
             Assert.Pass("Star does not exist in this context");
 
         MovePlayerTo(3, 3);
-        // why not spawn? because the bullet moves! and a zero vector causes it to self destruct
+
+        // Place the bullet. It cannot be spawned like normal because a
+        // bullet with an assigned actor without a vector causes it to self-destruct
+        // immediately.
         PlotTo(4, 3, ElementList.BulletId);
+
+        // Move the player into the bullet.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
             "player should take damage from the bullet");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
@@ -296,14 +347,21 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToInteractWithWater()
     {
+        // Water is only present in Original.
         if (ElementList.WaterId < 0)
-            Assert.Pass("Water does not exist in this context");
+            Assert.Pass("Lava does not exist in this context");
 
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the water.
         PlotTo(4, 3, ElementList.WaterId);
+
+        // Move the player into the water.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after interaction");
         Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
@@ -313,17 +371,83 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToInteractWithLava()
     {
+        // Lava is only present in Super.
         if (ElementList.LavaId < 0)
             Assert.Pass("Lava does not exist in this context");
 
+        // Place the player.
         MovePlayerTo(3, 3);
+
+        // Place the lava.
         PlotTo(4, 3, ElementList.LavaId);
+
+        // Move the player into the lava.
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after interaction");
         Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
             "correct message should be displayed");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToInteractWithObject()
+    {
+        // Place the player.
+        MovePlayerTo(3, 3);
+
+        // Place the object and assign it some code.
+        var objectIndex = SpawnTo(4, 3, ElementList.ObjectId);
+        SetActorCode(objectIndex,
+            ":touch",
+            "#set f1"
+        );
+
+        // Move the player into the object.
+        Type(AnsiKey.Right);
+        StepAllKeys();
+
+        // Assert.
+        World.Flags.Should().Contain(["F1"],
+            "Object should have received touch label");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToInteractWithEnemy()
+    {
+        // Place the player.
+        MovePlayerTo(3, 3);
+
+        // Place the enemy (any enemy with default behavior will do.)
+        SpawnTo(4, 3, ElementList.LionId);
+
+        // Move the player into the enemy.
+        Type(AnsiKey.Right);
+        StepAllKeys();
+
+        // Assert.
+        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+            "Player should take damage");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToPushPushable()
+    {
+        // Place the player.
+        MovePlayerTo(3, 3);
+
+        // Place the boulder.
+        PlotTo(4, 3, ElementList.BoulderId);
+
+        // Move the player into the boulder.
+        Type(AnsiKey.Right);
+        StepAllKeys();
+
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should have moved into boulder space");
+        TileAt(5, 3).Id.Should().Be(ElementList.BoulderId,
+            "boulder should have been pushed");
     }
 }
