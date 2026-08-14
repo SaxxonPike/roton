@@ -16,4 +16,5 @@ public interface IParser
     string ReadWord(int index, IExecutable instructionSource);
     int Search(int index, string term);
     int GetNumber(IOopContext context);
+    void DiscardLine(int index, IExecutable instructionSource);
 }

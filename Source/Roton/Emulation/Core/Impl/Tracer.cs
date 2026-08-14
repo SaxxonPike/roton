@@ -23,6 +23,9 @@ namespace Roton.Emulation.Core.Impl
 
         public void TraceOop(IOopContext oopContext)
         {
+            if (_writers.Count == 0)
+                return;
+            
             var code = oopContext.Actor.Code;
             var offset = oopContext.Instruction;
             var end = oopContext.Instruction;

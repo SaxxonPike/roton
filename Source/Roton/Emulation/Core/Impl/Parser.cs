@@ -68,7 +68,15 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         return result;
     }
 
-    public int GetNumber(IOopContext context) => ReadNumber(context.Index, context);
+    public int GetNumber(IOopContext context) => 
+        ReadNumber(context.Index, context);
+
+    public void DiscardLine(int index, IExecutable instructionSource)
+    {
+        ReadByte(index, instructionSource);
+        while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
+            ReadByte(index, instructionSource);
+    }
 
     public int ReadByte(int index, IExecutable instructionSource)
     {
@@ -91,20 +99,22 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
 
     public string ReadLine(int index, IExecutable instructionSource)
     {
-        var result = new StringBuilder();
+        var sb = StringBuilderPool.Rent();
         ReadByte(index, instructionSource);
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
-            result.Append(Engine.State.OopByte.ToChar());
+            sb.Append(Engine.State.OopByte.ToChar());
             ReadByte(index, instructionSource);
         }
 
-        return result.ToString();
+        var result = sb.ToString();
+        StringBuilderPool.Return(sb);
+        return result;
     }
 
     public int ReadNumber(int index, IExecutable instructionSource)
     {
-        var result = new StringBuilder();
+        var sb = StringBuilderPool.Rent();
         var success = false;
 
         while (ReadByte(index, instructionSource) == 0x20)
@@ -115,7 +125,7 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         while (Engine.State.OopByte is >= 0x30 and <= 0x39)
         {
             success = true;
-            result.Append(Engine.State.OopByte.ToChar());
+            sb.Append(Engine.State.OopByte.ToChar());
             ReadByte(index, instructionSource);
         }
 
@@ -130,16 +140,17 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         }
         else
         {
-            int.TryParse(result.ToString(), out var resultInt);
+            int.TryParse(sb.ToString(), out var resultInt);
             Engine.State.OopNumber = resultInt;
         }
 
+        StringBuilderPool.Return(sb);
         return Engine.State.OopNumber;
     }
 
     public string ReadWord(int index, IExecutable instructionSource)
     {
-        var result = new StringBuilder();
+        var sb = StringBuilderPool.Rent();
 
         while (true)
         {
@@ -157,7 +168,7 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         {
             while (oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
             {
-                result.Append(oopByte.ToChar());
+                sb.Append(oopByte.ToChar());
                 ReadByte(index, instructionSource);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
                 oopByte = Engine.State.OopByte;
@@ -169,7 +180,9 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
             instructionSource.Instruction--;
         }
 
-        Engine.State.OopWord = result.ToString();
+        Engine.State.OopWord = sb.ToString();
+        StringBuilderPool.Return(sb);
+
         return Engine.State.OopWord;
     }
 
