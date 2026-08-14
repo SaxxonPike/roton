@@ -98,6 +98,28 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     }
 
     [Test]
+    public void Blocked_ShouldEvaluateFalse_WithUnknownDirection()
+    {
+        // Place the test actor.
+        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var actor = Actors[index];
+        actor.Cycle = 1;
+        SetActorCode(index,
+            "#if blocked x set f1",
+            "#set f2"
+        );
+
+        // Execute.
+        Step();
+
+        // Assert.
+        World.Flags.Should().Contain(["F2"],
+            "code was not executed");
+        World.Flags.Should().NotContain(["F1"],
+            "blocked condition must resolve false when an unknown direction is specified");
+    }
+
+    [Test]
     public void Energized_ShouldEvaluateTrue_WhenPlayerHasEnergyCycles()
     {
         // Place the test actor.
@@ -223,6 +245,31 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     }
 
     [Test]
+    public void Any_ShouldEvaluateTrue_WhenElementIsPresent_WithBackgroundColor()
+    {
+        // Place the test actor.
+        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var actor = Actors[index];
+        actor.Cycle = 1;
+        SetActorCode(index,
+            "#if any blue key set f1",
+            "#set f2"
+        );
+
+        // Place a blue key elsewhere.
+        PlotTo(10, 10, ElementList.KeyId, 0x29);
+
+        // Execute.
+        Step();
+
+        // Assert.
+        World.Flags.Should().Contain(["F2"],
+            "code was not executed");
+        World.Flags.Should().Contain(["F1"],
+            "any kind+color condition must resolve true when an element of the specified color is present");
+    }
+
+    [Test]
     public void Any_ShouldEvaluateTrue_WhenElementIsPresent_WithColor()
     {
         // Place the test actor.
@@ -317,6 +364,28 @@ public class ConditionTests(Context context) : OopTestFixture(context)
             "code was not executed");
         World.Flags.Should().NotContain(["F1"],
             "any kind condition must resolve false when an element is not present");
+    }
+
+    [Test]
+    public void Any_ShouldEvaluateFalse_WithUnknownKind()
+    {
+        // Place the test actor.
+        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var actor = Actors[index];
+        actor.Cycle = 1;
+        SetActorCode(index,
+            "#if any banana set f1",
+            "#set f2"
+        );
+
+        // Execute.
+        Step();
+
+        // Assert.
+        World.Flags.Should().Contain(["F2"],
+            "code was not executed");
+        World.Flags.Should().NotContain(["F1"],
+            "any kind condition must resolve false when an unknown element is specified");
     }
 
     [Test]
