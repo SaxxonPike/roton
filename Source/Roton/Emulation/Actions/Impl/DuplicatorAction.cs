@@ -39,7 +39,7 @@ public sealed class DuplicatorAction(Lazy<IEngine> engine) : IAction
                         if (Engine.State.ActorCount < Engine.Actors.Capacity - 2)
                         {
                             var sourceTile = Engine.Tiles[source];
-                            Engine.SpawnActor(target, sourceTile, Engine.ElementList[sourceTile.Id].Cycle,
+                            Engine.SpawnActor(target, sourceTile, Engine.Actors[sourceIndex].Cycle,
                                 Engine.Actors[sourceIndex]);
                             Engine.UpdateBoard(target);
                         }

@@ -85,7 +85,7 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
                 Engine.OpenWorld();
                 break;
             case EngineKeyCode.R: // R
-                break;
+                return Engine.RestoreWorld();
             case EngineKeyCode.H: // H
                 ShowInGameHelp();
                 break;
@@ -161,7 +161,12 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
 
     public string OpenWorld()
     {
-        return Engine.ShowLoad("ZZT Worlds", "szt");
+        return Engine.ShowLoad("Super ZZT Worlds", "szt");
+    }
+
+    public string RestoreWorld()
+    {
+        return Engine.ShowLoad("Saved Games", "sav");
     }
 
     public void CleanUpOop(IOopContext context)
@@ -181,6 +186,11 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
         // in-progress movement counter is reset.
 
         Engine.Actors[index].P2 = 0;
+    }
+
+    public string GetSaveName(string baseName)
+    {
+        return $"{baseName}.SAV";
     }
 
     public void CleanUpPassageMovement()

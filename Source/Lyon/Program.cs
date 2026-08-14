@@ -33,7 +33,8 @@ public static class Program
             AudioDrumRate = 64,
             AudioSampleRate = 44100,
             AudioBufferSize = 2048,
-            VideoScale = 2,
+            VideoScaleX = 2,
+            VideoScaleY = 2,
             MasterClockNumerator = 100,
             MasterClockDenominator = 7275,
             FastMode = switches.Contains("--fast"),
@@ -42,6 +43,12 @@ public static class Program
 
         var selector = new ContextEngineSelector();
         var contextEngine = selector.Get(fileName);
+        
+        // Super ZZT looks a little nicer with slightly taller graphics.
+        if (contextEngine == Context.Super)
+        {
+            config.VideoScaleY *= 1.25f;
+        }
 
         var builder = new ContainerBuilder();
 

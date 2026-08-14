@@ -90,7 +90,6 @@ public abstract class Hud(Lazy<IEngine> engine, Lazy<IScroll> scroll) : IHud
 
     public virtual string SaveGame()
     {
-        // TODO: Save game hud
         return string.Empty;
     }
 

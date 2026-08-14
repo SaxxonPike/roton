@@ -8,7 +8,8 @@ public interface IConfig
     int AudioSampleRate { get; }
     int AudioDrumRate { get; }
     int AudioBufferSize { get; }
-    int VideoScale { get; }
+    float VideoScaleX { get; }
+    float VideoScaleY { get; }
     int MasterClockNumerator { get; }
     int MasterClockDenominator { get; }
     bool FastMode { get; }

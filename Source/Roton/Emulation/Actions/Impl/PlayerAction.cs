@@ -128,7 +128,10 @@ public sealed class PlayerAction(Lazy<IEngine> engine) : IAction
                 Engine.State.BreakGameLoop = Engine.State.GameOver || Engine.Hud.EndGameConfirmation();
                 break;
             case EngineKeyCode.S:
-                Engine.Hud.SaveGame();
+                if (Engine.Hud.SaveGame() is {} saveFileName)
+                {
+                    Engine.SaveWorld(saveFileName);
+                }
                 break;
             case EngineKeyCode.P:
                 if (Engine.World.Health > 0)

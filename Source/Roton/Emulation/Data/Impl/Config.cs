@@ -8,7 +8,8 @@ public sealed class Config : IConfig
     public int AudioSampleRate { get; set; }
     public int AudioDrumRate { get; set; }
     public int AudioBufferSize { get; set; }
-    public int VideoScale { get; set; }
+    public float VideoScaleX { get; set; }
+    public float VideoScaleY { get; set; }
     public int MasterClockNumerator { get; set; }
     public int MasterClockDenominator { get; set; }
     public bool FastMode { get; set; }

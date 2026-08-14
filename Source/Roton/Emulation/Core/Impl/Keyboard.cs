@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,17 +6,21 @@ namespace Roton.Emulation.Core.Impl;
 
 public abstract class Keyboard : IKeyboard
 {
-    private readonly Queue<IKeyPress> _queue = new();
+    private readonly ConcurrentQueue<IKeyPress> _queue = new();
 
     public void Clear()
-        => _queue.Clear();
+    {
+        while (_queue.TryDequeue(out _))
+        {
+        }
+    }
 
     public bool KeyIsAvailable
         => _queue.Count > 0;
 
     public IKeyPress GetKey()
-        => _queue.Count > 0
-            ? _queue.Dequeue()
+        => _queue.TryDequeue(out var keyPress)
+            ? keyPress
             : null;
 
     public int BufferLength
