@@ -22,9 +22,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.AmmoId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Ammo.Should().Be(Facts.DefaultAmmo + Facts.AmmoPerPickup, "ammo count should be correct");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.AmmoMessage.Text, "correct message should be displayed");
+
+        World.Ammo.Should().Be(Facts.DefaultAmmo + Facts.AmmoPerPickup,
+            "ammo count should be correct");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo(Alerts.AmmoMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -37,9 +41,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.TorchId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Torches.Should().Be(Facts.DefaultTorches + 1, "torch count should be correct");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.TorchMessage.Text, "correct message should be displayed");
+
+        World.Torches.Should().Be(Facts.DefaultTorches + 1,
+            "torch count should be correct");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo(Alerts.TorchMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -52,11 +60,17 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.GemId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Health.Should().Be(Facts.DefaultHealth + Facts.HealthPerGem, "health should be correct");
-        World.Gems.Should().Be(Facts.DefaultGems + 1, "gems should be correct");
-        World.Score.Should().Be(Facts.DefaultScore + Facts.ScorePerGem, "score should be correct");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.GemMessage.Text, "correct message should be displayed");
+
+        World.Health.Should().Be(Facts.DefaultHealth + Facts.HealthPerGem,
+            "health should be correct");
+        World.Gems.Should().Be(Facts.DefaultGems + 1,
+            "gems should be correct");
+        World.Score.Should().Be(Facts.DefaultScore + Facts.ScorePerGem,
+            "score should be correct");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo(Alerts.GemMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -70,8 +84,11 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.KeyId, keyColor);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Keys[keyColor - 1].Should().BeTrue("correct key should be obtained");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
+
+        World.Keys[keyColor - 1].Should().BeTrue(
+            "correct key should be obtained");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
         Message.Should().BeEquivalentTo(Alerts.KeyPickupMessage(keyColor).Text,
             "correct message should be displayed");
     }
@@ -88,7 +105,9 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.KeyId, keyColor);
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
         Message.Should().BeEquivalentTo(Alerts.KeyAlreadyMessage(keyColor).Text,
             "correct message should be displayed");
     }
@@ -105,10 +124,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.DoorId, keyColor << 4);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Keys[keyColor - 1].Should().BeFalse("correct key should be consumed");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should()
-            .BeEquivalentTo(Alerts.DoorOpenMessage(keyColor).Text, "correct message should be displayed");
+
+        World.Keys[keyColor - 1].Should().BeFalse(
+            "correct key should be consumed");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo(Alerts.DoorOpenMessage(keyColor).Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -122,7 +144,9 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.DoorId, keyColor << 4);
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be prevented from unlocking the door");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be prevented from unlocking the door");
         Message.Should().BeEquivalentTo(Alerts.DoorLockedMessage(keyColor).Text,
             "correct message should be displayed");
     }
@@ -139,10 +163,13 @@ public class PlayerTests : ElementTestFixture
         SetActorCode(actorIndex, message);
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo([message], "correct message should be displayed");
+
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo([message],
+            "correct message should be displayed");
     }
-        
+
     [Test]
     public void Player_ShouldBeAbleToUseScroll_WhenScrollIsMultiLine()
     {
@@ -160,12 +187,17 @@ public class PlayerTests : ElementTestFixture
         Type(AnsiKey.Right);
         Type(AnsiKey.Enter);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should not move after multi-line scroll");
-        TileAt(4, 3).Id.Should().Be(ElementList.FakeId, "scroll should leave behind under tile ID");
-        TileAt(4, 3).Color.Should().Be(underColor, "scroll should leave behind under tile color");
-        Message.Should().BeEmpty("no message should be displayed");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should not move after multi-line scroll");
+        TileAt(4, 3).Id.Should().Be(ElementList.FakeId,
+            "scroll should leave behind under tile ID");
+        TileAt(4, 3).Color.Should().Be(underColor,
+            "scroll should leave behind under tile color");
+        Message.Should().BeEmpty(
+            "no message should be displayed");
     }
-        
+
     [Test]
     public void Player_ShouldBeAbleToActivateBomb_WhenBombIsNotActivated()
     {
@@ -177,12 +209,17 @@ public class PlayerTests : ElementTestFixture
         var actor = Actors[actorIndex];
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should not move for bomb activation");
-        TileAt(4, 3).Id.Should().Be(ElementList.BombId, "bomb should be present after activation");
-        Message.Should().BeEquivalentTo(Alerts.BombMessage.Text, "correct message should be displayed");
-        actor.P1.Should().Be(Engine.Facts.BombCountdownStart - 1, "bomb should have the maximum timer set");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should not move for bomb activation");
+        TileAt(4, 3).Id.Should().Be(ElementList.BombId,
+            "bomb should be present after activation");
+        Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
+            "correct message should be displayed");
+        actor.P1.Should().Be(Engine.Facts.BombCountdownStart - 1,
+            "bomb should have the maximum timer set");
     }
-        
+
     [Test]
     public void Player_ShouldBeAbleToMoveBomb_WhenBombIsAlreadyActivated()
     {
@@ -195,8 +232,11 @@ public class PlayerTests : ElementTestFixture
         actor.P1 = Engine.Facts.BombCountdownStart;
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should move for activated bomb");
-        TileAt(5, 3).Id.Should().Be(ElementList.BombId, "bomb should have moved while activated");
+
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should move for activated bomb");
+        TileAt(5, 3).Id.Should().Be(ElementList.BombId,
+            "bomb should have moved while activated");
     }
 
     [Test]
@@ -209,10 +249,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.EnergizerId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1, "player should have correct number of energy cycles");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should()
-            .BeEquivalentTo(Alerts.EnergizerMessage.Text, "correct message should be displayed");
+
+        World.EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1,
+            "player should have correct number of energy cycles");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after pickup");
+        Message.Should().BeEquivalentTo(Alerts.EnergizerMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -225,10 +268,13 @@ public class PlayerTests : ElementTestFixture
         SpawnTo(4, 3, ElementList.StarId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the star");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
-        Message.Should()
-            .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");
+
+        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+            "player should take damage from the star");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after interaction");
+        Message.Should().BeEquivalentTo(Alerts.OuchMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -242,10 +288,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.BulletId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the bullet");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
-        Message.Should()
-            .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");
+
+        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+            "player should take damage from the bullet");
+        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after interaction");
+        Message.Should().BeEquivalentTo(Alerts.OuchMessage.Text,
+            "correct message should be displayed");
     }
 
     [Test]
@@ -258,11 +307,13 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.WaterId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
-        Message.Should()
-            .BeEquivalentTo(Alerts.WaterMessage.Text, "correct message should be displayed");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after interaction");
+        Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
+            "correct message should be displayed");
     }
-        
+
     [Test]
     public void Player_ShouldBeAbleToInteractWithLava()
     {
@@ -273,8 +324,10 @@ public class PlayerTests : ElementTestFixture
         PlotTo(4, 3, ElementList.LavaId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
-        Message.Should()
-            .BeEquivalentTo(Alerts.WaterMessage.Text, "correct message should be displayed");
+
+        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+            "player should be in correct location after interaction");
+        Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
+            "correct message should be displayed");
     }
 }
