@@ -4,6 +4,9 @@
 
 This C# project consists of two major components, **Roton** and **Lyon**.
 
+Special thanks to Asiekierka for the [Reconstruction of ZZT](https://github.com/asiekierka/reconstruction-of-zzt) project. Without this, some of the
+really edge case stuff probably wouldn't have been implemented.
+
 ### Roton
 
 Roton is an emulation of the ZZT and Super ZZT game creation engines.
@@ -36,6 +39,8 @@ Clone the repo:
 ```
 git clone https://github.com/SaxxonPike/roton.git
 cd roton
+git submodule init
+git submodule update
 ```
 
 Restore NuGet packages and build:
