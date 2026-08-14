@@ -4,12 +4,8 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public abstract class OopTestFixture : AllContextIntegrationTestFixture
+public abstract class OopTestFixture(Context context) : AllContextIntegrationTestFixture(context)
 {
-    public OopTestFixture(Context context) : base(context)
-    {
-    }
-
     [SetUp]
     public void __Setup()
     {

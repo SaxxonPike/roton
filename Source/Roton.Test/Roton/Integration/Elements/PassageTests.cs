@@ -5,12 +5,8 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class PassageTests : ElementTestFixture
+public class PassageTests(Context context) : ElementTestFixture(context)
 {
-    public PassageTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void Passage_ShouldSendPlayerToCorrectBoard()
     {

@@ -22,13 +22,8 @@ using Random = System.Random;
 
 namespace Roton.Test.Infrastructure;
 
-public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
+public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseTestFixture
 {
-    protected ContextBaseIntegrationTestFixture(Context context)
-    {
-        Context = context;
-    }
-
     protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
     protected FixedFileSystem FileSystem { get; private set; }
     protected Config Config { get; private set; }
@@ -176,7 +171,7 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
         State.Init = false;
     }
 
-    protected Context Context { get; }
+    protected Context Context { get; } = context;
 
     protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
 

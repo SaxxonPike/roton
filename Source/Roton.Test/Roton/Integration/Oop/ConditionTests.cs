@@ -4,12 +4,8 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class ConditionTests : OopTestFixture
+public class ConditionTests(Context context) : OopTestFixture(context)
 {
-    public ConditionTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void If_ShouldExecuteCurrentLine_WhenConditionIsMet()
     {

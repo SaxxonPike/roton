@@ -7,12 +7,8 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration;
 
-public class GameSerializerTests : AllContextIntegrationTestFixture
+public class GameSerializerTests(Context context) : AllContextIntegrationTestFixture(context)
 {
-    public GameSerializerTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void PackAndUnpack_ShouldProduceCorrectBoard()
     {

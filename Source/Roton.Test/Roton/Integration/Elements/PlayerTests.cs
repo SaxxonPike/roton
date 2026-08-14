@@ -6,12 +6,8 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class PlayerTests : ElementTestFixture
+public class PlayerTests(Context context) : ElementTestFixture(context)
 {
-    public PlayerTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void Player_ShouldBeAbleToPickUpAmmo()
     {

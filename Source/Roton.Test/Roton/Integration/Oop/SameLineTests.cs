@@ -4,12 +4,8 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class SameLineTests : OopTestFixture
+public class SameLineTests(Context context) : OopTestFixture(context)
 {
-    public SameLineTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void ShortMovement_ShouldRunCommandsOnSameLine()
     {

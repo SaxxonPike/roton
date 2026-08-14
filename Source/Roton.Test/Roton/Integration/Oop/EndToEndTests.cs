@@ -6,12 +6,8 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class EndToEndTests : OopTestFixture
+public class EndToEndTests(Context context) : OopTestFixture(context)
 {
-    public EndToEndTests(Context context) : base(context)
-    {
-    }
-    
     [Test]
     public void TestCase_TownOfZztHouseOfBlues()
     {

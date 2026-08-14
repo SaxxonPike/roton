@@ -6,12 +6,8 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class LabelTests : OopTestFixture
+public class LabelTests(Context context) : OopTestFixture(context)
 {
-    public LabelTests(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void ZappingOwnLabels_ShouldProduceExpectedCode()
     {
