@@ -3,7 +3,6 @@
         <LangVersion>default</LangVersion>
         <TargetFramework>netstandard2.0</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
