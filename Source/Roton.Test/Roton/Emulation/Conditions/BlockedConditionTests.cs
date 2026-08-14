@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
@@ -9,7 +9,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class BlockedConditionTestFixture : UnitTestFixture<BlockedCondition>
+public class BlockedConditionTests : UnitTestFixture<BlockedCondition>
 {
     [Test]
     [TestCase(false, false, null)]

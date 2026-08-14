@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
@@ -8,7 +8,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class NotConditionTestFixture : UnitTestFixture<NotCondition>
+public class NotConditionTests : UnitTestFixture<NotCondition>
 {
     [Test]
     [TestCase(true)]

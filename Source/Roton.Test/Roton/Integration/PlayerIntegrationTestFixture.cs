@@ -1,5 +1,5 @@
 using System.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
@@ -148,7 +148,7 @@ public class PlayerIntegrationTestFixture : AllContextIntegrationTestFixture
         Type(AnsiKey.Right);
         StepAllKeys();
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(new[] {message}, "correct message should be displayed");
+        Message.Should().BeEquivalentTo([message], "correct message should be displayed");
     }
         
     [Test]

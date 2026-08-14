@@ -65,7 +65,7 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
-    protected IEnumerable<string> Message => FullMessage.Where(m => m != string.Empty).ToArray();
+    protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
     protected void TouchActor(int actorIndex)
     {

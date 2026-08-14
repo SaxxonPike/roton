@@ -1,5 +1,5 @@
 using System.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;

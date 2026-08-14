@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
@@ -8,7 +8,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class ContactConditionTestFixture : UnitTestFixture<ContactCondition>
+public class ContactConditionTests : UnitTestFixture<ContactCondition>
 {
     [Test]
     [TestCase(0, 0, false)]  // this one's a real shocker, but it is correct

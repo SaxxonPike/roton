@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
@@ -8,7 +8,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class AlignedConditionTestFixture : UnitTestFixture<AlignedCondition>
+public class AlignedConditionTests : UnitTestFixture<AlignedCondition>
 {
     [Test]
     [TestCase(0, 0, true)]

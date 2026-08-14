@@ -46,6 +46,6 @@ public abstract class BaseTestFixture
     {
         using var resource = GetResource(path);
         using var reader = new BinaryReader(resource);
-        return reader.ReadBytes((int) resource.Length);
+        return reader.ReadBytes((int)resource.Length);
     }
 }
