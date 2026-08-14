@@ -195,15 +195,20 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         Actors[index].Length = codeBytes.Length;
     }
 
-    protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
+    protected ITile TileAt(int x, int y) =>
+        Tiles[new Location(x, y)];
 
-    protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress { Key = ekc });
+    protected void Type(AnsiKey ekc, KeyMod mod = 0) =>
+        Keyboard.Press(new KeyPress { Key = ekc, Mod = mod });
 
-    protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
+    protected int ActorIndexAt(int x, int y) =>
+        Engine.ActorIndexAt(new Location(x, y));
 
-    protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
+    protected IActor ActorAt(int x, int y) =>
+        Engine.ActorAt(new Location(x, y));
 
-    protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
+    protected int RandomInt(int min, int max) => 
+        Rand.Next(min, max + 1);
 
     protected void GoToBoard(int index)
     {

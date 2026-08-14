@@ -110,9 +110,27 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
         { Keycode.Equals, AnsiKey.Equals }
     };
 
+    private static KeyMod ConvertKeyMod(Keymod mod) =>
+        (mod.HasFlag(Keymod.LShift) | mod.HasFlag(Keymod.RShift) ? KeyMod.Shift : 0) |
+        (mod.HasFlag(Keymod.LCtrl) | mod.HasFlag(Keymod.RCtrl) ? KeyMod.Control : 0) |
+        (mod.HasFlag(Keymod.LAlt) | mod.HasFlag(Keymod.RAlt) ? KeyMod.Alt : 0);
+
+    private KeyMod UpdateMod(KeyboardEvent data)
+    {
+        var newMod = ConvertKeyMod(data.Keymod);
+        SetMod(newMod);
+        return newMod;
+    }
+
     public bool Press(KeyboardEvent data)
     {
+        var newMod = UpdateMod(data);
+
         if (data.Keycode == 0)
+            return false;
+
+        // Don't process command/Windows key shortcuts.
+        if ((data.Keymod & Keymod.Gui) != 0)
             return false;
 
         if (!Map.TryGetValue(data.Keycode, out var value))
@@ -121,11 +139,14 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
         Enqueue(new KeyPress
         {
             Key = value,
-            Shift = data.Keymod.HasFlag(Keymod.LShift) | data.Keymod.HasFlag(Keymod.RShift),
-            Control = data.Keymod.HasFlag(Keymod.LCtrl) | data.Keymod.HasFlag(Keymod.RCtrl),
-            Alt = data.Keymod.HasFlag(Keymod.LAlt) | data.Keymod.HasFlag(Keymod.RAlt)
+            Mod = newMod
         });
 
         return true;
+    }
+
+    public void Release(KeyboardEvent data)
+    {
+        UpdateMod(data);
     }
 }

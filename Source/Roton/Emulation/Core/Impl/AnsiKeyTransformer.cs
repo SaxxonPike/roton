@@ -116,10 +116,10 @@ public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
 
     public IEnumerable<byte> GetBytes(IKeyPress keyPress)
     {
-        var map = Map.ContainsKey(keyPress.Key) ? Map[keyPress.Key] : Map[AnsiKey.None];
-        return keyPress.Shift ? map.Shift :
-            keyPress.Control ? map.Ctrl :
-            keyPress.Alt ? map.Alt :
+        var map = Map.TryGetValue(keyPress.Key, out var value) ? value : Map[AnsiKey.None];
+        return keyPress.Mod.HasFlag(KeyMod.Shift) ? map.Shift :
+            keyPress.Mod.HasFlag(KeyMod.Control) ? map.Ctrl :
+            keyPress.Mod.HasFlag(KeyMod.Alt) ? map.Alt :
             map.Natural;
     }
 }

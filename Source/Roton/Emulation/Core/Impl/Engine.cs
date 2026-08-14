@@ -1853,16 +1853,17 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ReadInput()
     {
-        //State.KeyShift = false;
+        var mod = Keyboard.GetMod();
+        State.KeyShift = mod.HasFlag(KeyMod.Shift);
         State.KeyArrow = false;
         State.KeyPressed = 0;
+        State.KeyVector.SetTo(0, 0);
 
         var key = Keyboard.GetKey();
         if (key == null || key.Key == AnsiKey.None)
             return;
 
         State.KeyPressed = ConvertKey(key);
-        State.KeyShift = key.Shift;
 
         switch (State.KeyPressed)
         {

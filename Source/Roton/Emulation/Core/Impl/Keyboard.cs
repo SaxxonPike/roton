@@ -7,6 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 public abstract class Keyboard : IKeyboard
 {
     private readonly ConcurrentQueue<IKeyPress> _queue = new();
+    private KeyMod _mod;
 
     public void Clear()
     {
@@ -25,6 +26,12 @@ public abstract class Keyboard : IKeyboard
 
     public int BufferLength
         => _queue.Count;
+
+    public KeyMod GetMod() =>
+        _mod;
+
+    protected void SetMod(KeyMod mod) =>
+        _mod = mod;
 
     protected void Enqueue(IKeyPress keyPress)
     {

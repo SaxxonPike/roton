@@ -59,6 +59,11 @@ public sealed class Window : SdlWindow, IWindow
         KeyboardPresenter.Press(e);
     }
 
+    private void OnKeyUp(object obj, KeyboardEvent e)
+    {
+        KeyboardPresenter.Release(e);
+    }
+
     protected override void OnUpdate(float delta)
     {
         if(_closeWindow)
