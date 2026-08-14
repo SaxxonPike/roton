@@ -29,7 +29,7 @@ public sealed class SuperHud(
         [DebuggerStepThrough] get => textEntryHud.Value;
     }
 
-    private Location16 OldCamera { get; } = new(short.MinValue, short.MinValue);
+    private Location16 OldPlayerLocation { get; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
 
@@ -172,15 +172,11 @@ public sealed class SuperHud(
         }
     }
 
-    private static bool IsWithinCamera(IXyPair loc)
-    {
-        return loc.X is >= 0x0E and <= 0x25 && loc.Y is >= 0x02 and <= 0x15;
-    }
+    private static bool IsWithinCamera(IXyPair loc) => 
+        loc.X is >= 0x0E and <= 0x25 && loc.Y is >= 0x02 and <= 0x15;
 
-    private Vector GetTranslation()
-    {
-        return new Vector(0x0F + -Engine.Board.Camera.X, 0x03 + -Engine.Board.Camera.Y);
-    }
+    private Vector GetTranslation() => 
+        new(0x0F + -Engine.Board.Camera.X, 0x03 + -Engine.Board.Camera.Y);
 
     public override void Initialize()
     {
@@ -219,37 +215,97 @@ public sealed class SuperHud(
 
     public override void UpdateCamera()
     {
-        var camera = new Location16();
-        camera.CopyFrom(Engine.Player.Location);
-        camera.Subtract(12, 10);
+        var upperLeft = new Location(14, 2);
+        const int boardDrawWidth = 24;
+        const int boardDrawHeight = 20;
 
-        if (camera.X < 1)
+        var player = Engine.Player.Location;
+        var newCamera = new Location16(Engine.Board.Camera.X, Engine.Board.Camera.Y);
+        var redrawRequired = false;
+
+        var relativeX = player.X - newCamera.X;
+        if (relativeX < 9 && newCamera.X > 1)
         {
-            camera.X = 1;
+            if (player.X == OldPlayerLocation.X - 1)
+            {
+                newCamera.X--;
+                Engine.Board.Camera.CopyFrom(newCamera);
+                VideoScroll(upperLeft, boardDrawWidth, boardDrawHeight, Vector.East);
+                for (var y = 0; y < 20; y++)
+                    Engine.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
+            }
+            else
+            {
+                newCamera.X = (short)(player.X - 12);
+                if (newCamera.X < 1) newCamera.X = 1;
+                if (newCamera.X > 73) newCamera.X = 73;
+                redrawRequired = true;
+            }
+        }
+        else if (relativeX >= 14 && newCamera.X < 73)
+        {
+            if (player.X == OldPlayerLocation.X + 1)
+            {
+                newCamera.X++;
+                Engine.Board.Camera.CopyFrom(newCamera);
+                VideoScroll(upperLeft, boardDrawWidth, boardDrawHeight, Vector.West);
+                for (var y = 0; y < 20; y++)
+                    Engine.UpdateBoard(new Location(newCamera.X + 23, newCamera.Y + y));
+            }
+            else
+            {
+                newCamera.X = (short)(player.X - 12);
+                if (newCamera.X < 1) newCamera.X = 1;
+                if (newCamera.X > 73) newCamera.X = 73;
+                redrawRequired = true;
+            }
         }
 
-        if (camera.X > 73)
+        var relativeY = player.Y - newCamera.Y;
+        if (relativeY < 7 && newCamera.Y > 1)
         {
-            camera.X = 73;
+            if (player.Y == OldPlayerLocation.Y - 1)
+            {
+                newCamera.Y--;
+                Engine.Board.Camera.CopyFrom(newCamera);
+                VideoScroll(upperLeft, boardDrawWidth, boardDrawHeight, Vector.South);
+                for (var x = 0; x < 24; x++)
+                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
+            }
+            else
+            {
+                newCamera.Y = (short)(player.Y - 10);
+                if (newCamera.Y < 1) newCamera.Y = 1;
+                if (newCamera.Y > 61) newCamera.Y = 61;
+                redrawRequired = true;
+            }
+        }
+        else if (relativeY >= 13 && newCamera.Y < 61)
+        {
+            if (player.Y == OldPlayerLocation.Y + 1)
+            {
+                newCamera.Y++;
+                Engine.Board.Camera.CopyFrom(newCamera);
+                VideoScroll(upperLeft, boardDrawWidth, boardDrawHeight, Vector.North);
+                for (var x = 0; x < 24; x++)
+                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + 19));
+            }
+            else
+            {
+                newCamera.Y = (short)(player.Y - 10);
+                if (newCamera.Y < 1) newCamera.Y = 1;
+                if (newCamera.Y > 61) newCamera.Y = 61;
+                redrawRequired = true;
+            }
         }
 
-        if (camera.Y < 1)
-        {
-            camera.Y = 1;
-        }
-
-        if (camera.Y > 61)
-        {
-            camera.Y = 61;
-        }
-
-        if (OldCamera.Matches(camera))
+        OldPlayerLocation.CopyFrom(player);
+        if (newCamera.Matches(Engine.Board.Camera) && !redrawRequired)
             return;
 
-        // todo: implement super smart redraw instead of redrawing everything
-        OldCamera.CopyFrom(camera);
-        Engine.Board.Camera.CopyFrom(camera);
-        RedrawBoard();
+        Engine.Board.Camera.CopyFrom(newCamera);
+        if (redrawRequired)
+            RedrawBoard();
     }
 
     public override void UpdateStatus()
@@ -366,5 +422,39 @@ public sealed class SuperHud(
                 .Select(hs => $"{hs.Score.ToString(),5}  {hs.Name}"));
 
         Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
+    }
+
+    private void VideoScroll(IXyPair pos, int width, int height, IXyPair dir)
+    {
+        var buffer = new AnsiChar[width * height];
+        var bufIdx = 0;
+
+        var minX = pos.X;
+        var minY = pos.Y;
+        var maxX = pos.X + width;
+        var maxY = pos.Y + height;
+
+        // Copy source into memory.
+        
+        for (var iy = 0; iy < height; iy++)
+        for (var ix = 0; ix < width; ix++)
+            buffer[bufIdx++] = Terminal.Read(ix + pos.X, iy + pos.Y);
+
+        // Blit it back out where it goes.
+
+        bufIdx = 0;
+        var finalX = pos.X + dir.X;
+        var finalY = pos.Y + dir.Y;
+        for (var iy = 0; iy < height; iy++)
+        for (var ix = 0; ix < width; ix++)
+        {
+            var data = buffer[bufIdx++];
+            var px = ix + finalX;
+            var py = iy + finalY;
+
+            if (px >= minX && px < maxX && py >= minY && py < maxY)
+                Terminal.Plot(px, py, data);
+
+        }
     }
 }
