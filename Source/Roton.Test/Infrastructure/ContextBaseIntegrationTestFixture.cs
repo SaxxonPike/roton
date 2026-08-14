@@ -66,12 +66,12 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     {
         Engine.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
     }
-        
+
     protected void UnpackBoardResource(string path)
     {
         GameSerializer.UnpackBoard(Engine.Tiles, GameSerializer.LoadBoardData(GetResource(path)));
     }
-        
+
     protected void Step()
     {
         Engine.StepOnce();
@@ -88,7 +88,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         for (var i = 0; i < Actors.Count; i++)
         {
             var actor = Actors[i];
-            if (actor.Pointer == 0) 
+            if (actor.Pointer == 0)
                 continue;
 
             TestContext.Out.WriteLine($"Actor {i} code:");
@@ -110,27 +110,27 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             Step();
     }
 
-        protected void DisableTracer()
-        {
-            Tracer.Detach(TestContext.Out);
-        }
+    protected void DisableTracer()
+    {
+        Tracer.Detach(TestContext.Out);
+    }
 
-        protected void EnableTracer()
-        {
-            Tracer.Attach(TestContext.Out);
-        }
-        
-        [SetUp]
-        public void __SetUpContext()
-        {
-            // Test dependencies
-            FileSystem = new FixedFileSystem(true);
-            Config = new Config();
-            TerminalMock = new Mock<ITerminal>();
-            Keyboard = new TestKeyboard();
-            SpeakerMock = new Mock<ISpeaker>();
-            ClockFactoryMock = new Mock<IClockFactory>();
-            Tracer = new Tracer();
+    protected void EnableTracer()
+    {
+        Tracer.Attach(TestContext.Out);
+    }
+
+    [SetUp]
+    public void __SetUpContext()
+    {
+        // Test dependencies
+        FileSystem = new FixedFileSystem(true);
+        Config = new Config();
+        TerminalMock = new Mock<ITerminal>();
+        Keyboard = new TestKeyboard();
+        SpeakerMock = new Mock<ISpeaker>();
+        ClockFactoryMock = new Mock<IClockFactory>();
+        Tracer = new Tracer();
 
         // Outer container
         var builder = new ContainerBuilder();
@@ -159,7 +159,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         builder.Register(_ => Tracer)
             .As<ITracer>()
             .SingleInstance();
-            
+
         var container = builder.Build();
 
         // Inner container
@@ -179,7 +179,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
         Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
-        
+
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
         Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? ElementList[id].Color), ElementList[id].Cycle,
@@ -197,14 +197,14 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
 
-    protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress {Key = ekc});
+    protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress { Key = ekc });
 
     protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
 
     protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
 
     protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
-    
+
     protected void GoToBoard(int index)
     {
         while (State.BoardCount < index)

@@ -8,6 +8,25 @@ namespace Roton.Test.Roton.Integration.Elements;
 public class PassageTests(Context context) : ElementTestFixture(context)
 {
     [Test]
+    public void Passage_ShouldPauseWhenEntering()
+    {
+        // Set up the passage.
+        var passage = Actors[SpawnTo(2, 2, ElementList.PassageId, 1)];
+        passage.P3 = 0;
+        MovePlayerTo(3, 2);
+
+        // Walk the player into the passage.
+        Type(AnsiKey.Left);
+
+        // Play out steps.
+        StepAllKeys();
+
+        // Assert.
+        State.GamePaused.Should().BeTrue(
+            "game should pause when entering passage");
+    }
+
+    [Test]
     public void Passage_ShouldSendPlayerToCorrectBoard()
     {
         // Set up board 1.
