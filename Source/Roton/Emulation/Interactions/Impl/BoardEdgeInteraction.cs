@@ -18,28 +18,23 @@ public sealed class BoardEdgeInteraction(Lazy<IEngine> engine) : IInteraction
         int targetBoard;
         var oldBoard = Engine.World.BoardIndex;
 
-        switch (vector.Y)
+        switch (vector.X, vector.Y)
         {
-            case -1:
-                targetBoard = Engine.Board.ExitNorth;
+            case (_, -1):
+                targetBoard = Engine.Board.Exits.North;
                 target.Y = Engine.Tiles.Height;
                 break;
-            case 1:
-                targetBoard = Engine.Board.ExitSouth;
+            case (_, 1):
+                targetBoard = Engine.Board.Exits.South;
                 target.Y = 1;
                 break;
+            case (-1, _):
+                targetBoard = Engine.Board.Exits.West;
+                target.X = Engine.Tiles.Width;
+                break;
             default:
-                if (vector.X == -1)
-                {
-                    targetBoard = Engine.Board.ExitWest;
-                    target.X = Engine.Tiles.Width;
-                }
-                else
-                {
-                    targetBoard = Engine.Board.ExitEast;
-                    target.X = 1;
-                }
-
+                targetBoard = Engine.Board.Exits.East;
+                target.X = 1;
                 break;
         }
 

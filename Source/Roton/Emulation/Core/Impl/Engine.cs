@@ -1486,10 +1486,10 @@ public sealed class Engine : IEngine, IDisposable
         Board.IsDark = false;
         Board.RestartOnZap = false;
         Board.TimeLimit = 0;
-        Board.ExitEast = 0;
-        Board.ExitNorth = 0;
-        Board.ExitSouth = 0;
-        Board.ExitWest = 0;
+        Board.Exits.East = 0;
+        Board.Exits.North = 0;
+        Board.Exits.South = 0;
+        Board.Exits.West = 0;
 
         // build board edges
         for (var y = 0; y <= Tiles.Height + 1; y++)

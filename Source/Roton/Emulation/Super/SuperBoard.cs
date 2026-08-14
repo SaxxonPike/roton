@@ -14,36 +14,15 @@ public sealed class SuperBoard : IBoard
         _memory = memory;
         Camera = new MemoryLocation16(_memory, 0x776F);
         Entrance = new MemoryLocation(_memory, 0x776D);
+        Exits = new SuperExits(_memory);
     }
 
     public IXyPair Camera { get; }
 
     public IXyPair Entrance { get; }
-
-    public int ExitEast
-    {
-        get => _memory.Read8(0x776B);
-        set => _memory.Write8(0x776B, value);
-    }
-
-    public int ExitNorth
-    {
-        get => _memory.Read8(0x7768);
-        set => _memory.Write8(0x7768, value);
-    }
-
-    public int ExitSouth
-    {
-        get => _memory.Read8(0x7769);
-        set => _memory.Write8(0x7769, value);
-    }
-
-    public int ExitWest
-    {
-        get => _memory.Read8(0x776A);
-        set => _memory.Write8(0x776A, value);
-    }
-
+    
+    public IExits Exits { get; }
+    
     public bool IsDark
     {
         get => false;
