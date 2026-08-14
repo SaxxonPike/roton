@@ -35,17 +35,4 @@
             <Link>Infrastructure\Utility.cs</Link>
         </Compile>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Roton\Emulation\Cheats\" />
-      <Folder Include="Roton\Emulation\Commands\" />
-      <Folder Include="Roton\Emulation\Core\" />
-      <Folder Include="Roton\Emulation\Data\" />
-      <Folder Include="Roton\Emulation\Directions\" />
-      <Folder Include="Roton\Emulation\Draws\" />
-      <Folder Include="Roton\Emulation\Infrastructure\" />
-      <Folder Include="Roton\Emulation\Interactions\" />
-      <Folder Include="Roton\Emulation\Items\" />
-      <Folder Include="Roton\Emulation\Original\" />
-      <Folder Include="Roton\Emulation\Super\" />
-    </ItemGroup>
 </Project>
