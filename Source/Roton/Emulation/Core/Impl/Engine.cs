@@ -807,6 +807,7 @@ public sealed class Engine : IEngine, IDisposable
             if (numBoards < 0)
                 throw new Exception("Board count must be zero or greater.");
 
+            State.BoardCount = numBoards;
             GameSerializer.LoadWorld(stream);
 
             var newBoards = Enumerable
@@ -1777,6 +1778,7 @@ public sealed class Engine : IEngine, IDisposable
         while (Boards.Count <= boardIndex)
             Boards.Add(null);
 
+        State.BoardCount = Boards.Count - 1;
         Boards[World.BoardIndex] = board;
     }
 

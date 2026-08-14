@@ -8,11 +8,10 @@ using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class ConditionListTests : UnitTestFixture<ConditionList>
+public class ConditionListTests : ConditionTestFixture<ConditionList>
 {
     [Test]
     public void Get_ShouldReturnConditionFromMetadata()

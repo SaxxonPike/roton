@@ -7,9 +7,9 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration;
 
-public class GameSerializerTestFixture : AllContextIntegrationTestFixture
+public class GameSerializerTests : AllContextIntegrationTestFixture
 {
-    public GameSerializerTestFixture(Context context) : base(context)
+    public GameSerializerTests(Context context) : base(context)
     {
     }
 

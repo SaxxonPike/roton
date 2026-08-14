@@ -1,13 +1,11 @@
 using AwesomeAssertions;
-using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Data;
 using Roton.Emulation.Targets.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Targets;
 
-public class SelfTargetTests : UnitTestFixture<SelfTarget>
+public class SelfTargetTests : TargetTestFixture<SelfTarget>
 {
     [Test]
     [TestCase(1, 0, true, 1)]

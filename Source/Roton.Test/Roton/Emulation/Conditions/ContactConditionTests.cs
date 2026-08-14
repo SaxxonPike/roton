@@ -4,11 +4,10 @@ using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class ContactConditionTests : UnitTestFixture<ContactCondition>
+public class ContactConditionTests : ConditionTestFixture<ContactCondition>
 {
     [Test]
     [TestCase(0, 0, false)]  // this one's a real shocker, but it is correct

@@ -5,11 +5,10 @@ using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class BlockedConditionTests : UnitTestFixture<BlockedCondition>
+public class BlockedConditionTests : ConditionTestFixture<BlockedCondition>
 {
     [Test]
     [TestCase(false, false, null)]

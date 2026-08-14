@@ -4,11 +4,10 @@ using NUnit.Framework;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Targets.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Targets;
 
-public class DefaultTargetTests : UnitTestFixture<DefaultTarget>
+public class DefaultTargetTests : TargetTestFixture<DefaultTarget>
 {
     [Test]
     public void Execute_ShouldReturnTrueIfActorNameMatchesTerm()

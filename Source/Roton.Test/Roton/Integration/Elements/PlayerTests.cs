@@ -3,21 +3,13 @@ using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data.Impl;
-using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration;
+namespace Roton.Test.Roton.Integration.Elements;
 
-public class PlayerIntegrationTestFixture : AllContextIntegrationTestFixture
+public class PlayerTests : ElementTestFixture
 {
-    public PlayerIntegrationTestFixture(Context context) : base(context)
+    public PlayerTests(Context context) : base(context)
     {
-    }
-
-    [SetUp]
-    public void __Setup()
-    {
-        if (ElementList.PlayerId < 0)
-            Assert.Fail("Player does not exist in this context");
     }
 
     [Test]
@@ -250,7 +242,7 @@ public class PlayerIntegrationTestFixture : AllContextIntegrationTestFixture
         PlotTo(4, 3, ElementList.BulletId);
         Type(AnsiKey.Right);
         StepAllKeys();
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the star");
+        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit, "player should take damage from the bullet");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId, "player should be in correct location after interaction");
         Message.Should()
             .BeEquivalentTo(Alerts.OuchMessage.Text, "correct message should be displayed");

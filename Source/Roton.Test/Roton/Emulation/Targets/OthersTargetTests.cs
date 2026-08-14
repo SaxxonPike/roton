@@ -1,13 +1,11 @@
 using AwesomeAssertions;
-using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Data;
 using Roton.Emulation.Targets.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Targets;
 
-public class OthersTargetTests : UnitTestFixture<OthersTarget>
+public class OthersTargetTests : TargetTestFixture<OthersTarget>
 {
     [Test]
     [TestCase(0, 1, 1, false)] // searchIndex >= actorsCount (0 >= 1 false, but searchIndex=index=0, next searchIndex 1 >= 1)

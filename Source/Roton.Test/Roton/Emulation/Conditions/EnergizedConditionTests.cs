@@ -3,11 +3,10 @@ using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class EnergizedConditionTests : UnitTestFixture<EnergizedCondition>
+public class EnergizedConditionTests : ConditionTestFixture<EnergizedCondition>
 {
     [Test]
     [TestCase(1, true)]

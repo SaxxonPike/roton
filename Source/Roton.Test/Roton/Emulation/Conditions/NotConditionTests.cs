@@ -4,11 +4,10 @@ using NUnit.Framework;
 using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class NotConditionTests : UnitTestFixture<NotCondition>
+public class NotConditionTests : ConditionTestFixture<NotCondition>
 {
     [Test]
     [TestCase(true)]

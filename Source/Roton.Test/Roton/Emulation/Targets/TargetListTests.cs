@@ -8,11 +8,10 @@ using Roton.Emulation.Targets;
 using Roton.Emulation.Targets.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Targets;
 
-public class TargetListTests : UnitTestFixture<TargetList>
+public class TargetListTests : TargetTestFixture<TargetList>
 {
     [Test]
     public void Get_ShouldReturnTargetFromMetadata()

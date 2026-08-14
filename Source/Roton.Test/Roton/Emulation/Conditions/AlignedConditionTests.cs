@@ -4,11 +4,10 @@ using Roton.Emulation.Conditions.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Emulation.Conditions;
 
-public class AlignedConditionTests : UnitTestFixture<AlignedCondition>
+public class AlignedConditionTests : ConditionTestFixture<AlignedCondition>
 {
     [Test]
     [TestCase(0, 0, true)]
@@ -26,25 +25,25 @@ public class AlignedConditionTests : UnitTestFixture<AlignedCondition>
     {
         // Arrange.
         var playerLocation = Create<Location>();
-            
+
         var player = Mock<IActor>(mock =>
         {
             mock.Setup(x => x.Location)
                 .Returns(playerLocation);
         });
-            
+
         var actor = Mock<IActor>(mock =>
         {
             mock.Setup(x => x.Location)
                 .Returns(playerLocation.Sum(objectXVector, objectYVector));
         });
-            
+
         var context = Mock<IOopContext>(mock =>
         {
             mock.Setup(x => x.Actor)
                 .Returns(() => actor.Object);
         });
-            
+
         MockService<IEngine>(mock =>
         {
             mock.Setup(x => x.Player)
@@ -53,7 +52,7 @@ public class AlignedConditionTests : UnitTestFixture<AlignedCondition>
 
         // Act.
         var observed = Subject.Execute(context.Object);
-            
+
         // Assert.
         observed.Should().Be(expected);
     }

@@ -209,4 +209,20 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
     protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
 
     protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
+    
+    protected void GoToBoard(int index)
+    {
+        while (State.BoardCount < index)
+        {
+            Engine.PackBoard();
+            World.BoardIndex = State.BoardCount + 1;
+            Engine.ClearBoard();
+        }
+
+        if (World.BoardIndex != index)
+        {
+            Engine.PackBoard();
+            Engine.UnpackBoard(index);
+        }
+    }
 }
