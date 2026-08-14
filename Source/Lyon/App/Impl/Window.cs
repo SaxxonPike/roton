@@ -23,7 +23,7 @@ public sealed class Window : SdlWindow, IWindow
         Lazy<IKeyboardPresenter> keyboardPresenter,
         Lazy<IScenePresenter> scenePresenter) : base("Lyon",
         new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
-        640 * config.VideoScale, 480 * config.VideoScale,
+        (int)(640 * config.VideoScaleX), (int)(350 * config.VideoScaleY),
         640, 350)
     {
         _keyboardPresenter = keyboardPresenter;
