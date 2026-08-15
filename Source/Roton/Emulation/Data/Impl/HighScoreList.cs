@@ -17,7 +17,6 @@ public sealed class HighScoreList : IHighScoreList
             .. Enumerable
                 .Range(0, count)
                 .Select(_ => new HighScore { Name = string.Empty, Score = -1 })
-                .Cast<IHighScore>()
         ];
     }
         
