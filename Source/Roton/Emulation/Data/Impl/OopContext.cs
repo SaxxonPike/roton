@@ -63,7 +63,5 @@ public sealed class OopContext : IOopContext
 
     public int SearchOffset { get; set; }
 
-    public string SearchTarget { get; set; }
-        
     public int Command { get; set; }
 }
