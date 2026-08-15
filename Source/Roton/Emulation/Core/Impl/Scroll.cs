@@ -21,24 +21,24 @@ public abstract class Scroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : I
     }
 
     private static readonly int[] ScrollCharsTop =
-    {
+    [
         0xC6, 0xD1, 0xCD, 0xD1, 0xB5
-    };
+    ];
 
     private static readonly int[] ScrollCharsMid =
-    {
+    [
         0x20, 0xB3, 0x20, 0xB3, 0x20
-    };
+    ];
 
     private static readonly int[] ScrollCharsSplit =
-    {
+    [
         0x20, 0xC6, 0xCD, 0xB5, 0x20
-    };
+    ];
 
     private static readonly int[] ScrollCharsBottom =
-    {
+    [
         0xC6, 0xCF, 0xCD, 0xCF, 0xB5
-    };
+    ];
 
     protected abstract int Width { get; }
 
@@ -352,7 +352,7 @@ public abstract class Scroll(Lazy<IEngine> engine, Lazy<ITerminal> terminal) : I
             Index = index,
             Label = null,
             Cancelled = false,
-            Lines = message.ToList(),
+            Lines = [.. message],
             IsHelp = isHelp,
             Title = title
         };

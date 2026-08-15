@@ -78,7 +78,7 @@ public sealed class Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer) : II
             {
                 if (context.NextLine && context.Instruction > 0)
                 {
-                    Engine.Parser.ReadLine(context.Index, context);
+                    Engine.Parser.DiscardLine(context.Index, context);
                 }
 
                 break;

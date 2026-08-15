@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 
 namespace Roton.Emulation.Infrastructure;
 
@@ -9,6 +11,9 @@ internal static class Utility
 {
     private static readonly Encoding CodePage437 = CodePagesEncodingProvider.Instance.GetEncoding(437);
 
+    private static readonly ThreadLocal<byte[]> OneByteArray = new(() => new byte[1]);
+    private static readonly ThreadLocal<char[]> OneCharArray = new(() => new char[1]);
+    
     extension(int a)
     {
         /// <summary>
@@ -39,8 +44,14 @@ internal static class Utility
         /// Convert an integer to a character using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public char ToChar() => 
-            CodePage437.GetChars([(byte)(a & 0xFF)])[0];
+        public char ToChar()
+        {
+            var bytes = OneByteArray.Value;
+            bytes[0] = unchecked((byte)(a & 0xFF));
+            var chars = OneCharArray.Value;
+            CodePage437.GetChars(bytes, 0, 1, chars, 0);
+            return chars[0];
+        }
 
         /// <summary>
         /// Get the uppercase representation of an ASCII char stored as an integer.

@@ -6,7 +6,7 @@ namespace Roton.Composers.Video.Palettes.Impl;
 
 public sealed class CachedPaletteComposer(IPaletteComposer paletteComposer) : IPaletteComposer
 {
-    private readonly Color[] _colors = paletteComposer.ComposeAllColors().ToArray();
+    private readonly Color[] _colors = [.. paletteComposer.ComposeAllColors()];
 
     public Color ComposeColor(int index)
     {

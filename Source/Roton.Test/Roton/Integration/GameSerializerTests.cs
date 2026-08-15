@@ -1,5 +1,5 @@
 using System.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -7,12 +7,8 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration;
 
-public class GameSerializerTestFixture : AllContextIntegrationTestFixture
+public class GameSerializerTests(Context context) : AllContextIntegrationTestFixture(context)
 {
-    public GameSerializerTestFixture(Context context) : base(context)
-    {
-    }
-
     [Test]
     public void PackAndUnpack_ShouldProduceCorrectBoard()
     {

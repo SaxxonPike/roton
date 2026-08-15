@@ -29,7 +29,7 @@ public sealed class FileDialog(Lazy<IHud> hud, Lazy<IFileSystem> fileSystem) : I
                 .GetFileNames(path, extension)
                 .Select(f => f.Substring(0, f.Length - extension.Length - 1))
                 .OrderBy(f => f)
-                .Concat(new[] {"Exit"})
+                .Concat(["Exit"])
                 .ToArray();
 
             var result = Hud.ShowScroll(false, title, files);

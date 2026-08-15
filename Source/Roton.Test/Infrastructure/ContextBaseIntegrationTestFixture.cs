@@ -22,13 +22,8 @@ using Random = System.Random;
 
 namespace Roton.Test.Infrastructure;
 
-public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
+public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseTestFixture
 {
-    protected ContextBaseIntegrationTestFixture(Context context)
-    {
-        Context = context;
-    }
-
     protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
     protected FixedFileSystem FileSystem { get; private set; }
     protected Config Config { get; private set; }
@@ -65,18 +60,18 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
-    protected IEnumerable<string> Message => FullMessage.Where(m => m != string.Empty).ToArray();
+    protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
     protected void TouchActor(int actorIndex)
     {
         Engine.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
     }
-        
+
     protected void UnpackBoardResource(string path)
     {
         GameSerializer.UnpackBoard(Engine.Tiles, GameSerializer.LoadBoardData(GetResource(path)));
     }
-        
+
     protected void Step()
     {
         Engine.StepOnce();
@@ -93,7 +88,7 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
         for (var i = 0; i < Actors.Count; i++)
         {
             var actor = Actors[i];
-            if (actor.Pointer == 0) 
+            if (actor.Pointer == 0)
                 continue;
 
             TestContext.Out.WriteLine($"Actor {i} code:");
@@ -115,27 +110,27 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
             Step();
     }
 
-        protected void DisableTracer()
-        {
-            Tracer.Detach(TestContext.Out);
-        }
+    protected void DisableTracer()
+    {
+        Tracer.Detach(TestContext.Out);
+    }
 
-        protected void EnableTracer()
-        {
-            Tracer.Attach(TestContext.Out);
-        }
-        
-        [SetUp]
-        public void __SetUpContext()
-        {
-            // Test dependencies
-            FileSystem = new FixedFileSystem(true);
-            Config = new Config();
-            TerminalMock = new Mock<ITerminal>();
-            Keyboard = new TestKeyboard();
-            SpeakerMock = new Mock<ISpeaker>();
-            ClockFactoryMock = new Mock<IClockFactory>();
-            Tracer = new Tracer();
+    protected void EnableTracer()
+    {
+        Tracer.Attach(TestContext.Out);
+    }
+
+    [SetUp]
+    public void __SetUpContext()
+    {
+        // Test dependencies
+        FileSystem = new FixedFileSystem(true);
+        Config = new Config();
+        TerminalMock = new Mock<ITerminal>();
+        Keyboard = new TestKeyboard();
+        SpeakerMock = new Mock<ISpeaker>();
+        ClockFactoryMock = new Mock<IClockFactory>();
+        Tracer = new Tracer();
 
         // Outer container
         var builder = new ContainerBuilder();
@@ -164,7 +159,7 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
         builder.Register(_ => Tracer)
             .As<ITracer>()
             .SingleInstance();
-            
+
         var container = builder.Build();
 
         // Inner container
@@ -176,15 +171,17 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
         State.Init = false;
     }
 
-    protected Context Context { get; }
+    protected Context Context { get; } = context;
 
     protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
 
     protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
 
+    protected void FaceActor(int index, IXyPair vector) => Actors[index].Vector.CopyFrom(vector);
+
     protected void PlotTo(int x, int y, int id, int? color = null) =>
         Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
-        
+
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
         Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? ElementList[id].Color), ElementList[id].Cycle,
@@ -200,13 +197,37 @@ public abstract class ContextBaseIntegrationTestFixture : BaseTestFixture
         Actors[index].Length = codeBytes.Length;
     }
 
-    protected ITile TileAt(int x, int y) => Tiles[new Location(x, y)];
+    protected ITile TileAt(int x, int y) =>
+        Tiles[new Location(x, y)];
 
-    protected void Type(AnsiKey ekc) => Keyboard.Press(new KeyPress {Key = ekc});
+    protected ITile TileAt(IXyPair xy) =>
+        Tiles[xy];
 
-    protected int ActorIndexAt(int x, int y) => Engine.ActorIndexAt(new Location(x, y));
+    protected void Type(AnsiKey ekc, KeyMod mod = 0) =>
+        Keyboard.Press(new KeyPress { Key = ekc, Mod = mod });
 
-    protected IActor ActorAt(int x, int y) => Engine.ActorAt(new Location(x, y));
+    protected int ActorIndexAt(int x, int y) =>
+        Engine.ActorIndexAt(new Location(x, y));
 
-    protected int RandomInt(int min, int max) => Rand.Next(min, max + 1);
+    protected IActor ActorAt(int x, int y) =>
+        Engine.ActorAt(new Location(x, y));
+
+    protected int RandomInt(int min, int max) => 
+        Rand.Next(min, max + 1);
+
+    protected void GoToBoard(int index)
+    {
+        while (State.BoardCount < index)
+        {
+            Engine.PackBoard();
+            World.BoardIndex = State.BoardCount + 1;
+            Engine.ClearBoard();
+        }
+
+        if (World.BoardIndex != index)
+        {
+            Engine.PackBoard();
+            Engine.UnpackBoard(index);
+        }
+    }
 }

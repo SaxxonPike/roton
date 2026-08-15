@@ -5,6 +5,16 @@ namespace Roton.Emulation.Data.Impl;
 public abstract class Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
     : FixedList<ITile>, ITiles
 {
+    private readonly ITile[] _cache = BuildCache(memory, offset, width, height);
+
+    private static ITile[] BuildCache(IMemory memory, int offset, int width, int height)
+    {
+        var result = new ITile[width * height];
+        for (var i = 0; i < result.Length; i++)
+            result[i] = new MemoryTile(memory, offset + i * 2);
+        return result;
+    }
+
     public override int Count => TotalWidth * TotalHeight;
 
     private int TotalHeight => Height + 2;
@@ -17,10 +27,10 @@ public abstract class Tiles(IMemory memory, IElementList elementList, int offset
 
     public int Width { get; } = width;
 
-    protected override ITile GetItem(int index)
-    {
-        return new MemoryTile(memory, offset + index * 2);
-    }
+    protected override ITile GetItem(int index) =>
+        index >= 0 && index < _cache.Length
+            ? _cache[index]
+            : new MemoryTile(memory, offset + index * 2);
 
     protected override void SetItem(int index, ITile value)
     {

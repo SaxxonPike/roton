@@ -110,13 +110,13 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
 
     public void SetFont(byte[] data)
     {
-        _fontData = data.ToArray();
+        _fontData = [.. data];
         InitializeFont();
     }
 
     public void SetPalette(byte[] data)
     {
-        _paletteData = data.ToArray();
+        _paletteData = [.. data];
         InitializePalette();
     }
 
@@ -201,10 +201,12 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         var stride = Columns * _glyphComposer.MaxWidth;
         var height = Rows * _glyphComposer.MaxHeight;
             
-        _offsetLookUpTable = Enumerable.Range(0, charTotal)
-            .Select(i =>
-                _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
-            .ToArray();
+        _offsetLookUpTable =
+        [
+            .. Enumerable.Range(0, charTotal)
+                .Select(i =>
+                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
+        ];
 
         if (Bitmap != null)
         {
@@ -238,10 +240,12 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
     private void InitializePalette()
     {
         _paletteComposer = _paletteComposerFactory.Get(_paletteData);
-        _colors = Enumerable
-            .Range(0, 16)
-            .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
-            .ToArray();
+        _colors =
+        [
+            .. Enumerable
+                .Range(0, 16)
+                .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
+        ];
             
         PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs
         {

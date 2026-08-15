@@ -781,7 +781,7 @@ public sealed class Engine : IEngine, IDisposable
             catch (IOException e)
             {
                 ShowFormattedScroll(e.ToString());
-                return Array.Empty<byte>();
+                return [];
             }
         }
 
@@ -807,6 +807,7 @@ public sealed class Engine : IEngine, IDisposable
             if (numBoards < 0)
                 throw new Exception("Board count must be zero or greater.");
 
+            State.BoardCount = numBoards;
             GameSerializer.LoadWorld(stream);
 
             var newBoards = Enumerable
@@ -828,8 +829,7 @@ public sealed class Engine : IEngine, IDisposable
     private void ShowDosError()
     {
         Hud.ShowScroll(false, "Error",
-            new[]
-            {
+            [
                 "$DOS Error:",
                 string.Empty,
                 "This may be caused by missing",
@@ -838,7 +838,7 @@ public sealed class Engine : IEngine, IDisposable
                 "your disk may be full -- try",
                 "using a blank, formatted disk",
                 "for saving the game!"
-            }
+            ]
         );
     }
 
@@ -1485,10 +1485,10 @@ public sealed class Engine : IEngine, IDisposable
         Board.IsDark = false;
         Board.RestartOnZap = false;
         Board.TimeLimit = 0;
-        Board.ExitEast = 0;
-        Board.ExitNorth = 0;
-        Board.ExitSouth = 0;
-        Board.ExitWest = 0;
+        Board.Exits.East = 0;
+        Board.Exits.North = 0;
+        Board.Exits.South = 0;
+        Board.Exits.West = 0;
 
         // build board edges
         for (var y = 0; y <= Tiles.Height + 1; y++)
@@ -1777,6 +1777,7 @@ public sealed class Engine : IEngine, IDisposable
         while (Boards.Count <= boardIndex)
             Boards.Add(null);
 
+        State.BoardCount = Boards.Count - 1;
         Boards[World.BoardIndex] = board;
     }
 
@@ -1851,16 +1852,17 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ReadInput()
     {
-        //State.KeyShift = false;
+        var mod = Keyboard.GetMod();
+        State.KeyShift = mod.HasFlag(KeyMod.Shift);
         State.KeyArrow = false;
         State.KeyPressed = 0;
+        State.KeyVector.SetTo(0, 0);
 
         var key = Keyboard.GetKey();
         if (key == null || key.Key == AnsiKey.None)
             return;
 
         State.KeyPressed = ConvertKey(key);
-        State.KeyShift = key.Shift;
 
         switch (State.KeyPressed)
         {

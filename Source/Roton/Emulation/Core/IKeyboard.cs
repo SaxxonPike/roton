@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Core;
+﻿using Roton.Emulation.Core.Impl;
+
+namespace Roton.Emulation.Core;
 
 public interface IKeyboard
 {
@@ -6,4 +8,5 @@ public interface IKeyboard
     bool KeyIsAvailable { get; }
     IKeyPress GetKey();
     int BufferLength { get; }
+    KeyMod GetMod();
 }

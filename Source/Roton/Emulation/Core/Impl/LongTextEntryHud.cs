@@ -20,24 +20,24 @@ public sealed class LongTextEntryHud(Lazy<ITerminal> terminal, Lazy<ITextEntryHu
     }
 
     private static readonly int[] ScrollCharsTop =
-    {
+    [
         0xC6, 0xD1, 0xCD, 0xD1, 0xB5
-    };
+    ];
 
     private static readonly int[] ScrollCharsMid =
-    {
+    [
         0x20, 0xB3, 0x20, 0xB3, 0x20
-    };
+    ];
 
     private static readonly int[] ScrollCharsSplit =
-    {
+    [
         0x20, 0xC6, 0xCD, 0xB5, 0x20
-    };
+    ];
 
     private static readonly int[] ScrollCharsBottom =
-    {
+    [
         0xC6, 0xCF, 0xCD, 0xCF, 0xB5
-    };
+    ];
         
     private IReadOnlyList<AnsiChar> LoadBuffer(int left, int top, int width, int height)
     {

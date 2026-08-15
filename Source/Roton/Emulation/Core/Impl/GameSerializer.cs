@@ -54,9 +54,9 @@ public abstract class GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : I
     {
         using var mem = new MemoryStream();
         var writer = new BinaryWriter(mem);
-        writer.Write(Memory.Read(BoardNameOffset, BoardNameLength).ToArray());
+        writer.Write([.. Memory.Read(BoardNameOffset, BoardNameLength)]);
         PackTiles(tiles, writer);
-        writer.Write(Memory.Read(BoardDataOffset, BoardDataLength).ToArray());
+        writer.Write([.. Memory.Read(BoardDataOffset, BoardDataLength)]);
         var actorCount = Memory.Read16(ActorDataCountOffset);
         writer.Write((short) actorCount);
         PackActors(writer, actorCount);
@@ -138,7 +138,7 @@ public abstract class GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : I
             }
 
             // write memory to stream
-            target.Write(Memory.Read(actor.Offset, ActorDataLength).ToArray());
+            target.Write([.. Memory.Read(actor.Offset, ActorDataLength)]);
 
             // write code if applicable
             if (code != null)

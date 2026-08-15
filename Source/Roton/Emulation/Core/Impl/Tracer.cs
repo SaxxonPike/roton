@@ -13,7 +13,7 @@ namespace Roton.Emulation.Core.Impl
     public sealed class Tracer : ITracer
     {
         private long _stepNumber;
-        private readonly List<TextWriter> _writers = new List<TextWriter>();
+        private readonly List<TextWriter> _writers = [];
 
         public void TraceInput(EngineKeyCode keyCode)
         {
@@ -23,6 +23,9 @@ namespace Roton.Emulation.Core.Impl
 
         public void TraceOop(IOopContext oopContext)
         {
+            if (_writers.Count == 0)
+                return;
+            
             var code = oopContext.Actor.Code;
             var offset = oopContext.Instruction;
             var end = oopContext.Instruction;

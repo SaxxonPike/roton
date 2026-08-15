@@ -12,11 +12,13 @@ public sealed class HighScoreList : IHighScoreList
     internal HighScoreList(int count)
     {
         _count = count;
-        _list = Enumerable
-            .Range(0, count)
-            .Select(_ => new HighScore {Name = string.Empty, Score = -1})
-            .Cast<IHighScore>()
-            .ToList();
+        _list =
+        [
+            .. Enumerable
+                .Range(0, count)
+                .Select(_ => new HighScore { Name = string.Empty, Score = -1 })
+                .Cast<IHighScore>()
+        ];
     }
         
     public IEnumerator<IHighScore> GetEnumerator() => 

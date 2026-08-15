@@ -128,6 +128,6 @@ public sealed class MusicEncoder : IMusicEncoder
             result.Add(speed);
         }
 
-        return new Sound(result.Take(254).ToArray());
+        return new Sound([.. result.Take(254)]);
     }
 }

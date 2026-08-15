@@ -26,6 +26,6 @@ public sealed class FixedFileSystem(bool writeable, IDictionary<string, byte[]> 
 
     public void PutFile(string path, byte[] data)
     {
-        _files[path] = data.ToArray();
+        _files[path] = [.. data];
     }
 }

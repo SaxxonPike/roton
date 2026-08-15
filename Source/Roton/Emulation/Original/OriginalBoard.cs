@@ -13,36 +13,15 @@ public sealed class OriginalBoard : IBoard
     {
         _memory = memory;
         Entrance = new MemoryLocation(_memory, 0x45A9);
+        Exits = new OriginalExits(_memory);
     }
 
     public IXyPair Camera { get; } = new Location();
 
     public IXyPair Entrance { get; }
 
-    public int ExitEast
-    {
-        get => _memory.Read8(0x456C);
-        set => _memory.Write8(0x456C, value);
-    }
-
-    public int ExitNorth
-    {
-        get => _memory.Read8(0x4569);
-        set => _memory.Write8(0x4569, value);
-    }
-
-    public int ExitSouth
-    {
-        get => _memory.Read8(0x456A);
-        set => _memory.Write8(0x456A, value);
-    }
-
-    public int ExitWest
-    {
-        get => _memory.Read8(0x456B);
-        set => _memory.Write8(0x456B, value);
-    }
-
+    public IExits Exits { get; }
+    
     public bool IsDark
     {
         get => _memory.ReadBool(0x4568);
