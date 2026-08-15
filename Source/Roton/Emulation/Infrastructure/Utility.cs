@@ -97,13 +97,10 @@ internal static class Utility
         /// Compares source string to another string, with the source UpperCased.
         /// </summary>
         [DebuggerStepThrough]
-        public bool CaseInsensitiveEqual(string b)
+        public bool CaseInsensitiveEqual(ReadOnlySpan<char> b)
         {
-            if (a == null != (b == null))
-                return false;
-
             if (a == null)
-                return true;
+                return false;
 
             if (a.Length != b.Length)
                 return false;
@@ -121,16 +118,13 @@ internal static class Utility
         /// Compares source string to another string, with the source UpperCased, and only A-Z.
         /// </summary>
         [DebuggerStepThrough]
-        public bool CaseInsensitiveCharacterEqual(string b)
+        public bool CaseInsensitiveCharacterEqual(ReadOnlySpan<char> b)
         {
             var i = 0;
             var j = 0;
 
-            if (a == null != (b == null))
-                return false;
-
             if (a == null)
-                return true;
+                return false;
 
             while (i < a.Length)
             {

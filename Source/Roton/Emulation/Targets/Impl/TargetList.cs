@@ -11,12 +11,15 @@ namespace Roton.Emulation.Targets.Impl;
 public sealed class TargetList : ITargetList
 {
     private readonly Lazy<IDictionary<string, ITarget>> _targets;
+    private IDictionary<string, ITarget> Targets => _targets.Value;
 
-    public TargetList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<ITarget>> targets)
+    public TargetList(Lazy<IContextMetadataService> contextMetadataService,
+        Lazy<IEnumerable<ITarget>> targets)
     {
         _targets = new Lazy<IDictionary<string, ITarget>>(() =>
         {
             var result = new Dictionary<string, ITarget>();
+
             foreach (var target in targets.Value)
             {
                 foreach (var attribute in contextMetadataService.Value.GetMetadata(target))
@@ -26,11 +29,15 @@ public sealed class TargetList : ITargetList
             return result;
         });
     }
-        
-    public ITarget Get(string name)
+
+    public ITarget Get(ReadOnlySpan<char> name)
     {
-        return _targets.Value.TryGetValue(name, out var value)
-            ? value
-            : null;
-    }        
+        foreach (var entry in Targets)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
+    }
 }

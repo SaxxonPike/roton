@@ -11,7 +11,7 @@ public sealed class KeysCheat(Lazy<IEngine> engine) : ICheat
 {
     private IEngine Engine => engine.Value;
 
-    public void Execute(string name, bool clear)
+    public void Execute(ReadOnlySpan<char> name, bool clear)
     {
         for (var i = 0; i < 7; i++)
             Engine.World.Keys[i] = true;

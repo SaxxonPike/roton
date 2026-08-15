@@ -11,12 +11,15 @@ namespace Roton.Emulation.Commands.Impl;
 public sealed class CommandList : ICommandList
 {
     private readonly Lazy<IDictionary<string, ICommand>> _commands;
+    private IDictionary<string, ICommand> Commands => _commands.Value;
 
-    public CommandList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<ICommand>> commands)
+    public CommandList(Lazy<IContextMetadataService> contextMetadataService, 
+        Lazy<IEnumerable<ICommand>> commands)
     {
         _commands = new Lazy<IDictionary<string, ICommand>>(() =>
         {
             var result = new Dictionary<string, ICommand>();
+
             foreach (var command in commands.Value)
             {
                 foreach (var attribute in contextMetadataService.Value.GetMetadata(command))
@@ -26,11 +29,15 @@ public sealed class CommandList : ICommandList
             return result;
         });
     }
-        
-    public ICommand Get(string name)
+
+    public ICommand Get(ReadOnlySpan<char> name)
     {
-        return _commands.Value.TryGetValue(name, out var value)
-            ? value
-            : null;
-    }        
+        foreach (var entry in Commands)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
+    }
 }

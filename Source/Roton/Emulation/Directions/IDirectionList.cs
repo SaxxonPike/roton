@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Emulation.Directions;
 
 public interface IDirectionList
 {
-    IDirection Get(string name);
+    IDirection Get(ReadOnlySpan<char> name);
 }

@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Emulation.Cheats;
 
 public interface ICheat
 {
-    void Execute(string name, bool clear);
+    void Execute(ReadOnlySpan<char> name, bool clear);
 }

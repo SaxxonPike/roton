@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Emulation.Commands;
 
 public interface ICommandList
 {
-    ICommand Get(string name);
+    ICommand Get(ReadOnlySpan<char> name);
 }

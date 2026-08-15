@@ -11,12 +11,15 @@ namespace Roton.Emulation.Items.Impl;
 public sealed class ItemList : IItemList
 {
     private readonly Lazy<IDictionary<string, IItem>> _items;
+    private IDictionary<string, IItem> Items => _items.Value;
 
-    public ItemList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<IItem>> items)
+    public ItemList(Lazy<IContextMetadataService> contextMetadataService,
+        Lazy<IEnumerable<IItem>> items)
     {
         _items = new Lazy<IDictionary<string, IItem>>(() =>
         {
             var result = new Dictionary<string, IItem>();
+
             foreach (var item in items.Value)
             {
                 foreach (var attribute in contextMetadataService.Value.GetMetadata(item))
@@ -27,10 +30,14 @@ public sealed class ItemList : IItemList
         });
     }
 
-    public IItem Get(string name)
+    public IItem Get(ReadOnlySpan<char> name)
     {
-        return _items.Value.TryGetValue(name, out var value)
-            ? value
-            : null;
+        foreach (var entry in Items)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
     }
 }

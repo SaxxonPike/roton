@@ -11,12 +11,15 @@ namespace Roton.Emulation.Conditions.Impl;
 public sealed class ConditionList : IConditionList
 {
     private readonly Lazy<IDictionary<string, ICondition>> _conditions;
+    private IDictionary<string, ICondition> Conditions => _conditions.Value;
 
-    public ConditionList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<ICondition>> conditions)
+    public ConditionList(Lazy<IContextMetadataService> contextMetadataService,
+        Lazy<IEnumerable<ICondition>> conditions)
     {
         _conditions = new Lazy<IDictionary<string, ICondition>>(() =>
         {
             var result = new Dictionary<string, ICondition>();
+
             foreach (var condition in conditions.Value)
             {
                 foreach (var attribute in contextMetadataService.Value.GetMetadata(condition))
@@ -26,11 +29,15 @@ public sealed class ConditionList : IConditionList
             return result;
         });
     }
-        
-    public ICondition Get(string name)
+
+    public ICondition Get(ReadOnlySpan<char> name)
     {
-        return _conditions.Value.TryGetValue(name, out var value)
-            ? value
-            : null;
-    }        
+        foreach (var entry in Conditions)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
+    }
 }

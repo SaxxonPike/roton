@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Emulation.Conditions;
 
 public interface IConditionList
 {
-    ICondition Get(string name);
+    ICondition Get(ReadOnlySpan<char> name);
 }

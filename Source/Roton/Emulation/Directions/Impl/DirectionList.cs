@@ -11,6 +11,7 @@ namespace Roton.Emulation.Directions.Impl;
 public sealed class DirectionList : IDirectionList
 {
     private readonly Lazy<IDictionary<string, IDirection>> _directions;
+    private IDictionary<string, IDirection> Directions => _directions.Value;
 
     public DirectionList(Lazy<IContextMetadataService> contextMetadataService,
         Lazy<IEnumerable<IDirection>> directions)
@@ -18,6 +19,7 @@ public sealed class DirectionList : IDirectionList
         _directions = new Lazy<IDictionary<string, IDirection>>(() =>
         {
             var result = new Dictionary<string, IDirection>();
+
             foreach (var direction in directions.Value)
             {
                 foreach (var attribute in contextMetadataService.Value.GetMetadata(direction))
@@ -28,10 +30,14 @@ public sealed class DirectionList : IDirectionList
         });
     }
 
-    public IDirection Get(string name)
+    public IDirection Get(ReadOnlySpan<char> name)
     {
-        return _directions.Value.TryGetValue(name, out var value)
-            ? value
-            : null;
+        foreach (var entry in Directions)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
     }
 }

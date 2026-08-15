@@ -11,8 +11,10 @@ namespace Roton.Emulation.Cheats.Impl;
 public sealed class CheatList : ICheatList
 {
     private readonly Lazy<IDictionary<string, ICheat>> _cheats;
+    private IDictionary<string, ICheat> Cheats => _cheats.Value;
 
-    public CheatList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<ICheat>> cheats)
+    public CheatList(Lazy<IContextMetadataService> contextMetadataService, 
+        Lazy<IEnumerable<ICheat>> cheats)
     {
         _cheats = new Lazy<IDictionary<string, ICheat>>(() =>
         {
@@ -28,12 +30,14 @@ public sealed class CheatList : ICheatList
         });
     }
 
-    private IDictionary<string, ICheat> Cheats => _cheats.Value;
-
-    public ICheat Get(string name)
+    public ICheat Get(ReadOnlySpan<char> name)
     {
-        return Cheats.ContainsKey(name)
-            ? Cheats[name]
-            : null;
+        foreach (var entry in Cheats)
+        {
+            if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                return entry.Value;
+        }
+
+        return null;
     }
 }
