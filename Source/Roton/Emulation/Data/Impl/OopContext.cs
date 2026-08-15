@@ -5,37 +5,25 @@ namespace Roton.Emulation.Data.Impl;
 
 public sealed class OopContext : IOopContext
 {
-    private readonly int _index;
-        
-    private readonly IExecutable _instructionSource;
     private readonly IEngine _engine;
-    private ITile _deathTile;
-    private List<string> _message;
 
     internal OopContext(
-        int index,
-        IExecutable instructionSource,
-        string name,
         IEngine engine)
     {
-        _instructionSource = instructionSource;
         _engine = engine;
-        _index = index;
-        Index = index;
-        Name = name;
     }
 
     public int Instruction
     {
-        get => _instructionSource.Instruction;
-        set => _instructionSource.Instruction = value;
+        get => InstructionSource.Instruction;
+        set => InstructionSource.Instruction = value;
     }
 
-    public IActor Actor => _engine.Actors[_index];
+    public IActor Actor => _engine.Actors[Index];
 
     public int CommandsExecuted { get; set; }
 
-    public ITile DeathTile => _deathTile ??= new Tile(0, 0);
+    public ITile DeathTile { get; } = new Tile(0, 0);
 
     public bool Died { get; set; }
 
@@ -43,11 +31,13 @@ public sealed class OopContext : IOopContext
 
     public bool Finished { get; set; }
 
+    public IExecutable InstructionSource { get; set; }
+
     public int Index { get; set; }
 
-    public bool HasMessage => _message is { Count: > 0 };
+    public bool HasMessage => Message.Count > 0;
 
-    public IList<string> Message => _message ??= [];
+    public IList<string> Message { get; } = new List<string>();
 
     public bool Moved { get; set; }
 

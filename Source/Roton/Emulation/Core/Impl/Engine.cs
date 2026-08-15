@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
@@ -58,6 +59,7 @@ public sealed class Engine : IEngine, IDisposable
     private readonly Lazy<IInterpreter> _interpreter;
     private readonly Lazy<IItemList> _items;
     private readonly Lazy<IKeyboard> _keyboard;
+    private readonly Lazy<IOopContextPool> _oopContextPool;
     private readonly Lazy<IParser> _parser;
     private readonly Lazy<IRandomizer> _randomizer;
     private readonly Lazy<ISounds> _sounds;
@@ -80,19 +82,20 @@ public sealed class Engine : IEngine, IDisposable
         Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
         Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
         Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-        Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover, Lazy<IMusicEncoder> musicEncoder,
+        Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover,
+        Lazy<IMusicEncoder> musicEncoder,
         Lazy<IHighScoreListFactory> highScoreListFactory, Lazy<IConfigFileService> configFileService,
-        Lazy<IFileDialog> fileDialog, Lazy<ITracer> tracer)
+        Lazy<IFileDialog> fileDialog, Lazy<ITracer> tracer, Lazy<IOopContextPool> oopContextPool)
     {
         _clock = new Lazy<IClock>(() =>
         {
             var clock = clockFactory.Value.Create(
-                _config.Value.MasterClockNumerator, 
+                _config.Value.MasterClockNumerator,
                 _config.Value.MasterClockDenominator);
-                
+
             if (clock != null)
                 clock.OnTick += ClockTick;
-                
+
             return clock;
         });
 
@@ -138,12 +141,13 @@ public sealed class Engine : IEngine, IDisposable
         _configFileService = configFileService;
         _fileDialog = fileDialog;
         _tracer = tracer;
+        _oopContextPool = oopContextPool;
     }
 
     private void ClockTick(object sender, EventArgs args)
     {
         if (_ticksToRun < 3) _ticksToRun++;
-        if (!ThreadActive) 
+        if (!ThreadActive)
             Clock.Stop();
     }
 
@@ -152,7 +156,7 @@ public sealed class Engine : IEngine, IDisposable
     private IObjectMover ObjectMover => _objectMover.Value;
 
     public IMusicEncoder MusicEncoder => _musicEncoder.Value;
-        
+
     private IClock Clock => _clock.Value;
 
     private IBoards Boards => _boards.Value;
@@ -174,7 +178,7 @@ public sealed class Engine : IEngine, IDisposable
     private IScrollFormatter ScrollFormatter => _scrollFormatter.Value;
 
     public ITimers Timers => _timers.Value;
-        
+
     public IDrumBank DrumBank => _drumBank.Value;
 
     public ITracer Tracer => _tracer.Value;
@@ -184,7 +188,7 @@ public sealed class Engine : IEngine, IDisposable
     public bool ThreadActive => Thread != null || _step;
 
     public int MemoryUsage => Features.BaseMemoryUsage + Heap.Size + Boards.Sum(b => b.Data.Length);
-        
+
     public void Cheat()
     {
         var cheatText = Hud.EnterCheat().ToUpper();
@@ -208,11 +212,11 @@ public sealed class Engine : IEngine, IDisposable
                 World.Flags.Add(cheatText);
             }
         }
-            
+
         var cheat = CheatList.Get(cheatText);
         cheat?.Execute(cheatText, clear);
         Hud.UpdateStatus();
-            
+
         // TODO: figure out the actual priority of this sound
         PlaySound(3, Sounds.Cheat);
     }
@@ -226,13 +230,13 @@ public sealed class Engine : IEngine, IDisposable
     }
 
     public string GetHighScoreName(string fileName) => Features.GetHighScoreName(fileName);
-        
+
     public void ShowHighScores()
     {
         var list = HighScoreListFactory.Load();
-        if (list == null) 
+        if (list == null)
             return;
-            
+
         Hud.ShowHighScores(list);
     }
 
@@ -261,7 +265,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public event EventHandler Exited;
     public event EventHandler Tick;
-        
+
     public IActors Actors => _actors.Value;
 
     public int Adjacent(IXyPair location, int id)
@@ -323,9 +327,9 @@ public sealed class Engine : IEngine, IDisposable
         {
             if (!ActorIsLocked(info.SearchIndex) || ignoreLock || sender == info.SearchIndex && !ignoreSelfLock)
             {
-                if (sender == info.SearchIndex) 
+                if (sender == info.SearchIndex)
                     success = true;
-                
+
                 Tracer.TraceBroadcast(sender, label, info.SearchIndex, ignoreLock, ignoreSelfLock);
                 Actors[info.SearchIndex].Instruction = info.SearchOffset;
                 NotifyActorSentLabel(info.SearchIndex);
@@ -498,15 +502,11 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ExecuteCode(int index, IExecutable instructionSource, string name)
     {
-        var context = new OopContext(index, instructionSource, name, this)
-        {
-            Moved = false,
-            Repeat = false,
-            Died = false,
-            Finished = false,
-            CommandsExecuted = 0
-        };
+        var context = OopContextPool.Rent();
 
+        context.Index = index;
+        context.InstructionSource = instructionSource;
+        context.Name = name;
         context.PreviousInstruction = context.Instruction;
 
         while (true)
@@ -515,7 +515,7 @@ public sealed class Engine : IEngine, IDisposable
                 break;
 
             Tracer?.TraceOop(context);
-                
+
             context.NextLine = true;
             context.PreviousInstruction = context.Instruction;
             context.Command = ReadActorCodeByte(index, context);
@@ -550,7 +550,7 @@ public sealed class Engine : IEngine, IDisposable
                     Interpreter.Execute(context);
                     break;
                 case 0x0D: // enter
-                    if (context.HasMessage)
+                    if (context.Message.Count > 0)
                         context.Message.Add(string.Empty);
                     break;
                 case 0x00:
@@ -580,6 +580,8 @@ public sealed class Engine : IEngine, IDisposable
 
         if (context.Died)
             CleanUpOop(context);
+
+        OopContextPool.Return(context);
     }
 
     public void CleanUpOop(IOopContext context) => Features.CleanUpOop(context);
@@ -591,7 +593,7 @@ public sealed class Engine : IEngine, IDisposable
         var split = label.IndexOf(':');
         string target = null;
 
-        bool NextStat() => 
+        bool NextStat() =>
             Parser.GetTarget(sender, context, target);
 
         if (split > 0)
@@ -607,7 +609,7 @@ public sealed class Engine : IEngine, IDisposable
             split = 0;
             success = true;
         }
-        
+
         while (success)
         {
             if (label.ToUpper() == Facts.RestartLabel)
@@ -623,11 +625,11 @@ public sealed class Engine : IEngine, IDisposable
                     continue;
                 }
             }
-        
+
             success = context.SearchOffset >= 0;
             break;
         }
-        
+
         return success;
     }
 
@@ -767,7 +769,8 @@ public sealed class Engine : IEngine, IDisposable
 
     public IItemList ItemList => _items.Value;
 
-    private void ShowFormattedScroll(string error) => Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
+    private void ShowFormattedScroll(string error) =>
+        Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
     public void LoadWorld(string name, bool savedGame)
     {
@@ -791,7 +794,7 @@ public sealed class Engine : IEngine, IDisposable
             ShowDosError();
             return;
         }
-            
+
         using (var stream = new MemoryStream(worldData))
         {
             if (stream.Length == 0)
@@ -904,7 +907,7 @@ public sealed class Engine : IEngine, IDisposable
             vector.SetTo(0, 1);
         else if (underId == ElementList.RiverWId)
             vector.SetTo(-1, 0);
-        else if (underId == ElementList.RiverEId) 
+        else if (underId == ElementList.RiverEId)
             vector.SetTo(1, 0);
 
         if (vector.IsNonZero())
@@ -913,19 +916,21 @@ public sealed class Engine : IEngine, IDisposable
             if (actorTile.Id == ElementList.PlayerId)
             {
                 var targetLocation = actor.Location.Sum(vector);
-                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, vector);                
+                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, vector);
             }
         }
-            
+
         if (vector.IsNonZero())
         {
             var target = actor.Location.Sum(vector);
-            if (ElementAt(target).IsFloor) 
+            if (ElementAt(target).IsFloor)
                 MoveActor(index, target);
         }
     }
 
     public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
+
+    public IOopContextPool OopContextPool => _oopContextPool.Value;
 
     public IParser Parser => _parser.Value;
 
@@ -1156,7 +1161,7 @@ public sealed class Engine : IEngine, IDisposable
         using var writer = new BinaryWriter(stream);
 
         // Write common world header.
-        
+
         var type = (short)World.WorldType;
         var numBoards = (short)(Boards.Count - 1);
 
@@ -1168,7 +1173,7 @@ public sealed class Engine : IEngine, IDisposable
         GameSerializer.SaveWorld(stream);
 
         // Write each packed board.
-        
+
         foreach (var board in Boards)
             GameSerializer.SaveBoardData(stream, board.Data);
 
@@ -1239,7 +1244,7 @@ public sealed class Engine : IEngine, IDisposable
     public void OpenWorld()
     {
         var name = Features.OpenWorld();
-        if (string.IsNullOrEmpty(name)) 
+        if (string.IsNullOrEmpty(name))
             return;
 
         LoadWorld(name, false);
@@ -1251,7 +1256,7 @@ public sealed class Engine : IEngine, IDisposable
     public bool RestoreWorld()
     {
         var name = Features.RestoreWorld();
-        if (string.IsNullOrEmpty(name)) 
+        if (string.IsNullOrEmpty(name))
             return false;
 
         LoadWorld(name, true);
@@ -1395,7 +1400,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private void UpdateSound()
     {
-        if (!State.SoundPlaying) 
+        if (!State.SoundPlaying)
             return;
 
         if (State.SoundTicks <= 0)
@@ -1406,16 +1411,16 @@ public sealed class Engine : IEngine, IDisposable
                 State.SoundTicks = sound.Duration << 2;
                 if (sound.Note >= 0xF0)
                 {
-                    Speaker.PlayDrum(sound.Note - 0xF0);                                
+                    Speaker.PlayDrum(sound.Note - 0xF0);
                 }
                 else if (sound.Note > 0x00)
                 {
                     var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
-                    Speaker.PlayNote(actualNote);                                
+                    Speaker.PlayNote(actualNote);
                 }
                 else
                 {
-                    Speaker.StopNote();                                
+                    Speaker.StopNote();
                 }
             }
             else
@@ -1445,21 +1450,21 @@ public sealed class Engine : IEngine, IDisposable
                 if (Clock != null)
                     Tick?.Invoke(this, EventArgs.Empty);
                 _ticksToRun--;
-                
+
                 return false;
             });
         }
         else
         {
             UpdateSound();
-                
+
             if (Clock == null)
                 return;
-            
+
             Tick?.Invoke(this, EventArgs.Empty);
 
             SpinWait.SpinUntil(() => _ticksToRun > 0 || !ThreadActive);
-            
+
             if (_ticksToRun > 0)
                 _ticksToRun--;
         }
@@ -1549,13 +1554,13 @@ public sealed class Engine : IEngine, IDisposable
     private void EnterHighScore(int score)
     {
         var list = HighScoreListFactory.Load();
-        if (list == null) 
+        if (list == null)
             return;
-            
+
         var name = Hud.EnterHighScore(list, score);
-        if (name == null) 
+        if (name == null)
             return;
-            
+
         list.Add(name, score);
         HighScoreListFactory.Save(list);
         ShowHighScores();
@@ -1565,7 +1570,7 @@ public sealed class Engine : IEngine, IDisposable
     {
         var result = Features.ExecuteMessage(context);
         if (result is { Cancelled: false, Label: { } })
-            context.NextLine = BroadcastLabel(context.Index, result.Label, false);                            
+            context.NextLine = BroadcastLabel(context.Index, result.Label, false);
     }
 
     private void FadeBoard(AnsiChar ac) => Hud.FadeBoard(ac);
@@ -1796,7 +1801,7 @@ public sealed class Engine : IEngine, IDisposable
         if (World.IsLocked)
         {
             LoadWorld(World.Name, false);
-                
+
             if (State.WorldLoaded)
             {
                 gameIsActive = State.WorldLoaded;
@@ -1844,9 +1849,9 @@ public sealed class Engine : IEngine, IDisposable
             return EngineKeyCode.None;
 
         if (bytes.Count > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
-            return (EngineKeyCode) (bytes[1] | 0x80);
+            return (EngineKeyCode)(bytes[1] | 0x80);
 
-        return (EngineKeyCode) bytes[0];
+        return (EngineKeyCode)bytes[0];
     }
 
     public void ReadInput()
