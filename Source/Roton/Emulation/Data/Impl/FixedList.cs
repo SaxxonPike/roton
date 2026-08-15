@@ -41,10 +41,15 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return new LinearEnumerator<T>(GetItem, Count);
+        return GetEnumerator();
     }
 
-    public IEnumerator<T> GetEnumerator()
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public LinearEnumerator<T> GetEnumerator()
     {
         return new LinearEnumerator<T>(GetItem, Count);
     }
