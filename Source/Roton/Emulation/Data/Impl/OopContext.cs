@@ -9,6 +9,8 @@ public sealed class OopContext : IOopContext
         
     private readonly IExecutable _instructionSource;
     private readonly IEngine _engine;
+    private ITile _deathTile;
+    private List<string> _message;
 
     internal OopContext(
         int index,
@@ -21,8 +23,6 @@ public sealed class OopContext : IOopContext
         _index = index;
         Index = index;
         Name = name;
-        DeathTile = new Tile(0, 0);
-        Message = new List<string>();
     }
 
     public int Instruction
@@ -35,7 +35,7 @@ public sealed class OopContext : IOopContext
 
     public int CommandsExecuted { get; set; }
 
-    public ITile DeathTile { get; }
+    public ITile DeathTile => _deathTile ??= new Tile(0, 0);
 
     public bool Died { get; set; }
 
@@ -45,7 +45,9 @@ public sealed class OopContext : IOopContext
 
     public int Index { get; set; }
 
-    public IList<string> Message { get; }
+    public bool HasMessage => _message is { Count: > 0 };
+
+    public IList<string> Message => _message ??= [];
 
     public bool Moved { get; set; }
 

@@ -550,7 +550,7 @@ public sealed class Engine : IEngine, IDisposable
                     Interpreter.Execute(context);
                     break;
                 case 0x0D: // enter
-                    if (context.Message.Count > 0)
+                    if (context.HasMessage)
                         context.Message.Add(string.Empty);
                     break;
                 case 0x00:
@@ -575,7 +575,7 @@ public sealed class Engine : IEngine, IDisposable
         if (State.OopByte == 0)
             context.Instruction = -1;
 
-        if (context.Message.Count > 0)
+        if (context.HasMessage)
             ExecuteMessage(context);
 
         if (context.Died)

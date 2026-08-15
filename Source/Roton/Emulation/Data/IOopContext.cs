@@ -19,4 +19,5 @@ public interface IOopContext : IExecutable, ISearchContext
     bool Resume { get; set; }
     int Command { get; set; }
     int Index { get; }
+    bool HasMessage { get; }
 }
