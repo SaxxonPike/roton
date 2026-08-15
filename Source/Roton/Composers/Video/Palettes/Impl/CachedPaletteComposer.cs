@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Linq;
 using Roton.Composers.Extensions;
 
 namespace Roton.Composers.Video.Palettes.Impl;

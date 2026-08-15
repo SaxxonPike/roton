@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Roton.Emulation.Data;
 
 public interface IExits

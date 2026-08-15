@@ -29,8 +29,8 @@ public sealed class ConditionList : IConditionList
         
     public ICondition Get(string name)
     {
-        return _conditions.Value.ContainsKey(name)
-            ? _conditions.Value[name]
+        return _conditions.Value.TryGetValue(name, out var value)
+            ? value
             : null;
     }        
 }

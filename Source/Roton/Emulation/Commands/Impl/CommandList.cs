@@ -29,8 +29,8 @@ public sealed class CommandList : ICommandList
         
     public ICommand Get(string name)
     {
-        return _commands.Value.ContainsKey(name)
-            ? _commands.Value[name]
+        return _commands.Value.TryGetValue(name, out var value)
+            ? value
             : null;
     }        
 }

@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;

@@ -75,4 +75,7 @@ public sealed class SoundBufferList : FixedList<int>, ISoundBufferList
     {
         Memory.Write8(_offset, 0);
     }
+
+    protected override bool EqualsItem(int index, int value) => 
+        GetItem(index) == value;
 }

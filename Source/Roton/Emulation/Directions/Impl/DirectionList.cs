@@ -30,8 +30,8 @@ public sealed class DirectionList : IDirectionList
 
     public IDirection Get(string name)
     {
-        return _directions.Value.ContainsKey(name)
-            ? _directions.Value[name]
+        return _directions.Value.TryGetValue(name, out var value)
+            ? value
             : null;
     }
 }

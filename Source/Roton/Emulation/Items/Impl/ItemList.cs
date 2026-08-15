@@ -29,8 +29,8 @@ public sealed class ItemList : IItemList
 
     public IItem Get(string name)
     {
-        return _items.Value.ContainsKey(name)
-            ? _items.Value[name]
+        return _items.Value.TryGetValue(name, out var value)
+            ? value
             : null;
     }
 }

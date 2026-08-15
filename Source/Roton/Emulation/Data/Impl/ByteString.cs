@@ -11,15 +11,15 @@ public sealed class ByteString : FixedList<int>
         _offset = offset;
     }
 
-    public override int Count => _memory.Read8(_offset);
+    public override int Count =>
+        _memory.Read8(_offset);
 
-    protected override int GetItem(int index)
-    {
-        return _memory.Read8(_offset + index + 1);
-    }
+    protected override int GetItem(int index) =>
+        _memory.Read8(_offset + index + 1);
 
-    protected override void SetItem(int index, int value)
-    {
+    protected override void SetItem(int index, int value) =>
         _memory.Write8(_offset + index + 1, value);
-    }
+
+    protected override bool EqualsItem(int index, int value) =>
+        GetItem(index) == value;
 }

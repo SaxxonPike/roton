@@ -124,9 +124,9 @@ public abstract class GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : I
                 // check to see if the code needs to be stored
                 if (code != null)
                 {
-                    if (savedCode.ContainsKey(actor.Pointer))
+                    if (savedCode.TryGetValue(actor.Pointer, out var value))
                     {
-                        actor.Length = -savedCode[actor.Pointer];
+                        actor.Length = -value;
                     }
                     else
                     {

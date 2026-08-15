@@ -29,8 +29,8 @@ public sealed class InteractionList : IInteractionList
 
     public IInteraction Get(int index)
     {
-        return _interactions.Value.ContainsKey(index)
-            ? _interactions.Value[index]
+        return _interactions.Value.TryGetValue(index, out var value)
+            ? value
             : _interactions.Value[-1];
     }
 }

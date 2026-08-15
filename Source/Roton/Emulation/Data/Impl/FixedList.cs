@@ -18,7 +18,11 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 
     public virtual bool Contains(T item)
     {
-        return IndexOf(item) >= 0;
+        for (var i = 0; i < Count; i++)
+            if (EqualsItem(i, item))
+                return true;
+
+        return false;
     }
 
     public virtual void CopyTo(T[] array, int arrayIndex)
@@ -74,4 +78,7 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
     protected virtual void SetItem(int index, T value)
     {
     }
+
+    protected virtual bool EqualsItem(int index, T value) => 
+        GetItem(index).GetHashCode() == value.GetHashCode();
 }

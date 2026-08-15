@@ -29,8 +29,8 @@ public sealed class DrawList : IDrawList
 
     public IDraw Get(int index)
     {
-        return _draws.Value.ContainsKey(index) 
-            ? _draws.Value[index] 
+        return _draws.Value.TryGetValue(index, out var value) 
+            ? value 
             : _draws.Value[-1];
     }
 }

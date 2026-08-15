@@ -6,7 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.11" />
+        <PackageReference Include="System.Memory" Version="4.6.3" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Resources\resources.zip"/>
