@@ -21,7 +21,11 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
     public int Search(int index, string term)
     {
         var result = -1;
-        var termBytes = term.ToBytes();
+        if (string.IsNullOrEmpty(term))
+            return result;
+
+        var termBytes = term.Length <= 256 ? stackalloc byte[term.Length] : new byte[term.Length];
+        term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
         var offs = new Executable();
         

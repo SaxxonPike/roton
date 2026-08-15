@@ -29,11 +29,12 @@ public static class ActorExtensions
 
     public static void ModifyCodeAsString(this IActor self, string value)
     {
-        self.Code ??= [];
-        var code = self.Code;
-        var newCode = value.ToBytes();
-        Array.Resize(ref code, newCode.Length);
-        Buffer.BlockCopy(newCode, 0, code, 0, newCode.Length);
+        var length = value?.Length ?? 0;
+        if (self.Code == null || self.Code.Length != length)
+        {
+            self.Code = new byte[length];
+        }
+        value.ToBytes(self.Code);
     }
 
     public static void SetCodeAsString(this IActor self, string value)

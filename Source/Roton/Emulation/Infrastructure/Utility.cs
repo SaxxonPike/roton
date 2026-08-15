@@ -165,5 +165,17 @@ internal static class Utility
             Cp437.CharsToBytes(a, result);
             return result;
         }
+
+        /// <summary>
+        /// Convert a string to a byte array using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public int ToBytes(Span<byte> destination)
+        {
+            if (string.IsNullOrEmpty(a))
+                return 0;
+
+            return Cp437.CharsToBytes(a, destination);
+        }
     }
 }

@@ -19,10 +19,11 @@ public sealed class PackedBoard : IPackedBoard
         {
             if (Data.Length >= 260)
             {
-                int nameLength = Data[0];
-                var nameData = new byte[nameLength];
-                Buffer.BlockCopy(Data, 1, nameData, 0, nameLength);
-                return nameData.ToStringValue();
+                var nameLength = Data[0];
+                if (nameLength == 0) return string.Empty;
+                Span<char> chars = stackalloc char[nameLength];
+                Cp437.BytesToChars(Data.AsSpan(1, nameLength), chars);
+                return new string(chars.ToArray());
             }
             return string.Empty;
         }
@@ -30,10 +31,12 @@ public sealed class PackedBoard : IPackedBoard
         {
             if (Data.Length >= 260)
             {
-                var nameData = value.ToBytes();
-                var nameLength = (byte) (nameData.Length & 0xFF);
+                var nameLength = (byte)((value?.Length ?? 0) & 0xFF);
                 Data[0] = nameLength;
-                Buffer.BlockCopy(nameData, 0, Data, 1, nameLength);
+                if (nameLength > 0)
+                {
+                    value.ToBytes(Data.AsSpan(1, nameLength));
+                }
             }
         }
     }

@@ -169,11 +169,23 @@ public static class MemoryExtensions
             unchecked
             {
                 var span = memory.Data;
-                var encodedString = value.ToBytes();
-                var length = encodedString.Length & 0xFF;
-                span[offset++] = (byte) length;
-                for (var i = 0; i < length; i++)
-                    span[offset++] = encodedString[i];
+                var length = (value?.Length ?? 0) & 0xFF;
+                span[offset & 0xFFFF] = (byte) length;
+                if (length > 0)
+                {
+                    var destination = span.Slice((offset + 1) & 0xFFFF);
+                    // Handle wrap-around if necessary
+                    if (destination.Length >= length)
+                    {
+                        value.ToBytes(destination.Slice(0, length));
+                    }
+                    else
+                    {
+                        // Fallback for wrap-around
+                        for (var i = 0; i < length; i++)
+                            span[(offset + 1 + i) & 0xFFFF] = Cp437.CharToByte(value![i]);
+                    }
+                }
             }
         }
     }
