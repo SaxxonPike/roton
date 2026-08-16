@@ -23,7 +23,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 public sealed class Engine : IEngine, IDisposable
 {
-    private readonly IClock _clock;
     private readonly IConfigFileService _configFileService;
     private readonly IFileDialog _fileDialog;
 
@@ -166,8 +165,7 @@ public sealed class Engine : IEngine, IDisposable
         cheat?.Execute(cheatText, clear);
         Hud.UpdateStatus();
 
-        // TODO: figure out the actual priority of this sound
-        PlaySound(3, Sounds.Cheat);
+        PlaySound(10, Sounds.Cheat);
     }
 
     public void PlayStep()
@@ -765,7 +763,7 @@ public sealed class Engine : IEngine, IDisposable
 
             var newBoards = Enumerable
                 .Range(0, numBoards + 1)
-                .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)))
+                .Select(_ => new PackedBoard(GameSerializer.LoadBoardData(stream)))
                 .ToList();
 
             Boards.Clear();
@@ -881,7 +879,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
 
-    public IOopContextPool OopContextPool { get; }
+    private IOopContextPool OopContextPool { get; }
 
     public IParser Parser { get; }
 
