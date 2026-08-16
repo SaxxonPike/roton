@@ -60,10 +60,10 @@ public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigF
         {
             case ConfigFileFormat.Original30:
             {
-                output.AppendLine($"{configFile.Value0}");
-                output.AppendLine($"{configFile.Value1}");
-                output.AppendLine($"{configFile.Value2}");
-                output.AppendLine($"{configFile.Value3}");
+                output.AppendLine(configFile.Value0.ToString());
+                output.AppendLine(configFile.Value1.ToString());
+                output.AppendLine(configFile.Value2.ToString());
+                output.AppendLine(configFile.Value3.ToString());
                 output.AppendLine(configFile.WorldName);
                 output.AppendLine(configFile.RegistrationType);
                 output.AppendLine(configFile.RegistrationName);

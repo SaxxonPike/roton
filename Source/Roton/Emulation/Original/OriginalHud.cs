@@ -372,12 +372,12 @@ public sealed class OriginalHud : Hud
             if (score > 0 && index < 0 && hs.Score <= score)
             {
                 index = nameIndex;
-                nameList.Add($"{score.ToString(),5}  -- You! --");
+                nameList.Add($"{score,5}  -- You! --");
             }
 
             if (!string.IsNullOrEmpty(hs.Name))
             {
-                nameList.Add($"{hs.Score.ToString(),5}  {hs.Name}");
+                nameList.Add($"{hs.Score,5}  {hs.Name}");
                 nameIndex++;                    
             }
         }
@@ -408,7 +408,7 @@ public sealed class OriginalHud : Hud
         nameList.AddRange(
             highScoreList
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score.ToString(),5}  {hs.Name}"));
+                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
         Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
     }

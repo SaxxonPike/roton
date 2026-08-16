@@ -449,7 +449,7 @@ public sealed class SuperHud(
         nameList.AddRange(
             highScoreList
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score.ToString(),5}  {hs.Name}"));
+                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
         Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
     }
