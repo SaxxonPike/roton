@@ -11,6 +11,7 @@ public interface IOopContext : IExecutable, ISearchContext
     bool Died { get; set; }
     bool Executed { get; set; }
     bool Finished { get; set; }
+    IExecutable InstructionSource { get; set; }
     bool Moved { get; set; }
     string Name { get; set; }
     bool NextLine { get; set; }
@@ -18,5 +19,6 @@ public interface IOopContext : IExecutable, ISearchContext
     bool Repeat { get; set; }
     bool Resume { get; set; }
     int Command { get; set; }
-    int Index { get; }
+    int Index { get; set; }
+    bool HasMessage { get; }
 }

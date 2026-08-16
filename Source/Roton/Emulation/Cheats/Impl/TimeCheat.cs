@@ -11,7 +11,7 @@ public sealed class TimeCheat(Lazy<IEngine> engine) : ICheat
 {
     private IEngine Engine => engine.Value;
 
-    public void Execute(string name, bool clear)
+    public void Execute(ReadOnlySpan<char> name, bool clear)
     {
         Engine.World.TimePassed -= 30;
     }

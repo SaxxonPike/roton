@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 

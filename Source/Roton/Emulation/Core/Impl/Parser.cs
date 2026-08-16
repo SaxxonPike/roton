@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -22,7 +21,11 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
     public int Search(int index, string term)
     {
         var result = -1;
-        var termBytes = term.ToBytes();
+        if (string.IsNullOrEmpty(term))
+            return result;
+
+        var termBytes = term.Length <= 256 ? stackalloc byte[term.Length] : new byte[term.Length];
+        term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
         var offs = new Executable();
         
@@ -99,23 +102,26 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
 
     public string ReadLine(int index, IExecutable instructionSource)
     {
-        var sb = StringBuilderPool.Rent();
+        // The original ZZT engine used a string[50] Pascal buffer for OOP line reads.
+        // 256 chars is generous headroom while remaining safe for stack allocation (~512 bytes).
+
+        var buffer = (stackalloc char[256]);
+        var length = 0;
         ReadByte(index, instructionSource);
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
-            sb.Append(Engine.State.OopByte.ToChar());
+            if (length < buffer.Length)
+                buffer[length++] = Engine.State.OopByte.ToChar();
             ReadByte(index, instructionSource);
         }
 
-        var result = sb.ToString();
-        StringBuilderPool.Return(sb);
-        return result;
+        return buffer.Slice(0, length).ToString();
     }
 
     public int ReadNumber(int index, IExecutable instructionSource)
     {
-        var sb = StringBuilderPool.Rent();
         var success = false;
+        var resultInt = 0;
 
         while (ReadByte(index, instructionSource) == 0x20)
         {
@@ -125,7 +131,7 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         while (Engine.State.OopByte is >= 0x30 and <= 0x39)
         {
             success = true;
-            sb.Append(Engine.State.OopByte.ToChar());
+            resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
             ReadByte(index, instructionSource);
         }
 
@@ -140,17 +146,18 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         }
         else
         {
-            int.TryParse(sb.ToString(), out var resultInt);
             Engine.State.OopNumber = resultInt;
         }
 
-        StringBuilderPool.Return(sb);
         return Engine.State.OopNumber;
     }
 
     public string ReadWord(int index, IExecutable instructionSource)
     {
-        var sb = StringBuilderPool.Rent();
+        // Words are delimited by spaces and non-alphanumeric characters, so they are always short.
+        // 256 chars matches ReadLine and is well above any real-world OOP word length.
+        var buffer = (stackalloc char[256]);
+        var length = 0;
 
         while (true)
         {
@@ -162,13 +169,14 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
         }
 
         Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-        var oopByte = Engine.State.OopByte; 
+        var oopByte = Engine.State.OopByte;
 
         if (oopByte is not (>= 0x30 and <= 0x39))
         {
             while (oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
             {
-                sb.Append(oopByte.ToChar());
+                if (length < buffer.Length)
+                    buffer[length++] = oopByte.ToChar();
                 ReadByte(index, instructionSource);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
                 oopByte = Engine.State.OopByte;
@@ -180,9 +188,7 @@ public sealed class Parser(Lazy<IEngine> engine) : IParser
             instructionSource.Instruction--;
         }
 
-        Engine.State.OopWord = sb.ToString();
-        StringBuilderPool.Return(sb);
-
+        Engine.State.OopWord = buffer.Slice(0, length).ToString();
         return Engine.State.OopWord;
     }
 

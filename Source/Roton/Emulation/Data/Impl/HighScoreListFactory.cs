@@ -46,11 +46,10 @@ public sealed class HighScoreListFactory(Lazy<IEngine> engine, Lazy<IFacts> fact
         using var writer = new BinaryWriter(stream);
         foreach (var hs in highScoreList)
         {
-            var nameLength = unchecked((byte) hs.Name.Length);
+            var nameLength = unchecked((byte) (hs.Name?.Length ?? 0));
             var nameBuffer = new byte[Facts.HighScoreNameLength];
-            var name = hs.Name.ToBytes();
+            hs.Name.ToBytes(nameBuffer.AsSpan(0, Math.Min(nameLength, nameBuffer.Length)));
             var score = unchecked((short) hs.Score);
-            Buffer.BlockCopy(name, 0, nameBuffer, 0, Math.Min(nameLength, nameBuffer.Length));
             writer.Write(nameLength);
             writer.Write(nameBuffer);
             writer.Write(score);

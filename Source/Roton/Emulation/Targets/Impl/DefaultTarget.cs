@@ -25,10 +25,8 @@ public sealed class DefaultTarget(Lazy<IActors> actors, Lazy<IParser> parser) : 
                 if (firstByte == 0x40)
                 {
                     var name = Parser.ReadWord(context.SearchIndex, instruction);
-                    if (name == term)
-                    {
+                    if (name.Equals(term, StringComparison.OrdinalIgnoreCase))
                         return true;
-                    }
                 }
             }
             context.SearchIndex++;

@@ -425,7 +425,7 @@ public sealed class SuperHud(
 
     public override string EnterHighScore(IHighScoreList highScoreList, int score)
     {
-        if (!highScoreList.Any(hs => hs.Score <= score))
+        if (score <= 0 || !highScoreList.Any(hs => hs.Score <= score))
         {
             return null;
         }

@@ -11,8 +11,10 @@ namespace Roton.Emulation.Draws.Impl;
 public sealed class DrawList : IDrawList
 {
     private readonly Lazy<IDictionary<int, IDraw>> _draws;
+    private IDictionary<int, IDraw> Draws => _draws.Value;
 
-    public DrawList(Lazy<IContextMetadataService> contextMetadataService, Lazy<IEnumerable<IDraw>> draws)
+    public DrawList(Lazy<IContextMetadataService> contextMetadataService,
+        Lazy<IEnumerable<IDraw>> draws)
     {
         _draws = new Lazy<IDictionary<int, IDraw>>(() =>
         {
@@ -29,8 +31,8 @@ public sealed class DrawList : IDrawList
 
     public IDraw Get(int index)
     {
-        return _draws.Value.ContainsKey(index) 
-            ? _draws.Value[index] 
-            : _draws.Value[-1];
+        return Draws.TryGetValue(index, out var value)
+            ? value
+            : Draws[-1];
     }
 }

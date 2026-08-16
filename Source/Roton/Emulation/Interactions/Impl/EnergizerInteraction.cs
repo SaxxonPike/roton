@@ -18,7 +18,7 @@ public sealed class EnergizerInteraction(Lazy<IEngine> engine) : IInteraction
         Engine.RemoveItem(location);
         Engine.World.EnergyCycles = Engine.Facts.EnergyCyclesPerEnergizer;
         Engine.Hud.UpdateStatus();
-        Engine.UpdateBoard(location);
+
         if (Engine.Alerts.EnergizerPickup)
         {
             Engine.Alerts.EnergizerPickup = false;

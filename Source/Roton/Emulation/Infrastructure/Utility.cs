@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 
 namespace Roton.Emulation.Infrastructure;
 
 internal static class Utility
 {
-    private static readonly Encoding CodePage437 = CodePagesEncodingProvider.Instance.GetEncoding(437);
-
     private static readonly ThreadLocal<byte[]> OneByteArray = new(() => new byte[1]);
     private static readonly ThreadLocal<char[]> OneCharArray = new(() => new char[1]);
     
@@ -44,14 +40,9 @@ internal static class Utility
         /// Convert an integer to a character using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public char ToChar()
-        {
-            var bytes = OneByteArray.Value;
-            bytes[0] = unchecked((byte)(a & 0xFF));
-            var chars = OneCharArray.Value;
-            CodePage437.GetChars(bytes, 0, 1, chars, 0);
-            return chars[0];
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public char ToChar() => 
+            Cp437.ByteToChar(unchecked((byte)a));
 
         /// <summary>
         /// Get the uppercase representation of an ASCII char stored as an integer.
@@ -70,8 +61,12 @@ internal static class Utility
     /// </summary>
     [DebuggerStepThrough]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToStringValue(this byte[] value) =>
-        CodePage437.GetString(value);
+    public static string ToStringValue(this byte[] value)
+    {
+        var str = new char[value.Length];
+        Cp437.BytesToChars(value, str);
+        return new string(str);
+    }
 
     /// <summary>
     /// Get the uppercase representation of an input key.
@@ -103,13 +98,10 @@ internal static class Utility
         /// Compares source string to another string, with the source UpperCased.
         /// </summary>
         [DebuggerStepThrough]
-        public bool CaseInsensitiveEqual(string b)
+        public bool CaseInsensitiveEqual(ReadOnlySpan<char> b)
         {
-            if (a == null != (b == null))
-                return false;
-
             if (a == null)
-                return true;
+                return false;
 
             if (a.Length != b.Length)
                 return false;
@@ -127,16 +119,13 @@ internal static class Utility
         /// Compares source string to another string, with the source UpperCased, and only A-Z.
         /// </summary>
         [DebuggerStepThrough]
-        public bool CaseInsensitiveCharacterEqual(string b)
+        public bool CaseInsensitiveCharacterEqual(ReadOnlySpan<char> b)
         {
             var i = 0;
             var j = 0;
 
-            if (a == null != (b == null))
-                return false;
-
             if (a == null)
-                return true;
+                return false;
 
             while (i < a.Length)
             {
@@ -162,9 +151,38 @@ internal static class Utility
         /// Convert a string to a byte array using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public byte[] ToBytes() =>
-            string.IsNullOrEmpty(a)
-                ? []
-                : CodePage437.GetBytes(a);
+        public byte[] ToBytes()
+        {
+            if (string.IsNullOrEmpty(a))
+                return [];
+            
+            var result = new byte[a.Length];
+            Cp437.CharsToBytes(a, result);
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a string to a byte array using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public int ToBytes(Span<byte> destination)
+        {
+            if (string.IsNullOrEmpty(a))
+                return 0;
+
+            return Cp437.CharsToBytes(a, destination);
+        }
+
+        /// <summary>
+        /// Convert a byte array to a string using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public string UpCased()
+        {
+            var str = new char[a.Length];
+            for (var i = 0; i < a.Length; i++)
+                str[i] = unchecked((char)((int)a[i]).ToUpperCase());
+            return new string(str);
+        }
     }
 }

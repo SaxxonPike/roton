@@ -4,38 +4,26 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class LinearEnumerator<T> : IEnumerator<T>
+public struct LinearEnumerator<T>(Func<int, T> getter, int count) : IEnumerator<T>
 {
-    internal LinearEnumerator(Func<int, T> getter, int count)
-    {
-        Count = count;
-        Getter = getter;
-        Reset();
-    }
-
-    private int Count { get; }
-
-    private Func<int, T> Getter { get; set; }
-
-    private int Index { get; set; }
+    private int _index = -1;
 
     public void Dispose()
     {
-        Getter = null;
     }
 
-    object IEnumerator.Current => Getter(Index);
+    object IEnumerator.Current => Current;
 
     public bool MoveNext()
     {
-        Index++;
-        return Index < Count;
+        _index++;
+        return _index < count;
     }
 
     public void Reset()
     {
-        Index = -1;
+        _index = -1;
     }
 
-    public T Current => Getter(Index);
+    public T Current => getter(_index);
 }

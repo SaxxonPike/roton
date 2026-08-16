@@ -18,8 +18,8 @@ public sealed class AssemblyResourceService : IAssemblyResourceService
     {
         var assembly = typeof(T).Assembly;
 
-        if (_cache.ContainsKey(assembly))
-            return _cache[assembly];
+        if (_cache.TryGetValue(assembly, out var of))
+            return of;
             
         var name = $"{assembly.GetName().Name}.Resources.resources.zip";
         using var stream = assembly.GetManifestResourceStream(name);

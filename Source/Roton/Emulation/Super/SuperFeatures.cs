@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -60,6 +59,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
             Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
         else
             Engine.Tiles[location].CopyFrom(result);
+
+        Engine.UpdateBoard(location);
     }
 
     public string GetWorldName(string baseName) => $"{baseName}.SZT";
@@ -131,7 +132,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
 
     public bool CanPutTile(IXyPair location)
     {
-        return true;
+        // do not allow #put on the bottom row
+        return location.Y < Engine.Tiles.Height;
     }
 
     public void ClearForest(IXyPair location)
