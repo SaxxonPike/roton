@@ -203,8 +203,8 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected ITile TileAt(IXyPair xy) =>
         Tiles[xy];
 
-    protected void Type(AnsiKey ekc, KeyMod mod = 0) =>
-        Keyboard.Press(new KeyPress { Key = ekc, Mod = mod });
+    protected void Type(AnsiKey key, KeyMod mod = 0) =>
+        Keyboard.Press(new KeyPress { Key = key, Mod = mod });
 
     protected int ActorIndexAt(int x, int y) =>
         Engine.ActorIndexAt(new Location(x, y));

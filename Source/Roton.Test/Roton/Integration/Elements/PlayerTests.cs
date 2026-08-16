@@ -445,9 +445,33 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         Type(AnsiKey.Right);
         StepAllKeys();
 
+        // Assert.
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should have moved into boulder space");
         TileAt(5, 3).Id.Should().Be(ElementList.BoulderId,
             "boulder should have been pushed");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToShootEnemiesPointBlank()
+    {
+        // Place the player.
+        MovePlayerTo(10, 10);
+        
+        // Give the player some ammo.
+        World.Ammo = 1;
+        
+        // Place an enemy.
+        SpawnTo(11, 10, ElementList.LionId);
+        
+        // Instruct the player to shoot the enemy.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+        
+        // Assert.
+        World.Ammo.Should().Be(0,
+            "player should have used ammo");
+        TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
+            "enemy should have been killed");
     }
 }

@@ -1325,7 +1325,8 @@ public sealed class Engine : IEngine, IDisposable
 
         if (element.Id != ElementList.BreakableId &&
             (!element.IsDestructible ||
-             (element.Id != ElementList.PlayerId || World.EnergyCycles != 0) && enemyOwned))
+             element.Id == ElementList.PlayerId != enemyOwned ||
+             World.EnergyCycles != 0))
             return false;
 
         Destroy(target);
