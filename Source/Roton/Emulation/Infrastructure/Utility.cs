@@ -40,6 +40,7 @@ internal static class Utility
         /// Convert an integer to a character using code page 437.
         /// </summary>
         [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char ToChar() => 
             Cp437.ByteToChar(unchecked((byte)a));
 
