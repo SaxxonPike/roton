@@ -1,14 +1,13 @@
-﻿using System;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperActors(Lazy<IMemory> memory, Lazy<IHeap> heap) : Actors(memory, 129)
+public sealed class SuperActors(IMemory memory, IHeap heap) : Actors(memory, 129)
 {
-    private IHeap Heap => heap.Value;
+    private IHeap Heap => heap;
 
     public override int Count
         => Memory.Read16(0x6AB3) + 1;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -13,18 +12,14 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalState : IState
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IHeap> _heap;
-    private readonly Lazy<IEngineResourceService> _engineResourceService;
-
     public OriginalState(
-        Lazy<IMemory> memory, 
-        Lazy<IHeap> heap, 
-        Lazy<IEngineResourceService> engineResourceService)
+        IMemory memory, 
+        IHeap heap, 
+        IEngineResourceService engineResourceService)
     {
-        _memory = memory;
-        _heap = heap;
-        _engineResourceService = engineResourceService;
+        Memory = memory;
+        Heap = heap;
+        EngineResourceService = engineResourceService;
 
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
         BorderTile = new MemoryTile(Memory, 0x0072);
@@ -42,20 +37,11 @@ public sealed class OriginalState : IState
         Vector8 = new Int16List(Memory, 0x0042, 16);
     }
 
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => _memory.Value;
-    }
+    private IMemory Memory { [DebuggerStepThrough] get; }
 
-    private IHeap Heap
-    {
-        [DebuggerStepThrough] get => _heap.Value;
-    }
+    private IHeap Heap { [DebuggerStepThrough] get; }
 
-    private IEngineResourceService EngineResourceService
-    {
-        [DebuggerStepThrough] get => _engineResourceService.Value;
-    }
+    private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
     public int MainTime
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,9 +7,9 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x09)]
 [Context(Context.Super, 0x09)]
-public sealed class DoorInteraction(Lazy<IEngine> engine) : IInteraction
+public sealed class DoorInteraction(IEngineAccessor engine) : IInteraction
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Interact(IXyPair location, int index, IXyPair vector)
     {

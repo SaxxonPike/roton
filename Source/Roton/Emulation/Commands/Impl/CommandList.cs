@@ -13,7 +13,7 @@ public sealed class CommandList : ICommandList
     private readonly Lazy<IDictionary<string, ICommand>> _commands;
     private IDictionary<string, ICommand> Commands => _commands.Value;
 
-    public CommandList(Lazy<IContextMetadataService> contextMetadataService, 
+    public CommandList(IContextMetadataService contextMetadataService, 
         Lazy<IEnumerable<ICommand>> commands)
     {
         _commands = new Lazy<IDictionary<string, ICommand>>(() =>
@@ -22,7 +22,7 @@ public sealed class CommandList : ICommandList
 
             foreach (var command in commands.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(command))
+                foreach (var attribute in contextMetadataService.GetMetadata(command))
                     result.Add(attribute.Name, command);
             }
 

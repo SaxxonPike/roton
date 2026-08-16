@@ -7,9 +7,9 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "HEALTH")]
 [Context(Context.Super, "HEALTH")]
-public sealed class HealthCheat(Lazy<IEngine> engine) : ICheat
+public sealed class HealthCheat(IEngineAccessor engine) : ICheat
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Execute(ReadOnlySpan<char> name, bool clear)
     {

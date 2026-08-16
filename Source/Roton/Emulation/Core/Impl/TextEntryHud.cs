@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -8,16 +7,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class TextEntryHud(Lazy<ITerminal> terminal, Lazy<IEngine> engine) : ITextEntryHud
+public sealed class TextEntryHud(ITerminal terminal, IEngineAccessor engine) : ITextEntryHud
 {
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => terminal.Value;
+        [DebuggerStepThrough] get => terminal;
     }
 
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => engine.Value;
+        [DebuggerStepThrough] get => engine.Instance;
     }
 
     public string Show(int x, int y, int maxLength, int textColor, int pipColor)

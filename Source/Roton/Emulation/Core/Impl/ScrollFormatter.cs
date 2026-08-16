@@ -8,13 +8,13 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ScrollFormatter(Lazy<IScroll> scroll) : IScrollFormatter
+public sealed class ScrollFormatter(IScroll scroll) : IScrollFormatter
 {
     private readonly char[] _newLineChars = Environment.NewLine.ToCharArray();
 
     private IScroll Scroll
     {
-        [DebuggerStepThrough] get => scroll.Value;
+        [DebuggerStepThrough] get => scroll;
     }
         
     public string[] Format(string text)

@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -12,9 +11,9 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x18)]
 [Context(Context.Super, 0x19)]
 [Context(Context.Super, 0x1A)]
-public sealed class PuzzleInteraction(Lazy<IEngine> engine) : IInteraction
+public sealed class PuzzleInteraction(IEngineAccessor engine) : IInteraction
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Interact(IXyPair location, int index, IXyPair vector)
     {

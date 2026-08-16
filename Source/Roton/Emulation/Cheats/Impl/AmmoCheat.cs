@@ -8,10 +8,10 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "AMMO")]
 [Context(Context.Super, "AMMO")]
-public sealed class AmmoCheat(Lazy<IEngine> engine, Lazy<IFacts> facts) : ICheat
+public sealed class AmmoCheat(IEngineAccessor engine, IFacts facts) : ICheat
 {
-    private IEngine Engine => engine.Value;
-    private IFacts Facts => facts.Value;
+    private IEngine Engine => engine.Instance;
+    private IFacts Facts => facts;
 
     public void Execute(ReadOnlySpan<char> name, bool clear)
     {

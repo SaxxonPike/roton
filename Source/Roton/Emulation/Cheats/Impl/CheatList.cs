@@ -13,7 +13,7 @@ public sealed class CheatList : ICheatList
     private readonly Lazy<IDictionary<string, ICheat>> _cheats;
     private IDictionary<string, ICheat> Cheats => _cheats.Value;
 
-    public CheatList(Lazy<IContextMetadataService> contextMetadataService, 
+    public CheatList(IContextMetadataService contextMetadataService, 
         Lazy<IEnumerable<ICheat>> cheats)
     {
         _cheats = new Lazy<IDictionary<string, ICheat>>(() =>
@@ -22,7 +22,7 @@ public sealed class CheatList : ICheatList
 
             foreach (var cheat in cheats.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(cheat))
+                foreach (var attribute in contextMetadataService.GetMetadata(cheat))
                     result.Add(attribute.Name, cheat);
             }
 

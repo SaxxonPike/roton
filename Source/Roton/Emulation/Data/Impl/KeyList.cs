@@ -1,13 +1,12 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class KeyList(Lazy<IMemory> memory, int offset) : FixedList<bool>, IKeyList
+public abstract class KeyList(IMemory memory, int offset) : FixedList<bool>, IKeyList
 {
     private IMemory Memory
     {
-        [DebuggerStepThrough] get => memory.Value;
+        [DebuggerStepThrough] get => memory;
     }
 
     public override int Count => 7;

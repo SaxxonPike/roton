@@ -7,19 +7,15 @@ namespace Roton.Emulation.Core.Impl;
 
 public sealed class SoundBufferList : FixedList<int>, ISoundBufferList
 {
-    private readonly Lazy<IMemory> _memory;
     private readonly int _offset;
 
-    internal SoundBufferList(Lazy<IMemory> memory, int offset)
+    internal SoundBufferList(IMemory memory, int offset)
     {
-        _memory = memory;
+        Memory = memory;
         _offset = offset;
     }
 
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => _memory.Value;
-    }
+    private IMemory Memory { [DebuggerStepThrough] get; }
 
     public override int Count => Memory.Read8(_offset);
 

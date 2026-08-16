@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
@@ -11,11 +10,11 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Parser(Lazy<IEngine> engine) : IParser
+public sealed class Parser(IEngineAccessor engine) : IParser
 {
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => engine.Value;
+        [DebuggerStepThrough] get => engine.Instance;
     }
 
     public int Search(int index, string term)

@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -8,9 +7,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "BECOME")]
 [Context(Context.Super, "BECOME")]
-public sealed class BecomeCommand(Lazy<IEngine> engine) : ICommand
+public sealed class BecomeCommand(IEngineAccessor engine) : ICommand
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Execute(IOopContext context)
     {

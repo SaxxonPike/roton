@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -7,9 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x3C)]
-public sealed class DragonPupDraw(Lazy<IEngine> engine) : IDraw
+public sealed class DragonPupDraw(IEngineAccessor engine) : IDraw
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public AnsiChar Draw(IXyPair location)
     {

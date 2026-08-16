@@ -1,16 +1,15 @@
-﻿using System;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalActors(Lazy<IMemory> memory, Lazy<IHeap> heap) : Actors(memory, 152)
+public sealed class OriginalActors(IMemory memory, IHeap heap) : Actors(memory, 152)
 {
     public override int Count => Memory.Read16(0x31CD) + 1;
 
-    private IHeap Heap => heap.Value;
+    private IHeap Heap => heap;
 
     protected override IActor GetActor(int index)
     {

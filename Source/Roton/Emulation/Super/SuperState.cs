@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -13,15 +12,11 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperState : IState
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IEngineResourceService> _engineResourceService;
-    private readonly Lazy<IHeap> _heap;
-
-    public SuperState(Lazy<IMemory> memory, Lazy<IEngineResourceService> engineResourceService, Lazy<IHeap> heap)
+    public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
     {
-        _memory = memory;
-        _engineResourceService = engineResourceService;
-        _heap = heap;
+        Memory = memory;
+        EngineResourceService = engineResourceService;
+        Heap = heap;
             
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
         BorderTile = new Tile(0, 0); // Not in memory
@@ -40,20 +35,11 @@ public sealed class SuperState : IState
         WebChars = new ByteString(Memory, 0x227C);
     }
 
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => _memory.Value;
-    }
+    private IMemory Memory { [DebuggerStepThrough] get; }
 
-    private IEngineResourceService EngineResourceService
-    {
-        [DebuggerStepThrough] get => _engineResourceService.Value;
-    }
+    private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    private IHeap Heap
-    {
-        [DebuggerStepThrough] get => _heap.Value;
-    }
+    private IHeap Heap { [DebuggerStepThrough] get; }
 
     public bool AboutShown { get; set; }
 

@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -8,9 +7,9 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "OPP")]
 [Context(Context.Super, "OPP")]
-public sealed class OppDirection(Lazy<IEngine> engine) : IDirection
+public sealed class OppDirection(IEngineAccessor engine) : IDirection
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public IXyPair Execute(IOopContext context)
     {

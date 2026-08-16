@@ -13,7 +13,7 @@ public sealed class ActionList : IActionList
     private readonly Lazy<IDictionary<int, IAction>> _actions;
     private IDictionary<int, IAction> Actions => _actions.Value;
 
-    public ActionList(Lazy<IContextMetadataService> contextMetadataService, 
+    public ActionList(IContextMetadataService contextMetadataService, 
         Lazy<IEnumerable<IAction>> actions)
     {
         _actions = new Lazy<IDictionary<int, IAction>>(() =>
@@ -22,7 +22,7 @@ public sealed class ActionList : IActionList
 
             foreach (var action in actions.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(action))
+                foreach (var attribute in contextMetadataService.GetMetadata(action))
                     result.Add(attribute.Id, action);
             }
 

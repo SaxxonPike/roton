@@ -13,7 +13,7 @@ public sealed class TargetList : ITargetList
     private readonly Lazy<IDictionary<string, ITarget>> _targets;
     private IDictionary<string, ITarget> Targets => _targets.Value;
 
-    public TargetList(Lazy<IContextMetadataService> contextMetadataService,
+    public TargetList(IContextMetadataService contextMetadataService,
         Lazy<IEnumerable<ITarget>> targets)
     {
         _targets = new Lazy<IDictionary<string, ITarget>>(() =>
@@ -22,7 +22,7 @@ public sealed class TargetList : ITargetList
 
             foreach (var target in targets.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(target))
+                foreach (var attribute in contextMetadataService.GetMetadata(target))
                     result.Add(attribute.Name, target);
             }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
@@ -7,16 +6,16 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
-public sealed class LongTextEntryHud(Lazy<ITerminal> terminal, Lazy<ITextEntryHud> textEntryHud) : ILongTextEntryHud
+public sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEntryHud) : ILongTextEntryHud
 {
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => terminal.Value;
+        [DebuggerStepThrough] get => terminal;
     }
 
     private ITextEntryHud TextEntryHud
     {
-        [DebuggerStepThrough] get => textEntryHud.Value;
+        [DebuggerStepThrough] get => textEntryHud;
     }
 
     private static readonly int[] ScrollCharsTop =

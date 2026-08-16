@@ -13,7 +13,7 @@ public sealed class DrawList : IDrawList
     private readonly Lazy<IDictionary<int, IDraw>> _draws;
     private IDictionary<int, IDraw> Draws => _draws.Value;
 
-    public DrawList(Lazy<IContextMetadataService> contextMetadataService,
+    public DrawList(IContextMetadataService contextMetadataService,
         Lazy<IEnumerable<IDraw>> draws)
     {
         _draws = new Lazy<IDictionary<int, IDraw>>(() =>
@@ -21,7 +21,7 @@ public sealed class DrawList : IDrawList
             var result = new Dictionary<int, IDraw>();
             foreach (var draw in draws.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(draw))
+                foreach (var attribute in contextMetadataService.GetMetadata(draw))
                     result.Add(attribute.Id, draw);
             }
 

@@ -13,7 +13,7 @@ public sealed class ConditionList : IConditionList
     private readonly Lazy<IDictionary<string, ICondition>> _conditions;
     private IDictionary<string, ICondition> Conditions => _conditions.Value;
 
-    public ConditionList(Lazy<IContextMetadataService> contextMetadataService,
+    public ConditionList(IContextMetadataService contextMetadataService,
         Lazy<IEnumerable<ICondition>> conditions)
     {
         _conditions = new Lazy<IDictionary<string, ICondition>>(() =>
@@ -22,7 +22,7 @@ public sealed class ConditionList : IConditionList
 
             foreach (var condition in conditions.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(condition))
+                foreach (var attribute in contextMetadataService.GetMetadata(condition))
                     result.Add(attribute.Name, condition);
             }
 

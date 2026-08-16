@@ -13,7 +13,7 @@ public sealed class DirectionList : IDirectionList
     private readonly Lazy<IDictionary<string, IDirection>> _directions;
     private IDictionary<string, IDirection> Directions => _directions.Value;
 
-    public DirectionList(Lazy<IContextMetadataService> contextMetadataService,
+    public DirectionList(IContextMetadataService contextMetadataService,
         Lazy<IEnumerable<IDirection>> directions)
     {
         _directions = new Lazy<IDictionary<string, IDirection>>(() =>
@@ -22,7 +22,7 @@ public sealed class DirectionList : IDirectionList
 
             foreach (var direction in directions.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(direction))
+                foreach (var attribute in contextMetadataService.GetMetadata(direction))
                     result.Add(attribute.Name, direction);
             }
 

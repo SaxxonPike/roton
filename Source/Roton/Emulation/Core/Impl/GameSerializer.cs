@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Roton.Emulation.Data;
@@ -8,16 +7,16 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class GameSerializer(Lazy<IMemory> memory, Lazy<IHeap> heap) : IGameSerializer
+public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializer
 {
     private IMemory Memory
     {
-        [DebuggerStepThrough] get => memory.Value;
+        [DebuggerStepThrough] get => memory;
     }
 
     private IHeap Heap
     {
-        [DebuggerStepThrough] get => heap.Value;
+        [DebuggerStepThrough] get => heap;
     }
 
     public abstract int ActorCapacity { get; }

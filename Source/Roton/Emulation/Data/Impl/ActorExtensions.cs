@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Infrastructure;
+﻿using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 

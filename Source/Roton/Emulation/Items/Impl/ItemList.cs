@@ -13,7 +13,7 @@ public sealed class ItemList : IItemList
     private readonly Lazy<IDictionary<string, IItem>> _items;
     private IDictionary<string, IItem> Items => _items.Value;
 
-    public ItemList(Lazy<IContextMetadataService> contextMetadataService,
+    public ItemList(IContextMetadataService contextMetadataService,
         Lazy<IEnumerable<IItem>> items)
     {
         _items = new Lazy<IDictionary<string, IItem>>(() =>
@@ -22,7 +22,7 @@ public sealed class ItemList : IItemList
 
             foreach (var item in items.Value)
             {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(item))
+                foreach (var attribute in contextMetadataService.GetMetadata(item))
                     result.Add(attribute.Name, item);
             }
 

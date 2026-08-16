@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
@@ -13,20 +12,20 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 public sealed class SuperHud(
-    Lazy<IEngine> engine,
-    Lazy<ITerminal> terminal,
-    Lazy<IScroll> scroll,
-    Lazy<ITextEntryHud> textEntryHud)
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IScroll scroll,
+    ITextEntryHud textEntryHud)
     : Hud(engine, scroll)
 {
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => terminal.Value;
+        [DebuggerStepThrough] get => terminal;
     }
 
     private ITextEntryHud TextEntryHud
     {
-        [DebuggerStepThrough] get => textEntryHud.Value;
+        [DebuggerStepThrough] get => textEntryHud;
     }
 
     private Location16 OldPlayerLocation { get; } = new(short.MinValue, short.MinValue);

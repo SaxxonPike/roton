@@ -11,17 +11,17 @@ namespace Lyon.App.Impl;
 [Context(Context.Startup)]
 public sealed class Window : SdlWindow, IWindow
 {
-    private readonly Lazy<IKeyboardPresenter> _keyboardPresenter;
-    private readonly Lazy<IScenePresenter> _scenePresenter;
+    private readonly IKeyboardPresenter _keyboardPresenter;
+    private readonly IScenePresenter _scenePresenter;
     private bool _closeWindow;
 
-    private IKeyboardPresenter KeyboardPresenter => _keyboardPresenter.Value;
-    private IScenePresenter ScenePresenter => _scenePresenter.Value;
+    private IKeyboardPresenter KeyboardPresenter => _keyboardPresenter;
+    private IScenePresenter ScenePresenter => _scenePresenter;
 
     public Window(
         IConfig config,
-        Lazy<IKeyboardPresenter> keyboardPresenter,
-        Lazy<IScenePresenter> scenePresenter) : base("Lyon",
+        IKeyboardPresenter keyboardPresenter,
+        IScenePresenter scenePresenter) : base("Lyon",
         new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
         (int)(640 * config.VideoScaleX), (int)(350 * config.VideoScaleY),
         640, 350)

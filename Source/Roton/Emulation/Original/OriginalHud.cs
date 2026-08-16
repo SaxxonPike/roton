@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
@@ -13,48 +12,32 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalHud : Hud
 {
-    private readonly Lazy<ITerminal> _terminal;
-    private readonly Lazy<ITextEntryHud> _textEntryHud;
-    private readonly Lazy<IChoiceHud> _choiceHud;
-    private readonly Lazy<ILongTextEntryHud> _longTextEntryHud;
     private readonly Location[] _fadeMatrix;
 
     public OriginalHud(
-        Lazy<IEngine> engine,
-        Lazy<ITerminal> terminal,
-        Lazy<IScroll> scroll,
-        Lazy<ITextEntryHud> textEntryHud,
-        Lazy<IChoiceHud> choiceHud,
-        Lazy<ILongTextEntryHud> longTextEntryHud)
+        IEngineAccessor engine,
+        ITerminal terminal,
+        IScroll scroll,
+        ITextEntryHud textEntryHud,
+        IChoiceHud choiceHud,
+        ILongTextEntryHud longTextEntryHud)
         : base(engine, scroll)
     {
-        _terminal = terminal;
-        _textEntryHud = textEntryHud;
-        _choiceHud = choiceHud;
-        _longTextEntryHud = longTextEntryHud;
+        Terminal = terminal;
+        TextEntryHud = textEntryHud;
+        ChoiceHud = choiceHud;
+        LongTextEntryHud = longTextEntryHud;
         _fadeMatrix = new Location[ViewportTileCount];
         InitializeFadeMatrix();
     }
 
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => _terminal.Value;
-    }
+    private ITerminal Terminal { [DebuggerStepThrough] get; }
 
-    private ITextEntryHud TextEntryHud
-    {
-        [DebuggerStepThrough] get => _textEntryHud.Value;
-    }
+    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; }
 
-    private IChoiceHud ChoiceHud
-    {
-        [DebuggerStepThrough] get => _choiceHud.Value;
-    }
+    private IChoiceHud ChoiceHud { [DebuggerStepThrough] get; }
 
-    private ILongTextEntryHud LongTextEntryHud
-    {
-        [DebuggerStepThrough] get => _longTextEntryHud.Value;
-    }
+    private ILongTextEntryHud LongTextEntryHud { [DebuggerStepThrough] get; }
 
     private const int ViewportHeight = 25;
 
