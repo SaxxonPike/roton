@@ -59,6 +59,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
             Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
         else
             Engine.Tiles[location].CopyFrom(result);
+
+        Engine.UpdateBoard(location);
     }
 
     public string GetWorldName(string baseName) => $"{baseName}.SZT";
