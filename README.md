@@ -78,7 +78,7 @@ var map = RotonServices.Get(context, additionalAssemblies)
 
 foreach (var serviceGroup in map)
     builder.RegisterType(serviceGroup.Key)
-        .As([.. serviceGroup.Select(sg => sg.Service)])
+        .As(serviceGroup.Select(sg => sg.Service).ToArray())
         .AutoActivate()
         .SingleInstance();
 ```
