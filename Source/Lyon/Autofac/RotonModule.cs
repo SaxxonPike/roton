@@ -1,39 +1,28 @@
 using System.Linq;
+using System.Reflection;
 using Autofac;
+using Roton;
 using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Module = Autofac.Module;
 
 namespace Lyon.Autofac;
 
-public sealed class RotonModule : Module
+public sealed class RotonModule(Context context, params Assembly[] additionalAssemblies) : Module
 {
-    private readonly Context _context;
-
-    public RotonModule(Context context)
-    {
-        _context = context;
-    }
-        
     protected override void Load(ContainerBuilder builder)
     {
         base.Load(builder);
 
-        var cmsf = new ContextMetadataServiceFactory();
+        // Each concrete type must have all its services registered at the same time
+        // so that AutoFac knows that they all refer to the same instance.
 
-        builder.Register(_ => cmsf.Get(_context))
-            .As<IContextMetadataService>()
-            .AutoActivate()
-            .SingleInstance();
-            
-        builder.RegisterTypes(cmsf.Get(Context.Startup).GetTypes().ToArray())
-            .AsImplementedInterfaces()
-            .AutoActivate()
-            .SingleInstance();
-            
-        builder.RegisterTypes(cmsf.Get(_context).GetTypes().ToArray())
-            .AsImplementedInterfaces()
-            .AutoActivate()
-            .SingleInstance();
+        var map = RotonServices.Get(context, additionalAssemblies)
+            .GroupBy(s => s.Implementation);
+
+        foreach (var serviceGroup in map)
+            builder.RegisterType(serviceGroup.Key)
+                .As([.. serviceGroup.Select(sg => sg.Service)])
+                .AutoActivate()
+                .SingleInstance();
     }
 }

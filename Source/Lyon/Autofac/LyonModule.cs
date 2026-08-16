@@ -27,14 +27,14 @@ public sealed class LyonModule : Module
     {
         base.Load(builder);
 
-        builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
-            .Where(t => !t.IsAbstract &&
-                        t.IsClass &&
-                        t.GetCustomAttributes<ContextAttribute>()
-                            .Any(a => a.Context == Context.Startup))
-            .AsImplementedInterfaces()
-            .AutoActivate()
-            .SingleInstance();
+        // builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
+        //     .Where(t => !t.IsAbstract &&
+        //                 t.IsClass &&
+        //                 t.GetCustomAttributes<ContextAttribute>()
+        //                     .Any(a => a.Context == Context.Startup))
+        //     .AsImplementedInterfaces()
+        //     .AutoActivate()
+        //     .SingleInstance();
 
         builder.RegisterInstance(new CommandLine { Args = _args })
             .As<ICommandLine>()

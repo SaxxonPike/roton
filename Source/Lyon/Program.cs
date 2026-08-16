@@ -56,7 +56,7 @@ public static class Program
             .As<IConfig>()
             .SingleInstance();
 
-        builder.RegisterModule(new RotonModule(contextEngine));
+        builder.RegisterModule(new RotonModule(contextEngine, typeof(ILauncher).Assembly));
         builder.RegisterModule(new LyonModule(args));
 
         try

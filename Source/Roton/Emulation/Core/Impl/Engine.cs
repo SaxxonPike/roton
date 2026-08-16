@@ -1866,6 +1866,9 @@ public sealed class Engine : IEngine, IDisposable
         State.KeyPressed = 0;
         State.KeyVector.SetTo(0, 0);
 
+        if (!Keyboard.KeyIsAvailable)
+            return;
+
         var key = Keyboard.GetKey();
         if (key == null || key.Key == AnsiKey.None)
             return;
