@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace Roton.Emulation.Infrastructure;
 
 internal static class Utility
 {
-    private static readonly ThreadLocal<byte[]> OneByteArray = new(() => new byte[1]);
-    private static readonly ThreadLocal<char[]> OneCharArray = new(() => new char[1]);
-    
     extension(int a)
     {
         /// <summary>
