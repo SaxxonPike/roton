@@ -519,12 +519,18 @@ public sealed class Engine : IEngine, IDisposable
             context.NextLine = true;
             context.PreviousInstruction = context.Instruction;
             context.Command = ReadActorCodeByte(index, context);
+
+            while (context.Command == ':')
+            {
+                Parser.DiscardLine(index, context);
+                context.Command = ReadActorCodeByte(index, context);
+            }
+
             switch (context.Command)
             {
-                case 0x3A: // :
                 case 0x27: // '
                 case 0x40: // @
-                    Parser.ReadLine(index, context);
+                    Parser.DiscardLine(index, context);
                     break;
                 case 0x2F: // /
                 case 0x3F: // ?
