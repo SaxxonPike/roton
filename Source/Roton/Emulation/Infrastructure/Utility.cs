@@ -63,9 +63,13 @@ internal static class Utility
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToStringValue(this byte[] value)
     {
+#if NET10_0_OR_GREATER
+        return string.Create(value.Length, value, static (span, bytes) => Cp437.BytesToChars(bytes, span));
+#else
         var str = new char[value.Length];
         Cp437.BytesToChars(value, str);
         return new string(str);
+#endif
     }
 
     /// <summary>
@@ -179,10 +183,18 @@ internal static class Utility
         [DebuggerStepThrough]
         public string UpCased()
         {
+#if NET10_0_OR_GREATER
+            return string.Create(a.Length, a, static (span, s) =>
+            {
+                for (var i = 0; i < s.Length; i++)
+                    span[i] = unchecked((char)((int)s[i]).ToUpperCase());
+            });
+#else
             var str = new char[a.Length];
             for (var i = 0; i < a.Length; i++)
                 str[i] = unchecked((char)((int)a[i]).ToUpperCase());
             return new string(str);
+#endif
         }
     }
 
@@ -212,9 +224,13 @@ internal static class Utility
             if (a.Length == 0)
                 return string.Empty;
 
+#if NET10_0_OR_GREATER
+            return string.Create(a.Length, a, static (span, bytes) => Cp437.BytesToChars(bytes, span));
+#else
             var destination = new char[a.Length];
             Cp437.BytesToChars(a, destination);
             return new string(destination);
+#endif
         }
     }
 }
