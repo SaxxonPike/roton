@@ -725,18 +725,15 @@ public sealed class Engine : IEngine, IDisposable
                 World.Health -= Facts.HealthLostPerHit;
                 UpdateStatus();
                 SetMessage(Facts.ShortMessageDuration, Alerts.OuchMessage);
-                var color = Tiles[actor.Location].Color;
-                color &= 0x0F;
-                color |= 0x70;
-                Tiles[actor.Location].Color = color;
+                Tiles[actor.Location].Color = (ElementAt(actor.Location).Color & 0x0F) | 0x70;
+
                 if (World.Health > 0)
                 {
                     World.TimePassed = 0;
                     if (Board.RestartOnZap)
                     {
                         PlaySound(4, Sounds.TimeOut);
-                        Tiles[actor.Location].Id = ElementList.EmptyId;
-                        UpdateBoard(actor.Location);
+                        RemoveItem(actor.Location);
                         var oldLocation = actor.Location.Clone();
                         actor.Location.CopyFrom(Board.Entrance);
                         UpdateRadius(oldLocation, 0);
