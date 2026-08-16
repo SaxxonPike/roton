@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
 namespace Roton;
@@ -38,12 +39,14 @@ public static class RotonServices
         var types = contexts.SelectMany(c => assemblies.SelectMany(a => metadataFactory.Get(c).GetTypes(a)));
 
         // Convert them to a RotonService map.
-        return types.SelectMany(tc =>
+        var registrations = types.SelectMany(tc =>
         {
             var interfaces = tc.GetInterfaces()
                 .Where(ti => ti != typeof(IDisposable));
 
             return interfaces.Select(ti => new RotonService(ti, tc));
-        });
+        }).ToList();
+        
+        return registrations;
     }
 }

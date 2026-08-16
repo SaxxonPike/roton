@@ -27,15 +27,6 @@ public sealed class LyonModule : Module
     {
         base.Load(builder);
 
-        // builder.RegisterAssemblyTypes(typeof(ILauncher).Assembly)
-        //     .Where(t => !t.IsAbstract &&
-        //                 t.IsClass &&
-        //                 t.GetCustomAttributes<ContextAttribute>()
-        //                     .Any(a => a.Context == Context.Startup))
-        //     .AsImplementedInterfaces()
-        //     .AutoActivate()
-        //     .SingleInstance();
-
         builder.RegisterInstance(new CommandLine { Args = _args })
             .As<ICommandLine>()
             .SingleInstance();
@@ -49,21 +40,7 @@ public sealed class LyonModule : Module
             .As<IAudioComposer>()
             .As<ISpeaker>()
             .AutoActivate()
-            .SingleInstance()
-            .OnActivated(x =>
-            {
-                var presenter = x.Context.Resolve<IAudioPresenter>();
-                if (presenter != null)
-                {
-                    x.Instance.BufferReady += (_, a) => presenter.Update(a.Data);
-                    presenter.Start();
-
-                    x.Instance.SampleRate = presenter.SampleRate;
-                }
-
-                var engine = x.Context.Resolve<IEngine>();
-                engine.Tick += (_, _) => x.Instance.Tick();
-            });
+            .SingleInstance();
 
         builder.Register(c => c.Resolve<ISceneComposerFactory>().Get())
             .As<ISceneComposer>()
