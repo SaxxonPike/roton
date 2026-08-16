@@ -191,7 +191,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void Cheat()
     {
-        var cheatText = Hud.EnterCheat().ToUpper();
+        var cheatText = Hud.EnterCheat().UpCased();
         var clear = false;
 
         if (!ThreadActive)
@@ -618,7 +618,7 @@ public sealed class Engine : IEngine, IDisposable
 
         while (success)
         {
-            if (label.ToUpper() == Facts.RestartLabel)
+            if (label.UpCased() == Facts.RestartLabel)
             {
                 context.SearchOffset = 0;
             }

@@ -172,5 +172,17 @@ internal static class Utility
 
             return Cp437.CharsToBytes(a, destination);
         }
+
+        /// <summary>
+        /// Convert a byte array to a string using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public string UpCased()
+        {
+            var str = new char[a.Length];
+            for (var i = 0; i < a.Length; i++)
+                str[i] = unchecked((char)((int)a[i]).ToUpperCase());
+            return new string(str);
+        }
     }
 }
