@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Roton.Emulation.Data.Impl;
 
 namespace Roton.Infrastructure.Impl;
@@ -16,10 +17,9 @@ public abstract class ContextMetadataService(Context context) : IContextMetadata
             .Where(a => a.Context == context)
     ];
 
-    public IEnumerable<Type> GetTypes() =>
+    public IEnumerable<Type> GetTypes(Assembly assembly) =>
     [
-        .. GetType()
-            .Assembly
+        .. assembly
             .GetTypes()
             .Where(t => t
                 .GetCustomAttributes(true)

@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -7,13 +6,9 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Randomizer(Lazy<IConfig> config) : IRandomizer
+public sealed class Randomizer(IConfig config) : IRandomizer
 {
-    private readonly Lazy<IRandomState> _randomState = new(() => 
-        config.Value.RandomSeed.HasValue ? 
-            new RandomState(config.Value.RandomSeed.Value) :
-            new RandomState());
-    private IRandomState RandomState => _randomState.Value;
+    private IRandomState RandomState { get; } = config.RandomSeed.HasValue ? new RandomState(config.RandomSeed.Value) : new RandomState();
 
     public int GetNext(int exclusiveUpperBound)
     {

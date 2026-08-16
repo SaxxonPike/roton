@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -13,15 +12,11 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperState : IState
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IEngineResourceService> _engineResourceService;
-    private readonly Lazy<IHeap> _heap;
-
-    public SuperState(Lazy<IMemory> memory, Lazy<IEngineResourceService> engineResourceService, Lazy<IHeap> heap)
+    public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
     {
-        _memory = memory;
-        _engineResourceService = engineResourceService;
-        _heap = heap;
+        Memory = memory;
+        EngineResourceService = engineResourceService;
+        Heap = heap;
             
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
         BorderTile = new Tile(0, 0); // Not in memory
@@ -40,39 +35,30 @@ public sealed class SuperState : IState
         WebChars = new ByteString(Memory, 0x227C);
     }
 
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => _memory.Value;
-    }
+    private IMemory Memory { [DebuggerStepThrough] get; }
 
-    private IEngineResourceService EngineResourceService
-    {
-        [DebuggerStepThrough] get => _engineResourceService.Value;
-    }
+    private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    private IHeap Heap
-    {
-        [DebuggerStepThrough] get => _heap.Value;
-    }
+    private IHeap Heap { [DebuggerStepThrough] get; }
 
     public bool AboutShown { get; set; }
 
     public int ActIndex
     {
-        get => Memory.Read16(0xB95A);
-        set => Memory.Write16(0xB95A, value);
+        get => Memory.FastRead16(0xB95A);
+        set => Memory.FastWrite16(0xB95A, value);
     }
 
     public int ActorCount
     {
-        get => Memory.Read16(0x6AB3);
-        set => Memory.Write16(0x6AB3, value);
+        get => Memory.FastRead16(0x6AB3);
+        set => Memory.FastWrite16(0x6AB3, value);
     }
 
     public int BoardCount
     {
-        get => Memory.Read16(0x7784);
-        set => Memory.Write16(0x7784, value);
+        get => Memory.FastRead16(0x7784);
+        set => Memory.FastWrite16(0x7784, value);
     }
 
     public ITile BorderTile { get; }
@@ -115,14 +101,14 @@ public sealed class SuperState : IState
 
     public int ForestIndex
     {
-        get => Memory.Read16(0x2334);
-        set => Memory.Write16(0x2334, value);
+        get => Memory.FastRead16(0x2334);
+        set => Memory.FastWrite16(0x2334, value);
     }
 
     public int GameCycle
     {
-        get => Memory.Read16(0xB958);
-        set => Memory.Write16(0xB958, value);
+        get => Memory.FastRead16(0xB958);
+        set => Memory.FastWrite16(0xB958, value);
     }
 
     public bool GameOver
@@ -145,14 +131,14 @@ public sealed class SuperState : IState
 
     public int GameSpeed
     {
-        get => Memory.Read16(0x7CA4);
-        set => Memory.Write16(0x7CA4, value);
+        get => Memory.FastRead16(0x7CA4);
+        set => Memory.FastWrite16(0x7CA4, value);
     }
 
     public int GameWaitTime
     {
-        get => Memory.Read16(0xB956);
-        set => Memory.Write16(0xB956, value);
+        get => Memory.FastRead16(0xB956);
+        set => Memory.FastWrite16(0xB956, value);
     }
 
     public bool Init { get; set; }
@@ -203,8 +189,8 @@ public sealed class SuperState : IState
 
     public int OopNumber
     {
-        get => Memory.Read16(0xB97A);
-        set => Memory.Write16(0xB97A, value);
+        get => Memory.FastRead16(0xB97A);
+        set => Memory.FastWrite16(0xB97A, value);
     }
 
     public string OopWord
@@ -215,8 +201,8 @@ public sealed class SuperState : IState
 
     public int PlayerElement
     {
-        get => Memory.Read16(0x7CA0);
-        set => Memory.Write16(0x7CA0, value);
+        get => Memory.FastRead16(0x7CA0);
+        set => Memory.FastWrite16(0x7CA0, value);
     }
 
     public int PlayerTime { get; set; }
@@ -237,8 +223,8 @@ public sealed class SuperState : IState
 
     public int SoundPriority
     {
-        get => Memory.Read16(0xCD9C);
-        set => Memory.Write16(0xCD9C, value);
+        get => Memory.FastRead16(0xCD9C);
+        set => Memory.FastWrite16(0xCD9C, value);
     }
 
     public int SoundTicks
@@ -251,8 +237,8 @@ public sealed class SuperState : IState
 
     public int StartBoard
     {
-        get => Memory.Read16(0x7CA2);
-        set => Memory.Write16(0x7CA2, value);
+        get => Memory.FastRead16(0x7CA2);
+        set => Memory.FastWrite16(0x7CA2, value);
     }
 
     public IReadOnlyList<int> TransporterHChars { get; }

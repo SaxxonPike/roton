@@ -10,34 +10,42 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super)]
 public sealed class DirectionList : IDirectionList
 {
-    private readonly Lazy<IDictionary<string, IDirection>> _directions;
-    private IDictionary<string, IDirection> Directions => _directions.Value;
+#if NET10_0_OR_GREATER
+    private readonly Dictionary<string, IDirection>.AlternateLookup<ReadOnlySpan<char>> _directions;
+#else
+    private readonly Dictionary<string, IDirection> _directions;
+#endif
 
-    public DirectionList(Lazy<IContextMetadataService> contextMetadataService,
-        Lazy<IEnumerable<IDirection>> directions)
+    public DirectionList(IContextMetadataService contextMetadataService,
+        IEnumerable<IDirection> directions)
     {
-        _directions = new Lazy<IDictionary<string, IDirection>>(() =>
+        var result = new Dictionary<string, IDirection>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var direction in directions)
         {
-            var result = new Dictionary<string, IDirection>();
+            foreach (var attribute in contextMetadataService.GetMetadata(direction))
+                result.Add(attribute.Name, direction);
+        }
 
-            foreach (var direction in directions.Value)
-            {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(direction))
-                    result.Add(attribute.Name, direction);
-            }
-
-            return result;
-        });
+#if NET10_0_OR_GREATER
+        _directions = result.GetAlternateLookup<ReadOnlySpan<char>>();
+#else
+        _directions = result;
+#endif
     }
 
     public IDirection Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Directions)
+#if NET10_0_OR_GREATER
+        return _directions.TryGetValue(name, out var value) ? value : null;
+#else
+        foreach (var entry in _directions)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
         }
 
         return null;
+#endif
     }
 }

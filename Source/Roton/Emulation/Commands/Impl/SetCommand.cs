@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -8,9 +7,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "SET")]
 [Context(Context.Super, "SET")]
-public sealed class SetCommand(Lazy<IEngine> engine) : ICommand
+public sealed class SetCommand(IEngineAccessor engine) : ICommand
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Execute(IOopContext context)
     {

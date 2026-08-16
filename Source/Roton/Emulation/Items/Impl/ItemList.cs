@@ -10,34 +10,43 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super)]
 public sealed class ItemList : IItemList
 {
-    private readonly Lazy<IDictionary<string, IItem>> _items;
-    private IDictionary<string, IItem> Items => _items.Value;
+#if NET10_0_OR_GREATER
+    private readonly Dictionary<string, IItem>.AlternateLookup<ReadOnlySpan<char>> _items;
+#else
+    private readonly Dictionary<string, IItem> _items;
+#endif
 
-    public ItemList(Lazy<IContextMetadataService> contextMetadataService,
-        Lazy<IEnumerable<IItem>> items)
+    public ItemList(
+        IContextMetadataService contextMetadataService,
+        IEnumerable<IItem> items)
     {
-        _items = new Lazy<IDictionary<string, IItem>>(() =>
+        var result = new Dictionary<string, IItem>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var item in items)
         {
-            var result = new Dictionary<string, IItem>();
+            foreach (var attribute in contextMetadataService.GetMetadata(item))
+                result.Add(attribute.Name, item);
+        }
 
-            foreach (var item in items.Value)
-            {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(item))
-                    result.Add(attribute.Name, item);
-            }
-
-            return result;
-        });
+#if NET10_0_OR_GREATER
+        _items = result.GetAlternateLookup<ReadOnlySpan<char>>();
+#else
+        _items = result;
+#endif
     }
 
     public IItem Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Items)
+#if NET10_0_OR_GREATER
+        return _items.TryGetValue(name, out var value) ? value : null;
+#else
+        foreach (var entry in _items)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
         }
 
         return null;
+#endif
     }
 }

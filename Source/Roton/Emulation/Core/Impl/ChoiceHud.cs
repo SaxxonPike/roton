@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -8,16 +7,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ChoiceHud(Lazy<ITerminal> terminal, Lazy<IEngine> engine) : IChoiceHud
+public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : IChoiceHud
 {
     private ITerminal Terminal
     {
-        [DebuggerStepThrough] get => terminal.Value;
+        [DebuggerStepThrough] get => terminal;
     }
 
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => engine.Value;
+        [DebuggerStepThrough] get => engine.Instance;
     }
 
     private void DrawChar(int x, int y, AnsiChar ac)

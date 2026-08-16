@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -13,18 +12,14 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalState : IState
 {
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IHeap> _heap;
-    private readonly Lazy<IEngineResourceService> _engineResourceService;
-
     public OriginalState(
-        Lazy<IMemory> memory, 
-        Lazy<IHeap> heap, 
-        Lazy<IEngineResourceService> engineResourceService)
+        IMemory memory, 
+        IHeap heap, 
+        IEngineResourceService engineResourceService)
     {
-        _memory = memory;
-        _heap = heap;
-        _engineResourceService = engineResourceService;
+        Memory = memory;
+        Heap = heap;
+        EngineResourceService = engineResourceService;
 
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
         BorderTile = new MemoryTile(Memory, 0x0072);
@@ -42,31 +37,22 @@ public sealed class OriginalState : IState
         Vector8 = new Int16List(Memory, 0x0042, 16);
     }
 
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => _memory.Value;
-    }
+    private IMemory Memory { [DebuggerStepThrough] get; }
 
-    private IHeap Heap
-    {
-        [DebuggerStepThrough] get => _heap.Value;
-    }
+    private IHeap Heap { [DebuggerStepThrough] get; }
 
-    private IEngineResourceService EngineResourceService
-    {
-        [DebuggerStepThrough] get => _engineResourceService.Value;
-    }
+    private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
     public int MainTime
     {
-        get => Memory.Read16(0x740A);
-        set => Memory.Write16(0x740A, value);
+        get => Memory.FastRead16(0x740A);
+        set => Memory.FastWrite16(0x740A, value);
     }
 
     public int VisibleTileCount
     {
-        get => Memory.Read16(0x4ACC);
-        set => Memory.Write16(0x4ACC, value);
+        get => Memory.FastRead16(0x4ACC);
+        set => Memory.FastWrite16(0x4ACC, value);
     }
 
     public bool AboutShown
@@ -77,20 +63,20 @@ public sealed class OriginalState : IState
 
     public int ActIndex
     {
-        get => Memory.Read16(0x7406);
-        set => Memory.Write16(0x7406, value);
+        get => Memory.FastRead16(0x7406);
+        set => Memory.FastWrite16(0x7406, value);
     }
 
     public int ActorCount
     {
-        get => Memory.Read16(0x31CD);
-        set => Memory.Write16(0x31CD, value);
+        get => Memory.FastRead16(0x31CD);
+        set => Memory.FastWrite16(0x31CD, value);
     }
 
     public int BoardCount
     {
-        get => Memory.Read16(0x45BE);
-        set => Memory.Write16(0x45BE, value);
+        get => Memory.FastRead16(0x45BE);
+        set => Memory.FastWrite16(0x45BE, value);
     }
 
     public ITile BorderTile { get; }
@@ -139,8 +125,8 @@ public sealed class OriginalState : IState
 
     public int GameCycle
     {
-        get => Memory.Read16(0x7404);
-        set => Memory.Write16(0x7404, value);
+        get => Memory.FastRead16(0x7404);
+        set => Memory.FastWrite16(0x7404, value);
     }
 
     public bool GameOver
@@ -169,8 +155,8 @@ public sealed class OriginalState : IState
 
     public int GameWaitTime
     {
-        get => Memory.Read16(0x7402);
-        set => Memory.Write16(0x7402, value);
+        get => Memory.FastRead16(0x7402);
+        set => Memory.FastWrite16(0x7402, value);
     }
 
     public bool Init
@@ -221,8 +207,8 @@ public sealed class OriginalState : IState
 
     public int OopNumber
     {
-        get => Memory.Read16(0x7426);
-        set => Memory.Write16(0x7426, value);
+        get => Memory.FastRead16(0x7426);
+        set => Memory.FastWrite16(0x7426, value);
     }
 
     public string OopWord
@@ -233,14 +219,14 @@ public sealed class OriginalState : IState
 
     public int PlayerElement
     {
-        get => Memory.Read16(0x4AC8);
-        set => Memory.Write16(0x4AC8, value);
+        get => Memory.FastRead16(0x4AC8);
+        set => Memory.FastWrite16(0x4AC8, value);
     }
 
     public int PlayerTime
     {
-        get => Memory.Read16(0x4920);
-        set => Memory.Write16(0x4920, value);
+        get => Memory.FastRead16(0x4920);
+        set => Memory.FastWrite16(0x4920, value);
     }
 
     public bool QuitEngine
@@ -259,8 +245,8 @@ public sealed class OriginalState : IState
 
     public int SoundPriority
     {
-        get => Memory.Read16(0x7C8E);
-        set => Memory.Write16(0x7C8E, value);
+        get => Memory.FastRead16(0x7C8E);
+        set => Memory.FastWrite16(0x7C8E, value);
     }
 
     public int SoundTicks
@@ -273,8 +259,8 @@ public sealed class OriginalState : IState
 
     public int StartBoard
     {
-        get => Memory.Read16(0x4ACA);
-        set => Memory.Write16(0x4ACA, value);
+        get => Memory.FastRead16(0x4ACA);
+        set => Memory.FastWrite16(0x4ACA, value);
     }
 
     public IReadOnlyList<int> TransporterHChars { get; }

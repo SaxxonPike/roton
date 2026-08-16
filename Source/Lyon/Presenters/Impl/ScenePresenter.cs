@@ -11,13 +11,13 @@ namespace Lyon.Presenters.Impl;
 /// </summary>
 [Context(Context.Startup)]
 // ReSharper disable once UnusedMember.Global
-public sealed class ScenePresenter(Lazy<ISceneComposer> sceneComposer) : IScenePresenter
+public sealed class ScenePresenter(ISceneComposer sceneComposer) : IScenePresenter
 {
     /// <summary>
     /// Renders the scene.
     /// </summary>
     public IBitmap Render() => 
-        sceneComposer.Value.Bitmap;
+        sceneComposer.Bitmap;
 
     /// <summary>
     /// 

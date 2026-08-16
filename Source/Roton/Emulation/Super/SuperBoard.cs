@@ -49,7 +49,7 @@ public sealed class SuperBoard : IBoard
 
     public int TimeLimit
     {
-        get => _memory.Read16(0x7773);
-        set => _memory.Write16(0x7773, value);
+        get => _memory.FastRead16(0x7773);
+        set => _memory.FastWrite16(0x7773, value);
     }
 }

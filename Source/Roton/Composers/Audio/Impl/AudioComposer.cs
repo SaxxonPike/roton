@@ -11,7 +11,7 @@ public sealed class AudioComposer : IAudioComposer
 
     private const long AccumulatorMultiplier = 10000;
 
-    private readonly Lazy<IDrumBank> _drumBank;
+    private readonly IDrumBank _drumBank;
     private readonly IConfig _config;
     private readonly int _samplesPerDrumFrequency;
     private long[] _frequencyDutyCycleTable;
@@ -32,7 +32,7 @@ public sealed class AudioComposer : IAudioComposer
     private int _stepCounter;
     private int _stepLength;
 
-    public AudioComposer(Lazy<IDrumBank> drumBank, IConfig config)
+    public AudioComposer(IDrumBank drumBank, IConfig config)
     {
         _drumBank = drumBank;
         _config = config;
@@ -100,7 +100,7 @@ public sealed class AudioComposer : IAudioComposer
     public void PlayDrum(int index)
     {
         _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-        _currentDrumSound = _drumBank.Value[index];
+        _currentDrumSound = _drumBank[index];
         _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
         _drumSoundFrequencyIndex = 0;
         _accumulatorAmount = _currentDrumSound[0] * AccumulatorMultiplier;

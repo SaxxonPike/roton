@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -9,16 +8,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Interpreter(Lazy<IEngine> engine, Lazy<ITracer> tracer) : IInterpreter
+public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInterpreter
 {
     private IEngine Engine
     {
-        [DebuggerStepThrough] get => engine.Value;
+        [DebuggerStepThrough] get => engine.Instance;
     }
 
     private ITracer Tracer
     {
-        [DebuggerStepThrough] get => tracer.Value;
+        [DebuggerStepThrough] get => tracer;
     }
 
     public void Execute(IOopContext context)

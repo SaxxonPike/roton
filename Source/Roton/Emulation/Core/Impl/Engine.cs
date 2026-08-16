@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
@@ -24,124 +23,73 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 public sealed class Engine : IEngine, IDisposable
 {
-    private readonly Lazy<IActionList> _actionList;
-    private readonly Lazy<IActors> _actors;
-    private readonly Lazy<IAlerts> _alerts;
-    private readonly Lazy<IBoard> _board;
-    private readonly Lazy<IBoards> _boards;
-    private readonly Lazy<ICheatList> _cheats;
-    private readonly Lazy<IClock> _clock;
-    private readonly Lazy<IColors> _colors;
-    private readonly Lazy<ICommandList> _commands;
-    private readonly Lazy<IConditionList> _conditions;
-    private readonly Lazy<IConfig> _config;
-    private readonly Lazy<IDirectionList> _directions;
-    private readonly Lazy<IDrawList> _drawList;
-    private readonly Lazy<IElementList> _elements;
-    private readonly Lazy<IFacts> _facts;
-    private readonly Lazy<IMemory> _memory;
-    private readonly Lazy<IHeap> _heap;
-    private readonly Lazy<IAnsiKeyTransformer> _ansiKeyTransformer;
-    private readonly Lazy<IScrollFormatter> _scrollFormatter;
-    private readonly Lazy<ISpeaker> _speaker;
-    private readonly Lazy<IDrumBank> _drumBank;
-    private readonly Lazy<IObjectMover> _objectMover;
-    private readonly Lazy<IMusicEncoder> _musicEncoder;
-    private readonly Lazy<IHighScoreListFactory> _highScoreListFactory;
-    private readonly Lazy<IConfigFileService> _configFileService;
-    private readonly Lazy<IFileDialog> _fileDialog;
-    private readonly Lazy<ITracer> _tracer;
-    private readonly Lazy<IFeatures> _features;
-    private readonly Lazy<IFileSystem> _fileSystem;
-    private readonly Lazy<IGameSerializer> _gameSerializer;
-    private readonly Lazy<IHud> _hud;
-    private readonly Lazy<IInteractionList> _interactionList;
-    private readonly Lazy<IInterpreter> _interpreter;
-    private readonly Lazy<IItemList> _items;
-    private readonly Lazy<IKeyboard> _keyboard;
-    private readonly Lazy<IOopContextPool> _oopContextPool;
-    private readonly Lazy<IParser> _parser;
-    private readonly Lazy<IRandomizer> _randomizer;
-    private readonly Lazy<ISounds> _sounds;
-    private readonly Lazy<IState> _state;
-    private readonly Lazy<ITargetList> _targets;
-    private readonly Lazy<ITiles> _tiles;
-    private readonly Lazy<ITimers> _timers;
-    private readonly Lazy<IWorld> _world;
+    private readonly IConfigFileService _configFileService;
+    private readonly IFileDialog _fileDialog;
 
     private int _ticksToRun;
     private bool _step;
 
-    public Engine(Lazy<IClockFactory> clockFactory, Lazy<IActors> actors, Lazy<IAlerts> alerts, Lazy<IBoard> board,
-        Lazy<IFileSystem> fileSystem, Lazy<IElementList> elements,
-        Lazy<IInterpreter> interpreter, Lazy<IRandomizer> randomizer, Lazy<IKeyboard> keyboard,
-        Lazy<ITiles> tiles, Lazy<ISounds> sounds, Lazy<ITimers> timers, Lazy<IParser> parser,
-        Lazy<IConfig> config, Lazy<IConditionList> conditions, Lazy<IDirectionList> directions,
-        Lazy<IColors> colors, Lazy<ICheatList> cheats, Lazy<ICommandList> commands, Lazy<ITargetList> targets,
-        Lazy<IFeatures> features, Lazy<IGameSerializer> gameSerializer, Lazy<IHud> hud, Lazy<IState> state,
-        Lazy<IWorld> world, Lazy<IItemList> items, Lazy<IBoards> boards, Lazy<IActionList> actionList,
-        Lazy<IDrawList> drawList, Lazy<IInteractionList> interactionList, Lazy<IFacts> facts, Lazy<IMemory> memory,
-        Lazy<IHeap> heap, Lazy<IAnsiKeyTransformer> ansiKeyTransformer, Lazy<IScrollFormatter> scrollFormatter,
-        Lazy<ISpeaker> speaker, Lazy<IDrumBank> drumBank, Lazy<IObjectMover> objectMover,
-        Lazy<IMusicEncoder> musicEncoder,
-        Lazy<IHighScoreListFactory> highScoreListFactory, Lazy<IConfigFileService> configFileService,
-        Lazy<IFileDialog> fileDialog, Lazy<ITracer> tracer, Lazy<IOopContextPool> oopContextPool)
+    public Engine(IClock clock, IActors actors, IAlerts alerts, IBoard board,
+        IFileSystem fileSystem, IElementList elements,
+        IInterpreter interpreter, IRandomizer randomizer, IKeyboard keyboard,
+        ITiles tiles, ISounds sounds, ITimers timers, IParser parser,
+        IConfig config, IConditionList conditions, IDirectionList directions,
+        IColors colors, ICheatList cheats, ICommandList commands, ITargetList targets,
+        IFeatures features, IGameSerializer gameSerializer, IHud hud, IState state,
+        IWorld world, IItemList items, IBoards boards, IActionList actionList,
+        IDrawList drawList, IInteractionList interactionList, IFacts facts, IMemory memory,
+        IHeap heap, IAnsiKeyTransformer ansiKeyTransformer, IScrollFormatter scrollFormatter,
+        ISpeaker speaker, IDrumBank drumBank, IObjectMover objectMover,
+        IMusicEncoder musicEncoder,
+        IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
+        IFileDialog fileDialog, ITracer tracer, IOopContextPool oopContextPool, IEngineAccessor engineAccessor)
     {
-        _clock = new Lazy<IClock>(() =>
-        {
-            var clock = clockFactory.Value.Create(
-                _config.Value.MasterClockNumerator,
-                _config.Value.MasterClockDenominator);
+        engineAccessor.Instance = this;
 
-            if (clock != null)
-                clock.OnTick += ClockTick;
-
-            return clock;
-        });
-
-        _actors = actors;
-        _alerts = alerts;
-        _board = board;
-        _fileSystem = fileSystem;
-        _elements = elements;
-        _interpreter = interpreter;
-        _randomizer = randomizer;
-        _keyboard = keyboard;
-        _tiles = tiles;
-        _sounds = sounds;
-        _timers = timers;
-        _parser = parser;
-        _config = config;
-        _conditions = conditions;
-        _directions = directions;
-        _colors = colors;
-        _cheats = cheats;
-        _commands = commands;
-        _targets = targets;
-        _features = features;
-        _gameSerializer = gameSerializer;
-        _hud = hud;
-        _state = state;
-        _world = world;
-        _items = items;
-        _boards = boards;
-        _actionList = actionList;
-        _drawList = drawList;
-        _interactionList = interactionList;
-        _facts = facts;
-        _memory = memory;
-        _heap = heap;
-        _ansiKeyTransformer = ansiKeyTransformer;
-        _scrollFormatter = scrollFormatter;
-        _speaker = speaker;
-        _drumBank = drumBank;
-        _objectMover = objectMover;
-        _musicEncoder = musicEncoder;
-        _highScoreListFactory = highScoreListFactory;
+        Actors = actors;
+        Alerts = alerts;
+        Board = board;
+        Clock = clock;
+        Disk = fileSystem;
+        ElementList = elements;
+        Interpreter = interpreter;
+        Random = randomizer;
+        Keyboard = keyboard;
+        Tiles = tiles;
+        Sounds = sounds;
+        Timers = timers;
+        Parser = parser;
+        Config = config;
+        ConditionList = conditions;
+        DirectionList = directions;
+        Colors = colors;
+        CheatList = cheats;
+        CommandList = commands;
+        TargetList = targets;
+        Features = features;
+        GameSerializer = gameSerializer;
+        Hud = hud;
+        State = state;
+        World = world;
+        ItemList = items;
+        Boards = boards;
+        ActionList = actionList;
+        DrawList = drawList;
+        InteractionList = interactionList;
+        Facts = facts;
+        Memory = memory;
+        Heap = heap;
+        AnsiKeyTransformer = ansiKeyTransformer;
+        ScrollFormatter = scrollFormatter;
+        Speaker = speaker;
+        DrumBank = drumBank;
+        ObjectMover = objectMover;
+        MusicEncoder = musicEncoder;
+        HighScoreListFactory = highScoreListFactory;
         _configFileService = configFileService;
         _fileDialog = fileDialog;
-        _tracer = tracer;
-        _oopContextPool = oopContextPool;
+        Tracer = tracer;
+        OopContextPool = oopContextPool;
     }
 
     private void ClockTick(object sender, EventArgs args)
@@ -151,37 +99,37 @@ public sealed class Engine : IEngine, IDisposable
             Clock.Stop();
     }
 
-    private IHighScoreListFactory HighScoreListFactory => _highScoreListFactory.Value;
+    private IHighScoreListFactory HighScoreListFactory { get; }
 
-    private IObjectMover ObjectMover => _objectMover.Value;
+    private IObjectMover ObjectMover { get; }
 
-    public IMusicEncoder MusicEncoder => _musicEncoder.Value;
+    public IMusicEncoder MusicEncoder { get; }
 
-    private IClock Clock => _clock.Value;
+    private IClock Clock { get; }
 
-    private IBoards Boards => _boards.Value;
+    private IBoards Boards { get; }
 
     private ITile BorderTile => State.BorderTile;
 
-    public IFileSystem Disk => _fileSystem.Value;
+    public IFileSystem Disk { get; }
 
-    private IFeatures Features => _features.Value;
+    private IFeatures Features { get; }
 
-    private ISpeaker Speaker => _speaker.Value;
+    private ISpeaker Speaker { get; }
 
-    public IGameSerializer GameSerializer => _gameSerializer.Value;
+    public IGameSerializer GameSerializer { get; }
 
-    private IInterpreter Interpreter => _interpreter.Value;
+    private IInterpreter Interpreter { get; }
 
-    private IKeyboard Keyboard => _keyboard.Value;
+    private IKeyboard Keyboard { get; }
 
-    private IScrollFormatter ScrollFormatter => _scrollFormatter.Value;
+    private IScrollFormatter ScrollFormatter { get; }
 
-    public ITimers Timers => _timers.Value;
+    public ITimers Timers { get; }
 
-    public IDrumBank DrumBank => _drumBank.Value;
+    public IDrumBank DrumBank { get; }
 
-    public ITracer Tracer => _tracer.Value;
+    public ITracer Tracer { get; }
 
     private Thread Thread { get; set; }
 
@@ -217,8 +165,7 @@ public sealed class Engine : IEngine, IDisposable
         cheat?.Execute(cheatText, clear);
         Hud.UpdateStatus();
 
-        // TODO: figure out the actual priority of this sound
-        PlaySound(3, Sounds.Cheat);
+        PlaySound(10, Sounds.Cheat);
     }
 
     public void PlayStep()
@@ -240,8 +187,7 @@ public sealed class Engine : IEngine, IDisposable
         Hud.ShowHighScores(list);
     }
 
-    public IActionList ActionList
-        => _actionList.Value;
+    public IActionList ActionList { get; }
 
     public IActor ActorAt(IXyPair location)
     {
@@ -266,7 +212,7 @@ public sealed class Engine : IEngine, IDisposable
     public event EventHandler Exited;
     public event EventHandler Tick;
 
-    public IActors Actors => _actors.Value;
+    public IActors Actors { get; }
 
     public int Adjacent(IXyPair location, int id)
     {
@@ -276,7 +222,7 @@ public sealed class Engine : IEngine, IDisposable
                (location.X >= Tiles.Width || Tiles[location.Sum(Vector.East)].Id == id ? 8 : 0);
     }
 
-    public IAlerts Alerts => _alerts.Value;
+    public IAlerts Alerts { get; }
 
     public void Attack(int index, IXyPair location)
     {
@@ -304,7 +250,7 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IBoard Board => _board.Value;
+    public IBoard Board { get; }
 
     public bool BroadcastLabel(int sender, string label, bool ignoreLock)
     {
@@ -339,7 +285,7 @@ public sealed class Engine : IEngine, IDisposable
         return success;
     }
 
-    public ICheatList CheatList => _cheats.Value;
+    public ICheatList CheatList { get; }
 
     public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
@@ -376,13 +322,13 @@ public sealed class Engine : IEngine, IDisposable
         State.WorldFileName = string.Empty;
     }
 
-    public IColors Colors => _colors.Value;
+    public IColors Colors { get; }
 
-    public ICommandList CommandList => _commands.Value;
+    public ICommandList CommandList { get; }
 
-    public IConditionList ConditionList => _conditions.Value;
+    public IConditionList ConditionList { get; }
 
-    public IConfig Config => _config.Value;
+    public IConfig Config { get; }
 
     public void Convey(IXyPair center, int direction)
     {
@@ -466,7 +412,7 @@ public sealed class Engine : IEngine, IDisposable
             Harm(index);
     }
 
-    public IDirectionList DirectionList => _directions.Value;
+    public IDirectionList DirectionList { get; }
 
     public AnsiChar Draw(IXyPair location)
     {
@@ -492,11 +438,11 @@ public sealed class Engine : IEngine, IDisposable
             : new AnsiChar(tile.Color, 0x0F);
     }
 
-    public IDrawList DrawList => _drawList.Value;
+    public IDrawList DrawList { get; }
 
     public IElement ElementAt(IXyPair location) => ElementList[Tiles[location].Id];
 
-    public IElementList ElementList => _elements.Value;
+    public IElementList ElementList { get; }
 
     public void EnterBoard() => Features.EnterBoard();
 
@@ -665,11 +611,11 @@ public sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    public IFacts Facts => _facts.Value;
+    public IFacts Facts { get; }
 
-    public IHeap Heap => _heap.Value;
+    public IHeap Heap { get; }
 
-    public IMemory Memory => _memory.Value;
+    public IMemory Memory { get; }
 
     public void StepOnce()
     {
@@ -766,11 +712,11 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IHud Hud => _hud.Value;
+    public IHud Hud { get; }
 
-    public IInteractionList InteractionList => _interactionList.Value;
+    public IInteractionList InteractionList { get; }
 
-    public IItemList ItemList => _items.Value;
+    public IItemList ItemList { get; }
 
     private void ShowFormattedScroll(string error) =>
         Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
@@ -817,7 +763,7 @@ public sealed class Engine : IEngine, IDisposable
 
             var newBoards = Enumerable
                 .Range(0, numBoards + 1)
-                .Select(i => new PackedBoard(GameSerializer.LoadBoardData(stream)))
+                .Select(_ => new PackedBoard(GameSerializer.LoadBoardData(stream)))
                 .ToList();
 
             Boards.Clear();
@@ -933,9 +879,9 @@ public sealed class Engine : IEngine, IDisposable
 
     public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
 
-    public IOopContextPool OopContextPool => _oopContextPool.Value;
+    private IOopContextPool OopContextPool { get; }
 
-    public IParser Parser => _parser.Value;
+    public IParser Parser { get; }
 
     public IActor Player => Actors[0];
 
@@ -1098,7 +1044,7 @@ public sealed class Engine : IEngine, IDisposable
         PlaySound(5, Sounds.Error);
     }
 
-    public IRandomizer Random => _randomizer.Value;
+    public IRandomizer Random { get; }
 
     public void RemoveActor(int index)
     {
@@ -1271,10 +1217,10 @@ public sealed class Engine : IEngine, IDisposable
 
     public string ShowLoad(string title, string extension)
     {
-        return _fileDialog.Value.Open(title, extension);
+        return _fileDialog.Open(title, extension);
     }
 
-    public ISounds Sounds => _sounds.Value;
+    public ISounds Sounds { get; }
 
     public void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
     {
@@ -1344,16 +1290,16 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IState State => _state.Value;
+    public IState State { get; }
 
     public void Stop()
     {
         Thread = null;
     }
 
-    public ITargetList TargetList => _targets.Value;
+    public ITargetList TargetList { get; }
 
-    public ITiles Tiles => _tiles.Value;
+    public ITiles Tiles { get; }
 
     public bool TitleScreen => State.PlayerElement != ElementList.PlayerId;
 
@@ -1474,8 +1420,7 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IWorld World
-        => _world.Value;
+    public IWorld World { get; }
 
     private bool ActorIsLocked(int index) => Features.IsActorLocked(index);
 
@@ -1843,7 +1788,7 @@ public sealed class Engine : IEngine, IDisposable
         return value;
     }
 
-    private IAnsiKeyTransformer AnsiKeyTransformer => _ansiKeyTransformer.Value;
+    private IAnsiKeyTransformer AnsiKeyTransformer { get; }
 
     private EngineKeyCode ConvertKey(IKeyPress keyPress)
     {
@@ -1865,6 +1810,9 @@ public sealed class Engine : IEngine, IDisposable
         State.KeyArrow = false;
         State.KeyPressed = 0;
         State.KeyVector.SetTo(0, 0);
+
+        if (!Keyboard.KeyIsAvailable)
+            return;
 
         var key = Keyboard.GetKey();
         if (key == null || key.Key == AnsiKey.None)
@@ -1916,7 +1864,7 @@ public sealed class Engine : IEngine, IDisposable
 
         ClearWorld();
 
-        var cfg = _configFileService.Value.Load();
+        var cfg = _configFileService.Load();
         if (Config.DefaultWorld == null && cfg != null)
         {
             if (!string.IsNullOrEmpty(cfg.WorldName))
@@ -1933,8 +1881,10 @@ public sealed class Engine : IEngine, IDisposable
 
     private void StartMain()
     {
+        Clock.OnTick += ClockTick;
         StartInit();
         TitleScreenLoop();
+        Clock.OnTick -= ClockTick;
         Exited?.Invoke(this, EventArgs.Empty);
     }
 

@@ -62,6 +62,27 @@ Build and run:
 dotnet run --project Source/Lyon <path-to-game>
 ```
 
+### Using Roton in your own project
+
+Roton provides a `RotonServices` class that can be used to retrieve the type mapping needed by your favorite
+dependency injection library.
+
+AutoFac:
+
+```csharp
+// Each concrete type must have all its services registered at the same time
+// so that AutoFac knows that they all refer to the same instance.
+
+var map = RotonServices.Get(context, additionalAssemblies)
+    .GroupBy(s => s.Implementation);
+
+foreach (var serviceGroup in map)
+    builder.RegisterType(serviceGroup.Key)
+        .As(serviceGroup.Select(sg => sg.Service).ToArray())
+        .AutoActivate()
+        .SingleInstance();
+```
+
 ### Where can I learn more about ZZT?
 
 - https://museumofzzt.com/ - a preservation site for all things ZZT. The original games can be found here, plus a massive library of others from the community over the years. Administered by Dr. Dos. (The developers *really* appreciate this site.)

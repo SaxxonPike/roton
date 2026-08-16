@@ -10,34 +10,42 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Super)]
 public sealed class ConditionList : IConditionList
 {
-    private readonly Lazy<IDictionary<string, ICondition>> _conditions;
-    private IDictionary<string, ICondition> Conditions => _conditions.Value;
+#if NET10_0_OR_GREATER
+    private readonly Dictionary<string, ICondition>.AlternateLookup<ReadOnlySpan<char>> _conditions;
+#else
+    private readonly Dictionary<string, ICondition> _conditions;
+#endif
 
-    public ConditionList(Lazy<IContextMetadataService> contextMetadataService,
-        Lazy<IEnumerable<ICondition>> conditions)
+    public ConditionList(IContextMetadataService contextMetadataService,
+        IEnumerable<ICondition> conditions)
     {
-        _conditions = new Lazy<IDictionary<string, ICondition>>(() =>
+        var result = new Dictionary<string, ICondition>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var condition in conditions)
         {
-            var result = new Dictionary<string, ICondition>();
+            foreach (var attribute in contextMetadataService.GetMetadata(condition))
+                result.Add(attribute.Name, condition);
+        }
 
-            foreach (var condition in conditions.Value)
-            {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(condition))
-                    result.Add(attribute.Name, condition);
-            }
-
-            return result;
-        });
+#if NET10_0_OR_GREATER
+        _conditions = result.GetAlternateLookup<ReadOnlySpan<char>>();
+#else
+        _conditions = result;
+#endif
     }
 
     public ICondition Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Conditions)
+#if NET10_0_OR_GREATER
+        return _conditions.TryGetValue(name, out var value) ? value : null;
+#else
+        foreach (var entry in _conditions)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
         }
 
         return null;
+#endif
     }
 }

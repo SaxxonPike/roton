@@ -8,9 +8,9 @@ public sealed class OopContext : IOopContext
     private readonly IEngine _engine;
 
     internal OopContext(
-        IEngine engine)
+        IEngineAccessor engine)
     {
-        _engine = engine;
+        _engine = engine.Instance;
     }
 
     public int Instruction

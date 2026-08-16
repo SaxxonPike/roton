@@ -11,34 +11,34 @@ public sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) :
 
     public int Ammo
     {
-        get => Memory.Read16(0x784C);
-        set => Memory.Write16(0x784C, value);
+        get => Memory.FastRead16(0x784C);
+        set => Memory.FastWrite16(0x784C, value);
     }
 
     public int BoardIndex
     {
-        get => Memory.Read16(0x7859);
-        set => Memory.Write16(0x7859, value);
+        get => Memory.FastRead16(0x7859);
+        set => Memory.FastWrite16(0x7859, value);
     }
 
     public int EnergyCycles
     {
-        get => Memory.Read16(0x785D);
-        set => Memory.Write16(0x785D, value);
+        get => Memory.FastRead16(0x785D);
+        set => Memory.FastWrite16(0x785D, value);
     }
 
     public IFlags Flags { get; } = flags;
 
     public int Gems
     {
-        get => Memory.Read16(0x784E);
-        set => Memory.Write16(0x784E, value);
+        get => Memory.FastRead16(0x784E);
+        set => Memory.FastWrite16(0x784E, value);
     }
 
     public int Health
     {
-        get => Memory.Read16(0x7857);
-        set => Memory.Write16(0x7857, value);
+        get => Memory.FastRead16(0x7857);
+        set => Memory.FastWrite16(0x7857, value);
     }
 
     public bool IsLocked
@@ -57,20 +57,20 @@ public sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) :
 
     public int Score
     {
-        get => Memory.Read16(0x7861);
-        set => Memory.Write16(0x7861, value);
+        get => Memory.FastRead16(0x7861);
+        set => Memory.FastWrite16(0x7861, value);
     }
 
     public int Stones
     {
-        get => Memory.Read16(0x79CD);
-        set => Memory.Write16(0x79CD, value);
+        get => Memory.FastRead16(0x79CD);
+        set => Memory.FastWrite16(0x79CD, value);
     }
 
     public int TimePassed
     {
-        get => Memory.Read16(0x79C8);
-        set => Memory.Write16(0x79C8, value);
+        get => Memory.FastRead16(0x79C8);
+        set => Memory.FastWrite16(0x79C8, value);
     }
 
     public int TorchCycles

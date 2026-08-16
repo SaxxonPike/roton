@@ -1,5 +1,4 @@
-﻿using System;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -7,9 +6,9 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
-public sealed class StarAction(Lazy<IEngine> engine) : IAction
+public sealed class StarAction(IEngineAccessor engine) : IAction
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {

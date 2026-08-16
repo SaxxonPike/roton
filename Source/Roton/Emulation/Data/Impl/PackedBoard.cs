@@ -23,7 +23,11 @@ public sealed class PackedBoard : IPackedBoard
                 if (nameLength == 0) return string.Empty;
                 Span<char> chars = stackalloc char[nameLength];
                 Cp437.BytesToChars(Data.AsSpan(1, nameLength), chars);
+#if NET10_0_OR_GREATER
+                return new string(chars);
+#else
                 return new string(chars.ToArray());
+#endif
             }
             return string.Empty;
         }

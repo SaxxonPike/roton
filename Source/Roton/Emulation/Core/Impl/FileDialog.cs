@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data.Impl;
@@ -8,16 +7,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class FileDialog(Lazy<IHud> hud, Lazy<IFileSystem> fileSystem) : IFileDialog
+public sealed class FileDialog(IHud hud, IFileSystem fileSystem) : IFileDialog
 {
     private IHud Hud
     {
-        [DebuggerStepThrough] get => hud.Value;
+        [DebuggerStepThrough] get => hud;
     }
 
     private IFileSystem FileSystem
     {
-        [DebuggerStepThrough] get => fileSystem.Value;
+        [DebuggerStepThrough] get => fileSystem;
     }
 
     public string Open(string title, string extension)

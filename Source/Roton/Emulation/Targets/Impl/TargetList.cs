@@ -10,34 +10,42 @@ namespace Roton.Emulation.Targets.Impl;
 [Context(Context.Super)]
 public sealed class TargetList : ITargetList
 {
-    private readonly Lazy<IDictionary<string, ITarget>> _targets;
-    private IDictionary<string, ITarget> Targets => _targets.Value;
+#if NET10_0_OR_GREATER
+    private readonly Dictionary<string, ITarget>.AlternateLookup<ReadOnlySpan<char>> _targets;
+#else
+    private readonly Dictionary<string, ITarget> _targets;
+#endif
 
-    public TargetList(Lazy<IContextMetadataService> contextMetadataService,
-        Lazy<IEnumerable<ITarget>> targets)
+    public TargetList(IContextMetadataService contextMetadataService,
+        IEnumerable<ITarget> targets)
     {
-        _targets = new Lazy<IDictionary<string, ITarget>>(() =>
+        var result = new Dictionary<string, ITarget>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var target in targets)
         {
-            var result = new Dictionary<string, ITarget>();
+            foreach (var attribute in contextMetadataService.GetMetadata(target))
+                result.Add(attribute.Name, target);
+        }
 
-            foreach (var target in targets.Value)
-            {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(target))
-                    result.Add(attribute.Name, target);
-            }
-
-            return result;
-        });
+#if NET10_0_OR_GREATER
+        _targets = result.GetAlternateLookup<ReadOnlySpan<char>>();
+#else
+        _targets = result;
+#endif
     }
 
     public ITarget Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Targets)
+#if NET10_0_OR_GREATER
+        return _targets.TryGetValue(name, out var value) ? value : null;
+#else
+        foreach (var entry in _targets)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
         }
 
         return null;
+#endif
     }
 }

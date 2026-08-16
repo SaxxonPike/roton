@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -7,16 +6,16 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class Hud(Lazy<IEngine> engine, Lazy<IScroll> scroll) : IHud
+public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
 {
     protected IEngine Engine
     {
-        [DebuggerStepThrough] get => engine.Value;
+        [DebuggerStepThrough] get => engine.Instance;
     }
 
     protected IScroll Scroll
     {
-        [DebuggerStepThrough] get => scroll.Value;
+        [DebuggerStepThrough] get => scroll;
     }
 
     public virtual void ClearPausing()

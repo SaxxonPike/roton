@@ -5,7 +5,7 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class OopContextPool(IEngine engine)
+public sealed class OopContextPool(IEngineAccessor engine)
     : ObjectPool<IOopContext>(() => new OopContext(engine), Reset), IOopContextPool
 {
     private static void Reset(IOopContext obj)

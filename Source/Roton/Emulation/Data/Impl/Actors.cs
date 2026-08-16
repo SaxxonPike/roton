@@ -1,13 +1,12 @@
-﻿using System;
-using Roton.Emulation.Infrastructure;
+﻿using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Actors(Lazy<IMemory> memory, int capacity) : FixedList<IActor>, IActors
+public abstract class Actors(IMemory memory, int capacity) : FixedList<IActor>, IActors
 {
     private IActor[] Cache { get; } = new IActor[capacity];
 
-    protected IMemory Memory => memory.Value;
+    protected IMemory Memory => memory;
 
     public int Capacity { get; } = capacity;
 

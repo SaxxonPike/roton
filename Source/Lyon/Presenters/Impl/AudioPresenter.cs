@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using DotSDL.Audio;
+using Roton.Composers.Audio;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -20,12 +22,18 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
     private readonly Lock _bufferLock = new();
     private readonly Playback _audio;
 
-    public AudioPresenter(IConfig config)
+    public AudioPresenter(IConfig config, IEngine engine, IAudioComposer composer)
     {
         _buffer = [];
         _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono,
-            (ushort) config.AudioBufferSize);
+            (ushort)config.AudioBufferSize);
         Volume = 0.1;
+
+        composer.BufferReady += (_, a) => Update(a.Data);
+        composer.SampleRate = SampleRate;
+        Start();
+
+        engine.Tick += (_, _) => composer.Tick();
 
         _audio.BufferEmpty += BufferEmpty;
         _audio.Play();

@@ -6,9 +6,9 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "DARK")]
-public sealed class DarkCheat(Lazy<IEngine> engine) : ICheat
+public sealed class DarkCheat(IEngineAccessor engine) : ICheat
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Execute(ReadOnlySpan<char> name, bool clear)
     {

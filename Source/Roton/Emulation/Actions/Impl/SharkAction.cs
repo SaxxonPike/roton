@@ -1,14 +1,13 @@
-﻿using System;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x26)]
-public sealed class SharkAction(Lazy<IEngine> engine) : IAction
+public sealed class SharkAction(IEngineAccessor engine) : IAction
 {
-    private IEngine Engine => engine.Value;
+    private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {

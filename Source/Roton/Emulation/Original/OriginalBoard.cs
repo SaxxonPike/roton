@@ -48,7 +48,7 @@ public sealed class OriginalBoard : IBoard
 
     public int TimeLimit
     {
-        get => _memory.Read16(0x45AB);
-        set => _memory.Write16(0x45AB, value);
+        get => _memory.FastRead16(0x45AB);
+        set => _memory.FastWrite16(0x45AB, value);
     }
 }

@@ -9,19 +9,19 @@ namespace Lyon.App.Impl;
 [Context(Context.Startup)]
 public sealed class Launcher : ILauncher
 {
-    private readonly Lazy<IWindow> _window;
-    private readonly Lazy<IAudioPresenter> _audioPresenter;
+    private readonly IWindow _window;
+    private readonly IAudioPresenter _audioPresenter;
 
     public Launcher(
-        Lazy<IWindow> window,
-        Lazy<IAudioPresenter> audioPresenter)
+        IWindow window,
+        IAudioPresenter audioPresenter)
     {
         _window = window;
         _audioPresenter = audioPresenter;
     }
 
-    private IWindow Window => _window.Value;
-    private IAudioPresenter AudioPresenter => _audioPresenter.Value;
+    private IWindow Window => _window;
+    private IAudioPresenter AudioPresenter => _audioPresenter;
 
     private void OnExited(object sender, EventArgs e)
     {

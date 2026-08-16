@@ -10,11 +10,11 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalConfigFileService(Lazy<IFileSystem> fileSystem) : IConfigFileService
+public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigFileService
 {
     private const string ConfigFileName = "ZZT.CFG";
 
-    private IFileSystem FileSystem => fileSystem.Value;
+    private IFileSystem FileSystem => fileSystem;
 
     private IConfigFile Decode(byte[] data)
     {
@@ -60,10 +60,10 @@ public sealed class OriginalConfigFileService(Lazy<IFileSystem> fileSystem) : IC
         {
             case ConfigFileFormat.Original30:
             {
-                output.AppendLine($"{configFile.Value0}");
-                output.AppendLine($"{configFile.Value1}");
-                output.AppendLine($"{configFile.Value2}");
-                output.AppendLine($"{configFile.Value3}");
+                output.AppendLine(configFile.Value0.ToString());
+                output.AppendLine(configFile.Value1.ToString());
+                output.AppendLine(configFile.Value2.ToString());
+                output.AppendLine(configFile.Value3.ToString());
                 output.AppendLine(configFile.WorldName);
                 output.AppendLine(configFile.RegistrationType);
                 output.AppendLine(configFile.RegistrationName);

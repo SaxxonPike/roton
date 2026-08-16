@@ -10,34 +10,42 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super)]
 public sealed class CommandList : ICommandList
 {
-    private readonly Lazy<IDictionary<string, ICommand>> _commands;
-    private IDictionary<string, ICommand> Commands => _commands.Value;
+#if NET10_0_OR_GREATER
+    private readonly Dictionary<string, ICommand>.AlternateLookup<ReadOnlySpan<char>> _commands;
+#else
+    private readonly Dictionary<string, ICommand> _commands;
+#endif
 
-    public CommandList(Lazy<IContextMetadataService> contextMetadataService, 
-        Lazy<IEnumerable<ICommand>> commands)
+    public CommandList(IContextMetadataService contextMetadataService,
+        IEnumerable<ICommand> commands)
     {
-        _commands = new Lazy<IDictionary<string, ICommand>>(() =>
+        var result = new Dictionary<string, ICommand>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var command in commands)
         {
-            var result = new Dictionary<string, ICommand>();
+            foreach (var attribute in contextMetadataService.GetMetadata(command))
+                result.Add(attribute.Name, command);
+        }
 
-            foreach (var command in commands.Value)
-            {
-                foreach (var attribute in contextMetadataService.Value.GetMetadata(command))
-                    result.Add(attribute.Name, command);
-            }
-
-            return result;
-        });
+#if NET10_0_OR_GREATER
+        _commands = result.GetAlternateLookup<ReadOnlySpan<char>>();
+#else
+        _commands = result;
+#endif
     }
 
     public ICommand Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Commands)
+#if NET10_0_OR_GREATER
+        return _commands.TryGetValue(name, out var value) ? value : null;
+#else
+        foreach (var entry in _commands)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
         }
 
         return null;
+#endif
     }
 }
