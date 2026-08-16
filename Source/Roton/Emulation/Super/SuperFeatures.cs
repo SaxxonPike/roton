@@ -130,7 +130,8 @@ public sealed class SuperFeatures(Lazy<IEngine> engine) : IFeatures
 
     public bool CanPutTile(IXyPair location)
     {
-        return true;
+        // do not allow #put on the bottom row
+        return location.Y < Engine.Tiles.Height;
     }
 
     public void ClearForest(IXyPair location)
