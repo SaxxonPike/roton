@@ -30,7 +30,7 @@ public sealed class Engine : IEngine, IDisposable
     private int _ticksToRun;
     private bool _step;
 
-    public Engine(IClockFactory clockFactory, IActors actors, IAlerts alerts, IBoard board,
+    public Engine(IClock clock, IActors actors, IAlerts alerts, IBoard board,
         IFileSystem fileSystem, IElementList elements,
         IInterpreter interpreter, IRandomizer randomizer, IKeyboard keyboard,
         ITiles tiles, ISounds sounds, ITimers timers, IParser parser,
@@ -47,16 +47,10 @@ public sealed class Engine : IEngine, IDisposable
     {
         engineAccessor.Instance = this;
 
-        _clock = clockFactory.Create(
-            config.MasterClockNumerator,
-            config.MasterClockDenominator);
-
-        if (_clock != null)
-            _clock.OnTick += ClockTick;
-
         Actors = actors;
         Alerts = alerts;
         Board = board;
+        Clock = clock;
         Disk = fileSystem;
         ElementList = elements;
         Interpreter = interpreter;
@@ -112,7 +106,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public IMusicEncoder MusicEncoder { get; }
 
-    private IClock Clock => _clock;
+    private IClock Clock { get; }
 
     private IBoards Boards { get; }
 
@@ -1889,8 +1883,10 @@ public sealed class Engine : IEngine, IDisposable
 
     private void StartMain()
     {
+        Clock.OnTick += ClockTick;
         StartInit();
         TitleScreenLoop();
+        Clock.OnTick -= ClockTick;
         Exited?.Invoke(this, EventArgs.Empty);
     }
 

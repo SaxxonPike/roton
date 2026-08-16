@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
+using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class Clock : IClock
+[Context(Context.Startup)]
+public sealed class Clock(IConfig config) : IClock
 {
-    private readonly long _numerator;
-    private readonly long _denominator;
+    private readonly long _numerator = config.MasterClockNumerator;
+    private readonly long _denominator = config.MasterClockDenominator;
+
     private bool _running;
-
-    internal Clock(long numerator, long denominator)
-    {
-        _numerator = numerator;
-        _denominator = denominator;
-    }
-
     private bool _initialized;
 
     public event EventHandler OnTick;

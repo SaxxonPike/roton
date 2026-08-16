@@ -24,7 +24,7 @@ namespace Roton.Test.Infrastructure;
 
 public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseTestFixture
 {
-    protected Mock<IClockFactory> ClockFactoryMock { get; private set; }
+    protected Mock<IClock> ClockMock { get; private set; }
     protected FixedFileSystem FileSystem { get; private set; }
     protected Config Config { get; private set; }
     protected Mock<ITerminal> TerminalMock { get; private set; }
@@ -125,11 +125,16 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     {
         // Test dependencies
         FileSystem = new FixedFileSystem(true);
-        Config = new Config();
+        Config = new Config
+        {
+            // Fast mode is needed because otherwise WaitForTick will wait for a message
+            // from a thread that doesn't run during testing, leading to infinite loops.
+            FastMode = true
+        };
         TerminalMock = new Mock<ITerminal>();
         Keyboard = new TestKeyboard();
         SpeakerMock = new Mock<ISpeaker>();
-        ClockFactoryMock = new Mock<IClockFactory>();
+        ClockMock = new Mock<IClock>();
         Tracer = new Tracer();
 
         // Outer container
@@ -147,11 +152,11 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         builder.Register(_ => SpeakerMock.Object)
             .As<ISpeaker>()
             .SingleInstance();
+        builder.Register(_ => ClockMock.Object)
+            .As<IClock>()
+            .SingleInstance();
         builder.RegisterType<AssemblyResourceService>()
             .As<IAssemblyResourceService>()
-            .SingleInstance();
-        builder.Register(_ => ClockFactoryMock.Object)
-            .As<IClockFactory>()
             .SingleInstance();
         builder.Register(_ => Config)
             .As<IConfig>()
