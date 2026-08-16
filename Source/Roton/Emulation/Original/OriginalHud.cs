@@ -386,7 +386,7 @@ public sealed class OriginalHud : Hud
             
         foreach (var hs in highScoreList)
         {
-            if (index < 0 && hs.Score <= score)
+            if (score > 0 && index < 0 && hs.Score <= score)
             {
                 index = nameIndex;
                 nameList.Add($"{score.ToString(),5}  -- You! --");
