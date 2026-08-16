@@ -457,21 +457,44 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     {
         // Place the player.
         MovePlayerTo(10, 10);
-        
+
         // Give the player some ammo.
         World.Ammo = 1;
-        
+
         // Place an enemy.
         SpawnTo(11, 10, ElementList.LionId);
-        
+
         // Instruct the player to shoot the enemy.
         Type(AnsiKey.Right, KeyMod.Shift);
         StepAllKeys();
-        
+
         // Assert.
         World.Ammo.Should().Be(0,
             "player should have used ammo");
         TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
             "enemy should have been killed");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToShootBreakablesPointBlank()
+    {
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Give the player some ammo.
+        World.Ammo = 1;
+
+        // Place a breakable wall.
+        PlotTo(11, 10, ElementList.BreakableId);
+
+        // Instruct the player to shoot the wall.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+
+        // Assert.
+        World.Ammo.Should().Be(0,
+            "player should have used ammo");
+        TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
+            "breakable wall should have been broken");
     }
 }
