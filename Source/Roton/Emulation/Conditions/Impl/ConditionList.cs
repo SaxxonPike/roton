@@ -10,29 +10,25 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Super)]
 public sealed class ConditionList : IConditionList
 {
-    private readonly Lazy<IDictionary<string, ICondition>> _conditions;
-    private IDictionary<string, ICondition> Conditions => _conditions.Value;
+    private readonly Dictionary<string, ICondition> _conditions;
 
     public ConditionList(IContextMetadataService contextMetadataService,
-        Lazy<IEnumerable<ICondition>> conditions)
+        IEnumerable<ICondition> conditions)
     {
-        _conditions = new Lazy<IDictionary<string, ICondition>>(() =>
+        var result = new Dictionary<string, ICondition>();
+
+        foreach (var condition in conditions)
         {
-            var result = new Dictionary<string, ICondition>();
+            foreach (var attribute in contextMetadataService.GetMetadata(condition))
+                result.Add(attribute.Name, condition);
+        }
 
-            foreach (var condition in conditions.Value)
-            {
-                foreach (var attribute in contextMetadataService.GetMetadata(condition))
-                    result.Add(attribute.Name, condition);
-            }
-
-            return result;
-        });
+        _conditions = result;
     }
 
     public ICondition Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Conditions)
+        foreach (var entry in _conditions)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;

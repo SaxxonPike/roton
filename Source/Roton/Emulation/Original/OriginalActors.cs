@@ -7,7 +7,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalActors(IMemory memory, IHeap heap) : Actors(memory, 152)
 {
-    public override int Count => Memory.Read16(0x31CD) + 1;
+    public override int Count => Memory.FastRead16(0x31CD) + 1;
 
     private IHeap Heap => heap;
 

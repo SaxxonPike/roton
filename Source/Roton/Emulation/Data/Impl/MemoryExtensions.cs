@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Roton.Emulation.Infrastructure;
@@ -32,9 +33,16 @@ public static class MemoryExtensions
 
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal int FastRead16(int offset) =>
+            BinaryPrimitives.ReadInt16LittleEndian(memory.Data.Slice(offset));
+
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int Read16(int offset)
         {
             var span = memory.Data;
+            if (offset < 0xFFFF)
+                return BinaryPrimitives.ReadInt16LittleEndian(span.Slice(offset));
             return unchecked((short)(span[offset & 0xFFFF] | (span[(offset + 1) & 0xFFFF] << 8)));
         }
 
@@ -66,7 +74,12 @@ public static class MemoryExtensions
             {
                 var span = memory.Data;
                 var length = span[offset & 0xFFFF];
+                var end = offset + length;
                 var output = new byte[length];
+
+                if (end <= span.Length)
+                    return span.Slice(offset + 1, length).ToStringValue();
+                
                 for (var i = 0; i < length; i++)
                     output[i] = span[++offset & 0xFFFF];
                 return output.ToStringValue();
@@ -81,14 +94,13 @@ public static class MemoryExtensions
                 var span = memory.Data;
                 var length = span[offset & 0xFFFF];
 
-                if (offset + length <= memory.Data.Length) 
+                if (offset + length <= memory.Data.Length)
                     return span.Slice(offset + 1, length);
 
                 var result = new byte[length];
                 for (var i = 0; i < length; i++)
                     result[i] = span[++offset & 0xFFFF];
                 return result;
-
             }
         }
 
@@ -122,9 +134,15 @@ public static class MemoryExtensions
             unchecked
             {
                 var span = memory.Data;
-                span[offset & 0xFFFF] = (byte) value;
+                span[offset & 0xFFFF] = (byte)value;
             }
         }
+
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void FastWrite16(int offset, int value) =>
+            BinaryPrimitives.WriteInt16LittleEndian(memory.Data.Slice(offset), unchecked((short)value));
+
 
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -133,8 +151,8 @@ public static class MemoryExtensions
             unchecked
             {
                 var span = memory.Data;
-                span[offset & 0xFFFF] = (byte) value;
-                span[(offset + 1) & 0xFFFF] = (byte) (value >> 8);
+                span[offset & 0xFFFF] = (byte)value;
+                span[(offset + 1) & 0xFFFF] = (byte)(value >> 8);
             }
         }
 
@@ -145,10 +163,10 @@ public static class MemoryExtensions
             unchecked
             {
                 var span = memory.Data;
-                span[offset & 0xFFFF] = (byte) value;
-                span[(offset + 1) & 0xFFFF] = (byte) (value >> 8);
-                span[(offset + 2) & 0xFFFF] = (byte) (value >> 16);
-                span[(offset + 3) & 0xFFFF] = (byte) (value >> 24);
+                span[offset & 0xFFFF] = (byte)value;
+                span[(offset + 1) & 0xFFFF] = (byte)(value >> 8);
+                span[(offset + 2) & 0xFFFF] = (byte)(value >> 16);
+                span[(offset + 3) & 0xFFFF] = (byte)(value >> 24);
             }
         }
 
@@ -159,18 +177,18 @@ public static class MemoryExtensions
             unchecked
             {
                 var span = memory.Data;
-                span[offset & 0xFFFF] = value ? (byte) 1 : (byte) 0;
+                span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
             }
         }
 
         [DebuggerStepThrough]
-        internal void WriteString(int offset, string value)
+        internal void WriteString(int offset, ReadOnlySpan<char> value)
         {
             unchecked
             {
                 var span = memory.Data;
-                var length = (value?.Length ?? 0) & 0xFF;
-                span[offset & 0xFFFF] = (byte) length;
+                var length = value.Length & 0xFF;
+                span[offset & 0xFFFF] = (byte)length;
                 if (length > 0)
                 {
                     var destination = span.Slice((offset + 1) & 0xFFFF);

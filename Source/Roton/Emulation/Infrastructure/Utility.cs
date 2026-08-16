@@ -185,4 +185,36 @@ internal static class Utility
             return new string(str);
         }
     }
+
+    extension(ReadOnlySpan<char> a)
+    {
+        /// <summary>
+        /// Convert a string to a byte array using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public int ToBytes(Span<byte> destination)
+        {
+            if (a.Length == 0)
+                return 0;
+
+            return Cp437.CharsToBytes(a, destination);
+        }
+    }
+    
+    extension(ReadOnlySpan<byte> a)
+    {
+        /// <summary>
+        /// Convert a string to a byte array using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        public string ToStringValue()
+        {
+            if (a.Length == 0)
+                return string.Empty;
+
+            var destination = new char[a.Length];
+            Cp437.BytesToChars(a, destination);
+            return new string(destination);
+        }
+    }
 }

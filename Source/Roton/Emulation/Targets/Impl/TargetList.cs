@@ -10,29 +10,25 @@ namespace Roton.Emulation.Targets.Impl;
 [Context(Context.Super)]
 public sealed class TargetList : ITargetList
 {
-    private readonly Lazy<IDictionary<string, ITarget>> _targets;
-    private IDictionary<string, ITarget> Targets => _targets.Value;
+    private readonly Dictionary<string, ITarget> _targets;
 
     public TargetList(IContextMetadataService contextMetadataService,
-        Lazy<IEnumerable<ITarget>> targets)
+        IEnumerable<ITarget> targets)
     {
-        _targets = new Lazy<IDictionary<string, ITarget>>(() =>
+        var result = new Dictionary<string, ITarget>();
+
+        foreach (var target in targets)
         {
-            var result = new Dictionary<string, ITarget>();
+            foreach (var attribute in contextMetadataService.GetMetadata(target))
+                result.Add(attribute.Name, target);
+        }
 
-            foreach (var target in targets.Value)
-            {
-                foreach (var attribute in contextMetadataService.GetMetadata(target))
-                    result.Add(attribute.Name, target);
-            }
-
-            return result;
-        });
+        _targets = result;
     }
 
     public ITarget Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Targets)
+        foreach (var entry in _targets)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;

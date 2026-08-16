@@ -10,27 +10,24 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super)]
 public sealed class InteractionList : IInteractionList
 {
-    private readonly Lazy<IDictionary<int, IInteraction>> _interactions;
+    private readonly Dictionary<int, IInteraction> _interactions;
 
-    public InteractionList(IContextMetadataService contextMetadataService, IEnumerable<IInteraction> interactions)
+    public InteractionList(
+        IContextMetadataService contextMetadataService,
+        IEnumerable<IInteraction> interactions)
     {
-        _interactions = new Lazy<IDictionary<int, IInteraction>>(() =>
+        var result = new Dictionary<int, IInteraction>();
+        foreach (var interaction in interactions)
         {
-            var result = new Dictionary<int, IInteraction>();
-            foreach (var interaction in interactions)
-            {
-                foreach (var attribute in contextMetadataService.GetMetadata(interaction))
-                    result.Add(attribute.Id, interaction);
-            }
+            foreach (var attribute in contextMetadataService.GetMetadata(interaction))
+                result.Add(attribute.Id, interaction);
+        }
 
-            return result;
-        });
+        _interactions = result;
     }
 
-    public IInteraction Get(int index)
-    {
-        return _interactions.Value.TryGetValue(index, out var value)
+    public IInteraction Get(int index) =>
+        _interactions.TryGetValue(index, out var value)
             ? value
-            : _interactions.Value[-1];
-    }
+            : _interactions[-1];
 }

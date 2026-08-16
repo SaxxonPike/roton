@@ -9,32 +9,32 @@ public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags
 {
     public int Ammo
     {
-        get => memory.Read16(0x481E);
-        set => memory.Write16(0x481E, value);
+        get => memory.FastRead16(0x481E);
+        set => memory.FastWrite16(0x481E, value);
     }
 
     public int BoardIndex
     {
-        get => memory.Read16(0x482B);
-        set => memory.Write16(0x482B, value);
+        get => memory.FastRead16(0x482B);
+        set => memory.FastWrite16(0x482B, value);
     }
 
     public int EnergyCycles
     {
-        get => memory.Read16(0x4831);
-        set => memory.Write16(0x4831, value);
+        get => memory.FastRead16(0x4831);
+        set => memory.FastWrite16(0x4831, value);
     }
 
     public int Gems
     {
-        get => memory.Read16(0x4820);
-        set => memory.Write16(0x4820, value);
+        get => memory.FastRead16(0x4820);
+        set => memory.FastWrite16(0x4820, value);
     }
 
     public int Health
     {
-        get => memory.Read16(0x4829);
-        set => memory.Write16(0x4829, value);
+        get => memory.FastRead16(0x4829);
+        set => memory.FastWrite16(0x4829, value);
     }
 
     public bool IsLocked
@@ -55,8 +55,8 @@ public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags
 
     public int Score
     {
-        get => memory.Read16(0x4835);
-        set => memory.Write16(0x4835, value);
+        get => memory.FastRead16(0x4835);
+        set => memory.FastWrite16(0x4835, value);
     }
 
     public int Stones
@@ -67,20 +67,20 @@ public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags
 
     public int TimePassed
     {
-        get => memory.Read16(0x491E);
-        set => memory.Write16(0x491E, value);
+        get => memory.FastRead16(0x491E);
+        set => memory.FastWrite16(0x491E, value);
     }
 
     public int TorchCycles
     {
-        get => memory.Read16(0x482F);
-        set => memory.Write16(0x482F, value);
+        get => memory.FastRead16(0x482F);
+        set => memory.FastWrite16(0x482F, value);
     }
 
     public int Torches
     {
-        get => memory.Read16(0x482D);
-        set => memory.Write16(0x482D, value);
+        get => memory.FastRead16(0x482D);
+        set => memory.FastWrite16(0x482D, value);
     }
 
     public int WorldType => -1;

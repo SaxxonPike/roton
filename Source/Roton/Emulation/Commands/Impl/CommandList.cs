@@ -10,29 +10,25 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super)]
 public sealed class CommandList : ICommandList
 {
-    private readonly Lazy<IDictionary<string, ICommand>> _commands;
-    private IDictionary<string, ICommand> Commands => _commands.Value;
+    private readonly Dictionary<string, ICommand> _commands;
 
-    public CommandList(IContextMetadataService contextMetadataService, 
-        Lazy<IEnumerable<ICommand>> commands)
+    public CommandList(IContextMetadataService contextMetadataService,
+        IEnumerable<ICommand> commands)
     {
-        _commands = new Lazy<IDictionary<string, ICommand>>(() =>
+        var result = new Dictionary<string, ICommand>();
+
+        foreach (var command in commands)
         {
-            var result = new Dictionary<string, ICommand>();
+            foreach (var attribute in contextMetadataService.GetMetadata(command))
+                result.Add(attribute.Name, command);
+        }
 
-            foreach (var command in commands.Value)
-            {
-                foreach (var attribute in contextMetadataService.GetMetadata(command))
-                    result.Add(attribute.Name, command);
-            }
-
-            return result;
-        });
+        _commands = result;
     }
 
     public ICommand Get(ReadOnlySpan<char> name)
     {
-        foreach (var entry in Commands)
+        foreach (var entry in _commands)
         {
             if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                 return entry.Value;
