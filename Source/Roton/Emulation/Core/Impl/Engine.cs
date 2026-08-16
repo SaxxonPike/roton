@@ -1572,7 +1572,7 @@ public sealed class Engine : IEngine, IDisposable
     private void ExecuteMessage(IOopContext context)
     {
         var result = Features.ExecuteMessage(context);
-        if (result is { Cancelled: false, Label: { } })
+        if (result is { Cancelled: false, Label: not null })
             context.NextLine = BroadcastLabel(context.Index, result.Label, false);
     }
 
