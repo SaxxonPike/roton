@@ -135,9 +135,9 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         Resized?.Invoke(this, new ResizedEventArgs {Width = width, Height = height, Wide = wide});
     }
 
-    public void Write(int x, int y, string value, int color)
+    public void Write(int x, int y, ReadOnlySpan<char> value, int color)
     {
-        foreach (var b in (value ?? string.Empty).ToBytes())
+        foreach (var b in value)
         {
             if (y >= Rows)
                 break;
@@ -148,7 +148,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
                 y++;
             }
 
-            Plot(x++, y, new AnsiChar(b, color));
+            Plot(x++, y, new AnsiChar(Cp437.CharToByte(b), color));
         }
     }
 

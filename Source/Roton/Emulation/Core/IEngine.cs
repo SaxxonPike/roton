@@ -56,7 +56,7 @@ public interface IEngine
     IElement ElementAt(IXyPair location);
     void EnterBoard();
     void ExecuteCode(int index, IExecutable instructionSource, string name);
-    bool ExecuteLabel(int sender, ISearchContext context, string term, string prefix);
+    bool ExecuteLabel(int sender, ISearchContext context, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix);
     bool ExecuteTransaction(IOopContext context, bool take);
     void FadePurple();
     bool FindTile(ITile kind, IXyPair location);

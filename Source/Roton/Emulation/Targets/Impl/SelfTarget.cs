@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,7 +9,7 @@ namespace Roton.Emulation.Targets.Impl;
 [Context(Context.Super, "SELF")]
 public sealed class SelfTarget : ITarget
 {
-    public bool Execute(int index, ISearchContext context, string term)
+    public bool Execute(int index, ISearchContext context, ReadOnlySpan<char> term)
     {
         if (index <= 0)
             return false;

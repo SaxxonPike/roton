@@ -14,7 +14,7 @@ public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
 
     private IParser Parser => parser;
 
-    public bool Execute(int index, ISearchContext context, string term)
+    public bool Execute(int index, ISearchContext context, ReadOnlySpan<char> term)
     {
         while (context.SearchIndex < Actors.Count)
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
@@ -17,10 +18,10 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         [DebuggerStepThrough] get => engine.Instance;
     }
 
-    public int Search(int index, string term)
+    public int Search(int index, ReadOnlySpan<char> term)
     {
         var result = -1;
-        if (string.IsNullOrEmpty(term))
+        if (term.IsEmpty)
             return result;
 
         var termBytes = term.Length <= 256 ? stackalloc byte[term.Length] : new byte[term.Length];
@@ -241,7 +242,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return success ? result : null;
     }
 
-    public bool GetTarget(int index, ISearchContext context, string term)
+    public bool GetTarget(int index, ISearchContext context, ReadOnlySpan<char> term)
     {
         context.SearchIndex++;
         var target = Engine.TargetList.Get(term) ?? Engine.TargetList.Get(string.Empty);

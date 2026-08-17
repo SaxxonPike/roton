@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -10,7 +11,7 @@ public sealed class OthersTarget(IActors actors) : ITarget
 {
     private IActors Actors => actors;
 
-    public bool Execute(int index, ISearchContext context, string term)
+    public bool Execute(int index, ISearchContext context, ReadOnlySpan<char> term)
     {
         if (context.SearchIndex >= Actors.Count)
             return false;

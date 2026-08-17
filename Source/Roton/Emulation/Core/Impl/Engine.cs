@@ -538,21 +538,19 @@ public sealed class Engine : IEngine, IDisposable
 
     public void CleanUpOop(IOopContext context) => Features.CleanUpOop(context);
 
-    public bool ExecuteLabel(int sender, ISearchContext context, string term, string prefix)
+    public bool ExecuteLabel(int sender, ISearchContext context, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
+        Span<char> buffer = stackalloc char[250];
         var label = term;
         var success = false;
         var split = label.IndexOf(':');
-        string target = null;
-
-        bool NextStat() =>
-            Parser.GetTarget(sender, context, target);
+        ReadOnlySpan<char> target = null;
 
         if (split > 0)
         {
-            target = label.Substring(0, split);
-            label = label.Substring(split + 1);
-            success = NextStat();
+            target = label.Slice(0, split);
+            label = label.Slice(split + 1);
+            success = Parser.GetTarget(sender, context, target);
         }
         else if (context.SearchIndex < sender)
         {
@@ -564,16 +562,18 @@ public sealed class Engine : IEngine, IDisposable
 
         while (success)
         {
-            if (label.UpCased() == Facts.RestartLabel)
+            if (label.Equals(Facts.RestartLabel, StringComparison.OrdinalIgnoreCase))
             {
                 context.SearchOffset = 0;
             }
             else
             {
-                context.SearchOffset = Parser.Search(context.SearchIndex, prefix + label);
+                prefix.CopyTo(buffer);
+                label.CopyTo(buffer.Slice(prefix.Length));
+                context.SearchOffset = Parser.Search(context.SearchIndex, buffer.Slice(0, prefix.Length + label.Length));
                 if (context.SearchOffset < 0 && split > 0)
                 {
-                    success = NextStat();
+                    success = Parser.GetTarget(sender, context, target);
                     continue;
                 }
             }
