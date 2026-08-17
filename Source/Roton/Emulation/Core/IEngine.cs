@@ -45,7 +45,7 @@ public interface IEngine
     int ActorIndexAt(IXyPair location);
     int Adjacent(IXyPair location, int id);
     void Attack(int index, IXyPair location);
-    bool BroadcastLabel(int sender, string label, bool ignoreLock);
+    bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
     void CleanUpOop(IOopContext context);
     void ClearBoard();
     void ClearSound();

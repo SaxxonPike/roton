@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -13,8 +14,10 @@ public sealed class BindCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(IOopContext context)
     {
+        Span<char> buffer = stackalloc char[256];
+
         var search = new SearchContext();
-        var target = Engine.Parser.ReadWord(context.Index, context);
+        var target = Engine.Parser.ReadWord(context.Index, context, buffer);
         if (Engine.Parser.GetTarget(context.Index, search, target))
         {
             var targetActor = Engine.Actors[search.SearchIndex];

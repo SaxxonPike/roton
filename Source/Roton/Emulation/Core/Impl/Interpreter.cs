@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -22,6 +23,7 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
 
     public void Execute(IOopContext context)
     {
+        Span<char> buffer = stackalloc char[256];
         var firstLine = true;
 
         while (true)
@@ -34,7 +36,7 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             context.Resume = false;
             context.Executed = true;
 
-            var name = Engine.Parser.ReadWord(context.Index, context);
+            var name = Engine.Parser.ReadWord(context.Index, context, buffer);
             if (name.Length == 0)
                 break;
 
@@ -48,9 +50,9 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             {
                 if (!Engine.BroadcastLabel(context.Index, name, false))
                 {
-                    if (!name.Contains(':'))
+                    if (name.IndexOf(':') < 0)
                     {
-                        Engine.RaiseError($"Bad command {name}");
+                        Engine.RaiseError($"Bad command {name.ToString()}");
                     }
                 }
                 else

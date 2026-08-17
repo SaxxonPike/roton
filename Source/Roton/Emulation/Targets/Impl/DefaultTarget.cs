@@ -16,6 +16,8 @@ public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
 
     public bool Execute(int index, ISearchContext context, ReadOnlySpan<char> term)
     {
+        Span<char> buffer = stackalloc char[256];
+
         while (context.SearchIndex < Actors.Count)
         {
             if (Actors[context.SearchIndex].Pointer != 0)
@@ -24,7 +26,7 @@ public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
                 var firstByte = Parser.ReadByte(context.SearchIndex, instruction);
                 if (firstByte == 0x40)
                 {
-                    var name = Parser.ReadWord(context.SearchIndex, instruction);
+                    var name = Parser.ReadWord(context.SearchIndex, instruction, buffer);
                     if (name.Equals(term, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }

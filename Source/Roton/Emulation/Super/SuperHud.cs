@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
@@ -143,7 +144,7 @@ public sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public override void DrawString(int x, int y, string text, int color)
+    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
         Terminal.Write(x, y, text, color);
     }

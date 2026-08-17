@@ -8,4 +8,6 @@ namespace Roton.Emulation.Super;
 public sealed class SuperFlags(IMemory memory) : Flags(memory, 0x7863 + 21)
 {
     public override int Count => 16;
+
+    protected override int ItemLength => 21;
 }

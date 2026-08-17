@@ -8,4 +8,6 @@ namespace Roton.Emulation.Original;
 public sealed class OriginalFlags(IMemory memory) : Flags(memory, 0x4837 + 21)
 {
     public override int Count => 10;
+
+    protected override int ItemLength => 21;
 }

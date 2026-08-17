@@ -56,8 +56,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             {
                 ReadByte(index, offs);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-                if (!(Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
-                      Engine.State.OopByte == 0x5F))
+                if (!(Engine.State.OopByte is >= 0x41 and <= 0x5A or 0x5F))
                 {
                     result = oldOffset;
                     break;
@@ -152,11 +151,14 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return Engine.State.OopNumber;
     }
 
-    public string ReadWord(int index, IExecutable instructionSource)
+    public void ReadWord(int index, IExecutable instructionSource)
     {
-        // Words are delimited by spaces and non-alphanumeric characters, so they are always short.
-        // 256 chars matches ReadLine and is well above any real-world OOP word length.
-        var buffer = (stackalloc char[256]);
+        Span<char> result = stackalloc char[256];
+        ReadWord(index, instructionSource, result);
+    }
+
+    public ReadOnlySpan<char> ReadWord(int index, IExecutable instructionSource, Span<char> buffer)
+    {
         var length = 0;
 
         while (true)
@@ -183,39 +185,42 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             }
         }
 
-        if (instructionSource.Instruction > 0)
-        {
+        if (instructionSource.Instruction > 0) 
             instructionSource.Instruction--;
-        }
 
-        Engine.State.OopWord = buffer.Slice(0, length).ToString();
-        return Engine.State.OopWord;
+        var result = buffer.Slice(0, length);
+        Engine.State.SetOopWord(result);
+        return result;
     }
 
     public bool? GetCondition(IOopContext oopContext)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, oopContext, buffer);
         var condition = Engine.ConditionList.Get(name);
         return condition?.Execute(oopContext) ?? Engine.World.Flags.Contains(name);
     }
 
     public IXyPair GetDirection(IOopContext oopContext)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, oopContext, buffer);
         var direction = Engine.DirectionList.Get(name);
         return direction?.Execute(oopContext);
     }
 
     public IItem GetItem(IOopContext oopContext)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, oopContext, buffer);
         var item = Engine.ItemList.Get(name);
         return item;
     }
 
     public ITile GetKind(IOopContext oopContext)
     {
-        var word = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var word = ReadWord(oopContext.Index, oopContext, buffer);
         var result = new Tile(0, 0);
         var success = false;
 
@@ -225,7 +230,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                 continue;
 
             result.Color = i + 8;
-            word = ReadWord(oopContext.Index, oopContext);
+            word = ReadWord(oopContext.Index, oopContext, buffer);
             break;
         }
 

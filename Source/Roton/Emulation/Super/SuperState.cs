@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -17,7 +18,7 @@ public sealed class SuperState : IState
         Memory = memory;
         EngineResourceService = engineResourceService;
         Heap = heap;
-            
+
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
         BorderTile = new Tile(0, 0); // Not in memory
         DefaultActor = new Actor(Memory, Heap, 0x2262);
@@ -151,8 +152,8 @@ public sealed class SuperState : IState
 
     public EngineKeyCode KeyPressed
     {
-        get => (EngineKeyCode) Memory.Read8(0xCC76);
-        set => Memory.Write8(0xCC76, (int) value);
+        get => (EngineKeyCode)Memory.Read8(0xCC76);
+        set => Memory.Write8(0xCC76, (int)value);
     }
 
     public bool KeyShift
@@ -164,9 +165,9 @@ public sealed class SuperState : IState
     public IXyPair KeyVector { get; }
 
     public IReadOnlyList<int> LineChars { get; }
-    
+
     public IReadOnlyList<string> ProgressAnimation { get; }
-    
+
     public IReadOnlyList<int> ProgressColors { get; }
 
     public string Message
@@ -262,4 +263,14 @@ public sealed class SuperState : IState
         get => Memory.ReadBool(0xB97C);
         set => Memory.WriteBool(0xB97C, value);
     }
+
+    public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
+    {
+        var span = Memory.ReadStringSpan(0xB964);
+        Cp437.BytesToChars(span, buffer);
+        return buffer.Slice(0, span.Length);
+    }
+
+    public void SetOopWord(ReadOnlySpan<char> buffer) =>
+        Memory.WriteString(0xB964, buffer);
 }

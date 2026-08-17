@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace Roton.Emulation.Core.Impl
 
         public void TraceInput(EngineKeyCode keyCode)
         {
+            if (_writers.Count == 0)
+                return;
+            
             foreach (var writer in _writers)
                 writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
@@ -50,8 +54,11 @@ namespace Roton.Emulation.Core.Impl
             _stepNumber++;
         }
 
-        public void TraceBroadcast(int sender, string term, int targetIndex, bool ignoreLock, bool ignoreSelfLock)
+        public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock, bool ignoreSelfLock)
         {
+            if (_writers.Count == 0)
+                return;
+            
             if (sender == targetIndex && !ignoreLock && !ignoreSelfLock)
                 return;
             
@@ -64,7 +71,7 @@ namespace Roton.Emulation.Core.Impl
             var optionsString = string.Join(" ", options.Where(o => !string.IsNullOrEmpty(o)));
 
             foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:{sender:D3} BROADCAST  {term} -> {targetIndex}  {optionsString}");
+                writer.WriteLine($"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
         }
 
         public void Attach(TextWriter writer)

@@ -14,7 +14,8 @@ public interface IParser
     int ReadByte(int index, IExecutable instructionSource);
     string ReadLine(int index, IExecutable instructionSource);
     int ReadNumber(int index, IExecutable instructionSource);
-    string ReadWord(int index, IExecutable instructionSource);
+    void ReadWord(int index, IExecutable instructionSource);
+    ReadOnlySpan<char> ReadWord(int index, IExecutable instructionSource, Span<char> buffer);
     int Search(int index, ReadOnlySpan<char> term);
     int GetNumber(IOopContext context);
     void DiscardLine(int index, IExecutable instructionSource);

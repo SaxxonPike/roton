@@ -252,7 +252,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public IBoard Board { get; }
 
-    public bool BroadcastLabel(int sender, string label, bool ignoreLock)
+    public bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock)
     {
         var ignoreSelfLock = false;
         var success = false;
@@ -269,7 +269,7 @@ public sealed class Engine : IEngine, IDisposable
             SearchOffset = 0
         };
 
-        while (ExecuteLabel(sender, info, label, "\x000D:"))
+        while (ExecuteLabel(sender, info, label, "\r:"))
         {
             if (!ActorIsLocked(info.SearchIndex) || ignoreLock || sender == info.SearchIndex && !ignoreSelfLock)
             {
@@ -540,7 +540,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public bool ExecuteLabel(int sender, ISearchContext context, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
-        Span<char> buffer = stackalloc char[250];
+        Span<char> buffer = stackalloc char[256];
         var label = term;
         var success = false;
         var split = label.IndexOf(':');

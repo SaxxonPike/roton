@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
@@ -14,7 +15,7 @@ public interface IHud
     void DrawMessage(IMessage message, int color);
     void DrawPausing();
     void DrawStatusLine(int y);
-    void DrawString(int x, int y, string text, int color);
+    void DrawString(int x, int y, ReadOnlySpan<char> text, int color);
     void DrawTile(int x, int y, AnsiChar ac);
     void DrawTitleStatus();
     bool EndGameConfirmation();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
 
@@ -45,7 +46,7 @@ public interface IState
     string Message2 { get; set; }
     int OopByte { get; set; }
     int OopNumber { get; set; }
-    string OopWord { get; set; }
+    //string OopWord { get; set; }
     int PlayerElement { get; set; }
     int PlayerTime { get; set; }
     bool QuitEngine { get; set; }
@@ -55,4 +56,7 @@ public interface IState
     int StartBoard { get; set; }
     string WorldFileName { get; set; }
     bool WorldLoaded { get; set; }
+
+    ReadOnlySpan<char> GetOopWord(Span<char> buffer);
+    void SetOopWord(ReadOnlySpan<char> buffer);
 }

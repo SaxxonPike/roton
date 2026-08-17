@@ -27,7 +27,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected Mock<IClock> ClockMock { get; private set; }
     protected FixedFileSystem FileSystem { get; private set; }
     protected Config Config { get; private set; }
-    protected Mock<ITerminal> TerminalMock { get; private set; }
+    protected TestTerminal Terminal { get; private set; }
     protected TestKeyboard Keyboard { get; private set; }
     protected Mock<ISpeaker> SpeakerMock { get; private set; }
     protected ITracer Tracer { get; private set; }
@@ -131,7 +131,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             // from a thread that doesn't run during testing, leading to infinite loops.
             FastMode = true
         };
-        TerminalMock = new Mock<ITerminal>();
+        Terminal = new TestTerminal();
         Keyboard = new TestKeyboard();
         SpeakerMock = new Mock<ISpeaker>();
         ClockMock = new Mock<IClock>();
@@ -143,7 +143,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         builder.Register(_ => FileSystem)
             .As<IFileSystem>()
             .SingleInstance();
-        builder.Register(_ => TerminalMock.Object)
+        builder.Register(_ => Terminal)
             .As<ITerminal>()
             .SingleInstance();
         builder.Register(_ => Keyboard)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -284,4 +285,14 @@ public sealed class OriginalState : IState
         get => Memory.ReadBool(0x7428);
         set => Memory.WriteBool(0x7428, value);
     }
+
+    public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
+    {
+        var span = Memory.ReadStringSpan(0x7410);
+        Cp437.BytesToChars(span, buffer);
+        return buffer.Slice(0, span.Length);
+    }
+
+    public void SetOopWord(ReadOnlySpan<char> buffer) => 
+        Memory.WriteString(0x7410, buffer);
 }

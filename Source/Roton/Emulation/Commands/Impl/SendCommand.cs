@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -13,7 +14,8 @@ public sealed class SendCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(IOopContext context)
     {
-        var target = Engine.Parser.ReadWord(context.Index, context);
+        Span<char> buffer = stackalloc char[256];
+        var target = Engine.Parser.ReadWord(context.Index, context, buffer);
         context.NextLine = Engine.BroadcastLabel(context.Index, target, false);
     }
 }
