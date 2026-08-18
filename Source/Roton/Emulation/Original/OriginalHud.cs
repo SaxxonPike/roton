@@ -13,7 +13,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalHud : Hud
 {
-    private readonly Location[] _fadeMatrix;
+    private readonly Location[] _fadeMatrix = new Location[ViewportTileCount];
 
     public OriginalHud(
         IEngineAccessor engine,
@@ -28,7 +28,6 @@ public sealed class OriginalHud : Hud
         TextEntryHud = textEntryHud;
         ChoiceHud = choiceHud;
         LongTextEntryHud = longTextEntryHud;
-        _fadeMatrix = new Location[ViewportTileCount];
         InitializeFadeMatrix();
     }
 
