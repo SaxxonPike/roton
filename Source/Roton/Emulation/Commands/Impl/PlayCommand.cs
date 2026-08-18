@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -12,7 +13,9 @@ public sealed class PlayCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var notes = Engine.Parser.ReadLine(context.Index, ref instruction);
+        Span<char> buffer = stackalloc char[256];
+
+        var notes = Engine.Parser.ReadLine(context.Index, ref instruction, buffer);
         var sound = Engine.MusicEncoder.Encode(notes);
         Engine.PlaySound(-1, sound);
         context.NextLine = false;

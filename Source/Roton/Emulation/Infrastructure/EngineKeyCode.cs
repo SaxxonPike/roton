@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Infrastructure;
 
-public enum EngineKeyCode
+public enum EngineKeyCode : byte
 {
     None = 0x00,
     Tab = 0x07,

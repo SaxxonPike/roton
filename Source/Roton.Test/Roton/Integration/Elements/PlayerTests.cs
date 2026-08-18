@@ -2,7 +2,6 @@ using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
@@ -247,7 +246,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
             "bomb should be present after activation");
         Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
             "correct message should be displayed");
-        actor.P1.Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
+        ((int)actor.P1).Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
             "bomb should have the maximum timer set");
     }
 
@@ -496,5 +495,32 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
             "player should have used ammo");
         TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
             "breakable wall should have been broken");
+    }
+
+    [Test]
+    public void PlayerClone_OnTitleScreen_ShouldInteract()
+    {
+        // On the title screen, actor 0 element will be Monitor instead of player.
+        TileAt(Player.Location).Id = ElementList.MonitorId;
+        State.PlayerElement = ElementList.MonitorId;
+        
+        // Spawn a player clone.
+        SpawnTo(5, 5, ElementList.PlayerId);
+        
+        // Place an object that will receive the clone's input.
+        var objectId = SpawnTo(5, 4, ElementList.ObjectId);
+        Actors[objectId].Cycle = 1;
+        SetActorCode(objectId, 
+            "#end",
+            ":touch",
+            "#set f1"
+        );
+        
+        // Make the player clone touch the object.
+        Type(AnsiKey.Up);
+        StepAllKeys();
+        
+        // Assert.
+        Flags.AsEnumerable().Should().Contain(["F1"]);
     }
 }

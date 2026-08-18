@@ -49,6 +49,21 @@ public abstract class Alerts : IAlerts
         CantShootHere = true;
         NotDark = true;
         NoTorches = true;
-        TorchPickup = true;            
+        TorchPickup = true;
+    }
+
+    public void SetAll()
+    {
+        AmmoPickup = false;
+        Dark = false;
+        EnergizerPickup = false;
+        FakeWall = false;
+        Forest = false;
+        GemPickup = false;
+        OutOfAmmo = false;
+        CantShootHere = false;
+        NotDark = false;
+        NoTorches = false;
+        TorchPickup = false;
     }
 }

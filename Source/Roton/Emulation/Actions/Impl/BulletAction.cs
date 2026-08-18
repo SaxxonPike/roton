@@ -18,7 +18,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
         {
             var target = actor.Location + actor.Vector;
             var element = Engine.Tiles.ElementAt(target);
-            if (element.IsFloor || element.Id == Engine.ElementList.WaterId)
+            if (element.IsFloor || element.Id == Engine.ElementList.WaterId || element.Id == Engine.ElementList.LavaId)
             {
                 Engine.MoveActor(index, target);
                 break;

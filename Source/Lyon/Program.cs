@@ -5,6 +5,7 @@ using System.Linq;
 using Autofac;
 using Lyon.App;
 using Lyon.Autofac;
+using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -39,6 +40,7 @@ public static class Program
             MasterClockDenominator = 7275,
             FastMode = switches.Contains("--fast"),
             TraceOop = switches.Contains("--trace"),
+            NoPesterMode = switches.Contains("--no-pester"),
         };
 
         var selector = new ContextEngineSelector();

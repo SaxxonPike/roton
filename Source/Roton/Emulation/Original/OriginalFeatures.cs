@@ -145,7 +145,8 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         {
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.Player.Location += Engine.State.KeyVector;
-            Engine.Tiles[Engine.Player.Location] = new Tile(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
+            Engine.Tiles[Engine.Player.Location] =
+                new Tile(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
             Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
@@ -183,6 +184,18 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
     {
         return $"{baseName}.SAV";
     }
+
+    private bool TestAdjacent(Location location, int id)
+    {
+        var eId = Engine.Tiles[location].Id;
+        return eId == id || eId == Engine.ElementList.BoardEdgeId;
+    }
+
+    public int GetAdjacent(Location location, int id) =>
+        (TestAdjacent(location + Vector.North, id) ? 1 : 0) |
+        (TestAdjacent(location + Vector.South, id) ? 2 : 0) |
+        (TestAdjacent(location + Vector.West, id) ? 4 : 0) |
+        (TestAdjacent(location + Vector.East, id) ? 8 : 0);
 
     public bool HandleTitleInput()
     {

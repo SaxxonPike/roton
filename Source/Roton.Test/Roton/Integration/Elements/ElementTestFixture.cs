@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Roton.Emulation.Data.Impl;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -15,12 +14,12 @@ public abstract class ElementTestFixture(Context context) : AllContextIntegratio
             return;
         }
 
-        Tracer.Attach(TestContext.Out);
+        EnableTracer();
     }
 
     [TearDown]
     public void __TearDown()
     {
-        Tracer.Detach(TestContext.Out);
+        DisableTracer();
     }
 }

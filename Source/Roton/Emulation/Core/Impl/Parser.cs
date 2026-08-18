@@ -27,13 +27,13 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
         var offs = new Word();
-        
+
         while (offs < actor.Length)
         {
             var oldOffset = offs;
             var termOffset = 0;
             bool success;
-        
+
             while (true)
             {
                 ReadByte(index, ref offs);
@@ -42,7 +42,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                     success = false;
                     break;
                 }
-        
+
                 termOffset++;
                 if (termOffset >= termBytes.Length)
                 {
@@ -50,26 +50,26 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                     break;
                 }
             }
-        
+
             if (success)
             {
                 ReadByte(index, ref offs);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-                if (Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
+                if ((int)Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
                 {
                     result = oldOffset;
                     break;
                 }
             }
-        
+
             oldOffset++;
             offs = oldOffset;
         }
-        
+
         return result;
     }
 
-    public int GetNumber(ref OopContext context, ref Word instruction) => 
+    public int GetNumber(ref OopContext context, ref Word instruction) =>
         ReadNumber(context.Index, ref instruction);
 
     public void DiscardLine(int index, ref Word instruction)
@@ -104,8 +104,15 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         // 256 chars is generous headroom while remaining safe for stack allocation (~512 bytes).
 
         var buffer = (stackalloc char[256]);
+        return ReadLine(index, ref instruction, buffer).ToString();
+    }
+
+    public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
+    {
         var length = 0;
+
         ReadByte(index, ref instruction);
+
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
             if (length < buffer.Length)
@@ -113,7 +120,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             ReadByte(index, ref instruction);
         }
 
-        return buffer.Slice(0, length).ToString();
+        return buffer.Slice(0, length);
     }
 
     public int ReadNumber(int index, ref Word instruction)
@@ -126,7 +133,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         }
 
         Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-        while (Engine.State.OopByte is >= 0x30 and <= 0x39)
+        while ((int)Engine.State.OopByte is >= 0x30 and <= 0x39)
         {
             success = true;
             resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
@@ -172,9 +179,9 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
         var oopByte = Engine.State.OopByte;
 
-        if (oopByte is not (>= 0x30 and <= 0x39))
+        if ((int)oopByte is not (>= 0x30 and <= 0x39))
         {
-            while (oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
+            while ((int)oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
             {
                 if (length < buffer.Length)
                     buffer[length++] = oopByte.ToChar();
@@ -184,7 +191,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             }
         }
 
-        if (instruction > 0) 
+        if (instruction > 0)
             instruction--;
 
         var result = buffer.Slice(0, length);
@@ -223,24 +230,18 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         var result = new Tile(0, 0);
         var success = false;
 
-        for (var i = 1; i < 8; i++)
+        var colorId = Engine.Colors.IndexOf(word);
+        if (colorId > 0)
         {
-            if (!Engine.Colors[i].CaseInsensitiveEqual(word))
-                continue;
-
-            result.Color = i + 8;
+            result.Color = colorId + 8;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
-            break;
         }
 
-        foreach (var element in Engine.ElementList.Where(e => e != null))
+        var elementId = Engine.ElementList.IndexOf(word);
+        if (elementId >= 0)
         {
-            if (!element.NameMatches(word))
-                continue;
-
             success = true;
-            result.Id = element.Id;
-            break;
+            result.Id = elementId;
         }
 
         return success ? result : null;

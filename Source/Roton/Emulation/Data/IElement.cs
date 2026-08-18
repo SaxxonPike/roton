@@ -26,5 +26,6 @@ public interface IElement
     int Points { get; set; }
     string StepEditText { get; set; }
 
+    bool CanContainCode { get; }
     bool NameMatches(ReadOnlySpan<char> name);
 }

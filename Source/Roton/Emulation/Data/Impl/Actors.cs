@@ -12,6 +12,23 @@ public abstract class Actors(IMemory memory, int capacity) : FixedList<IActor>, 
 
     public IActor Player => this[0];
 
+    public IActor ActorAt(Location location) => 
+        GetItem(ActorIndexAt(location));
+
+    public int ActorIndexAt(Location location)
+    {
+        var count = Count;
+
+        for (var i = 0; i < count; i++)
+        {
+            var actor = GetItem(i);
+            if (actor.Location == location)
+                return i;
+        }
+
+        return -1;
+    }
+
     protected abstract IActor GetActor(int index);
 
     protected sealed override IActor GetItem(int index)

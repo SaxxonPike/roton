@@ -65,7 +65,7 @@ public interface IEngine
     int GetColorMatchValue(int color);
     void HandlePlayerInput(IActor actor);
     void Harm(int index);
-    void LoadWorld(string name, bool savedGame);
+    bool LoadWorld(string name, bool savedGame);
     void LockActor(int index);
     void MoveActor(int index, Location location);
     void MoveActorOnRiver(int index);
@@ -123,4 +123,7 @@ public interface IEngine
     string ShowLoad(string title, string extension);
     void PackBoard();
     void UnpackBoard(int index);
+    void Delay(int msec);
+    void PlayErrorSound();
+    int ResetBoardTimeHsec();
 }

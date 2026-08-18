@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Infrastructure;
 
@@ -260,5 +261,27 @@ internal static class Utility
 
             return i == a.Length && j == b.Length;
         }
+    }
+    
+    extension(HWord a)
+    {
+        /// <summary>
+        /// Get the uppercase representation of an ASCII char stored as an integer.
+        /// </summary>
+        [DebuggerStepThrough]
+        public int ToUpperCase() =>
+            (int)a switch
+            {
+                >= 0x61 and <= 0x7A => a - 0x20,
+                _ => a
+            };
+
+        /// <summary>
+        /// Convert an integer to a character using code page 437.
+        /// </summary>
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public char ToChar() => 
+            Cp437.ByteToChar(a);
     }
 }

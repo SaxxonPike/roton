@@ -27,6 +27,7 @@ public sealed class Engine : IEngine, IDisposable
     private readonly IFileDialog _fileDialog;
 
     private int _ticksToRun;
+    private float _boardTimeHsec;
     private bool _step;
     private readonly IEngineAccessor _engineAccessor;
 
@@ -95,7 +96,12 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ClockTick(object sender, EventArgs args)
     {
-        if (_ticksToRun < 3) _ticksToRun++;
+        if (_ticksToRun < 3)
+            _ticksToRun++;
+        
+        if (!State.GamePaused)
+            _boardTimeHsec += Config.MasterClockNumerator * 100f / Config.MasterClockDenominator;
+
         if (!ThreadActive)
             Clock.Stop();
     }
@@ -190,38 +196,18 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActionList ActionList { get; }
 
-    public IActor ActorAt(Location location)
-    {
-        return Actors
-                   .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y) ??
-               Actors[-1];
-    }
+    public IActor ActorAt(Location location) =>
+        Actors.ActorAt(location);
 
-    public int ActorIndexAt(Location location)
-    {
-        var index = 0;
-        foreach (var actor in Actors)
-        {
-            if (actor.Location == location)
-                return index;
-            index++;
-        }
-
-        return -1;
-    }
+    public int ActorIndexAt(Location location) =>
+        Actors.ActorIndexAt(location);
 
     public event EventHandler Exited;
     public event EventHandler Tick;
 
     public IActors Actors { get; }
 
-    public int Adjacent(Location location, int id)
-    {
-        return (location.Y <= 1 || Tiles[location + Vector.North].Id == id ? 1 : 0) |
-               (location.Y >= Tiles.Height || Tiles[location + Vector.South].Id == id ? 2 : 0) |
-               (location.X <= 1 || Tiles[location + Vector.West].Id == id ? 4 : 0) |
-               (location.X >= Tiles.Width || Tiles[location + Vector.East].Id == id ? 8 : 0);
-    }
+    public int Adjacent(Location location, int id) => Features.GetAdjacent(location, id);
 
     public IAlerts Alerts { get; }
 
@@ -302,7 +288,12 @@ public sealed class Engine : IEngine, IDisposable
     {
         State.BoardCount = 0;
         Boards.Clear();
-        Alerts.Reset();
+
+        if (Config.NoPesterMode)
+            Alerts.SetAll();
+        else
+            Alerts.Reset();
+
         ClearBoard();
         Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
         World.BoardIndex = 0;
@@ -445,7 +436,11 @@ public sealed class Engine : IEngine, IDisposable
 
     public IElementList ElementList { get; }
 
-    public void EnterBoard() => Features.EnterBoard();
+    public void EnterBoard()
+    {
+        _boardTimeHsec = 0;
+        Features.EnterBoard();
+    }
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
@@ -470,6 +465,7 @@ public sealed class Engine : IEngine, IDisposable
             while (context.Command == ':')
             {
                 Parser.DiscardLine(index, ref instruction);
+                Tracer?.TraceOop(ref context, ref instruction);
                 context.Command = ReadActorCodeByte(index, ref instruction);
             }
 
@@ -584,7 +580,7 @@ public sealed class Engine : IEngine, IDisposable
         return success;
     }
 
-    public bool ExecuteTransaction(ref OopContext context, ref Word instruction,  bool take)
+    public bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take)
     {
         // Does the item exist?
         var item = Parser.GetItem(ref context, ref instruction);
@@ -720,7 +716,7 @@ public sealed class Engine : IEngine, IDisposable
     private void ShowFormattedScroll(string error) =>
         Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
-    public void LoadWorld(string name, bool savedGame)
+    public bool LoadWorld(string name, bool savedGame)
     {
         byte[] TryLoadWorld()
         {
@@ -740,18 +736,21 @@ public sealed class Engine : IEngine, IDisposable
         if (worldData == null || worldData.Length == 0)
         {
             ShowDosError();
-            return;
+            return false;
         }
 
         using (var stream = new MemoryStream(worldData))
         {
             if (stream.Length == 0)
-                return;
+                return false;
 
             using var reader = new BinaryReader(stream);
             var type = reader.ReadInt16();
             if (type != World.WorldType)
-                throw new Exception("Incompatible world for this engine.");
+            {
+                Hud.FailToLoadWorld();
+                return false;
+            }
 
             var numBoards = reader.ReadInt16();
             if (numBoards < 0)
@@ -774,6 +773,7 @@ public sealed class Engine : IEngine, IDisposable
         Hud.CreateStatusWorld();
         UnpackBoard(World.BoardIndex);
         State.WorldLoaded = true;
+        return true;
     }
 
     private void ShowDosError()
@@ -801,8 +801,8 @@ public sealed class Engine : IEngine, IDisposable
         ref var sourceTile = ref Tiles[actor.Location];
         ref var targetTile = ref Tiles[target];
         var underTile = actor.UnderTile;
+        var nextUnderTile = targetTile;
 
-        actor.UnderTile = targetTile;
         if (targetTile.Id == ElementList.EmptyId)
             targetTile = new Tile(sourceTile.Id, sourceTile.Color & 0x0F);
         else
@@ -815,6 +815,7 @@ public sealed class Engine : IEngine, IDisposable
 
         UpdateBoard(target);
         UpdateBoard(sourceLocation);
+        actor.UnderTile = nextUnderTile;
 
         if (index == 0 && Board.IsDark)
         {
@@ -957,7 +958,7 @@ public sealed class Engine : IEngine, IDisposable
             ref var furtherTile = ref Tiles[location + vector];
             if (furtherTile.Id == ElementList.TransporterId)
                 PushThroughTransporter(location, vector);
-            else if (furtherTile.Id != ElementList.EmptyId) 
+            else if (furtherTile.Id != ElementList.EmptyId)
                 Push(location + vector, vector);
 
             var furtherElement = ElementList[furtherTile.Id];
@@ -965,7 +966,7 @@ public sealed class Engine : IEngine, IDisposable
                 Destroy(location + vector);
 
             furtherElement = ElementList[furtherTile.Id];
-            if (furtherElement.IsFloor) 
+            if (furtherElement.IsFloor)
                 MoveTile(location, location + vector);
         }
     }
@@ -1202,6 +1203,10 @@ public sealed class Engine : IEngine, IDisposable
         LoadWorld(name, false);
         State.StartBoard = World.BoardIndex;
         SetBoard(0);
+
+        var element = ElementList[State.PlayerElement];
+        Tiles[Player.Location] = new Tile(element.Id, element.Color);
+
         FadePurple();
     }
 
@@ -1211,7 +1216,9 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return false;
 
-        LoadWorld(name, true);
+        if (!LoadWorld(name, true))
+            return false;
+
         State.StartBoard = World.BoardIndex;
         World.IsLocked = false;
         SetBoard(State.StartBoard);
@@ -1328,7 +1335,7 @@ public sealed class Engine : IEngine, IDisposable
                         var element = ElementAt(target);
                         if (mode == RadiusMode.Explode)
                         {
-                            if (element.CodeEditText.Length > 0)
+                            if (element.CanContainCode)
                             {
                                 var actorIndex = ActorIndexAt(target);
                                 if (actorIndex > 0) BroadcastLabel(-actorIndex, Facts.BombedLabel, false);
@@ -1557,6 +1564,8 @@ public sealed class Engine : IEngine, IDisposable
             MainLoopInit(doFade);
         }
 
+        State.BreakGameLoop = false;
+
         while (ThreadActive)
         {
             if (!State.GamePaused)
@@ -1575,7 +1584,7 @@ public sealed class Engine : IEngine, IDisposable
             {
                 State.ActIndex = State.ActorCount + 1;
 
-                if (Timers.Player.Clock(Facts.PauseFlashInterval))
+                if (Timers.Player.Clock(1, Facts.PauseFlashInterval) > 0)
                     alternating = !alternating;
 
                 if (alternating)
@@ -1631,7 +1640,7 @@ public sealed class Engine : IEngine, IDisposable
             if (State.ActIndex > State.ActorCount)
             {
                 if (!State.BreakGameLoop && !State.GamePaused)
-                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
+                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(1, State.GameWaitTime) > 0)
                     {
                         State.GameCycle++;
                         if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
@@ -1700,7 +1709,6 @@ public sealed class Engine : IEngine, IDisposable
             FadePurple();
 
         State.GameWaitTime = State.GameSpeed << 1;
-        State.BreakGameLoop = false;
         State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);
         State.ActIndex = State.ActorCount + 1;
     }
@@ -1919,6 +1927,26 @@ public sealed class Engine : IEngine, IDisposable
     {
         GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
         World.BoardIndex = boardIndex;
+    }
+
+    public void Delay(int msec)
+    {
+        var waitUntil = DateTime.Now + TimeSpan.FromMilliseconds(msec);
+        while (DateTime.Now < waitUntil)
+            WaitForTick();
+    }
+
+    public void PlayErrorSound()
+    {
+        ClearSound();
+        PlaySound(1, MusicEncoder.Encode("s004x114x9"));
+    }
+
+    public int ResetBoardTimeHsec()
+    {
+        var result = (int)Math.Truncate(_boardTimeHsec);
+        _boardTimeHsec -= result;
+        return result;
     }
 
     public void Dispose()

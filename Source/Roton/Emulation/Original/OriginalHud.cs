@@ -13,25 +13,26 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalHud : Hud
 {
-    private readonly Location[] _fadeMatrix;
-
     public OriginalHud(
         IEngineAccessor engine,
         ITerminal terminal,
         IScroll scroll,
         ITextEntryHud textEntryHud,
         IChoiceHud choiceHud,
-        ILongTextEntryHud longTextEntryHud)
+        ILongTextEntryHud longTextEntryHud,
+        IFadeMatrix fadeMatrix)
         : base(engine, scroll)
     {
         Terminal = terminal;
         TextEntryHud = textEntryHud;
         ChoiceHud = choiceHud;
         LongTextEntryHud = longTextEntryHud;
-        _fadeMatrix = new Location[ViewportTileCount];
-        InitializeFadeMatrix();
+        FadeMatrix = fadeMatrix;
+        fadeMatrix.Initialize();
     }
 
+    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } 
+    
     private ITerminal Terminal { [DebuggerStepThrough] get; }
 
     private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; }
@@ -41,8 +42,6 @@ public sealed class OriginalHud : Hud
     private ILongTextEntryHud LongTextEntryHud { [DebuggerStepThrough] get; }
 
     private const int ViewportHeight = 25;
-
-    private const int ViewportTileCount = ViewportWidth * ViewportHeight;
 
     private const int ViewportWidth = 60;
 
@@ -207,37 +206,9 @@ public sealed class OriginalHud : Hud
         DrawString(0x3E, 0x05, @"Pick a command:", 0x1B);
     }
 
-    public override void FadeBoard(AnsiChar ac)
-    {
-        for (var i = 0; i < ViewportTileCount; i++)
-        {
-            var location = _fadeMatrix[i];
-            DrawTileCommon(location.X, location.Y, ac);
-            FadeWait(i);
-        }
-    }
+    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
 
-    private void FadeWait(int i)
-    {
-        if ((i & 0x7F) == 0)
-        {
-            Engine.WaitForTick();
-        }
-    }
-
-    private void RandomizeFadeMatrix()
-    {
-        var rnd = Engine.Random;
-        InitializeFadeMatrix();
-            
-        for (var i = 0; i < ViewportTileCount; i++)
-        {
-            var sourceIndex = i;
-            var targetIndex = rnd.GetNext(_fadeMatrix.Length);
-            (_fadeMatrix[sourceIndex], _fadeMatrix[targetIndex]) =
-                (_fadeMatrix[targetIndex], _fadeMatrix[sourceIndex]);
-        }
-    }
+    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
 
     public override void Initialize()
     {
@@ -245,32 +216,12 @@ public sealed class OriginalHud : Hud
         Terminal.SetSize(Engine.State.EditorMode ? 60 : 80, 25, false);
     }
 
-    private void InitializeFadeMatrix()
-    {
-        var index = 0;
-        for (var x = 0; x < ViewportWidth; x++)
-        {
-            for (var y = 0; y < ViewportHeight; y++)
-            {
-                _fadeMatrix[index++] = new Location(x, y);
-            }
-        }            
-    }
-
     private static string IntToString(int i)
     {
         return $"{i} ";
     }
 
-    public override void RedrawBoard()
-    {
-        for (var i = 0; i < ViewportTileCount; i++)
-        {
-            var location = _fadeMatrix[i];
-            DrawTileCommon(location.X, location.Y, Engine.Draw(location + 1));
-            FadeWait(i);
-        }
-    }
+    public override void RedrawBoard() => FadeMatrix.FadeIn();
 
     public override void UpdateBorder()
     {
@@ -421,5 +372,13 @@ public sealed class OriginalHud : Hud
         DrawStatusLine(3);
         DrawStatusLine(5);
         return result;
+    }
+
+    public override void FailToLoadWorld()
+    {
+        DrawString(62, 4, "You need a newer", 0x1E);
+        DrawString(62, 5, " version of ZZT!", 0x1E);
+        Engine.PlayErrorSound();
+        Engine.Delay(2000);
     }
 }

@@ -4,10 +4,21 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
+/// <summary>
+/// Base class for lists of items that have a fixed length internally.
+/// </summary>
+/// <typeparam name="T">
+/// Type of items in the list.
+/// </typeparam>
 public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 {
     private Func<int, T> _getter;
-    
+
+    /// <summary>
+    /// Index of the first item in the list. Used for enumeration.
+    /// </summary>
+    protected virtual int FirstIndex => 0;
+
     public virtual void Add(T item)
     {
         throw new InvalidOperationException();
@@ -21,7 +32,7 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
     public virtual bool Contains(T item)
     {
         for (var i = 0; i < Count; i++)
-            if (EqualsItem(i, item))
+            if (EqualsItem(i + FirstIndex, item))
                 return true;
 
         return false;
@@ -41,20 +52,16 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
         throw new InvalidOperationException();
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => 
+        GetEnumerator();
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => 
+        GetEnumerator();
 
     public LinearEnumerator<T> GetEnumerator()
     {
         _getter ??= GetItem;
-        return new LinearEnumerator<T>(_getter, Count);
+        return new LinearEnumerator<T>(_getter, Count, FirstIndex);
     }
 
     public virtual int IndexOf(T item)
@@ -87,6 +94,6 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
     {
     }
 
-    protected virtual bool EqualsItem(int index, T value) => 
+    protected virtual bool EqualsItem(int index, T value) =>
         GetItem(index).GetHashCode() == value.GetHashCode();
 }

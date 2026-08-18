@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl;
@@ -10,7 +12,7 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 public sealed class MusicEncoder : IMusicEncoder
 {
-    public ISound Encode(string music)
+    public ISound Encode(ReadOnlySpan<char> music)
     {
         var speed = 1;
         var octave = 3;
@@ -18,15 +20,17 @@ public sealed class MusicEncoder : IMusicEncoder
         var isNote = false;
         var note = -1;
 
-        foreach (var c in music.ToUpperInvariant())
+        foreach (var c in music)
         {
+            var ch = c.ToUpperCase();
+
             if (!isNote)
             {
                 note = -1;
             }
             else
             {
-                switch (c)
+                switch (ch)
                 {
                     case '!':
                         note--;
@@ -41,7 +45,7 @@ public sealed class MusicEncoder : IMusicEncoder
                 result.Add(speed);
             }
 
-            switch (c)
+            switch (ch)
             {
                 case 'T':
                     speed = 1;
@@ -116,7 +120,7 @@ public sealed class MusicEncoder : IMusicEncoder
                 case '7':
                 case '8':
                 case '9':
-                    result.Add(0xF0 | (c - 0x30));
+                    result.Add(0xF0 | (ch - 0x30));
                     result.Add(speed);
                     break;
             }

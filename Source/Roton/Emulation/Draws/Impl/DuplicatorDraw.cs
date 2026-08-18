@@ -12,7 +12,7 @@ public sealed class DuplicatorDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return Engine.ActorAt(location).P1 switch
+        return (int)Engine.ActorAt(location).P1 switch
         {
             2 => new AnsiChar(0xF9, Engine.Tiles[location].Color),
             3 => new AnsiChar(0xF8, Engine.Tiles[location].Color),

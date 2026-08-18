@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
@@ -65,5 +66,6 @@ public interface IElementList : IEnumerable<IElement>
     int WaterId { get; }
     int WebId { get; }
 
+    int IndexOf(ReadOnlySpan<char> name);
     void Reset();
 }

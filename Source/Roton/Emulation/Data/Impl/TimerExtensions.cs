@@ -2,15 +2,15 @@
 
 public static class TimerExtensions
 {
-    public static bool Clock(this ITimer timer, int interval)
+    public static int Clock(this ITimer timer, int amount, int interval)
     {
-        var value = timer.Ticks + 1;
-        var result = false;
+        var value = timer.Ticks + amount;
+        var result = 0;
 
-        if (value >= interval)
+        while (value >= interval)
         {
-            value = 0;
-            result = true;
+            value -= interval;
+            result++;
         }
 
         timer.Ticks = value;

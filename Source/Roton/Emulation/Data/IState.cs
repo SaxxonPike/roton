@@ -22,41 +22,40 @@ public interface IState
     IReadOnlyList<int> Vector4 { get; }
     IReadOnlyList<int> Vector8 { get; }
     IReadOnlyList<int> WebChars { get; }
-    bool AboutShown { get; set; }
-    int ActIndex { get; set; }
-    int ActorCount { get; set; }
-    int BoardCount { get; set; }
-    bool BreakGameLoop { get; set; }
-    bool CancelScroll { get; set; }
+    ref Bool AboutShown { get; }
+    ref Word ActIndex { get; }
+    ref Word ActorCount { get; }
+    ref Word BoardCount { get; }
+    ref Bool BreakGameLoop { get; }
+    ref Bool CancelScroll { get; }
     string DefaultBoardName { get; set; }
     string DefaultSaveName { get; set; }
     string DefaultWorldName { get; set; }
-    bool EditorMode { get; set; }
-    int ForestIndex { get; set; }
-    int GameCycle { get; set; }
-    bool GameOver { get; set; }
-    bool GamePaused { get; set; }
-    bool GameQuiet { get; set; }
-    int GameSpeed { get; set; }
-    int GameWaitTime { get; set; }
-    bool Init { get; set; }
-    bool KeyArrow { get; set; }
-    EngineKeyCode KeyPressed { get; set; }
-    bool KeyShift { get; set; }
+    ref Bool EditorMode { get; }
+    ref Word ForestIndex { get; }
+    ref Word GameCycle { get; }
+    ref Bool GameOver { get; }
+    ref Bool GamePaused { get; }
+    ref Bool GameQuiet { get; }
+    ref HWord GameSpeed { get; }
+    ref Word GameWaitTime { get; }
+    ref Bool Init { get; }
+    ref Bool KeyArrow { get; }
+    ref EngineKeyCode KeyPressed { get; }
+    ref Bool KeyShift { get; }
     string Message { get; set; }
     string Message2 { get; set; }
-    int OopByte { get; set; }
-    int OopNumber { get; set; }
+    ref HWord OopByte { get; }
+    ref Word OopNumber { get; }
     //string OopWord { get; set; }
-    int PlayerElement { get; set; }
-    int PlayerTime { get; set; }
-    bool QuitEngine { get; set; }
-    bool SoundPlaying { get; set; }
-    int SoundPriority { get; set; }
-    int SoundTicks { get; set; }
-    int StartBoard { get; set; }
+    ref Word PlayerElement { get; }
+    ref Bool QuitEngine { get; }
+    ref Bool SoundPlaying { get; }
+    ref Word SoundPriority { get; }
+    ref HWord SoundTicks { get; }
+    ref Word StartBoard { get; }
     string WorldFileName { get; set; }
-    bool WorldLoaded { get; set; }
+    ref Bool WorldLoaded { get; }
 
     ReadOnlySpan<char> GetOopWord(Span<char> buffer);
     void SetOopWord(ReadOnlySpan<char> buffer);

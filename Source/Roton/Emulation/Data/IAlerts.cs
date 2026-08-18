@@ -39,4 +39,5 @@ public interface IAlerts
     IMessage KeyPickupMessage(int color);
 
     void Reset();
+    void SetAll();
 }

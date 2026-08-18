@@ -12,28 +12,40 @@ using Roton.Infrastructure.Impl;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperHud(
-    IEngineAccessor engine,
-    ITerminal terminal,
-    IScroll scroll,
-    ITextEntryHud textEntryHud)
-    : Hud(engine, scroll)
+public sealed class SuperHud : Hud
 {
-    private ITerminal Terminal
+    public SuperHud(IEngineAccessor engine,
+        ITerminal terminal,
+        IScroll scroll,
+        ITextEntryHud textEntryHud,
+        IFadeMatrix fadeMatrix)
+        : base(engine, scroll)
     {
-        [DebuggerStepThrough] get => terminal;
+        Terminal = terminal;
+        TextEntryHud = textEntryHud;
+        FadeMatrix = fadeMatrix;
+        fadeMatrix.Initialize();
     }
 
-    private ITextEntryHud TextEntryHud
-    {
-        [DebuggerStepThrough] get => textEntryHud;
-    }
+    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; }
+
+    private ITerminal Terminal { [DebuggerStepThrough] get; }
+
+    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; }
 
     private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
-
     private const int ViewportWidth = 40;
+
+    private const int WindowWidth = 24;
+    private const int WindowHeight = 20;
+    private const int WindowLeft = 14;
+    private const int WindowTop = 2;
+    private const int WindowRight = WindowLeft + WindowWidth - 1;
+    private const int WindowBottom = WindowTop + WindowHeight - 1;
+
+    private const int WindowTileCount = WindowWidth * WindowHeight;
 
     protected override bool Confirm(string message)
     {
@@ -49,8 +61,17 @@ public sealed class SuperHud(
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
-            DrawString(0, y, new string(' ', ViewportWidth), 0x1F);
+            for (var x = 0; x < ViewportWidth; x++)
+            {
+                if (x < WindowLeft || x > WindowRight || y < WindowTop || y > WindowBottom)
+                    DrawChar(x, y, new AnsiChar(0x20, 0x1F));
+            }
         }
+
+        // for (var y = 0; y < ViewportHeight; y++)
+        // {
+        //     DrawString(0, y, new string(' ', ViewportWidth), 0x1F);
+        // }
     }
 
     public override void CreateStatusText()
@@ -112,10 +133,10 @@ public sealed class SuperHud(
         DrawString(0x0D, 0x16, new string(0xDF.ToChar(), 1), 0x1F);
         DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
 
-        var column = 0xDB.ToChar() + new string(' ', 24) + 0xDB.ToChar();
         for (var y = 0x02; y <= 0x15; y++)
         {
-            DrawString(0x0D, y, column, 0x0F);
+            DrawChar(0x0D, y, new AnsiChar(0xDB, 0x0F));
+            DrawChar(0x26, y, new AnsiChar(0xDB, 0x0F));
             DrawChar(0x27, y + 1, new AnsiChar(0xDE, 0x71));
         }
     }
@@ -136,6 +157,11 @@ public sealed class SuperHud(
         DrawString(bottomX, 24, $" {bottomText} ", messageColor);
     }
 
+    private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
+    {
+        DrawString(25 - message.Length / 2, 23, message, 0x1E);
+    }
+
     private void DrawNumber(int y, int value)
     {
         var s = value.ToString();
@@ -152,6 +178,11 @@ public sealed class SuperHud(
     public override void DrawTile(int x, int y, AnsiChar ac)
     {
         DrawTileCommon(x, y, ac);
+    }
+
+    private void DrawTileExact(int x, int y, AnsiChar ac)
+    {
+        Terminal.Plot(x, y, ac);
     }
 
     private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -179,6 +210,8 @@ public sealed class SuperHud(
 
     public override void Initialize()
     {
+        RandomizeFadeMatrix();
+
         if (Engine.State.EditorMode)
         {
             Terminal.SetSize(96, 80, true);
@@ -189,17 +222,12 @@ public sealed class SuperHud(
         }
     }
 
+    private void InitializeFadeMatrix() => FadeMatrix.Initialize();
+
     public override void RedrawBoard()
     {
-        for (var x = 0; x < Engine.Tiles.Width; x++)
-        {
-            for (var y = 0; y < Engine.Tiles.Height; y++)
-            {
-                var loc = new Location(x, y);
-                if (IsWithinCamera(loc + GetTranslation()))
-                    Engine.UpdateBoard(loc + 1);
-            }
-        }
+        UpdateCameraPosition();
+        FadeMatrix.FadeIn();
     }
 
     public override void UpdateBorder()
@@ -212,13 +240,22 @@ public sealed class SuperHud(
         }
     }
 
+    private void UpdateCameraPosition()
+    {
+        var cameraX = Engine.Player.Location.X - WindowWidth / 2;
+        var cameraY = Engine.Player.Location.Y - WindowHeight / 2;
+
+        Engine.Board.Camera = new Location16(
+            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth), 1),
+            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight), 1)
+        );
+    }
+
     public override void UpdateCamera()
     {
-        var upperLeft = new Location(14, 2);
-        const int viewWidth = 24;
-        const int viewHeight = 20;
-        const int viewCenterX = viewWidth / 2;
-        const int viewCenterY = viewHeight / 2;
+        var upperLeft = new Location(WindowLeft, WindowTop);
+        const int viewCenterX = WindowWidth / 2;
+        const int viewCenterY = WindowHeight / 2;
 
         // Thresholds are the number of tiles that the camera will try to keep in view relative to the player.
         // The 8/6 mismatch on the Y axis is a bug in the Super engine itself. A perfectly centered camera
@@ -231,8 +268,8 @@ public sealed class SuperHud(
 
         // Max bounds of the camera (so that the scroll doesn't go off the right or bottom of the board.)
 
-        var maxCameraX = Engine.Tiles.Width - viewWidth + 1;
-        var maxCameraY = Engine.Tiles.Height - viewHeight + 1;
+        var maxCameraX = Engine.Tiles.Width - WindowWidth + 1;
+        var maxCameraY = Engine.Tiles.Height - WindowHeight + 1;
 
         var player = Engine.Player.Location;
         var newCamera = new Location16(Engine.Board.Camera.X, Engine.Board.Camera.Y);
@@ -245,8 +282,8 @@ public sealed class SuperHud(
             {
                 newCamera.X--;
                 Engine.Board.Camera = newCamera;
-                VideoScroll(upperLeft, viewWidth, viewHeight, Vector.East);
-                for (var y = 0; y < viewHeight; y++)
+                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.East);
+                for (var y = 0; y < WindowHeight; y++)
                     Engine.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
             }
             else
@@ -261,15 +298,15 @@ public sealed class SuperHud(
                 redrawRequired = true;
             }
         }
-        else if (relativeX >= viewWidth - scrollThresholdRight && newCamera.X < maxCameraX)
+        else if (relativeX >= WindowWidth - scrollThresholdRight && newCamera.X < maxCameraX)
         {
             if (player.X == OldPlayerLocation.X + 1)
             {
                 newCamera.X++;
                 Engine.Board.Camera = newCamera;
-                VideoScroll(upperLeft, viewWidth, viewHeight, Vector.West);
-                for (var y = 0; y < viewHeight; y++)
-                    Engine.UpdateBoard(new Location(newCamera.X + viewWidth - 1, newCamera.Y + y));
+                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.West);
+                for (var y = 0; y < WindowHeight; y++)
+                    Engine.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
             }
             else
             {
@@ -291,8 +328,8 @@ public sealed class SuperHud(
             {
                 newCamera.Y--;
                 Engine.Board.Camera = newCamera;
-                VideoScroll(upperLeft, viewWidth, viewHeight, Vector.South);
-                for (var x = 0; x < viewWidth; x++)
+                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.South);
+                for (var x = 0; x < WindowWidth; x++)
                     Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
             }
             else
@@ -307,15 +344,15 @@ public sealed class SuperHud(
                 redrawRequired = true;
             }
         }
-        else if (relativeY >= viewHeight - scrollThresholdBottom && newCamera.Y < maxCameraY)
+        else if (relativeY >= WindowHeight - scrollThresholdBottom && newCamera.Y < maxCameraY)
         {
             if (player.Y == OldPlayerLocation.Y + 1)
             {
                 newCamera.Y++;
                 Engine.Board.Camera = newCamera;
-                VideoScroll(upperLeft, viewWidth, viewHeight, Vector.North);
-                for (var x = 0; x < viewWidth; x++)
-                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + viewHeight - 1));
+                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.North);
+                for (var x = 0; x < WindowWidth; x++)
+                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
             }
             else
             {
@@ -487,7 +524,7 @@ public sealed class SuperHud(
                 Terminal.Plot(px, py, data);
         }
     }
-    
+
     public override string SaveGame()
     {
         DrawString(13, 24, "Save game:", 0x1F);
@@ -495,5 +532,16 @@ public sealed class SuperHud(
         var result = TextEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
         UpdateBorder();
         return result;
+    }
+
+    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
+
+    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
+
+    public override void FailToLoadWorld()
+    {
+        DrawSystemMessage("Wrong ZZT version!", 0x1E);
+        Engine.PlayErrorSound();
+        Engine.Delay(2000);
     }
 }

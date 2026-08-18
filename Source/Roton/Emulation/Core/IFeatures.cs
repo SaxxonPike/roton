@@ -30,4 +30,5 @@ public interface IFeatures
     int GetColorMatchValue(int color);
     void NotifyActorSentLabel(int index);
     string GetSaveName(string baseName);
+    int GetAdjacent(Location location, int elementId);
 }

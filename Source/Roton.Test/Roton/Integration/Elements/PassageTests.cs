@@ -1,7 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
@@ -22,7 +21,7 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        State.GamePaused.Should().BeTrue(
+        GamePaused.Should().BeTrue(
             "game should pause when entering passage");
     }
 

@@ -197,6 +197,28 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         return $"{baseName}.SAV";
     }
 
+    private bool TestAdjacent(Location location, int id)
+    {
+        var eId = Engine.Tiles[location].Id;
+        if (eId == id || eId == Engine.ElementList.BoardEdgeId)
+            return true;
+
+        if (Engine.ElementAt(location).Cycle >= 0)
+        {
+            eId = Engine.ActorAt(location).UnderTile.Id;
+            if (eId == id || eId == Engine.ElementList.BoardEdgeId)
+                return true;
+        }
+
+        return false;
+    }
+    
+    public int GetAdjacent(Location location, int id) =>
+        (TestAdjacent(location + Vector.North, id) ? 1 : 0) |
+        (TestAdjacent(location + Vector.South, id) ? 2 : 0) |
+        (TestAdjacent(location + Vector.West, id) ? 4 : 0) |
+        (TestAdjacent(location + Vector.East, id) ? 8 : 0);
+
     public void CleanUpPassageMovement()
     {
         Engine.Tiles[Engine.Player.Location] = Engine.Player.UnderTile;

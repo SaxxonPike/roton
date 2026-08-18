@@ -17,7 +17,7 @@ public sealed class BombAction(IEngineAccessor engine) : IAction
 
         actor.P1--;
         Engine.UpdateBoard(actor.Location);
-        switch (actor.P1)
+        switch ((int)actor.P1)
         {
             case 1:
                 Engine.PlaySound(1, Engine.Sounds.BombExplode);

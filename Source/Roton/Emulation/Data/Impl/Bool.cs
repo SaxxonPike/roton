@@ -25,4 +25,6 @@ public readonly struct Bool(bool value) : IEquatable<Bool>, IEquatable<bool>
 
     public override int GetHashCode() =>
         (_val != 0).GetHashCode();
+
+    public override string ToString() => $"{_val}";
 }
