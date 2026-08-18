@@ -202,6 +202,11 @@ public sealed class SuperHud(
         }
     }
 
+    public override void FadeBoard(AnsiChar ac)
+    {
+        UpdateBorder();
+    }
+
     public override void UpdateBorder()
     {
         var clearChar = new AnsiChar(0x00, 0x10);
