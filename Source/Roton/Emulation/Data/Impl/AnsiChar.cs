@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public struct AnsiChar(int newChar, int newColor) : IEquatable<AnsiChar>
+public readonly struct AnsiChar(int newChar, int newColor) : IEquatable<AnsiChar>
 {
     public readonly int Char = newChar;
     public readonly int Color = newColor;
