@@ -201,13 +201,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActors Actors { get; }
 
-    public int Adjacent(Location location, int id)
-    {
-        return (location.Y <= 1 || Tiles[location + Vector.North].Id == id ? 1 : 0) |
-               (location.Y >= Tiles.Height || Tiles[location + Vector.South].Id == id ? 2 : 0) |
-               (location.X <= 1 || Tiles[location + Vector.West].Id == id ? 4 : 0) |
-               (location.X >= Tiles.Width || Tiles[location + Vector.East].Id == id ? 8 : 0);
-    }
+    public int Adjacent(Location location, int id) => Features.GetAdjacent(location, id);
 
     public IAlerts Alerts { get; }
 
@@ -792,8 +786,8 @@ public sealed class Engine : IEngine, IDisposable
         ref var sourceTile = ref Tiles[actor.Location];
         ref var targetTile = ref Tiles[target];
         var underTile = actor.UnderTile;
+        var nextUnderTile = targetTile;
 
-        actor.UnderTile = targetTile;
         if (targetTile.Id == ElementList.EmptyId)
             targetTile = new Tile(sourceTile.Id, sourceTile.Color & 0x0F);
         else
@@ -806,6 +800,7 @@ public sealed class Engine : IEngine, IDisposable
 
         UpdateBoard(target);
         UpdateBoard(sourceLocation);
+        actor.UnderTile = nextUnderTile;
 
         if (index == 0 && Board.IsDark)
         {
