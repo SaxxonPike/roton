@@ -89,4 +89,82 @@ public class BulletTests(Context context) : ElementTestFixture(context)
         TileAt(6, 5).Id.Should().Be(ElementList.BulletId,
             "bullet should be at its new position");
     }
+
+    [Test]
+    public void Bullet_ReversesVector_WhenHittingRicochetDirectly()
+    {
+        // Bullets will reverse direction when hitting a ricochet head-on.
+
+        // Place the bullet and assign it a vector.
+        var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
+        var bullet = Actors[bulletIndex];
+        bullet.Vector = Vector.East;
+        bullet.Cycle = 1;
+
+        // Place the ricochet in front of the bullet.
+        PlotTo(6, 5, ElementList.RicochetId);
+
+        // Wait for the bullet to move.
+        Step();
+
+        // Assert.
+        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+            "bullet should have left is previous position");
+        TileAt(4, 5).Id.Should().Be(ElementList.BulletId,
+            "bullet should be at its new position after hitting the ricochet");
+    }
+
+    [Test]
+    public void Bullet_TurnsClockwise_WhenBlockedAndRicochetIsCounterClockwise()
+    {
+        // Bullets will use a ricochet located counter-clockwise if hitting a non-ricochet.
+
+        // Place the bullet and assign it a vector.
+        var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
+        var bullet = Actors[bulletIndex];
+        bullet.Vector = Vector.East;
+        bullet.Cycle = 1;
+
+        // Place the wall in front of the bullet.
+        PlotTo(6, 5, ElementList.SolidId);
+        
+        // Place a ricochet counter-clockwise.
+        PlotTo(5, 4, ElementList.RicochetId);
+
+        // Wait for the bullet to move.
+        Step();
+
+        // Assert.
+        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+            "bullet should have left is previous position");
+        TileAt(5, 6).Id.Should().Be(ElementList.BulletId,
+            "bullet should be at its new position after hitting the ricochet");
+    }
+    
+    [Test]
+    public void Bullet_TurnsCounterClockwise_WhenBlockedAndRicochetIsClockwise()
+    {
+        // Bullets will use a ricochet located clockwise if hitting a non-ricochet.
+
+        // Place the bullet and assign it a vector.
+        var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
+        var bullet = Actors[bulletIndex];
+        bullet.Vector = Vector.East;
+        bullet.Cycle = 1;
+
+        // Place the wall in front of the bullet.
+        PlotTo(6, 5, ElementList.SolidId);
+        
+        // Place a ricochet clockwise.
+        PlotTo(5, 6, ElementList.RicochetId);
+
+        // Wait for the bullet to move.
+        Step();
+
+        // Assert.
+        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+            "bullet should have left is previous position");
+        TileAt(5, 4).Id.Should().Be(ElementList.BulletId,
+            "bullet should be at its new position after hitting the ricochet");
+    }
 }
