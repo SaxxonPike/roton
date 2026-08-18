@@ -128,7 +128,7 @@ public class BulletTests(Context context) : ElementTestFixture(context)
 
         // Place the wall in front of the bullet.
         PlotTo(6, 5, ElementList.SolidId);
-        
+
         // Place a ricochet counter-clockwise.
         PlotTo(5, 4, ElementList.RicochetId);
 
@@ -141,7 +141,7 @@ public class BulletTests(Context context) : ElementTestFixture(context)
         TileAt(5, 6).Id.Should().Be(ElementList.BulletId,
             "bullet should be at its new position after hitting the ricochet");
     }
-    
+
     [Test]
     public void Bullet_TurnsCounterClockwise_WhenBlockedAndRicochetIsClockwise()
     {
@@ -155,7 +155,7 @@ public class BulletTests(Context context) : ElementTestFixture(context)
 
         // Place the wall in front of the bullet.
         PlotTo(6, 5, ElementList.SolidId);
-        
+
         // Place a ricochet clockwise.
         PlotTo(5, 6, ElementList.RicochetId);
 
@@ -173,7 +173,7 @@ public class BulletTests(Context context) : ElementTestFixture(context)
     public void Bullet_ShouldInvokeShotLabel()
     {
         // Bullets will send the "SHOT" label to objects when colliding.
-        
+
         // Place the bullet and assign it a vector.
         var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
         var bullet = Actors[bulletIndex];
@@ -184,12 +184,12 @@ public class BulletTests(Context context) : ElementTestFixture(context)
         var objectIndex = SpawnTo(6, 5, ElementList.ObjectId);
         var obj = Actors[objectIndex];
         obj.Cycle = 1;
-        SetActorCode(objectIndex, 
+        SetActorCode(objectIndex,
             "#end",
             ":shot",
             "#set f1"
         );
-        
+
         // Wait for the bullet to collide with the object.
         Step();
 
