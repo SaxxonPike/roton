@@ -1,3 +1,4 @@
+using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Data.Impl;
@@ -166,5 +167,36 @@ public class BulletTests(Context context) : ElementTestFixture(context)
             "bullet should have left is previous position");
         TileAt(5, 4).Id.Should().Be(ElementList.BulletId,
             "bullet should be at its new position after hitting the ricochet");
+    }
+
+    [Test]
+    public void Bullet_ShouldInvokeShotLabel()
+    {
+        // Bullets will send the "SHOT" label to objects when colliding.
+        
+        // Place the bullet and assign it a vector.
+        var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
+        var bullet = Actors[bulletIndex];
+        bullet.Vector = Vector.East;
+        bullet.Cycle = 1;
+
+        // Place the object in front of the bullet.
+        var objectIndex = SpawnTo(6, 5, ElementList.ObjectId);
+        var obj = Actors[objectIndex];
+        obj.Cycle = 1;
+        SetActorCode(objectIndex, 
+            "#end",
+            ":shot",
+            "#set f1"
+        );
+        
+        // Wait for the bullet to collide with the object.
+        Step();
+
+        // Assert.
+        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+            "bullet should have been destroyed");
+        Flags.AsEnumerable().Should().Contain(["F1"],
+            "shot label was not invoked");
     }
 }
