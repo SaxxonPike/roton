@@ -22,7 +22,7 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        State.GamePaused.Should().BeTrue(
+        GamePaused.Should().BeTrue(
             "game should pause when entering passage");
     }
 

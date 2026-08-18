@@ -294,4 +294,6 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
 
     protected IKeyList Keys => Engine.World.Keys;
+
+    protected bool GamePaused => Engine.State.GamePaused;
 }

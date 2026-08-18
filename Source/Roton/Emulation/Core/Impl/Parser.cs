@@ -55,7 +55,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             {
                 ReadByte(index, ref offs);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-                if (Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
+                if ((int)Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
                 {
                     result = oldOffset;
                     break;
@@ -126,7 +126,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         }
 
         Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-        while (Engine.State.OopByte is >= 0x30 and <= 0x39)
+        while ((int)Engine.State.OopByte is >= 0x30 and <= 0x39)
         {
             success = true;
             resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
@@ -172,9 +172,9 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
         var oopByte = Engine.State.OopByte;
 
-        if (oopByte is not (>= 0x30 and <= 0x39))
+        if ((int)oopByte is not (>= 0x30 and <= 0x39))
         {
-            while (oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
+            while ((int)oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
             {
                 if (length < buffer.Length)
                     buffer[length++] = oopByte.ToChar();
@@ -223,24 +223,18 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         var result = new Tile(0, 0);
         var success = false;
 
-        for (var i = 1; i < 8; i++)
+        var colorId = Engine.Colors.IndexOf(word);
+        if (colorId > 0)
         {
-            if (!Engine.Colors[i].CaseInsensitiveEqual(word))
-                continue;
-
-            result.Color = i + 8;
+            result.Color = colorId + 8;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
-            break;
         }
-
-        foreach (var element in Engine.ElementList.Where(e => e != null))
+        
+        var elementId = Engine.ElementList.IndexOf(word);
+        if (elementId >= 0)
         {
-            if (!element.NameMatches(word))
-                continue;
-
             success = true;
-            result.Id = element.Id;
-            break;
+            result.Id = elementId;
         }
 
         return success ? result : null;

@@ -247,7 +247,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
             "bomb should be present after activation");
         Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
             "correct message should be displayed");
-        actor.P1.Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
+        ((int)actor.P1).Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
             "bomb should have the maximum timer set");
     }
 

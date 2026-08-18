@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
@@ -66,7 +67,16 @@ public abstract class ElementList(int count) : FixedList<IElement>, IElementList
     public virtual int TransporterId => -1;
     public virtual int WaterId => -1;
     public virtual int WebId => -1;
-        
+
+    public int IndexOf(ReadOnlySpan<char> name)
+    {
+        for (var i = 0; i < Count; i++)
+            if (GetItem(i).NameMatches(name))
+                return i;
+
+        return -1;
+    }
+
     public abstract void Reset();
 
     protected abstract IElement GetElement(int index);

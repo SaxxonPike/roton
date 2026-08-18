@@ -27,11 +27,11 @@ public sealed class Actor : IActor
 
     public ref Location Location => ref _memory.GetRef<Location>(Offset + 0x00);
 
-    public ref byte P1 => ref _memory.GetRef<byte>(Offset + 0x08);
+    public ref HWord P1 => ref _memory.GetRef<HWord>(Offset + 0x08);
 
-    public ref byte P2 => ref _memory.GetRef<byte>(Offset + 0x09);
+    public ref HWord P2 => ref _memory.GetRef<HWord>(Offset + 0x09);
 
-    public ref byte P3 => ref _memory.GetRef<byte>(Offset + 0x0A);
+    public ref HWord P3 => ref _memory.GetRef<HWord>(Offset + 0x0A);
 
     public ref DWord Pointer => ref _memory.GetRef<DWord>(Offset + 0x11);
 

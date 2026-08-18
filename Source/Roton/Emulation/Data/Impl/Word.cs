@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Roton.Emulation.Data.Impl;
 
 /// <summary>
-/// Wraps a 16-bit value in an endian-agnostic manner.
+/// Wraps a signed 16-bit value in an endian-agnostic manner.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct Word(int value) : IEquatable<Word>, IEquatable<int>, IEquatable<short>

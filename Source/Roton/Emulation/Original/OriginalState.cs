@@ -13,9 +13,11 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalState : IState
 {
+    private Word _forestIndex;
+
     public OriginalState(
-        IMemory memory, 
-        IHeap heap, 
+        IMemory memory,
+        IHeap heap,
         IEngineResourceService engineResourceService)
     {
         Memory = memory;
@@ -41,55 +43,23 @@ public sealed class OriginalState : IState
 
     private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    public int MainTime
-    {
-        get => Memory.FastRead16(0x740A);
-        set => Memory.FastWrite16(0x740A, value);
-    }
+    public ref Word MainTime => ref Memory.GetRef<Word>(0x740A);
 
-    public int VisibleTileCount
-    {
-        get => Memory.FastRead16(0x4ACC);
-        set => Memory.FastWrite16(0x4ACC, value);
-    }
+    public ref Word VisibleTileCount => ref Memory.GetRef<Word>(0x4ACC);
 
-    public bool AboutShown
-    {
-        get => Memory.ReadBool(0x7A60);
-        set => Memory.WriteBool(0x7A60, value);
-    }
+    public ref Bool AboutShown => ref Memory.GetRef<Bool>(0x7A60);
 
-    public int ActIndex
-    {
-        get => Memory.FastRead16(0x7406);
-        set => Memory.FastWrite16(0x7406, value);
-    }
+    public ref Word ActIndex => ref Memory.GetRef<Word>(0x7406);
 
-    public int ActorCount
-    {
-        get => Memory.FastRead16(0x31CD);
-        set => Memory.FastWrite16(0x31CD, value);
-    }
+    public ref Word ActorCount => ref Memory.GetRef<Word>(0x31CD);
 
-    public int BoardCount
-    {
-        get => Memory.FastRead16(0x45BE);
-        set => Memory.FastWrite16(0x45BE, value);
-    }
+    public ref Word BoardCount => ref Memory.GetRef<Word>(0x45BE);
 
     public ref Tile BorderTile => ref Memory.GetRef<Tile>(0x0072);
 
-    public bool BreakGameLoop
-    {
-        get => Memory.ReadBool(0x4AC6);
-        set => Memory.WriteBool(0x4AC6, value);
-    }
+    public ref Bool BreakGameLoop => ref Memory.GetRef<Bool>(0x4AC6);
 
-    public bool CancelScroll
-    {
-        get => Memory.ReadBool(0x7B66);
-        set => Memory.WriteBool(0x7B66, value);
-    }
+    public ref Bool CancelScroll => ref Memory.GetRef<Bool>(0x7B66);
 
     public IActor DefaultActor { get; }
 
@@ -113,80 +83,36 @@ public sealed class OriginalState : IState
 
     public ref Tile EdgeTile => ref Memory.GetRef<Tile>(0x0074);
 
-    public bool EditorMode
-    {
-        get => Memory.ReadBool(0x740C);
-        set => Memory.WriteBool(0x740C, value);
-    }
+    public ref Bool EditorMode => ref Memory.GetRef<Bool>(0x740C);
 
-    public int ForestIndex { get; set; }
+    public ref Word ForestIndex => ref _forestIndex;
 
-    public int GameCycle
-    {
-        get => Memory.FastRead16(0x7404);
-        set => Memory.FastWrite16(0x7404, value);
-    }
+    public ref Word GameCycle => ref Memory.GetRef<Word>(0x7404);
 
-    public bool GameOver
-    {
-        get => Memory.ReadBool(0x7C8D);
-        set => Memory.WriteBool(0x7C8D, value);
-    }
+    public ref Bool GameOver => ref Memory.GetRef<Bool>(0x7C8D);
 
-    public bool GamePaused
-    {
-        get => Memory.ReadBool(0x7408);
-        set => Memory.WriteBool(0x7408, value);
-    }
+    public ref Bool GamePaused => ref Memory.GetRef<Bool>(0x7408);
 
-    public bool GameQuiet
-    {
-        get => Memory.ReadBool(0x7C8C);
-        set => Memory.WriteBool(0x7C8C, value);
-    }
+    public ref Bool GameQuiet => ref Memory.GetRef<Bool>(0x7C8C);
 
-    public int GameSpeed
-    {
-        get => Memory.Read8(0x4ACE);
-        set => Memory.Write8(0x4ACE, value);
-    }
+    public ref Word GameSpeed => ref Memory.GetRef<Word>(0x4ACE);
 
-    public int GameWaitTime
-    {
-        get => Memory.FastRead16(0x7402);
-        set => Memory.FastWrite16(0x7402, value);
-    }
+    public ref Word GameWaitTime => ref Memory.GetRef<Word>(0x7402);
 
-    public bool Init
-    {
-        get => Memory.ReadBool(0x7B60);
-        set => Memory.WriteBool(0x7B60, value);
-    }
+    public ref Bool Init => ref Memory.GetRef<Bool>(0x7B60);
 
-    public bool KeyArrow
-    {
-        get => Memory.ReadBool(0x7C7E);
-        set => Memory.WriteBool(0x7C7E, value);
-    }
+    public ref Bool KeyArrow => ref Memory.GetRef<Bool>(0x7C7E);
 
-    public EngineKeyCode KeyPressed
-    {
-        get => (EngineKeyCode) Memory.Read8(0x7C70);
-        set => Memory.Write8(0x7C70, (int) value);
-    }
+    public ref EngineKeyCode KeyPressed => ref Memory.GetRef<EngineKeyCode>(0x7C70);
 
-    public bool KeyShift
-    {
-        get => Memory.ReadBool(0x7C6C);
-        set => Memory.WriteBool(0x7C6C, value);
-    }
+    public ref Bool KeyShift => ref Memory.GetRef<Bool>(0x7C6C);
 
     public ref Vector KeyVector => ref Memory.GetRef<Vector>(0x7C68);
 
     public IReadOnlyList<int> LineChars { get; }
-    
+
     public IReadOnlyList<string> ProgressAnimation { get; }
-    
+
     public IReadOnlyList<int> ProgressColors { get; }
 
     public string Message
@@ -197,17 +123,9 @@ public sealed class OriginalState : IState
 
     public string Message2 { get; set; }
 
-    public int OopByte
-    {
-        get => Memory.Read8(0x740E);
-        set => Memory.Write8(0x740E, value);
-    }
+    public ref HWord OopByte => ref Memory.GetRef<HWord>(0x740E);
 
-    public int OopNumber
-    {
-        get => Memory.FastRead16(0x7426);
-        set => Memory.FastWrite16(0x7426, value);
-    }
+    public ref Word OopNumber => ref Memory.GetRef<Word>(0x7426);
 
     public string OopWord
     {
@@ -215,51 +133,23 @@ public sealed class OriginalState : IState
         set => Memory.WriteString(0x7410, value);
     }
 
-    public int PlayerElement
-    {
-        get => Memory.FastRead16(0x4AC8);
-        set => Memory.FastWrite16(0x4AC8, value);
-    }
+    public ref Word PlayerElement => ref Memory.GetRef<Word>(0x4AC8);
 
-    public int PlayerTime
-    {
-        get => Memory.FastRead16(0x4920);
-        set => Memory.FastWrite16(0x4920, value);
-    }
+    public ref Word PlayerTime => ref Memory.GetRef<Word>(0x4920);
 
-    public bool QuitEngine
-    {
-        get => Memory.ReadBool(0x4AC5);
-        set => Memory.WriteBool(0x4AC5, value);
-    }
+    public ref Bool QuitEngine => ref Memory.GetRef<Bool>(0x4AC5);
 
     public ISoundBufferList SoundBuffer { get; }
 
-    public bool SoundPlaying
-    {
-        get => Memory.ReadBool(0x7F9A);
-        set => Memory.WriteBool(0x7F9A, value);
-    }
+    public ref Bool SoundPlaying => ref Memory.GetRef<Bool>(0x7F9A);
 
-    public int SoundPriority
-    {
-        get => Memory.FastRead16(0x7C8E);
-        set => Memory.FastWrite16(0x7C8E, value);
-    }
+    public ref Word SoundPriority => ref Memory.GetRef<Word>(0x7C8E);
 
-    public int SoundTicks
-    {
-        get => Memory.Read8(0x7E8F);
-        set => Memory.Write8(0x7E8F, value);
-    }
+    public ref Word SoundTicks => ref Memory.GetRef<Word>(0x7E8F);
 
     public IReadOnlyList<int> StarChars { get; }
 
-    public int StartBoard
-    {
-        get => Memory.FastRead16(0x4ACA);
-        set => Memory.FastWrite16(0x4ACA, value);
-    }
+    public ref Word StartBoard => ref Memory.GetRef<Word>(0x4ACA);
 
     public IReadOnlyList<int> TransporterHChars { get; }
 
@@ -277,11 +167,7 @@ public sealed class OriginalState : IState
         set => Memory.WriteString(0x23B6, value);
     }
 
-    public bool WorldLoaded
-    {
-        get => Memory.ReadBool(0x7428);
-        set => Memory.WriteBool(0x7428, value);
-    }
+    public ref Bool WorldLoaded => ref Memory.GetRef<Bool>(0x7428);
 
     public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
     {
@@ -290,6 +176,6 @@ public sealed class OriginalState : IState
         return buffer.Slice(0, span.Length);
     }
 
-    public void SetOopWord(ReadOnlySpan<char> buffer) => 
+    public void SetOopWord(ReadOnlySpan<char> buffer) =>
         Memory.WriteString(0x7410, buffer);
 }

@@ -94,10 +94,10 @@ public class EndToEndTests(Context context) : OopTestFixture(context)
         Type(AnsiKey.Up);
         StepAllKeys();
 
-        actors[0].P1.Should().Be(14);
-        actors[1].P1.Should().Be(14);
-        actors[2].P1.Should().Be(14);
-        actors[3].P1.Should().Be(13);
-        actors[4].P1.Should().Be(14);
+        ((int)actors[0].P1).Should().Be(14);
+        ((int)actors[1].P1).Should().Be(14);
+        ((int)actors[2].P1).Should().Be(14);
+        ((int)actors[3].P1).Should().Be(13);
+        ((int)actors[4].P1).Should().Be(14);
     }
 }

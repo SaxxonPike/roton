@@ -190,25 +190,11 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActionList ActionList { get; }
 
-    public IActor ActorAt(Location location)
-    {
-        return Actors
-                   .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y) ??
-               Actors[-1];
-    }
+    public IActor ActorAt(Location location) => 
+        Actors.ActorAt(location);
 
-    public int ActorIndexAt(Location location)
-    {
-        var index = 0;
-        foreach (var actor in Actors)
-        {
-            if (actor.Location == location)
-                return index;
-            index++;
-        }
-
-        return -1;
-    }
+    public int ActorIndexAt(Location location) => 
+        Actors.ActorIndexAt(location);
 
     public event EventHandler Exited;
     public event EventHandler Tick;

@@ -12,8 +12,8 @@ public interface IActor : IProgrammable
     ref Word Leader { get; }
     ref Word Instruction { get; }
     ref Word Length { get; }
-    ref byte P1 { get; }
-    ref byte P2 { get; }
-    ref byte P3 { get; }
+    ref HWord P1 { get; }
+    ref HWord P2 { get; }
+    ref HWord P3 { get; }
     ref DWord Pointer { get; }
 }
