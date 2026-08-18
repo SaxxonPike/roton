@@ -7,9 +7,9 @@ public interface IBoard
     ref Location16 Camera { get; }
     ref Location Entrance { get; }
     IExits Exits { get; }
-    bool IsDark { get; set; }
-    int MaximumShots { get; set; }
+    ref Bool IsDark { get; }
+    ref Word MaximumShots { get; }
     string Name { get; set; }
-    bool RestartOnZap { get; set; }
-    int TimeLimit { get; set; }
+    ref Bool RestartOnZap { get; }
+    ref Word TimeLimit { get; }
 }

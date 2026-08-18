@@ -7,41 +7,19 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
 {
-    public int Ammo
-    {
-        get => memory.FastRead16(0x481E);
-        set => memory.FastWrite16(0x481E, value);
-    }
+    private Word _stones;
 
-    public int BoardIndex
-    {
-        get => memory.FastRead16(0x482B);
-        set => memory.FastWrite16(0x482B, value);
-    }
+    public ref Word Ammo => ref memory.GetRef<Word>(0x481E);
 
-    public int EnergyCycles
-    {
-        get => memory.FastRead16(0x4831);
-        set => memory.FastWrite16(0x4831, value);
-    }
+    public ref Word BoardIndex => ref memory.GetRef<Word>(0x482B);
 
-    public int Gems
-    {
-        get => memory.FastRead16(0x4820);
-        set => memory.FastWrite16(0x4820, value);
-    }
+    public ref Word EnergyCycles => ref memory.GetRef<Word>(0x4831);
 
-    public int Health
-    {
-        get => memory.FastRead16(0x4829);
-        set => memory.FastWrite16(0x4829, value);
-    }
+    public ref Word Gems => ref memory.GetRef<Word>(0x4820);
 
-    public bool IsLocked
-    {
-        get => memory.ReadBool(0x4922);
-        set => memory.WriteBool(0x4922, value);
-    }
+    public ref Word Health => ref memory.GetRef<Word>(0x4829);
+
+    public ref Bool IsLocked => ref memory.GetRef<Bool>(0x4922);
 
     public IFlags Flags { get; } = flags;
 
@@ -53,35 +31,15 @@ public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags
         set => memory.WriteString(0x4837, value);
     }
 
-    public int Score
-    {
-        get => memory.FastRead16(0x4835);
-        set => memory.FastWrite16(0x4835, value);
-    }
+    public ref Word Score => ref memory.GetRef<Word>(0x4835);
 
-    public int Stones
-    {
-        get => 0;
-        set { }
-    }
+    public ref Word Stones => ref _stones;
 
-    public int TimePassed
-    {
-        get => memory.FastRead16(0x491E);
-        set => memory.FastWrite16(0x491E, value);
-    }
+    public ref Word TimePassed => ref memory.GetRef<Word>(0x491E);
 
-    public int TorchCycles
-    {
-        get => memory.FastRead16(0x482F);
-        set => memory.FastWrite16(0x482F, value);
-    }
+    public ref Word TorchCycles => ref memory.GetRef<Word>(0x482F);
 
-    public int Torches
-    {
-        get => memory.FastRead16(0x482D);
-        set => memory.FastWrite16(0x482D, value);
-    }
+    public ref Word Torches => ref memory.GetRef<Word>(0x482D);
 
     public int WorldType => -1;
 

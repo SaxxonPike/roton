@@ -56,7 +56,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IState State => Engine.State;
     protected ITargetList TargetList => Engine.TargetList;
     protected ITiles Tiles => Engine.Tiles;
-    protected IWorld World => Engine.World;
+    //protected IWorld World => Engine.World;
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
@@ -225,14 +225,73 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         while (State.BoardCount < index)
         {
             Engine.PackBoard();
-            World.BoardIndex = State.BoardCount + 1;
+            BoardIndex = State.BoardCount + 1;
             Engine.ClearBoard();
         }
 
-        if (World.BoardIndex != index)
+        if (BoardIndex != index)
         {
             Engine.PackBoard();
             Engine.UnpackBoard(index);
         }
     }
+    
+    protected int BoardIndex
+    {
+        get => Engine.World.BoardIndex;
+        set => Engine.World.BoardIndex = value;
+    }
+
+    protected int Ammo
+    {
+        get => Engine.World.Ammo;
+        set => Engine.World.Ammo = value;
+    }
+
+    protected int Torches
+    {
+        get => Engine.World.Torches;
+        set => Engine.World.Torches = value;
+    }
+    
+    protected int TorchCycles
+    {
+        get => Engine.World.TorchCycles;
+        set => Engine.World.Torches = value;
+    }
+
+    protected int EnergyCycles
+    {
+        get => Engine.World.EnergyCycles;
+        set => Engine.World.EnergyCycles = value;
+    }
+
+    protected int Gems
+    {
+        get => Engine.World.Gems;
+        set => Engine.World.Gems = value;
+    }
+
+    protected int Health
+    {
+        get => Engine.World.Health;
+        set => Engine.World.Health = value;
+    }
+
+    protected int Score
+    {
+        get => Engine.World.Score;
+        set => Engine.World.Score = value;
+    }
+
+    protected int Stones
+    {
+        get => Engine.World.Stones;
+        set => Engine.World.Stones = value;
+    }
+
+    protected IFlags Flags => Engine.World.Flags;
+
+
+    protected IKeyList Keys => Engine.World.Keys;
 }

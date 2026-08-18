@@ -26,7 +26,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         // Assert.
         TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
             "player should not have moved");
-        World.BoardIndex.Should().Be(0,
+        BoardIndex.Should().Be(0,
             "board should not have changed");
     }
 
@@ -47,7 +47,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
             BoardEdgeDir.East => (1, 0, 1, 10, AnsiKey.Right),
             _ => default
         };
-        
+
         // Set up board 1.
         GoToBoard(1);
         PlotTo(tX, tY, ElementList.EmptyId);
@@ -65,7 +65,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.BoardIndex.Should().Be(1,
+        BoardIndex.Should().Be(1,
             "board should have changed");
         TileAt(tX, tY).Id.Should().Be(ElementList.PlayerId,
             "player should have entered at the correct coordinate");
@@ -94,7 +94,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.BoardIndex.Should().Be(0,
+        BoardIndex.Should().Be(0,
             "board should not have changed");
         TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
             "player should have been blocked from moving");
@@ -125,11 +125,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.BoardIndex.Should().Be(1,
+        BoardIndex.Should().Be(1,
             "board should have changed");
         TileAt(1, 10).Id.Should().Be(ElementList.PlayerId,
             "player should have entered the board on the left side");
-        World.Keys[0].Should().BeTrue(
+        Keys[0].Should().BeTrue(
             "player should have picked up the key");
     }
 
@@ -158,7 +158,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert board 0.
-        World.BoardIndex.Should().Be(0,
+        BoardIndex.Should().Be(0,
             "board should not have changed");
 
         // Assert board 1.
@@ -200,13 +200,13 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         if (Context == Context.Super)
         {
-            World.BoardIndex.Should().Be(2,
+            BoardIndex.Should().Be(2,
                 "board should have changed");
             TileAt(1, 10).Id.Should().Be(ElementList.FakeId);
         }
         else
         {
-            World.BoardIndex.Should().Be(0,
+            BoardIndex.Should().Be(0,
                 "board should not have changed");
             TileAt(10, 10).Id.Should().Be(ElementList.PlayerId);
         }
@@ -241,7 +241,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         Type(AnsiKey.Right);
         StepAllKeys();
 
-        World.BoardIndex.Should().Be(0,
+        BoardIndex.Should().Be(0,
             "board should not have changed");
         TileAt(10, 10).Id.Should().Be(ElementList.PlayerId);
     }
@@ -273,7 +273,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         Type(AnsiKey.Right);
         StepAllKeys();
 
-        World.BoardIndex.Should().Be(2,
+        BoardIndex.Should().Be(2,
             "board should have changed");
     }
 }

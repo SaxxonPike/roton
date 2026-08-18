@@ -47,7 +47,7 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.BoardIndex.Should().Be(1,
+        BoardIndex.Should().Be(1,
             "player should arrive at the correct board");
         TileAt(5, 2).Id.Should().Be(ElementList.EmptyId,
             "player should leave the original location on the target board");
@@ -79,7 +79,7 @@ public class PassageTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.BoardIndex.Should().Be(0,
+        BoardIndex.Should().Be(0,
             "player should remain on the same board");
         TileAt(3, 2).Id.Should().Be(ElementList.EmptyId,
             "player should leave the original location");

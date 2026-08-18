@@ -1,20 +1,22 @@
-﻿namespace Roton.Emulation.Data;
+﻿using Roton.Emulation.Data.Impl;
+
+namespace Roton.Emulation.Data;
 
 public interface IWorld
 {
     IFlags Flags { get; }
     IKeyList Keys { get; }
     int WorldType { get; }
-    int Ammo { get; set; }
-    int BoardIndex { get; set; }
-    int EnergyCycles { get; set; }
-    int Gems { get; set; }
-    int Health { get; set; }
-    bool IsLocked { get; set; }
+    ref Word Ammo { get; }
+    ref Word BoardIndex { get; }
+    ref Word EnergyCycles { get; }
+    ref Word Gems { get; }
+    ref Word Health { get; }
+    ref Bool IsLocked { get; }
     string Name { get; set; }
-    int Score { get; set; }
-    int Stones { get; set; }
-    int TimePassed { get; set; }
-    int TorchCycles { get; set; }
-    int Torches { get; set; }
+    ref Word Score { get; }
+    ref Word Stones { get; }
+    ref Word TimePassed { get; }
+    ref Word TorchCycles { get; }
+    ref Word Torches { get; }
 }

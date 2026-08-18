@@ -349,7 +349,7 @@ public sealed class SuperHud(
             Engine.World.Health = 0;
         }
 
-        var healthRemaining = Engine.World.Health;
+        var healthRemaining = (int)Engine.World.Health;
         for (var x = 7; x < 12; x++)
         {
             switch (healthRemaining)

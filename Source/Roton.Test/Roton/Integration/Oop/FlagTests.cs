@@ -22,7 +22,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "flag was not set");
     }
 
@@ -30,7 +30,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
     public void Flags_ShouldBeClearedByClearCommand()
     {
         // Set the flag.
-        World.Flags.Add("F1");
+        Flags.Add("F1");
 
         // Place the test actor.
         var index = SpawnTo(1, 1, ElementList.ObjectId);
@@ -44,7 +44,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "flag was not cleared");
     }
 
@@ -64,20 +64,20 @@ public class FlagTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags[0].Should().Be("F1");
-        World.Flags[1].Should().BeEmpty();
+        Flags[0].Should().Be("F1");
+        Flags[1].Should().BeEmpty();
     }
 
     [Test]
     public void Flags_ShouldReplaceHighestFlag_WhenFlagsAreFull()
     {
         // Fill the flag list.
-        for (var i = 0; i < World.Flags.Count; i++)
-            World.Flags[i] = $"F{i}";
+        for (var i = 0; i < Flags.Count; i++)
+            Flags[i] = $"F{i}";
 
         var expectedFlags = Enumerable
-            .Range(0, World.Flags.Count - 1)
-            .Select(i => World.Flags[i])
+            .Range(0, Flags.Count - 1)
+            .Select(i => Flags[i])
             .Concat(["F99"])
             .ToList();
 
@@ -93,6 +93,6 @@ public class FlagTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.AsEnumerable().Should().BeEquivalentTo(expectedFlags);
+        Flags.AsEnumerable().Should().BeEquivalentTo(expectedFlags);
     }
 }
