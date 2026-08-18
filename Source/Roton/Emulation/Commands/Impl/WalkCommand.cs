@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,12 +10,12 @@ public sealed class WalkCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(context);
-        if (vector != null)
+        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
+        if (vector is {} vec)
         {
-            context.Actor.Vector.CopyFrom(vector);
+            context.Actor.Vector = vec;
         }
     }
 }

@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
@@ -17,18 +17,21 @@ namespace Roton.Emulation.Core.Impl
 
         public void TraceInput(EngineKeyCode keyCode)
         {
+            if (_writers.Count == 0)
+                return;
+            
             foreach (var writer in _writers)
                 writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
 
-        public void TraceOop(IOopContext oopContext)
+        public void TraceOop(ref OopContext oopContext, ref Word instruction)
         {
             if (_writers.Count == 0)
                 return;
             
             var code = oopContext.Actor.Code;
-            var offset = oopContext.Instruction;
-            var end = oopContext.Instruction;
+            var offset = instruction;
+            var end = instruction;
 
             if (code == null)
                 return;
@@ -50,8 +53,11 @@ namespace Roton.Emulation.Core.Impl
             _stepNumber++;
         }
 
-        public void TraceBroadcast(int sender, string term, int targetIndex, bool ignoreLock, bool ignoreSelfLock)
+        public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock, bool ignoreSelfLock)
         {
+            if (_writers.Count == 0)
+                return;
+            
             if (sender == targetIndex && !ignoreLock && !ignoreSelfLock)
                 return;
             
@@ -64,7 +70,7 @@ namespace Roton.Emulation.Core.Impl
             var optionsString = string.Join(" ", options.Where(o => !string.IsNullOrEmpty(o)));
 
             foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:{sender:D3} BROADCAST  {term} -> {targetIndex}  {optionsString}");
+                writer.WriteLine($"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
         }
 
         public void Attach(TextWriter writer)

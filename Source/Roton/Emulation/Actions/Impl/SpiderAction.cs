@@ -1,5 +1,4 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -15,27 +14,27 @@ public sealed class SpiderAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         var vector = new Vector();
 
-        vector.CopyFrom(actor.P1 <= Engine.Random.GetNext(10)
+        vector = actor.P1 <= Engine.Random.GetNext(10)
             ? Engine.Rnd()
-            : Engine.Seek(actor.Location));
+            : Engine.Seek(actor.Location);
 
         if (!ActSpiderAttemptDirection(index, vector))
         {
             var i = (Engine.Random.GetNext(2) << 1) - 1;
-            if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap()))
+            if (!ActSpiderAttemptDirection(index, (vector * i).Swap()))
             {
-                if (!ActSpiderAttemptDirection(index, vector.Product(i).Swap().Opposite()))
+                if (!ActSpiderAttemptDirection(index, -(vector * i).Swap()))
                 {
-                    ActSpiderAttemptDirection(index, vector.Opposite());
+                    ActSpiderAttemptDirection(index, -vector);
                 }
             }
         }
     }
 
-    private bool ActSpiderAttemptDirection(int index, IXyPair vector)
+    private bool ActSpiderAttemptDirection(int index, Vector vector)
     {
         var actor = Engine.Actors[index];
-        var target = actor.Location.Sum(vector);
+        var target = actor.Location + vector;
         var targetElement = Engine.Tiles.ElementAt(target).Id;
 
         if (targetElement == Engine.ElementList.WebId)

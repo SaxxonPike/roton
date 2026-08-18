@@ -14,22 +14,24 @@ public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
 
     private IParser Parser => parser;
 
-    public bool Execute(int index, ISearchContext context, string term)
+    public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
-        while (context.SearchIndex < Actors.Count)
+        Span<char> buffer = stackalloc char[256];
+
+        while (context.Index < Actors.Count)
         {
-            if (Actors[context.SearchIndex].Pointer != 0)
+            if (Actors[context.Index].Pointer != 0)
             {
-                var instruction = new Executable();
-                var firstByte = Parser.ReadByte(context.SearchIndex, instruction);
+                var instruction = new Word();
+                var firstByte = Parser.ReadByte(context.Index, ref instruction);
                 if (firstByte == 0x40)
                 {
-                    var name = Parser.ReadWord(context.SearchIndex, instruction);
+                    var name = Parser.ReadWord(context.Index, ref instruction, buffer);
                     if (name.Equals(term, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }
             }
-            context.SearchIndex++;
+            context.Index++;
         }
         return false;
     }

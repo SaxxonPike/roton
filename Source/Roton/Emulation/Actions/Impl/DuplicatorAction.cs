@@ -13,21 +13,22 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
     public void Act(int index)
     {
         var actor = Engine.Actors[index];
-        var source = actor.Location.Sum(actor.Vector);
-        var target = actor.Location.Difference(actor.Vector);
+        var source = actor.Location + actor.Vector;
+        var target = actor.Location - actor.Vector;
 
         if (actor.P1 > 4)
         {
             if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
             {
                 Engine.InteractionList.Get(Engine.Tiles[source].Id)
-                    .Interact(source, 0, Engine.State.KeyVector);
+                    .Interact(source, 0, ref Engine.State.KeyVector);
             }
             else
             {
                 if (Engine.Tiles[target].Id != Engine.ElementList.EmptyId)
                 {
-                    Engine.Push(target, actor.Vector.Opposite());
+                    var oppVec = -actor.Vector;
+                    Engine.Push(target, oppVec);
                 }
 
                 if (Engine.Tiles[target].Id == Engine.ElementList.EmptyId)
@@ -37,7 +38,7 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
                     {
                         if (Engine.State.ActorCount < Engine.Actors.Capacity - 2)
                         {
-                            var sourceTile = Engine.Tiles[source];
+                            ref var sourceTile = ref Engine.Tiles[source];
                             Engine.SpawnActor(target, sourceTile, Engine.Actors[sourceIndex].Cycle,
                                 Engine.Actors[sourceIndex]);
                             Engine.UpdateBoard(target);
@@ -45,7 +46,7 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
                     }
                     else if (sourceIndex != 0)
                     {
-                        Engine.Tiles[target].CopyFrom(Engine.Tiles[source]);
+                        Engine.Tiles[target] = Engine.Tiles[source];
                         Engine.UpdateBoard(target);
                     }
 

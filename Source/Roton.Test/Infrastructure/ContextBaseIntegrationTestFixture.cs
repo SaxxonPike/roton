@@ -27,7 +27,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected Mock<IClock> ClockMock { get; private set; }
     protected FixedFileSystem FileSystem { get; private set; }
     protected Config Config { get; private set; }
-    protected Mock<ITerminal> TerminalMock { get; private set; }
+    protected TestTerminal Terminal { get; private set; }
     protected TestKeyboard Keyboard { get; private set; }
     protected Mock<ISpeaker> SpeakerMock { get; private set; }
     protected ITracer Tracer { get; private set; }
@@ -56,7 +56,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IState State => Engine.State;
     protected ITargetList TargetList => Engine.TargetList;
     protected ITiles Tiles => Engine.Tiles;
-    protected IWorld World => Engine.World;
+    //protected IWorld World => Engine.World;
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
@@ -131,7 +131,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             // from a thread that doesn't run during testing, leading to infinite loops.
             FastMode = true
         };
-        TerminalMock = new Mock<ITerminal>();
+        Terminal = new TestTerminal();
         Keyboard = new TestKeyboard();
         SpeakerMock = new Mock<ISpeaker>();
         ClockMock = new Mock<IClock>();
@@ -143,7 +143,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         builder.Register(_ => FileSystem)
             .As<IFileSystem>()
             .SingleInstance();
-        builder.Register(_ => TerminalMock.Object)
+        builder.Register(_ => Terminal)
             .As<ITerminal>()
             .SingleInstance();
         builder.Register(_ => Keyboard)
@@ -182,10 +182,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
 
-    protected void FaceActor(int index, IXyPair vector) => Actors[index].Vector.CopyFrom(vector);
+    protected void FaceActor(int index, Vector vector) => Actors[index].Vector = vector;
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
-        Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
+        Tiles[new Location(x, y)] = (new Tile(id, color ?? RandomInt(0x00, 0xFF)));
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
@@ -202,11 +202,11 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         Actors[index].Length = codeBytes.Length;
     }
 
-    protected ITile TileAt(int x, int y) =>
-        Tiles[new Location(x, y)];
+    protected ref Tile TileAt(int x, int y) =>
+        ref Tiles[new Location(x, y)];
 
-    protected ITile TileAt(IXyPair xy) =>
-        Tiles[xy];
+    protected ref Tile TileAt(Location xy) =>
+        ref Tiles[xy];
 
     protected void Type(AnsiKey key, KeyMod mod = 0) =>
         Keyboard.Press(new KeyPress { Key = key, Mod = mod });
@@ -225,14 +225,73 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         while (State.BoardCount < index)
         {
             Engine.PackBoard();
-            World.BoardIndex = State.BoardCount + 1;
+            BoardIndex = State.BoardCount + 1;
             Engine.ClearBoard();
         }
 
-        if (World.BoardIndex != index)
+        if (BoardIndex != index)
         {
             Engine.PackBoard();
             Engine.UnpackBoard(index);
         }
     }
+    
+    protected int BoardIndex
+    {
+        get => Engine.World.BoardIndex;
+        set => Engine.World.BoardIndex = value;
+    }
+
+    protected int Ammo
+    {
+        get => Engine.World.Ammo;
+        set => Engine.World.Ammo = value;
+    }
+
+    protected int Torches
+    {
+        get => Engine.World.Torches;
+        set => Engine.World.Torches = value;
+    }
+    
+    protected int TorchCycles
+    {
+        get => Engine.World.TorchCycles;
+        set => Engine.World.Torches = value;
+    }
+
+    protected int EnergyCycles
+    {
+        get => Engine.World.EnergyCycles;
+        set => Engine.World.EnergyCycles = value;
+    }
+
+    protected int Gems
+    {
+        get => Engine.World.Gems;
+        set => Engine.World.Gems = value;
+    }
+
+    protected int Health
+    {
+        get => Engine.World.Health;
+        set => Engine.World.Health = value;
+    }
+
+    protected int Score
+    {
+        get => Engine.World.Score;
+        set => Engine.World.Score = value;
+    }
+
+    protected int Stones
+    {
+        get => Engine.World.Stones;
+        set => Engine.World.Stones = value;
+    }
+
+    protected IFlags Flags => Engine.World.Flags;
+
+
+    protected IKeyList Keys => Engine.World.Keys;
 }

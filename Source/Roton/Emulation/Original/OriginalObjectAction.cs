@@ -15,13 +15,13 @@ public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         if (actor.Instruction >= 0)
         {
-            Engine.ExecuteCode(index, actor, @"Interaction");
+            Engine.ExecuteCode(index, ref actor.Instruction, @"Interaction");
         }
             
         if (actor.Vector.IsZero()) 
             return;
 
-        var target = actor.Location.Sum(actor.Vector);
+        var target = actor.Location + actor.Vector;
         if (Engine.Tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);

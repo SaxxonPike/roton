@@ -13,72 +13,33 @@ public sealed class Actor : IActor
         _memory = memory;
         _heap = heap;
         Offset = offset;
-        Location = new MemoryLocation(_memory, Offset + 0x00);
-        UnderTile = new MemoryTile(_memory, Offset + 0x0F);
-        Vector = new MemoryVector(_memory, Offset + 0x02);
     }
 
     public int Offset { get; }
 
-    public int Cycle
-    {
-        get => _memory.Read16(Offset + 0x06);
-        set => _memory.Write16(Offset + 0x06, value);
-    }
+    public ref Word Cycle => ref _memory.GetRef<Word>(Offset + 0x06);
 
-    public int Follower
-    {
-        get => _memory.Read16(Offset + 0x0B);
-        set => _memory.Write16(Offset + 0x0B, value);
-    }
+    public ref Word Follower => ref _memory.GetRef<Word>(Offset + 0x0B);
 
-    public int Leader
-    {
-        get => _memory.Read16(Offset + 0x0D);
-        set => _memory.Write16(Offset + 0x0D, value);
-    }
+    public ref Word Leader => ref _memory.GetRef<Word>(Offset + 0x0D);
 
-    public int Length
-    {
-        get => _memory.Read16(Offset + 0x17);
-        set => _memory.Write16(Offset + 0x17, value);
-    }
+    public ref Word Length => ref _memory.GetRef<Word>(Offset + 0x17);
 
-    public IXyPair Location { get; }
+    public ref Location Location => ref _memory.GetRef<Location>(Offset + 0x00);
 
-    public int P1
-    {
-        get => _memory.Read8(Offset + 0x08);
-        set => _memory.Write8(Offset + 0x08, value);
-    }
+    public ref byte P1 => ref _memory.GetRef<byte>(Offset + 0x08);
 
-    public int P2
-    {
-        get => _memory.Read8(Offset + 0x09);
-        set => _memory.Write8(Offset + 0x09, value);
-    }
+    public ref byte P2 => ref _memory.GetRef<byte>(Offset + 0x09);
 
-    public int P3
-    {
-        get => _memory.Read8(Offset + 0x0A);
-        set => _memory.Write8(Offset + 0x0A, value);
-    }
+    public ref byte P3 => ref _memory.GetRef<byte>(Offset + 0x0A);
 
-    public int Pointer
-    {
-        get => _memory.Read32(Offset + 0x11);
-        set => _memory.Write32(Offset + 0x11, value);
-    }
+    public ref DWord Pointer => ref _memory.GetRef<DWord>(Offset + 0x11);
 
-    public ITile UnderTile { get; }
+    public ref Tile UnderTile => ref _memory.GetRef<Tile>(Offset + 0x0F);
 
-    public IXyPair Vector { get; }
+    public ref Vector Vector => ref _memory.GetRef<Vector>(Offset + 0x02);
 
-    public int Instruction
-    {
-        get => _memory.Read16(Offset + 0x15);
-        set => _memory.Write16(Offset + 0x15, value);
-    }
+    public ref Word Instruction => ref _memory.GetRef<Word>(Offset + 0x15);
 
     public byte[] Code
     {

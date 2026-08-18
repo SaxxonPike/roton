@@ -22,7 +22,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Ammo.Should().Be(Facts.DefaultAmmo + Facts.AmmoPerPickup,
+        Ammo.Should().Be(Facts.DefaultAmmo + Facts.AmmoPerPickup,
             "ammo count should be correct");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -47,7 +47,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Torches.Should().Be(Facts.DefaultTorches + 1,
+        Torches.Should().Be(Facts.DefaultTorches + 1,
             "torch count should be correct");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -69,11 +69,11 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Health.Should().Be(Facts.DefaultHealth + Facts.HealthPerGem,
+        Health.Should().Be(Facts.DefaultHealth + Facts.HealthPerGem,
             "health should be correct");
-        World.Gems.Should().Be(Facts.DefaultGems + 1,
+        Gems.Should().Be(Facts.DefaultGems + 1,
             "gems should be correct");
-        World.Score.Should().Be(Facts.DefaultScore + Facts.ScorePerGem,
+        Score.Should().Be(Facts.DefaultScore + Facts.ScorePerGem,
             "score should be correct");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -96,7 +96,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Keys[keyColor - 1].Should().BeTrue(
+        Keys[keyColor - 1].Should().BeTrue(
             "correct key should be obtained");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -115,7 +115,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         PlotTo(4, 3, ElementList.KeyId, keyColor);
 
         // Add the same color key to the player's inventory.
-        World.Keys[keyColor - 1] = true;
+        Keys[keyColor - 1] = true;
 
         // Move the player into the key.
         Type(AnsiKey.Right);
@@ -139,14 +139,14 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         PlotTo(4, 3, ElementList.DoorId, doorColor << 4);
 
         // Add the same color key to the player's inventory.
-        World.Keys[doorColor - 1] = true;
+        Keys[doorColor - 1] = true;
 
         // Move the player into the door.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        World.Keys[doorColor - 1].Should().BeFalse(
+        Keys[doorColor - 1].Should().BeFalse(
             "correct key should be consumed");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -247,7 +247,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
             "bomb should be present after activation");
         Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
             "correct message should be displayed");
-        actor.P1.Should().Be(Engine.Facts.BombCountdownStart - 1,
+        actor.P1.Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
             "bomb should have the maximum timer set");
     }
 
@@ -260,7 +260,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         // Place the bomb and light it.
         var actorIndex = SpawnTo(4, 3, ElementList.BombId);
         var actor = Actors[actorIndex];
-        actor.P1 = Engine.Facts.BombCountdownStart;
+        actor.P1 = (byte)Engine.Facts.BombCountdownStart;
 
         // Move the player into the bomb.
         Type(AnsiKey.Right);
@@ -287,7 +287,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1,
+        EnergyCycles.Should().Be(Facts.EnergyCyclesPerEnergizer - 1,
             "player should have correct number of energy cycles");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after pickup");
@@ -309,7 +309,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+        Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
             "player should take damage from the star");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after interaction");
@@ -336,7 +336,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+        Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
             "player should take damage from the bullet");
         TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
             "player should be in correct location after interaction");
@@ -410,7 +410,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "Object should have received touch label");
     }
 
@@ -428,7 +428,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
+        Health.Should().Be(Facts.DefaultHealth - Facts.HealthLostPerHit,
             "Player should take damage");
     }
 
@@ -459,7 +459,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Give the player some ammo.
-        World.Ammo = 1;
+        Ammo = 1;
 
         // Place an enemy.
         SpawnTo(11, 10, ElementList.LionId);
@@ -469,7 +469,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Ammo.Should().Be(0,
+        Ammo.Should().Be(0,
             "player should have used ammo");
         TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
             "enemy should have been killed");
@@ -482,7 +482,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Give the player some ammo.
-        World.Ammo = 1;
+        Ammo = 1;
 
         // Place a breakable wall.
         PlotTo(11, 10, ElementList.BreakableId);
@@ -492,7 +492,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        World.Ammo.Should().Be(0,
+        Ammo.Should().Be(0,
             "player should have used ammo");
         TileAt(11, 10).Id.Should().Be(ElementList.EmptyId,
             "breakable wall should have been broken");

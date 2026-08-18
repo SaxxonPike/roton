@@ -1,5 +1,5 @@
+using System;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,9 +11,10 @@ public sealed class SetCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var flag = Engine.Parser.ReadWord(context.Index, context);
+        Span<char> buffer = stackalloc char[256];
+        var flag = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
         Engine.World.Flags.Add(flag);
     }
 }

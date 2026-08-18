@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,16 +10,16 @@ public sealed class TryCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(context);
-        if (vector == null)
+        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
+        if (vector is not {} vec)
             return;
 
-        var target = vector.Sum(context.Actor.Location);
+        var target = context.Actor.Location + vec;
         if (!Engine.Tiles.ElementAt(target).IsFloor)
         {
-            Engine.Push(target, vector);
+            Engine.Push(target, vec);
         }
         if (Engine.ElementAt(target).IsFloor)
         {

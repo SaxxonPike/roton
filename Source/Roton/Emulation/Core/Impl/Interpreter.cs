@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using Roton.Emulation.Data;
+﻿using System;
+using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -20,8 +19,9 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
         [DebuggerStepThrough] get => tracer;
     }
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
+        Span<char> buffer = stackalloc char[256];
         var firstLine = true;
 
         while (true)
@@ -29,12 +29,12 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             if (firstLine)
                 firstLine = false;
             else
-                Tracer?.TraceOop(context);
+                Tracer?.TraceOop(ref context, ref instruction);
 
             context.Resume = false;
             context.Executed = true;
 
-            var name = Engine.Parser.ReadWord(context.Index, context);
+            var name = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
             if (name.Length == 0)
                 break;
 
@@ -42,15 +42,15 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
 
             if (command != null)
             {
-                command.Execute(context);
+                command.Execute(ref context, ref instruction);
             }
             else
             {
                 if (!Engine.BroadcastLabel(context.Index, name, false))
                 {
-                    if (!name.Contains(':'))
+                    if (name.IndexOf(':') < 0)
                     {
-                        Engine.RaiseError($"Bad command {name}");
+                        Engine.RaiseError($"Bad command {name.ToString()}");
                     }
                 }
                 else
@@ -75,9 +75,9 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             }
             else
             {
-                if (context.NextLine && context.Instruction > 0)
+                if (context.NextLine && instruction > 0)
                 {
-                    Engine.Parser.DiscardLine(context.Index, context);
+                    Engine.Parser.DiscardLine(context.Index, ref instruction);
                 }
 
                 break;

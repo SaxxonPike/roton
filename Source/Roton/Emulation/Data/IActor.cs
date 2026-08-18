@@ -1,16 +1,19 @@
-﻿namespace Roton.Emulation.Data;
+﻿using Roton.Emulation.Data.Impl;
 
-public interface IActor : IExecutable, IProgrammable
+namespace Roton.Emulation.Data;
+
+public interface IActor : IProgrammable
 {
-    IXyPair Location { get; }
-    ITile UnderTile { get; }
-    IXyPair Vector { get; }
-    int Cycle { get; set; }
-    int Follower { get; set; }
-    int Leader { get; set; }
-    int Length { get; set; }
-    int P1 { get; set; }
-    int P2 { get; set; }
-    int P3 { get; set; }
-    int Pointer { get; set; }
+    ref Location Location { get; }
+    ref Tile UnderTile { get; }
+    ref Vector Vector { get; }
+    ref Word Cycle { get; }
+    ref Word Follower { get; }
+    ref Word Leader { get; }
+    ref Word Instruction { get; }
+    ref Word Length { get; }
+    ref byte P1 { get; }
+    ref byte P2 { get; }
+    ref byte P3 { get; }
+    ref DWord Pointer { get; }
 }

@@ -9,6 +9,7 @@ public abstract class OopTestFixture(Context context) : AllContextIntegrationTes
     [SetUp]
     public void __Setup()
     {
+        EnableTracer();
         if (ElementList.ObjectId < 0)
             Assert.Inconclusive();
     }

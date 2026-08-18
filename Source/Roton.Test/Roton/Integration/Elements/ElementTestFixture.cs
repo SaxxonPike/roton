@@ -10,6 +10,17 @@ public abstract class ElementTestFixture(Context context) : AllContextIntegratio
     public void __Setup()
     {
         if (ElementList.ObjectId < 0)
+        {
             Assert.Inconclusive();
+            return;
+        }
+
+        Tracer.Attach(TestContext.Out);
+    }
+
+    [TearDown]
+    public void __TearDown()
+    {
+        Tracer.Detach(TestContext.Out);
     }
 }

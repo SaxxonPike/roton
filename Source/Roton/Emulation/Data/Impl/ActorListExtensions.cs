@@ -2,7 +2,7 @@
 
 public static class ActorListExtensions
 {
-    public static int ActorIndexAt(this IActors actors, IXyPair location)
+    public static int ActorIndexAt(this IActors actors, Location location)
     {
         var index = 0;
         foreach (var actor in actors)

@@ -1,8 +1,8 @@
-﻿using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core;
 
 public interface IInterpreter
 {
-    void Execute(IOopContext context);
+    void Execute(ref OopContext context, ref Word instruction);
 }

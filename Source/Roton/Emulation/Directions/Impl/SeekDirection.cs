@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,7 +10,7 @@ public sealed class SeekDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(ref OopContext context, ref Word instruction)
     {
         return Engine.Seek(context.Actor.Location);
     }

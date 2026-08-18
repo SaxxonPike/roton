@@ -1,5 +1,5 @@
+using System;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,17 +11,19 @@ public sealed class ZapCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        Engine.Parser.ReadWord(context.Index, context);
-        context.SearchIndex = 0;
+        Span<char> buffer = stackalloc char[256];
+
+        Engine.Parser.ReadWord(context.Index, ref instruction);
+        context.Search.Index = 0;
         while (true)
         {
-            
-            var result = Engine.ExecuteLabel(context.Index, context, Engine.State.OopWord,"\xD\x3A");
+
+            var result = Engine.ExecuteLabel(context.Index, ref context.Search, Engine.State.GetOopWord(buffer), "\r:");
             if (!result)
                 break;
-            Engine.Actors[context.SearchIndex].Code[context.SearchOffset + 1] = 0x27;
+            Engine.Actors[context.Search.Index].Code[context.Search.Offset + 1] = 0x27;
         }
     }
 }

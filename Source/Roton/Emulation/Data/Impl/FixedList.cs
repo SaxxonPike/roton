@@ -6,6 +6,8 @@ namespace Roton.Emulation.Data.Impl;
 
 public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 {
+    private Func<int, T> _getter;
+    
     public virtual void Add(T item)
     {
         throw new InvalidOperationException();
@@ -51,7 +53,8 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 
     public LinearEnumerator<T> GetEnumerator()
     {
-        return new LinearEnumerator<T>(GetItem, Count);
+        _getter ??= GetItem;
+        return new LinearEnumerator<T>(_getter, Count);
     }
 
     public virtual int IndexOf(T item)

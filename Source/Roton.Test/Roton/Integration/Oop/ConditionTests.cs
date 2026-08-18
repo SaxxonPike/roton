@@ -22,9 +22,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "condition line was not executed");
     }
 
@@ -41,9 +41,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
 
         Step();
 
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "condition line was not skipped");
     }
 
@@ -66,9 +66,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "blocked condition must resolve true when blocked");
     }
 
@@ -91,9 +91,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "blocked condition must resolve false when not blocked");
     }
 
@@ -113,9 +113,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "blocked condition must resolve false when an unknown direction is specified");
     }
 
@@ -132,15 +132,15 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Give the player some energy.
-        World.EnergyCycles = 10;
+        EnergyCycles = 10;
 
         // Execute.
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "energized condition must resolve true when player has energy cycles");
     }
 
@@ -157,15 +157,15 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Make sure the player has no energy.
-        World.EnergyCycles = 0;
+        EnergyCycles = 0;
 
         // Execute.
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "energized condition must resolve false when player has no energy cycles");
     }
 
@@ -188,9 +188,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "aligned condition must resolve true when aligned horizontally with the player");
     }
 
@@ -213,9 +213,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "aligned condition must resolve true when aligned vertically with the player");
     }
 
@@ -238,9 +238,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "aligned condition must resolve false when not aligned");
     }
 
@@ -263,9 +263,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "any kind+color condition must resolve true when an element of the specified color is present");
     }
 
@@ -288,9 +288,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "any kind+color condition must resolve true when an element of the specified color is present");
     }
 
@@ -313,9 +313,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "any kind condition must resolve true when an element is present");
     }
 
@@ -338,9 +338,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "any kind+color condition must resolve false when an element of the specified color is not present");
     }
 
@@ -360,9 +360,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "any kind condition must resolve false when an element is not present");
     }
 
@@ -382,9 +382,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "any kind condition must resolve false when an unknown element is specified");
     }
 
@@ -407,9 +407,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "contact condition must resolve true when adjacent to the player");
     }
 
@@ -432,9 +432,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "contact condition must resolve false when not adjacent to the player");
     }
 
@@ -457,9 +457,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().Contain(["F1"],
+        Flags.Should().Contain(["F1"],
             "not condition must resolve true when the condition it negates is false");
     }
 
@@ -482,9 +482,9 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         Step();
 
         // Assert.
-        World.Flags.Should().Contain(["F2"],
+        Flags.Should().Contain(["F2"],
             "code was not executed");
-        World.Flags.Should().NotContain(["F1"],
+        Flags.Should().NotContain(["F1"],
             "not condition must resolve false when the condition it negates is true");
     }
 }

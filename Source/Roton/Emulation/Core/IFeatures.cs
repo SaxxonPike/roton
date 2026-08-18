@@ -1,4 +1,5 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core;
 
@@ -7,16 +8,16 @@ public interface IFeatures
     void LockActor(int index);
     void UnlockActor(int index);
     bool IsActorLocked(int index);
-    void RemoveItem(IXyPair location);
+    void RemoveItem(Location location);
     string GetWorldName(string baseName);
     string GetHighScoreName(string baseName);
     void EnterBoard();
     bool HandleTitleInput();
     void ShowInGameHelp();
-    IScrollState ExecuteMessage(IOopContext context);
+    IScrollState ExecuteMessage(ref OopContext context);
     void HandlePlayerInput(IActor actor);
-    bool CanPutTile(IXyPair location);
-    void ClearForest(IXyPair location);
+    bool CanPutTile(Location location);
+    void ClearForest(Location location);
     void CleanUpPassageMovement();
     void ForcePlayerColor(int index);
     string[] GetMessageLines();
@@ -25,7 +26,7 @@ public interface IFeatures
     void CleanUpPauseMovement();
     string OpenWorld();
     string RestoreWorld();
-    void CleanUpOop(IOopContext context);
+    void CleanUpOop(ref OopContext context);
     int GetColorMatchValue(int color);
     void NotifyActorSentLabel(int index);
     string GetSaveName(string baseName);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -22,10 +23,7 @@ public sealed class OriginalState : IState
         EngineResourceService = engineResourceService;
 
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
-        BorderTile = new MemoryTile(Memory, 0x0072);
         DefaultActor = new Actor(Memory, Heap, 0x0076);
-        EdgeTile = new MemoryTile(Memory, 0x0074);
-        KeyVector = new MemoryVector(Memory, 0x7C68);
         LineChars = new ByteString(Memory, 0x0098);
         ProgressAnimation = new ProgressAnimation(Memory, 0x00B2);
         ProgressColors = new Int8List(Memory, 0x00AA, 8);
@@ -79,7 +77,7 @@ public sealed class OriginalState : IState
         set => Memory.FastWrite16(0x45BE, value);
     }
 
-    public ITile BorderTile { get; }
+    public ref Tile BorderTile => ref Memory.GetRef<Tile>(0x0072);
 
     public bool BreakGameLoop
     {
@@ -113,7 +111,7 @@ public sealed class OriginalState : IState
         set => Memory.WriteString(0x2452, value);
     }
 
-    public ITile EdgeTile { get; }
+    public ref Tile EdgeTile => ref Memory.GetRef<Tile>(0x0074);
 
     public bool EditorMode
     {
@@ -183,7 +181,7 @@ public sealed class OriginalState : IState
         set => Memory.WriteBool(0x7C6C, value);
     }
 
-    public IXyPair KeyVector { get; }
+    public ref Vector KeyVector => ref Memory.GetRef<Vector>(0x7C68);
 
     public IReadOnlyList<int> LineChars { get; }
     
@@ -284,4 +282,14 @@ public sealed class OriginalState : IState
         get => Memory.ReadBool(0x7428);
         set => Memory.WriteBool(0x7428, value);
     }
+
+    public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
+    {
+        var span = Memory.ReadStringSpan(0x7410);
+        Cp437.BytesToChars(span, buffer);
+        return buffer.Slice(0, span.Length);
+    }
+
+    public void SetOopWord(ReadOnlySpan<char> buffer) => 
+        Memory.WriteString(0x7410, buffer);
 }

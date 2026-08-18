@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -12,17 +13,16 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperState : IState
 {
+    private Tile _borderTile;
+    
     public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
     {
         Memory = memory;
         EngineResourceService = engineResourceService;
         Heap = heap;
-            
+
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
-        BorderTile = new Tile(0, 0); // Not in memory
         DefaultActor = new Actor(Memory, Heap, 0x2262);
-        EdgeTile = new MemoryTile(Memory, 0x2260);
-        KeyVector = new MemoryVector(Memory, 0xCC6E);
         LineChars = new ByteString(Memory, 0x22BA);
         ProgressAnimation = new ProgressAnimation(Memory, 0x21C0);
         ProgressColors = new Int8List(Memory, 0x21B8, 8);
@@ -61,7 +61,7 @@ public sealed class SuperState : IState
         set => Memory.FastWrite16(0x7784, value);
     }
 
-    public ITile BorderTile { get; }
+    public ref Tile BorderTile => ref _borderTile;
 
     public bool BreakGameLoop
     {
@@ -91,7 +91,7 @@ public sealed class SuperState : IState
         set => Memory.WriteString(0x2B70, value);
     }
 
-    public ITile EdgeTile { get; }
+    public ref Tile EdgeTile => ref Memory.GetRef<Tile>(0x2260);
 
     public bool EditorMode
     {
@@ -151,8 +151,8 @@ public sealed class SuperState : IState
 
     public EngineKeyCode KeyPressed
     {
-        get => (EngineKeyCode) Memory.Read8(0xCC76);
-        set => Memory.Write8(0xCC76, (int) value);
+        get => (EngineKeyCode)Memory.Read8(0xCC76);
+        set => Memory.Write8(0xCC76, (int)value);
     }
 
     public bool KeyShift
@@ -161,12 +161,12 @@ public sealed class SuperState : IState
         set => Memory.WriteBool(0xCC72, value);
     }
 
-    public IXyPair KeyVector { get; }
+    public ref Vector KeyVector => ref Memory.GetRef<Vector>(0xCC6E);
 
     public IReadOnlyList<int> LineChars { get; }
-    
+
     public IReadOnlyList<string> ProgressAnimation { get; }
-    
+
     public IReadOnlyList<int> ProgressColors { get; }
 
     public string Message
@@ -262,4 +262,14 @@ public sealed class SuperState : IState
         get => Memory.ReadBool(0xB97C);
         set => Memory.WriteBool(0xB97C, value);
     }
+
+    public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
+    {
+        var span = Memory.ReadStringSpan(0xB964);
+        Cp437.BytesToChars(span, buffer);
+        return buffer.Slice(0, span.Length);
+    }
+
+    public void SetOopWord(ReadOnlySpan<char> buffer) =>
+        Memory.WriteString(0xB964, buffer);
 }

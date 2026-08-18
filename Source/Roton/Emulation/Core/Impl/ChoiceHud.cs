@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -33,7 +34,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
         }            
     }
 
-    private void DrawString(int x, int y, string message, int color)
+    private void DrawString(int x, int y, ReadOnlySpan<char> message, int color)
     {
         Terminal.Write(x, y, message, color);
     }

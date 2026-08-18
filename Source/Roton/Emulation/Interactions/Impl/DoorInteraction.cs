@@ -1,5 +1,4 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,7 +10,7 @@ public sealed class DoorInteraction(IEngineAccessor engine) : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
         var color = (Engine.Tiles[location].Color & 0x70) >> 4;
         var keyIndex = color - 1;

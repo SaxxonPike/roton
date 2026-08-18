@@ -1,4 +1,3 @@
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,9 +7,9 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "RESTART")]
 public sealed class RestartCommand : ICommand
 {
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        context.Instruction = 0;
+        instruction = 0;
         context.NextLine = false;
     }
 }

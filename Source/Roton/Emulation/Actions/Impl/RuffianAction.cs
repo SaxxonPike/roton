@@ -18,9 +18,9 @@ public sealed class RuffianAction(IEngineAccessor engine) : IAction
         {
             if (actor.P2 + 8 <= Engine.Random.GetNext(17))
             {
-                actor.Vector.CopyFrom(actor.P1 >= Engine.Random.GetNext(9)
-                ? Engine.Seek(actor.Location)
-                :Engine.Rnd());
+                actor.Vector = actor.P1 >= Engine.Random.GetNext(9)
+                    ? Engine.Seek(actor.Location)
+                    :Engine.Rnd();
                 
             }
         }
@@ -30,11 +30,11 @@ public sealed class RuffianAction(IEngineAccessor engine) : IAction
             {
                 if (actor.P1 >= Engine.Random.GetNext(9))
                 {
-                    actor.Vector.CopyFrom(Engine.Seek(actor.Location));
+                    actor.Vector = Engine.Seek(actor.Location);
                 }
             }
 
-            var target = actor.Location.Sum(actor.Vector);
+            var target = actor.Location + actor.Vector;
             if (Engine.Tiles.ElementAt(target).Id == Engine.ElementList.PlayerId)
             {
                 Engine.Attack(index, target);
@@ -44,12 +44,12 @@ public sealed class RuffianAction(IEngineAccessor engine) : IAction
                 Engine.MoveActor(index, target);
                 if (actor.P2 + 8 <= Engine.Random.GetNext(17))
                 {
-                    actor.Vector.SetTo(0, 0);
+                    actor.Vector = new Vector(0, 0);
                 }
             }
             else
             {
-                actor.Vector.SetTo(0, 0);
+                actor.Vector = new Vector(0, 0);
             }
         }
     }

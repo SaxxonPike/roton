@@ -1,6 +1,6 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
@@ -17,26 +17,26 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         [DebuggerStepThrough] get => engine.Instance;
     }
 
-    public int Search(int index, string term)
+    public int Search(int index, ReadOnlySpan<char> term)
     {
         var result = -1;
-        if (string.IsNullOrEmpty(term))
+        if (term.IsEmpty)
             return result;
 
         var termBytes = term.Length <= 256 ? stackalloc byte[term.Length] : new byte[term.Length];
         term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
-        var offs = new Executable();
+        var offs = new Word();
         
-        while (offs.Instruction < actor.Length)
+        while (offs < actor.Length)
         {
-            var oldOffset = offs.Instruction;
+            var oldOffset = offs;
             var termOffset = 0;
             bool success;
         
             while (true)
             {
-                ReadByte(index, offs);
+                ReadByte(index, ref offs);
                 if (termBytes[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpperCase())
                 {
                     success = false;
@@ -53,10 +53,9 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         
             if (success)
             {
-                ReadByte(index, offs);
+                ReadByte(index, ref offs);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
-                if (!(Engine.State.OopByte >= 0x41 && Engine.State.OopByte <= 0x5A ||
-                      Engine.State.OopByte == 0x5F))
+                if (Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
                 {
                     result = oldOffset;
                     break;
@@ -64,65 +63,65 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             }
         
             oldOffset++;
-            offs.Instruction = oldOffset;
+            offs = oldOffset;
         }
         
         return result;
     }
 
-    public int GetNumber(IOopContext context) => 
-        ReadNumber(context.Index, context);
+    public int GetNumber(ref OopContext context, ref Word instruction) => 
+        ReadNumber(context.Index, ref instruction);
 
-    public void DiscardLine(int index, IExecutable instructionSource)
+    public void DiscardLine(int index, ref Word instruction)
     {
-        ReadByte(index, instructionSource);
+        ReadByte(index, ref instruction);
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
-            ReadByte(index, instructionSource);
+            ReadByte(index, ref instruction);
     }
 
-    public int ReadByte(int index, IExecutable instructionSource)
+    public int ReadByte(int index, ref Word instruction)
     {
         var actor = Engine.Actors[index];
         var value = 0;
 
-        if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
+        if (instruction < 0 || instruction >= actor.Length)
         {
             Engine.State.OopByte = 0;
         }
         else
         {
-            value = actor.Code[instructionSource.Instruction];
+            value = actor.Code[instruction];
             Engine.State.OopByte = value;
-            instructionSource.Instruction++;
+            instruction++;
         }
 
         return value;
     }
 
-    public string ReadLine(int index, IExecutable instructionSource)
+    public string ReadLine(int index, ref Word instruction)
     {
         // The original ZZT engine used a string[50] Pascal buffer for OOP line reads.
         // 256 chars is generous headroom while remaining safe for stack allocation (~512 bytes).
 
         var buffer = (stackalloc char[256]);
         var length = 0;
-        ReadByte(index, instructionSource);
+        ReadByte(index, ref instruction);
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
             if (length < buffer.Length)
                 buffer[length++] = Engine.State.OopByte.ToChar();
-            ReadByte(index, instructionSource);
+            ReadByte(index, ref instruction);
         }
 
         return buffer.Slice(0, length).ToString();
     }
 
-    public int ReadNumber(int index, IExecutable instructionSource)
+    public int ReadNumber(int index, ref Word instruction)
     {
         var success = false;
         var resultInt = 0;
 
-        while (ReadByte(index, instructionSource) == 0x20)
+        while (ReadByte(index, ref instruction) == 0x20)
         {
         }
 
@@ -131,12 +130,12 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         {
             success = true;
             resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
-            ReadByte(index, instructionSource);
+            ReadByte(index, ref instruction);
         }
 
-        if (instructionSource.Instruction > 0)
+        if (instruction > 0)
         {
-            instructionSource.Instruction--;
+            instruction--;
         }
 
         if (!success)
@@ -151,16 +150,19 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return Engine.State.OopNumber;
     }
 
-    public string ReadWord(int index, IExecutable instructionSource)
+    public void ReadWord(int index, ref Word instruction)
     {
-        // Words are delimited by spaces and non-alphanumeric characters, so they are always short.
-        // 256 chars matches ReadLine and is well above any real-world OOP word length.
-        var buffer = (stackalloc char[256]);
+        Span<char> result = stackalloc char[256];
+        ReadWord(index, ref instruction, result);
+    }
+
+    public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
+    {
         var length = 0;
 
         while (true)
         {
-            ReadByte(index, instructionSource);
+            ReadByte(index, ref instruction);
             if (Engine.State.OopByte != 0x20)
             {
                 break;
@@ -176,45 +178,48 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             {
                 if (length < buffer.Length)
                     buffer[length++] = oopByte.ToChar();
-                ReadByte(index, instructionSource);
+                ReadByte(index, ref instruction);
                 Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
                 oopByte = Engine.State.OopByte;
             }
         }
 
-        if (instructionSource.Instruction > 0)
-        {
-            instructionSource.Instruction--;
-        }
+        if (instruction > 0) 
+            instruction--;
 
-        Engine.State.OopWord = buffer.Slice(0, length).ToString();
-        return Engine.State.OopWord;
+        var result = buffer.Slice(0, length);
+        Engine.State.SetOopWord(result);
+        return result;
     }
 
-    public bool? GetCondition(IOopContext oopContext)
+    public bool? GetCondition(ref OopContext oopContext, ref Word instruction)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, ref instruction, buffer);
         var condition = Engine.ConditionList.Get(name);
-        return condition?.Execute(oopContext) ?? Engine.World.Flags.Contains(name);
+        return condition?.Execute(ref oopContext, ref instruction) ?? Engine.World.Flags.Contains(name);
     }
 
-    public IXyPair GetDirection(IOopContext oopContext)
+    public Vector? GetDirection(ref OopContext oopContext, ref Word instruction)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, ref instruction, buffer);
         var direction = Engine.DirectionList.Get(name);
-        return direction?.Execute(oopContext);
+        return direction?.Execute(ref oopContext, ref instruction);
     }
 
-    public IItem GetItem(IOopContext oopContext)
+    public IItem GetItem(ref OopContext oopContext, ref Word instruction)
     {
-        var name = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var name = ReadWord(oopContext.Index, ref instruction, buffer);
         var item = Engine.ItemList.Get(name);
         return item;
     }
 
-    public ITile GetKind(IOopContext oopContext)
+    public Tile? GetKind(ref OopContext oopContext, ref Word instruction)
     {
-        var word = ReadWord(oopContext.Index, oopContext);
+        Span<char> buffer = stackalloc char[256];
+        var word = ReadWord(oopContext.Index, ref instruction, buffer);
         var result = new Tile(0, 0);
         var success = false;
 
@@ -224,13 +229,13 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                 continue;
 
             result.Color = i + 8;
-            word = ReadWord(oopContext.Index, oopContext);
+            word = ReadWord(oopContext.Index, ref instruction, buffer);
             break;
         }
 
         foreach (var element in Engine.ElementList.Where(e => e != null))
         {
-            if (!element.Name.CaseInsensitiveCharacterEqual(word))
+            if (!element.NameMatches(word))
                 continue;
 
             success = true;
@@ -241,10 +246,10 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return success ? result : null;
     }
 
-    public bool GetTarget(int index, ISearchContext context, string term)
+    public bool GetTarget(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
-        context.SearchIndex++;
+        context.Index++;
         var target = Engine.TargetList.Get(term) ?? Engine.TargetList.Get(string.Empty);
-        return target.Execute(index, context, term);
+        return target.Execute(index, ref context, term);
     }
 }

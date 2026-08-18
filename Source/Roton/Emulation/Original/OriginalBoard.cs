@@ -8,31 +8,23 @@ namespace Roton.Emulation.Original;
 public sealed class OriginalBoard : IBoard
 {
     private readonly IMemory _memory;
+    private Location16 _camera;
 
     public OriginalBoard(IMemory memory)
     {
         _memory = memory;
-        Entrance = new MemoryLocation(_memory, 0x45A9);
         Exits = new OriginalExits(_memory);
     }
 
-    public IXyPair Camera { get; } = new Location();
+    public ref Location16 Camera => ref _camera;
 
-    public IXyPair Entrance { get; }
+    public ref Location Entrance => ref _memory.GetRef<Location>(0x45A9);
 
     public IExits Exits { get; }
-    
-    public bool IsDark
-    {
-        get => _memory.ReadBool(0x4568);
-        set => _memory.WriteBool(0x4568, value);
-    }
 
-    public int MaximumShots
-    {
-        get => _memory.Read8(0x4567);
-        set => _memory.Write8(0x4567, value);
-    }
+    public ref Bool IsDark => ref _memory.GetRef<Bool>(0x4568);
+
+    public ref Word MaximumShots => ref _memory.GetRef<Word>(0x4567);
 
     public string Name
     {
@@ -40,15 +32,7 @@ public sealed class OriginalBoard : IBoard
         set => _memory.WriteString(0x2486, value);
     }
 
-    public bool RestartOnZap
-    {
-        get => _memory.ReadBool(0x456D);
-        set => _memory.WriteBool(0x456D, value);
-    }
+    public ref Bool RestartOnZap => ref _memory.GetRef<Bool>(0x456D);
 
-    public int TimeLimit
-    {
-        get => _memory.FastRead16(0x45AB);
-        set => _memory.FastWrite16(0x45AB, value);
-    }
+    public ref Word TimeLimit => ref _memory.GetRef<Word>(0x45AB);
 }

@@ -1,4 +1,3 @@
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -8,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "THEN")]
 public sealed class ThenCommand : ICommand
 {
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
         // The actual code doesn't work this way.
         // We cheat a little by not advancing the execution counter.

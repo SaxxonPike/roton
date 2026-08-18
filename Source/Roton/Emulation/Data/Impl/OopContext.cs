@@ -1,59 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class OopContext : IOopContext
+public ref struct OopContext(IEngineAccessor engine)
 {
-    private readonly IEngine _engine;
-
-    internal OopContext(
-        IEngineAccessor engine)
-    {
-        _engine = engine.Instance;
-    }
-
-    public int Instruction
-    {
-        get => InstructionSource.Instruction;
-        set => InstructionSource.Instruction = value;
-    }
+    private readonly IEngine _engine = engine.Instance;
 
     public IActor Actor => _engine.Actors[Index];
 
-    public int CommandsExecuted { get; set; }
+    public int CommandsExecuted;
 
-    public ITile DeathTile { get; } = new Tile(0, 0);
+    public Tile DeathTile;
 
-    public bool Died { get; set; }
+    public bool Died;
 
-    public bool Executed { get; set; }
+    public bool Executed;
 
-    public bool Finished { get; set; }
+    public bool Finished;
 
-    public IExecutable InstructionSource { get; set; }
+    public int Index;
 
-    public int Index { get; set; }
+    public List<string> Message { get; set; }
 
-    public bool HasMessage => Message.Count > 0;
+    public bool Moved;
 
-    public IList<string> Message { get; } = new List<string>();
+    public string Name;
 
-    public bool Moved { get; set; }
+    public bool NextLine;
 
-    public string Name { get; set; }
+    public int PreviousInstruction;
 
-    public bool NextLine { get; set; }
+    public bool Repeat;
 
-    public int PreviousInstruction { get; set; }
+    public bool Resume;
 
-    public bool Repeat { get; set; }
+    public SearchContext Search;
 
-    public bool Resume { get; set; }
+    public int Command;
 
-    public int SearchIndex { get; set; }
+    public void AddMessage(ReadOnlySpan<char> message)
+    {
+        Message ??= [];
+        Message.Add(message.ToString());
+    }
 
-    public int SearchOffset { get; set; }
-
-    public int Command { get; set; }
+    public bool HasMessage => Message != null;
 }

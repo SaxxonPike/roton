@@ -15,11 +15,11 @@ public sealed class LionAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         var vector = new Vector();
 
-        vector.CopyFrom(actor.P1 >= Engine.Random.GetNext(10)
+        vector = actor.P1 >= Engine.Random.GetNext(10)
             ? Engine.Seek(actor.Location)
-            : Engine.Rnd());
+            : Engine.Rnd();
 
-        var target = actor.Location.Sum(vector);
+        var target = actor.Location + vector;
         var element = Engine.Tiles.ElementAt(target);
         if (element.IsFloor)
         {

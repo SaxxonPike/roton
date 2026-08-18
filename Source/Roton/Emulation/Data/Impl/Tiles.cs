@@ -1,53 +1,50 @@
-﻿using Roton.Emulation.Infrastructure;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
 public abstract class Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
-    : FixedList<ITile>, ITiles
+    : ITiles
 {
-    private readonly ITile[] _cache = BuildCache(memory, offset, width, height);
+    public int Count =>
+        TotalWidth * TotalHeight;
 
-    private static ITile[] BuildCache(IMemory memory, int offset, int width, int height)
-    {
-        var result = new ITile[width * height];
-        for (var i = 0; i < result.Length; i++)
-            result[i] = new MemoryTile(memory, offset + i * 2);
-        return result;
-    }
+    private int TotalHeight =>
+        Height + 2;
 
-    public override int Count => TotalWidth * TotalHeight;
-
-    private int TotalHeight => Height + 2;
-
-    private int TotalWidth => Width + 2;
+    private int TotalWidth =>
+        Width + 2;
 
     public int Height { get; } = height;
 
-    public ITile this[IXyPair location] => this[location.X * TotalHeight + location.Y];
+    public ref Tile this[Location location] =>
+        ref this[location.X * TotalHeight + location.Y];
+
+    public ref Tile this[int index] =>
+        ref memory.GetRef<Tile>(offset + index * 2);
 
     public int Width { get; } = width;
 
-    protected override ITile GetItem(int index) =>
-        index >= 0 && index < _cache.Length
-            ? _cache[index]
-            : new MemoryTile(memory, offset + index * 2);
-
-    protected override void SetItem(int index, ITile value)
+    private IEnumerable<Tile> GetTileEnumerable()
     {
-        throw Exceptions.InvalidSet;
+        for (var x = 1; x < TotalWidth - 1; x++)
+        for (var y = 1; y < TotalHeight - 1; y++)
+            yield return this[new Location(x, y)];
     }
 
-    public override string ToString()
-    {
-        return $"TileGrid ({Width}x{Height})";
-    }
+    public IEnumerator<Tile> GetEnumerator() =>
+        GetTileEnumerable().GetEnumerator();
 
-    public IElement ElementAt(IXyPair location)
-    {
-        return elementList[this[location].Id];
-    }
+    public override string ToString() =>
+        $"TileGrid ({Width}x{Height})";
 
-    public bool FindTile(ITile kind, IXyPair location)
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
+
+    public IElement ElementAt(Location location) =>
+        elementList[this[location].Id];
+
+    public bool FindTile(Tile kind, ref Location location)
     {
         location.X++;
         while (location.Y <= Height)
@@ -73,7 +70,7 @@ public abstract class Tiles(IMemory memory, IElementList elementList, int offset
         return false;
     }
 
-    private int ColorMatch(ITile tile)
+    private int ColorMatch(Tile tile)
     {
         var element = elementList[tile.Id];
 

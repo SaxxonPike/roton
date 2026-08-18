@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -50,7 +51,7 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
     {
     }
 
-    public virtual void DrawString(int x, int y, string text, int color)
+    public virtual void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
     }
 

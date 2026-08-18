@@ -18,7 +18,7 @@ public class SameLineTests(Context context) : OopTestFixture(context)
 
         Step(2);
 
-        World.Flags.Should().Contain("F2");
+        Flags.Should().Contain("F2");
     }
 
     [Test]
@@ -34,6 +34,6 @@ public class SameLineTests(Context context) : OopTestFixture(context)
 
         Step(2);
 
-        World.Flags.Should().Contain("F2");
+        Flags.Should().Contain("F2");
     }
 }

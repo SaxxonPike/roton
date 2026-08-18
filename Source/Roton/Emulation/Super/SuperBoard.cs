@@ -8,32 +8,23 @@ namespace Roton.Emulation.Super;
 public sealed class SuperBoard : IBoard
 {
     private readonly IMemory _memory;
+    private Bool _isDark;
 
     public SuperBoard(IMemory memory)
     {
         _memory = memory;
-        Camera = new MemoryLocation16(_memory, 0x776F);
-        Entrance = new MemoryLocation(_memory, 0x776D);
         Exits = new SuperExits(_memory);
     }
 
-    public IXyPair Camera { get; }
+    public ref Location16 Camera => ref _memory.GetRef<Location16>(0x776F);
 
-    public IXyPair Entrance { get; }
-    
+    public ref Location Entrance => ref _memory.GetRef<Location>(0x776D);
+
     public IExits Exits { get; }
-    
-    public bool IsDark
-    {
-        get => false;
-        set { }
-    }
 
-    public int MaximumShots
-    {
-        get => _memory.Read8(0x7767);
-        set => _memory.Write8(0x7767, value);
-    }
+    public ref Bool IsDark => ref _isDark;
+
+    public ref Word MaximumShots => ref _memory.GetRef<Word>(0x7767);
 
     public string Name
     {
@@ -41,15 +32,7 @@ public sealed class SuperBoard : IBoard
         set => _memory.WriteString(0x2BAE, value);
     }
 
-    public bool RestartOnZap
-    {
-        get => _memory.ReadBool(0x776C);
-        set => _memory.WriteBool(0x776C, value);
-    }
+    public ref Bool RestartOnZap => ref _memory.GetRef<Bool>(0x776C);
 
-    public int TimeLimit
-    {
-        get => _memory.FastRead16(0x7773);
-        set => _memory.FastWrite16(0x7773, value);
-    }
+    public ref Word TimeLimit => ref _memory.GetRef<Word>(0x7773);
 }

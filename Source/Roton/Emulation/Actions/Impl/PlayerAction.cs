@@ -43,7 +43,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
 
         if (Engine.World.Health <= 0)
         {
-            Engine.State.KeyVector.SetTo(0, 0);
+            Engine.State.KeyVector = new Vector(0, 0);
             Engine.State.KeyShift = false;
             if (Engine.Actors.ActorIndexAt(new Location(0, 0)) == -1)
             {
@@ -100,8 +100,8 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
             {
                 // Movement logic
 
-                Engine.InteractionList.Get(Engine.Tiles[actor.Location.Sum(Engine.State.KeyVector)].Id)
-                    .Interact(actor.Location.Sum(Engine.State.KeyVector), 0, Engine.State.KeyVector);
+                Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
+                    .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
                     
                 if (!Engine.State.KeyVector.IsZero())
                 {
@@ -110,9 +110,9 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
                         Engine.PlayStep();
                     }
 
-                    if (Engine.Tiles.ElementAt(actor.Location.Sum(Engine.State.KeyVector)).IsFloor)
+                    if (Engine.Tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
                     {
-                        Engine.MoveActor(0, actor.Location.Sum(Engine.State.KeyVector));
+                        Engine.MoveActor(0, actor.Location + Engine.State.KeyVector);
                     }
                 }
             }

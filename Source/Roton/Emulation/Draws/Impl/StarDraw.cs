@@ -1,5 +1,4 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,9 +10,9 @@ public sealed class StarDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
-        var tile = Engine.Tiles[location];
+        ref var tile = ref Engine.Tiles[location];
         tile.Color++;
         if (tile.Color > 15)
             tile.Color = 9;

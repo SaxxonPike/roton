@@ -19,17 +19,17 @@ public sealed class BearAction(IEngineAccessor engine) : IAction
             if (Engine.Player.Location.X == actor.Location.X ||
                 8 - actor.P1 < Engine.Player.Location.Y.AbsDiff(actor.Location.Y))
             {
-                vector.SetTo(0,
+                vector = new Vector(0,
                     8 - actor.P1 < Engine.Player.Location.X.AbsDiff(actor.Location.X)
                         ? 0
                         : (Engine.Player.Location.Y - actor.Location.Y).Polarity());
             }
             else
             {
-                vector.SetTo((Engine.Player.Location.X - actor.Location.X).Polarity(), 0);
+                vector = new Vector((Engine.Player.Location.X - actor.Location.X).Polarity(), 0);
             }
 
-        var target = actor.Location.Sum(vector);
+        var target = actor.Location + vector;
         var targetElement = Engine.Tiles.ElementAt(target);
 
         if (targetElement.IsFloor)

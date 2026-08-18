@@ -1,4 +1,3 @@
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -10,7 +9,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "EAST")]
 public sealed class EastDirection : IDirection
 {
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(ref OopContext context, ref Word instruction)
     {
         return Vector.East;
     }

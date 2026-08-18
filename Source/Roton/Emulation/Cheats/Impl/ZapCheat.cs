@@ -15,7 +15,7 @@ public sealed class ZapCheat(IEngineAccessor engine) : ICheat
     {
         for (var i = 0; i < 4; i++)
         {
-            Engine.Destroy(Engine.Player.Location.Sum(Engine.GetCardinalVector(i)));
+            Engine.Destroy(Engine.Player.Location + Engine.GetCardinalVector(i));
         }
     }
 }

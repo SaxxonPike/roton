@@ -1,8 +1,8 @@
-using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Conditions;
 
 public interface ICondition
 {
-    bool? Execute(IOopContext context);
+    bool? Execute(ref OopContext context, ref Word instruction);
 }

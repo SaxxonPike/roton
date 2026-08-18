@@ -1,11 +1,7 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public sealed class SearchContext : ISearchContext
+public struct SearchContext
 {
-    internal SearchContext()
-    {
-    }
-
-    public int SearchIndex { get; set; }
-    public int SearchOffset { get; set; }
+    public int Index { get; set; }
+    public int Offset { get; set; }
 }

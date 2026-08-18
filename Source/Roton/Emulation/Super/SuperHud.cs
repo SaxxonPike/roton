@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
@@ -28,7 +29,7 @@ public sealed class SuperHud(
         [DebuggerStepThrough] get => textEntryHud;
     }
 
-    private Location16 OldPlayerLocation { get; } = new(short.MinValue, short.MinValue);
+    private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
 
@@ -143,7 +144,7 @@ public sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public override void DrawString(int x, int y, string text, int color)
+    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
         Terminal.Write(x, y, text, color);
     }
@@ -164,13 +165,13 @@ public sealed class SuperHud(
         }
         else
         {
-            var loc = new Location(x, y).Sum(GetTranslation());
+            var loc = new Location(x, y) + GetTranslation();
             if (IsWithinCamera(loc))
                 Terminal.Plot(loc.X, loc.Y, ac);
         }
     }
 
-    private static bool IsWithinCamera(IXyPair loc) =>
+    private static bool IsWithinCamera(Location loc) =>
         loc.X is >= 0x0E and <= 0x25 && loc.Y is >= 0x02 and <= 0x15;
 
     private Vector GetTranslation() =>
@@ -195,8 +196,8 @@ public sealed class SuperHud(
             for (var y = 0; y < Engine.Tiles.Height; y++)
             {
                 var loc = new Location(x, y);
-                if (IsWithinCamera(loc.Sum(GetTranslation())))
-                    Engine.UpdateBoard(loc.Sum(1, 1));
+                if (IsWithinCamera(loc + GetTranslation()))
+                    Engine.UpdateBoard(loc + 1);
             }
         }
     }
@@ -243,7 +244,7 @@ public sealed class SuperHud(
             if (player.X == OldPlayerLocation.X - 1)
             {
                 newCamera.X--;
-                Engine.Board.Camera.CopyFrom(newCamera);
+                Engine.Board.Camera = newCamera;
                 VideoScroll(upperLeft, viewWidth, viewHeight, Vector.East);
                 for (var y = 0; y < viewHeight; y++)
                     Engine.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
@@ -265,7 +266,7 @@ public sealed class SuperHud(
             if (player.X == OldPlayerLocation.X + 1)
             {
                 newCamera.X++;
-                Engine.Board.Camera.CopyFrom(newCamera);
+                Engine.Board.Camera = newCamera;
                 VideoScroll(upperLeft, viewWidth, viewHeight, Vector.West);
                 for (var y = 0; y < viewHeight; y++)
                     Engine.UpdateBoard(new Location(newCamera.X + viewWidth - 1, newCamera.Y + y));
@@ -289,7 +290,7 @@ public sealed class SuperHud(
             if (player.Y == OldPlayerLocation.Y - 1)
             {
                 newCamera.Y--;
-                Engine.Board.Camera.CopyFrom(newCamera);
+                Engine.Board.Camera = newCamera;
                 VideoScroll(upperLeft, viewWidth, viewHeight, Vector.South);
                 for (var x = 0; x < viewWidth; x++)
                     Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
@@ -311,7 +312,7 @@ public sealed class SuperHud(
             if (player.Y == OldPlayerLocation.Y + 1)
             {
                 newCamera.Y++;
-                Engine.Board.Camera.CopyFrom(newCamera);
+                Engine.Board.Camera = newCamera;
                 VideoScroll(upperLeft, viewWidth, viewHeight, Vector.North);
                 for (var x = 0; x < viewWidth; x++)
                     Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + viewHeight - 1));
@@ -329,11 +330,11 @@ public sealed class SuperHud(
             }
         }
 
-        OldPlayerLocation.CopyFrom(player);
-        if (newCamera.Matches(Engine.Board.Camera) && !redrawRequired)
+        OldPlayerLocation = player;
+        if (newCamera == Engine.Board.Camera && !redrawRequired)
             return;
 
-        Engine.Board.Camera.CopyFrom(newCamera);
+        Engine.Board.Camera = newCamera;
         if (redrawRequired)
             RedrawBoard();
     }
@@ -348,7 +349,7 @@ public sealed class SuperHud(
             Engine.World.Health = 0;
         }
 
-        var healthRemaining = Engine.World.Health;
+        var healthRemaining = (int)Engine.World.Health;
         for (var x = 7; x < 12; x++)
         {
             switch (healthRemaining)
@@ -454,7 +455,7 @@ public sealed class SuperHud(
         Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
     }
 
-    private void VideoScroll(IXyPair pos, int width, int height, IXyPair dir)
+    private void VideoScroll(Location pos, int width, int height, Vector dir)
     {
         var buffer = new AnsiChar[width * height];
         var bufIdx = 0;

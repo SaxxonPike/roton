@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,20 +10,20 @@ public sealed class PutCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(context);
+        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
         var success = false;
 
-        if (vector != null)
+        if (vector is {} vec)
         {
-            var kind = Engine.Parser.GetKind(context);
-            if (kind != null)
+            var kind = Engine.Parser.GetKind(ref context, ref instruction);
+            if (kind is {} k)
             {
                 success = true;
                     
-                var target = context.Actor.Location.Sum(vector);
-                Engine.PutTile(target, vector, kind);
+                var target = context.Actor.Location + vec;
+                Engine.PutTile(target, vec, k);
             }
         }
 

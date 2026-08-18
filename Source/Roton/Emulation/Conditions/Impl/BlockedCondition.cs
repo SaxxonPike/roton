@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,12 +10,12 @@ public sealed class BlockedCondition(IEngineAccessor engine) : ICondition
 {
     private IEngine Engine => engine.Instance;
 
-    public bool? Execute(IOopContext context)
+    public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        var direction = Engine.Parser.GetDirection(context);
-        if (direction == null)
+        var direction = Engine.Parser.GetDirection(ref context, ref instruction);
+        if (direction is not {} val)
             return null;
 
-        return !Engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
+        return !Engine.ElementAt(context.Actor.Location + val).IsFloor;
     }
 }

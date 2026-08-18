@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,9 +10,9 @@ public sealed class IfCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var condition = Engine.Parser.GetCondition(context);
+        var condition = Engine.Parser.GetCondition(ref context, ref instruction);
             
         if (condition.HasValue)
             context.Resume = condition.Value;

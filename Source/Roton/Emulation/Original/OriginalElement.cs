@@ -1,5 +1,7 @@
-﻿using Roton.Emulation.Data;
+﻿using System;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
@@ -126,4 +128,7 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         get => memory.ReadString(_offset + 0x97);
         set => memory.WriteString(_offset + 0x97, value);
     }
+
+    public override bool NameMatches(ReadOnlySpan<char> name) =>
+        memory.ReadStringSpan(_offset + 0x19).CaseInsensitiveCharacterEqual(name);
 }

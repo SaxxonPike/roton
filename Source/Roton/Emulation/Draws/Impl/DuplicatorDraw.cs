@@ -1,5 +1,4 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,7 +10,7 @@ public sealed class DuplicatorDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         return Engine.ActorAt(location).P1 switch
         {

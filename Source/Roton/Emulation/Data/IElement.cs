@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface IElement
 {
@@ -23,4 +25,6 @@ public interface IElement
     string P3EditText { get; set; }
     int Points { get; set; }
     string StepEditText { get; set; }
+
+    bool NameMatches(ReadOnlySpan<char> name);
 }
