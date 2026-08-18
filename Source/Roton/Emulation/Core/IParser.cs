@@ -13,6 +13,7 @@ public interface IParser
     bool GetTarget(int index, ref SearchContext context, ReadOnlySpan<char> term);
     int ReadByte(int index, ref Word instruction);
     string ReadLine(int index, ref Word instruction);
+    ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer);
     int ReadNumber(int index, ref Word instruction);
     void ReadWord(int index, ref Word instruction);
     ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer);

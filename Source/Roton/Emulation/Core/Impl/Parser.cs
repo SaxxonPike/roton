@@ -27,13 +27,13 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
         var offs = new Word();
-        
+
         while (offs < actor.Length)
         {
             var oldOffset = offs;
             var termOffset = 0;
             bool success;
-        
+
             while (true)
             {
                 ReadByte(index, ref offs);
@@ -42,7 +42,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                     success = false;
                     break;
                 }
-        
+
                 termOffset++;
                 if (termOffset >= termBytes.Length)
                 {
@@ -50,7 +50,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                     break;
                 }
             }
-        
+
             if (success)
             {
                 ReadByte(index, ref offs);
@@ -61,15 +61,15 @@ public sealed class Parser(IEngineAccessor engine) : IParser
                     break;
                 }
             }
-        
+
             oldOffset++;
             offs = oldOffset;
         }
-        
+
         return result;
     }
 
-    public int GetNumber(ref OopContext context, ref Word instruction) => 
+    public int GetNumber(ref OopContext context, ref Word instruction) =>
         ReadNumber(context.Index, ref instruction);
 
     public void DiscardLine(int index, ref Word instruction)
@@ -104,8 +104,15 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         // 256 chars is generous headroom while remaining safe for stack allocation (~512 bytes).
 
         var buffer = (stackalloc char[256]);
+        return ReadLine(index, ref instruction, buffer).ToString();
+    }
+
+    public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
+    {
         var length = 0;
+
         ReadByte(index, ref instruction);
+
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
             if (length < buffer.Length)
@@ -113,7 +120,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             ReadByte(index, ref instruction);
         }
 
-        return buffer.Slice(0, length).ToString();
+        return buffer.Slice(0, length);
     }
 
     public int ReadNumber(int index, ref Word instruction)
@@ -184,7 +191,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             }
         }
 
-        if (instruction > 0) 
+        if (instruction > 0)
             instruction--;
 
         var result = buffer.Slice(0, length);
@@ -229,7 +236,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             result.Color = colorId + 8;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
-        
+
         var elementId = Engine.ElementList.IndexOf(word);
         if (elementId >= 0)
         {
