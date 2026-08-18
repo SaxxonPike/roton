@@ -470,6 +470,7 @@ public sealed class Engine : IEngine, IDisposable
             while (context.Command == ':')
             {
                 Parser.DiscardLine(index, ref instruction);
+                Tracer?.TraceOop(ref context, ref instruction);
                 context.Command = ReadActorCodeByte(index, ref instruction);
             }
 
