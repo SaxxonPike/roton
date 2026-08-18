@@ -27,6 +27,7 @@ public sealed class Engine : IEngine, IDisposable
     private readonly IFileDialog _fileDialog;
 
     private int _ticksToRun;
+    private float _boardTimeHsec;
     private bool _step;
     private readonly IEngineAccessor _engineAccessor;
 
@@ -95,7 +96,12 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ClockTick(object sender, EventArgs args)
     {
-        if (_ticksToRun < 3) _ticksToRun++;
+        if (_ticksToRun < 3)
+            _ticksToRun++;
+        
+        if (!State.GamePaused)
+            _boardTimeHsec += Config.MasterClockNumerator * 100f / Config.MasterClockDenominator;
+
         if (!ThreadActive)
             Clock.Stop();
     }
@@ -430,7 +436,11 @@ public sealed class Engine : IEngine, IDisposable
 
     public IElementList ElementList { get; }
 
-    public void EnterBoard() => Features.EnterBoard();
+    public void EnterBoard()
+    {
+        _boardTimeHsec = 0;
+        Features.EnterBoard();
+    }
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
@@ -1574,7 +1584,7 @@ public sealed class Engine : IEngine, IDisposable
             {
                 State.ActIndex = State.ActorCount + 1;
 
-                if (Timers.Player.Clock(Facts.PauseFlashInterval))
+                if (Timers.Player.Clock(1, Facts.PauseFlashInterval) > 0)
                     alternating = !alternating;
 
                 if (alternating)
@@ -1630,7 +1640,7 @@ public sealed class Engine : IEngine, IDisposable
             if (State.ActIndex > State.ActorCount)
             {
                 if (!State.BreakGameLoop && !State.GamePaused)
-                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(State.GameWaitTime))
+                    if (State.GameWaitTime <= 0 || Timers.Player.Clock(1, State.GameWaitTime) > 0)
                     {
                         State.GameCycle++;
                         if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
@@ -1930,6 +1940,13 @@ public sealed class Engine : IEngine, IDisposable
     {
         ClearSound();
         PlaySound(1, MusicEncoder.Encode("s004x114x9"));
+    }
+
+    public int ResetBoardTimeHsec()
+    {
+        var result = (int)Math.Truncate(_boardTimeHsec);
+        _boardTimeHsec -= result;
+        return result;
     }
 
     public void Dispose()

@@ -191,7 +191,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
         {
             if (Engine.World.Health > 0)
             {
-                if (Engine.Timers.TimeLimit.Clock(100))
+                if (Engine.Timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
                 {
                     Engine.World.TimePassed++;
                     if (!Engine.Config.NoPesterMode && Engine.Board.TimeLimit - 10 == Engine.World.TimePassed)

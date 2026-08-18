@@ -125,4 +125,5 @@ public interface IEngine
     void UnpackBoard(int index);
     void Delay(int msec);
     void PlayErrorSound();
+    int ResetBoardTimeHsec();
 }
