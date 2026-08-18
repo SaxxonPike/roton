@@ -26,5 +26,6 @@ public abstract class Element(int id) : IElement
     public abstract int Points { get; set; }
     public abstract string StepEditText { get; set; }
 
+    public abstract bool CanContainCode { get; }
     public abstract bool NameMatches(ReadOnlySpan<char> name);
 }

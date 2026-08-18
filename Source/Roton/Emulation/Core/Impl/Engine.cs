@@ -1315,7 +1315,7 @@ public sealed class Engine : IEngine, IDisposable
                         var element = ElementAt(target);
                         if (mode == RadiusMode.Explode)
                         {
-                            if (element.CodeEditText.Length > 0)
+                            if (element.CanContainCode)
                             {
                                 var actorIndex = ActorIndexAt(target);
                                 if (actorIndex > 0) BroadcastLabel(-actorIndex, Facts.BombedLabel, false);

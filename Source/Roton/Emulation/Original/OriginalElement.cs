@@ -129,6 +129,9 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x97, value);
     }
 
+    public override bool CanContainCode =>
+        memory.Data[_offset + 0xAC] > 0;
+
     public override bool NameMatches(ReadOnlySpan<char> name) =>
         memory.ReadStringSpan(_offset + 0x19).CaseInsensitiveCharacterEqual(name);
 }
