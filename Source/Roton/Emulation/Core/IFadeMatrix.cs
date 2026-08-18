@@ -1,0 +1,16 @@
+using Roton.Emulation.Data.Impl;
+
+namespace Roton.Emulation.Core;
+
+public interface IFadeMatrix
+{
+    int Width { get; }
+    int Height { get; }
+    int Left { get; }
+    int Top { get; }
+
+    void Initialize();
+    void Randomize();
+    void FadeOut(AnsiChar ac);
+    void FadeIn();
+}

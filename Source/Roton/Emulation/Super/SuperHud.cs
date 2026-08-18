@@ -14,17 +14,20 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperHud : Hud
 {
-    private readonly Location[] _fadeMatrix = new Location[WindowTileCount];
-
     public SuperHud(IEngineAccessor engine,
         ITerminal terminal,
         IScroll scroll,
-        ITextEntryHud textEntryHud) : base(engine, scroll)
+        ITextEntryHud textEntryHud,
+        IFadeMatrix fadeMatrix)
+        : base(engine, scroll)
     {
         Terminal = terminal;
         TextEntryHud = textEntryHud;
-        InitializeFadeMatrix();
+        FadeMatrix = fadeMatrix;
+        fadeMatrix.Initialize();
     }
+
+    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; }
 
     private ITerminal Terminal { [DebuggerStepThrough] get; }
 
@@ -214,30 +217,12 @@ public sealed class SuperHud : Hud
         }
     }
 
-    private void InitializeFadeMatrix()
-    {
-        var index = 0;
-        for (var x = 0; x < 24; x++)
-        {
-            for (var y = 0; y < 20; y++)
-            {
-                _fadeMatrix[index++] = new Location(x, y);
-            }
-        }
-    }
+    private void InitializeFadeMatrix() => FadeMatrix.Initialize();
 
     public override void RedrawBoard()
     {
         UpdateCameraPosition();
-
-        var camera = new Vector(Engine.Board.Camera.X, Engine.Board.Camera.Y);
-
-        for (var i = 0; i < WindowTileCount; i++)
-        {
-            var location = _fadeMatrix[i];
-            DrawTileExact(location.X + WindowLeft, location.Y + WindowTop, Engine.Draw(location + camera));
-            FadeWait(i);
-        }
+        FadeMatrix.FadeIn();
     }
 
     public override void UpdateBorder()
@@ -544,37 +529,7 @@ public sealed class SuperHud : Hud
         return result;
     }
 
-    public override void FadeBoard(AnsiChar ac)
-    {
-        UpdateBorder();
+    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
 
-        for (var i = 0; i < WindowTileCount; i++)
-        {
-            var location = _fadeMatrix[i];
-            DrawTileExact(location.X + WindowLeft, location.Y + WindowTop, ac);
-            FadeWait(i);
-        }
-    }
-
-    private void FadeWait(int i)
-    {
-        if ((i & 0x3F) == 0)
-        {
-            Engine.WaitForTick();
-        }
-    }
-
-    private void RandomizeFadeMatrix()
-    {
-        var rnd = Engine.Random;
-        InitializeFadeMatrix();
-
-        for (var i = 0; i < WindowTileCount; i++)
-        {
-            var sourceIndex = i;
-            var targetIndex = rnd.GetNext(_fadeMatrix.Length);
-            (_fadeMatrix[sourceIndex], _fadeMatrix[targetIndex]) =
-                (_fadeMatrix[targetIndex], _fadeMatrix[sourceIndex]);
-        }
-    }
+    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
 }
