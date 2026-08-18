@@ -1,4 +1,4 @@
-﻿namespace Roton.Emulation.Data.Impl;
+﻿namespace Roton;
 
 public enum Context
 {

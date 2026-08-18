@@ -5,6 +5,7 @@ using System.Linq;
 using Autofac;
 using Lyon.App;
 using Lyon.Autofac;
+using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;

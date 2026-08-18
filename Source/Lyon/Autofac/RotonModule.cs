@@ -2,7 +2,6 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Roton;
-using Roton.Emulation.Data.Impl;
 using Module = Autofac.Module;
 
 namespace Lyon.Autofac;
