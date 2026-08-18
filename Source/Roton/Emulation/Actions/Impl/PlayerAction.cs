@@ -54,66 +54,63 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
             Engine.State.GameOver = true;
         }
 
-        if (Engine.State.KeyVector.IsNonZero())
+        if ((Engine.State.KeyArrow && Engine.State.KeyShift) || Engine.State.KeyPressed == EngineKeyCode.Space)
         {
-            if ((Engine.State.KeyArrow && Engine.State.KeyShift) || Engine.State.KeyPressed == EngineKeyCode.Space)
-            {
-                // Shooting logic
+            // Shooting logic
 
-                if (Engine.Board.MaximumShots > 0)
+            if (Engine.Board.MaximumShots > 0)
+            {
+                if (Engine.World.Ammo > 0)
                 {
-                    if (Engine.World.Ammo > 0)
+                    var bulletCount =
+                        Engine.Actors.Count(
+                            a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.ElementList.BulletId);
+                    if (bulletCount < Engine.Board.MaximumShots)
                     {
-                        var bulletCount =
-                            Engine.Actors.Count(
-                                a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.ElementList.BulletId);
-                        if (bulletCount < Engine.Board.MaximumShots)
+                        if (Engine.SpawnProjectile(Engine.ElementList.BulletId, actor.Location,
+                                Engine.State.KeyVector, false))
                         {
-                            if (Engine.SpawnProjectile(Engine.ElementList.BulletId, actor.Location,
-                                    Engine.State.KeyVector, false))
-                            {
-                                Engine.World.Ammo--;
-                                Engine.Hud.UpdateStatus();
-                                Engine.PlaySound(2, Engine.Sounds.Shoot);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (Engine.Alerts.OutOfAmmo)
-                        {
-                            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoAmmoMessage);
-                            Engine.Alerts.OutOfAmmo = false;
+                            Engine.World.Ammo--;
+                            Engine.Hud.UpdateStatus();
+                            Engine.PlaySound(2, Engine.Sounds.Shoot);
                         }
                     }
                 }
                 else
                 {
-                    if (Engine.Alerts.CantShootHere)
+                    if (Engine.Alerts.OutOfAmmo)
                     {
-                        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoShootMessage);
-                        Engine.Alerts.CantShootHere = false;
+                        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoAmmoMessage);
+                        Engine.Alerts.OutOfAmmo = false;
                     }
                 }
             }
-            else if (Engine.State.KeyArrow)
+            else
             {
-                // Movement logic
-
-                Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
-                    .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
-                    
-                if (!Engine.State.KeyVector.IsZero())
+                if (Engine.Alerts.CantShootHere)
                 {
-                    if (!Engine.State.SoundPlaying)
-                    {
-                        Engine.PlayStep();
-                    }
+                    Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoShootMessage);
+                    Engine.Alerts.CantShootHere = false;
+                }
+            }
+        }
+        else if (Engine.State.KeyVector.IsNonZero())
+        {
+            // Movement logic
 
-                    if (Engine.Tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
-                    {
-                        Engine.MoveActor(0, actor.Location + Engine.State.KeyVector);
-                    }
+            Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
+                .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
+                    
+            if (!Engine.State.KeyVector.IsZero())
+            {
+                if (!Engine.State.SoundPlaying)
+                {
+                    Engine.PlayStep();
+                }
+
+                if (Engine.Tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
+                {
+                    Engine.MoveActor(0, actor.Location + Engine.State.KeyVector);
                 }
             }
         }

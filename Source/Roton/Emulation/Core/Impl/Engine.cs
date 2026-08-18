@@ -1548,6 +1548,8 @@ public sealed class Engine : IEngine, IDisposable
             Hud.UpdateStatus();
             MainLoopInit(doFade);
         }
+        
+        State.BreakGameLoop = false;
 
         while (ThreadActive)
         {
@@ -1692,7 +1694,6 @@ public sealed class Engine : IEngine, IDisposable
             FadePurple();
 
         State.GameWaitTime = State.GameSpeed << 1;
-        State.BreakGameLoop = false;
         State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);
         State.ActIndex = State.ActorCount + 1;
     }

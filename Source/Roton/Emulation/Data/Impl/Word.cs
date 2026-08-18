@@ -47,4 +47,6 @@ public readonly struct Word(int value) : IEquatable<Word>, IEquatable<int>, IEqu
         BitConverter.IsLittleEndian
             ? _val.GetHashCode()
             : unchecked((short)(((_val & 0xFF) << 8) | ((_val >> 8) & 0xFF))).GetHashCode();
+    
+    public override string ToString() => $"{Value}";
 }

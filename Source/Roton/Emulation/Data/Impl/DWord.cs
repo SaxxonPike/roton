@@ -60,4 +60,6 @@ public struct DWord : IEquatable<DWord>, IEquatable<int>, IEquatable<short>
               ((_val & 0xFF00) << 8) |
               ((_val & 0xFF0000) >> 8) |
               ((_val >> 24) & 0xFF).GetHashCode();
+
+    public override string ToString() => $"{_val}";
 }

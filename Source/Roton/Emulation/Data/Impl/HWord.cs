@@ -32,4 +32,6 @@ public readonly struct HWord(int value) : IEquatable<HWord>, IEquatable<int>, IE
 
     public override int GetHashCode() =>
         _val.GetHashCode();
+
+    public override string ToString() => $"{_val}";
 }
