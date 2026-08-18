@@ -13,4 +13,10 @@ public abstract class OopTestFixture(Context context) : AllContextIntegrationTes
         if (ElementList.ObjectId < 0)
             Assert.Inconclusive();
     }
+
+    [TearDown]
+    public void __TearDown()
+    {
+        DisableTracer();
+    }
 }

@@ -15,12 +15,12 @@ public abstract class ElementTestFixture(Context context) : AllContextIntegratio
             return;
         }
 
-        Tracer.Attach(TestContext.Out);
+        EnableTracer();
     }
 
     [TearDown]
     public void __TearDown()
     {
-        Tracer.Detach(TestContext.Out);
+        DisableTracer();
     }
 }
