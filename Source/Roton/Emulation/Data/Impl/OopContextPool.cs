@@ -24,6 +24,6 @@ public sealed class OopContextPool(IEngineAccessor engine)
         obj.SearchOffset = 0;
         obj.Command = 0;
         obj.Message.Clear();
-        obj.DeathTile?.SetTo(0, 0);
+        obj.DeathTile = default;
     }
 }

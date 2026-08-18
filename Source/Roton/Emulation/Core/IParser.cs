@@ -1,5 +1,6 @@
 using System;
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Items;
 
 namespace Roton.Emulation.Core;
@@ -7,9 +8,9 @@ namespace Roton.Emulation.Core;
 public interface IParser
 {
     bool? GetCondition(IOopContext oopContext);
-    IXyPair GetDirection(IOopContext oopContext);
+    Vector? GetDirection(IOopContext oopContext);
     IItem GetItem(IOopContext oopContext);
-    ITile GetKind(IOopContext oopContext);
+    Tile? GetKind(IOopContext oopContext);
     bool GetTarget(int index, ISearchContext context, ReadOnlySpan<char> term);
     int ReadByte(int index, IExecutable instructionSource);
     string ReadLine(int index, IExecutable instructionSource);

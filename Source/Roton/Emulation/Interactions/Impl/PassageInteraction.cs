@@ -11,7 +11,7 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = Engine.Tiles[location].Color;
         var passageIndex = Engine.ActorIndexAt(location);
@@ -25,19 +25,19 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
             {
                 var loc = new Location(x, y);
                 if (Engine.Tiles[loc].Id == Engine.ElementList.PassageId && Engine.Tiles[loc].Color == searchColor)
-                    target.SetTo(x, y);
+                    target = new Location(x, y);
             }
         }
 
         Engine.CleanUpPassageMovement();
 
         if (target.X != 0)
-            Engine.Player.Location.CopyFrom(target);
+            Engine.Player.Location = target;
 
         Engine.State.GamePaused = true;
         Engine.PlaySound(4, Engine.Sounds.Passage);
         Engine.FadePurple();
         Engine.EnterBoard();
-        vector.SetTo(0, 0);
+        vector = Vector.Idle;
     }
 }

@@ -14,9 +14,9 @@ public sealed class WalkCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var vector = Engine.Parser.GetDirection(context);
-        if (vector != null)
+        if (vector is {} vec)
         {
-            context.Actor.Vector.CopyFrom(vector);
+            context.Actor.Vector = vec;
         }
     }
 }

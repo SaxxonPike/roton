@@ -228,5 +228,37 @@ internal static class Utility
             return new string(destination);
 #endif
         }
+        
+        /// <summary>
+        /// Compares source string to another string, with the source UpperCased, and only A-Z.
+        /// </summary>
+        [DebuggerStepThrough]
+        public bool CaseInsensitiveCharacterEqual(ReadOnlySpan<char> b)
+        {
+            var i = 0;
+            var j = 0;
+
+            if (a.IsEmpty)
+                return false;
+
+            while (i < a.Length)
+            {
+                var ai = a[i].ToUpperCase();
+
+                if (ai is >= 0x41 and <= 0x5A)
+                {
+                    if (j >= b.Length)
+                        break;
+
+                    if (ai != b[j])
+                        return false;
+                    j++;
+                }
+
+                i++;
+            }
+
+            return i == a.Length && j == b.Length;
+        }
     }
 }

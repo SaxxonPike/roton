@@ -11,7 +11,7 @@ public sealed class DuplicatorDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         return Engine.ActorAt(location).P1 switch
         {

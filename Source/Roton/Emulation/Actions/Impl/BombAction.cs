@@ -24,7 +24,7 @@ public sealed class BombAction(IEngineAccessor engine) : IAction
                 Engine.UpdateRadius(actor.Location, RadiusMode.Explode);
                 break;
             case 0:
-                var location = actor.Location.Clone();
+                var location = actor.Location;
                 Engine.RemoveActor(index);
                 Engine.UpdateRadius(location, RadiusMode.Clear);
                 break;

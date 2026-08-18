@@ -31,7 +31,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void EnterBoard()
     {
-        Engine.Board.Entrance.CopyFrom(Engine.Player.Location);
+        Engine.Board.Entrance = Engine.Player.Location;
         if (Engine.Board.IsDark && Engine.Alerts.Dark)
         {
             Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.DarkMessage);
@@ -50,7 +50,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
             return null;
         }
 
-        Engine.State.KeyVector.SetTo(0, 0);
+        Engine.State.KeyVector = Vector.Idle;
         return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
     }
 
@@ -92,20 +92,20 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         }
     }
 
-    public bool CanPutTile(IXyPair location)
+    public bool CanPutTile(Location location)
     {
         // do not allow #put on the bottom row
         return location.Y < Engine.Tiles.Height;
     }
 
-    public void ClearForest(IXyPair location)
+    public void ClearForest(Location location)
     {
         Engine.RemoveItem(location);
     }
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.EmptyId, 0);
+        Engine.Tiles[Engine.Player.Location] = new Tile(Engine.ElementList.EmptyId, 0);
     }
 
     public void ForcePlayerColor(int index)
@@ -135,7 +135,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPauseMovement()
     {
-        var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
+        var target = Engine.Player.Location + Engine.State.KeyVector;
 
         if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
         {
@@ -144,11 +144,11 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         else
         {
             Engine.UpdateBoard(Engine.Player.Location);
-            Engine.Player.Location.Add(Engine.State.KeyVector);
-            Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
+            Engine.Player.Location += Engine.State.KeyVector;
+            Engine.Tiles[Engine.Player.Location] = new Tile(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
+            Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
         }
     }
 
@@ -164,7 +164,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpOop(IOopContext context)
     {
-        var location = context.Actor.Location.Clone();
+        var location = context.Actor.Location;
         Engine.Harm(context.Index);
         Engine.PlotTile(location, context.DeathTile);
     }
@@ -220,7 +220,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         return false;
     }
 
-    public void RemoveItem(IXyPair location)
+    public void RemoveItem(Location location)
     {
         Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
         Engine.UpdateBoard(location);

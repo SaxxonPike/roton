@@ -10,7 +10,7 @@ public sealed class SuperObjectMover(IEngineAccessor engine) : IObjectMover
 {
     private IEngine Engine => engine.Instance;
 
-    public void ExecuteDirection(IOopContext context, IXyPair vector)
+    public void ExecuteDirection(IOopContext context, Vector vector)
     {
         var count = Engine.Parser.ReadNumber(context.Index, context);
         if (count < 0)
@@ -20,7 +20,7 @@ public sealed class SuperObjectMover(IEngineAccessor engine) : IObjectMover
             count = -count;
 
         context.Actor.P2 = count;
-        context.Actor.Vector.CopyFrom(vector);
+        context.Actor.Vector = vector;
         context.Repeat = false;
     }
         

@@ -1,9 +1,11 @@
-﻿namespace Roton.Emulation.Data;
+﻿using Roton.Emulation.Data.Impl;
+
+namespace Roton.Emulation.Data;
 
 public interface IBoard
 {
-    IXyPair Camera { get; }
-    IXyPair Entrance { get; }
+    ref Location16 Camera { get; }
+    ref Location Entrance { get; }
     IExits Exits { get; }
     bool IsDark { get; set; }
     int MaximumShots { get; set; }

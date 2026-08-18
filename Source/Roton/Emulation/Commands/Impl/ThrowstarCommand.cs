@@ -14,10 +14,10 @@ public sealed class ThrowstarCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var vector = Engine.Parser.GetDirection(context);
-        if (vector != null)
+        if (vector is {} vec)
         {
             var projectile = Engine.ElementList.Star();
-            Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+            Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
         }
         context.Moved = true;
     }

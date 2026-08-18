@@ -11,8 +11,6 @@ public sealed class CcwDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public IXyPair Execute(IOopContext context)
-    {
-        return Engine.Parser.GetDirection(context).CounterClockwise();
-    }
+    public Vector Execute(IOopContext context) => 
+        (Engine.Parser.GetDirection(context) ?? Vector.Idle).CounterClockwise();
 }

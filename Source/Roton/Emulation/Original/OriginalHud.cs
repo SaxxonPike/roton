@@ -192,9 +192,9 @@ public sealed class OriginalHud : Hud
         DrawTileCommon(x, y, ac);
     }
 
-    private void DrawTileAt(IXyPair location)
+    private void DrawTileAt(Location location)
     {
-        DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
+        DrawTileCommon(location.X, location.Y, Engine.Draw(location + 1));
     }
 
     private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -234,9 +234,8 @@ public sealed class OriginalHud : Hud
         {
             var sourceIndex = i;
             var targetIndex = rnd.GetNext(_fadeMatrix.Length);
-            var temp = _fadeMatrix[sourceIndex].Clone();
-            _fadeMatrix[sourceIndex].CopyFrom(_fadeMatrix[targetIndex]);
-            _fadeMatrix[targetIndex].CopyFrom(temp);
+            (_fadeMatrix[sourceIndex], _fadeMatrix[targetIndex]) =
+                (_fadeMatrix[targetIndex], _fadeMatrix[sourceIndex]);
         }
     }
 
@@ -268,7 +267,7 @@ public sealed class OriginalHud : Hud
         for (var i = 0; i < ViewportTileCount; i++)
         {
             var location = _fadeMatrix[i];
-            DrawTileCommon(location.X, location.Y, Engine.Draw(location.Sum(1, 1)));
+            DrawTileCommon(location.X, location.Y, Engine.Draw(location + 1));
             FadeWait(i);
         }
     }

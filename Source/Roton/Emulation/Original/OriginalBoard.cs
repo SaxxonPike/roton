@@ -8,20 +8,20 @@ namespace Roton.Emulation.Original;
 public sealed class OriginalBoard : IBoard
 {
     private readonly IMemory _memory;
+    private Location16 _camera;
 
     public OriginalBoard(IMemory memory)
     {
         _memory = memory;
-        Entrance = new MemoryLocation(_memory, 0x45A9);
         Exits = new OriginalExits(_memory);
     }
 
-    public IXyPair Camera { get; } = new Location();
+    public ref Location16 Camera => ref _camera;
 
-    public IXyPair Entrance { get; }
+    public ref Location Entrance => ref _memory.GetRef<Location>(0x45A9);
 
     public IExits Exits { get; }
-    
+
     public bool IsDark
     {
         get => _memory.ReadBool(0x4568);

@@ -10,7 +10,7 @@ public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
 {
     private IEngine Engine => engine.Instance;
 
-    public void ExecuteDirection(IOopContext context, IXyPair vector)
+    public void ExecuteDirection(IOopContext context, Vector vector)
     {
         if (vector.IsZero())
         {
@@ -18,7 +18,7 @@ public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
         }
         else
         {
-            var target = context.Actor.Location.Sum(vector);
+            var target = context.Actor.Location + vector;
             if (!Engine.ElementAt(target).IsFloor) 
                 Engine.Push(target, vector);
 

@@ -21,7 +21,7 @@ public sealed class RotonAction(IEngineAccessor engine) : IAction
             actor.P3 = actor.P2 * 10 + Engine.Random.GetNext(10);
         }
 
-        actor.Vector.CopyFrom(Engine.Seek(actor.Location));
+        actor.Vector = Engine.Seek(actor.Location);
         if (actor.P1 <= Engine.Random.GetNext(10))
         {
             var temp = actor.Vector.X;
@@ -29,7 +29,7 @@ public sealed class RotonAction(IEngineAccessor engine) : IAction
             actor.Vector.Y = actor.P2.Polarity() * temp;
         }
 
-        var target = actor.Location.Sum(actor.Vector);
+        var target = actor.Location + actor.Vector;
         if (Engine.Tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);

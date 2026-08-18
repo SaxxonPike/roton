@@ -14,13 +14,13 @@ public sealed class BecomeCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var kind = Engine.Parser.GetKind(context);
-        if (kind == null)
+        if (kind is not {} val)
         {
             Engine.RaiseError("Bad #BECOME");
             return;
         }
 
         context.Died = true;
-        context.DeathTile.CopyFrom(kind);
+        context.DeathTile = val;
     }
 }

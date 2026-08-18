@@ -201,7 +201,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return condition?.Execute(oopContext) ?? Engine.World.Flags.Contains(name);
     }
 
-    public IXyPair GetDirection(IOopContext oopContext)
+    public Vector? GetDirection(IOopContext oopContext)
     {
         Span<char> buffer = stackalloc char[256];
         var name = ReadWord(oopContext.Index, oopContext, buffer);
@@ -217,7 +217,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return item;
     }
 
-    public ITile GetKind(IOopContext oopContext)
+    public Tile? GetKind(IOopContext oopContext)
     {
         Span<char> buffer = stackalloc char[256];
         var word = ReadWord(oopContext.Index, oopContext, buffer);
@@ -236,7 +236,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
         foreach (var element in Engine.ElementList.Where(e => e != null))
         {
-            if (!element.Name.CaseInsensitiveCharacterEqual(word))
+            if (!element.NameMatches(word))
                 continue;
 
             success = true;

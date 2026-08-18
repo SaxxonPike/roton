@@ -21,7 +21,7 @@ public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
         if (actor.Vector.IsZero()) 
             return;
 
-        var target = actor.Location.Sum(actor.Vector);
+        var target = actor.Location + actor.Vector;
         if (Engine.Tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);

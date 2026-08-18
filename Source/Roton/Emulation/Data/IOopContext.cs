@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Data;
 
 public interface IOopContext : IExecutable, ISearchContext
 {
     IActor Actor { get; }
-    ITile DeathTile { get; }
+    Tile DeathTile { get; set; }
     IList<string> Message { get; }
     int CommandsExecuted { get; set; }
     bool Died { get; set; }

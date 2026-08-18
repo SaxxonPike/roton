@@ -14,9 +14,9 @@ public sealed class BlockedCondition(IEngineAccessor engine) : ICondition
     public bool? Execute(IOopContext context)
     {
         var direction = Engine.Parser.GetDirection(context);
-        if (direction == null)
+        if (direction is not {} val)
             return null;
 
-        return !Engine.ElementAt(context.Actor.Location.Sum(direction)).IsFloor;
+        return !Engine.ElementAt(context.Actor.Location + val).IsFloor;
     }
 }

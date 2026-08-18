@@ -14,11 +14,11 @@ public sealed class SharkAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         var vector = new Vector();
 
-        vector.CopyFrom(actor.P1 > Engine.Random.GetNext(10)
+        vector = actor.P1 > Engine.Random.GetNext(10)
             ? Engine.Seek(actor.Location)
-            : Engine.Rnd());
+            : Engine.Rnd();
 
-        var target = actor.Location.Sum(vector);
+        var target = actor.Location + vector;
         var targetElement = Engine.Tiles.ElementAt(target);
 
         if (targetElement.Id == Engine.ElementList.WaterId || targetElement.Id == Engine.ElementList.LavaId)

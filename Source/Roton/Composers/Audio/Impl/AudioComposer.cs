@@ -153,7 +153,7 @@ public sealed class AudioComposer : IAudioComposer
         _bufferDenominator = _config.MasterClockDenominator;
         _bufferNumerator = _sampleRate * _config.MasterClockNumerator;
         _bufferAccumulator = 0;
-        _stepLength = (_sampleRate / 22050) + 1;
+        _stepLength = _sampleRate / 22050 + 1;
     }
 
     public int SampleRate

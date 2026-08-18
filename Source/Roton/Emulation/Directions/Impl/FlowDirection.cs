@@ -8,8 +8,8 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "FLOW")]
 public sealed class FlowDirection : IDirection
 {
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
-        return context.Actor.Vector.Clone();
+        return context.Actor.Vector;
     }
 }

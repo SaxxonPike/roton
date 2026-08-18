@@ -182,10 +182,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
 
-    protected void FaceActor(int index, IXyPair vector) => Actors[index].Vector.CopyFrom(vector);
+    protected void FaceActor(int index, Vector vector) => Actors[index].Vector = vector;
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
-        Tiles[new Location(x, y)].CopyFrom(new Tile(id, color ?? RandomInt(0x00, 0xFF)));
+        Tiles[new Location(x, y)] = (new Tile(id, color ?? RandomInt(0x00, 0xFF)));
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
@@ -202,11 +202,11 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         Actors[index].Length = codeBytes.Length;
     }
 
-    protected ITile TileAt(int x, int y) =>
-        Tiles[new Location(x, y)];
+    protected ref Tile TileAt(int x, int y) =>
+        ref Tiles[new Location(x, y)];
 
-    protected ITile TileAt(IXyPair xy) =>
-        Tiles[xy];
+    protected ref Tile TileAt(Location xy) =>
+        ref Tiles[xy];
 
     protected void Type(AnsiKey key, KeyMod mod = 0) =>
         Keyboard.Press(new KeyPress { Key = key, Mod = mod });

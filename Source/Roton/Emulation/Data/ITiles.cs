@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Data;
 
-public interface ITiles : IEnumerable<ITile>
+public interface ITiles : IEnumerable<Tile>
 {
+    int Count { get; }
     int Height { get; }
-    ITile this[int index] { get; }
-    ITile this[IXyPair location] { get; }
+    ref Tile this[int index] { get; }
+    ref Tile this[Location location] { get; }
     int Width { get; }
-    bool FindTile(ITile kind, IXyPair location);
-    IElement ElementAt(IXyPair location);
+    bool FindTile(Tile kind, ref Location location);
+    IElement ElementAt(Location location);
 }

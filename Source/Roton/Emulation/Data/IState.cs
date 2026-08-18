@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data;
 
 public interface IState
 {
-    ITile BorderTile { get; }
+    ref Tile BorderTile { get; }
     IActor DefaultActor { get; }
-    ITile EdgeTile { get; }
-    IXyPair KeyVector { get; }
+    ref Tile EdgeTile { get; }
+    ref Vector KeyVector { get; }
     IReadOnlyList<int> LineChars { get; }
     IReadOnlyList<string> ProgressAnimation { get; }
     IReadOnlyList<int> ProgressColors { get; }

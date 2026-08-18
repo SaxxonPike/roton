@@ -25,7 +25,7 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
             return;
         }
 
-        var target = actor.Location.Sum(actor.Vector);
+        var target = actor.Location + actor.Vector;
             
         if (!Engine.Tiles.ElementAt(target).IsFloor)
             Engine.Push(target, actor.Vector);
@@ -37,7 +37,7 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
             {
                 actor.P2--;
                 if (actor.P2 == 0)
-                    actor.Vector.SetTo(0, 0);
+                    actor.Vector = Vector.Idle;
             }
         }
         else

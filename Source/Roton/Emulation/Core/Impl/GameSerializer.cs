@@ -239,7 +239,7 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
                     color = source.ReadByte();
                 }
 
-                var tile = tiles[new Location(x, y)];
+                ref var tile = ref tiles[new Location(x, y)];
                 tile.Id = id;
                 tile.Color = color;
                 count = (count - 1) & 0xFF;

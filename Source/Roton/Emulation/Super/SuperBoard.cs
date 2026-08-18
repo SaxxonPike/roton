@@ -12,17 +12,15 @@ public sealed class SuperBoard : IBoard
     public SuperBoard(IMemory memory)
     {
         _memory = memory;
-        Camera = new MemoryLocation16(_memory, 0x776F);
-        Entrance = new MemoryLocation(_memory, 0x776D);
         Exits = new SuperExits(_memory);
     }
 
-    public IXyPair Camera { get; }
+    public ref Location16 Camera => ref _memory.GetRef<Location16>(0x776F);
 
-    public IXyPair Entrance { get; }
-    
+    public ref Location Entrance => ref _memory.GetRef<Location>(0x776D);
+
     public IExits Exits { get; }
-    
+
     public bool IsDark
     {
         get => false;

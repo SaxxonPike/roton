@@ -184,7 +184,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set the player "under tile" on the target board. This is
         // something to check due to the Super engine behavior.
-        Player.UnderTile.SetTo(ElementList.FakeId, 1);
+        Player.UnderTile = new(ElementList.FakeId, 1);
 
         // Set up board 0.
         GoToBoard(0);

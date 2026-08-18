@@ -10,7 +10,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "EAST")]
 public sealed class EastDirection : IDirection
 {
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
         return Vector.East;
     }

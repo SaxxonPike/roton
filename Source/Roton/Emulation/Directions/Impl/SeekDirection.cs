@@ -11,7 +11,7 @@ public sealed class SeekDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
         return Engine.Seek(context.Actor.Location);
     }

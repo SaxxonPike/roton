@@ -11,7 +11,7 @@ public sealed class BombDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         var p1 = Engine.ActorAt(location).P1;
         return new AnsiChar(p1 > 1 ? 0x30 + p1 : 0x0B, Engine.Tiles[location].Color);

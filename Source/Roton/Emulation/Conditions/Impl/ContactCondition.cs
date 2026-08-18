@@ -14,7 +14,9 @@ public sealed class ContactCondition(IEngineAccessor engine) : ICondition
     public bool? Execute(IOopContext context)
     {
         var player = Engine.Player;
-        var distance = new Location16(context.Actor.Location).Difference(player.Location);
+        var selfLoc = context.Actor.Location;
+        var playerLoc = player.Location;
+        var distance = new Location16(selfLoc.X, selfLoc.Y) - new Location16(playerLoc.X, playerLoc.Y);
         return distance.X * distance.X + distance.Y * distance.Y == 1;
     }
 }

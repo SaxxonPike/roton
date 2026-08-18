@@ -14,12 +14,12 @@ public sealed class GoCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var vector = Engine.Parser.GetDirection(context);
-        if (vector != null)
+        if (vector is {} vec)
         {
-            var target = context.Actor.Location.Sum(vector);
+            var target = context.Actor.Location + vec;
             if (!Engine.Tiles.ElementAt(target).IsFloor)
             {
-                Engine.Push(target, vector);
+                Engine.Push(target, vec);
             }
             if (Engine.Tiles.ElementAt(target).IsFloor)
             {

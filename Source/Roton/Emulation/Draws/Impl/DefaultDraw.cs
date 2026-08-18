@@ -8,7 +8,7 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super)]
 public sealed class DefaultDraw : IDraw
 {
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         return new AnsiChar(0x3F, 0x40);
     }

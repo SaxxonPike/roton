@@ -11,7 +11,7 @@ public sealed class BombInteraction(IEngineAccessor engine) : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
         var actor = Engine.ActorAt(location);
         if (actor.P1 == 0)

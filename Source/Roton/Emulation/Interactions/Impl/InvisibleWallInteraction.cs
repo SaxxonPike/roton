@@ -11,7 +11,7 @@ public sealed class InvisibleWallInteraction(IEngineAccessor engine) : IInteract
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
         Engine.Tiles[location].Id = Engine.ElementList.NormalId;
         Engine.UpdateBoard(location);

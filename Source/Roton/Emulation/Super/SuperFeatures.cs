@@ -26,7 +26,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         return Engine.Actors[index].P3 != 0;
     }
 
-    public void RemoveItem(IXyPair location)
+    public void RemoveItem(Location location)
     {
         var result = new Tile(Engine.ElementList.FloorId, 0x00);
 
@@ -57,7 +57,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         if (result.Color == 0)
             Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
         else
-            Engine.Tiles[location].CopyFrom(result);
+            Engine.Tiles[location] = result;
 
         Engine.UpdateBoard(location);
     }
@@ -69,7 +69,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
     public void EnterBoard()
     {
         Engine.BroadcastLabel(0, Engine.Facts.EnterLabel, false);
-        Engine.Board.Entrance.CopyFrom(Engine.Actors.Player.Location);
+        Engine.Board.Entrance = Engine.Actors.Player.Location;
         Engine.Hud.UpdateCamera();
         Engine.World.TimePassed = 0;
         Engine.Hud.UpdateStatus();
@@ -119,7 +119,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
             case 0:
                 return null;
             default:
-                Engine.State.KeyVector.SetTo(0, 0);
+                Engine.State.KeyVector = Vector.Idle;
                 return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
         }
     }
@@ -129,20 +129,20 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         // todo: this
     }
 
-    public bool CanPutTile(IXyPair location)
+    public bool CanPutTile(Location location)
     {
         // do not allow #put on the bottom row
         return location.Y < Engine.Tiles.Height;
     }
 
-    public void ClearForest(IXyPair location)
+    public void ClearForest(Location location)
     {
-        Engine.Tiles[location].SetTo(Engine.ElementList.FloorId, 0x02);
+        Engine.Tiles[location] = new Tile(Engine.ElementList.FloorId, 0x02);
     }
 
     public void CleanUpPauseMovement()
     {
-        var target = Engine.Player.Location.Sum(Engine.State.KeyVector);
+        var target = Engine.Player.Location + Engine.State.KeyVector;
 
         if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
         {
@@ -151,12 +151,12 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         else
         {
             Engine.UpdateBoard(Engine.Player.Location);
-            Engine.Player.Location.Add(Engine.State.KeyVector);
-            Engine.Player.UnderTile.CopyFrom(Engine.Tiles[Engine.Player.Location]);
-            Engine.Tiles[Engine.Player.Location].SetTo(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
+            Engine.Player.Location += Engine.State.KeyVector;
+            Engine.Player.UnderTile = Engine.Tiles[Engine.Player.Location];
+            Engine.Tiles[Engine.Player.Location] = new Tile(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(Engine.Player.Location.Difference(Engine.State.KeyVector), RadiusMode.Update);
+            Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
         }
     }
 
@@ -172,7 +172,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpOop(IOopContext context)
     {
-        var location = context.Actor.Location.Clone();
+        var location = context.Actor.Location;
         Engine.PlotTile(location, context.DeathTile);
     }
 
@@ -196,7 +196,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location].CopyFrom(Engine.Player.UnderTile);
+        Engine.Tiles[Engine.Player.Location] = Engine.Player.UnderTile;
     }
 
     public void ForcePlayerColor(int index)

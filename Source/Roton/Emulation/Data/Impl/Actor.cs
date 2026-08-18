@@ -13,9 +13,6 @@ public sealed class Actor : IActor
         _memory = memory;
         _heap = heap;
         Offset = offset;
-        Location = new MemoryLocation(_memory, Offset + 0x00);
-        UnderTile = new MemoryTile(_memory, Offset + 0x0F);
-        Vector = new MemoryVector(_memory, Offset + 0x02);
     }
 
     public int Offset { get; }
@@ -44,7 +41,7 @@ public sealed class Actor : IActor
         set => _memory.Write16(Offset + 0x17, value);
     }
 
-    public IXyPair Location { get; }
+    public ref Location Location => ref _memory.GetRef<Location>(Offset + 0x00);
 
     public int P1
     {
@@ -70,9 +67,9 @@ public sealed class Actor : IActor
         set => _memory.Write32(Offset + 0x11, value);
     }
 
-    public ITile UnderTile { get; }
+    public ref Tile UnderTile => ref _memory.GetRef<Tile>(Offset + 0x0F);
 
-    public IXyPair Vector { get; }
+    public ref Vector Vector => ref _memory.GetRef<Vector>(Offset + 0x02);
 
     public int Instruction
     {

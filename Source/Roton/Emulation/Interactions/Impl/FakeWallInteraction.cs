@@ -11,7 +11,7 @@ public sealed class FakeWallInteraction(IEngineAccessor engine) : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
         if (!Engine.Alerts.FakeWall) return;
 

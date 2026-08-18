@@ -16,15 +16,15 @@ public sealed class PutCommand(IEngineAccessor engine) : ICommand
         var vector = Engine.Parser.GetDirection(context);
         var success = false;
 
-        if (vector != null)
+        if (vector is {} vec)
         {
             var kind = Engine.Parser.GetKind(context);
-            if (kind != null)
+            if (kind is {} k)
             {
                 success = true;
                     
-                var target = context.Actor.Location.Sum(vector);
-                Engine.PutTile(target, vector, kind);
+                var target = context.Actor.Location + vec;
+                Engine.PutTile(target, vec, k);
             }
         }
 

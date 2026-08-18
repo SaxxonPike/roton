@@ -11,7 +11,7 @@ public sealed class RndNsDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
         return Engine.Random.GetNext(2) == 0
             ? Vector.North

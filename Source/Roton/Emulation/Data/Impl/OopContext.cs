@@ -23,7 +23,7 @@ public sealed class OopContext : IOopContext
 
     public int CommandsExecuted { get; set; }
 
-    public ITile DeathTile { get; } = new Tile(0, 0);
+    public Tile DeathTile { get; set; }
 
     public bool Died { get; set; }
 

@@ -14,10 +14,10 @@ public sealed class ShootCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var vector = Engine.Parser.GetDirection(context);
-        if (vector != null)
+        if (vector is {} vec)
         {
             var projectile = Engine.ElementList.Bullet();
-            var success = Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vector, true);
+            var success = Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
             if (success)
             {
                 Engine.PlaySound(2, Engine.Sounds.EnemyShoot);

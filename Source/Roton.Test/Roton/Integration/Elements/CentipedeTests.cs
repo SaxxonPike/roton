@@ -20,7 +20,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         actor.Cycle = 1;
 
         // Send the centipede east.
-        actor.Vector.SetTo(1, 0);
+        actor.Vector = Vector.East;
 
         // Turn intelligence/deviance to zero so that randomness doesn't
         // mess with the test.
@@ -61,7 +61,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         headActor.P2 = 0;
 
         // Send the centipede east.
-        headActor.Vector.SetTo(1, 0);
+        headActor.Vector = Vector.East;
 
         // Execute.
         Step();
@@ -95,7 +95,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         seg2.Follower = -1;
 
         // Send the centipede east.
-        head.Vector.SetTo(1, 0);
+        head.Vector = Vector.East;
 
         // Place walls on all sides of the head.
         PlotTo(11, 10, ElementList.SolidId);
@@ -146,7 +146,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         actor.P2 = 0;
 
         // Send the centipede head east.
-        actor.Vector.SetTo(1, 0);
+        actor.Vector = Vector.East;
 
         // Block the east and north so that the centipede will turn south.
         PlotTo(11, 10, ElementList.SolidId);

@@ -11,9 +11,9 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
-        var target = location.Clone();
+        var target = location;
         int targetBoard;
         var oldBoard = Engine.World.BoardIndex;
 
@@ -44,7 +44,7 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
         if (Engine.Tiles[target].Id != Engine.ElementList.PlayerId)
         {
             Engine.InteractionList.Get(Engine.Tiles[target].Id)
-                .Interact(target, index, Engine.State.KeyVector);
+                .Interact(target, index, ref Engine.State.KeyVector);
         }
 
         if (Engine.Tiles.ElementAt(target).IsFloor ||
@@ -56,7 +56,7 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
             }
 
             Engine.FadePurple();
-            vector.SetTo(0, 0);
+            vector = Vector.Idle;
             Engine.EnterBoard();
         }
         else

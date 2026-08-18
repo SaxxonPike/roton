@@ -1,10 +1,12 @@
-﻿namespace Roton.Emulation.Data;
+﻿using Roton.Emulation.Data.Impl;
+
+namespace Roton.Emulation.Data;
 
 public interface IActor : IExecutable, IProgrammable
 {
-    IXyPair Location { get; }
-    ITile UnderTile { get; }
-    IXyPair Vector { get; }
+    ref Location Location { get; }
+    ref Tile UnderTile { get; }
+    ref Vector Vector { get; }
     int Cycle { get; set; }
     int Follower { get; set; }
     int Leader { get; set; }

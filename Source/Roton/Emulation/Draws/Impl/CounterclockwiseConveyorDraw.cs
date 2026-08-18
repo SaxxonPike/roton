@@ -11,7 +11,7 @@ public sealed class CounterclockwiseConveyorDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         return ((Engine.State.GameCycle / Engine.ElementList.Counter().Cycle) & 0x3) switch
         {

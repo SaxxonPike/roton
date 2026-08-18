@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data.Impl;
+﻿using System;
+
+namespace Roton.Emulation.Data.Impl;
 
 public abstract class Element(int id) : IElement
 {
@@ -23,4 +25,6 @@ public abstract class Element(int id) : IElement
     public abstract string P3EditText { get; set; }
     public abstract int Points { get; set; }
     public abstract string StepEditText { get; set; }
+
+    public abstract bool NameMatches(ReadOnlySpan<char> name);
 }

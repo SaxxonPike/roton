@@ -13,6 +13,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperState : IState
 {
+    private Tile _borderTile;
+    
     public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
     {
         Memory = memory;
@@ -20,10 +22,7 @@ public sealed class SuperState : IState
         Heap = heap;
 
         Memory.Write(0x0000, EngineResourceService.GetMemoryData());
-        BorderTile = new Tile(0, 0); // Not in memory
         DefaultActor = new Actor(Memory, Heap, 0x2262);
-        EdgeTile = new MemoryTile(Memory, 0x2260);
-        KeyVector = new MemoryVector(Memory, 0xCC6E);
         LineChars = new ByteString(Memory, 0x22BA);
         ProgressAnimation = new ProgressAnimation(Memory, 0x21C0);
         ProgressColors = new Int8List(Memory, 0x21B8, 8);
@@ -62,7 +61,7 @@ public sealed class SuperState : IState
         set => Memory.FastWrite16(0x7784, value);
     }
 
-    public ITile BorderTile { get; }
+    public ref Tile BorderTile => ref _borderTile;
 
     public bool BreakGameLoop
     {
@@ -92,7 +91,7 @@ public sealed class SuperState : IState
         set => Memory.WriteString(0x2B70, value);
     }
 
-    public ITile EdgeTile { get; }
+    public ref Tile EdgeTile => ref Memory.GetRef<Tile>(0x2260);
 
     public bool EditorMode
     {
@@ -162,7 +161,7 @@ public sealed class SuperState : IState
         set => Memory.WriteBool(0xCC72, value);
     }
 
-    public IXyPair KeyVector { get; }
+    public ref Vector KeyVector => ref Memory.GetRef<Vector>(0xCC6E);
 
     public IReadOnlyList<int> LineChars { get; }
 

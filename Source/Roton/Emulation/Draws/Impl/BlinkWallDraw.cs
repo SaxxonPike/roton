@@ -11,7 +11,7 @@ public sealed class BlinkWallDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         return new AnsiChar(0xCE, Engine.Tiles[location].Color);
     }

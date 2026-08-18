@@ -10,7 +10,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "IDLE")]
 public sealed class IdleDirection : IDirection
 {
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
         return Vector.Idle;
     }

@@ -13,22 +13,22 @@ public sealed class PusherAction(IEngineAccessor engine) : IAction
     public void Act(int index)
     {
         var actor = Engine.Actors[index];
-        var source = actor.Location.Clone();
+        var source = actor.Location;
 
-        if (!Engine.Tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor)
+        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
         {
-            Engine.Push(actor.Location.Sum(actor.Vector), actor.Vector);
+            Engine.Push(actor.Location + actor.Vector, actor.Vector);
         }
 
         index = Engine.Actors.ActorIndexAt(source);
         actor = Engine.Actors[index];
             
-        if (!Engine.Tiles.ElementAt(actor.Location.Sum(actor.Vector)).IsFloor) 
+        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor) 
             return;
 
-        Engine.MoveActor(index, actor.Location.Sum(actor.Vector));
+        Engine.MoveActor(index, actor.Location + actor.Vector);
         Engine.PlaySound(2, Engine.Sounds.Push);
-        var behindLocation = actor.Location.Difference(actor.Vector);
+        var behindLocation = actor.Location - actor.Vector;
             
         if (Engine.Tiles[behindLocation].Id != Engine.ElementList.PusherId) 
             return;

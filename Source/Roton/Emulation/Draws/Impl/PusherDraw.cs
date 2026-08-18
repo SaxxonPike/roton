@@ -11,7 +11,7 @@ public sealed class PusherDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         var actor = Engine.ActorAt(location);
         return actor.Vector.X switch

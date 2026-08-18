@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
@@ -11,6 +12,11 @@ public static class MemoryExtensions
 {
     extension(IMemory memory)
     {
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref T GetRef<T>(int offset) where T : struct => 
+            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(offset))[0];
+
         [DebuggerStepThrough]
         internal Span<byte> Read(int offset, int length)
         {

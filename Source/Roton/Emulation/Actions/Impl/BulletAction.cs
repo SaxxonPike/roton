@@ -16,7 +16,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
         var canRicochet = true;
         while (true)
         {
-            var target = actor.Location.Sum(actor.Vector);
+            var target = actor.Location + actor.Vector;
             var element = Engine.Tiles.ElementAt(target);
             if (element.IsFloor || element.Id == Engine.ElementList.WaterId)
             {
@@ -27,7 +27,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             if (canRicochet && element.Id == Engine.ElementList.RicochetId)
             {
                 canRicochet = false;
-                actor.Vector.SetOpposite();
+                actor.Vector = -actor.Vector;
                 Engine.PlaySound(1, Engine.Sounds.Ricochet);
                 continue;
             }
@@ -46,19 +46,19 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location.Sum(actor.Vector.Clockwise())].Id == Engine.ElementList.RicochetId)
+                Engine.Tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.ElementList.RicochetId)
             {
                 canRicochet = false;
-                actor.Vector.SetCounterClockwise();
+                actor.Vector = actor.Vector.CounterClockwise();
                 Engine.PlaySound(1, Engine.Sounds.Ricochet);
                 continue;
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location.Sum(actor.Vector.CounterClockwise())].Id == Engine.ElementList.RicochetId)
+                Engine.Tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.ElementList.RicochetId)
             {
                 canRicochet = false;
-                actor.Vector.SetClockwise();
+                actor.Vector = actor.Vector.Clockwise();
                 Engine.PlaySound(1, Engine.Sounds.Ricochet);
                 continue;
             }

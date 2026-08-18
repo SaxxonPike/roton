@@ -109,7 +109,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private IBoards Boards { get; }
 
-    private ITile BorderTile => State.BorderTile;
+    private Tile BorderTile => State.BorderTile;
 
     public IFileSystem Disk { get; }
 
@@ -189,19 +189,19 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActionList ActionList { get; }
 
-    public IActor ActorAt(IXyPair location)
+    public IActor ActorAt(Location location)
     {
         return Actors
                    .FirstOrDefault(actor => actor.Location.X == location.X && actor.Location.Y == location.Y) ??
                Actors[-1];
     }
 
-    public int ActorIndexAt(IXyPair location)
+    public int ActorIndexAt(Location location)
     {
         var index = 0;
         foreach (var actor in Actors)
         {
-            if (actor.Location.Matches(location))
+            if (actor.Location == location)
                 return index;
             index++;
         }
@@ -214,17 +214,17 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActors Actors { get; }
 
-    public int Adjacent(IXyPair location, int id)
+    public int Adjacent(Location location, int id)
     {
-        return (location.Y <= 1 || Tiles[location.Sum(Vector.North)].Id == id ? 1 : 0) |
-               (location.Y >= Tiles.Height || Tiles[location.Sum(Vector.South)].Id == id ? 2 : 0) |
-               (location.X <= 1 || Tiles[location.Sum(Vector.West)].Id == id ? 4 : 0) |
-               (location.X >= Tiles.Width || Tiles[location.Sum(Vector.East)].Id == id ? 8 : 0);
+        return (location.Y <= 1 || Tiles[location + Vector.North].Id == id ? 1 : 0) |
+               (location.Y >= Tiles.Height || Tiles[location + Vector.South].Id == id ? 2 : 0) |
+               (location.X <= 1 || Tiles[location + Vector.West].Id == id ? 4 : 0) |
+               (location.X >= Tiles.Width || Tiles[location + Vector.East].Id == id ? 8 : 0);
     }
 
     public IAlerts Alerts { get; }
 
-    public void Attack(int index, IXyPair location)
+    public void Attack(int index, Location location)
     {
         if (index == 0 && World.EnergyCycles > 0)
         {
@@ -289,7 +289,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
-    public void ClearForest(IXyPair location) => Features.ClearForest(location);
+    public void ClearForest(Location location) => Features.ClearForest(location);
 
     public void ClearSound()
     {
@@ -330,12 +330,12 @@ public sealed class Engine : IEngine, IDisposable
 
     public IConfig Config { get; }
 
-    public void Convey(IXyPair center, int direction)
+    public void Convey(Location center, int direction)
     {
         int beginIndex;
         int endIndex;
 
-        var surrounding = new ITile[8];
+        Span<Tile> surrounding = stackalloc Tile[8];
 
         if (direction == 1)
         {
@@ -351,7 +351,7 @@ public sealed class Engine : IEngine, IDisposable
         var pushable = true;
         for (var i = beginIndex; i != endIndex; i += direction)
         {
-            surrounding[i] = Tiles[center.Sum(GetConveyorVector(i))].Clone();
+            surrounding[i] = Tiles[center + GetConveyorVector(i)];
             var element = ElementList[surrounding[i].Id];
             if (element.Id == ElementList.EmptyId)
                 pushable = true;
@@ -367,20 +367,20 @@ public sealed class Engine : IEngine, IDisposable
             {
                 if (element.IsPushable)
                 {
-                    var source = center.Sum(GetConveyorVector(i));
-                    var target = center.Sum(GetConveyorVector((i + 8 - direction) % 8));
+                    var source = center + GetConveyorVector(i);
+                    var target = center + GetConveyorVector((i + 8 - direction) % 8);
                     if (element.Cycle > -1)
                     {
-                        var tile = Tiles[source];
+                        ref var tile = ref Tiles[source];
                         var index = ActorIndexAt(source);
-                        Tiles[source].CopyFrom(surrounding[i]);
+                        Tiles[source] = surrounding[i];
                         Tiles[target].Id = ElementList.EmptyId;
                         MoveActor(index, target);
-                        Tiles[source].CopyFrom(tile);
+                        Tiles[source] = tile;
                     }
                     else
                     {
-                        Tiles[target].CopyFrom(surrounding[i]);
+                        Tiles[target] = surrounding[i];
                         UpdateBoard(target);
                     }
 
@@ -403,7 +403,7 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void Destroy(IXyPair location)
+    public void Destroy(Location location)
     {
         var index = ActorIndexAt(location);
         if (index == -1)
@@ -414,14 +414,14 @@ public sealed class Engine : IEngine, IDisposable
 
     public IDirectionList DirectionList { get; }
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         if (Board.IsDark && !ElementAt(location).IsAlwaysVisible &&
             (World.TorchCycles <= 0 || Distance(Player.Location, location) >= Facts.TorchRadius) &&
             !State.EditorMode)
             return Facts.DarknessTile;
 
-        var tile = Tiles[location];
+        ref var tile = ref Tiles[location];
         var element = ElementList[tile.Id];
         var elementCount = ElementList.Count;
 
@@ -440,7 +440,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public IDrawList DrawList { get; }
 
-    public IElement ElementAt(IXyPair location) => ElementList[Tiles[location].Id];
+    public IElement ElementAt(Location location) => ElementList[Tiles[location].Id];
 
     public IElementList ElementList { get; }
 
@@ -490,7 +490,7 @@ public sealed class Engine : IEngine, IDisposable
                         break;
                     }
 
-                    ObjectMover.ExecuteDirection(context, vector);
+                    ObjectMover.ExecuteDirection(context, vector.Value);
 
                     ReadActorCodeByte(index, context);
                     if (State.OopByte != 0x0D)
@@ -634,7 +634,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public int GetColorMatchValue(int color) => Features.GetColorMatchValue(color);
 
-    public bool FindTile(ITile kind, IXyPair location)
+    public bool FindTile(Tile kind, Location location)
     {
         var matchColor = GetColorMatchValue(kind.Color);
 
@@ -643,7 +643,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             while (location.X <= Tiles.Width)
             {
-                var tile = Tiles[location];
+                ref var tile = ref Tiles[location];
                 if (tile.Id == kind.Id)
                 {
                     var foundColor = GetColorMatchValue(ColorMatch(Tiles[location]));
@@ -663,7 +663,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ForcePlayerColor(int index) => Features.ForcePlayerColor(index);
 
-    public IXyPair GetCardinalVector(int index) => new Vector(State.Vector4[index], State.Vector4[index + 4]);
+    public Vector GetCardinalVector(int index) => new(State.Vector4[index], State.Vector4[index + 4]);
 
     public void HandlePlayerInput(IActor actor) => Features.HandlePlayerInput(actor);
 
@@ -686,8 +686,8 @@ public sealed class Engine : IEngine, IDisposable
                     {
                         PlaySound(4, Sounds.TimeOut);
                         RemoveItem(actor.Location);
-                        var oldLocation = actor.Location.Clone();
-                        actor.Location.CopyFrom(Board.Entrance);
+                        var oldLocation = actor.Location;
+                        actor.Location = Board.Entrance;
                         UpdateRadius(oldLocation, 0);
                         UpdateRadius(actor.Location, 0);
                         State.GamePaused = true;
@@ -795,27 +795,28 @@ public sealed class Engine : IEngine, IDisposable
 
     public void LockActor(int index) => Features.LockActor(index);
 
-    public void MoveActor(int index, IXyPair target)
+    public void MoveActor(int index, Location target)
     {
         var actor = Actors[index];
-        var sourceLocation = actor.Location.Clone();
-        var sourceTile = Tiles[actor.Location];
-        var targetTile = Tiles[target];
-        var underTile = actor.UnderTile.Clone();
+        var sourceLocation = actor.Location;
+        ref var sourceTile = ref Tiles[actor.Location];
+        ref var targetTile = ref Tiles[target];
+        var underTile = actor.UnderTile;
 
-        actor.UnderTile.CopyFrom(targetTile);
+        actor.UnderTile = targetTile;
         if (targetTile.Id == ElementList.EmptyId)
-            targetTile.SetTo(sourceTile.Id, sourceTile.Color & 0x0F);
+            targetTile = new Tile(sourceTile.Id, sourceTile.Color & 0x0F);
         else
-            targetTile.SetTo(sourceTile.Id, (targetTile.Color & 0x70) | (sourceTile.Color & 0x0F));
+            targetTile = new Tile(sourceTile.Id, (targetTile.Color & 0x70) | (sourceTile.Color & 0x0F));
 
-        sourceTile.CopyFrom(underTile);
-        actor.Location.CopyFrom(target);
+        sourceTile = underTile;
+        actor.Location = target;
         if (targetTile.Id == ElementList.PlayerId)
             ForcePlayerColor(index);
 
         UpdateBoard(target);
         UpdateBoard(sourceLocation);
+
         if (index == 0 && Board.IsDark)
         {
             var squareDistanceX = (target.X - sourceLocation.X).Square();
@@ -830,7 +831,7 @@ public sealed class Engine : IEngine, IDisposable
                      y <= target.Y + Facts.TorchDrawBoxHorizontalSize;
                      y++)
                 {
-                    glowLocation.SetTo(x, y);
+                    glowLocation = new Location(x, y);
                     if (glowLocation.X >= 1 && glowLocation.X <= Tiles.Width && glowLocation.Y >= 1 &&
                         glowLocation.Y <= Tiles.Height)
                         if ((Distance(sourceLocation, glowLocation) < Facts.TorchRadius) ^
@@ -851,27 +852,27 @@ public sealed class Engine : IEngine, IDisposable
         var underId = actor.UnderTile.Id;
 
         if (underId == ElementList.RiverNId)
-            vector.SetTo(0, -1);
+            vector = Vector.North;
         else if (underId == ElementList.RiverSId)
-            vector.SetTo(0, 1);
+            vector = Vector.South;
         else if (underId == ElementList.RiverWId)
-            vector.SetTo(-1, 0);
+            vector = Vector.West;
         else if (underId == ElementList.RiverEId)
-            vector.SetTo(1, 0);
+            vector = Vector.East;
 
         if (vector.IsNonZero())
         {
-            var actorTile = Tiles[actor.Location];
+            ref var actorTile = ref Tiles[actor.Location];
             if (actorTile.Id == ElementList.PlayerId)
             {
-                var targetLocation = actor.Location.Sum(vector);
-                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, vector);
+                var targetLocation = actor.Location + vector;
+                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, ref vector);
             }
         }
 
         if (vector.IsNonZero())
         {
-            var target = actor.Location.Sum(vector);
+            var target = actor.Location + vector;
             if (ElementAt(target).IsFloor)
                 MoveActor(index, target);
         }
@@ -905,13 +906,13 @@ public sealed class Engine : IEngine, IDisposable
         State.SoundPriority = priority;
     }
 
-    public void PlotTile(IXyPair location, ITile tile)
+    public void PlotTile(Location location, Tile tile)
     {
         if (ElementAt(location).Id == ElementList.PlayerId)
             return;
 
         var targetElement = ElementList[tile.Id];
-        var existingTile = Tiles[location];
+        ref var existingTile = ref Tiles[location];
         var targetColor = tile.Color;
         if (targetElement.Color >= 0xF0)
         {
@@ -935,7 +936,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             Destroy(location);
             if (targetElement.Cycle < 0)
-                existingTile.SetTo(targetElement.Id, targetColor);
+                existingTile = new Tile(targetElement.Id, targetColor);
             else
                 SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
                     State.DefaultActor);
@@ -944,46 +945,48 @@ public sealed class Engine : IEngine, IDisposable
         UpdateBoard(location);
     }
 
-    public void Push(IXyPair location, IXyPair vector)
+    public void Push(Location location, Vector vector)
     {
         // this is here to prevent endless push loops
         // but doesn't exist in the original code
         if (vector.IsZero())
             throw Exceptions.PushStackOverflow;
 
-        var tile = Tiles[location];
+        ref var tile = ref Tiles[location];
         if (tile.Id == ElementList.SliderEwId && vector.Y == 0 ||
             tile.Id == ElementList.SliderNsId && vector.X == 0 ||
             ElementList[tile.Id].IsPushable)
         {
-            var furtherTile = Tiles[location.Sum(vector)];
+            ref var furtherTile = ref Tiles[location + vector];
             if (furtherTile.Id == ElementList.TransporterId)
                 PushThroughTransporter(location, vector);
-            else if (furtherTile.Id != ElementList.EmptyId) Push(location.Sum(vector), vector);
+            else if (furtherTile.Id != ElementList.EmptyId) 
+                Push(location + vector, vector);
 
             var furtherElement = ElementList[furtherTile.Id];
             if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != ElementList.PlayerId)
-                Destroy(location.Sum(vector));
+                Destroy(location + vector);
 
             furtherElement = ElementList[furtherTile.Id];
-            if (furtherElement.IsFloor) MoveTile(location, location.Sum(vector));
+            if (furtherElement.IsFloor) 
+                MoveTile(location, location + vector);
         }
     }
 
-    public void PushThroughTransporter(IXyPair location, IXyPair vector)
+    public void PushThroughTransporter(Location location, Vector vector)
     {
-        var actor = ActorAt(location.Sum(vector));
+        var actor = ActorAt(location + vector);
 
-        if (actor.Vector.Matches(vector))
+        if (actor.Vector == vector)
         {
-            var search = actor.Location.Clone();
+            var search = actor.Location;
             var target = new Location();
             var ended = false;
             var success = true;
 
             while (!ended)
             {
-                search.Add(vector);
+                search += vector;
                 var element = ElementAt(search);
                 if (element.Id == ElementList.BoardEdgeId)
                 {
@@ -1003,7 +1006,7 @@ public sealed class Engine : IEngine, IDisposable
                         if (element.IsFloor)
                         {
                             ended = true;
-                            target.CopyFrom(search);
+                            target = search;
                         }
                         else
                         {
@@ -1013,19 +1016,19 @@ public sealed class Engine : IEngine, IDisposable
                 }
 
                 if (element.Id == ElementList.TransporterId)
-                    if (ActorAt(search).Vector.Matches(vector.Opposite()))
+                    if (ActorAt(search).Vector == -vector)
                         success = true;
             }
 
             if (target.X > 0)
             {
-                MoveTile(actor.Location.Difference(vector), target);
+                MoveTile(actor.Location - vector, target);
                 PlaySound(3, Sounds.Transporter);
             }
         }
     }
 
-    public void PutTile(IXyPair location, IXyPair vector, ITile kind)
+    public void PutTile(Location location, Vector vector, Tile kind)
     {
         if (!Features.CanPutTile(location))
             return;
@@ -1051,7 +1054,7 @@ public sealed class Engine : IEngine, IDisposable
         var actor = Actors[index];
         if (index < State.ActIndex) State.ActIndex--;
 
-        Tiles[actor.Location].CopyFrom(actor.UnderTile);
+        Tiles[actor.Location] = actor.UnderTile;
         if (actor.Location.Y > 0) UpdateBoard(actor.Location);
 
         for (var i = 1; i <= State.ActorCount; i++)
@@ -1081,22 +1084,25 @@ public sealed class Engine : IEngine, IDisposable
         State.ActorCount--;
     }
 
-    public void RemoveItem(IXyPair location) => Features.RemoveItem(location);
+    public void RemoveItem(Location location) => Features.RemoveItem(location);
 
-    public IXyPair Rnd()
+    public Vector Rnd()
     {
-        var result = new Vector();
-        Rnd(result);
+        var result = new Vector
+        {
+            X = Random.GetNext(3) - 1
+        };
+
+        result.Y = result.X == 0 ? (Random.GetNext(2) << 1) - 1 : 0;
         return result;
     }
 
-    public IXyPair RndP(IXyPair vector)
+    public Vector RndP(Vector vector)
     {
         var result = new Vector();
-        result.CopyFrom(
-            Random.GetNext(2) == 0
-                ? vector.Clockwise()
-                : vector.CounterClockwise());
+        result = Random.GetNext(2) == 0
+            ? vector.Clockwise()
+            : vector.CounterClockwise();
         return result;
     }
 
@@ -1135,7 +1141,7 @@ public sealed class Engine : IEngine, IDisposable
         Disk.PutFile(fileName, stream.ToArray());
     }
 
-    public IXyPair Seek(IXyPair location)
+    public Vector Seek(Location location)
     {
         var result = new Vector();
         if (Random.GetNext(2) == 0 || Player.Location.Y == location.Y)
@@ -1143,7 +1149,7 @@ public sealed class Engine : IEngine, IDisposable
 
         if (result.X == 0) result.Y = (Player.Location.Y - location.Y).Polarity();
 
-        if (World.EnergyCycles > 0) result.SetOpposite();
+        if (World.EnergyCycles > 0) result = -result;
 
         return result;
     }
@@ -1151,7 +1157,7 @@ public sealed class Engine : IEngine, IDisposable
     public void SetBoard(int boardIndex)
     {
         var element = ElementList.Player();
-        Tiles[Player.Location].SetTo(element.Id, element.Color);
+        Tiles[Player.Location] = new Tile(element.Id, element.Color);
         PackBoard();
         UnpackBoard(boardIndex);
     }
@@ -1222,7 +1228,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public ISounds Sounds { get; }
 
-    public void SpawnActor(IXyPair location, ITile tile, int cycle, IActor source)
+    public void SpawnActor(Location location, Tile tile, int cycle, IActor source)
     {
         // must reserve one actor for player, and one for messenger
         if (State.ActorCount < Actors.Capacity - 2)
@@ -1233,9 +1239,9 @@ public sealed class Engine : IEngine, IDisposable
             source ??= State.DefaultActor;
 
             actor.CopyFrom(source);
-            actor.Location.CopyFrom(location);
+            actor.Location = location;
             actor.Cycle = cycle;
-            actor.UnderTile.CopyFrom(Tiles[location]);
+            actor.UnderTile = Tiles[location];
             actor.Instruction = 0;
 
             if (ElementAt(actor.Location).IsEditorFloor)
@@ -1254,9 +1260,9 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public bool SpawnProjectile(int id, IXyPair location, IXyPair vector, bool enemyOwned)
+    public bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned)
     {
-        var target = location.Sum(vector);
+        var target = location + vector;
         var element = ElementAt(target);
 
         if (element.IsFloor || element.Id == ElementList.WaterId)
@@ -1264,7 +1270,7 @@ public sealed class Engine : IEngine, IDisposable
             SpawnActor(target, new Tile(id, ElementList[id].Color), 1, State.DefaultActor);
             var actor = Actors[State.ActorCount];
             actor.P1 = enemyOwned ? 1 : 0;
-            actor.Vector.CopyFrom(vector);
+            actor.Vector = vector;
             actor.P2 = 0x64;
             return true;
         }
@@ -1305,11 +1311,11 @@ public sealed class Engine : IEngine, IDisposable
 
     public void UnlockActor(int index) => Features.UnlockActor(index);
 
-    public void UpdateBoard(IXyPair location) => DrawTile(location, Draw(location));
+    public void UpdateBoard(Location location) => DrawTile(location, Draw(location));
 
-    public void UpdateRadius(IXyPair location, RadiusMode mode)
+    public void UpdateRadius(Location location, RadiusMode mode)
     {
-        var source = location.Clone();
+        var source = location;
         var left = source.X - 9;
         var right = source.X + 9;
         var top = source.Y - 6;
@@ -1334,7 +1340,7 @@ public sealed class Engine : IEngine, IDisposable
                             if (element.IsDestructible || element.Id == ElementList.StarId) Destroy(target);
 
                             if (element.Id == ElementList.EmptyId || element.Id == ElementList.BreakableId)
-                                Tiles[target].SetTo(ElementList.BreakableId, Random.GetNext(7) + 9);
+                                Tiles[target] = new Tile(ElementList.BreakableId, Random.GetNext(7) + 9);
                         }
                         else
                         {
@@ -1459,33 +1465,33 @@ public sealed class Engine : IEngine, IDisposable
         // clear out board
         for (var x = 1; x <= Tiles.Width; x++)
         for (var y = 1; y <= Tiles.Height; y++)
-            Tiles[new Location(x, y)].SetTo(emptyId, 0);
+            Tiles[new Location(x, y)] = new Tile(emptyId, 0);
 
         // build border
         for (var y = 1; y <= Tiles.Height; y++)
         {
-            Tiles[new Location(1, y)].SetTo(boardBorderId, boardBorderColor);
-            Tiles[new Location(Tiles.Width, y)].SetTo(boardBorderId, boardBorderColor);
+            Tiles[new Location(1, y)] = new Tile(boardBorderId, boardBorderColor);
+            Tiles[new Location(Tiles.Width, y)] = new Tile(boardBorderId, boardBorderColor);
         }
 
         for (var x = 1; x <= Tiles.Width; x++)
         {
-            Tiles[new Location(x, 1)].SetTo(boardBorderId, boardBorderColor);
-            Tiles[new Location(x, Tiles.Height)].SetTo(boardBorderId, boardBorderColor);
+            Tiles[new Location(x, 1)] = new Tile(boardBorderId, boardBorderColor);
+            Tiles[new Location(x, Tiles.Height)] = new Tile(boardBorderId, boardBorderColor);
         }
 
         // generate player actor
         var element = ElementList.Player();
         State.ActorCount = 0;
-        Player.Location.SetTo(Tiles.Width / 2, Tiles.Height / 2);
-        Tiles[Player.Location].SetTo(element.Id, element.Color);
+        Player.Location = new Location(Tiles.Width / 2, Tiles.Height / 2);
+        Tiles[Player.Location] = new Tile(element.Id, element.Color);
         Player.Cycle = 1;
-        Player.UnderTile.SetTo(0, 0);
+        Player.UnderTile = new Tile(0, 0);
         Player.Pointer = 0;
         Player.Length = 0;
     }
 
-    private int ColorMatch(ITile tile)
+    private int ColorMatch(Tile tile)
     {
         var element = ElementList[tile.Id];
 
@@ -1496,9 +1502,9 @@ public sealed class Engine : IEngine, IDisposable
         return tile.Color & 0x0F;
     }
 
-    private static int Distance(IXyPair a, IXyPair b) => (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
+    private static int Distance(Location a, Location b) => (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
-    private void DrawTile(IXyPair location, AnsiChar ac) => Hud.DrawTile(location.X - 1, location.Y - 1, ac);
+    private void DrawTile(Location location, AnsiChar ac) => Hud.DrawTile(location.X - 1, location.Y - 1, ac);
 
     private void EnterHighScore(int score)
     {
@@ -1530,7 +1536,7 @@ public sealed class Engine : IEngine, IDisposable
         Hud.RedrawBoard();
     }
 
-    private IXyPair GetConveyorVector(int index) => new Vector(State.Vector8[index], State.Vector8[index + 8]);
+    private Vector GetConveyorVector(int index) => new(State.Vector8[index], State.Vector8[index + 8]);
 
     private void InitializeElements(bool showInvisibles)
     {
@@ -1607,13 +1613,13 @@ public sealed class Engine : IEngine, IDisposable
 
                 if (!State.KeyVector.IsZero() && State.KeyArrow)
                 {
-                    var target = Player.Location.Sum(State.KeyVector);
-                    InteractionList.Get(ElementAt(target).Id).Interact(target, 0, State.KeyVector);
+                    var target = Player.Location + State.KeyVector;
+                    InteractionList.Get(ElementAt(target).Id).Interact(target, 0, ref State.KeyVector);
                 }
 
                 if (!State.KeyVector.IsZero() && State.KeyArrow)
                 {
-                    var target = Player.Location.Sum(State.KeyVector);
+                    var target = Player.Location + State.KeyVector;
                     if (ElementAt(target).IsFloor)
                     {
                         Features.CleanUpPauseMovement();
@@ -1657,7 +1663,7 @@ public sealed class Engine : IEngine, IDisposable
                 }
 
                 var element = ElementList.Player();
-                Tiles[Player.Location].SetTo(element.Id, element.Color);
+                Tiles[Player.Location] = new Tile(element.Id, element.Color);
                 State.GameOver = false;
                 break;
             }
@@ -1686,7 +1692,7 @@ public sealed class Engine : IEngine, IDisposable
         }
 
         var element = ElementList[State.PlayerElement];
-        Tiles[Player.Location].SetTo(element.Id, element.Color);
+        Tiles[Player.Location] = new Tile(element.Id, element.Color);
         if (State.PlayerElement == ElementList.MonitorId)
         {
             SetMessage(0, new Message());
@@ -1702,7 +1708,7 @@ public sealed class Engine : IEngine, IDisposable
         State.ActIndex = State.ActorCount + 1;
     }
 
-    private void MoveTile(IXyPair source, IXyPair target)
+    private void MoveTile(Location source, Location target)
     {
         var sourceIndex = ActorIndexAt(source);
         if (sourceIndex >= 0)
@@ -1711,7 +1717,7 @@ public sealed class Engine : IEngine, IDisposable
         }
         else
         {
-            Tiles[target].CopyFrom(Tiles[source]);
+            Tiles[target] = Tiles[source];
             UpdateBoard(target);
             RemoveItem(source);
             UpdateBoard(source);
@@ -1809,7 +1815,7 @@ public sealed class Engine : IEngine, IDisposable
         State.KeyShift = mod.HasFlag(KeyMod.Shift);
         State.KeyArrow = false;
         State.KeyPressed = 0;
-        State.KeyVector.SetTo(0, 0);
+        State.KeyVector = new Vector(0, 0);
 
         if (!Keyboard.KeyIsAvailable)
             return;
@@ -1823,31 +1829,22 @@ public sealed class Engine : IEngine, IDisposable
         switch (State.KeyPressed)
         {
             case EngineKeyCode.Left:
-                State.KeyVector.CopyFrom(Vector.West);
+                State.KeyVector = Vector.West;
                 State.KeyArrow = true;
                 break;
             case EngineKeyCode.Right:
-                State.KeyVector.CopyFrom(Vector.East);
+                State.KeyVector = Vector.East;
                 State.KeyArrow = true;
                 break;
             case EngineKeyCode.Up:
-                State.KeyVector.CopyFrom(Vector.North);
+                State.KeyVector = Vector.North;
                 State.KeyArrow = true;
                 break;
             case EngineKeyCode.Down:
-                State.KeyVector.CopyFrom(Vector.South);
+                State.KeyVector = Vector.South;
                 State.KeyArrow = true;
                 break;
         }
-    }
-
-    private void Rnd(IXyPair result)
-    {
-        result.X = Random.GetNext(3) - 1;
-        if (result.X == 0)
-            result.Y = (Random.GetNext(2) << 1) - 1;
-        else
-            result.Y = 0;
     }
 
     private void ShowAbout() => Features.ShowAbout();

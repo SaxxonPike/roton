@@ -14,11 +14,11 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         var success = false;
-        var source = Engine.Parser.GetKind(context);
-        if (source != null)
+        var sourceVal = Engine.Parser.GetKind(context);
+        if (sourceVal is { } source)
         {
-            var target = Engine.Parser.GetKind(context);
-            if (target != null)
+            var targetVal = Engine.Parser.GetKind(context);
+            if (targetVal is {} target)
             {
                 var targetElement = Engine.ElementList[target.Id];
                 success = true;
@@ -27,7 +27,7 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
                     target.Color = targetElement.Color;
                 }
                 var location = new Location(0, 1);
-                while (Engine.Tiles.FindTile(source, location))
+                while (Engine.Tiles.FindTile(source, ref location))
                 {
                     Engine.PlotTile(location, target);
                 }

@@ -11,7 +11,7 @@ public sealed class SpinningGunDraw(IEngineAccessor engine) : IDraw
 {
     private IEngine Engine => engine.Instance;
 
-    public AnsiChar Draw(IXyPair location)
+    public AnsiChar Draw(Location location)
     {
         switch (Engine.State.GameCycle & 0x7)
         {

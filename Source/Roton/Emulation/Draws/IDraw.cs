@@ -5,5 +5,5 @@ namespace Roton.Emulation.Draws;
 
 public interface IDraw
 {
-    AnsiChar Draw(IXyPair location);
+    AnsiChar Draw(Location location);
 }

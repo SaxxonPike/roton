@@ -11,9 +11,10 @@ public sealed class RndPDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public IXyPair Execute(IOopContext context)
+    public Vector Execute(IOopContext context)
     {
-        var direction = Engine.Parser.GetDirection(context);
+        var direction = Engine.Parser.GetDirection(context) ?? Vector.Idle;
+
         return Engine.Random.GetNext(2) == 0
             ? direction.Clockwise()
             : direction.CounterClockwise();

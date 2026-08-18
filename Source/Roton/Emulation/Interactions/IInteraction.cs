@@ -1,8 +1,9 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Interactions;
 
 public interface IInteraction
 {
-    void Interact(IXyPair location, int index, IXyPair vector);
+    void Interact(Location location, int index, ref Vector vector);
 }

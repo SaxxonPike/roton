@@ -11,9 +11,9 @@ public sealed class TransporterInteraction(IEngineAccessor engine) : IInteractio
 {
     private IEngine Engine => engine.Instance;
 
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.PushThroughTransporter(location.Difference(vector), vector);
-        vector.SetTo(0, 0);
+        Engine.PushThroughTransporter(location - vector, vector);
+        vector = Vector.Idle;
     }
 }

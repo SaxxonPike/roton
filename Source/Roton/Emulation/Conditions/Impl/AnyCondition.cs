@@ -14,9 +14,9 @@ public sealed class AnyCondition(IEngineAccessor engine) : ICondition
     public bool? Execute(IOopContext context)
     {
         var kind = Engine.Parser.GetKind(context);
-        if (kind == null)
+        if (kind is not { } val)
             return null;
 
-        return Engine.FindTile(kind, new Location(0, 1));
+        return Engine.FindTile(val, new Location(0, 1));
     }
 }

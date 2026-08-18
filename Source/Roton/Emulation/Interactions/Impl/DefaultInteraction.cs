@@ -8,7 +8,7 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super)]
 public sealed class DefaultInteraction : IInteraction
 {
-    public void Interact(IXyPair location, int index, IXyPair vector)
+    public void Interact(Location location, int index, ref Vector vector)
     {
     }
 }

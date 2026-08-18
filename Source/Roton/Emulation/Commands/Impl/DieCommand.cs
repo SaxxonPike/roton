@@ -14,6 +14,6 @@ public sealed class DieCommand(IEngineAccessor engine) : ICommand
     public void Execute(IOopContext context)
     {
         context.Died = true;
-        context.DeathTile.SetTo(Engine.ElementList.EmptyId, 0);
+        context.DeathTile = new Tile(Engine.ElementList.EmptyId, 0);
     }
 }
