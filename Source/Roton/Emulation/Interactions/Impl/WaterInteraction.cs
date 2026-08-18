@@ -12,6 +12,9 @@ public sealed class WaterInteraction(IEngineAccessor engine) : IInteraction
 
     public void Interact(Location location, int index, ref Vector vector)
     {
+        if (engine.Instance.Config.NoPesterMode)
+            return;
+
         Engine.PlaySound(3, Engine.Sounds.Water);
         Engine.SetMessage(Engine.Facts.ShortMessageDuration, Engine.Alerts.WaterMessage);
     }

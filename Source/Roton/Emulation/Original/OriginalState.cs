@@ -135,8 +135,6 @@ public sealed class OriginalState : IState
 
     public ref Word PlayerElement => ref Memory.GetRef<Word>(0x4AC8);
 
-    public ref Word PlayerTime => ref Memory.GetRef<Word>(0x4920);
-
     public ref Bool QuitEngine => ref Memory.GetRef<Bool>(0x4AC5);
 
     public ISoundBufferList SoundBuffer { get; }

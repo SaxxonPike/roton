@@ -49,7 +49,6 @@ public interface IState
     ref Word OopNumber { get; }
     //string OopWord { get; set; }
     ref Word PlayerElement { get; }
-    ref Word PlayerTime { get; }
     ref Bool QuitEngine { get; }
     ref Bool SoundPlaying { get; }
     ref Word SoundPriority { get; }

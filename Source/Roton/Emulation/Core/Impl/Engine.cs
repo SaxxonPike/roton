@@ -190,10 +190,10 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActionList ActionList { get; }
 
-    public IActor ActorAt(Location location) => 
+    public IActor ActorAt(Location location) =>
         Actors.ActorAt(location);
 
-    public int ActorIndexAt(Location location) => 
+    public int ActorIndexAt(Location location) =>
         Actors.ActorIndexAt(location);
 
     public event EventHandler Exited;
@@ -282,7 +282,12 @@ public sealed class Engine : IEngine, IDisposable
     {
         State.BoardCount = 0;
         Boards.Clear();
-        Alerts.Reset();
+
+        if (Config.NoPesterMode)
+            Alerts.SetAll();
+        else
+            Alerts.Reset();
+
         ClearBoard();
         Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
         World.BoardIndex = 0;
@@ -565,7 +570,7 @@ public sealed class Engine : IEngine, IDisposable
         return success;
     }
 
-    public bool ExecuteTransaction(ref OopContext context, ref Word instruction,  bool take)
+    public bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take)
     {
         // Does the item exist?
         var item = Parser.GetItem(ref context, ref instruction);
@@ -943,7 +948,7 @@ public sealed class Engine : IEngine, IDisposable
             ref var furtherTile = ref Tiles[location + vector];
             if (furtherTile.Id == ElementList.TransporterId)
                 PushThroughTransporter(location, vector);
-            else if (furtherTile.Id != ElementList.EmptyId) 
+            else if (furtherTile.Id != ElementList.EmptyId)
                 Push(location + vector, vector);
 
             var furtherElement = ElementList[furtherTile.Id];
@@ -951,7 +956,7 @@ public sealed class Engine : IEngine, IDisposable
                 Destroy(location + vector);
 
             furtherElement = ElementList[furtherTile.Id];
-            if (furtherElement.IsFloor) 
+            if (furtherElement.IsFloor)
                 MoveTile(location, location + vector);
         }
     }
@@ -1188,7 +1193,7 @@ public sealed class Engine : IEngine, IDisposable
         LoadWorld(name, false);
         State.StartBoard = World.BoardIndex;
         SetBoard(0);
-        
+
         var element = ElementList[State.PlayerElement];
         Tiles[Player.Location] = new Tile(element.Id, element.Color);
 
@@ -1548,7 +1553,7 @@ public sealed class Engine : IEngine, IDisposable
             Hud.UpdateStatus();
             MainLoopInit(doFade);
         }
-        
+
         State.BreakGameLoop = false;
 
         while (ThreadActive)

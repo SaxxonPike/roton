@@ -194,7 +194,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
                 if (Engine.Timers.TimeLimit.Clock(100))
                 {
                     Engine.World.TimePassed++;
-                    if (Engine.Board.TimeLimit - 10 == Engine.World.TimePassed)
+                    if (!Engine.Config.NoPesterMode && Engine.Board.TimeLimit - 10 == Engine.World.TimePassed)
                     {
                         Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.TimeMessage);
                         Engine.PlaySound(3, Engine.Sounds.TimeLow);

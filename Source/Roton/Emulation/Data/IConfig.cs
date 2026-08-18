@@ -13,4 +13,5 @@ public interface IConfig
     int MasterClockNumerator { get; }
     int MasterClockDenominator { get; }
     bool FastMode { get; }
+    bool NoPesterMode { get; }
 }
