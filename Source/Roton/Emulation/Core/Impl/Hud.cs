@@ -39,6 +39,10 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
     {
     }
 
+    public virtual void FailToLoadWorld()
+    {
+    }
+
     public virtual void DrawMessage(IMessage message, int color)
     {
     }

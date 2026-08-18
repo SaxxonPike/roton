@@ -157,6 +157,11 @@ public sealed class SuperHud : Hud
         DrawString(bottomX, 24, $" {bottomText} ", messageColor);
     }
 
+    private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
+    {
+        DrawString(25 - message.Length / 2, 23, message, 0x1E);
+    }
+
     private void DrawNumber(int y, int value)
     {
         var s = value.ToString();
@@ -532,4 +537,11 @@ public sealed class SuperHud : Hud
     public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
 
     private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
+
+    public override void FailToLoadWorld()
+    {
+        DrawSystemMessage("Wrong ZZT version!", 0x1E);
+        Engine.PlayErrorSound();
+        Engine.Delay(2000);
+    }
 }

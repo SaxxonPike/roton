@@ -95,7 +95,7 @@ public sealed class OriginalState : IState
 
     public ref Bool GameQuiet => ref Memory.GetRef<Bool>(0x7C8C);
 
-    public ref Word GameSpeed => ref Memory.GetRef<Word>(0x4ACE);
+    public ref HWord GameSpeed => ref Memory.GetRef<HWord>(0x4ACE);
 
     public ref Word GameWaitTime => ref Memory.GetRef<Word>(0x7402);
 
@@ -145,7 +145,7 @@ public sealed class OriginalState : IState
 
     public ref Word SoundPriority => ref Memory.GetRef<Word>(0x7C8E);
 
-    public ref Word SoundTicks => ref Memory.GetRef<Word>(0x7E8F);
+    public ref HWord SoundTicks => ref Memory.GetRef<HWord>(0x7E8F);
 
     public IReadOnlyList<int> StarChars { get; }
 

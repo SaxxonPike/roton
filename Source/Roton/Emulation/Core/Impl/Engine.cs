@@ -707,7 +707,7 @@ public sealed class Engine : IEngine, IDisposable
     private void ShowFormattedScroll(string error) =>
         Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
 
-    public void LoadWorld(string name, bool savedGame)
+    public bool LoadWorld(string name, bool savedGame)
     {
         byte[] TryLoadWorld()
         {
@@ -727,18 +727,21 @@ public sealed class Engine : IEngine, IDisposable
         if (worldData == null || worldData.Length == 0)
         {
             ShowDosError();
-            return;
+            return false;
         }
 
         using (var stream = new MemoryStream(worldData))
         {
             if (stream.Length == 0)
-                return;
+                return false;
 
             using var reader = new BinaryReader(stream);
             var type = reader.ReadInt16();
             if (type != World.WorldType)
-                throw new Exception("Incompatible world for this engine.");
+            {
+                Hud.FailToLoadWorld();
+                return false;
+            }
 
             var numBoards = reader.ReadInt16();
             if (numBoards < 0)
@@ -761,6 +764,7 @@ public sealed class Engine : IEngine, IDisposable
         Hud.CreateStatusWorld();
         UnpackBoard(World.BoardIndex);
         State.WorldLoaded = true;
+        return true;
     }
 
     private void ShowDosError()
@@ -1189,6 +1193,10 @@ public sealed class Engine : IEngine, IDisposable
         LoadWorld(name, false);
         State.StartBoard = World.BoardIndex;
         SetBoard(0);
+        
+        var element = ElementList[State.PlayerElement];
+        Tiles[Player.Location] = new Tile(element.Id, element.Color);
+
         FadePurple();
     }
 
@@ -1198,7 +1206,9 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return false;
 
-        LoadWorld(name, true);
+        if (!LoadWorld(name, true))
+            return false;
+
         State.StartBoard = World.BoardIndex;
         World.IsLocked = false;
         SetBoard(State.StartBoard);
@@ -1906,6 +1916,19 @@ public sealed class Engine : IEngine, IDisposable
     {
         GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
         World.BoardIndex = boardIndex;
+    }
+
+    public void Delay(int msec)
+    {
+        var waitUntil = DateTime.Now + TimeSpan.FromMilliseconds(msec);
+        while (DateTime.Now < waitUntil)
+            WaitForTick();
+    }
+
+    public void PlayErrorSound()
+    {
+        ClearSound();
+        PlaySound(1, MusicEncoder.Encode("s004x114x9"));
     }
 
     public void Dispose()

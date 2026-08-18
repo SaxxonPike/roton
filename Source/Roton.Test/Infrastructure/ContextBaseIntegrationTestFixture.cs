@@ -174,6 +174,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         Engine.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
+        State.PlayerElement = ElementList.PlayerId;
     }
 
     protected Context Context { get; } = context;

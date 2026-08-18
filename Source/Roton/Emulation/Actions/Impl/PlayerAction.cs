@@ -100,8 +100,9 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
             {
                 // Movement logic
 
+                var tempVec = Engine.State.KeyVector;
                 Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
-                    .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
+                    .Interact(actor.Location + Engine.State.KeyVector, 0, ref tempVec);
                     
                 if (!Engine.State.KeyVector.IsZero())
                 {

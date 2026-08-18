@@ -37,7 +37,7 @@ public interface IState
     ref Bool GameOver { get; }
     ref Bool GamePaused { get; }
     ref Bool GameQuiet { get; }
-    ref Word GameSpeed { get; }
+    ref HWord GameSpeed { get; }
     ref Word GameWaitTime { get; }
     ref Bool Init { get; }
     ref Bool KeyArrow { get; }
@@ -53,7 +53,7 @@ public interface IState
     ref Bool QuitEngine { get; }
     ref Bool SoundPlaying { get; }
     ref Word SoundPriority { get; }
-    ref Word SoundTicks { get; }
+    ref HWord SoundTicks { get; }
     ref Word StartBoard { get; }
     string WorldFileName { get; set; }
     ref Bool WorldLoaded { get; }

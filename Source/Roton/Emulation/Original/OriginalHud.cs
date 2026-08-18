@@ -373,4 +373,12 @@ public sealed class OriginalHud : Hud
         DrawStatusLine(5);
         return result;
     }
+
+    public override void FailToLoadWorld()
+    {
+        DrawString(62, 4, "You need a newer", 0x1E);
+        DrawString(62, 5, " version of ZZT!", 0x1E);
+        Engine.PlayErrorSound();
+        Engine.Delay(2000);
+    }
 }

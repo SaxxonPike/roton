@@ -93,7 +93,7 @@ public sealed class SuperState : IState
 
     public ref Bool GameQuiet => ref Memory.GetRef<Bool>(0xCD9A);
 
-    public ref Word GameSpeed => ref Memory.GetRef<Word>(0x7CA4);
+    public ref HWord GameSpeed => ref Memory.GetRef<HWord>(0x7CA4);
 
     public ref Word GameWaitTime => ref Memory.GetRef<Word>(0xB956);
 
@@ -147,7 +147,7 @@ public sealed class SuperState : IState
 
     public ref Word SoundPriority => ref Memory.GetRef<Word>(0xCD9C);
 
-    public ref Word SoundTicks => ref Memory.GetRef<Word>(0xCF9D);
+    public ref HWord SoundTicks => ref Memory.GetRef<HWord>(0xCF9D);
 
     public IReadOnlyList<int> StarChars { get; }
 
