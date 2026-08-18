@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Data.Impl;
-
-namespace Roton.Emulation.Data;
+﻿namespace Roton.Emulation.Data.Impl;
 
 public sealed class Int16List(IMemory memory, int offset, int count) : FixedList<int>
 {
