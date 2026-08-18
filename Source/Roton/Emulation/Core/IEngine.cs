@@ -46,7 +46,7 @@ public interface IEngine
     int Adjacent(Location location, int id);
     void Attack(int index, Location location);
     bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
-    void CleanUpOop(IOopContext context);
+    void CleanUpOop(ref OopContext context);
     void ClearBoard();
     void ClearSound();
     void ClearWorld();
@@ -55,9 +55,9 @@ public interface IEngine
     AnsiChar Draw(Location location);
     IElement ElementAt(Location location);
     void EnterBoard();
-    void ExecuteCode(int index, IExecutable instructionSource, string name);
-    bool ExecuteLabel(int sender, ISearchContext context, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix);
-    bool ExecuteTransaction(IOopContext context, bool take);
+    void ExecuteCode(int index, ref Word instruction, string name);
+    bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix);
+    bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take);
     void FadePurple();
     bool FindTile(Tile kind, Location location);
     void ForcePlayerColor(int index);

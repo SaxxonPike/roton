@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,13 +10,13 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
-        var sourceVal = Engine.Parser.GetKind(context);
+        var sourceVal = Engine.Parser.GetKind(ref context, ref instruction);
         if (sourceVal is { } source)
         {
-            var targetVal = Engine.Parser.GetKind(context);
+            var targetVal = Engine.Parser.GetKind(ref context, ref instruction);
             if (targetVal is {} target)
             {
                 var targetElement = Engine.ElementList[target.Id];

@@ -1,5 +1,4 @@
 using System;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Items;
 
@@ -7,17 +6,17 @@ namespace Roton.Emulation.Core;
 
 public interface IParser
 {
-    bool? GetCondition(IOopContext oopContext);
-    Vector? GetDirection(IOopContext oopContext);
-    IItem GetItem(IOopContext oopContext);
-    Tile? GetKind(IOopContext oopContext);
-    bool GetTarget(int index, ISearchContext context, ReadOnlySpan<char> term);
-    int ReadByte(int index, IExecutable instructionSource);
-    string ReadLine(int index, IExecutable instructionSource);
-    int ReadNumber(int index, IExecutable instructionSource);
-    void ReadWord(int index, IExecutable instructionSource);
-    ReadOnlySpan<char> ReadWord(int index, IExecutable instructionSource, Span<char> buffer);
+    bool? GetCondition(ref OopContext oopContext, ref Word instruction);
+    Vector? GetDirection(ref OopContext oopContext, ref Word instruction);
+    IItem GetItem(ref OopContext oopContext, ref Word instruction);
+    Tile? GetKind(ref OopContext oopContext, ref Word instruction);
+    bool GetTarget(int index, ref SearchContext context, ReadOnlySpan<char> term);
+    int ReadByte(int index, ref Word instruction);
+    string ReadLine(int index, ref Word instruction);
+    int ReadNumber(int index, ref Word instruction);
+    void ReadWord(int index, ref Word instruction);
+    ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer);
     int Search(int index, ReadOnlySpan<char> term);
-    int GetNumber(IOopContext context);
-    void DiscardLine(int index, IExecutable instructionSource);
+    int GetNumber(ref OopContext context, ref Word instruction);
+    void DiscardLine(int index, ref Word instruction);
 }

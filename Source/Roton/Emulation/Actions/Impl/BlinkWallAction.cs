@@ -1,5 +1,4 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -16,11 +15,11 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
 
         if (actor.P3 == 0)
-            actor.P3 = actor.P1 + 1;
+            actor.P3 = unchecked((byte)(actor.P1 + 1));
 
         if (actor.P3 == 1)
         {
-            actor.P3 = actor.P2 * 2 + 1;
+            actor.P3 = unchecked((byte)(actor.P2 * 2 + 1));
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;

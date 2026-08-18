@@ -14,7 +14,7 @@ public sealed class StarAction(IEngineAccessor engine) : IAction
     {
         var actor = Engine.Actors[index];
 
-        actor.P2 = (actor.P2 - 1) & 0xFF;
+        actor.P2 = unchecked((byte)((actor.P2 - 1) & 0xFF));
         if (actor.P2 > 0)
         {
             if ((actor.P2 & 1) == 0)

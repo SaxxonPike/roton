@@ -11,15 +11,15 @@ public sealed class OthersTarget(IActors actors) : ITarget
 {
     private IActors Actors => actors;
 
-    public bool Execute(int index, ISearchContext context, ReadOnlySpan<char> term)
+    public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
-        if (context.SearchIndex >= Actors.Count)
+        if (context.Index >= Actors.Count)
             return false;
 
-        if (context.SearchIndex != index)
+        if (context.Index != index)
             return true;
 
-        context.SearchIndex++;
-        return context.SearchIndex < Actors.Count;
+        context.Index++;
+        return context.Index < Actors.Count;
     }
 }

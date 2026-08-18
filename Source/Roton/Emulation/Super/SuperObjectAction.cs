@@ -15,7 +15,7 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         if (actor.P2 == 0 && actor.Instruction >= 0)
         {
-            Engine.ExecuteCode(index, actor, @"Interaction");
+            Engine.ExecuteCode(index, ref actor.Instruction, @"Interaction");
         }
 
         if (actor.Vector.IsZero())

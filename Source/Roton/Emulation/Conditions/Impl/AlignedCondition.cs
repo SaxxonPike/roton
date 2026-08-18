@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,7 +10,7 @@ public sealed class AlignedCondition(IEngineAccessor engine) : ICondition
 {
     private IEngine Engine => engine.Instance;
 
-    public bool? Execute(IOopContext context)
+    public bool? Execute(ref OopContext context, ref Word instruction)
     {
         return context.Actor.Location.X == Engine.Player.Location.X ||
                context.Actor.Location.Y == Engine.Player.Location.Y;

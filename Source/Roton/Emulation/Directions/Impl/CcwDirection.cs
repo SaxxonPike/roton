@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,6 +10,6 @@ public sealed class CcwDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public Vector Execute(IOopContext context) => 
-        (Engine.Parser.GetDirection(context) ?? Vector.Idle).CounterClockwise();
+    public Vector Execute(ref OopContext context, ref Word instruction) => 
+        (Engine.Parser.GetDirection(ref context, ref instruction) ?? Vector.Idle).CounterClockwise();
 }

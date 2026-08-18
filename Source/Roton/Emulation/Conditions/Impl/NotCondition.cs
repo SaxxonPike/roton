@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,8 +10,8 @@ public sealed class NotCondition(IEngineAccessor engine) : ICondition
 {
     private IEngine Engine => engine.Instance;
 
-    public bool? Execute(IOopContext context)
+    public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        return !Engine.Parser.GetCondition(context);
+        return !Engine.Parser.GetCondition(ref context, ref instruction);
     }
 }

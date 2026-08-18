@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -10,7 +9,7 @@ public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
 {
     private IEngine Engine => engine.Instance;
 
-    public void ExecuteDirection(IOopContext context, Vector vector)
+    public void ExecuteDirection(ref OopContext context, Vector vector)
     {
         if (vector.IsZero())
         {

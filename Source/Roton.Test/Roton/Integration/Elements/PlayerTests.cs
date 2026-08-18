@@ -247,7 +247,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
             "bomb should be present after activation");
         Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
             "correct message should be displayed");
-        actor.P1.Should().Be(Engine.Facts.BombCountdownStart - 1,
+        actor.P1.Should().Be((byte)(Engine.Facts.BombCountdownStart - 1),
             "bomb should have the maximum timer set");
     }
 
@@ -260,7 +260,7 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         // Place the bomb and light it.
         var actorIndex = SpawnTo(4, 3, ElementList.BombId);
         var actor = Actors[actorIndex];
-        actor.P1 = Engine.Facts.BombCountdownStart;
+        actor.P1 = (byte)Engine.Facts.BombCountdownStart;
 
         // Move the player into the bomb.
         Type(AnsiKey.Right);

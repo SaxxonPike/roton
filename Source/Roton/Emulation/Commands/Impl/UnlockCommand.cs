@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,7 +10,7 @@ public sealed class UnlockCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
         Engine.UnlockActor(context.Index);
     }

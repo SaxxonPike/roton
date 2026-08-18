@@ -105,8 +105,11 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         Engine.BroadcastLabel(0, Engine.Facts.HintLabel, false);
     }
 
-    public IScrollState ExecuteMessage(IOopContext context)
+    public IScrollState ExecuteMessage(ref OopContext context)
     {
+        if (!context.HasMessage)
+            return null;
+
         switch (context.Message.Count)
         {
             case 1:
@@ -170,7 +173,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         return Engine.ShowLoad("Saved Games", "sav");
     }
 
-    public void CleanUpOop(IOopContext context)
+    public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;
         Engine.PlotTile(location, context.DeathTile);

@@ -98,11 +98,8 @@ public struct Vector : IEquatable<Vector>
     public bool Equals(Vector other) =>
         _x == other._x && _y == other._y;
 
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (_x.GetHashCode() * 397) ^ _y.GetHashCode();
-        }
-    }
+    public override int GetHashCode() =>
+        BitConverter.IsLittleEndian 
+            ? ((_y << 16) | _x).GetHashCode() 
+            : ((_x << 16) | _y).GetHashCode();
 }

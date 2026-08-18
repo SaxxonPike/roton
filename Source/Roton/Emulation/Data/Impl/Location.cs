@@ -59,11 +59,8 @@ public struct Location : IEquatable<Location>
     public bool Equals(Location other) => 
         _x == other._x && _y == other._y;
 
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (_x.GetHashCode() * 397) ^ _y.GetHashCode();
-        }
-    }
+    public override int GetHashCode() =>
+        BitConverter.IsLittleEndian 
+            ? ((_y << 8) | _x).GetHashCode() 
+            : ((_x << 8) | _y).GetHashCode();
 }

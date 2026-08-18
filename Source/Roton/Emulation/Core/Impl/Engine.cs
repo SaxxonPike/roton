@@ -28,6 +28,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private int _ticksToRun;
     private bool _step;
+    private readonly IEngineAccessor _engineAccessor;
 
     public Engine(IClock clock, IActors actors, IAlerts alerts, IBoard board,
         IFileSystem fileSystem, IElementList elements,
@@ -42,7 +43,7 @@ public sealed class Engine : IEngine, IDisposable
         ISpeaker speaker, IDrumBank drumBank, IObjectMover objectMover,
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
-        IFileDialog fileDialog, ITracer tracer, IOopContextPool oopContextPool, IEngineAccessor engineAccessor)
+        IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor)
     {
         engineAccessor.Instance = this;
 
@@ -89,7 +90,7 @@ public sealed class Engine : IEngine, IDisposable
         _configFileService = configFileService;
         _fileDialog = fileDialog;
         Tracer = tracer;
-        OopContextPool = oopContextPool;
+        _engineAccessor = engineAccessor;
     }
 
     private void ClockTick(object sender, EventArgs args)
@@ -265,20 +266,20 @@ public sealed class Engine : IEngine, IDisposable
 
         var info = new SearchContext
         {
-            SearchIndex = 0,
-            SearchOffset = 0
+            Index = 0,
+            Offset = 0
         };
 
-        while (ExecuteLabel(sender, info, label, "\r:"))
+        while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (!ActorIsLocked(info.SearchIndex) || ignoreLock || sender == info.SearchIndex && !ignoreSelfLock)
+            if (!ActorIsLocked(info.Index) || ignoreLock || sender == info.Index && !ignoreSelfLock)
             {
-                if (sender == info.SearchIndex)
+                if (sender == info.Index)
                     success = true;
 
-                Tracer.TraceBroadcast(sender, label, info.SearchIndex, ignoreLock, ignoreSelfLock);
-                Actors[info.SearchIndex].Instruction = info.SearchOffset;
-                NotifyActorSentLabel(info.SearchIndex);
+                Tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
+                Actors[info.Index].Instruction = info.Offset;
+                NotifyActorSentLabel(info.Index);
             }
         }
 
@@ -446,70 +447,70 @@ public sealed class Engine : IEngine, IDisposable
 
     public void EnterBoard() => Features.EnterBoard();
 
-    public void ExecuteCode(int index, IExecutable instructionSource, string name)
+    public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = OopContextPool.Rent();
-
-        context.Index = index;
-        context.InstructionSource = instructionSource;
-        context.Name = name;
-        context.PreviousInstruction = context.Instruction;
+        var context = new OopContext(_engineAccessor)
+        {
+            Index = index,
+            Name = name,
+            PreviousInstruction = instruction
+        };
 
         while (true)
         {
-            if (context.Instruction < 0)
+            if (instruction < 0)
                 break;
 
-            Tracer?.TraceOop(context);
+            Tracer?.TraceOop(ref context, ref instruction);
 
             context.NextLine = true;
-            context.PreviousInstruction = context.Instruction;
-            context.Command = ReadActorCodeByte(index, context);
+            context.PreviousInstruction = instruction;
+            context.Command = ReadActorCodeByte(index, ref instruction);
 
             while (context.Command == ':')
             {
-                Parser.DiscardLine(index, context);
-                context.Command = ReadActorCodeByte(index, context);
+                Parser.DiscardLine(index, ref instruction);
+                context.Command = ReadActorCodeByte(index, ref instruction);
             }
 
             switch (context.Command)
             {
                 case 0x27: // '
                 case 0x40: // @
-                    Parser.DiscardLine(index, context);
+                    Parser.DiscardLine(index, ref instruction);
                     break;
                 case 0x2F: // /
                 case 0x3F: // ?
                     if (context.Command == 0x2F)
                         context.Repeat = true;
 
-                    var vector = Parser.GetDirection(context);
+                    var vector = Parser.GetDirection(ref context, ref instruction);
                     if (vector == null)
                     {
                         RaiseError("Bad direction");
                         break;
                     }
 
-                    ObjectMover.ExecuteDirection(context, vector.Value);
+                    ObjectMover.ExecuteDirection(ref context, vector.Value);
 
-                    ReadActorCodeByte(index, context);
+                    ReadActorCodeByte(index, ref instruction);
                     if (State.OopByte != 0x0D)
-                        context.Instruction--;
+                        instruction--;
                     context.Moved = true;
 
                     break;
                 case 0x23: // #
-                    Interpreter.Execute(context);
+                    Interpreter.Execute(ref context, ref instruction);
                     break;
                 case 0x0D: // enter
-                    if (context.Message.Count > 0)
-                        context.Message.Add(string.Empty);
+                    if (context.HasMessage)
+                        context.AddMessage(string.Empty);
                     break;
                 case 0x00:
                     context.Finished = true;
                     break;
                 default:
-                    context.Message.Add($"{context.Command.ToChar()}{Parser.ReadLine(context.Index, context)}");
+                    context.AddMessage($"{context.Command.ToChar()}{Parser.ReadLine(context.Index, ref instruction)}");
                     break;
             }
 
@@ -522,23 +523,21 @@ public sealed class Engine : IEngine, IDisposable
         }
 
         if (context.Repeat)
-            context.Instruction = context.PreviousInstruction;
+            instruction = context.PreviousInstruction;
 
         if (State.OopByte == 0)
-            context.Instruction = -1;
+            instruction = -1;
 
         if (context.HasMessage)
-            ExecuteMessage(context);
+            ExecuteMessage(ref context);
 
         if (context.Died)
-            CleanUpOop(context);
-
-        OopContextPool.Return(context);
+            CleanUpOop(ref context);
     }
 
-    public void CleanUpOop(IOopContext context) => Features.CleanUpOop(context);
+    public void CleanUpOop(ref OopContext context) => Features.CleanUpOop(ref context);
 
-    public bool ExecuteLabel(int sender, ISearchContext context, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
+    public bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
         Span<char> buffer = stackalloc char[256];
         var label = term;
@@ -550,12 +549,12 @@ public sealed class Engine : IEngine, IDisposable
         {
             target = label.Slice(0, split);
             label = label.Slice(split + 1);
-            success = Parser.GetTarget(sender, context, target);
+            success = Parser.GetTarget(sender, ref search, target);
         }
-        else if (context.SearchIndex < sender)
+        else if (search.Index < sender)
         {
             label = term;
-            context.SearchIndex = sender;
+            search.Index = sender;
             split = 0;
             success = true;
         }
@@ -564,36 +563,36 @@ public sealed class Engine : IEngine, IDisposable
         {
             if (label.Equals(Facts.RestartLabel, StringComparison.OrdinalIgnoreCase))
             {
-                context.SearchOffset = 0;
+                search.Offset = 0;
             }
             else
             {
                 prefix.CopyTo(buffer);
                 label.CopyTo(buffer.Slice(prefix.Length));
-                context.SearchOffset = Parser.Search(context.SearchIndex, buffer.Slice(0, prefix.Length + label.Length));
-                if (context.SearchOffset < 0 && split > 0)
+                search.Offset = Parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
+                if (search.Offset < 0 && split > 0)
                 {
-                    success = Parser.GetTarget(sender, context, target);
+                    success = Parser.GetTarget(sender, ref search, target);
                     continue;
                 }
             }
 
-            success = context.SearchOffset >= 0;
+            success = search.Offset >= 0;
             break;
         }
 
         return success;
     }
 
-    public bool ExecuteTransaction(IOopContext context, bool take)
+    public bool ExecuteTransaction(ref OopContext context, ref Word instruction,  bool take)
     {
         // Does the item exist?
-        var item = Parser.GetItem(context);
+        var item = Parser.GetItem(ref context, ref instruction);
         if (item == null)
             return false;
 
         // Do we have a valid amount?
-        var amount = Parser.ReadNumber(context.Index, context);
+        var amount = Parser.ReadNumber(context.Index, ref context.Actor.Instruction);
         if (amount <= 0)
             return true;
 
@@ -879,8 +878,6 @@ public sealed class Engine : IEngine, IDisposable
     }
 
     public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
-
-    private IOopContextPool OopContextPool { get; }
 
     public IParser Parser { get; }
 
@@ -1187,7 +1184,7 @@ public sealed class Engine : IEngine, IDisposable
         var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
 
         SpawnActor(new Location(0, 0), new Tile(ElementList.MessengerId, 0), 1, State.DefaultActor);
-        Actors[State.ActorCount].P2 = duration / (State.GameWaitTime + 1);
+        Actors[State.ActorCount].P2 = unchecked((byte)(duration / (State.GameWaitTime + 1)));
         State.Message = topMessage;
         State.Message2 = bottomMessage;
     }
@@ -1269,7 +1266,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             SpawnActor(target, new Tile(id, ElementList[id].Color), 1, State.DefaultActor);
             var actor = Actors[State.ActorCount];
-            actor.P1 = enemyOwned ? 1 : 0;
+            actor.P1 = unchecked((byte)(enemyOwned ? 1 : 0));
             actor.Vector = vector;
             actor.P2 = 0x64;
             return true;
@@ -1521,9 +1518,9 @@ public sealed class Engine : IEngine, IDisposable
         ShowHighScores();
     }
 
-    private void ExecuteMessage(IOopContext context)
+    private void ExecuteMessage(ref OopContext context)
     {
-        var result = Features.ExecuteMessage(context);
+        var result = Features.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Label: not null })
             context.NextLine = BroadcastLabel(context.Index, result.Label, false);
     }
@@ -1774,21 +1771,21 @@ public sealed class Engine : IEngine, IDisposable
         return gameIsActive;
     }
 
-    private int ReadActorCodeByte(int index, IExecutable instructionSource)
+    private int ReadActorCodeByte(int index, ref Word instruction)
     {
         var actor = Actors[index];
         var value = 0;
 
-        if (instructionSource.Instruction < 0 || instructionSource.Instruction >= actor.Length)
+        if (instruction < 0 || instruction >= actor.Length)
         {
             State.OopByte = 0;
         }
         else
         {
             Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
-            value = actor.Code[instructionSource.Instruction];
+            value = actor.Code[instruction];
             State.OopByte = value;
-            instructionSource.Instruction++;
+            instruction++;
         }
 
         return value;

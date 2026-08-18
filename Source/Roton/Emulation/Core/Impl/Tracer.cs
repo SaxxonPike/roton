@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
@@ -25,14 +24,14 @@ namespace Roton.Emulation.Core.Impl
                 writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
 
-        public void TraceOop(IOopContext oopContext)
+        public void TraceOop(ref OopContext oopContext, ref Word instruction)
         {
             if (_writers.Count == 0)
                 return;
             
             var code = oopContext.Actor.Code;
-            var offset = oopContext.Instruction;
-            var end = oopContext.Instruction;
+            var offset = instruction;
+            var end = instruction;
 
             if (code == null)
                 return;

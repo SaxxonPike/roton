@@ -14,7 +14,7 @@ public interface IFeatures
     void EnterBoard();
     bool HandleTitleInput();
     void ShowInGameHelp();
-    IScrollState ExecuteMessage(IOopContext context);
+    IScrollState ExecuteMessage(ref OopContext context);
     void HandlePlayerInput(IActor actor);
     bool CanPutTile(Location location);
     void ClearForest(Location location);
@@ -26,7 +26,7 @@ public interface IFeatures
     void CleanUpPauseMovement();
     string OpenWorld();
     string RestoreWorld();
-    void CleanUpOop(IOopContext context);
+    void CleanUpOop(ref OopContext context);
     int GetColorMatchValue(int color);
     void NotifyActorSentLabel(int index);
     string GetSaveName(string baseName);

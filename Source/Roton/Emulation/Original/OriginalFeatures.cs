@@ -42,9 +42,9 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         Engine.UpdateStatus();
     }
 
-    public IScrollState ExecuteMessage(IOopContext context)
+    public IScrollState ExecuteMessage(ref OopContext context)
     {
-        if (context.Message.Count == 1)
+        if (context.Message is { Count: 1 })
         {
             Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message));
             return null;
@@ -162,7 +162,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         return Engine.ShowLoad("Saved Games", "sav");
     }
 
-    public void CleanUpOop(IOopContext context)
+    public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;
         Engine.Harm(context.Index);

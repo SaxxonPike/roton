@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -11,12 +10,12 @@ public sealed class CharCommand(IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(IOopContext context)
+    public void Execute(ref OopContext context, ref Word instruction)
     {
-        var value = Engine.Parser.ReadNumber(context.Index, context);
+        var value = Engine.Parser.ReadNumber(context.Index, ref instruction);
         if (value >= 0)
         {
-            context.Actor.P1 = value;
+            context.Actor.P1 = unchecked((byte)value);
             Engine.UpdateBoard(context.Actor.Location);
         }
     }
