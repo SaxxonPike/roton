@@ -75,7 +75,7 @@ public interface IEngine
     void Push(Location location, Vector vector);
     void PushThroughTransporter(Location location, Vector vector);
     void PutTile(Location location, Vector vector, Tile kind);
-    void RaiseError(string error);
+    void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
     void ReadInput();
     void RemoveActor(int index);
     void RemoveItem(Location location);

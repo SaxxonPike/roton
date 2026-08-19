@@ -32,6 +32,6 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
         }
 
         if (!success)
-            Engine.RaiseError("Bad #CHANGE");
+            Engine.RaiseError(ref context, "Bad #CHANGE");
     }
 }

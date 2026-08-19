@@ -26,6 +26,6 @@ public sealed class PutCommand(IEngineAccessor engine) : ICommand
         }
 
         if (!success)
-            Engine.RaiseError("Bad #PUT");
+            Engine.RaiseError(ref context, "Bad #PUT");
     }
 }

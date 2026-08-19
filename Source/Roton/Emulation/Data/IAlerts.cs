@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface IAlerts
 {
@@ -34,7 +36,7 @@ public interface IAlerts
 
     IMessage DoorLockedMessage(int color);
     IMessage DoorOpenMessage(int color);
-    IMessage ErrorMessage(string error);
+    IMessage ErrorMessage(ReadOnlySpan<char> error);
     IMessage KeyAlreadyMessage(int color);
     IMessage KeyPickupMessage(int color);
 

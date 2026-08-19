@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data.Impl;
+﻿using System;
+
+namespace Roton.Emulation.Data.Impl;
 
 public abstract class Alerts : IAlerts
 {
@@ -33,7 +35,7 @@ public abstract class Alerts : IAlerts
     public abstract bool TorchPickup { get; set; }
     public abstract IMessage DoorLockedMessage(int color);
     public abstract IMessage DoorOpenMessage(int color);
-    public abstract IMessage ErrorMessage(string error);
+    public abstract IMessage ErrorMessage(ReadOnlySpan<char> error);
     public abstract IMessage KeyAlreadyMessage(int color);
     public abstract IMessage KeyPickupMessage(int color);
 

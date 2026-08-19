@@ -14,7 +14,7 @@ public sealed class BecomeCommand(IEngineAccessor engine) : ICommand
     {
         if (!Engine.Parser.TryEvalKind(ref context, ref instruction, out var val))
         {
-            Engine.RaiseError("Bad #BECOME");
+            Engine.RaiseError(ref context, "Bad #BECOME");
             return;
         }
 

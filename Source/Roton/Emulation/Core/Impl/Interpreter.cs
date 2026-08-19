@@ -48,10 +48,8 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             {
                 if (!Engine.BroadcastLabel(context.Index, name, false))
                 {
-                    if (name.IndexOf(':') < 0)
-                    {
-                        Engine.RaiseError($"Bad command {name.ToString()}");
-                    }
+                    if (name.IndexOf(':') < 0) 
+                        Engine.RaiseError(ref context, $"Bad command {name.ToString()}");
                 }
                 else
                 {

@@ -98,7 +98,7 @@ public sealed class Engine : IEngine, IDisposable
     {
         if (_ticksToRun < 3)
             _ticksToRun++;
-        
+
         if (!State.GamePaused)
             _boardTimeHsec += Config.MasterClockNumerator * 100f / Config.MasterClockDenominator;
 
@@ -482,7 +482,7 @@ public sealed class Engine : IEngine, IDisposable
 
                     if (!Parser.TryEvalDirection(ref context, ref instruction, out var vector))
                     {
-                        RaiseError("Bad direction");
+                        RaiseError(ref context, "Bad direction");
                         break;
                     }
 
@@ -1037,10 +1037,11 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void RaiseError(string error)
+    public void RaiseError(ref OopContext context, ReadOnlySpan<char> error)
     {
         SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
         PlaySound(5, Sounds.Error);
+        Tracer.TraceError(ref context, error);
     }
 
     public IRandomizer Random { get; }
