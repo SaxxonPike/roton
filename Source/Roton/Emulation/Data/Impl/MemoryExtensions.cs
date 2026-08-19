@@ -39,11 +39,6 @@ public static class MemoryExtensions
 
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int FastRead16(int offset) =>
-            BinaryPrimitives.ReadInt16LittleEndian(memory.Data.Slice(offset));
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int Read16(int offset)
         {
             var span = memory.Data;
