@@ -34,7 +34,7 @@ public sealed class ConditionList : IConditionList
 #endif
     }
 
-    public ICondition Get(ReadOnlySpan<char> name)
+    public ICondition? Get(ReadOnlySpan<char> name)
     {
 #if NET10_0_OR_GREATER
         return _conditions.TryGetValue(name, out var value) ? value : null;

@@ -26,13 +26,13 @@ public interface IHud
     bool QuitEngineConfirmation();
     void RedrawBoard();
     string SaveGame();
-    int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText);
+    int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string? barText);
     IScrollState ShowHelp(string title, string fileName);
-    IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines);
+    IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines);
     void UpdateBorder();
     void UpdateCamera();
     void UpdateStatus();
     void CreateStatusWorld();
-    string EnterHighScore(IHighScoreList highScoreList, int score);
+    string? EnterHighScore(IHighScoreList highScoreList, int score);
     void ShowHighScores(IHighScoreList highScoreList);
 }

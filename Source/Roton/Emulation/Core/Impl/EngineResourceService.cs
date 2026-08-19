@@ -13,14 +13,19 @@ public abstract class EngineResourceService(
 {
     private readonly Lazy<IResource> _resource = new(assemblyResourceService.GetFromAssemblyOf<IEngine>);
 
-    private IResource Resource => _resource.Value;
+    private IResource Resource =>
+        _resource.Value;
 
-    public byte[] GetElementData() => Resource.System.GetFile(elementFileName);
+    public ReadOnlySpan<byte> GetElementData() =>
+        Resource.System.GetFile(elementFileName);
 
-    public byte[] GetMemoryData() => Resource.System.GetFile(memoryFileName);
+    public ReadOnlySpan<byte> GetMemoryData() =>
+        Resource.System.GetFile(memoryFileName);
 
-    public IDictionary<string, byte[]> GetStaticFiles()
+    public IDictionary<string, ReadOnlyMemory<byte>> GetStaticFiles()
         => Resource.Root
             .GetFileNames(string.Empty)
-            .ToDictionary(f => f, f => Resource.Root.GetFile(f));
+            .Select(f => (Name: f, Data: Resource.Root.GetFile(f)))
+            .Where(f => f.Data != null)
+            .ToDictionary(f => f.Name, f => (ReadOnlyMemory<byte>)f.Data);
 }

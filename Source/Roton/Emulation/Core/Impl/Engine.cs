@@ -94,7 +94,7 @@ public sealed class Engine : IEngine, IDisposable
         _engineAccessor = engineAccessor;
     }
 
-    private void ClockTick(object sender, EventArgs args)
+    private void ClockTick(object? sender, EventArgs args)
     {
         if (_ticksToRun < 3)
             _ticksToRun++;
@@ -138,7 +138,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public ITracer Tracer { get; }
 
-    private Thread Thread { get; set; }
+    private Thread? Thread { get; set; }
 
     public bool ThreadActive => Thread != null || _step;
 
@@ -154,7 +154,7 @@ public sealed class Engine : IEngine, IDisposable
 
         if (!string.IsNullOrEmpty(cheatText))
         {
-            if (cheatText[0] == '-')
+            if (cheatText![0] == '-')
             {
                 cheatText = cheatText.Substring(1);
                 while (World.Flags.Contains(cheatText))
@@ -202,8 +202,8 @@ public sealed class Engine : IEngine, IDisposable
     public int ActorIndexAt(Location location) =>
         Actors.ActorIndexAt(location);
 
-    public event EventHandler Exited;
-    public event EventHandler Tick;
+    public event EventHandler? Exited;
+    public event EventHandler? Tick;
 
     public IActors Actors { get; }
 
@@ -595,7 +595,7 @@ public sealed class Engine : IEngine, IDisposable
             State.OopNumber = -State.OopNumber;
 
         // Determine if the result will be in range.
-        var pendingAmount = item.Value + State.OopNumber;
+        var pendingAmount = item!.Value + State.OopNumber;
         if ((pendingAmount & 0xFFFF) >= 0x8000)
             return true;
 
@@ -716,19 +716,6 @@ public sealed class Engine : IEngine, IDisposable
 
     public bool LoadWorld(string name, bool savedGame)
     {
-        byte[] TryLoadWorld()
-        {
-            try
-            {
-                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
-            }
-            catch (IOException e)
-            {
-                ShowFormattedScroll(e.ToString());
-                return [];
-            }
-        }
-
         var worldData = TryLoadWorld();
 
         if (worldData == null || worldData.Length == 0)
@@ -772,6 +759,19 @@ public sealed class Engine : IEngine, IDisposable
         UnpackBoard(World.BoardIndex);
         State.WorldLoaded = true;
         return true;
+
+        byte[]? TryLoadWorld()
+        {
+            try
+            {
+                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
+            }
+            catch (IOException e)
+            {
+                ShowFormattedScroll(e.ToString());
+                return [];
+            }
+        }
     }
 
     private void ShowDosError()
@@ -1199,7 +1199,7 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return;
 
-        LoadWorld(name, false);
+        LoadWorld(name!, false);
         State.StartBoard = World.BoardIndex;
         SetBoard(0);
 
@@ -1215,7 +1215,7 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return false;
 
-        if (!LoadWorld(name, true))
+        if (!LoadWorld(name!, true))
             return false;
 
         State.StartBoard = World.BoardIndex;
@@ -1224,14 +1224,14 @@ public sealed class Engine : IEngine, IDisposable
         return true;
     }
 
-    public string ShowLoad(string title, string extension)
+    public string? ShowLoad(string title, string extension)
     {
         return _fileDialog.Open(title, extension);
     }
 
     public ISounds Sounds { get; }
 
-    public void SpawnActor(Location location, Tile tile, int cycle, IActor source)
+    public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
         // must reserve one actor for player, and one for messenger
         if (State.ActorCount < Actors.Capacity - 2)
@@ -1738,7 +1738,7 @@ public sealed class Engine : IEngine, IDisposable
     {
         // bit of a hack to make sure we don't go out of bounds
         while (Boards.Count <= boardIndex)
-            Boards.Add(null);
+            Boards.Add(new PackedBoard([]));
 
         State.BoardCount = Boards.Count - 1;
         Boards[World.BoardIndex] = board;
@@ -1789,8 +1789,7 @@ public sealed class Engine : IEngine, IDisposable
         }
         else
         {
-            Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
-            value = actor.Code[instruction];
+            value = actor.Code?[instruction] ?? 0;
             State.OopByte = value;
             instruction++;
         }
@@ -1870,9 +1869,11 @@ public sealed class Engine : IEngine, IDisposable
         {
             if (!string.IsNullOrEmpty(cfg.WorldName))
             {
-                State.DefaultWorldName = cfg.WorldName.StartsWith("*")
-                    ? cfg.WorldName.Substring(1)
-                    : cfg.WorldName;
+                State.DefaultWorldName = (
+                    cfg.WorldName?.StartsWith("*") ?? false
+                        ? cfg.WorldName.Substring(1)
+                        : cfg.WorldName
+                ) ?? string.Empty;
             }
         }
 

@@ -16,7 +16,7 @@ public sealed class Clock(IConfig config) : IClock
     private bool _running;
     private bool _initialized;
 
-    public event EventHandler OnTick;
+    public event EventHandler? OnTick;
 
     public void Start()
     {

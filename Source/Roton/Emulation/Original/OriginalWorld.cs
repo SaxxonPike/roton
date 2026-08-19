@@ -43,5 +43,5 @@ public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags
 
     public int WorldType => -1;
 
-    public override string ToString() => Name ?? base.ToString();
+    public override string ToString() => Name;
 }

@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Core;
+﻿using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
@@ -8,18 +9,18 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalElementList : ElementList
 {
-    private readonly byte[] _data;
+    private readonly Memory<byte> _data;
     private readonly IMemory _memory;
 
     public OriginalElementList(IMemory memory, IEngineResourceService engineResourceService)
         : base(54)
     {
         _memory = memory;
-        _data = engineResourceService.GetElementData();
+        _data = engineResourceService.GetElementData().ToArray();
         Reset();
     }
 
-    public override void Reset() => _memory.Write(0x4AD4, _data);
+    public override void Reset() => _memory.Write(0x4AD4, _data.Span);
 
     public override int AmmoId => 0x05;
     public override int BearId => 0x22;

@@ -80,7 +80,7 @@ public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigF
         return output.ToString().ToBytes();
     }
 
-    public IConfigFile Load()
+    public IConfigFile? Load()
     {
         var file = FileSystem.GetFile(ConfigFileName);
         if (file != null)

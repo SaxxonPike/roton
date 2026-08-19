@@ -12,7 +12,7 @@ namespace Roton.Emulation.Data.Impl;
 /// </typeparam>
 public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
 {
-    private Func<int, T> _getter;
+    private Func<int, T>? _getter;
 
     /// <summary>
     /// Index of the first item in the list. Used for enumeration.
@@ -95,5 +95,5 @@ public abstract class FixedList<T> : IList<T>, IReadOnlyList<T>
     }
 
     protected virtual bool EqualsItem(int index, T value) =>
-        GetItem(index).GetHashCode() == value.GetHashCode();
+        GetItem(index)?.GetHashCode() == value?.GetHashCode();
 }

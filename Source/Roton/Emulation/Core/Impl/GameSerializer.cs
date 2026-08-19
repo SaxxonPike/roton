@@ -114,7 +114,7 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
         for (var i = 0; i <= count; i++)
         {
             var actor = new Actor(mem, Heap, ActorDataOffset + ActorDataLength * i);
-            byte[] code = null;
+            byte[]? code = null;
 
             if (actor.Pointer != 0)
             {

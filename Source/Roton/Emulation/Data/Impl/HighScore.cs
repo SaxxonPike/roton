@@ -6,6 +6,6 @@ public sealed class HighScore : IHighScore
     {
     }
         
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int Score { get; set; }
 }

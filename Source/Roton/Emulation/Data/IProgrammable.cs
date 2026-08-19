@@ -2,5 +2,5 @@
 
 public interface IProgrammable
 {
-    byte[] Code { get; set; }
+    byte[]? Code { get; set; }
 }

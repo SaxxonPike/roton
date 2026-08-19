@@ -19,7 +19,7 @@ public sealed class FileDialog(IHud hud, IFileSystem fileSystem) : IFileDialog
         [DebuggerStepThrough] get => fileSystem;
     }
 
-    public string Open(string title, string extension)
+    public string? Open(string title, string extension)
     {
         var path = string.Empty;
         while (true)

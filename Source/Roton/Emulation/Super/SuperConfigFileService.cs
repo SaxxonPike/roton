@@ -7,7 +7,7 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperConfigFileService : IConfigFileService
 {
-    public IConfigFile Load()
+    public IConfigFile? Load()
     {
         return null;
     }

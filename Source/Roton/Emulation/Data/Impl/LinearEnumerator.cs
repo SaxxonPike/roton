@@ -13,7 +13,7 @@ public struct LinearEnumerator<T>(Func<int, T> getter, int count, int firstIndex
     {
     }
 
-    object IEnumerator.Current => Current;
+    object IEnumerator.Current => Current!;
 
     public bool MoveNext()
     {

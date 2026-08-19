@@ -8,7 +8,7 @@ public interface IGlyphComposer
     /// <summary>
     /// Render a glyph bitmap.
     /// </summary>
-    IGlyph ComposeGlyph(int index);
+    IGlyph? ComposeGlyph(int index);
 
     int MaxWidth { get; }
 

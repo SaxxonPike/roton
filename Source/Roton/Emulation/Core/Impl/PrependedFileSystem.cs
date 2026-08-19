@@ -9,7 +9,7 @@ public sealed class PrependedFileSystem(IFileSystem baseFileSystem, string baseP
     public bool FileExists(string path)
         => baseFileSystem.FileExists(basePath + path);
 
-    public byte[] GetFile(string path) 
+    public byte[]? GetFile(string path) 
         => baseFileSystem.GetFile(basePath + path);
 
     public IEnumerable<string> GetFileNames(string path) 

@@ -4,5 +4,5 @@ namespace Roton.Emulation.Commands;
 
 public interface ICommandList
 {
-    ICommand Get(ReadOnlySpan<char> name);
+    ICommand? Get(ReadOnlySpan<char> name);
 }

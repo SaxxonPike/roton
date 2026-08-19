@@ -6,6 +6,7 @@ namespace Roton.Emulation.Data.Impl;
 
 public ref struct OopContext(IEngineAccessor engine)
 {
+    private List<string>? _message;
     private readonly IEngine _engine = engine.Instance;
 
     public IActor Actor => _engine.Actors[Index];
@@ -22,11 +23,9 @@ public ref struct OopContext(IEngineAccessor engine)
 
     public int Index;
 
-    public List<string> Message { get; set; }
-
     public bool Moved;
 
-    public string Name;
+    public string? Name;
 
     public bool NextLine;
 
@@ -42,9 +41,11 @@ public ref struct OopContext(IEngineAccessor engine)
 
     public void AddMessage(ReadOnlySpan<char> message)
     {
-        Message ??= [];
-        Message.Add(message.ToString());
+        _message ??= [];
+        _message.Add(message.ToString());
     }
 
-    public bool HasMessage => Message != null;
+    public bool HasMessage => _message != null;
+
+    public IReadOnlyList<string> GetMessage() => _message ?? [];
 }

@@ -35,7 +35,7 @@ public sealed class CheatList : ICheatList
 #endif
     }
 
-    public ICheat Get(ReadOnlySpan<char> name)
+    public ICheat? Get(ReadOnlySpan<char> name)
     {
 #if NET10_0_OR_GREATER
         return _cheats.TryGetValue(name, out var value) ? value : null;

@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 namespace Roton.Emulation.Core;
 
 public interface IEngineResourceService
 {
-    byte[] GetElementData();
-    byte[] GetMemoryData();
-    IDictionary<string, byte[]> GetStaticFiles();
+    ReadOnlySpan<byte> GetElementData();
+    ReadOnlySpan<byte> GetMemoryData();
+    IDictionary<string, ReadOnlyMemory<byte>> GetStaticFiles();
 }

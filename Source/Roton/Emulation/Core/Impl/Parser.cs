@@ -81,7 +81,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         }
         else
         {
-            value = actor.Code[instruction];
+            value = actor.Code?[instruction] ?? 0;
             Engine.State.OopByte = value;
             instruction++;
         }
@@ -213,7 +213,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return true;
     }
 
-    public bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem result)
+    public bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem? result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var name = ReadWord(oopContext.Index, ref instruction, buffer);
@@ -249,6 +249,6 @@ public sealed class Parser(IEngineAccessor engine) : IParser
     {
         context.Index++;
         var target = Engine.TargetList.Get(term) ?? Engine.TargetList.Get(string.Empty);
-        return target.Execute(index, ref context, term);
+        return target?.Execute(index, ref context, term) ?? false;
     }
 }

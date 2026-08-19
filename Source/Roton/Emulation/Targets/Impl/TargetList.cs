@@ -34,7 +34,7 @@ public sealed class TargetList : ITargetList
 #endif
     }
 
-    public ITarget Get(ReadOnlySpan<char> name)
+    public ITarget? Get(ReadOnlySpan<char> name)
     {
 #if NET10_0_OR_GREATER
         return _targets.TryGetValue(name, out var value) ? value : null;

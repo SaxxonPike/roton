@@ -44,7 +44,7 @@ public sealed class ZipFileSystem : IFileSystem
         return archive.Entries.Any(e => e.FullName.Equals(path));
     }
 
-    public byte[] GetFile(string filename)
+    public byte[]? GetFile(string filename)
     {
         using var archiveStream = new MemoryStream(_file);
         using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);

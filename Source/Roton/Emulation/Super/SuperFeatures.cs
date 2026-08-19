@@ -105,25 +105,27 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         Engine.BroadcastLabel(0, Engine.Facts.HintLabel, false);
     }
 
-    public IScrollState ExecuteMessage(ref OopContext context)
+    public IScrollState? ExecuteMessage(ref OopContext context)
     {
         if (!context.HasMessage)
             return null;
 
-        switch (context.Message.Count)
+        var message = context.GetMessage();
+
+        switch (message.Count)
         {
             case 1:
-                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(string.Empty, context.Message[0]));
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(string.Empty, message[0]));
                 return null;
             case 2:
                 Engine.SetMessage(Engine.Facts.LongMessageDuration,
-                    new Message(context.Message[0], context.Message[1]));
+                    new Message(message[0], message[1]));
                 return null;
             case 0:
                 return null;
             default:
                 Engine.State.KeyVector = Vector.Idle;
-                return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
+                return Engine.Hud.ShowScroll(false, context.Name, [.. message]);
         }
     }
 
@@ -163,15 +165,11 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         }
     }
 
-    public string OpenWorld()
-    {
-        return Engine.ShowLoad("Super ZZT Worlds", "szt");
-    }
+    public string? OpenWorld() => 
+        Engine.ShowLoad("Super ZZT Worlds", "szt");
 
-    public string RestoreWorld()
-    {
-        return Engine.ShowLoad("Saved Games", "sav");
-    }
+    public string? RestoreWorld() => 
+        Engine.ShowLoad("Saved Games", "sav");
 
     public void CleanUpOop(ref OopContext context)
     {

@@ -41,7 +41,7 @@ public sealed class Actor : IActor
 
     public ref Word Instruction => ref _memory.GetRef<Word>(Offset + 0x15);
 
-    public byte[] Code
+    public byte[]? Code
     {
         get => _heap[Pointer];
         set { }

@@ -49,7 +49,7 @@ public struct Location : IEquatable<Location>
     public bool IsNonZero() => X != 0 || Y != 0;
     public bool IsZero() => X == 0 && Y == 0;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is Location other)
             return Equals(other);

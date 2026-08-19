@@ -37,9 +37,10 @@ public sealed class Heap : IHeap
         _nextEntry = 1;
     }
 
-    public byte[] this[int index] => Entries.ContainsKey(index)
-        ? Entries[index]
-        : null;
+    public byte[]? this[int index] =>
+        Entries.ContainsKey(index)
+            ? Entries[index]
+            : null;
 
     private bool Contains(int index) => Entries.ContainsKey(index);
 

@@ -121,7 +121,7 @@ public sealed class OriginalState : IState
         set => Memory.WriteString(0x456E, value);
     }
 
-    public string Message2 { get; set; }
+    public string Message2 { get; set; } = string.Empty;
 
     public ref HWord OopByte => ref Memory.GetRef<HWord>(0x740E);
 

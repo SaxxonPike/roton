@@ -93,7 +93,7 @@ internal static class Utility
     public static char ToUpperCase(this char input) =>
         unchecked((char)((int)input).ToUpperCase());
 
-    extension(string a)
+    extension(string? a)
     {
         /// <summary>
         /// Compares source string to another string, with the source UpperCased.
@@ -157,7 +157,7 @@ internal static class Utility
             if (string.IsNullOrEmpty(a))
                 return [];
             
-            var result = new byte[a.Length];
+            var result = new byte[a!.Length];
             Cp437.CharsToBytes(a, result);
             return result;
         }
@@ -178,8 +178,11 @@ internal static class Utility
         /// Convert a byte array to a string using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public string UpCased()
+        public string? UpCased()
         {
+            if (a == null)
+                return null;
+
 #if NET10_0_OR_GREATER
             return string.Create(a.Length, a, static (span, s) =>
             {

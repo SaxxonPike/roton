@@ -38,22 +38,23 @@ public sealed class DiskFileSystem(string basePath) : IFileSystem
         //    1) Directory names are ignored. Those are assumed to be specified
         //       correctly.
         //    2) If an exact file match is found, use that.
-        //    3) If the file list contains an inexact match (i.e. the case doesn't
+        //    3) If the file list contains an inexact match (i.e., the case doesn't
         //       match), use the first one it comes across.
         //    4) If a match could not be found, return the string that the function
         //       called with. It's the responsibility of the calling function to
         //       handle the error.
             
         // Rule #2:
-        if(File.Exists(path)) return path;
-            
+        if(File.Exists(path))
+            return path;
+
         // Rule #3:
         var directory = Path.GetDirectoryName(path) ?? ".";
-        var filename = Path.GetFileName(path)?.ToLower();
+        var filename = Path.GetFileName(path).ToLower();
 
         var fileList = Directory.GetFiles(directory);
         foreach(var file in fileList.Select(Path.GetFileName)) {
-            if(file.ToLower() == filename)
+            if(filename.Equals(file, StringComparison.OrdinalIgnoreCase))
                 return Path.Combine(directory, file);
         }
 

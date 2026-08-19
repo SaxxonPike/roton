@@ -40,7 +40,7 @@ public readonly struct Word(int value) : IEquatable<Word>, IEquatable<int>, IEqu
     public bool Equals(short other) =>
         Value == other;
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         obj is Word other && Equals(other);
 
     public override int GetHashCode() =>

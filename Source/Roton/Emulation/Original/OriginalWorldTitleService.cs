@@ -7,9 +7,8 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 public sealed class OriginalWorldTitleService : IWorldTitleService
 {
-    public string GetTitle(string fileName)
-    {
-        return fileName.ToUpperInvariant() switch
+    public string? GetTitle(string? fileName) =>
+        fileName?.ToUpperInvariant() switch
         {
             "TOWN" => "The Town of ZZT",
             "DEMO" => "Demo of the ZZT World Editor",
@@ -20,5 +19,4 @@ public sealed class OriginalWorldTitleService : IWorldTitleService
             "DUNGEONS" => "The Dungeons of ZZT",
             _ => null
         };
-    }
 }

@@ -215,7 +215,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             line++;
         }
 
-        RenderName(title, message, offset);
+        RenderName(title ?? "", message, offset);
     }
 
     private void RenderDots(int y)
@@ -342,10 +342,10 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         return state;
     }
         
-    public IScrollState Show(string title, IEnumerable<string> message, bool isHelp, int index) 
+    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index) 
         => Show(title, message, isHelp, index, ShowLoop);
 
-    public IScrollState Show(string title, IEnumerable<string> message, bool isHelp, int index, Action<IScrollState> mainLoop)
+    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index, Action<IScrollState> mainLoop)
     {
         var state = new ScrollState
         {

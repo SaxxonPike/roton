@@ -4,9 +4,12 @@ namespace Roton.Composers.Video.Glyphs.Impl;
 
 public sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX, int scaleY) : IGlyphComposer
 {
-    public IGlyph ComposeGlyph(int index)
+    public IGlyph? ComposeGlyph(int index)
     {
         var glyph = glyphComposer.ComposeGlyph(index);
+        if (glyph == null)
+            return null;
+        
         var scaledXScan = glyph.Data.SelectMany(pixel => Enumerable.Repeat(pixel, scaleX));
         var scaledY = scaledXScan.SelectMany(scan => Enumerable.Repeat(scan, scaleY));
         return new Glyph(index, glyph.Width * scaleX, glyph.Height * scaleY, scaledY);

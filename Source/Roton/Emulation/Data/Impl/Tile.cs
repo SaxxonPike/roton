@@ -38,7 +38,7 @@ public struct Tile : IEquatable<Tile>
     public bool Equals(Tile other) => 
         _id == other._id && _color == other._color;
 
-    public override bool Equals(object obj) => 
+    public override bool Equals(object? obj) => 
         obj is Tile other && Equals(other);
 
     public override int GetHashCode()

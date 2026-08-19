@@ -47,18 +47,18 @@ public interface IParser
     /// Reads an item name from the script.
     /// </summary>
     /// <param name="oopContext">
-    /// Execution context.
+    ///     Execution context.
     /// </param>
     /// <param name="instruction">
-    /// Instruction pointer.
+    ///     Instruction pointer.
     /// </param>
     /// <param name="result">
-    /// A reference to the item value.
+    ///     A reference to the item value.
     /// </param>
     /// <returns>
     /// True if the item was successfully parsed, false otherwise.
     /// </returns>
-    bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem result);
+    bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem? result);
 
     /// <summary>
     /// Reads an optional color and a mandatory element name from the script.

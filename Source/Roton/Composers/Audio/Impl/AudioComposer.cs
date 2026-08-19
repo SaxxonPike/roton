@@ -7,20 +7,20 @@ namespace Roton.Composers.Audio.Impl;
 
 public sealed class AudioComposer : IAudioComposer
 {
-    public event EventHandler<AudioComposerDataEventArgs> BufferReady;
+    public event EventHandler<AudioComposerDataEventArgs>? BufferReady;
 
     private const long AccumulatorMultiplier = 10000;
 
     private readonly IDrumBank _drumBank;
     private readonly IConfig _config;
     private readonly int _samplesPerDrumFrequency;
-    private long[] _frequencyDutyCycleTable;
+    private long[]? _frequencyDutyCycleTable;
     private long _accumulatorLimit;
 
     private int _drumSoundSamplesRemaining;
     private int _drumSoundFrequenciesRemaining;
     private int _drumSoundFrequencyIndex;
-    private IDrumSound _currentDrumSound;
+    private IDrumSound? _currentDrumSound;
     private long _accumulatorAmount;
     private bool _generating;
     private bool _dutyLevel;
@@ -73,8 +73,8 @@ public sealed class AudioComposer : IAudioComposer
 
                     _drumSoundFrequenciesRemaining--;
                     _drumSoundFrequencyIndex++;
-                    _accumulatorAmount =
-                        _currentDrumSound[_drumSoundFrequencyIndex] * AccumulatorMultiplier * 2;
+                    _accumulatorAmount = (_currentDrumSound?[_drumSoundFrequencyIndex] ?? 0) *
+                                         AccumulatorMultiplier * 2;
                     _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
                 }
             }
@@ -110,7 +110,7 @@ public sealed class AudioComposer : IAudioComposer
     public void PlayNote(int note)
     {
         _drumSoundSamplesRemaining = 0;
-        _accumulatorAmount = _frequencyDutyCycleTable[note];
+        _accumulatorAmount = _frequencyDutyCycleTable?[note] ?? 0;
         _toneAccumulator = 0;
         _generating = true;
     }
