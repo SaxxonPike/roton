@@ -28,7 +28,7 @@ public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
 
             while (context.Search.Offset >= 0)
             {
-                Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = 0x3A;
+                Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
                 var word = Engine.State.GetOopWord(wordBuffer);
                 context.Search.Offset = Engine.Parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }

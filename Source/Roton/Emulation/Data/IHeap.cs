@@ -1,9 +1,11 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface IHeap
 {
-    byte[]? this[int index] { get; }
+    Memory<char> this[int index] { get; }
     int Size { get; }
-    int Allocate(byte[] data);
+    int Allocate(ReadOnlySpan<char> data);
     void FreeAll();
 }

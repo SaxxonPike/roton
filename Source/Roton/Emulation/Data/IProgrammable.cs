@@ -4,5 +4,5 @@ namespace Roton.Emulation.Data;
 
 public interface IProgrammable
 {
-    Memory<byte> Code { get; set; }
+    Memory<char> Code { get; set; }
 }

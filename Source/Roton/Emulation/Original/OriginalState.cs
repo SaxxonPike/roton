@@ -119,7 +119,7 @@ public sealed class OriginalState : IState
 
     public string Message2 { get; set; } = string.Empty;
 
-    public ref HWord OopByte => ref Memory.GetRef<HWord>(0x740E);
+    public ref PChar OopByte => ref Memory.GetRef<PChar>(0x740E);
 
     public ref Word OopNumber => ref Memory.GetRef<Word>(0x7426);
 

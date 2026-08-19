@@ -99,15 +99,15 @@ public interface IParser
     /// Reads the next byte from the script into OopByte.
     /// </summary>
     /// <param name="index">
-    /// Index of the actor that contains the script.
+    ///     Index of the actor that contains the script.
     /// </param>
     /// <param name="instruction">
-    /// Instruction counter.
+    ///     Instruction counter.
     /// </param>
     /// <returns>
     /// The byte that was read or -1 if unsuccessful.
     /// </returns>
-    int ReadByte(int index, ref Word instruction);
+    char ReadByte(int index, ref Word instruction);
 
     /// <summary>
     /// Reads the next line from the script into a temporary buffer.

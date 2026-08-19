@@ -18,14 +18,11 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
     public int Search(int index, ReadOnlySpan<char> term)
     {
-        Span<byte> termBytes = stackalloc byte[byte.MaxValue];
-
         var result = -1;
         if (term.IsEmpty)
             return result;
 
         var termLength = term.Length;
-        term.ToBytes(termBytes);
         var actor = Engine.Actors[index];
         var offs = new Word();
 
@@ -38,7 +35,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             while (true)
             {
                 ReadByte(index, ref offs);
-                if (termBytes[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpperCase())
+                if (term[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpper())
                 {
                     success = false;
                     break;
@@ -55,7 +52,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             if (success)
             {
                 ReadByte(index, ref offs);
-                Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+                Engine.State.OopByte = Engine.State.OopByte.ToUpper();
                 if ((int)Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
                 {
                     result = oldOffset;
@@ -70,14 +67,14 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         return result;
     }
 
-    public int ReadByte(int index, ref Word instruction)
+    public char ReadByte(int index, ref Word instruction)
     {
         var actor = Engine.Actors[index];
-        var value = 0;
+        var value = '\0';
 
         if (instruction < 0 || instruction >= actor.Length)
         {
-            Engine.State.OopByte = 0;
+            Engine.State.OopByte = default;
         }
         else
         {
@@ -98,7 +95,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
         {
             if (length < buffer.Length)
-                buffer[length++] = Engine.State.OopByte.ToChar();
+                buffer[length++] = Engine.State.OopByte;
             ReadByte(index, ref instruction);
         }
 
@@ -114,7 +111,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         {
         }
 
-        Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+        Engine.State.OopByte = Engine.State.OopByte.ToUpper();
         while ((int)Engine.State.OopByte is >= 0x30 and <= 0x39)
         {
             success = true;
@@ -158,7 +155,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             }
         }
 
-        Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+        Engine.State.OopByte = Engine.State.OopByte.ToUpper();
         var oopByte = Engine.State.OopByte;
 
         if ((int)oopByte is not (>= 0x30 and <= 0x39))
@@ -166,9 +163,9 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             while ((int)oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
             {
                 if (length < buffer.Length)
-                    buffer[length++] = oopByte.ToChar();
+                    buffer[length++] = oopByte;
                 ReadByte(index, ref instruction);
-                Engine.State.OopByte = Engine.State.OopByte.ToUpperCase();
+                Engine.State.OopByte = Engine.State.OopByte.ToUpper();
                 oopByte = Engine.State.OopByte;
             }
         }

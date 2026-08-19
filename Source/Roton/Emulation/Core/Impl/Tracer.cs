@@ -43,7 +43,7 @@ namespace Roton.Emulation.Core.Impl
                 end++;
             }
 
-            var line = code.Slice(offset, end - offset).ToStringValue();
+            var line = code.Slice(offset, end - offset).ToString();
             foreach (var writer in _writers)
                 writer.WriteLine($"{_stepNumber:D8}:{context.Index:D3} TRACE OOP  [{context.Actor}] {line}");
         }

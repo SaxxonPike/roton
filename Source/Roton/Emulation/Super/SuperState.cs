@@ -124,7 +124,7 @@ public sealed class SuperState : IState
         set => Memory.WriteString(0x7C60, value);
     }
 
-    public ref HWord OopByte => ref Memory.GetRef<HWord>(0xB962);
+    public ref PChar OopByte => ref Memory.GetRef<PChar>(0xB962);
 
     public ref Word OopNumber => ref Memory.GetRef<Word>(0xB97A);
 

@@ -1777,11 +1777,11 @@ public sealed class Engine : IEngine, IDisposable
     private int ReadActorCodeByte(int index, ref Word instruction)
     {
         var actor = Actors[index];
-        var value = 0;
+        var value = (char)0;
 
         if (instruction < 0 || instruction >= actor.Length)
         {
-            State.OopByte = 0;
+            State.OopByte = default;
         }
         else
         {

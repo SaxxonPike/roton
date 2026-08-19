@@ -45,7 +45,7 @@ public interface IState
     ref Bool KeyShift { get; }
     string Message { get; set; }
     string Message2 { get; set; }
-    ref HWord OopByte { get; }
+    ref PChar OopByte { get; }
     ref Word OopNumber { get; }
     //string OopWord { get; set; }
     ref Word PlayerElement { get; }

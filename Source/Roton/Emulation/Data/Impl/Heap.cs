@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Data.Impl;
@@ -9,25 +11,24 @@ namespace Roton.Emulation.Data.Impl;
 [Context(Context.Super)]
 public sealed class Heap : IHeap
 {
-    private int _nextEntry;
+    private int _nextEntry = 1;
 
-    public Heap()
+    private IDictionary<int, Memory<char>> Entries { get; } = new Dictionary<int, Memory<char>>();
+
+    public int Size => Entries.Where(e => !e.Value.IsEmpty).Sum(e => e.Value.Length);
+
+    public int Allocate(ReadOnlySpan<char> data)
     {
-        Entries = new Dictionary<int, byte[]>();
-        SetNextEntry();
-    }
+        var allocated = new char[data.Length];
+        data.CopyTo(allocated);
 
-    private IDictionary<int, byte[]> Entries { get; }
+        int index;
 
-    public int Size => Entries.Where(e => e.Value != null).Sum(e => e.Value.Length);
+        while (Entries.ContainsKey(index = Interlocked.Increment(ref _nextEntry)))
+        {
+        }
 
-    public int Allocate(byte[] data)
-    {
-        var dataCopy = new byte[data.Length];
-        Buffer.BlockCopy(data, 0, dataCopy, 0, dataCopy.Length);
-        var index = _nextEntry;
-        Entries[index] = dataCopy;
-        SetNextEntry();
+        Entries[_nextEntry] = allocated;
         return index;
     }
 
@@ -37,18 +38,10 @@ public sealed class Heap : IHeap
         _nextEntry = 1;
     }
 
-    public byte[]? this[int index] =>
+    public Memory<char> this[int index] =>
         Entries.ContainsKey(index)
             ? Entries[index]
             : null;
 
     private bool Contains(int index) => Entries.ContainsKey(index);
-
-    private void SetNextEntry()
-    {
-        while (_nextEntry == 0 || Contains(_nextEntry))
-        {
-            _nextEntry++;
-        }
-    }
 }

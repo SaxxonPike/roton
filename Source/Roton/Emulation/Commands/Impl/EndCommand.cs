@@ -12,7 +12,7 @@ public sealed class EndCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Engine.State.OopByte = 0;
+        Engine.State.OopByte = default;
         instruction = -1;
     }
 }

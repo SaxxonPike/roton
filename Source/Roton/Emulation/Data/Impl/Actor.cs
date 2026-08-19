@@ -41,7 +41,7 @@ public sealed class Actor : IActor
 
     public ref Word Instruction => ref _memory.GetRef<Word>(Offset + 0x15);
 
-    public Memory<byte> Code
+    public Memory<char> Code
     {
         get => _heap[Pointer];
         set { }
@@ -49,7 +49,7 @@ public sealed class Actor : IActor
 
     public override string ToString()
     {
-        var name = string.Empty;
+        var name = ReadOnlySpan<char>.Empty;
         var data = Code.Span;
 
         if (!data.IsEmpty)
@@ -62,16 +62,15 @@ public sealed class Actor : IActor
                 {
                     if (data[i] == 0x0D)
                     {
-                        name = data.Slice(1, i - 1).ToStringValue();
+                        name = data.Slice(1, i - 1);
                         break;
                     }
                 }
             }
 
-            name = string.IsNullOrWhiteSpace(name) ? string.Empty : $" {name}";
+            name = name.IsEmpty ? string.Empty : $" {name.ToString()}";
         }
 
-        name = Location + name;
-        return name;
+        return $"{Location}{name.ToString()}";
     }
 }

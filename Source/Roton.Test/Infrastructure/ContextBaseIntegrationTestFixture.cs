@@ -92,7 +92,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
                 continue;
 
             TestContext.Out.WriteLine($"Actor {i} code:");
-            var code = actor.Code.Span.ToStringValue();
+            var code = actor.Code.ToString();
             var reader = new StringReader(code);
             while (true)
             {
@@ -197,10 +197,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected void SetActorCode(int index, params string[] code)
     {
-        var codeBytes = string.Join(new string('\xD', 1), code).ToBytes();
-        var pointer = Heap.Allocate(codeBytes);
+        var codeBlock = string.Join(new string('\xD', 1), code);
+        var pointer = Heap.Allocate(codeBlock);
         Actors[index].Pointer = pointer;
-        Actors[index].Length = codeBytes.Length;
+        Actors[index].Length = codeBlock.Length;
     }
 
     protected ref Tile TileAt(int x, int y) =>
