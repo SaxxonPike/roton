@@ -184,7 +184,7 @@ internal static class Utility
             var j = 0;
 
             if (a.IsEmpty)
-                return false;
+                return b.IsEmpty;
 
             while (i < a.Length)
             {
