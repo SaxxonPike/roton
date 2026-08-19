@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using DotSDL.Audio;
 using Roton;
@@ -50,8 +51,8 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
             }
 
             var count = Math.Min(_buffer.Count, e.Length);
-            var samples = _buffer.Take(count).ToArray();
-            Buffer.BlockCopy(samples, 0, e.Samples[Channel.Mono], 0, count * 8);
+            var samples = CollectionsMarshal.AsSpan(_buffer)[..count];
+            samples.CopyTo(e.Samples[Channel.Mono]);
             _buffer.RemoveRange(0, count);
         }
     }
