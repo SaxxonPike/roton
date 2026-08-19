@@ -480,14 +480,13 @@ public sealed class Engine : IEngine, IDisposable
                     if (context.Command == 0x2F)
                         context.Repeat = true;
 
-                    var vector = Parser.GetDirection(ref context, ref instruction);
-                    if (vector == null)
+                    if (!Parser.TryEvalDirection(ref context, ref instruction, out var vector))
                     {
                         RaiseError("Bad direction");
                         break;
                     }
 
-                    ObjectMover.ExecuteDirection(ref context, vector.Value);
+                    ObjectMover.ExecuteDirection(ref context, vector);
 
                     ReadActorCodeByte(index, ref instruction);
                     if (State.OopByte != 0x0D)
@@ -535,7 +534,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         var label = term;
         var success = false;
         var split = label.IndexOf(':');
@@ -545,7 +544,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             target = label.Slice(0, split);
             label = label.Slice(split + 1);
-            success = Parser.GetTarget(sender, ref search, target);
+            success = Parser.TryEvalTarget(sender, ref search, target);
         }
         else if (search.Index < sender)
         {
@@ -568,7 +567,7 @@ public sealed class Engine : IEngine, IDisposable
                 search.Offset = Parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {
-                    success = Parser.GetTarget(sender, ref search, target);
+                    success = Parser.TryEvalTarget(sender, ref search, target);
                     continue;
                 }
             }
@@ -583,8 +582,7 @@ public sealed class Engine : IEngine, IDisposable
     public bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take)
     {
         // Does the item exist?
-        var item = Parser.GetItem(ref context, ref instruction);
-        if (item == null)
+        if (!Parser.TryEvalItem(ref context, ref instruction, out var item))
             return false;
 
         // Do we have a valid amount?

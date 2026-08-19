@@ -8,11 +8,5 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super, "GEMS")]
 public sealed class GemsItem(IEngineAccessor engine) : IItem
 {
-    private IEngine Engine => engine.Instance;
-
-    public int Value
-    {
-        get => Engine.World.Gems;
-        set => Engine.World.Gems = value;
-    }
+    public ref Word Value => ref engine.Instance.World.Gems;
 }

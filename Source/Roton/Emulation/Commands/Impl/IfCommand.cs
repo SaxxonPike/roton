@@ -12,9 +12,7 @@ public sealed class IfCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var condition = Engine.Parser.GetCondition(ref context, ref instruction);
-            
-        if (condition.HasValue)
-            context.Resume = condition.Value;
+        if (Engine.Parser.TryEvalCondition(ref context, ref instruction, out var result))
+            context.Resume = result;
     }
 }

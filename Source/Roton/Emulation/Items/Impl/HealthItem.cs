@@ -8,11 +8,5 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super, "HEALTH")]
 public sealed class HealthItem(IEngineAccessor engine) : IItem
 {
-    private IEngine Engine => engine.Instance;
-
-    public int Value
-    {
-        get => Engine.World.Health;
-        set => Engine.World.Health = value;
-    }
+    public ref Word Value => ref engine.Instance.World.Health;
 }

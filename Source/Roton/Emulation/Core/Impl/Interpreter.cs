@@ -21,7 +21,7 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         var firstLine = true;
 
         while (true)

@@ -12,10 +12,7 @@ public sealed class WalkCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
-        if (vector is {} vec)
-        {
+        if (Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec)) 
             context.Actor.Vector = vec;
-        }
     }
 }

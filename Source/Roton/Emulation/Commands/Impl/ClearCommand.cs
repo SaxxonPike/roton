@@ -13,7 +13,7 @@ public sealed class ClearCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         var flag = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
         Engine.World.Flags.Remove(flag);
     }

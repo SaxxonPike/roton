@@ -12,8 +12,7 @@ public sealed class AnyCondition(IEngineAccessor engine) : ICondition
 
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        var kind = Engine.Parser.GetKind(ref context, ref instruction);
-        if (kind is not { } val)
+        if (!Engine.Parser.TryEvalKind(ref context, ref instruction, out var val))
             return null;
 
         return Engine.FindTile(val, new Location(0, 1));

@@ -1,6 +1,8 @@
+using Roton.Emulation.Data.Impl;
+
 namespace Roton.Emulation.Items;
 
 public interface IItem
 {
-    int Value { get; set; }
+    ref Word Value { get; }
 }

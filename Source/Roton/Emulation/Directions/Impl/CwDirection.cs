@@ -11,5 +11,7 @@ public sealed class CwDirection(IEngineAccessor engine) : IDirection
     private IEngine Engine => engine.Instance;
 
     public Vector Execute(ref OopContext context, ref Word instruction) => 
-        (Engine.Parser.GetDirection(ref context, ref instruction) ?? Vector.Idle).Clockwise();
+        Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec)
+            ? vec.Clockwise()
+            : Vector.Idle;
 }

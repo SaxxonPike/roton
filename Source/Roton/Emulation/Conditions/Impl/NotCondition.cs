@@ -10,8 +10,8 @@ public sealed class NotCondition(IEngineAccessor engine) : ICondition
 {
     private IEngine Engine => engine.Instance;
 
-    public bool? Execute(ref OopContext context, ref Word instruction)
-    {
-        return !Engine.Parser.GetCondition(ref context, ref instruction);
-    }
+    public bool? Execute(ref OopContext context, ref Word instruction) =>
+        Engine.Parser.TryEvalCondition(ref context, ref instruction, out var result)
+            ? !result
+            : null;
 }

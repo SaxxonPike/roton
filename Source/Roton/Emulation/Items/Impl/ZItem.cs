@@ -7,11 +7,5 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super, "Z")]
 public sealed class ZItem(IEngineAccessor engine) : IItem
 {
-    private IEngine Engine => engine.Instance;
-
-    public int Value
-    {
-        get => Engine.World.Stones;
-        set => Engine.World.Stones = value;
-    }
+    public ref Word Value => ref engine.Instance.World.Stones;
 }

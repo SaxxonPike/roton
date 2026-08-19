@@ -13,7 +13,7 @@ public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         buffer[0] = '\r';
         buffer[1] = '\'';
         var wordBuffer = buffer.Slice(2);

@@ -12,8 +12,7 @@ public sealed class BlockedCondition(IEngineAccessor engine) : ICondition
 
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        var direction = Engine.Parser.GetDirection(ref context, ref instruction);
-        if (direction is not {} val)
+        if (!Engine.Parser.TryEvalDirection(ref context, ref instruction, out var val))
             return null;
 
         return !Engine.ElementAt(context.Actor.Location + val).IsFloor;

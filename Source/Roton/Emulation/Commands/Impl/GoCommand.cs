@@ -12,23 +12,22 @@ public sealed class GoCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
-        if (vector is {} vec)
+        if (!Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
+            return;
+
+        var target = context.Actor.Location + vec;
+
+        if (!Engine.Tiles.ElementAt(target).IsFloor)
+            Engine.Push(target, vec);
+
+        if (Engine.Tiles.ElementAt(target).IsFloor)
         {
-            var target = context.Actor.Location + vec;
-            if (!Engine.Tiles.ElementAt(target).IsFloor)
-            {
-                Engine.Push(target, vec);
-            }
-            if (Engine.Tiles.ElementAt(target).IsFloor)
-            {
-                Engine.MoveActor(context.Index, target);
-                context.Moved = true;
-            }
-            else
-            {
-                context.Repeat = true;
-            }
+            Engine.MoveActor(context.Index, target);
+            context.Moved = true;
+        }
+        else
+        {
+            context.Repeat = true;
         }
     }
 }

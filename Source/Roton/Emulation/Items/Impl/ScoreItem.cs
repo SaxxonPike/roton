@@ -8,11 +8,5 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super, "SCORE")]
 public sealed class ScoreItem(IEngineAccessor engine) : IItem
 {
-    private IEngine Engine => engine.Instance;
-
-    public int Value
-    {
-        get => Engine.World.Score;
-        set => Engine.World.Score = value;
-    }
+    public ref Word Value => ref engine.Instance.World.Score;
 }
