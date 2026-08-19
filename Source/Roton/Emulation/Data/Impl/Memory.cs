@@ -10,7 +10,7 @@ namespace Roton.Emulation.Data.Impl;
 [DebuggerStepThrough]
 public sealed class Memory : IMemory
 {
-    private readonly byte[] _data = new byte[0x10000];
+    private readonly Memory<byte> _data = new byte[0x10000];
 
     public byte[] Dump()
     {
@@ -23,6 +23,6 @@ public sealed class Memory : IMemory
     {
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-        get => _data;
+        get => _data.Span;
     }
 }

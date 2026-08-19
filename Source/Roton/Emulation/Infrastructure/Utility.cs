@@ -91,7 +91,11 @@ internal static class Utility
     [DebuggerStepThrough]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToUpperCase(this char input) =>
-        unchecked((char)((int)input).ToUpperCase());
+        input switch
+        {
+            >= 'a' and <= 'z' => unchecked((char)(input - 0x20)),
+            _ => input
+        };
 
     extension(string? a)
     {

@@ -180,11 +180,8 @@ public static class MemoryExtensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void WriteBool(int offset, bool value)
         {
-            unchecked
-            {
-                var span = memory.Data;
-                span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
-            }
+            var span = memory.Data;
+            span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
         }
 
         [DebuggerStepThrough]

@@ -24,7 +24,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
         var termLength = term.Length;
         var actor = Engine.Actors[index];
-        var offs = new Word();
+        Word offs = default;
 
         while (offs < actor.Length)
         {
