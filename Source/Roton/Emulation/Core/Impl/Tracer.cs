@@ -29,11 +29,11 @@ namespace Roton.Emulation.Core.Impl
             if (_writers.Count == 0)
                 return;
 
-            var code = context.Actor.Code;
+            var code = context.Actor.Code.Span;
             var offset = instruction;
             var end = instruction;
 
-            if (code == null)
+            if (code.IsEmpty)
                 return;
 
             while (end < code.Length)
@@ -43,7 +43,7 @@ namespace Roton.Emulation.Core.Impl
                 end++;
             }
 
-            var line = code.Skip(offset).Take(end - offset).ToArray().ToStringValue();
+            var line = code.Slice(offset, end - offset).ToStringValue();
             foreach (var writer in _writers)
                 writer.WriteLine($"{_stepNumber:D8}:{context.Index:D3} TRACE OOP  [{context.Actor}] {line}");
         }

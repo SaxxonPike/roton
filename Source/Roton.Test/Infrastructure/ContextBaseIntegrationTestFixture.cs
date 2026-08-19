@@ -92,7 +92,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
                 continue;
 
             TestContext.Out.WriteLine($"Actor {i} code:");
-            var code = actor.Code.ToStringValue();
+            var code = actor.Code.Span.ToStringValue();
             var reader = new StringReader(code);
             while (true)
             {

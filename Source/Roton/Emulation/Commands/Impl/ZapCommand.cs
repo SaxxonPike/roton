@@ -25,7 +25,7 @@ public sealed class ZapCommand(IEngineAccessor engine) : ICommand
             if (!result)
                 break;
 
-            Engine.Actors[context.Search.Index].Code?[context.Search.Offset + 1] = 0x27;
+            Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = 0x27;
         }
     }
 }

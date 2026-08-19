@@ -81,7 +81,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         }
         else
         {
-            value = actor.Code?[instruction] ?? 0;
+            value = actor.Code.Span[instruction];
             Engine.State.OopByte = value;
             instruction++;
         }
