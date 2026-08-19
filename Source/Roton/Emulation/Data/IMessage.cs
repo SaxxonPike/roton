@@ -1,6 +1,8 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System.Collections.Generic;
+
+namespace Roton.Emulation.Data;
 
 public interface IMessage
 {
-    string[] Text { get; }
+    IReadOnlyList<string> Text { get; }
 }

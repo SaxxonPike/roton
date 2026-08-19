@@ -1181,7 +1181,7 @@ public sealed class Engine : IEngine, IDisposable
         }
 
         var topMessage = message.Text[0];
-        var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
+        var bottomMessage = message.Text.Count > 1 ? message.Text[1] : string.Empty;
 
         SpawnActor(new Location(0, 0), new Tile(ElementList.MessengerId, 0), 1, State.DefaultActor);
         Actors[State.ActorCount].P2 = unchecked((byte)(duration / (State.GameWaitTime + 1)));
