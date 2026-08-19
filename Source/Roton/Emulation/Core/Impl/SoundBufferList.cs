@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -50,7 +49,7 @@ public sealed class SoundBufferList : FixedList<int>, ISoundBufferList
     {
         var remaining = Memory.Read8(_offset);
         if (remaining <= 0)
-            throw new Exception("No notes available in queue!");
+            throw new RotonException("No notes available in queue!");
             
         var result = new SoundNote
         {

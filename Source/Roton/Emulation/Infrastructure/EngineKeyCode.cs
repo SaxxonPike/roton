@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace Roton.Emulation.Infrastructure;
 
+[PublicAPI]
 public enum EngineKeyCode : byte
 {
     None = 0x00,

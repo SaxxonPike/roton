@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -739,7 +738,7 @@ public sealed class Engine : IEngine, IDisposable
 
             var numBoards = reader.ReadInt16();
             if (numBoards < 0)
-                throw new Exception("Board count must be zero or greater.");
+                throw new RotonException("Board count must be zero or greater.");
 
             State.BoardCount = numBoards;
             GameSerializer.LoadWorld(stream);
@@ -1544,9 +1543,6 @@ public sealed class Engine : IEngine, IDisposable
     private void InitializeElements(bool showInvisibles)
     {
         ElementList.Reset();
-
-        // this isn't all the initializations.
-        // todo: replace this with the ability to completely reinitialize engine default memory
         ElementList.Invisible().Character = showInvisibles ? 0xB0 : 0x20;
         ElementList.Invisible().Color = 0xFF;
         ElementList.Player().Character = 0x02;
@@ -1801,12 +1797,12 @@ public sealed class Engine : IEngine, IDisposable
 
     private EngineKeyCode ConvertKey(IKeyPress keyPress)
     {
-        var bytes = AnsiKeyTransformer.GetBytes(keyPress)?.ToList();
+        var bytes = AnsiKeyTransformer.GetBytes(keyPress);
 
-        if (bytes == null || bytes.Count == 0)
+        if (bytes.IsEmpty)
             return EngineKeyCode.None;
 
-        if (bytes.Count > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
+        if (bytes.Length > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
             return (EngineKeyCode)(bytes[1] | 0x80);
 
         return (EngineKeyCode)bytes[0];

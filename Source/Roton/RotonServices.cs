@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton;
@@ -34,8 +33,8 @@ public static class RotonServices
         var assemblies = additionalAssemblies.Concat([typeof(RotonServices).Assembly]).Distinct();
 
         // Fetch all types decorated with ContextAttribute.
-        var metadataFactory = new ContextMetadataServiceFactory();
-        var types = contexts.SelectMany(c => assemblies.SelectMany(a => metadataFactory.Get(c).GetTypes(a)));
+        var types = contexts.SelectMany(c => assemblies
+            .SelectMany(a => ContextMetadataServiceFactory.GetForContext(c).GetTypes(a)));
 
         // Convert them to a RotonService map.
         var registrations = types.SelectMany(tc =>

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -16,13 +15,14 @@ public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigF
 
     private IFileSystem FileSystem => fileSystem;
 
-    private IConfigFile Decode(byte[] data)
+    private static ConfigFile Decode(byte[] data)
     {
         var buffer = Enumerable.Range(0, 8).Select(_ => string.Empty).ToArray();
         var lines = data
             .ToStringValue()
-            .Replace("\xD\xA", "\xD")
-            .Split('\xD');
+            .Replace("\r\n", "\r")
+            .Split('\r');
+
         Array.Copy(buffer, lines, Math.Min(buffer.Length, lines.Length));
 
         if (lines.Length >= 4 && int.TryParse(buffer[0], out var value0))
@@ -52,7 +52,7 @@ public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigF
         };
     }
 
-    private byte[] Encode(IConfigFile configFile)
+    private static byte[] Encode(IConfigFile configFile)
     {
         var output = new StringBuilder();
 
@@ -83,9 +83,7 @@ public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigF
     public IConfigFile? Load()
     {
         var file = FileSystem.GetFile(ConfigFileName);
-        if (file != null)
-            return Decode(file);
-        return null;
+        return file != null ? Decode(file) : null;
     }
 
     public void Save(IConfigFile configFile)

@@ -1,17 +1,32 @@
 using System;
-using Roton.Emulation.Data.Impl;
+using System.Collections.Generic;
 
 namespace Roton.Infrastructure.Impl;
 
 [Context(Context.Startup)]
 public sealed class ContextEngineSelector : IContextEngineSelector
 {
-    public Context Get(string filename)
+    private static readonly Dictionary<string, Context> ContextMap = new()
     {
-        if (filename == null || filename.EndsWith(".zzt", StringComparison.OrdinalIgnoreCase))
-            return Context.Original;
-        if (filename.EndsWith(".szt", StringComparison.OrdinalIgnoreCase))
-            return Context.Super;
-        throw new Exception("Unrecognized file extension");
+        { ".zzt", Context.Original },
+        { ".szt", Context.Super }
+    };
+
+    public bool TryGetForWorldFileName(string filename, out Context context)
+    {
+        if (filename == null)
+            throw new ArgumentNullException(nameof(filename));
+
+        foreach (var kv in ContextMap)
+        {
+            if (!filename.EndsWith(kv.Key, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            context = kv.Value;
+            return true;
+        }
+
+        context = Context.Unknown;
+        return false;
     }
 }

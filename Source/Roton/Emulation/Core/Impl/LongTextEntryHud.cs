@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
@@ -84,7 +85,7 @@ public sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEntry
         RenderLine(y + 5, ScrollCharsBottom);
         Terminal.Write(titleX, y + 1, title, pipColor);
 
-        var result = TextEntryHud.Show(x + 7, y + 3, maxLength, textColor, pipColor);
+        var result = TextEntryHud.Show(x + 7, y + 3, maxLength, textColor, pipColor, ReadOnlySpan<char>.Empty);
             
         RestoreBuffer(buffer, x, y, width, height);
         return result;

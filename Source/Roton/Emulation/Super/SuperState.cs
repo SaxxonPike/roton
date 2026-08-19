@@ -17,7 +17,6 @@ public sealed class SuperState : IState
     private Tile _borderTile;
     private Bool _cancelScroll;
     private Bool _init;
-    private Word _playerTime;
 
     public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
     {
@@ -129,15 +128,7 @@ public sealed class SuperState : IState
 
     public ref Word OopNumber => ref Memory.GetRef<Word>(0xB97A);
 
-    public string OopWord
-    {
-        get => Memory.ReadString(0xB964);
-        set => Memory.WriteString(0xB964, value);
-    }
-
     public ref Word PlayerElement => ref Memory.GetRef<Word>(0x7CA0);
-
-    public ref Word PlayerTime => ref _playerTime;
 
     public ref Bool QuitEngine => ref Memory.GetRef<Bool>(0x7C9D);
 

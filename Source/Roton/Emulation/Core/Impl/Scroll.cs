@@ -114,7 +114,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         var x = Left + Width / 2 - title.Length / 2;
         Terminal.Write(x, Top + 1, title, 0x1E);
 
-        // Avoid putting these directly in the string for unicode conversion reasons
+        // Avoid putting these directly in the string for Unicode conversion reasons
         if (pips)
         {
             Terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
@@ -327,7 +327,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         
     public IScrollState Show(string title, string fileName)
     {
-        var state = new ScrollState
+        var state = new ScrollState(Engine.State)
         {
             Index = 0,
             Label = null,
@@ -347,7 +347,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
 
     public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index, Action<IScrollState> mainLoop)
     {
-        var state = new ScrollState
+        var state = new ScrollState(Engine.State)
         {
             Index = index,
             Label = null,

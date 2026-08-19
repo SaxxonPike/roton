@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roton.Emulation.Core.Impl;
+﻿namespace Roton.Emulation.Core.Impl;
 
 public sealed class Resource : IResource
 {
@@ -9,7 +7,7 @@ public sealed class Resource : IResource
     public Resource(byte[] data)
     {
         if (data == null || data.Length == 0)
-            throw new Exception("Can\'t resolve resource.");
+            throw new RotonException("Can't resolve resource.");
         _data = data;
     }
         

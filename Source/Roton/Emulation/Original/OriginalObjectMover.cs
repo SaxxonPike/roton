@@ -18,14 +18,15 @@ public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
         else
         {
             var target = context.Actor.Location + vector;
-            if (!Engine.ElementAt(target).IsFloor) 
+
+            if (!Engine.ElementAt(target).IsFloor)
                 Engine.Push(target, vector);
 
-            if (Engine.ElementAt(target).IsFloor)
-            {
-                Engine.MoveActor(context.Index, target);
-                context.Repeat = false;
-            }
+            if (!Engine.ElementAt(target).IsFloor)
+                return;
+
+            Engine.MoveActor(context.Index, target);
+            context.Repeat = false;
         }
     }
 }

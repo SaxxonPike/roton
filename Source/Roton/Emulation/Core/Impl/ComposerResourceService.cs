@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 

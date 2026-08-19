@@ -294,7 +294,7 @@ public sealed class OriginalHud : Hud
     {
         DrawStatusLine(4);
         DrawStatusLine(5);
-        var cheat = TextEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F);
+        var cheat = TextEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F, ReadOnlySpan<char>.Empty);
         DrawStatusLine(4);
         DrawStatusLine(5);
         return cheat;
@@ -326,11 +326,11 @@ public sealed class OriginalHud : Hud
                 nameList.Add($"{score,5}  -- You! --");
             }
 
-            if (!string.IsNullOrEmpty(hs.Name))
-            {
-                nameList.Add($"{hs.Score,5}  {hs.Name}");
-                nameIndex++;                    
-            }
+            if (string.IsNullOrEmpty(hs.Name))
+                continue;
+
+            nameList.Add($"{hs.Score,5}  {hs.Name}");
+            nameIndex++;
         }
 
         if (index >= 0)
@@ -368,7 +368,7 @@ public sealed class OriginalHud : Hud
     {
         DrawString(65, 3, "Save game:", 0x1F);
         DrawString(71, 5, ".SAV", 0x0F);
-        var result = TextEntryHud.Show(63, 4, 8, 0x0F, 0x1F);
+        var result = TextEntryHud.Show(63, 4, 8, 0x0F, 0x1F, Engine.State.DefaultSaveName);
         DrawStatusLine(3);
         DrawStatusLine(5);
         return result;

@@ -1,12 +1,12 @@
 ﻿using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperGameSerializer(IMemory memory, IHeap heap) : GameSerializer(memory, heap)
+public sealed class SuperGameSerializer(IMemory memory, IHeap heap)
+    : GameSerializer(memory, heap)
 {
     public override int ActorCapacity => 129;
     public override int ActorDataCountOffset => 0x6AB3;

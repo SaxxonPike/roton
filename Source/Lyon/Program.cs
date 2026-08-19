@@ -23,9 +23,6 @@ public static class Program
         var fileName = args.TakeWhile(s => !s.StartsWith("--")).FirstOrDefault();
         var switches = args.SkipWhile(s => !s.StartsWith("--")).Select(s => s.ToLower()).ToArray();
 
-        if (fileName != null)
-            fileName = Path.GetFullPath(fileName);
-        
         var config = new Config
         {
             DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
@@ -43,14 +40,16 @@ public static class Program
             NoPesterMode = switches.Contains("--no-pester"),
         };
 
+        fileName ??= "TOWN.ZZT";
+        
         var selector = new ContextEngineSelector();
-        var contextEngine = selector.Get(fileName);
+        
+        if (!selector.TryGetForWorldFileName(fileName, out var contextEngine))
+            throw new Exception($"Cannot determine the format of the world file: {fileName}");
         
         // Super ZZT looks a little nicer with slightly taller graphics.
-        if (contextEngine == Context.Super)
-        {
+        if (contextEngine == Context.Super) 
             config.VideoScaleY *= 1.25f;
-        }
 
         var builder = new ContainerBuilder();
 
