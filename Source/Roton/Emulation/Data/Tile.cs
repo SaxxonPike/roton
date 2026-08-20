@@ -11,7 +11,7 @@ public struct Tile : IEquatable<Tile>
 
     private byte _id;
     private byte _color;
-    
+
     public Tile(int id, int color)
     {
         Id = id;
@@ -30,22 +30,15 @@ public struct Tile : IEquatable<Tile>
         set => _id = unchecked((byte)(value & 0xFF));
     }
 
-    public override string ToString()
-    {
-        return $"Id: {Id:x2}, Color: {Color:x2}";
-    }
+    public override string ToString() => 
+        $"{{ Id: {Id:X2}, Color: {Color:X2} }}";
 
-    public bool Equals(Tile other) => 
+    public bool Equals(Tile other) =>
         _id == other._id && _color == other._color;
 
-    public override bool Equals(object? obj) => 
+    public override bool Equals(object? obj) =>
         obj is Tile other && Equals(other);
 
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (_id.GetHashCode() * 397) ^ _color.GetHashCode();
-        }
-    }
+    public override int GetHashCode() =>
+        _id | (_color << 8);
 }
