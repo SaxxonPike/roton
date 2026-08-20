@@ -703,8 +703,18 @@ public sealed class Engine : IEngine, IDisposable
             RemoveActor(index);
         }
     }
-    
-    private int HsecToTicks(int hsec) => (hsec * Config.MasterClockDenominator / Config.MasterClockNumerator / 100) + 1;
+
+    /// <summary>
+    /// Converts hundredths of seconds to ticks.
+    /// </summary>
+    /// <param name="hsec">
+    /// Duration in hundredths of seconds.
+    /// </param>
+    /// <returns>
+    /// The equivalent number of ticks.
+    /// </returns>
+    private int HsecToTicks(int hsec) =>
+        Math.Max(1, hsec * (Config.MasterClockDenominator / Config.MasterClockNumerator + 50) / 100);
 
     public IHud Hud { get; }
 
@@ -1614,13 +1624,13 @@ public sealed class Engine : IEngine, IDisposable
                     State.KeyPressed = 0;
                 }
 
-                if (!State.KeyVector.IsZero() && State.KeyArrow)
+                if (!State.KeyVector.IsZero())
                 {
                     var target = Player.Location + State.KeyVector;
                     InteractionList.Get(ElementAt(target).Id).Interact(target, 0, ref State.KeyVector);
                 }
 
-                if (!State.KeyVector.IsZero() && State.KeyArrow)
+                if (!State.KeyVector.IsZero())
                 {
                     var target = Player.Location + State.KeyVector;
                     if (ElementAt(target).IsFloor)
@@ -1814,7 +1824,6 @@ public sealed class Engine : IEngine, IDisposable
     {
         var mod = Keyboard.GetMod();
         State.KeyShift = mod.HasFlag(KeyMod.Shift);
-        State.KeyArrow = false;
         State.KeyPressed = 0;
         State.KeyVector = new Vector(0, 0);
 
@@ -1831,21 +1840,20 @@ public sealed class Engine : IEngine, IDisposable
         {
             case EngineKeyCode.Left:
                 State.KeyVector = Vector.West;
-                State.KeyArrow = true;
                 break;
             case EngineKeyCode.Right:
                 State.KeyVector = Vector.East;
-                State.KeyArrow = true;
                 break;
             case EngineKeyCode.Up:
                 State.KeyVector = Vector.North;
-                State.KeyArrow = true;
                 break;
             case EngineKeyCode.Down:
                 State.KeyVector = Vector.South;
-                State.KeyArrow = true;
                 break;
         }
+
+        if (State.KeyVector.IsNonZero())
+            State.KeyLastVector = State.KeyVector;
     }
 
     private void ShowAbout() => Features.ShowAbout();

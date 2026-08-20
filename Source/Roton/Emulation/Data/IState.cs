@@ -12,6 +12,7 @@ public interface IState
     IActor DefaultActor { get; }
     ref Tile EdgeTile { get; }
     ref Vector KeyVector { get; }
+    ref Vector KeyLastVector { get; }
     IReadOnlyList<int> LineChars { get; }
     IReadOnlyList<string> ProgressAnimation { get; }
     IReadOnlyList<int> ProgressColors { get; }
@@ -40,14 +41,12 @@ public interface IState
     ref HWord GameSpeed { get; }
     ref Word GameWaitTime { get; }
     ref Bool Init { get; }
-    ref Bool KeyArrow { get; }
     ref EngineKeyCode KeyPressed { get; }
     ref Bool KeyShift { get; }
     string Message { get; set; }
     string Message2 { get; set; }
     ref PChar OopByte { get; }
     ref Word OopNumber { get; }
-    //string OopWord { get; set; }
     ref Word PlayerElement { get; }
     ref Bool QuitEngine { get; }
     ref Bool SoundPlaying { get; }

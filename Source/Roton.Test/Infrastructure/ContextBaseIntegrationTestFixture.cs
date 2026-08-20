@@ -129,7 +129,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         {
             // Fast mode is needed because otherwise WaitForTick will wait for a message
             // from a thread that doesn't run during testing, leading to infinite loops.
-            FastMode = true
+            FastMode = true,
+            // These need to be nonzero to prevent division by zero in HsecToTicks.
+            MasterClockNumerator = 1,
+            MasterClockDenominator = 1
         };
         Terminal = new TestTerminal();
         Keyboard = new TestKeyboard();
