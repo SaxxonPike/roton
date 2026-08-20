@@ -107,7 +107,7 @@ public sealed class SuperHud : Hud
             DrawString(0x00, 0x0A, "   Be Quiet ", 0x6E);
             DrawString(0x01, 0x0A, "B", 0x6F);
             DrawString(0x00, 0x0B, "   Quit     ", 0x6E);
-            DrawString(0x01, 0x0B, "B", 0x6F);
+            DrawString(0x01, 0x0B, "Q", 0x6F);
             DrawString(0x00, 0x0C, new string(0xDC.ToChar(), 12), 0x1D);
             DrawString(0x00, 0x0D, "   Status   ", 0x6F);
             DrawString(0x00, 0x0E, new string(0xDF.ToChar(), 12), 0x6D);
