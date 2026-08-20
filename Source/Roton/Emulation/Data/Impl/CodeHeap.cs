@@ -11,39 +11,40 @@ namespace Roton.Emulation.Data.Impl;
 public sealed class CodeHeap : ICodeHeap
 {
     private int _nextEntry = 1;
-    private readonly SortedDictionary<int, Memory<char>> _entries = [];
+    private readonly Memory<char>[] _entries = new Memory<char>[256];
 
-    public int Size => _entries.Where(e => !e.Value.IsEmpty).Sum(e => e.Value.Length);
+    public int Size => _entries.Where(e => !e.IsEmpty).Sum(e => e.Length);
 
     public int Allocate(ReadOnlySpan<char> data)
     {
         var allocated = new char[data.Length];
         data.CopyTo(allocated);
 
-        int index;
-
-        while (_entries.ContainsKey(index = Interlocked.Increment(ref _nextEntry)))
+        while (true)
         {
-        }
+            if (_nextEntry >= _entries.Length)
+                _nextEntry = 1;
 
-        _entries[_nextEntry] = allocated;
-        return index;
+            if (_entries[_nextEntry].IsEmpty)
+            {
+                _entries[_nextEntry] = allocated;
+                return _nextEntry++;
+            }
+        }
     }
 
     public void Free(int index) =>
-        _entries.Remove(index);
+        _entries[index] = default;
 
     public void FreeAll()
     {
-        _entries.Clear();
+        _entries.AsSpan().Clear();
         _nextEntry = 1;
     }
 
     public Memory<char> this[int index] =>
-        _entries.ContainsKey(index)
-            ? _entries[index]
-            : null;
+        _entries[index];
 
     private bool Contains(int index) =>
-        _entries.ContainsKey(index);
+        !_entries[index].IsEmpty;
 }
