@@ -54,7 +54,17 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
             Engine.State.GameOver = true;
         }
 
-        if ((Engine.State.KeyArrow && Engine.State.KeyShift) || Engine.State.KeyPressed == EngineKeyCode.Space)
+        // In the Original engine, the check for player shooting is a little more complex.
+        // In the Super engine, pressing Space is reinterpreted as Shift + Last Direction.
+        // We use the Super method here for simplicity.
+
+        if (Engine.State.KeyPressed == EngineKeyCode.Space)
+        {
+            Engine.State.KeyVector = Engine.State.KeyLastVector;
+            Engine.State.KeyShift = true;
+        }
+
+        if (Engine.State.KeyVector.IsNonZero() && Engine.State.KeyShift)
         {
             // Shooting logic
 

@@ -98,13 +98,13 @@ public sealed class SuperState : IState
 
     public ref Bool Init => ref _init;
 
-    public ref Bool KeyArrow => ref Memory.GetRef<Bool>(0xCC84);
-
     public ref EngineKeyCode KeyPressed => ref Memory.GetRef<EngineKeyCode>(0xCC76);
 
     public ref Bool KeyShift => ref Memory.GetRef<Bool>(0xCC72);
 
     public ref Vector KeyVector => ref Memory.GetRef<Vector>(0xCC6E);
+
+    public ref Vector KeyLastVector => ref Memory.GetRef<Vector>(0xCC8A);
 
     public IReadOnlyList<int> LineChars { get; }
 

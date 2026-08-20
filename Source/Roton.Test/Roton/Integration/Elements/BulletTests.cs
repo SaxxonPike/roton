@@ -199,4 +199,29 @@ public class BulletTests(Context context) : ElementTestFixture(context)
         Flags.AsEnumerable().Should().Contain(["F1"],
             "shot label was not invoked");
     }
+
+    [Test]
+    public void Bullet_ShouldBreakBreakableTile()
+    {
+        // Bullets that collide with breakable tiles will be destroyed but
+        // also destroy the target tile.
+
+        // Place the bullet and assign it a vector.
+        var bulletIndex = SpawnTo(5, 5, ElementList.BulletId);
+        var bullet = Actors[bulletIndex];
+        bullet.Vector = Vector.East;
+        bullet.Cycle = 1;
+
+        // Place the breakable wall in front of the bullet.
+        PlotTo(6, 5, ElementList.BreakableId);
+
+        // Wait for the bullet to collide with the object.
+        Step();
+
+        // Assert.
+        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+            "bullet should have been destroyed");
+        TileAt(6, 5).Id.Should().Be(ElementList.EmptyId,
+            "breakable tile should have been destroyed");
+    }
 }

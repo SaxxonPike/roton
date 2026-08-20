@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{ABB83496
 		..\publish.sh = ..\publish.sh
 		..\publish-win32.bat = ..\publish-win32.bat
 		..\README.md = ..\README.md
+		..\TIPS.md = ..\TIPS.md
 	EndProjectSection
 EndProject
 Global

@@ -97,13 +97,13 @@ public sealed class OriginalState : IState
 
     public ref Bool Init => ref Memory.GetRef<Bool>(0x7B60);
 
-    public ref Bool KeyArrow => ref Memory.GetRef<Bool>(0x7C7E);
-
     public ref EngineKeyCode KeyPressed => ref Memory.GetRef<EngineKeyCode>(0x7C70);
 
     public ref Bool KeyShift => ref Memory.GetRef<Bool>(0x7C6C);
 
     public ref Vector KeyVector => ref Memory.GetRef<Vector>(0x7C68);
+
+    public ref Vector KeyLastVector => ref Memory.GetRef<Vector>(0x7C84);
 
     public IReadOnlyList<int> LineChars { get; }
 

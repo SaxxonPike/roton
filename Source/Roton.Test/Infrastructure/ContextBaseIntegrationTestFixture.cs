@@ -129,7 +129,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         {
             // Fast mode is needed because otherwise WaitForTick will wait for a message
             // from a thread that doesn't run during testing, leading to infinite loops.
-            FastMode = true
+            FastMode = true,
+            // These need to be nonzero to prevent division by zero in HsecToTicks.
+            MasterClockNumerator = 1,
+            MasterClockDenominator = 1
         };
         Terminal = new TestTerminal();
         Keyboard = new TestKeyboard();
@@ -297,4 +300,14 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IKeyList Keys => Engine.World.Keys;
 
     protected bool GamePaused => Engine.State.GamePaused;
+
+    /// <summary>
+    /// Pass in ElementList IDs here. If the element is not present, the test will immediately
+    /// be considered a pass (as it cannot be tested but all is expected.)
+    /// </summary>
+    protected void RequireElement(int elementId)
+    {
+        if (elementId < 0)
+            Assert.Pass("Element does not exist in this context.");
+    }
 }

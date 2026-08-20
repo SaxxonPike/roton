@@ -452,6 +452,51 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     }
 
     [Test]
+    public void Player_ShouldBeAbleToShootWithSpaceBar()
+    {
+        // The player can shoot after having moved a direction.
+        // One thing to note about the assertion: you might think that
+        // the bullet should spawn one tile away. It does, but because
+        // it comes later in the actor list, it is immediately processed
+        // and moved one more tile in its current vector.
+
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Give the player some ammo.
+        Ammo = 10;
+
+        // Face the player to the right and shoot.
+        Type(AnsiKey.Right);
+        Type(AnsiKey.Space);
+        StepAllKeys();
+
+        // Assert.
+        TileAt(Player.Location.X + 2, 10).Id.Should().Be(ElementList.BulletId,
+            "bullet should have been spawned");
+    }
+
+    [Test]
+    public void Player_ShouldBeAbleToShootWithShift()
+    {
+        // The player can shoot if pressing a direction and shift at the same time.
+
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Give the player some ammo.
+        Ammo = 10;
+
+        // Face the player to the right and shoot.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+
+        // Assert.
+        TileAt(Player.Location.X + 2, 10).Id.Should().Be(ElementList.BulletId,
+            "bullet should have been spawned");
+    }
+
+    [Test]
     public void Player_ShouldBeAbleToShootEnemiesPointBlank()
     {
         // Place the player.
