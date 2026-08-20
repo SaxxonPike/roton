@@ -300,4 +300,14 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IKeyList Keys => Engine.World.Keys;
 
     protected bool GamePaused => Engine.State.GamePaused;
+
+    /// <summary>
+    /// Pass in ElementList IDs here. If the element is not present, the test will immediately
+    /// be considered a pass (as it cannot be tested but all is expected.)
+    /// </summary>
+    protected void RequireElement(int elementId)
+    {
+        if (elementId < 0)
+            Assert.Pass("Element does not exist in this context.");
+    }
 }
