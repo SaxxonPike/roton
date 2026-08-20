@@ -1,5 +1,5 @@
 using Roton.Emulation.Data;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Impl;
 

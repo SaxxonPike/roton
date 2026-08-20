@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Data.Impl;
-
-namespace Roton.Emulation.Data;
+﻿namespace Roton.Emulation.Data;
 
 public interface IActor : IProgrammable
 {

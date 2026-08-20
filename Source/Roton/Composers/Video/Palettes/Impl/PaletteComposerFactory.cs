@@ -1,6 +1,6 @@
 using System;
 using Roton.Emulation.Core;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Composers.Video.Palettes.Impl;
 

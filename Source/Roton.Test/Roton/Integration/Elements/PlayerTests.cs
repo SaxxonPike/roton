@@ -1,6 +1,7 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;

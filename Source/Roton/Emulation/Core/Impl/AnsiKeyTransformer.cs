@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 // Source: http://www.lagmonster.org/docs/DOS7/v-ansi-keys.html
@@ -114,7 +114,7 @@ public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
         {AnsiKey.Pause, new AnsiKeyMap([], [], [0, 0], [])}
     };
 
-    public ReadOnlySpan<byte> GetBytes(IKeyPress keyPress)
+    public ReadOnlySpan<byte> GetBytes(KeyPress keyPress)
     {
         var map = Map.TryGetValue(keyPress.Key, out var value) ? value : Map[AnsiKey.None];
         return keyPress.Mod.HasFlag(KeyMod.Shift) ? map.Shift :

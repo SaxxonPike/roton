@@ -45,17 +45,16 @@ public sealed class SoundBufferList : FixedList<int>, ISoundBufferList
         Memory.Write8(_offset, totalLength);
     }
 
-    public ISoundNote Dequeue()
+    public SoundNote Dequeue()
     {
         var remaining = Memory.Read8(_offset);
         if (remaining <= 0)
             throw new RotonException("No notes available in queue!");
             
-        var result = new SoundNote
-        {
-            Note = Memory.Read8(_offset + 1),
-            Duration = Memory.Read8(_offset + 2)
-        };
+        var result = new SoundNote(
+            note: Memory.Read8(_offset + 1),
+            duration: Memory.Read8(_offset + 2)
+        );
 
         remaining -= 2;
         Memory.Write8(_offset, remaining);

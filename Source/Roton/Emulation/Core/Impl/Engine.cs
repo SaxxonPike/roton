@@ -14,7 +14,7 @@ using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
@@ -1807,7 +1807,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private IAnsiKeyTransformer AnsiKeyTransformer { get; }
 
-    private EngineKeyCode ConvertKey(IKeyPress keyPress)
+    private EngineKeyCode ConvertKey(KeyPress keyPress)
     {
         var bytes = AnsiKeyTransformer.GetBytes(keyPress);
 
@@ -1831,10 +1831,10 @@ public sealed class Engine : IEngine, IDisposable
             return;
 
         var key = Keyboard.GetKey();
-        if (key == null || key.Key == AnsiKey.None)
+        if (key is not { } keyValue || keyValue.Key == AnsiKey.None)
             return;
 
-        State.KeyPressed = ConvertKey(key);
+        State.KeyPressed = ConvertKey(keyValue);
 
         switch (State.KeyPressed)
         {

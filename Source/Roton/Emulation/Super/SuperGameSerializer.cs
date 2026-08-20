@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Roton.Emulation.Infrastructure;
+﻿namespace Roton.Emulation.Infrastructure;
 
 public static class Exceptions
 {

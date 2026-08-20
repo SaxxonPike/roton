@@ -2,7 +2,9 @@
 using DotSDL.Events;
 using DotSDL.Input.Keyboard;
 using Roton;
+using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
+using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
@@ -137,10 +139,10 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
             return false;
 
         Enqueue(new KeyPress
-        {
-            Key = value,
-            Mod = newMod
-        });
+        (
+            key: value,
+            mod: newMod
+        ));
 
         return true;
     }

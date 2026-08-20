@@ -1,4 +1,4 @@
-﻿using Roton.Infrastructure.Impl;
+﻿using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 

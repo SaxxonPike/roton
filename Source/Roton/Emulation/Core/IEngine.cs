@@ -4,7 +4,6 @@ using Roton.Emulation.Cheats;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Draws;
 using Roton.Emulation.Interactions;

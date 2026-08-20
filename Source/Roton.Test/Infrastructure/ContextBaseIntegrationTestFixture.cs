@@ -13,7 +13,6 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
-using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
@@ -213,7 +212,11 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         ref Tiles[xy];
 
     protected void Type(AnsiKey key, KeyMod mod = 0) =>
-        Keyboard.Press(new KeyPress { Key = key, Mod = mod });
+        Keyboard.Press(new KeyPress
+        (
+            key: key,
+            mod: mod
+        ));
 
     protected int ActorIndexAt(int x, int y) =>
         Engine.ActorIndexAt(new Location(x, y));

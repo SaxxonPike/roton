@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;

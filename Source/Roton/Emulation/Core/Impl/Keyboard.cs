@@ -5,7 +5,7 @@ namespace Roton.Emulation.Core.Impl;
 
 public abstract class Keyboard : IKeyboard
 {
-    private readonly ConcurrentQueue<IKeyPress> _queue = new();
+    private readonly ConcurrentQueue<KeyPress> _queue = new();
     private KeyMod _mod;
 
     public void Clear()
@@ -18,7 +18,7 @@ public abstract class Keyboard : IKeyboard
     public bool KeyIsAvailable
         => _queue.Count > 0;
 
-    public IKeyPress? GetKey()
+    public KeyPress? GetKey()
         => _queue.TryDequeue(out var keyPress)
             ? keyPress
             : null;
@@ -32,7 +32,7 @@ public abstract class Keyboard : IKeyboard
     protected void SetMod(KeyMod mod) =>
         _mod = mod;
 
-    protected void Enqueue(IKeyPress keyPress)
+    protected void Enqueue(KeyPress keyPress)
     {
         if (_queue.Count(q => q.Key == keyPress.Key) < 2)
             _queue.Enqueue(keyPress);

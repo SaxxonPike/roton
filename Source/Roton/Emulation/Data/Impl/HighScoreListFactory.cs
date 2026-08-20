@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 

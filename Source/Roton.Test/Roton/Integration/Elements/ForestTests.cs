@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
