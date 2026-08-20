@@ -44,7 +44,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IDirectionList Directions => Engine.Directions;
     protected IElementList Elements => Engine.Elements;
     protected IFacts Facts => Engine.Facts;
-    protected IHeap Heap => Engine.Heap;
+    protected ICodeHeap Heap => Engine.Heap;
     protected IHud Hud => Engine.Hud;
     protected IItemList Items => Engine.ItemList;
     protected IMemory Memory => Engine.Memory;

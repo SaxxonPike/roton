@@ -5,11 +5,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalActorList(IMemory memory, IHeap heap) : ActorList(memory, 152)
+public sealed class OriginalActorList(IMemory memory, ICodeHeap heap) : ActorList(memory, 152)
 {
     public override int Count => Memory.GetRef<Word>(0x31CD) + 1;
 
-    private IHeap Heap => heap;
+    private ICodeHeap Heap => heap;
 
     protected override IActor GetActor(int index)
     {

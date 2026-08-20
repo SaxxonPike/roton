@@ -9,6 +9,34 @@ internal static class Utility
 {
     extension(int a)
     {
+        public ReadOnlySpan<char> ToCharSpan(Span<char> buffer)
+        {
+            var idx = buffer.Length;
+            var val = a;
+
+            if (a == 0)
+            {
+                buffer[--idx] = '0';
+                return buffer.Slice(idx);
+            }
+            
+            var neg = val < 0;
+            if (neg)
+                val = -val;
+
+            while (val > 0)
+            {
+                var num = val % 10;
+                buffer[--idx] = (char)('0' + num);
+                val /= 10;
+            }
+            
+            if (neg)
+                buffer[--idx] = '-';
+
+            return buffer.Slice(idx);
+        }
+        
         /// <summary>
         /// Return the absolute difference between this value and another specified value.
         /// </summary>

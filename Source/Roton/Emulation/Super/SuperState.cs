@@ -18,7 +18,7 @@ public sealed class SuperState : IState
     private Bool _cancelScroll;
     private Bool _init;
 
-    public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
+    public SuperState(IMemory memory, IEngineResourceService engineResourceService, ICodeHeap heap)
     {
         Memory = memory;
         EngineResourceService = engineResourceService;
@@ -42,7 +42,7 @@ public sealed class SuperState : IState
 
     private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    private IHeap Heap { [DebuggerStepThrough] get; }
+    private ICodeHeap Heap { [DebuggerStepThrough] get; }
 
     public ref Bool AboutShown => ref _aboutShown;
 

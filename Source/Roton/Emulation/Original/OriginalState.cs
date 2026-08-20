@@ -17,7 +17,7 @@ public sealed class OriginalState : IState
 
     public OriginalState(
         IMemory memory,
-        IHeap heap,
+        ICodeHeap heap,
         IEngineResourceService engineResourceService)
     {
         Memory = memory;
@@ -39,7 +39,7 @@ public sealed class OriginalState : IState
 
     private IMemory Memory { [DebuggerStepThrough] get; }
 
-    private IHeap Heap { [DebuggerStepThrough] get; }
+    private ICodeHeap Heap { [DebuggerStepThrough] get; }
 
     private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 

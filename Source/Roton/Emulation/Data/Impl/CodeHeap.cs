@@ -8,13 +8,12 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Heap : IHeap
+public sealed class CodeHeap : ICodeHeap
 {
     private int _nextEntry = 1;
+    private readonly SortedDictionary<int, Memory<char>> _entries = [];
 
-    private IDictionary<int, Memory<char>> Entries { get; } = new Dictionary<int, Memory<char>>();
-
-    public int Size => Entries.Where(e => !e.Value.IsEmpty).Sum(e => e.Value.Length);
+    public int Size => _entries.Where(e => !e.Value.IsEmpty).Sum(e => e.Value.Length);
 
     public int Allocate(ReadOnlySpan<char> data)
     {
@@ -23,24 +22,28 @@ public sealed class Heap : IHeap
 
         int index;
 
-        while (Entries.ContainsKey(index = Interlocked.Increment(ref _nextEntry)))
+        while (_entries.ContainsKey(index = Interlocked.Increment(ref _nextEntry)))
         {
         }
 
-        Entries[_nextEntry] = allocated;
+        _entries[_nextEntry] = allocated;
         return index;
     }
 
+    public void Free(int index) =>
+        _entries.Remove(index);
+
     public void FreeAll()
     {
-        Entries.Clear();
+        _entries.Clear();
         _nextEntry = 1;
     }
 
     public Memory<char> this[int index] =>
-        Entries.ContainsKey(index)
-            ? Entries[index]
+        _entries.ContainsKey(index)
+            ? _entries[index]
             : null;
 
-    private bool Contains(int index) => Entries.ContainsKey(index);
+    private bool Contains(int index) =>
+        _entries.ContainsKey(index);
 }

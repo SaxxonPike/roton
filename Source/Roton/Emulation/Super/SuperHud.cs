@@ -13,6 +13,17 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public sealed class SuperHud : Hud
 {
+    private readonly string _arrows = new([
+        0x18.ToChar(),
+        0x19.ToChar(),
+        0x1A.ToChar(),
+        0x1B.ToChar()
+    ]);
+
+    private readonly string _bottomOfHelp = new(0xDC.ToChar(), 12);
+    
+    private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
+
     public SuperHud(IEngineAccessor engine,
         ITerminal terminal,
         IScroll scroll,
@@ -68,6 +79,8 @@ public sealed class SuperHud : Hud
 
     public override void CreateStatusText()
     {
+        var buffer = (stackalloc char[16]);
+
         CreateStatusBar();
         if (Engine.TitleScreen)
         {
@@ -77,18 +90,12 @@ public sealed class SuperHud : Hud
         }
         else
         {
-            var arrows = new string([
-                0x18.ToChar(),
-                0x19.ToChar(),
-                0x1A.ToChar(),
-                0x1B.ToChar()
-            ]);
             DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
             DrawString(0x00, 0x01, "  Commands  ", 0x6F);
             DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
-            DrawString(0x00, 0x03, $" {arrows}       ", 0x6F);
+            DrawString(0x00, 0x03, " ", _arrows, "       ", 0x6F);
             DrawString(0x00, 0x04, "   Move     ", 0x6E);
-            DrawString(0x00, 0x05, $" Shift+{arrows} ", 0x6F);
+            DrawString(0x00, 0x05, " Shift+", _arrows, " ", 0x6F);
             DrawString(0x00, 0x06, "   Shoot    ", 0x6B);
             DrawString(0x00, 0x07, "   Hint     ", 0x6E);
             DrawString(0x01, 0x07, "H", 0x6F);
@@ -100,9 +107,9 @@ public sealed class SuperHud : Hud
             DrawString(0x01, 0x0A, "B", 0x6F);
             DrawString(0x00, 0x0B, "   Quit     ", 0x6E);
             DrawString(0x01, 0x0B, "Q", 0x6F);
-            DrawString(0x00, 0x0C, new string(0xDC.ToChar(), 12), 0x1D);
+            DrawString(0x00, 0x0C, _bottomOfHelp, 0x1D);
             DrawString(0x00, 0x0D, "   Status   ", 0x6F);
-            DrawString(0x00, 0x0E, new string(0xDF.ToChar(), 12), 0x6D);
+            DrawString(0x00, 0x0E, _topOfStatus, 0x6D);
             DrawString(0x00, 0x0F, "Health      ", 0x6F);
             DrawString(0x00, 0x10, "            ", 0x6F);
             DrawString(0x00, 0x11, " Gems       ", 0x6F);
@@ -121,9 +128,13 @@ public sealed class SuperHud : Hud
 
     private void CreateStatusWindow()
     {
-        DrawString(0x0D, 0x01, new string(0xDC.ToChar(), 26), 0x1F);
-        DrawString(0x0D, 0x16, new string(0xDF.ToChar(), 1), 0x1F);
-        DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
+        for (var x = 0; x < 26; x++)
+            DrawChar(0x0D + x, 0x01, new AnsiChar(0xDC, 0x1F));
+        // DrawString(0x0D, 0x01, new string(0xDC.ToChar(), 26), 0x1F);
+        DrawChar(0x0D, 0x16, new AnsiChar(0xDF, 0x1F));
+        for (var x = 0; x < 25; x++)
+            DrawChar(0x0E + x, 0x16, new AnsiChar(0xDF, 0x7F));
+        // DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
 
         for (var y = 0x02; y <= 0x15; y++)
         {
@@ -145,8 +156,8 @@ public sealed class SuperHud : Hud
         var topX = 26 - (topText.Length >> 1);
         var bottomX = 26 - (bottomText.Length >> 1);
         var messageColor = (color & 0x0F) | 0x10;
-        DrawString(topX, 23, $" {topText} ", messageColor);
-        DrawString(bottomX, 24, $" {bottomText} ", messageColor);
+        DrawString(topX, 23, " ", topText, " ", messageColor);
+        DrawString(bottomX, 24, " ", bottomText, " ", messageColor);
     }
 
     private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
@@ -156,7 +167,8 @@ public sealed class SuperHud : Hud
 
     private void DrawNumber(int y, int value)
     {
-        var s = value.ToString();
+        var buffer = (stackalloc char[6]);
+        var s = value.ToCharSpan(buffer);
         var x = 11 - s.Length;
         DrawString(0x07, y, "   ", 0x6E);
         DrawString(x, y, s, 0x6E);
@@ -165,6 +177,16 @@ public sealed class SuperHud : Hud
     public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
         Terminal.Write(x, y, text, color);
+    }
+
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
+    {
+        Terminal.Write(x, y, text0, text1, color);
+    }
+
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color)
+    {
+        Terminal.Write(x, y, text0, text1, text2, color);
     }
 
     public override void DrawTile(int x, int y, AnsiChar ac)

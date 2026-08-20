@@ -8,14 +8,14 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializer
+public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSerializer
 {
     private IMemory Memory
     {
         [DebuggerStepThrough] get => memory;
     }
 
-    private IHeap Heap
+    private ICodeHeap Heap
     {
         [DebuggerStepThrough] get => heap;
     }

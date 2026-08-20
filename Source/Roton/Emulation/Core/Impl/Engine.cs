@@ -39,7 +39,7 @@ public sealed class Engine : IEngine, IDisposable
         IFeatures features, IGameSerializer gameSerializer, IHud hud, IState state,
         IWorld world, IItemList items, IBoardList boards, IActionList actionList,
         IDrawList drawList, IInteractionList interactionList, IFacts facts, IMemory memory,
-        IHeap heap, IAnsiKeyTransformer ansiKeyTransformer, IScrollFormatter scrollFormatter,
+        ICodeHeap heap, IAnsiKeyTransformer ansiKeyTransformer, IScrollFormatter scrollFormatter,
         ISpeaker speaker, IDrumSoundList drumBank, IObjectMover objectMover,
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
@@ -605,7 +605,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public IFacts Facts { get; }
 
-    public IHeap Heap { get; }
+    public ICodeHeap Heap { get; }
 
     public IMemory Memory { get; }
 
@@ -1060,10 +1060,17 @@ public sealed class Engine : IEngine, IDisposable
     public void RemoveActor(int index)
     {
         var actor = Actors[index];
-        if (index < State.ActIndex) State.ActIndex--;
+        var freeCode = actor.Length > 0 && actor.Pointer != 0;
+
+        if (index < State.ActIndex)
+            State.ActIndex--;
 
         Tiles[actor.Location] = actor.UnderTile;
-        if (actor.Location.Y > 0) UpdateBoard(actor.Location);
+
+        if (actor.Location.Y > 0)
+            UpdateBoard(actor.Location);
+
+        var pointer = actor.Pointer;
 
         for (var i = 1; i <= State.ActorCount; i++)
         {
@@ -1083,6 +1090,15 @@ public sealed class Engine : IEngine, IDisposable
                 else
                     a.Leader--;
             }
+
+            if (freeCode && i != index && a.Pointer == pointer)
+                freeCode = false;
+        }
+
+        if (freeCode)
+        {
+            Heap.Free(pointer);
+            actor.Pointer = 0;
         }
 
         if (index < State.ActorCount)
@@ -1105,14 +1121,10 @@ public sealed class Engine : IEngine, IDisposable
         return result;
     }
 
-    public Vector RndP(Vector vector)
-    {
-        var result = new Vector();
-        result = Random.GetNext(2) == 0
+    public Vector RndP(Vector vector) =>
+        Random.GetNext(2) == 0
             ? vector.Clockwise()
             : vector.CounterClockwise();
-        return result;
-    }
 
     public void SaveWorld(string name)
     {
@@ -1371,7 +1383,10 @@ public sealed class Engine : IEngine, IDisposable
     private void UpdateSound()
     {
         if (!State.SoundPlaying)
+        {
+            State.SoundBuffer.Clear();
             return;
+        }
 
         if (State.SoundTicks <= 0)
         {
@@ -1417,8 +1432,7 @@ public sealed class Engine : IEngine, IDisposable
                     return true;
 
                 UpdateSound();
-                if (Clock != null)
-                    Tick?.Invoke(this, EventArgs.Empty);
+                Tick?.Invoke(this, EventArgs.Empty);
                 _ticksToRun--;
 
                 return false;
@@ -1427,9 +1441,6 @@ public sealed class Engine : IEngine, IDisposable
         else
         {
             UpdateSound();
-
-            if (Clock == null)
-                return;
 
             Tick?.Invoke(this, EventArgs.Empty);
 

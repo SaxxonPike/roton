@@ -105,7 +105,7 @@ public interface IEngine
     IDrawList DrawList { get; }
     IInteractionList InteractionList { get; }
     IFacts Facts { get; }
-    IHeap Heap { get; }
+    ICodeHeap Heap { get; }
     IMemory Memory { get; }
     void StepOnce();
     string[] GetMessageLines();
