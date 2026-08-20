@@ -703,6 +703,8 @@ public sealed class Engine : IEngine, IDisposable
             RemoveActor(index);
         }
     }
+    
+    private int HsecToTicks(int hsec) => (hsec * Config.MasterClockDenominator / Config.MasterClockNumerator / 100) + 1;
 
     public IHud Hud { get; }
 
@@ -1579,7 +1581,7 @@ public sealed class Engine : IEngine, IDisposable
             {
                 State.ActIndex = State.ActorCount + 1;
 
-                if (Timers.Player.Clock(1, Facts.PauseFlashInterval) > 0)
+                if (Timers.Player.Clock(1, HsecToTicks(25)) > 0)
                     alternating = !alternating;
 
                 if (alternating)

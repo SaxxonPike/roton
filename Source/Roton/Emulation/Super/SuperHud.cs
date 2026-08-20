@@ -218,12 +218,7 @@ public sealed class SuperHud : Hud
 
     public override void UpdateBorder()
     {
-        var clearChar = new AnsiChar(0x00, 0x10);
-        for (var x = 12; x < 40; x++)
-        {
-            DrawChar(x, 23, clearChar);
-            DrawChar(x, 24, clearChar);
-        }
+        ClearMessage();
     }
 
     private void UpdateCameraPosition()
@@ -529,5 +524,25 @@ public sealed class SuperHud : Hud
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
         Engine.PlayErrorSound();
         Engine.Delay(2000);
+    }
+    
+    public override void DrawPausing()
+    {
+        DrawString(21, 24, "Pausing...", 0x1E);
+    }
+
+    public override void ClearPausing()
+    {
+        ClearMessage();
+    }
+
+    private void ClearMessage()
+    {
+        var clearChar = new AnsiChar(0x00, 0x10);
+        for (var x = 12; x < 40; x++)
+        {
+            DrawChar(x, 23, clearChar);
+            DrawChar(x, 24, clearChar);
+        }
     }
 }
