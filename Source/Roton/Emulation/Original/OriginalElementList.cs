@@ -57,7 +57,6 @@ public sealed class OriginalElementList : ElementList
     public override int RuffianId => 0x23;
     public override int ScrollId => 0x0A;
     public override int SegmentId => 0x2D;
-    public override int SharkId => 0x26;
     public override int SliderEwId => 0x1A;
     public override int SliderNsId => 0x19;
     public override int SlimeId => 0x25;
