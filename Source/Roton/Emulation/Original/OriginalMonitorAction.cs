@@ -15,7 +15,6 @@ public sealed class OriginalMonitorAction(IEngineAccessor engine) : IAction
         if (Engine.State.KeyPressed == EngineKeyCode.None)
             return;
 
-        // [#27, 'A', 'E', 'H', 'N', 'P', 'Q', 'R', 'S', 'W', '|']
         Engine.State.BreakGameLoop |= Engine.State.KeyPressed.ToUpperCase() switch
         {
             EngineKeyCode.Escape or

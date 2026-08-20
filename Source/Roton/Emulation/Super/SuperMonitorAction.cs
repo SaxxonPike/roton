@@ -12,9 +12,21 @@ public sealed class SuperMonitorAction(IEngineAccessor engine) : IAction
 
     public void Act(int index)
     {
-        if (Engine.State.KeyPressed is EngineKeyCode.Enter or EngineKeyCode.Escape)
-            Engine.State.BreakGameLoop = true;
-            
+        // Ordinarily, the game code will only check for Enter and Escape here.
+        // However, since we still don't have the proper "title card" implementation
+        // just yet, we will have to accept those inputs here.
+
+        Engine.State.BreakGameLoop |= Engine.State.KeyPressed.ToUpperCase() switch
+        {
+            EngineKeyCode.Escape or
+                EngineKeyCode.Enter or
+                EngineKeyCode.Q or
+                EngineKeyCode.R or
+                EngineKeyCode.W or
+                EngineKeyCode.QuestionMark => true,
+            _ => false
+        };
+
         Engine.MoveActorOnRiver(index);
     }
 }
