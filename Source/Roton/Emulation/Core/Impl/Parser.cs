@@ -24,47 +24,39 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
         var termLength = term.Length;
         var actor = Engine.Actors[index];
-        Word offs = default;
+        var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
+        var code = actor.Code.Span.Slice(0, codeLength);
 
-        while (offs < actor.Length)
+        var startIdx = 0;
+
+        while (startIdx < codeLength)
         {
-            var oldOffset = offs;
-            var termOffset = 0;
-            bool success;
+            var foundIdx = code
+                .Slice(startIdx)
+                .IndexOf(term, StringComparison.OrdinalIgnoreCase);
 
-            while (true)
+            if (foundIdx < 0)
+                break;
+
+            startIdx += foundIdx;
+
+            var endIdx = startIdx + termLength;
+
+            var endChar = endIdx >= codeLength
+                ? '\0'
+                : code[endIdx].ToUpperCase();
+
+            if (endChar is '_' or >= 'A' and <= 'Z')
             {
-                ReadByte(index, ref offs);
-                if (term[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpper())
-                {
-                    success = false;
-                    break;
-                }
-
-                termOffset++;
-                if (termOffset >= termLength)
-                {
-                    success = true;
-                    break;
-                }
+                startIdx++;
+                continue;
             }
 
-            if (success)
-            {
-                ReadByte(index, ref offs);
-                Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-                if ((int)Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
-                {
-                    result = oldOffset;
-                    break;
-                }
-            }
-
-            oldOffset++;
-            offs = oldOffset;
+            Engine.State.OopByte = endChar;
+            return startIdx;
         }
 
-        return result;
+        return -1;
     }
 
     public char ReadByte(int index, ref Word instruction)
