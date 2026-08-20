@@ -246,8 +246,8 @@ public sealed class SuperHud : Hud
         var cameraY = Engine.Player.Location.Y - WindowHeight / 2;
 
         Engine.Board.Camera = new Location16(
-            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth), 1),
-            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight), 1)
+            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth + 1), 1),
+            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight + 1), 1)
         );
     }
 
