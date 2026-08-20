@@ -44,8 +44,9 @@ public abstract class FixedStringList(IMemory memory, int offset) : FixedList<st
     /// <inheritdoc cref="IndexOf(string)" />
     public virtual int IndexOf(ReadOnlySpan<char> item)
     {
+        Span<byte> buffer = stackalloc byte[byte.MaxValue];
         for (var i = 0; i < Count; i++)
-            if (EqualsItem(i + FirstIndex, item))
+            if (EqualsItem(i + FirstIndex, item, buffer))
                 return i + FirstIndex;
 
         return -1;
@@ -56,6 +57,9 @@ public abstract class FixedStringList(IMemory memory, int offset) : FixedList<st
 
     protected virtual ReadOnlySpan<byte> GetItemSpan(int index) =>
         memory.ReadStringSpan(offset + index * ItemLength);
+
+    protected virtual ReadOnlySpan<byte> GetItemSpan(int index, Span<byte> buffer) =>
+        memory.ReadStringSpan(offset + index * ItemLength, buffer);
 
     protected override void SetItem(int index, string value) =>
         SetItem(index, value.AsSpan());
@@ -68,4 +72,7 @@ public abstract class FixedStringList(IMemory memory, int offset) : FixedList<st
 
     protected virtual bool EqualsItem(int index, ReadOnlySpan<char> value) =>
         Cp437.CharsEqualBytes(value, GetItemSpan(index));
+
+    protected virtual bool EqualsItem(int index, ReadOnlySpan<char> value, Span<byte> buffer) =>
+        Cp437.CharsEqualBytes(value, GetItemSpan(index, buffer));
 }

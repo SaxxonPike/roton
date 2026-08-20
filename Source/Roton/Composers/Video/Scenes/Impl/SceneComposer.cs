@@ -134,7 +134,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         InitializeFont();
         InitializeNewBitmap();
 
-        Resized?.Invoke(this, new ResizedEventArgs { Width = width, Height = height, Wide = wide });
+        Resized?.Invoke(this, new ResizedEventArgs(width, height, wide));
     }
 
     public void Write(int x, int y, ReadOnlySpan<char> value, int color)
@@ -236,10 +236,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
                 InitializeNewBitmap();
         }
 
-        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs
-        {
-            Data = _fontData.ToArray()
-        });
+        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs(_fontData.ToArray()));
     }
 
     private void InitializePalette()
@@ -251,10 +248,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
             .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
             .ToArray();
 
-        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs
-        {
-            Data = _paletteData.ToArray()
-        });
+        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs(_paletteData.ToArray()));
     }
 
     private bool IsOutOfBounds(int x, int y)

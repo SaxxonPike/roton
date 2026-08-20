@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Composers.Video.Scenes.Impl;
 
-public sealed class FontDataChangedEventArgs : EventArgs
+public readonly struct FontDataChangedEventArgs(byte[]? data)
 {
-    public byte[]? Data { get; set; }
+    public byte[]? Data => data;
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using DotSDL.Audio;
 using Roton;
 using Roton.Composers.Audio;
+using Roton.Composers.Audio.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure.Impl;
@@ -19,7 +20,7 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
 {
     private bool _isDisposed;
     private bool _running;
-    private readonly List<double> _buffer;
+    private readonly Queue<double> _buffer;
     private readonly Lock _bufferLock = new();
     private readonly Playback _audio;
 
@@ -30,7 +31,7 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
             (ushort)config.AudioBufferSize);
         Volume = 0.1;
 
-        composer.BufferReady += (_, a) => Update(a.Data);
+        composer.BufferReady += (_, a) => Update(a);
         composer.SampleRate = SampleRate;
         Start();
 
@@ -51,9 +52,9 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
             }
 
             var count = Math.Min(_buffer.Count, e.Length);
-            var samples = CollectionsMarshal.AsSpan(_buffer)[..count];
-            samples.CopyTo(e.Samples[Channel.Mono]);
-            _buffer.RemoveRange(0, count);
+
+            for (var i = 0; i < count; i++)
+                e.Samples[Channel.Mono][i] = _buffer.Dequeue();
         }
     }
 
@@ -65,12 +66,22 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
         _running = true;
     }
 
-    public void Update(IEnumerable<float> buffer)
+    public void Update(AudioComposerDataEventArgs e)
     {
-        // Buffer incoming data.
-        var data = buffer.Select(i => i * Volume).ToArray();
+        if (_buffer == null)
+            return;
+
+        var data = e.Data;
+
         lock (_bufferLock)
-            _buffer.AddRange(data);
+        {
+            _buffer.EnsureCapacity(_buffer.Count + data.Length);
+
+            foreach (var sample in data)
+                _buffer.Enqueue(sample * Volume);
+        }
+        
+        e.Memory.Dispose();
     }
 
     public int SampleRate => _audio.Frequency;

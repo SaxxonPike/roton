@@ -2,9 +2,9 @@
 
 namespace Roton.Composers.Video.Scenes.Impl;
 
-public sealed class ResizedEventArgs : EventArgs
+public readonly struct ResizedEventArgs(int width, int height, bool wide)
 {
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public bool Wide { get; set; }
+    public int Width => width;
+    public int Height => height;
+    public bool Wide => wide;
 }

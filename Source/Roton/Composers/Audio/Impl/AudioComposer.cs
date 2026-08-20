@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 
@@ -40,22 +42,24 @@ public sealed class AudioComposer : IAudioComposer
         _samplesPerDrumFrequency = config.AudioDrumRate;
     }
 
-    private IEnumerable<float> ComposeAudio()
+    private int ComposeAudio(Span<float> buffer)
     {
-        while (_bufferAccumulator > _bufferDenominator)
+        var idx = 0;
+
+        while (idx < buffer.Length)
         {
             _bufferAccumulator -= _bufferDenominator;
 
             if (_stepCounter > 0)
             {
                 _stepCounter--;
-                yield return 1;
+                buffer[idx++] = 1;
                 continue;
             }
-                
+
             if (!_generating)
             {
-                yield return 0;
+                buffer[idx++] = 0;
                 continue;
             }
 
@@ -67,7 +71,7 @@ public sealed class AudioComposer : IAudioComposer
                     if (_drumSoundFrequenciesRemaining <= 0)
                     {
                         _generating = false;
-                        yield return 0;
+                        buffer[idx++] = 0;
                         continue;
                     }
 
@@ -88,13 +92,15 @@ public sealed class AudioComposer : IAudioComposer
                     _dutyLevel = !_dutyLevel;
                 }
 
-                yield return _dutyLevel ? 1 : -1;
+                buffer[idx++] = _dutyLevel ? 1 : -1;
             }
             else
             {
-                yield return 0;
+                buffer[idx++] = 0;
             }
         }
+
+        return idx;
     }
 
     public void PlayDrum(int index)
@@ -128,10 +134,14 @@ public sealed class AudioComposer : IAudioComposer
     public void Tick()
     {
         _bufferAccumulator += _bufferNumerator;
-        var args = new AudioComposerDataEventArgs
-        {
-            Data = [.. ComposeAudio()]
-        };
+
+        var length = (int)(_bufferAccumulator / _bufferDenominator);
+        var mem = MemoryPool<float>.Shared.Rent(length);
+        var buffer = mem.Memory.Span.Slice(0, length);
+
+        ComposeAudio(buffer);
+
+        var args = new AudioComposerDataEventArgs(mem, length);
         BufferReady?.Invoke(this, args);
     }
 

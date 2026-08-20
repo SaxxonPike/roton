@@ -106,6 +106,24 @@ public static class MemoryExtensions
         }
 
         [DebuggerStepThrough]
+        internal ReadOnlySpan<byte> ReadStringSpan(int offset, Span<byte> buffer)
+        {
+            unchecked
+            {
+                var span = memory.Data;
+                var length = span[offset & 0xFFFF];
+
+                if (offset + length <= memory.Data.Length)
+                    return span.Slice(offset + 1, length);
+
+                var result = buffer.Slice(0, length);
+                for (var i = 0; i < length; i++)
+                    result[i] = span[++offset & 0xFFFF];
+                return result;
+            }
+        }
+
+        [DebuggerStepThrough]
         internal void Write(int offset, ReadOnlySpan<byte> data)
         {
             unchecked
