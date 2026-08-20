@@ -3,7 +3,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Colors(IMemory memory, int offset) : FixedStringList(memory, offset), IColors
+public abstract class ColorList(IMemory memory, int offset) : FixedStringList(memory, offset), IColorList
 {
     protected override int ItemLength => 9;
 

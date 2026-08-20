@@ -36,7 +36,7 @@ public sealed class BearAction(IEngineAccessor engine) : IAction
         {
             Engine.MoveActor(index, target);
         }
-        else if (targetElement.Id == Engine.ElementList.PlayerId || targetElement.Id == Engine.ElementList.BreakableId)
+        else if (targetElement.Id == Engine.Elements.PlayerId || targetElement.Id == Engine.Elements.BreakableId)
         {
             Engine.Attack(index, target);
         }

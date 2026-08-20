@@ -17,20 +17,20 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
 
         if (actor.P1 > 4)
         {
-            if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
+            if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
             {
                 Engine.InteractionList.Get(Engine.Tiles[source].Id)
                     .Interact(source, 0, ref Engine.State.KeyVector);
             }
             else
             {
-                if (Engine.Tiles[target].Id != Engine.ElementList.EmptyId)
+                if (Engine.Tiles[target].Id != Engine.Elements.EmptyId)
                 {
                     var oppVec = -actor.Vector;
                     Engine.Push(target, oppVec);
                 }
 
-                if (Engine.Tiles[target].Id == Engine.ElementList.EmptyId)
+                if (Engine.Tiles[target].Id == Engine.Elements.EmptyId)
                 {
                     var sourceIndex = Engine.Actors.ActorIndexAt(source);
                     if (sourceIndex > 0)

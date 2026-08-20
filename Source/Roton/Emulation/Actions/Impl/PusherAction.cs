@@ -29,14 +29,14 @@ public sealed class PusherAction(IEngineAccessor engine) : IAction
         Engine.PlaySound(2, Engine.Sounds.Push);
         var behindLocation = actor.Location - actor.Vector;
             
-        if (Engine.Tiles[behindLocation].Id != Engine.ElementList.PusherId) 
+        if (Engine.Tiles[behindLocation].Id != Engine.Elements.PusherId) 
             return;
 
         var behindIndex = Engine.Actors.ActorIndexAt(behindLocation);
         var behindActor = Engine.Actors[behindIndex];
         if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
         {
-            Engine.ActionList.Get(Engine.ElementList.PusherId).Act(behindIndex);
+            Engine.ActionList.Get(Engine.Elements.PusherId).Act(behindIndex);
         }
     }
 }

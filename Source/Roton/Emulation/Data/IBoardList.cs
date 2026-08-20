@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data;
 
-public interface IBoards : IEnumerable<IPackedBoard>
+public interface IBoardList : IEnumerable<IPackedBoard>
 {
     IPackedBoard this[int index] { get; set; }
     int Count { get; }

@@ -23,7 +23,7 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
             for (var y = 1; y <= Engine.Tiles.Height; y++)
             {
                 var loc = new Location(x, y);
-                if (Engine.Tiles[loc].Id == Engine.ElementList.PassageId && Engine.Tiles[loc].Color == searchColor)
+                if (Engine.Tiles[loc].Id == Engine.Elements.PassageId && Engine.Tiles[loc].Color == searchColor)
                     target = new Location(x, y);
             }
         }

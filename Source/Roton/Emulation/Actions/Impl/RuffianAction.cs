@@ -35,7 +35,7 @@ public sealed class RuffianAction(IEngineAccessor engine) : IAction
             }
 
             var target = actor.Location + actor.Vector;
-            if (Engine.Tiles.ElementAt(target).Id == Engine.ElementList.PlayerId)
+            if (Engine.Tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
             {
                 Engine.Attack(index, target);
             }

@@ -18,7 +18,7 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 5);
 
         // Place the ruffian.
-        var ruffianIndex = SpawnTo(5, 5, ElementList.RuffianId);
+        var ruffianIndex = SpawnTo(5, 5, Elements.RuffianId);
         var ruffian = Actors[ruffianIndex];
         ruffian.Vector = Vector.East;
 
@@ -32,9 +32,9 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 5).Id.Should().Be(Elements.EmptyId,
             "ruffian should vacate initial position");
-        TileAt(6, 5).Id.Should().Be(ElementList.RuffianId,
+        TileAt(6, 5).Id.Should().Be(Elements.RuffianId,
             "ruffian should advance forward along vector");
     }
 
@@ -45,7 +45,7 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(6, 5);
 
         // Place the ruffian directly next to the player.
-        var ruffianIndex = SpawnTo(5, 5, ElementList.RuffianId);
+        var ruffianIndex = SpawnTo(5, 5, Elements.RuffianId);
         var ruffian = Actors[ruffianIndex];
         ruffian.Vector = Vector.East;
         ruffian.P1 = 9;
@@ -59,7 +59,7 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         // Assert.
         Health.Should().Be(initialHealth - Facts.HealthLostPerHit,
             "player should take damage when ruffian attacks");
-        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 5).Id.Should().Be(Elements.EmptyId,
             "ruffian should be removed after attacking player");
     }
 
@@ -70,7 +70,7 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         // or by random chance determined by resting rate stat (P2).
 
         // Place the ruffian and make it hurry east.
-        var ruffianIndex = SpawnTo(5, 5, ElementList.RuffianId);
+        var ruffianIndex = SpawnTo(5, 5, Elements.RuffianId);
         var ruffian = Actors[ruffianIndex];
         ruffian.Vector = Vector.East;
         ruffian.P1 = 9;
@@ -78,14 +78,14 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         ruffian.Cycle = 1;
 
         // Place a wall in front of the ruffian.
-        PlotTo(6, 5, ElementList.SolidId);
+        PlotTo(6, 5, Elements.SolidId);
 
         // Wait for the ruffian to activate.
         Step();
 
-        TileAt(5, 5).Id.Should().Be(ElementList.RuffianId,
+        TileAt(5, 5).Id.Should().Be(Elements.RuffianId,
             "ruffian should remain at initial tile when blocked");
-        TileAt(6, 5).Id.Should().Be(ElementList.SolidId,
+        TileAt(6, 5).Id.Should().Be(Elements.SolidId,
             "wall should remain");
         ruffian.Vector.IsZero().Should().BeTrue(
             "ruffian should enter rest state");
@@ -98,7 +98,7 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(3, 3);
 
         // Place the ruffian.
-        SpawnTo(4, 3, ElementList.RuffianId);
+        SpawnTo(4, 3, Elements.RuffianId);
 
         // Move the player into the ruffian.
         var initialHealth = Health;
@@ -108,9 +108,9 @@ public class RuffianTests(Context context) : ElementTestFixture(context)
         // Assert.
         Health.Should().Be(initialHealth - Facts.HealthLostPerHit,
             "player should take damage when walking into ruffian");
-        TileAt(3, 3).Id.Should().Be(ElementList.EmptyId,
+        TileAt(3, 3).Id.Should().Be(Elements.EmptyId,
             "player should move from original location");
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+        TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should occupy ruffian tile after destroying it");
     }
 }

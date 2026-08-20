@@ -12,7 +12,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(5, 10);
         
         // Place the tiger.
-        var tigerIndex = SpawnTo(5, 5, ElementList.TigerId);
+        var tigerIndex = SpawnTo(5, 5, Elements.TigerId);
         var tiger = Actors[tigerIndex];
         tiger.P1 = 0;
         
@@ -25,9 +25,9 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(5, 6).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 6).Id.Should().Be(Elements.EmptyId,
             "bullet should travel one extra tile");
-        TileAt(5, 7).Id.Should().Be(ElementList.BulletId,
+        TileAt(5, 7).Id.Should().Be(Elements.BulletId,
             "tiger should fire a bullet toward player");
     }
 
@@ -35,7 +35,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
     public void Tiger_ShouldFireBulletTowardsPlayer_WhenAlignedHorizontally()
     {
         MovePlayerTo(10, 5);
-        var tigerIndex = SpawnTo(5, 5, ElementList.TigerId);
+        var tigerIndex = SpawnTo(5, 5, Elements.TigerId);
         var tiger = Actors[tigerIndex];
         tiger.P1 = 0;
         
@@ -46,9 +46,9 @@ public class TigerTests(Context context) : ElementTestFixture(context)
 
         Step();
 
-        TileAt(6, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(6, 5).Id.Should().Be(Elements.EmptyId,
             "bullet should travel one extra tile");
-        TileAt(7, 5).Id.Should().Be(ElementList.BulletId,
+        TileAt(7, 5).Id.Should().Be(Elements.BulletId,
             "tiger should fire a bullet toward player");
     }
 
@@ -59,7 +59,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(5, 10);
         
         // Place the tiger, setting it to shoot stars.
-        var tigerIndex = SpawnTo(5, 5, ElementList.TigerId);
+        var tigerIndex = SpawnTo(5, 5, Elements.TigerId);
         var tiger = Actors[tigerIndex];
         tiger.P1 = 0;
         tiger.P2 = 0x80 | 0x7F;
@@ -69,7 +69,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(5, 6).Id.Should().Be(ElementList.StarId,
+        TileAt(5, 6).Id.Should().Be(Elements.StarId,
             "tiger should fire a star toward player");
     }
 
@@ -80,7 +80,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(5, 5);
         
         // Place the tiger, but prevent it from firing.
-        var tigerIndex = SpawnTo(5, 4, ElementList.TigerId);
+        var tigerIndex = SpawnTo(5, 4, Elements.TigerId);
         var tiger = Actors[tigerIndex];
         tiger.P1 = 10;
         tiger.P2 = 0;
@@ -93,7 +93,7 @@ public class TigerTests(Context context) : ElementTestFixture(context)
         // Assert.
         Health.Should().Be(initialHealth - Facts.HealthLostPerHit,
             "player should take damage when tiger attacks");
-        TileAt(5, 4).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 4).Id.Should().Be(Elements.EmptyId,
             "tiger should be destroyed after attacking player");
     }
 }

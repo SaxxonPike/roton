@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : Alerts
+public sealed class SuperAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
 {
     private Bool _dark;
     private Bool _notDark;

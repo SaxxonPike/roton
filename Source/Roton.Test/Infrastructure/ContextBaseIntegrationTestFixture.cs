@@ -34,26 +34,26 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     private Random Rand { get; } = new();
 
     protected IEngine Engine { get; private set; }
-    protected IActors Actors => Engine.Actors;
+    protected IActorList Actors => Engine.Actors;
     protected IAlerts Alerts => Engine.Alerts;
     protected IBoard Board => Engine.Board;
-    protected ICheatList CheatList => Engine.CheatList;
-    protected IColors Colors => Engine.Colors;
-    protected ICommandList CommandList => Engine.CommandList;
-    protected IConditionList ConditionList => Engine.ConditionList;
-    protected IDirectionList DirectionList => Engine.DirectionList;
-    protected IElementList ElementList => Engine.ElementList;
+    protected ICheatList Cheats => Engine.Cheats;
+    protected IColorList Colors => Engine.Colors;
+    protected ICommandList Commands => Engine.CommandList;
+    protected IConditionList Conditions => Engine.Conditions;
+    protected IDirectionList Directions => Engine.Directions;
+    protected IElementList Elements => Engine.Elements;
     protected IFacts Facts => Engine.Facts;
     protected IHeap Heap => Engine.Heap;
     protected IHud Hud => Engine.Hud;
-    protected IItemList ItemList => Engine.ItemList;
+    protected IItemList Items => Engine.ItemList;
     protected IMemory Memory => Engine.Memory;
     protected IParser Parser => Engine.Parser;
     protected IActor Player => Engine.Player;
     protected IRandomizer Random => Engine.Random;
     protected ISounds Sounds => Engine.Sounds;
     protected IState State => Engine.State;
-    protected ITargetList TargetList => Engine.TargetList;
+    protected ITargetList Targets => Engine.TargetList;
     protected ITiles Tiles => Engine.Tiles;
     //protected IWorld World => Engine.World;
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
@@ -176,7 +176,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         Engine.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
-        State.PlayerElement = ElementList.PlayerId;
+        State.PlayerElement = Elements.PlayerId;
     }
 
     protected Context Context { get; } = context;
@@ -192,7 +192,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
-        Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? ElementList[id].Color), ElementList[id].Cycle,
+        Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? Elements[id].Color), Elements[id].Cycle,
             State.DefaultActor);
         return ActorIndexAt(x, y);
     }

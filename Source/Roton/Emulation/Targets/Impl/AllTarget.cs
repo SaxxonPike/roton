@@ -6,9 +6,9 @@ namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original, "ALL")]
 [Context(Context.Super, "ALL")]
-public sealed class AllTarget(IActors actors) : ITarget
+public sealed class AllTarget(IActorList actors) : ITarget
 {
-    private IActors Actors => actors;
+    private IActorList Actors => actors;
 
     public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {

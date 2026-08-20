@@ -8,7 +8,7 @@ public class SameLineTests(Context context) : OopTestFixture(context)
     [Test]
     public void ShortMovement_ShouldRunCommandsOnSameLine()
     {
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -23,7 +23,7 @@ public class SameLineTests(Context context) : OopTestFixture(context)
     [Test]
     public void ShortMovement_ShouldRunCommandsOnSameLine_WhenPrecededByIf()
     {
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,

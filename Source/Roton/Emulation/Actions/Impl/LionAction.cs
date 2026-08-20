@@ -25,7 +25,7 @@ public sealed class LionAction(IEngineAccessor engine) : IAction
         {
             Engine.MoveActor(index, target);
         }
-        else if (element.Id == Engine.ElementList.PlayerId)
+        else if (element.Id == Engine.Elements.PlayerId)
         {
             Engine.Attack(index, target);
         }

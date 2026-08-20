@@ -15,7 +15,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
     public void Act(int index)
     {
         var actor = Engine.Actors[index];
-        var playerElement = Engine.ElementList.Player();
+        var playerElement = Engine.Elements.Player();
 
         // Energizer graphics
 
@@ -74,10 +74,10 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
                 {
                     var bulletCount =
                         Engine.Actors.Count(
-                            a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.ElementList.BulletId);
+                            a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.Elements.BulletId);
                     if (bulletCount < Engine.Board.MaximumShots)
                     {
-                        if (Engine.SpawnProjectile(Engine.ElementList.BulletId, actor.Location,
+                        if (Engine.SpawnProjectile(Engine.Elements.BulletId, actor.Location,
                                 Engine.State.KeyVector, false))
                         {
                             Engine.World.Ammo--;

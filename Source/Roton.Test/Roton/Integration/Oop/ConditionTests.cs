@@ -9,7 +9,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void If_ShouldExecuteCurrentLine_WhenConditionIsMet()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -30,7 +30,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     [Test]
     public void If_ShouldSkipToNextLine_WhenConditionIsNotMet()
     {
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -50,7 +50,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Blocked_ShouldEvaluateTrue_WhenBlocked()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -59,7 +59,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a wall to the west.
-        PlotTo(4, 5, ElementList.SolidId);
+        PlotTo(4, 5, Elements.SolidId);
 
         // Execute.
         Step();
@@ -75,7 +75,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Blocked_ShouldEvaluateFalse_WhenNotBlocked()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -84,7 +84,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a walkable element to the west.
-        PlotTo(4, 5, ElementList.FakeId);
+        PlotTo(4, 5, Elements.FakeId);
 
         // Execute.
         Step();
@@ -100,7 +100,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Blocked_ShouldEvaluateFalse_WithUnknownDirection()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -122,7 +122,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Energized_ShouldEvaluateTrue_WhenPlayerHasEnergyCycles()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -147,7 +147,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Energized_ShouldEvaluateTrue_WhenPlayerHasNoEnergyCycles()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -175,7 +175,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the test actor to the west.
-        var index = SpawnTo(5, 10, ElementList.ObjectId);
+        var index = SpawnTo(5, 10, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -200,7 +200,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the test actor to the north.
-        var index = SpawnTo(10, 5, ElementList.ObjectId);
+        var index = SpawnTo(10, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -225,7 +225,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the test actor somewhere that isn't aligned.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -247,7 +247,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateTrue_WhenElementIsPresent_WithBackgroundColor()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -256,7 +256,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a blue key elsewhere.
-        PlotTo(10, 10, ElementList.KeyId, 0x29);
+        PlotTo(10, 10, Elements.KeyId, 0x29);
 
         // Execute.
         Step();
@@ -272,7 +272,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateTrue_WhenElementIsPresent_WithColor()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -281,7 +281,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a blue key elsewhere.
-        PlotTo(10, 10, ElementList.KeyId, 9);
+        PlotTo(10, 10, Elements.KeyId, 9);
 
         // Execute.
         Step();
@@ -297,7 +297,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateTrue_WhenElementIsPresent_WithoutColor()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -306,7 +306,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a key elsewhere.
-        PlotTo(10, 10, ElementList.KeyId, 12);
+        PlotTo(10, 10, Elements.KeyId, 12);
 
         // Execute.
         Step();
@@ -322,7 +322,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateFalse_WhenElementIsAbsent_WithColor()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -331,7 +331,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a different color key somewhere.
-        PlotTo(10, 10, ElementList.KeyId, 10);
+        PlotTo(10, 10, Elements.KeyId, 10);
 
         // Execute.
         Step();
@@ -347,7 +347,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateFalse_WhenElementIsAbsent_WithoutColor()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -369,7 +369,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Any_ShouldEvaluateFalse_WithUnknownKind()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -394,7 +394,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the test actor adjacent to the player.
-        var index = SpawnTo(9, 10, ElementList.ObjectId);
+        var index = SpawnTo(9, 10, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -419,7 +419,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the test actor not adjacent to the player.
-        var index = SpawnTo(8, 10, ElementList.ObjectId);
+        var index = SpawnTo(8, 10, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -441,7 +441,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Not_ShouldNegateCondition_WhenTrue()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -450,7 +450,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a non-blocking element to the west.
-        PlotTo(4, 5, ElementList.FakeId);
+        PlotTo(4, 5, Elements.FakeId);
 
         // Execute.
         Step();
@@ -466,7 +466,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
     public void Not_ShouldNegateCondition_WhenFalse()
     {
         // Place the test actor.
-        var index = SpawnTo(5, 5, ElementList.ObjectId);
+        var index = SpawnTo(5, 5, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -475,7 +475,7 @@ public class ConditionTests(Context context) : OopTestFixture(context)
         );
 
         // Place a blocking element to the west.
-        PlotTo(4, 5, ElementList.SolidId);
+        PlotTo(4, 5, Elements.SolidId);
 
         // Execute.
         Step();

@@ -17,16 +17,16 @@ public interface IEngine
     event EventHandler Exited;
     event EventHandler Tick;
         
-    IActors Actors { get; }
+    IActorList Actors { get; }
     IAlerts Alerts { get; }
     IBoard Board { get; }
-    ICheatList CheatList { get; }
-    IColors Colors { get; }
+    ICheatList Cheats { get; }
+    IColorList Colors { get; }
     ICommandList CommandList { get; }
-    IConditionList ConditionList { get; }
+    IConditionList Conditions { get; }
     IConfig Config { get; }
-    IDirectionList DirectionList { get; }
-    IElementList ElementList { get; }
+    IDirectionList Directions { get; }
+    IElementList Elements { get; }
     IGameSerializer GameSerializer { get; }
     IHud Hud { get; }
     IItemList ItemList { get; }
@@ -110,7 +110,7 @@ public interface IEngine
     void StepOnce();
     string[] GetMessageLines();
     ITimers Timers { get; }
-    IDrumBank DrumBank { get; }
+    IDrumSoundList DrumSounds { get; }
     bool ThreadActive { get; }
     int MemoryUsage { get; }
     IMusicEncoder MusicEncoder { get; }

@@ -16,7 +16,7 @@ public class GameSerializerTests(Context context) : AllContextIntegrationTestFix
         // Add some code.
         var allCode = Enumerable.Range(0, 50).Select(x =>
         {
-            var actor = SpawnTo(x + 1, 10, ElementList.ObjectId);
+            var actor = SpawnTo(x + 1, 10, Elements.ObjectId);
             var code = Create<string>();
             SetActorCode(actor, code);
             return code;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
-public interface IColors : IEnumerable<string>
+public interface IColorList : IEnumerable<string>
 {
     string this[int index] { get; }
     int IndexOf(ReadOnlySpan<char> item);

@@ -21,11 +21,11 @@ public sealed class SharkAction(IEngineAccessor engine) : IAction
         var target = actor.Location + vector;
         var targetElement = Engine.Tiles.ElementAt(target);
 
-        if (targetElement.Id == Engine.ElementList.WaterId || targetElement.Id == Engine.ElementList.LavaId)
+        if (targetElement.Id == Engine.Elements.WaterId || targetElement.Id == Engine.Elements.LavaId)
         {
             Engine.MoveActor(index, target);
         }
-        else if (targetElement.Id == Engine.ElementList.PlayerId)
+        else if (targetElement.Id == Engine.Elements.PlayerId)
         {
             Engine.Attack(index, target);
         }

@@ -189,7 +189,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             return false;
         }
 
-        var condition = Engine.ConditionList.Get(name);
+        var condition = Engine.Conditions.Get(name);
         result = condition?.Execute(ref oopContext, ref instruction) ?? Engine.World.Flags.Contains(name);
         return true;
     }
@@ -198,7 +198,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        var direction = Engine.DirectionList.Get(name);
+        var direction = Engine.Directions.Get(name);
 
         if (direction?.Execute(ref oopContext, ref instruction) is not {} temp)
         {
@@ -232,7 +232,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
 
-        var elementId = Engine.ElementList.IndexOf(word);
+        var elementId = Engine.Elements.IndexOf(word);
         if (elementId >= 0)
         {
             success = true;

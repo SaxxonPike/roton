@@ -40,16 +40,16 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
             return;
 
         Engine.SetBoard(targetBoard);
-        if (Engine.Tiles[target].Id != Engine.ElementList.PlayerId)
+        if (Engine.Tiles[target].Id != Engine.Elements.PlayerId)
         {
             Engine.InteractionList.Get(Engine.Tiles[target].Id)
                 .Interact(target, index, ref Engine.State.KeyVector);
         }
 
         if (Engine.Tiles.ElementAt(target).IsFloor ||
-            Engine.Tiles.ElementAt(target).Id == Engine.ElementList.PlayerId)
+            Engine.Tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
         {
-            if (Engine.Tiles.ElementAt(target).Id != Engine.ElementList.PlayerId)
+            if (Engine.Tiles.ElementAt(target).Id != Engine.Elements.PlayerId)
             {
                 Engine.MoveActor(0, target);
             }

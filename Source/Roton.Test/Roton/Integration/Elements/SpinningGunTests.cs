@@ -12,7 +12,7 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 5);
 
         // Place the gun.
-        var gunIndex = SpawnTo(5, 5, ElementList.SpinningGunId);
+        var gunIndex = SpawnTo(5, 5, Elements.SpinningGunId);
         var gun = Actors[gunIndex];
         gun.P1 = 9;
         gun.P2 = 9;
@@ -22,9 +22,9 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(6, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(6, 5).Id.Should().Be(Elements.EmptyId,
             "bullet needs to travel one tile");
-        TileAt(7, 5).Id.Should().Be(ElementList.BulletId,
+        TileAt(7, 5).Id.Should().Be(Elements.BulletId,
             "spinning gun should shoot towards player");
     }
 
@@ -35,7 +35,7 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(5, 10);
 
         // Place the gun.
-        var gunIndex = SpawnTo(5, 5, ElementList.SpinningGunId);
+        var gunIndex = SpawnTo(5, 5, Elements.SpinningGunId);
         var gun = Actors[gunIndex];
         gun.P1 = 9;
         gun.P2 = 9;
@@ -45,9 +45,9 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(5, 6).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 6).Id.Should().Be(Elements.EmptyId,
             "bullet needs to travel one tile");
-        TileAt(5, 7).Id.Should().Be(ElementList.BulletId,
+        TileAt(5, 7).Id.Should().Be(Elements.BulletId,
             "spinning gun should shoot towards player");
     }
 
@@ -58,7 +58,7 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 5);
 
         // Place the gun, setting it to shoot stars.
-        var gunIndex = SpawnTo(5, 5, ElementList.SpinningGunId);
+        var gunIndex = SpawnTo(5, 5, Elements.SpinningGunId);
         var gun = Actors[gunIndex];
         gun.P1 = 9;
         gun.P2 = 9 | 0x80;
@@ -68,7 +68,7 @@ public class SpinningGunTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(6, 5).Id.Should().Be(ElementList.StarId,
+        TileAt(6, 5).Id.Should().Be(Elements.StarId,
             "spinning gun that shoots stars should shoot a star moving towards player");
     }
 }

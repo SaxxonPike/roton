@@ -5,4 +5,4 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Boards : List<IPackedBoard>, IBoards;
+public sealed class BoardList : List<IPackedBoard>, IBoardList;

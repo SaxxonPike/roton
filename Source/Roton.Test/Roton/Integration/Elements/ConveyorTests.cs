@@ -9,19 +9,19 @@ public class ConveyorTests(Context context) : ElementTestFixture(context)
     public void ClockwiseConveyor_ShouldConveyPushableClockwise()
     {
         // Place the conveyor.
-        var conveyorIndex = SpawnTo(5, 5, ElementList.ClockwiseId);
+        var conveyorIndex = SpawnTo(5, 5, Elements.ClockwiseId);
         Actors[conveyorIndex].Cycle = 1;
 
         // Place a boulder next to it.
-        PlotTo(5, 4, ElementList.BoulderId);
+        PlotTo(5, 4, Elements.BoulderId);
 
         // Wait for the conveyor to convey.
         Step();
 
         // Assert.
-        TileAt(5, 4).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 4).Id.Should().Be(Elements.EmptyId,
             "boulder should have moved from its previous location");
-        TileAt(6, 4).Id.Should().Be(ElementList.BoulderId,
+        TileAt(6, 4).Id.Should().Be(Elements.BoulderId,
             "boulder should have moved clockwise");
     }
 
@@ -29,19 +29,19 @@ public class ConveyorTests(Context context) : ElementTestFixture(context)
     public void CounterClockwiseConveyor_ShouldConveyPushableCounterClockwise()
     {
         // Place the conveyor.
-        var conveyorIndex = SpawnTo(5, 5, ElementList.CounterId);
+        var conveyorIndex = SpawnTo(5, 5, Elements.CounterId);
         Actors[conveyorIndex].Cycle = 1;
 
         // Place a boulder next to it.
-        PlotTo(5, 4, ElementList.BoulderId);
+        PlotTo(5, 4, Elements.BoulderId);
 
         // Wait for the conveyor to convey.
         Step();
 
         // Assert.
-        TileAt(5, 4).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 4).Id.Should().Be(Elements.EmptyId,
             "boulder should have been moved away from previous position");
-        TileAt(4, 4).Id.Should().Be(ElementList.BoulderId,
+        TileAt(4, 4).Id.Should().Be(Elements.BoulderId,
             "boulder should have moved counter-clockwise");
     }
 }

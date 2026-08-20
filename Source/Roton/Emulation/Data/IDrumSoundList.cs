@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data;
 
-public interface IDrumBank : IEnumerable<IDrumSound>
+public interface IDrumSoundList : IEnumerable<IDrumSound>
 {
     int Count { get; }
     IDrumSound this[int index] { get; }

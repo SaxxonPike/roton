@@ -15,7 +15,7 @@ public sealed class ShootCommand(IEngineAccessor engine) : ICommand
         if (!Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
             return;
 
-        var projectile = Engine.ElementList.Bullet();
+        var projectile = Engine.Elements.Bullet();
         var success = Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
 
         if (success)

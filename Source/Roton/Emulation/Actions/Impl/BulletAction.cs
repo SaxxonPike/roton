@@ -17,13 +17,13 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
         {
             var target = actor.Location + actor.Vector;
             var element = Engine.Tiles.ElementAt(target);
-            if (element.IsFloor || element.Id == Engine.ElementList.WaterId || element.Id == Engine.ElementList.LavaId)
+            if (element.IsFloor || element.Id == Engine.Elements.WaterId || element.Id == Engine.Elements.LavaId)
             {
                 Engine.MoveActor(index, target);
                 break;
             }
 
-            if (canRicochet && element.Id == Engine.ElementList.RicochetId)
+            if (canRicochet && element.Id == Engine.Elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
@@ -31,8 +31,8 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
                 continue;
             }
 
-            if (element.Id == Engine.ElementList.BreakableId ||
-                element.IsDestructible && (element.Id == Engine.ElementList.PlayerId || actor.P1 == 0))
+            if (element.Id == Engine.Elements.BreakableId ||
+                element.IsDestructible && (element.Id == Engine.Elements.PlayerId || actor.P1 == 0))
             {
                 if (element.Points != 0)
                 {
@@ -45,7 +45,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.ElementList.RicochetId)
+                Engine.Tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.Elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
@@ -54,7 +54,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.ElementList.RicochetId)
+                Engine.Tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.Elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
@@ -64,7 +64,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
 
             Engine.RemoveActor(index);
             Engine.State.ActIndex--;
-            if (element.Id == Engine.ElementList.ObjectId || element.Id == Engine.ElementList.ScrollId)
+            if (element.Id == Engine.Elements.ObjectId || element.Id == Engine.Elements.ScrollId)
             {
                 Engine.BroadcastLabel(-Engine.Actors.ActorIndexAt(target), Engine.Facts.ShotLabel, false);
             }

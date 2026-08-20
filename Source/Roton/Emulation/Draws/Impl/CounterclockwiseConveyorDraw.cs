@@ -12,7 +12,7 @@ public sealed class CounterclockwiseConveyorDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return ((Engine.State.GameCycle / Engine.ElementList.Counter().Cycle) & 0x3) switch
+        return ((Engine.State.GameCycle / Engine.Elements.Counter().Cycle) & 0x3) switch
         {
             3 => new AnsiChar(0xB3, Engine.Tiles[location].Color),
             2 => new AnsiChar(0x2F, Engine.Tiles[location].Color),

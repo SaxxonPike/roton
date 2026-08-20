@@ -16,7 +16,7 @@ public sealed class CentipedeSegmentAction(IEngineAccessor engine) : IAction
         {
             if (actor.Leader < -1)
             {
-                Engine.Tiles[actor.Location].Id = Engine.ElementList.HeadId;
+                Engine.Tiles[actor.Location].Id = Engine.Elements.HeadId;
             }
             else
             {

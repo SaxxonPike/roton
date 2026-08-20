@@ -37,13 +37,13 @@ public sealed class SpiderAction(IEngineAccessor engine) : IAction
         var target = actor.Location + vector;
         var targetElement = Engine.Tiles.ElementAt(target).Id;
 
-        if (targetElement == Engine.ElementList.WebId)
+        if (targetElement == Engine.Elements.WebId)
         {
             Engine.MoveActor(index, target);
             return true;
         }
 
-        if (targetElement == Engine.ElementList.PlayerId)
+        if (targetElement == Engine.Elements.PlayerId)
         {
             Engine.Attack(index, target);
             return true;

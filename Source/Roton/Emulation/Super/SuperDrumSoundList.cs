@@ -5,7 +5,4 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperColors(IMemory memory) : Colors(memory, 0x21E7)
-{
-    public override int Count => 7;
-}
+public sealed class SuperDrumSoundList(IMemory memory) : MemoryDrumSoundList(memory, 0xD0B2);

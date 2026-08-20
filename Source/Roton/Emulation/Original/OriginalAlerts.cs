@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalAlerts(IMemory memory, IColors colors, IFacts facts) : Alerts
+public sealed class OriginalAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
 {
     public override IMessage AmmoMessage => new Message($"Ammunition - {facts.AmmoPerPickup} shots per container.");
 

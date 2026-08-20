@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data;
 
-public interface IActors : IEnumerable<IActor>
+public interface IActorList : IEnumerable<IActor>
 {
     int Capacity { get; }
     int Count { get; }

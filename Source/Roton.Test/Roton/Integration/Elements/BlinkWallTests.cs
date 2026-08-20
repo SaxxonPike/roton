@@ -13,7 +13,7 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         // Blink rays fire toward a vector until the ray collides with a non-empty.
 
         // Spawn a blink wall.
-        var wallIndex = SpawnTo(5, 5, ElementList.BlinkWallId);
+        var wallIndex = SpawnTo(5, 5, Elements.BlinkWallId);
         var wall = Actors[wallIndex];
         wall.Vector = Vector.East;
         wall.P1 = 0;
@@ -22,17 +22,17 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         wall.Cycle = 1;
 
         // Spawn a solid wall for the blink wall to fire into.
-        PlotTo(8, 5, ElementList.SolidId);
+        PlotTo(8, 5, Elements.SolidId);
 
         // Wait for the ray to be emitted.
         Step();
 
         // Assert.
-        TileAt(6, 5).Id.Should().Be(ElementList.BlinkRayHId,
+        TileAt(6, 5).Id.Should().Be(Elements.BlinkRayHId,
             "horizontal ray should be spawned 1 tile away");
-        TileAt(7, 5).Id.Should().Be(ElementList.BlinkRayHId,
+        TileAt(7, 5).Id.Should().Be(Elements.BlinkRayHId,
             "horizontal ray should be spawned 2 tiles away");
-        TileAt(8, 5).Id.Should().Be(ElementList.SolidId,
+        TileAt(8, 5).Id.Should().Be(Elements.SolidId,
             "walls should stop rays");
     }
 
@@ -43,7 +43,7 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         // The ray must be the same color as the blink wall.
 
         // Spawn a blink wall.
-        var wallIndex = SpawnTo(5, 5, ElementList.BlinkWallId, 0x01);
+        var wallIndex = SpawnTo(5, 5, Elements.BlinkWallId, 0x01);
         var wall = Actors[wallIndex];
         wall.Vector = Vector.East;
         wall.P1 = 0;
@@ -52,16 +52,16 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         wall.Cycle = 1;
 
         // Spawn the ray.
-        PlotTo(6, 5, ElementList.BlinkRayHId, 0x01);
-        PlotTo(7, 5, ElementList.BlinkRayHId, 0x01);
+        PlotTo(6, 5, Elements.BlinkRayHId, 0x01);
+        PlotTo(7, 5, Elements.BlinkRayHId, 0x01);
 
         // Wait for the ray to be removed.
         Step();
 
         // Assert.
-        TileAt(6, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(6, 5).Id.Should().Be(Elements.EmptyId,
             "ray 1 tile away should be cleared");
-        TileAt(7, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(7, 5).Id.Should().Be(Elements.EmptyId,
             "ray 2 tiles away should be cleared");
     }
 
@@ -70,7 +70,7 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
     {
         // Vertical rays work like horizontal rays, but the element ID for the ray is different.
 
-        var wallIndex = SpawnTo(5, 5, ElementList.BlinkWallId, 0x0E);
+        var wallIndex = SpawnTo(5, 5, Elements.BlinkWallId, 0x0E);
         var wall = Actors[wallIndex];
         wall.Vector = Vector.South;
         wall.P1 = 0;
@@ -78,15 +78,15 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         wall.P3 = 1;
         wall.Cycle = 1;
 
-        PlotTo(5, 8, ElementList.SolidId);
+        PlotTo(5, 8, Elements.SolidId);
 
         Step();
 
-        TileAt(5, 6).Id.Should().Be(ElementList.BlinkRayVId,
+        TileAt(5, 6).Id.Should().Be(Elements.BlinkRayVId,
             "vertical ray should be spawned 1 tile away");
-        TileAt(5, 7).Id.Should().Be(ElementList.BlinkRayVId,
+        TileAt(5, 7).Id.Should().Be(Elements.BlinkRayVId,
             "vertical ray should be spawned 2 tiles away");
-        TileAt(5, 8).Id.Should().Be(ElementList.SolidId,
+        TileAt(5, 8).Id.Should().Be(Elements.SolidId,
             "walls should stop rays");
     }
     
@@ -97,7 +97,7 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         // The ray must be the same color as the blink wall.
 
         // Spawn a blink wall.
-        var wallIndex = SpawnTo(5, 5, ElementList.BlinkWallId, 0x01);
+        var wallIndex = SpawnTo(5, 5, Elements.BlinkWallId, 0x01);
         var wall = Actors[wallIndex];
         wall.Vector = Vector.South;
         wall.P1 = 0;
@@ -106,16 +106,16 @@ public class BlinkWallTests(Context context) : ElementTestFixture(context)
         wall.Cycle = 1;
 
         // Spawn the ray.
-        PlotTo(5, 6, ElementList.BlinkRayVId, 0x01);
-        PlotTo(5, 7, ElementList.BlinkRayVId, 0x01);
+        PlotTo(5, 6, Elements.BlinkRayVId, 0x01);
+        PlotTo(5, 7, Elements.BlinkRayVId, 0x01);
 
         // Wait for the ray to be removed.
         Step();
 
         // Assert.
-        TileAt(5, 6).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 6).Id.Should().Be(Elements.EmptyId,
             "ray 1 tile away should be cleared");
-        TileAt(5, 7).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 7).Id.Should().Be(Elements.EmptyId,
             "ray 2 tiles away should be cleared");
     }
 

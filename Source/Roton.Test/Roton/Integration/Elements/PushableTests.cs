@@ -15,18 +15,18 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the slider to the south of the player.
-        PlotTo(10, 11, ElementList.SliderNsId);
+        PlotTo(10, 11, Elements.SliderNsId);
 
         // Move the player into the slider.
         Type(AnsiKey.Down);
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.EmptyId,
+        TileAt(10, 10).Id.Should().Be(Elements.EmptyId,
             "player should not be in the original position");
-        TileAt(10, 11).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 11).Id.Should().Be(Elements.PlayerId,
             "player should have moved in the push direction");
-        TileAt(10, 12).Id.Should().Be(ElementList.SliderNsId,
+        TileAt(10, 12).Id.Should().Be(Elements.SliderNsId,
             "slider should have moved in the push direction");
     }
 
@@ -37,16 +37,16 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the slider to the east of the player.
-        PlotTo(11, 10, ElementList.SliderNsId);
+        PlotTo(11, 10, Elements.SliderNsId);
 
         // Move the player into the slider.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved");
-        TileAt(11, 10).Id.Should().Be(ElementList.SliderNsId,
+        TileAt(11, 10).Id.Should().Be(Elements.SliderNsId,
             "slider should not have moved");
     }
 
@@ -57,16 +57,16 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the slider to the south of the player.
-        PlotTo(10, 11, ElementList.SliderEwId);
+        PlotTo(10, 11, Elements.SliderEwId);
 
         // Move the player into the slider.
         Type(AnsiKey.Down);
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved");
-        TileAt(10, 11).Id.Should().Be(ElementList.SliderEwId,
+        TileAt(10, 11).Id.Should().Be(Elements.SliderEwId,
             "slider should not have moved");
     }
 
@@ -77,18 +77,18 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the slider to the east of the player.
-        PlotTo(11, 10, ElementList.SliderEwId);
+        PlotTo(11, 10, Elements.SliderEwId);
 
         // Move the player into the slider.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.EmptyId,
+        TileAt(10, 10).Id.Should().Be(Elements.EmptyId,
             "player should not be in the original position");
-        TileAt(11, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(11, 10).Id.Should().Be(Elements.PlayerId,
             "player should have moved in the push direction");
-        TileAt(12, 10).Id.Should().Be(ElementList.SliderEwId,
+        TileAt(12, 10).Id.Should().Be(Elements.SliderEwId,
             "slider should have moved in the push direction");
     }
 
@@ -99,13 +99,13 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
         
         // Place the gem.
-        PlotTo(5, 5, ElementList.GemId);
+        PlotTo(5, 5, Elements.GemId);
         
         // Place a boulder beyond the gem.
-        PlotTo(6, 5, ElementList.BoulderId);
+        PlotTo(6, 5, Elements.BoulderId);
         
         // Place the pusher.
-        var index = SpawnTo(4, 5, ElementList.PusherId);
+        var index = SpawnTo(4, 5, Elements.PusherId);
         FaceActor(index, Vector.East);
         Actors[index].Cycle = 1;
         
@@ -113,13 +113,13 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         Step();
         
         // Assert.
-        TileAt(4, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(4, 5).Id.Should().Be(Elements.EmptyId,
             "pusher should have left original position");
-        TileAt(5, 5).Id.Should().Be(ElementList.PusherId,
+        TileAt(5, 5).Id.Should().Be(Elements.PusherId,
             "pusher should have moved in the push direction");
-        TileAt(6, 5).Id.Should().Be(ElementList.GemId,
+        TileAt(6, 5).Id.Should().Be(Elements.GemId,
             "gem should have been pushed");
-        TileAt(7, 5).Id.Should().Be(ElementList.BoulderId,
+        TileAt(7, 5).Id.Should().Be(Elements.BoulderId,
             "boulder should have been pushed");
     }
 
@@ -130,16 +130,16 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
         
         // Place a boulder.
-        PlotTo(5, 5, ElementList.BoulderId);
+        PlotTo(5, 5, Elements.BoulderId);
         
         // Place a gem beyond the boulder.
-        PlotTo(6, 5, ElementList.GemId);
+        PlotTo(6, 5, Elements.GemId);
         
         // Place a wall beyond the gem.
-        PlotTo(7, 5, ElementList.SolidId);
+        PlotTo(7, 5, Elements.SolidId);
         
         // Place the pusher.
-        var index = SpawnTo(4, 5, ElementList.PusherId);
+        var index = SpawnTo(4, 5, Elements.PusherId);
         FaceActor(index, Vector.East);
         Actors[index].Cycle = 1;
         
@@ -147,11 +147,11 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         Step();
         
         // Assert.
-        TileAt(4, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(4, 5).Id.Should().Be(Elements.EmptyId,
             "pusher should have left original position");
-        TileAt(5, 5).Id.Should().Be(ElementList.PusherId,
+        TileAt(5, 5).Id.Should().Be(Elements.PusherId,
             "pusher should have moved in the push direction");
-        TileAt(6, 5).Id.Should().Be(ElementList.BoulderId,
+        TileAt(6, 5).Id.Should().Be(Elements.BoulderId,
             "gem should have been crushed");
     }
 
@@ -167,16 +167,16 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
         
         // Place a gem.
-        PlotTo(5, 5, ElementList.GemId);
+        PlotTo(5, 5, Elements.GemId);
         
         // Place a boulder beyond the gem.
-        PlotTo(6, 5, ElementList.BoulderId);
+        PlotTo(6, 5, Elements.BoulderId);
         
         // Place a wall beyond the boulder.
-        PlotTo(7, 5, ElementList.SolidId);
+        PlotTo(7, 5, Elements.SolidId);
         
         // Place the pusher.
-        var index = SpawnTo(4, 5, ElementList.PusherId);
+        var index = SpawnTo(4, 5, Elements.PusherId);
         FaceActor(index, Vector.East);
         Actors[index].Cycle = 1;
         
@@ -184,11 +184,11 @@ public class PushableTests(Context context) : ElementTestFixture(context)
         Step();
         
         // Assert.
-        TileAt(4, 5).Id.Should().Be(ElementList.PusherId,
+        TileAt(4, 5).Id.Should().Be(Elements.PusherId,
             "pusher should not have moved");
-        TileAt(5, 5).Id.Should().Be(ElementList.GemId,
+        TileAt(5, 5).Id.Should().Be(Elements.GemId,
             "gem should not have been crushed");
-        TileAt(6, 5).Id.Should().Be(ElementList.BoulderId,
+        TileAt(6, 5).Id.Should().Be(Elements.BoulderId,
             "boulder should not have moved");
     }
 }
