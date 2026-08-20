@@ -45,8 +45,6 @@ public sealed class SuperHud : Hud
     private const int WindowRight = WindowLeft + WindowWidth - 1;
     private const int WindowBottom = WindowTop + WindowHeight - 1;
 
-    private const int WindowTileCount = WindowWidth * WindowHeight;
-
     protected override bool Confirm(string message)
     {
         UpdateBorder();
@@ -67,11 +65,6 @@ public sealed class SuperHud : Hud
                     DrawChar(x, y, new AnsiChar(0x20, 0x1F));
             }
         }
-
-        // for (var y = 0; y < ViewportHeight; y++)
-        // {
-        //     DrawString(0, y, new string(' ', ViewportWidth), 0x1F);
-        // }
     }
 
     public override void CreateStatusText()
@@ -159,7 +152,7 @@ public sealed class SuperHud : Hud
 
     private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
     {
-        DrawString(25 - message.Length / 2, 23, message, 0x1E);
+        DrawString(25 - message.Length / 2, 23, message, color);
     }
 
     private void DrawNumber(int y, int value)
@@ -178,11 +171,6 @@ public sealed class SuperHud : Hud
     public override void DrawTile(int x, int y, AnsiChar ac)
     {
         DrawTileCommon(x, y, ac);
-    }
-
-    private void DrawTileExact(int x, int y, AnsiChar ac)
-    {
-        Terminal.Plot(x, y, ac);
     }
 
     private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -221,8 +209,6 @@ public sealed class SuperHud : Hud
             Terminal.SetSize(40, 25, true);
         }
     }
-
-    private void InitializeFadeMatrix() => FadeMatrix.Initialize();
 
     public override void RedrawBoard()
     {

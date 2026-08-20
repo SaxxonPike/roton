@@ -68,6 +68,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void EnterBoard()
     {
+        Engine.Hud.UpdateBorder();
         Engine.BroadcastLabel(0, Engine.Facts.EnterLabel, false);
         Engine.Board.Entrance = Engine.Actors.Player.Location;
         Engine.Hud.UpdateCamera();
