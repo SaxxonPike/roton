@@ -27,7 +27,7 @@ public readonly struct HWord(int value) : IEquatable<HWord>, IEquatable<int>, IE
     public bool Equals(byte other) =>
         _val == other;
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         obj is HWord other && Equals(other);
 
     public override int GetHashCode() =>

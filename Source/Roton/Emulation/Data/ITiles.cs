@@ -5,9 +5,7 @@ namespace Roton.Emulation.Data;
 
 public interface ITiles : IEnumerable<Tile>
 {
-    int Count { get; }
     int Height { get; }
-    ref Tile this[int index] { get; }
     ref Tile this[Location location] { get; }
     int Width { get; }
     bool FindTile(Tile kind, ref Location location);

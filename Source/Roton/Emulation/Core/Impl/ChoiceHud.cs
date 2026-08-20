@@ -39,7 +39,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
         Terminal.Write(x, y, message, color);
     }
         
-    public int Show(bool performSelection, int x, int y, string message, int currentValue, string barText)
+    public int Show(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {
         void DrawPip(int col)
         {
@@ -76,12 +76,12 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
             }
             else
             {
-                minIndicator = @"1";
-                maxIndicator = @"9";
+                minIndicator = "1";
+                maxIndicator = "9";
             }
 
             DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
-            DrawString(x, y + 2, $@"{minIndicator}....:....{maxIndicator}", 0x1E);
+            DrawString(x, y + 2, $"{minIndicator}....:....{maxIndicator}", 0x1E);
         }
         else
         {

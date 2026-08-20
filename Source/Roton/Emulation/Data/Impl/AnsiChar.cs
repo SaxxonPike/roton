@@ -16,7 +16,7 @@ public readonly struct AnsiChar(int newChar, int newColor) : IEquatable<AnsiChar
     public bool Equals(AnsiChar other) => 
         Char == other.Char && Color == other.Color;
 
-    public override bool Equals(object obj) => 
+    public override bool Equals(object? obj) => 
         obj is AnsiChar other && Equals(other);
 
     public override int GetHashCode()

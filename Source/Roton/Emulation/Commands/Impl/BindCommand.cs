@@ -13,11 +13,11 @@ public sealed class BindCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
 
         var search = new SearchContext();
         var target = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
-        if (Engine.Parser.GetTarget(context.Index, ref search, target))
+        if (Engine.Parser.TryEvalTarget(context.Index, ref search, target))
         {
             var targetActor = Engine.Actors[search.Index];
             context.Actor.Pointer = targetActor.Pointer;

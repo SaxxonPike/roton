@@ -19,5 +19,5 @@ public sealed class Message : IMessage
         Text = [.. message];
     }
 
-    public string[] Text { get; }
+    public IReadOnlyList<string> Text { get; }
 }

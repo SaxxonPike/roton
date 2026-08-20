@@ -42,16 +42,21 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         Engine.UpdateStatus();
     }
 
-    public IScrollState ExecuteMessage(ref OopContext context)
+    public IScrollState? ExecuteMessage(ref OopContext context)
     {
-        if (context.Message is { Count: 1 })
-        {
-            Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(context.Message));
-            return null;
-        }
+        var message = context.GetMessage();
 
-        Engine.State.KeyVector = Vector.Idle;
-        return Engine.Hud.ShowScroll(false, context.Name, [.. context.Message]);
+        switch (message)
+        {
+            case { Count: 1 }:
+                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(message));
+                return null;
+            case { Count: > 1 }:
+                Engine.State.KeyVector = Vector.Idle;
+                return Engine.Hud.ShowScroll(false, context.Name, [.. message]);
+            default:
+                return null;
+        }
     }
 
     public void HandlePlayerInput(IActor actor)
@@ -153,12 +158,12 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         }
     }
 
-    public string OpenWorld()
+    public string? OpenWorld()
     {
         return Engine.ShowLoad("ZZT Worlds", "zzt");
     }
 
-    public string RestoreWorld()
+    public string? RestoreWorld()
     {
         return Engine.ShowLoad("Saved Games", "sav");
     }
@@ -214,7 +219,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
             case EngineKeyCode.S:
                 Engine.Hud.CreateStatusText();
                 Engine.State.GameSpeed = Engine.Hud.SelectParameter(
-                    true, 0x42, 0x15, @"Game speed:;FS", Engine.State.GameSpeed, null);
+                    true, 0x42, 0x15, "Game speed:;FS", Engine.State.GameSpeed, null);
                 break;
             case EngineKeyCode.R:
                 return Engine.RestoreWorld();

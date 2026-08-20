@@ -12,8 +12,7 @@ public sealed class TryCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
-        if (vector is not {} vec)
+        if (!Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
             return;
 
         var target = context.Actor.Location + vec;

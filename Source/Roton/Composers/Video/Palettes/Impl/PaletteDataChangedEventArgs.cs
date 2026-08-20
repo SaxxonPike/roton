@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Composers.Video.Palettes.Impl;
 
-public sealed class PaletteDataChangedEventArgs : EventArgs
+public readonly struct PaletteDataChangedEventArgs(byte[] data)
 {
-    public byte[] Data { get; set; }
+    public byte[] Data => data;
 }

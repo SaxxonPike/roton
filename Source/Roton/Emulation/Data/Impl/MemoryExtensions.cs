@@ -39,11 +39,6 @@ public static class MemoryExtensions
 
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int FastRead16(int offset) =>
-            BinaryPrimitives.ReadInt16LittleEndian(memory.Data.Slice(offset));
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int Read16(int offset)
         {
             var span = memory.Data;
@@ -104,6 +99,24 @@ public static class MemoryExtensions
                     return span.Slice(offset + 1, length);
 
                 var result = new byte[length];
+                for (var i = 0; i < length; i++)
+                    result[i] = span[++offset & 0xFFFF];
+                return result;
+            }
+        }
+
+        [DebuggerStepThrough]
+        internal ReadOnlySpan<byte> ReadStringSpan(int offset, Span<byte> buffer)
+        {
+            unchecked
+            {
+                var span = memory.Data;
+                var length = span[offset & 0xFFFF];
+
+                if (offset + length <= memory.Data.Length)
+                    return span.Slice(offset + 1, length);
+
+                var result = buffer.Slice(0, length);
                 for (var i = 0; i < length; i++)
                     result[i] = span[++offset & 0xFFFF];
                 return result;
@@ -180,11 +193,8 @@ public static class MemoryExtensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void WriteBool(int offset, bool value)
         {
-            unchecked
-            {
-                var span = memory.Data;
-                span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
-            }
+            var span = memory.Data;
+            span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
         }
 
         [DebuggerStepThrough]

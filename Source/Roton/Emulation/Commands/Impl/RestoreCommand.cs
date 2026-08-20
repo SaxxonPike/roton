@@ -13,7 +13,7 @@ public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         buffer[0] = '\r';
         buffer[1] = '\'';
         var wordBuffer = buffer.Slice(2);
@@ -28,7 +28,7 @@ public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
 
             while (context.Search.Offset >= 0)
             {
-                Engine.Actors[context.Search.Index].Code[context.Search.Offset + 1] = 0x3A;
+                Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
                 var word = Engine.State.GetOopWord(wordBuffer);
                 context.Search.Offset = Engine.Parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }

@@ -43,10 +43,6 @@ public sealed class OriginalState : IState
 
     private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    public ref Word MainTime => ref Memory.GetRef<Word>(0x740A);
-
-    public ref Word VisibleTileCount => ref Memory.GetRef<Word>(0x4ACC);
-
     public ref Bool AboutShown => ref Memory.GetRef<Bool>(0x7A60);
 
     public ref Word ActIndex => ref Memory.GetRef<Word>(0x7406);
@@ -121,17 +117,11 @@ public sealed class OriginalState : IState
         set => Memory.WriteString(0x456E, value);
     }
 
-    public string Message2 { get; set; }
+    public string Message2 { get; set; } = string.Empty;
 
-    public ref HWord OopByte => ref Memory.GetRef<HWord>(0x740E);
+    public ref PChar OopByte => ref Memory.GetRef<PChar>(0x740E);
 
     public ref Word OopNumber => ref Memory.GetRef<Word>(0x7426);
-
-    public string OopWord
-    {
-        get => Memory.ReadString(0x7410);
-        set => Memory.WriteString(0x7410, value);
-    }
 
     public ref Word PlayerElement => ref Memory.GetRef<Word>(0x4AC8);
 

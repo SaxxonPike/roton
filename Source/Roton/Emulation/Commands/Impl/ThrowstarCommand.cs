@@ -12,12 +12,12 @@ public sealed class ThrowstarCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
-        if (vector is {} vec)
+        if (Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
         {
             var projectile = Engine.ElementList.Star();
             Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
         }
+
         context.Moved = true;
     }
 }

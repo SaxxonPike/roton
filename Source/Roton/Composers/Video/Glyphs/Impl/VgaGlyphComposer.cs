@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
@@ -9,7 +9,13 @@ public sealed class VgaGlyphComposer : IGlyphComposer
 
     public VgaGlyphComposer(IBitmapFont font)
     {
-        _data = [.. font.Data.Select(i => (int)i)];
+        if (font == null)
+            throw new ArgumentNullException(nameof(font));
+        
+        _data = new int[font.Data.Length];
+        for (var i = 0; i < font.Data.Length; i++)
+            _data[i] = font.Data.Span[i];
+
         _height = font.Height;
         MaxWidth = font.Width;
         MaxHeight = font.Height;

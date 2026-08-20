@@ -19,23 +19,23 @@ namespace Roton.Emulation.Core.Impl
         {
             if (_writers.Count == 0)
                 return;
-            
+
             foreach (var writer in _writers)
                 writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
         }
 
-        public void TraceOop(ref OopContext oopContext, ref Word instruction)
+        public void TraceOop(ref OopContext context, ref Word instruction)
         {
             if (_writers.Count == 0)
                 return;
-            
-            var code = oopContext.Actor.Code;
+
+            var code = context.Actor.Code.Span;
             var offset = instruction;
             var end = instruction;
 
-            if (code == null)
+            if (code.IsEmpty)
                 return;
-            
+
             while (end < code.Length)
             {
                 if (code[end] == 0x0D || code[end] == 0x00)
@@ -43,9 +43,9 @@ namespace Roton.Emulation.Core.Impl
                 end++;
             }
 
-            var line = code.Skip(offset).Take(end - offset).ToArray().ToStringValue();
+            var line = code.Slice(offset, end - offset).ToString();
             foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:{oopContext.Index:D3} TRACE OOP  [{oopContext.Actor}] {line}");
+                writer.WriteLine($"{_stepNumber:D8}:{context.Index:D3} TRACE OOP  [{context.Actor}] {line}");
         }
 
         public void TraceStep()
@@ -53,14 +53,15 @@ namespace Roton.Emulation.Core.Impl
             _stepNumber++;
         }
 
-        public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock, bool ignoreSelfLock)
+        public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock,
+            bool ignoreSelfLock)
         {
             if (_writers.Count == 0)
                 return;
-            
+
             if (sender == targetIndex && !ignoreLock && !ignoreSelfLock)
                 return;
-            
+
             var options = new[]
             {
                 ignoreLock ? "IgnoreLock" : string.Empty,
@@ -70,7 +71,8 @@ namespace Roton.Emulation.Core.Impl
             var optionsString = string.Join(" ", options.Where(o => !string.IsNullOrEmpty(o)));
 
             foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
+                writer.WriteLine(
+                    $"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
         }
 
         public void Attach(TextWriter writer)
@@ -82,6 +84,16 @@ namespace Roton.Emulation.Core.Impl
         public void Detach(TextWriter writer)
         {
             _writers.Remove(writer);
+        }
+
+        public void TraceError(ref OopContext context, ReadOnlySpan<char> message)
+        {
+            if (_writers.Count == 0)
+                return;
+
+            foreach (var writer in _writers)
+                writer.WriteLine(
+                    $"{_stepNumber:D8}:{context.Index:D3} ERROR      [{context.Actor}] {message.ToString()}");
         }
     }
 }

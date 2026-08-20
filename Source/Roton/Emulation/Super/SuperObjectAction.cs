@@ -15,7 +15,7 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         if (actor.P2 == 0 && actor.Instruction >= 0)
         {
-            Engine.ExecuteCode(index, ref actor.Instruction, @"Interaction");
+            Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");
         }
 
         if (actor.Vector.IsZero())
@@ -26,23 +26,24 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
         }
 
         var target = actor.Location + actor.Vector;
-            
+
         if (!Engine.Tiles.ElementAt(target).IsFloor)
             Engine.Push(target, actor.Vector);
 
         if (Engine.Tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);
-            if (actor.P2 > 0)
-            {
-                actor.P2--;
-                if (actor.P2 == 0)
-                    actor.Vector = Vector.Idle;
-            }
+
+            if (actor.P2 <= 0)
+                return;
+
+            actor.P2--;
+            if (actor.P2 == 0)
+                actor.Vector = Vector.Idle;
         }
         else
         {
             Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
         }
-    }        
+    }
 }

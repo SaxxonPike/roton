@@ -15,11 +15,7 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x82, value);
     }
 
-    public override int Character
-    {
-        get => memory.Read8(_offset + 0x00);
-        set => memory.Write8(_offset + 0x00, value);
-    }
+    public override ref HWord Character => ref memory.GetRef<HWord>(_offset + 0x00);
 
     public override string CodeEditText
     {
@@ -27,17 +23,9 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0xAC, value);
     }
 
-    public override int Color
-    {
-        get => memory.Read8(_offset + 0x01);
-        set => memory.Write8(_offset + 0x01, value);
-    }
+    public override ref HWord Color => ref memory.GetRef<HWord>(_offset + 0x01);
 
-    public override int Cycle
-    {
-        get => memory.Read16(_offset + 0x0C);
-        set => memory.Write16(_offset + 0x0C, value);
-    }
+    public override ref Word Cycle => ref memory.GetRef<Word>(_offset + 0x0C);
 
     public override string EditorCategory
     {
@@ -45,53 +33,21 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x2E, value);
     }
 
-    public override bool HasDrawCode
-    {
-        get => memory.ReadBool(_offset + 0x07);
-        set => memory.WriteBool(_offset + 0x07, value);
-    }
+    public override ref Bool HasDrawCode => ref memory.GetRef<Bool>(_offset + 0x07);
 
-    public override bool IsAlwaysVisible
-    {
-        get => memory.ReadBool(_offset + 0x04);
-        set => memory.WriteBool(_offset + 0x04, value);
-    }
+    public override ref Bool IsAlwaysVisible => ref memory.GetRef<Bool>(_offset + 0x04);
 
-    public override bool IsDestructible
-    {
-        get => memory.ReadBool(_offset + 0x02);
-        set => memory.WriteBool(_offset + 0x02, value);
-    }
+    public override ref Bool IsDestructible => ref memory.GetRef<Bool>(_offset + 0x02);
 
-    public override bool IsEditorFloor
-    {
-        get => memory.ReadBool(_offset + 0x05);
-        set => memory.WriteBool(_offset + 0x05, value);
-    }
+    public override ref Bool IsEditorFloor => ref memory.GetRef<Bool>(_offset + 0x05);
 
-    public override bool IsFloor
-    {
-        get => memory.ReadBool(_offset + 0x06);
-        set => memory.WriteBool(_offset + 0x06, value);
-    }
+    public override ref Bool IsFloor => ref memory.GetRef<Bool>(_offset + 0x06);
 
-    public override bool IsPushable
-    {
-        get => memory.ReadBool(_offset + 0x03);
-        set => memory.WriteBool(_offset + 0x03, value);
-    }
+    public override ref Bool IsPushable => ref memory.GetRef<Bool>(_offset + 0x03);
 
-    public override int MenuIndex
-    {
-        get => memory.Read16(_offset + 0x16);
-        set => memory.Write16(_offset + 0x16, value);
-    }
+    public override ref Word MenuIndex => ref memory.GetRef<Word>(_offset + 0x16);
 
-    public override int MenuKey
-    {
-        get => memory.Read8(_offset + 0x18);
-        set => memory.Write8(_offset + 0x18, value);
-    }
+    public override ref PChar MenuKey => ref memory.GetRef<PChar>(_offset + 0x18);
 
     public override string Name
     {
@@ -117,11 +73,7 @@ public sealed class OriginalElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x6D, value);
     }
 
-    public override int Points
-    {
-        get => memory.Read16(_offset + 0xC1);
-        set => memory.Write16(_offset + 0xC1, value);
-    }
+    public override ref Word Points => ref memory.GetRef<Word>(_offset + 0xC1);
 
     public override string StepEditText
     {

@@ -1,6 +1,8 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface IProgrammable
 {
-    byte[] Code { get; set; }
+    Memory<char> Code { get; set; }
 }

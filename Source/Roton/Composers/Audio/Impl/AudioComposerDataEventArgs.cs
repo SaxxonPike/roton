@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Buffers;
 
 namespace Roton.Composers.Audio.Impl;
 
-public sealed class AudioComposerDataEventArgs : EventArgs
+public readonly struct AudioComposerDataEventArgs(
+    IMemoryOwner<float> memory,
+    int length)
 {
-    public float[] Data { get; set; }
+    public IMemoryOwner<float> Memory => memory;
+    public int Length => length;
+    public Span<float> Data => memory.Memory.Span.Slice(0, length);
 }

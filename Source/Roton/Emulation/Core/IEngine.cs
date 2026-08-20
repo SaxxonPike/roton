@@ -75,7 +75,7 @@ public interface IEngine
     void Push(Location location, Vector vector);
     void PushThroughTransporter(Location location, Vector vector);
     void PutTile(Location location, Vector vector, Tile kind);
-    void RaiseError(string error);
+    void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
     void ReadInput();
     void RemoveActor(int index);
     void RemoveItem(Location location);
@@ -91,7 +91,7 @@ public interface IEngine
     void ShowInGameHelp();
     void OpenWorld();
     bool RestoreWorld();
-    void SpawnActor(Location location, Tile tile, int cycle, IActor source);
+    void SpawnActor(Location location, Tile tile, int cycle, IActor? source);
     bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned);
     void Start();
     void Stop();
@@ -120,7 +120,7 @@ public interface IEngine
     void PlayStep();
     string GetHighScoreName(string fileName);
     void ShowHighScores();
-    string ShowLoad(string title, string extension);
+    string? ShowLoad(string title, string extension);
     void PackBoard();
     void UnpackBoard(int index);
     void Delay(int msec);

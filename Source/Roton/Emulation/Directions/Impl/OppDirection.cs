@@ -11,5 +11,7 @@ public sealed class OppDirection(IEngineAccessor engine) : IDirection
     private IEngine Engine => engine.Instance;
 
     public Vector Execute(ref OopContext context, ref Word instruction) => 
-        -(Engine.Parser.GetDirection(ref context, ref instruction) ?? Vector.Idle);
+        Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec)
+            ? -vec
+            : Vector.Idle;
 }

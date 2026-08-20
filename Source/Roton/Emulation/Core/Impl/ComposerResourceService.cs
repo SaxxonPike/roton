@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -20,10 +19,10 @@ public sealed class ComposerResourceService(IAssemblyResourceService assemblyRes
         [DebuggerStepThrough] get => _resource.Value;
     }
 
-    public byte[] GetPaletteData() 
+    public byte[]? GetPaletteData() 
         => Resource.System.GetFile(PaletteDataFileName);
 
-    public byte[] GetFontData() 
+    public byte[]? GetFontData() 
         => Resource.System.GetFile(FontDataFileName);
 
 }

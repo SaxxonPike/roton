@@ -1,6 +1,5 @@
 using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Original;
@@ -15,7 +14,7 @@ public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         if (actor.Instruction >= 0)
         {
-            Engine.ExecuteCode(index, ref actor.Instruction, @"Interaction");
+            Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");
         }
             
         if (actor.Vector.IsZero()) 

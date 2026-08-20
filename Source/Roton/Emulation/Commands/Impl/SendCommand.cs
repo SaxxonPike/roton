@@ -13,7 +13,7 @@ public sealed class SendCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         var target = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
         context.NextLine = Engine.BroadcastLabel(context.Index, target, false);
     }

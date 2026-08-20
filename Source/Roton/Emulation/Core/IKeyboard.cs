@@ -6,7 +6,7 @@ public interface IKeyboard
 {
     void Clear();
     bool KeyIsAvailable { get; }
-    IKeyPress GetKey();
+    IKeyPress? GetKey();
     int BufferLength { get; }
     KeyMod GetMod();
 }

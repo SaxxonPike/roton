@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Infrastructure.Impl;
 
@@ -12,7 +10,7 @@ namespace Roton.Infrastructure.Impl;
 [Context(Context.Super)]
 public sealed class AssemblyResourceService : IAssemblyResourceService
 {
-    private readonly IDictionary<Assembly, IResource> _cache = new Dictionary<Assembly, IResource>();
+    private readonly Dictionary<Assembly, IResource> _cache = new();
         
     public IResource GetFromAssemblyOf<T>()
     {
@@ -25,7 +23,7 @@ public sealed class AssemblyResourceService : IAssemblyResourceService
         using var stream = assembly.GetManifestResourceStream(name);
         using var mem = new MemoryStream();
         if (stream == null)
-            throw new Exception($"Reading resource failed: {name}");
+            throw new RotonException($"Reading resource failed: {name}");
                 
         stream.CopyTo(mem);
                 

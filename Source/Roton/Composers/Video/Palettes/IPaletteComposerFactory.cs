@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Composers.Video.Palettes;
 
 public interface IPaletteComposerFactory
 {
-    IPaletteComposer Get(byte[] data);
+    IPaletteComposer Get(ReadOnlyMemory<byte> data);
 }

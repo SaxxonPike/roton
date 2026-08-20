@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Roton.Emulation.Data;
@@ -114,14 +115,14 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
         for (var i = 0; i <= count; i++)
         {
             var actor = new Actor(mem, Heap, ActorDataOffset + ActorDataLength * i);
-            byte[] code = null;
+            var code = Memory<char>.Empty;
 
             if (actor.Pointer != 0)
             {
                 code = Heap[actor.Pointer];
 
                 // check to see if the code needs to be stored
-                if (code != null)
+                if (!code.IsEmpty)
                 {
                     if (savedCode.TryGetValue(actor.Pointer, out var value))
                     {
@@ -140,9 +141,11 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
             target.Write([.. Memory.Read(actor.Offset, ActorDataLength)]);
 
             // write code if applicable
-            if (code != null)
+            if (!code.IsEmpty)
             {
-                target.Write(code);
+                var codeBytes = new byte[code.Length];
+                Cp437.CharsToBytes(code.Span, codeBytes);
+                target.Write(codeBytes);
             }
         }
     }
@@ -183,6 +186,8 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
 
     private void UnpackActors(BinaryReader source, int count)
     {
+        var buffer = (stackalloc char[short.MaxValue]);
+
         // sanity check
         if (count > ActorCapacity)
         {
@@ -202,7 +207,8 @@ public abstract class GameSerializer(IMemory memory, IHeap heap) : IGameSerializ
             if (actor.Length > 0)
             {
                 var code = source.ReadBytes(actor.Length);
-                var pointer = Heap.Allocate(code);
+                Cp437.BytesToChars(code, buffer);
+                var pointer = Heap.Allocate(buffer.Slice(0, actor.Length));
                 actor.Pointer = pointer;
             }
 

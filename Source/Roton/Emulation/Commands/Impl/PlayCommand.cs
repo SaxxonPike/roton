@@ -13,7 +13,7 @@ public sealed class PlayCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
 
         var notes = Engine.Parser.ReadLine(context.Index, ref instruction, buffer);
         var sound = Engine.MusicEncoder.Encode(notes);

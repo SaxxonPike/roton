@@ -45,8 +45,6 @@ public sealed class SuperHud : Hud
     private const int WindowRight = WindowLeft + WindowWidth - 1;
     private const int WindowBottom = WindowTop + WindowHeight - 1;
 
-    private const int WindowTileCount = WindowWidth * WindowHeight;
-
     protected override bool Confirm(string message)
     {
         UpdateBorder();
@@ -67,11 +65,6 @@ public sealed class SuperHud : Hud
                     DrawChar(x, y, new AnsiChar(0x20, 0x1F));
             }
         }
-
-        // for (var y = 0; y < ViewportHeight; y++)
-        // {
-        //     DrawString(0, y, new string(' ', ViewportWidth), 0x1F);
-        // }
     }
 
     public override void CreateStatusText()
@@ -79,9 +72,9 @@ public sealed class SuperHud : Hud
         CreateStatusBar();
         if (Engine.TitleScreen)
         {
-            DrawString(0x04, 0x0A, @"Press", 0x1E);
-            DrawString(0x04, 0x0C, @"ENTER", 0x1F);
-            DrawString(0x01, 0x0E, @"to continue", 0x1E);
+            DrawString(0x04, 0x0A, "Press", 0x1E);
+            DrawString(0x04, 0x0C, "ENTER", 0x1F);
+            DrawString(0x01, 0x0E, "to continue", 0x1E);
         }
         else
         {
@@ -92,36 +85,36 @@ public sealed class SuperHud : Hud
                 0x1B.ToChar()
             ]);
             DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
-            DrawString(0x00, 0x01, @"  Commands  ", 0x6F);
+            DrawString(0x00, 0x01, "  Commands  ", 0x6F);
             DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
-            DrawString(0x00, 0x03, $@" {arrows}       ", 0x6F);
-            DrawString(0x00, 0x04, @"   Move     ", 0x6E);
-            DrawString(0x00, 0x05, $@" Shift+{arrows} ", 0x6F);
-            DrawString(0x00, 0x06, @"   Shoot    ", 0x6B);
-            DrawString(0x00, 0x07, @"   Hint     ", 0x6E);
-            DrawString(0x01, 0x07, @"H", 0x6F);
-            DrawString(0x00, 0x08, @"   Save Game", 0x6B);
-            DrawString(0x01, 0x08, @"S", 0x6F);
-            DrawString(0x00, 0x09, @"   Restore  ", 0x6E);
-            DrawString(0x01, 0x09, @"R", 0x6F);
-            DrawString(0x00, 0x0A, @"   Be Quiet ", 0x6E);
-            DrawString(0x01, 0x0A, @"B", 0x6F);
-            DrawString(0x00, 0x0B, @"   Quit     ", 0x6E);
-            DrawString(0x01, 0x0B, @"B", 0x6F);
+            DrawString(0x00, 0x03, $" {arrows}       ", 0x6F);
+            DrawString(0x00, 0x04, "   Move     ", 0x6E);
+            DrawString(0x00, 0x05, $" Shift+{arrows} ", 0x6F);
+            DrawString(0x00, 0x06, "   Shoot    ", 0x6B);
+            DrawString(0x00, 0x07, "   Hint     ", 0x6E);
+            DrawString(0x01, 0x07, "H", 0x6F);
+            DrawString(0x00, 0x08, "   Save Game", 0x6B);
+            DrawString(0x01, 0x08, "S", 0x6F);
+            DrawString(0x00, 0x09, "   Restore  ", 0x6E);
+            DrawString(0x01, 0x09, "R", 0x6F);
+            DrawString(0x00, 0x0A, "   Be Quiet ", 0x6E);
+            DrawString(0x01, 0x0A, "B", 0x6F);
+            DrawString(0x00, 0x0B, "   Quit     ", 0x6E);
+            DrawString(0x01, 0x0B, "Q", 0x6F);
             DrawString(0x00, 0x0C, new string(0xDC.ToChar(), 12), 0x1D);
-            DrawString(0x00, 0x0D, @"   Status   ", 0x6F);
+            DrawString(0x00, 0x0D, "   Status   ", 0x6F);
             DrawString(0x00, 0x0E, new string(0xDF.ToChar(), 12), 0x6D);
-            DrawString(0x00, 0x0F, @"Health      ", 0x6F);
-            DrawString(0x00, 0x10, @"            ", 0x6F);
-            DrawString(0x00, 0x11, @" Gems       ", 0x6F);
+            DrawString(0x00, 0x0F, "Health      ", 0x6F);
+            DrawString(0x00, 0x10, "            ", 0x6F);
+            DrawString(0x00, 0x11, " Gems       ", 0x6F);
             DrawChar(0x06, 0x11, new AnsiChar(0x04, 0x62));
-            DrawString(0x00, 0x12, @" Ammo       ", 0x6F);
+            DrawString(0x00, 0x12, " Ammo       ", 0x6F);
             DrawChar(0x06, 0x12, new AnsiChar(0x84, 0x6B));
-            DrawString(0x00, 0x13, @" Keys       ", 0x6F);
-            DrawString(0x00, 0x14, @"            ", 0x6F);
-            DrawString(0x00, 0x15, @" Score      ", 0x6F);
-            DrawString(0x00, 0x16, @"            ", 0x6F);
-            DrawString(0x00, 0x17, @"            ", 0x6F);
+            DrawString(0x00, 0x13, " Keys       ", 0x6F);
+            DrawString(0x00, 0x14, "            ", 0x6F);
+            DrawString(0x00, 0x15, " Score      ", 0x6F);
+            DrawString(0x00, 0x16, "            ", 0x6F);
+            DrawString(0x00, 0x17, "            ", 0x6F);
         }
 
         CreateStatusWindow();
@@ -159,14 +152,14 @@ public sealed class SuperHud : Hud
 
     private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
     {
-        DrawString(25 - message.Length / 2, 23, message, 0x1E);
+        DrawString(25 - message.Length / 2, 23, message, color);
     }
 
     private void DrawNumber(int y, int value)
     {
         var s = value.ToString();
         var x = 11 - s.Length;
-        DrawString(0x07, y, @"   ", 0x6E);
+        DrawString(0x07, y, "   ", 0x6E);
         DrawString(x, y, s, 0x6E);
     }
 
@@ -178,11 +171,6 @@ public sealed class SuperHud : Hud
     public override void DrawTile(int x, int y, AnsiChar ac)
     {
         DrawTileCommon(x, y, ac);
-    }
-
-    private void DrawTileExact(int x, int y, AnsiChar ac)
-    {
-        Terminal.Plot(x, y, ac);
     }
 
     private void DrawTileCommon(int x, int y, AnsiChar ac)
@@ -222,8 +210,6 @@ public sealed class SuperHud : Hud
         }
     }
 
-    private void InitializeFadeMatrix() => FadeMatrix.Initialize();
-
     public override void RedrawBoard()
     {
         UpdateCameraPosition();
@@ -232,12 +218,7 @@ public sealed class SuperHud : Hud
 
     public override void UpdateBorder()
     {
-        var clearChar = new AnsiChar(0x00, 0x10);
-        for (var x = 12; x < 40; x++)
-        {
-            DrawChar(x, 23, clearChar);
-            DrawChar(x, 24, clearChar);
-        }
+        ClearMessage();
     }
 
     private void UpdateCameraPosition()
@@ -246,8 +227,8 @@ public sealed class SuperHud : Hud
         var cameraY = Engine.Player.Location.Y - WindowHeight / 2;
 
         Engine.Board.Camera = new Location16(
-            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth), 1),
-            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight), 1)
+            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth + 1), 1),
+            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight + 1), 1)
         );
     }
 
@@ -408,7 +389,7 @@ public sealed class SuperHud : Hud
         DrawNumber(0x11, Engine.World.Gems);
         DrawNumber(0x12, Engine.World.Ammo);
         DrawNumber(0x15, Engine.World.Score);
-        DrawString(0x00, 0x16, @"            ", 0x6F);
+        DrawString(0x00, 0x16, "            ", 0x6F);
 
         var stoneText = StoneText;
 
@@ -424,13 +405,13 @@ public sealed class SuperHud : Hud
 
         for (var i = 0; i < 7; i++)
         {
-            var keyChar = Engine.World.Keys[i] ? Engine.ElementList.Key().Character : 0x20;
+            var keyChar = Engine.World.Keys[i] ? (byte)Engine.ElementList.Key().Character : 0x20;
             var x = i & 0x3;
             var y = i >> 2;
             DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
         }
 
-        DrawString(0x03, 0x0A, Engine.State.GameQuiet ? @"Be Noisy " : @"Be Quiet ", 0x6E);
+        DrawString(0x03, 0x0A, Engine.State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
 
         if (Engine.World.Flags.Contains("DEBUG"))
             DrawString(0x0E, 0x00, $"Used: {Engine.MemoryUsage}", 0x1E);
@@ -460,14 +441,14 @@ public sealed class SuperHud : Hud
         return cheat;
     }
 
-    public override string EnterHighScore(IHighScoreList highScoreList, int score)
+    public override string? EnterHighScore(IHighScoreList highScoreList, int score)
     {
         if (score <= 0 || !highScoreList.Any(hs => hs.Score <= score))
         {
             return null;
         }
 
-        string name = null;
+        string? name = null;
         Scroll.Show($"New high score for {Engine.World.Name}",
             [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
@@ -543,5 +524,25 @@ public sealed class SuperHud : Hud
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
         Engine.PlayErrorSound();
         Engine.Delay(2000);
+    }
+    
+    public override void DrawPausing()
+    {
+        DrawString(21, 24, "Pausing...", 0x1E);
+    }
+
+    public override void ClearPausing()
+    {
+        ClearMessage();
+    }
+
+    private void ClearMessage()
+    {
+        var clearChar = new AnsiChar(0x00, 0x10);
+        for (var x = 12; x < 40; x++)
+        {
+            DrawChar(x, 23, clearChar);
+            DrawChar(x, 24, clearChar);
+        }
     }
 }

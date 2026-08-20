@@ -34,7 +34,7 @@ public class LabelTests(Context context) : OopTestFixture(context)
 
         Step(2);
 
-        actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[0].Code.ToString().Should().Be(string.Join("\r",
             "@yellow",
             "#zap label",
             "'label",
@@ -70,7 +70,7 @@ public class LabelTests(Context context) : OopTestFixture(context)
 
         Step(2);
 
-        actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[0].Code.ToString().Should().Be(string.Join("\r",
             "@yellow",
             "#restore label",
             ":label",
@@ -128,27 +128,27 @@ public class LabelTests(Context context) : OopTestFixture(context)
 
         Step(2);
 
-        actors[0].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[0].Code.ToString().Should().Be(string.Join("\r",
             "@blue",
             "#zap green:label",
             ":label",
             "'label",
             "#end"
         ));
-        actors[1].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[1].Code.ToString().Should().Be(string.Join("\r",
             "@blue",
             "'label",
             "'label",
             "#end"
         ));
-        actors[2].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[2].Code.ToString().Should().Be(string.Join("\r",
             "@green",
             "#restore blue:label",
             "'label",
             ":label",
             "#end"
         ));
-        actors[3].Code.ToStringValue().Should().Be(string.Join("\xD",
+        actors[3].Code.ToString().Should().Be(string.Join("\r",
             "@green",
             ":label",
             ":label",

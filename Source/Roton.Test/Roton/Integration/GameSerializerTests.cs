@@ -34,7 +34,7 @@ public class GameSerializerTests(Context context) : AllContextIntegrationTestFix
             
         // Assert.
         Actors.Count.Should().Be(allCode.Count + 1);
-        var observed = Actors.Select(x => x.Code?.ToStringValue()).Where(c => c != null).ToList();
+        var observed = Actors.Select(x => x.Code.ToString()).Where(c => c.Length > 0).ToList();
         observed.Should().BeEquivalentTo(allCode);
     }
 }

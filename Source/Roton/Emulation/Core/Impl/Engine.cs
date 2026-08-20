@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -94,11 +93,11 @@ public sealed class Engine : IEngine, IDisposable
         _engineAccessor = engineAccessor;
     }
 
-    private void ClockTick(object sender, EventArgs args)
+    private void ClockTick(object? sender, EventArgs args)
     {
         if (_ticksToRun < 3)
             _ticksToRun++;
-        
+
         if (!State.GamePaused)
             _boardTimeHsec += Config.MasterClockNumerator * 100f / Config.MasterClockDenominator;
 
@@ -138,7 +137,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public ITracer Tracer { get; }
 
-    private Thread Thread { get; set; }
+    private Thread? Thread { get; set; }
 
     public bool ThreadActive => Thread != null || _step;
 
@@ -154,7 +153,7 @@ public sealed class Engine : IEngine, IDisposable
 
         if (!string.IsNullOrEmpty(cheatText))
         {
-            if (cheatText[0] == '-')
+            if (cheatText![0] == '-')
             {
                 cheatText = cheatText.Substring(1);
                 while (World.Flags.Contains(cheatText))
@@ -202,8 +201,8 @@ public sealed class Engine : IEngine, IDisposable
     public int ActorIndexAt(Location location) =>
         Actors.ActorIndexAt(location);
 
-    public event EventHandler Exited;
-    public event EventHandler Tick;
+    public event EventHandler? Exited;
+    public event EventHandler? Tick;
 
     public IActors Actors { get; }
 
@@ -480,14 +479,13 @@ public sealed class Engine : IEngine, IDisposable
                     if (context.Command == 0x2F)
                         context.Repeat = true;
 
-                    var vector = Parser.GetDirection(ref context, ref instruction);
-                    if (vector == null)
+                    if (!Parser.TryEvalDirection(ref context, ref instruction, out var vector))
                     {
-                        RaiseError("Bad direction");
+                        RaiseError(ref context, "Bad direction");
                         break;
                     }
 
-                    ObjectMover.ExecuteDirection(ref context, vector.Value);
+                    ObjectMover.ExecuteDirection(ref context, vector);
 
                     ReadActorCodeByte(index, ref instruction);
                     if (State.OopByte != 0x0D)
@@ -535,7 +533,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
         var label = term;
         var success = false;
         var split = label.IndexOf(':');
@@ -545,7 +543,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             target = label.Slice(0, split);
             label = label.Slice(split + 1);
-            success = Parser.GetTarget(sender, ref search, target);
+            success = Parser.TryEvalTarget(sender, ref search, target);
         }
         else if (search.Index < sender)
         {
@@ -568,7 +566,7 @@ public sealed class Engine : IEngine, IDisposable
                 search.Offset = Parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {
-                    success = Parser.GetTarget(sender, ref search, target);
+                    success = Parser.TryEvalTarget(sender, ref search, target);
                     continue;
                 }
             }
@@ -583,8 +581,7 @@ public sealed class Engine : IEngine, IDisposable
     public bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take)
     {
         // Does the item exist?
-        var item = Parser.GetItem(ref context, ref instruction);
-        if (item == null)
+        if (!Parser.TryEvalItem(ref context, ref instruction, out var item))
             return false;
 
         // Do we have a valid amount?
@@ -597,7 +594,7 @@ public sealed class Engine : IEngine, IDisposable
             State.OopNumber = -State.OopNumber;
 
         // Determine if the result will be in range.
-        var pendingAmount = item.Value + State.OopNumber;
+        var pendingAmount = item!.Value + State.OopNumber;
         if ((pendingAmount & 0xFFFF) >= 0x8000)
             return true;
 
@@ -706,6 +703,8 @@ public sealed class Engine : IEngine, IDisposable
             RemoveActor(index);
         }
     }
+    
+    private int HsecToTicks(int hsec) => (hsec * Config.MasterClockDenominator / Config.MasterClockNumerator / 100) + 1;
 
     public IHud Hud { get; }
 
@@ -718,19 +717,6 @@ public sealed class Engine : IEngine, IDisposable
 
     public bool LoadWorld(string name, bool savedGame)
     {
-        byte[] TryLoadWorld()
-        {
-            try
-            {
-                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
-            }
-            catch (IOException e)
-            {
-                ShowFormattedScroll(e.ToString());
-                return [];
-            }
-        }
-
         var worldData = TryLoadWorld();
 
         if (worldData == null || worldData.Length == 0)
@@ -754,7 +740,7 @@ public sealed class Engine : IEngine, IDisposable
 
             var numBoards = reader.ReadInt16();
             if (numBoards < 0)
-                throw new Exception("Board count must be zero or greater.");
+                throw new RotonException("Board count must be zero or greater.");
 
             State.BoardCount = numBoards;
             GameSerializer.LoadWorld(stream);
@@ -774,6 +760,19 @@ public sealed class Engine : IEngine, IDisposable
         UnpackBoard(World.BoardIndex);
         State.WorldLoaded = true;
         return true;
+
+        byte[]? TryLoadWorld()
+        {
+            try
+            {
+                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
+            }
+            catch (IOException e)
+            {
+                ShowFormattedScroll(e.ToString());
+                return [];
+            }
+        }
     }
 
     private void ShowDosError()
@@ -1039,10 +1038,11 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void RaiseError(string error)
+    public void RaiseError(ref OopContext context, ReadOnlySpan<char> error)
     {
         SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
         PlaySound(5, Sounds.Error);
+        Tracer.TraceError(ref context, error);
     }
 
     public IRandomizer Random { get; }
@@ -1182,7 +1182,7 @@ public sealed class Engine : IEngine, IDisposable
         }
 
         var topMessage = message.Text[0];
-        var bottomMessage = message.Text.Length > 1 ? message.Text[1] : string.Empty;
+        var bottomMessage = message.Text.Count > 1 ? message.Text[1] : string.Empty;
 
         SpawnActor(new Location(0, 0), new Tile(ElementList.MessengerId, 0), 1, State.DefaultActor);
         Actors[State.ActorCount].P2 = unchecked((byte)(duration / (State.GameWaitTime + 1)));
@@ -1200,7 +1200,7 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return;
 
-        LoadWorld(name, false);
+        LoadWorld(name!, false);
         State.StartBoard = World.BoardIndex;
         SetBoard(0);
 
@@ -1216,7 +1216,7 @@ public sealed class Engine : IEngine, IDisposable
         if (string.IsNullOrEmpty(name))
             return false;
 
-        if (!LoadWorld(name, true))
+        if (!LoadWorld(name!, true))
             return false;
 
         State.StartBoard = World.BoardIndex;
@@ -1225,14 +1225,14 @@ public sealed class Engine : IEngine, IDisposable
         return true;
     }
 
-    public string ShowLoad(string title, string extension)
+    public string? ShowLoad(string title, string extension)
     {
         return _fileDialog.Open(title, extension);
     }
 
     public ISounds Sounds { get; }
 
-    public void SpawnActor(Location location, Tile tile, int cycle, IActor source)
+    public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
         // must reserve one actor for player, and one for messenger
         if (State.ActorCount < Actors.Capacity - 2)
@@ -1545,9 +1545,6 @@ public sealed class Engine : IEngine, IDisposable
     private void InitializeElements(bool showInvisibles)
     {
         ElementList.Reset();
-
-        // this isn't all the initializations.
-        // todo: replace this with the ability to completely reinitialize engine default memory
         ElementList.Invisible().Character = showInvisibles ? 0xB0 : 0x20;
         ElementList.Invisible().Color = 0xFF;
         ElementList.Player().Character = 0x02;
@@ -1584,7 +1581,7 @@ public sealed class Engine : IEngine, IDisposable
             {
                 State.ActIndex = State.ActorCount + 1;
 
-                if (Timers.Player.Clock(1, Facts.PauseFlashInterval) > 0)
+                if (Timers.Player.Clock(1, HsecToTicks(25)) > 0)
                     alternating = !alternating;
 
                 if (alternating)
@@ -1739,7 +1736,7 @@ public sealed class Engine : IEngine, IDisposable
     {
         // bit of a hack to make sure we don't go out of bounds
         while (Boards.Count <= boardIndex)
-            Boards.Add(null);
+            Boards.Add(new PackedBoard([]));
 
         State.BoardCount = Boards.Count - 1;
         Boards[World.BoardIndex] = board;
@@ -1782,16 +1779,15 @@ public sealed class Engine : IEngine, IDisposable
     private int ReadActorCodeByte(int index, ref Word instruction)
     {
         var actor = Actors[index];
-        var value = 0;
+        var value = (char)0;
 
         if (instruction < 0 || instruction >= actor.Length)
         {
-            State.OopByte = 0;
+            State.OopByte = default;
         }
         else
         {
-            Debug.Assert(actor.Length == actor.Code.Length, @"Actor length and actual code length mismatch.");
-            value = actor.Code[instruction];
+            value = actor.Code.Span[instruction];
             State.OopByte = value;
             instruction++;
         }
@@ -1803,12 +1799,12 @@ public sealed class Engine : IEngine, IDisposable
 
     private EngineKeyCode ConvertKey(IKeyPress keyPress)
     {
-        var bytes = AnsiKeyTransformer.GetBytes(keyPress)?.ToList();
+        var bytes = AnsiKeyTransformer.GetBytes(keyPress);
 
-        if (bytes == null || bytes.Count == 0)
+        if (bytes.IsEmpty)
             return EngineKeyCode.None;
 
-        if (bytes.Count > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
+        if (bytes.Length > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
             return (EngineKeyCode)(bytes[1] | 0x80);
 
         return (EngineKeyCode)bytes[0];
@@ -1871,9 +1867,11 @@ public sealed class Engine : IEngine, IDisposable
         {
             if (!string.IsNullOrEmpty(cfg.WorldName))
             {
-                State.DefaultWorldName = cfg.WorldName.StartsWith("*")
-                    ? cfg.WorldName.Substring(1)
-                    : cfg.WorldName;
+                State.DefaultWorldName = (
+                    cfg.WorldName?.StartsWith("*") ?? false
+                        ? cfg.WorldName.Substring(1)
+                        : cfg.WorldName
+                ) ?? string.Empty;
             }
         }
 

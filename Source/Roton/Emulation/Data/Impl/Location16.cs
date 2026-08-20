@@ -79,7 +79,7 @@ public struct Location16 : IEquatable<Location16>
     public bool IsNonZero() => X != 0 || Y != 0;
     public bool IsZero() => X == 0 && Y == 0;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is Location16 other)
             return Equals(other);
@@ -89,8 +89,10 @@ public struct Location16 : IEquatable<Location16>
     public bool Equals(Location16 other) =>
         _x == other._x && _y == other._y;
 
+#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
     public override int GetHashCode() =>
         BitConverter.IsLittleEndian 
             ? ((_y << 16) | _x).GetHashCode() 
             : ((_x << 16) | _y).GetHashCode();
+#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
 }

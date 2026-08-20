@@ -10,7 +10,7 @@ public sealed class SuperActors(IMemory memory, IHeap heap) : Actors(memory, 129
     private IHeap Heap => heap;
 
     public override int Count
-        => Memory.FastRead16(0x6AB3) + 1;
+        => Memory.GetRef<Word>(0x6AB3) + 1;
 
     protected override IActor GetActor(int index)
         => new Actor(Memory, Heap, 0x6AB5 + 0x0019 * index);

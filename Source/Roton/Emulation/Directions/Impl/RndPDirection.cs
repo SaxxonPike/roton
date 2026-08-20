@@ -10,12 +10,10 @@ public sealed class RndPDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 
-    public Vector Execute(ref OopContext context, ref Word instruction)
-    {
-        var direction = Engine.Parser.GetDirection(ref context, ref instruction) ?? Vector.Idle;
-
-        return Engine.Random.GetNext(2) == 0
-            ? direction.Clockwise()
-            : direction.CounterClockwise();
-    }
+    public Vector Execute(ref OopContext context, ref Word instruction) =>
+        Engine.Parser.TryEvalDirection(ref context, ref instruction, out var direction)
+            ? Engine.Random.GetNext(2) == 0
+                ? direction.Clockwise()
+                : direction.CounterClockwise()
+            : Vector.Idle;
 }

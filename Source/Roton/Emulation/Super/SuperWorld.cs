@@ -46,5 +46,5 @@ public sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) :
 
     public int WorldType => -2;
 
-    public override string ToString() => Name ?? base.ToString();
+    public override string ToString() => Name;
 }

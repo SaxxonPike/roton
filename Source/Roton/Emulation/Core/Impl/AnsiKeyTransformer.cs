@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl;
@@ -114,7 +114,7 @@ public sealed class AnsiKeyTransformer : IAnsiKeyTransformer
         {AnsiKey.Pause, new AnsiKeyMap([], [], [0, 0], [])}
     };
 
-    public IEnumerable<byte> GetBytes(IKeyPress keyPress)
+    public ReadOnlySpan<byte> GetBytes(IKeyPress keyPress)
     {
         var map = Map.TryGetValue(keyPress.Key, out var value) ? value : Map[AnsiKey.None];
         return keyPress.Mod.HasFlag(KeyMod.Shift) ? map.Shift :

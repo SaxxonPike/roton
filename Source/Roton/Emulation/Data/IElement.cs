@@ -1,29 +1,30 @@
 ﻿using System;
+using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Data;
 
 public interface IElement
 {
     string BoardEditText { get; set; }
-    int Character { get; set; }
+    ref HWord Character { get; }
     string CodeEditText { get; set; }
-    int Color { get; set; }
-    int Cycle { get; set; }
+    ref HWord Color { get; }
+    ref Word Cycle { get; }
     string EditorCategory { get; set; }
-    bool HasDrawCode { get; set; }
+    ref Bool HasDrawCode { get; }
     int Id { get; }
-    bool IsAlwaysVisible { get; set; }
-    bool IsDestructible { get; set; }
-    bool IsEditorFloor { get; set; }
-    bool IsFloor { get; set; }
-    bool IsPushable { get; set; }
-    int MenuIndex { get; set; }
-    int MenuKey { get; set; }
+    ref Bool IsAlwaysVisible { get; }
+    ref Bool IsDestructible { get; }
+    ref Bool IsEditorFloor { get; }
+    ref Bool IsFloor { get; }
+    ref Bool IsPushable { get; }
+    ref Word MenuIndex { get; }
+    ref PChar MenuKey { get; }
     string Name { get; set; }
     string P1EditText { get; set; }
     string P2EditText { get; set; }
     string P3EditText { get; set; }
-    int Points { get; set; }
+    ref Word Points { get; }
     string StepEditText { get; set; }
 
     bool CanContainCode { get; }

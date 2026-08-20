@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Linq;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl;
@@ -19,7 +18,7 @@ public sealed class FileDialog(IHud hud, IFileSystem fileSystem) : IFileDialog
         [DebuggerStepThrough] get => fileSystem;
     }
 
-    public string Open(string title, string extension)
+    public string? Open(string title, string extension)
     {
         var path = string.Empty;
         while (true)

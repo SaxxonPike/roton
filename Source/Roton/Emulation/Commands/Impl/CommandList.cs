@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -34,7 +33,7 @@ public sealed class CommandList : ICommandList
 #endif
     }
 
-    public ICommand Get(ReadOnlySpan<char> name)
+    public ICommand? Get(ReadOnlySpan<char> name)
     {
 #if NET10_0_OR_GREATER
         return _commands.TryGetValue(name, out var value) ? value : null;

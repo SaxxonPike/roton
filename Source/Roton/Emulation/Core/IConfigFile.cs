@@ -9,7 +9,7 @@ public interface IConfigFile
     int Value1 { get; }
     int Value2 { get; }
     int Value3 { get; }
-    string WorldName { get; }
-    string RegistrationType { get; }
-    string RegistrationName { get; }
+    string? WorldName { get; }
+    string? RegistrationType { get; }
+    string? RegistrationName { get; }
 }

@@ -97,7 +97,7 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
         return string.Empty;
     }
 
-    public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string barText)
+    public virtual int SelectParameter(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {
         return currentValue;
     }
@@ -105,7 +105,7 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
     public IScrollState ShowHelp(string title, string fileName) => 
         Scroll.Show(title, fileName);
 
-    public IScrollState ShowScroll(bool isHelp, string title, IEnumerable<string> lines) =>
+    public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
         Scroll.Show(title, lines, isHelp, 0);
 
     public virtual void UpdateBorder()
@@ -124,7 +124,7 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
     {
     }
 
-    public virtual string EnterHighScore(IHighScoreList highScoreList, int score)
+    public virtual string? EnterHighScore(IHighScoreList highScoreList, int score)
     {
         return null;
     }

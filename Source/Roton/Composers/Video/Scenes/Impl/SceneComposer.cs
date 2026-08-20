@@ -10,27 +10,27 @@ namespace Roton.Composers.Video.Scenes.Impl;
 
 public sealed class SceneComposer : ISceneComposer, IDisposable
 {
-    public event EventHandler<FontDataChangedEventArgs> FontDataChanged;
-    public event EventHandler<PaletteDataChangedEventArgs> PaletteDataChanged;
-    public event EventHandler<ResizedEventArgs> Resized;
-    public event EventHandler<SceneUpdatedEventArgs> SceneUpdated;
-        
+    public event EventHandler<FontDataChangedEventArgs>? FontDataChanged;
+    public event EventHandler<PaletteDataChangedEventArgs>? PaletteDataChanged;
+    public event EventHandler<ResizedEventArgs>? Resized;
+    public event EventHandler<SceneUpdatedEventArgs>? SceneUpdated;
+
     private readonly AnsiChar _blankCharacter;
     private readonly IGlyphComposerFactory _glyphComposerFactory;
     private readonly IPaletteComposerFactory _paletteComposerFactory;
-    private int[] _colors;
+    private ReadOnlyMemory<int> _colors;
 
-    private byte[] _fontData;
-    private IGlyphComposer _glyphComposer;
+    private ReadOnlyMemory<byte> _fontData;
+    private IGlyphComposer? _glyphComposer;
     private bool _hideBlinkingCharacters;
-    private int[] _offsetLookUpTable;
-    private IPaletteComposer _paletteComposer;
-    private byte[] _paletteData;
+    private ReadOnlyMemory<int> _offsetLookUpTable;
+    private IPaletteComposer? _paletteComposer;
+    private ReadOnlyMemory<byte> _paletteData;
 
     private int _stride;
     private bool _useFullBrightBackgrounds;
 
-    private AnsiChar[] _chars;
+    private Memory<AnsiChar> _chars;
 
     public SceneComposer(
         IPaletteComposerFactory paletteComposerFactory,
@@ -46,7 +46,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         InitializeNewBitmap();
     }
 
-    public IBitmap Bitmap { get; private set; }
+    public IBitmap? Bitmap { get; private set; }
 
     public bool HideBlinkingCharacters
     {
@@ -78,7 +78,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
     public void Update(int x, int y)
     {
         var index = GetBufferOffset(x, y);
-        Update(index, _chars[index]);
+        Update(index, _chars.Span[index]);
     }
 
     public void Clear()
@@ -94,29 +94,31 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
             return;
 
         var index = GetBufferOffset(x, y);
-        if (_chars[index] != ac)
-        {
-            _chars[index] = ac;
-            Update(index, ac);
-        }
+
+        var existingAc = _chars.Span[index];
+        if (existingAc == ac)
+            return;
+
+        _chars.Span[index] = ac;
+        Update(index, ac);
     }
 
     public AnsiChar Read(int x, int y)
     {
         return IsOutOfBounds(x, y)
             ? _blankCharacter
-            : _chars[GetBufferOffset(x, y)];
+            : _chars.Span[GetBufferOffset(x, y)];
     }
 
     public void SetFont(byte[] data)
     {
-        _fontData = [.. data];
+        _fontData = data.ToArray();
         InitializeFont();
     }
 
     public void SetPalette(byte[] data)
     {
-        _paletteData = [.. data];
+        _paletteData = data.ToArray();
         InitializePalette();
     }
 
@@ -132,7 +134,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         InitializeFont();
         InitializeNewBitmap();
 
-        Resized?.Invoke(this, new ResizedEventArgs {Width = width, Height = height, Wide = wide});
+        Resized?.Invoke(this, new ResizedEventArgs(width, height, wide));
     }
 
     public void Write(int x, int y, ReadOnlySpan<char> value, int color)
@@ -159,18 +161,22 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
 
     private void DrawGlyph(AnsiChar ac, int offset)
     {
-        var glyph = _glyphComposer.ComposeGlyph(ac.Char);
+        if (_glyphComposer?.ComposeGlyph(ac.Char) is not { } glyph)
+            return;
+        if (Bitmap?.Bits is not { } outputBits)
+            return;
+
+        var colors = _colors.Span;
         var inputBits = glyph.Data;
-        var outputBits = Bitmap.Bits;
         var width = glyph.Width;
         var height = glyph.Height;
         var baseOffset = offset;
         var inputOffset = 0;
         var backgroundColor = _useFullBrightBackgrounds
-            ? _colors[ac.Color >> 4]
-            : _colors[(ac.Color >> 4) & 0x7];
+            ? colors[ac.Color >> 4]
+            : colors[(ac.Color >> 4) & 0x7];
         var foregroundColor = !_hideBlinkingCharacters || (ac.Color & 0x80) == 0
-            ? _colors[ac.Color & 0x0F]
+            ? colors[ac.Color & 0x0F]
             : backgroundColor;
         for (var y = 0; y < height; y++)
         {
@@ -183,7 +189,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
 
             baseOffset += _stride;
         }
-            
+
         SceneUpdated?.Invoke(this, new SceneUpdatedEventArgs());
     }
 
@@ -200,13 +206,11 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         var charTotal = Columns * Rows;
         var stride = Columns * _glyphComposer.MaxWidth;
         var height = Rows * _glyphComposer.MaxHeight;
-            
-        _offsetLookUpTable =
-        [
-            .. Enumerable.Range(0, charTotal)
-                .Select(i =>
-                    _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
-        ];
+
+        _offsetLookUpTable = Enumerable.Range(0, charTotal)
+            .Select(i =>
+                _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
+            .ToArray();
 
         if (Bitmap != null)
         {
@@ -224,33 +228,27 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
     {
         var oldGlyphComposer = _glyphComposer;
         _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide);
-            
+
         if (oldGlyphComposer != null)
         {
-            if (_glyphComposer.MaxHeight != oldGlyphComposer.MaxHeight || _glyphComposer.MaxWidth != oldGlyphComposer.MaxWidth)
+            if (_glyphComposer.MaxHeight != oldGlyphComposer.MaxHeight ||
+                _glyphComposer.MaxWidth != oldGlyphComposer.MaxWidth)
                 InitializeNewBitmap();
         }
-            
-        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs
-        {
-            Data = _fontData?.ToArray()
-        });
+
+        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs(_fontData.ToArray()));
     }
 
     private void InitializePalette()
     {
         _paletteComposer = _paletteComposerFactory.Get(_paletteData);
-        _colors =
-        [
-            .. Enumerable
-                .Range(0, 16)
-                .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
-        ];
-            
-        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs
-        {
-            Data = _paletteData?.ToArray()
-        });
+
+        _colors = Enumerable
+            .Range(0, 16)
+            .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
+            .ToArray();
+
+        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs(_paletteData.ToArray()));
     }
 
     private bool IsOutOfBounds(int x, int y)
@@ -260,7 +258,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
 
     private void Update(int index, AnsiChar ac)
     {
-        DrawGlyph(ac, _offsetLookUpTable[index]);
+        DrawGlyph(ac, _offsetLookUpTable.Span[index]);
     }
 
     private void UpdateAllBlinkingCharacters()
@@ -269,9 +267,9 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         for (var x = 0; x < Columns; x++)
         {
             var index = GetBufferOffset(x, y);
-            var c = _chars[index];
+            var c = _chars.Span[index];
             if ((c.Color & 0x80) != 0)
-                Update(index, _chars[index]);
+                Update(index, _chars.Span[index]);
         }
     }
 }

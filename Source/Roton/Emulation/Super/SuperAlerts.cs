@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using System;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -49,9 +50,9 @@ public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : 
         set => memory.WriteBool(0x7C11, value);
     }
 
-    public override IMessage ErrorMessage(string error)
+    public override IMessage ErrorMessage(ReadOnlySpan<char> error)
     {
-        return new Message($"ERR: {error}");
+        return new Message($"ERR: {error.ToString()}");
     }
 
     public override IMessage FakeMessage { get; } = new Message("A fake wall:", "secret passage!");

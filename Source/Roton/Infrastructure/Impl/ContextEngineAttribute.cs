@@ -1,6 +1,5 @@
 using System;
 using JetBrains.Annotations;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Infrastructure.Impl;
 

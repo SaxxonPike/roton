@@ -1,8 +1,6 @@
-using Roton.Emulation.Data.Impl;
-
 namespace Roton.Infrastructure;
 
 public interface IContextEngineSelector
 {
-    Context Get(string filename);
+    bool TryGetForWorldFileName(string filename, out Context context);
 }

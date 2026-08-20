@@ -50,7 +50,7 @@ public struct DWord : IEquatable<DWord>, IEquatable<int>, IEquatable<short>
     public bool Equals(short other) =>
         Value == other;
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         obj is DWord other && Equals(other);
 
     public override int GetHashCode() =>

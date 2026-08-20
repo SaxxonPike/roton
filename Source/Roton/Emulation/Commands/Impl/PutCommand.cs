@@ -12,22 +12,20 @@ public sealed class PutCommand(IEngineAccessor engine) : ICommand
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var vector = Engine.Parser.GetDirection(ref context, ref instruction);
         var success = false;
 
-        if (vector is {} vec)
+        if (Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
         {
-            var kind = Engine.Parser.GetKind(ref context, ref instruction);
-            if (kind is {} k)
+            if (Engine.Parser.TryEvalKind(ref context, ref instruction, out var k))
             {
                 success = true;
-                    
+
                 var target = context.Actor.Location + vec;
                 Engine.PutTile(target, vec, k);
             }
         }
 
         if (!success)
-            Engine.RaiseError("Bad #PUT");
+            Engine.RaiseError(ref context, "Bad #PUT");
     }
 }

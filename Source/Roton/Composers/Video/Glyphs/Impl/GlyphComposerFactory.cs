@@ -1,5 +1,5 @@
+using System;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Composers.Video.Glyphs.Impl;
@@ -8,10 +8,10 @@ namespace Roton.Composers.Video.Glyphs.Impl;
 [Context(Context.Super)]
 public sealed class GlyphComposerFactory(IComposerResourceService composerResourceService) : IGlyphComposerFactory
 {
-    public IGlyphComposer Get(byte[] data, bool wide)
+    public IGlyphComposer Get(ReadOnlyMemory<byte> data, bool wide)
     {
         IGlyphComposer result =
-            new AutoDetectBinaryGlyphComposer(data ?? composerResourceService.GetFontData());
+            new AutoDetectBinaryGlyphComposer(data.IsEmpty ? composerResourceService.GetFontData() : data);
 
         if (wide)
             result = new ScaledGlyphComposer(result, 2, 1);

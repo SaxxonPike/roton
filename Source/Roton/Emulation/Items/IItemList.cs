@@ -4,5 +4,5 @@ namespace Roton.Emulation.Items;
 
 public interface IItemList
 {
-    IItem Get(ReadOnlySpan<char> name);
+    IItem? Get(ReadOnlySpan<char> name);
 }

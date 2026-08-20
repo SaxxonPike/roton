@@ -6,8 +6,6 @@ namespace Roton.Composers.Extensions;
 
 public static class GlyphComposerExtensions
 {
-    public static IReadOnlyList<IGlyph> ComposeAllGlyphs(this IGlyphComposer composer)
-    {
-        return [.. Enumerable.Range(0, 256).Select(composer.ComposeGlyph)];
-    }
+    public static IReadOnlyList<IGlyph?> ComposeAllGlyphs(this IGlyphComposer composer) => 
+        [.. Enumerable.Range(0, 256).Select(composer.ComposeGlyph)];
 }

@@ -45,7 +45,7 @@ internal static class Utility
         /// Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
         [DebuggerStepThrough]
-        public int ToUpperCase() =>
+        private int ToUpperCase() =>
             a switch
             {
                 >= 0x61 and <= 0x7A => a - 0x20,
@@ -91,63 +91,14 @@ internal static class Utility
     [DebuggerStepThrough]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToUpperCase(this char input) =>
-        unchecked((char)((int)input).ToUpperCase());
+        input switch
+        {
+            >= 'a' and <= 'z' => unchecked((char)(input - 0x20)),
+            _ => input
+        };
 
-    extension(string a)
+    extension(string? a)
     {
-        /// <summary>
-        /// Compares source string to another string, with the source UpperCased.
-        /// </summary>
-        [DebuggerStepThrough]
-        public bool CaseInsensitiveEqual(ReadOnlySpan<char> b)
-        {
-            if (a == null)
-                return false;
-
-            if (a.Length != b.Length)
-                return false;
-
-            for (var i = 0; i < a.Length; i++)
-            {
-                if (a[i].ToUpperCase() != b[i])
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Compares source string to another string, with the source UpperCased, and only A-Z.
-        /// </summary>
-        [DebuggerStepThrough]
-        public bool CaseInsensitiveCharacterEqual(ReadOnlySpan<char> b)
-        {
-            var i = 0;
-            var j = 0;
-
-            if (a == null)
-                return false;
-
-            while (i < a.Length)
-            {
-                var ai = a[i].ToUpperCase();
-
-                if (ai >= 0x41 && ai <= 0x5A)
-                {
-                    if (j >= b.Length)
-                        break;
-
-                    if (ai != b[j])
-                        return false;
-                    j++;
-                }
-
-                i++;
-            }
-
-            return i == a.Length && j == b.Length;
-        }
-
         /// <summary>
         /// Convert a string to a byte array using code page 437.
         /// </summary>
@@ -157,7 +108,7 @@ internal static class Utility
             if (string.IsNullOrEmpty(a))
                 return [];
             
-            var result = new byte[a.Length];
+            var result = new byte[a!.Length];
             Cp437.CharsToBytes(a, result);
             return result;
         }
@@ -166,20 +117,18 @@ internal static class Utility
         /// Convert a string to a byte array using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public int ToBytes(Span<byte> destination)
-        {
-            if (string.IsNullOrEmpty(a))
-                return 0;
-
-            return Cp437.CharsToBytes(a, destination);
-        }
+        public int ToBytes(Span<byte> destination) => 
+            string.IsNullOrEmpty(a) ? 0 : Cp437.CharsToBytes(a, destination);
 
         /// <summary>
         /// Convert a byte array to a string using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public string UpCased()
+        public string? UpCased()
         {
+            if (a == null)
+                return null;
+
 #if NET10_0_OR_GREATER
             return string.Create(a.Length, a, static (span, s) =>
             {
@@ -201,13 +150,8 @@ internal static class Utility
         /// Convert a string to a byte array using code page 437.
         /// </summary>
         [DebuggerStepThrough]
-        public int ToBytes(Span<byte> destination)
-        {
-            if (a.Length == 0)
-                return 0;
-
-            return Cp437.CharsToBytes(a, destination);
-        }
+        public int ToBytes(Span<byte> destination) => 
+            a.Length == 0 ? 0 : Cp437.CharsToBytes(a, destination);
     }
     
     extension(ReadOnlySpan<byte> a)
@@ -240,7 +184,7 @@ internal static class Utility
             var j = 0;
 
             if (a.IsEmpty)
-                return false;
+                return b.IsEmpty;
 
             while (i < a.Length)
             {

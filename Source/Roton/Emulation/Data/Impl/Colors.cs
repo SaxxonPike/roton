@@ -11,4 +11,7 @@ public abstract class Colors(IMemory memory, int offset) : FixedStringList(memor
 
     protected override bool EqualsItem(int index, ReadOnlySpan<char> value) => 
         GetItemSpan(index).CaseInsensitiveCharacterEqual(value);
+
+    protected override bool EqualsItem(int index, ReadOnlySpan<char> value, Span<byte> buffer) =>
+        GetItemSpan(index, buffer).CaseInsensitiveCharacterEqual(value);
 }

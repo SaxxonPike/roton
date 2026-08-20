@@ -19,7 +19,7 @@ public readonly struct Bool(bool value) : IEquatable<Bool>, IEquatable<bool>
     public bool Equals(bool other) =>
         _val != 0 == other;
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         (obj is Bool other && Equals(other)) ||
         (obj is bool b && Equals(b));
 

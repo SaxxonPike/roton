@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -35,7 +34,7 @@ public sealed class ItemList : IItemList
 #endif
     }
 
-    public IItem Get(ReadOnlySpan<char> name)
+    public IItem? Get(ReadOnlySpan<char> name)
     {
 #if NET10_0_OR_GREATER
         return _items.TryGetValue(name, out var value) ? value : null;

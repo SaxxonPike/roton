@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Roton.Emulation.Data.Impl;
@@ -22,6 +23,7 @@ public readonly struct Word(int value) : IEquatable<Word>, IEquatable<int>, IEqu
 
     private int Value
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             if (BitConverter.IsLittleEndian)
@@ -40,7 +42,7 @@ public readonly struct Word(int value) : IEquatable<Word>, IEquatable<int>, IEqu
     public bool Equals(short other) =>
         Value == other;
 
-    public override bool Equals(object obj) =>
+    public override bool Equals(object? obj) =>
         obj is Word other && Equals(other);
 
     public override int GetHashCode() =>

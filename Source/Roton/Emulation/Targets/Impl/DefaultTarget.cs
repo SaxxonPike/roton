@@ -16,7 +16,7 @@ public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
 
     public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
-        Span<char> buffer = stackalloc char[256];
+        Span<char> buffer = stackalloc char[byte.MaxValue];
 
         while (context.Index < Actors.Count)
         {

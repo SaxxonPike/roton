@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -13,7 +12,7 @@ public sealed class ZipFileSystem : IFileSystem
     public ZipFileSystem(byte[] file)
     {
         if (file == null || file.Length == 0)
-            throw new Exception($"Can't load {nameof(ZipFileSystem)} source.");
+            throw new RotonException($"Can't load {nameof(ZipFileSystem)} source.");
         _file = file;
     }
 
@@ -44,7 +43,7 @@ public sealed class ZipFileSystem : IFileSystem
         return archive.Entries.Any(e => e.FullName.Equals(path));
     }
 
-    public byte[] GetFile(string filename)
+    public byte[]? GetFile(string filename)
     {
         using var archiveStream = new MemoryStream(_file);
         using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);

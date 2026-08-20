@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Infrastructure;
-
-namespace Roton.Emulation.Data.Impl;
+﻿namespace Roton.Emulation.Data.Impl;
 
 public static class ActorExtensions
 {
@@ -19,25 +17,5 @@ public static class ActorExtensions
         self.UnderTile = actor.UnderTile;
         self.Vector = actor.Vector;
         self.Code = actor.Code;
-    }
-
-    public static string GetCodeAsString(this IActor self)
-    {
-        return (self.Code ?? []).ToStringValue();
-    }
-
-    public static void ModifyCodeAsString(this IActor self, string value)
-    {
-        var length = value?.Length ?? 0;
-        if (self.Code == null || self.Code.Length != length)
-        {
-            self.Code = new byte[length];
-        }
-        value.ToBytes(self.Code);
-    }
-
-    public static void SetCodeAsString(this IActor self, string value)
-    {
-        self.Code = value.ToBytes();
     }
 }

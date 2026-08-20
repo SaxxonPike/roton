@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Threading;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
 namespace Roton.Emulation.Core.Impl;
@@ -16,7 +15,7 @@ public sealed class Clock(IConfig config) : IClock
     private bool _running;
     private bool _initialized;
 
-    public event EventHandler OnTick;
+    public event EventHandler? OnTick;
 
     public void Start()
     {

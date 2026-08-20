@@ -8,11 +8,5 @@ namespace Roton.Emulation.Items.Impl;
 [Context(Context.Super, "TIME")]
 public sealed class TimeItem(IEngineAccessor engine) : IItem
 {
-    private IEngine Engine => engine.Instance;
-
-    public int Value
-    {
-        get => Engine.World.TimePassed;
-        set => Engine.World.TimePassed = value;
-    }
+    public ref Word Value => ref engine.Instance.World.TimePassed;
 }
