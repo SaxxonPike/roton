@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Roton.Emulation.Core.Impl;
+namespace Roton.Emulation.Core;
 
 public static class FileSystemExtensions
 {
