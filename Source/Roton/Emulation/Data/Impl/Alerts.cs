@@ -22,17 +22,17 @@ public abstract class Alerts : IAlerts
     public abstract IMessage TimeMessage { get; }
     public abstract IMessage TorchMessage { get; }
     public abstract IMessage WaterMessage { get; }
-    public abstract bool AmmoPickup { get; set; }
-    public abstract bool CantShootHere { get; set; }
-    public abstract bool Dark { get; set; }
-    public abstract bool EnergizerPickup { get; set; }
-    public abstract bool FakeWall { get; set; }
-    public abstract bool Forest { get; set; }
-    public abstract bool GemPickup { get; set; }
-    public abstract bool NotDark { get; set; }
-    public abstract bool NoTorches { get; set; }
-    public abstract bool OutOfAmmo { get; set; }
-    public abstract bool TorchPickup { get; set; }
+    public abstract ref Bool AmmoPickup { get; }
+    public abstract ref Bool CantShootHere { get; }
+    public abstract ref Bool Dark { get; }
+    public abstract ref Bool EnergizerPickup { get; }
+    public abstract ref Bool FakeWall { get; }
+    public abstract ref Bool Forest { get; }
+    public abstract ref Bool GemPickup { get; }
+    public abstract ref Bool NotDark { get; }
+    public abstract ref Bool NoTorches { get; }
+    public abstract ref Bool OutOfAmmo { get; }
+    public abstract ref Bool TorchPickup { get; }
     public abstract IMessage DoorLockedMessage(int color);
     public abstract IMessage DoorOpenMessage(int color);
     public abstract IMessage ErrorMessage(ReadOnlySpan<char> error);

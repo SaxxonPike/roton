@@ -51,6 +51,6 @@ public class ForestTests(Context context) : AllContextIntegrationTestFixture(con
         StepAllKeys();
 
         // Assert.
-        Alerts.Forest.Should().BeFalse();
+        ((bool)Alerts.Forest).Should().BeFalse();
     }
 }

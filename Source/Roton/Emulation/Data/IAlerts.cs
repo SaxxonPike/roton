@@ -22,17 +22,17 @@ public interface IAlerts
     IMessage TimeMessage { get; }
     IMessage TorchMessage { get; }
     IMessage WaterMessage { get; }
-    bool AmmoPickup { get; set; }
-    bool CantShootHere { get; set; }
-    bool Dark { get; set; }
-    bool EnergizerPickup { get; set; }
-    bool FakeWall { get; set; }
-    bool Forest { get; set; }
-    bool GemPickup { get; set; }
-    bool NotDark { get; set; }
-    bool NoTorches { get; set; }
-    bool OutOfAmmo { get; set; }
-    bool TorchPickup { get; set; }
+    ref Bool AmmoPickup { get; }
+    ref Bool CantShootHere { get; }
+    ref Bool Dark { get; }
+    ref Bool EnergizerPickup { get; }
+    ref Bool FakeWall { get; }
+    ref Bool Forest { get; }
+    ref Bool GemPickup { get; }
+    ref Bool NotDark { get; }
+    ref Bool NoTorches { get; }
+    ref Bool OutOfAmmo { get; }
+    ref Bool TorchPickup { get; }
 
     IMessage DoorLockedMessage(int color);
     IMessage DoorOpenMessage(int color);

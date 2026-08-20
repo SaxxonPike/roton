@@ -43,6 +43,6 @@ public class FakeWallTests(Context context) : AllContextIntegrationTestFixture(c
         StepAllKeys();
 
         // Assert.
-        Alerts.FakeWall.Should().BeFalse();
+        ((bool)Alerts.FakeWall).Should().BeFalse();
     }
 }
