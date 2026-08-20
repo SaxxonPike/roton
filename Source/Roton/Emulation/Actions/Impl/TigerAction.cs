@@ -1,7 +1,7 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -14,11 +14,11 @@ public sealed class TigerAction(IEngineAccessor engine) : IAction
     public void Act(int index)
     {
         var actor = Engine.Actors[index];
-        var firingElement = Engine.ElementList.BulletId;
+        var firingElement = Engine.Elements.BulletId;
 
         if (actor.P2 >= 0x80)
         {
-            firingElement = Engine.ElementList.StarId;
+            firingElement = Engine.Elements.StarId;
         }
 
         if ((actor.P2 & 0x7F) > 3 * Engine.Random.GetNext(10))
@@ -35,6 +35,6 @@ public sealed class TigerAction(IEngineAccessor engine) : IAction
         }
 
         // Proceed to lion code.
-        Engine.ActionList.Get(Engine.ElementList.LionId).Act(index);
+        Engine.ActionList.Get(Engine.Elements.LionId).Act(index);
     }
 }

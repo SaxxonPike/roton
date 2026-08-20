@@ -6,7 +6,7 @@ using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
@@ -18,7 +18,7 @@ public sealed class SuperState : IState
     private Bool _cancelScroll;
     private Bool _init;
 
-    public SuperState(IMemory memory, IEngineResourceService engineResourceService, IHeap heap)
+    public SuperState(IMemory memory, IEngineResourceService engineResourceService, ICodeHeap heap)
     {
         Memory = memory;
         EngineResourceService = engineResourceService;
@@ -42,7 +42,7 @@ public sealed class SuperState : IState
 
     private IEngineResourceService EngineResourceService { [DebuggerStepThrough] get; }
 
-    private IHeap Heap { [DebuggerStepThrough] get; }
+    private ICodeHeap Heap { [DebuggerStepThrough] get; }
 
     public ref Bool AboutShown => ref _aboutShown;
 

@@ -1,14 +1,15 @@
 using System;
 using System.Diagnostics;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : IChoiceHud
+public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine)
+    : IChoiceHud
 {
     private ITerminal Terminal
     {
@@ -31,21 +32,23 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
         for (var i = 0; i < 14; i++)
         {
             Terminal.Plot(x + i, y, blankChar);
-        }            
+        }
     }
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> message, int color)
-    {
-        Terminal.Write(x, y, message, color);
-    }
-        
+    private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
+        Terminal.Write(x, y, text, color);
+
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
+        int color) =>
+        Terminal.Write(x, y, text0, text1, text2, color);
+
     public int Show(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {
         void DrawPip(int col)
         {
             for (var x2 = 0; x2 < 8; x2++)
                 DrawChar(x + x2 + 1, y + 1, new AnsiChar(0x20, col));
-                
+
             if (barText == null)
             {
                 DrawChar(x + currentValue + 1,
@@ -55,15 +58,15 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
             else
             {
                 DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
-                    y + 1, 
+                    y + 1,
                     new AnsiChar(0x1F, 0x1F));
             }
         }
-            
+
         DrawStatusLine(x, y);
         DrawStatusLine(x, y + 1);
         DrawStatusLine(x, y + 2);
-            
+
         if (barText == null)
         {
             string minIndicator;
@@ -81,7 +84,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
             }
 
             DrawString(x, y, message, performSelection ? 0x1F : 0x1E);
-            DrawString(x, y + 2, $"{minIndicator}....:....{maxIndicator}", 0x1E);
+            DrawString(x, y + 2, minIndicator, $"....:....", maxIndicator, 0x1E);
         }
         else
         {
@@ -93,13 +96,13 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
             DrawPip(0x1F);
             return currentValue;
         }
-            
+
         DrawPip(0x9F);
-            
+
         while (Engine.ThreadActive)
         {
             var update = false;
-                    
+
             Engine.ReadInput();
 
             switch (Engine.State.KeyPressed)
@@ -118,6 +121,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
                         if (currentValue > 0)
                             currentValue = 0;
                     }
+
                     update = true;
                     break;
                 case EngineKeyCode.Right:
@@ -131,6 +135,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
                         if (currentValue < 0x80)
                             currentValue = 0x80;
                     }
+
                     update = true;
                     break;
             }
@@ -140,18 +145,18 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine) : ICho
                 DrawStatusLine(x, y + 1);
                 DrawPip(0x9F);
             }
-                    
+
             if (Engine.State.KeyShift || Engine.State.KeyPressed is EngineKeyCode.Enter or EngineKeyCode.Escape)
             {
                 break;
             }
-                
+
             Engine.WaitForTick();
         }
 
         DrawString(x, y, message, 0x1E);
         DrawPip(0x1F);
-            
+
         return currentValue;
     }
 }

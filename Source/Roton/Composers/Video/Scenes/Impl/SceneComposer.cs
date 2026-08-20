@@ -2,8 +2,7 @@
 using System.Linq;
 using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Palettes;
-using Roton.Composers.Video.Palettes.Impl;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Composers.Video.Scenes.Impl;

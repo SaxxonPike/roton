@@ -1,7 +1,6 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
@@ -25,7 +24,7 @@ public class LabelTests(Context context) : OopTestFixture(context)
         var x = 1;
         var actors = programs.Select(code =>
         {
-            var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+            var actorIndex = SpawnTo(x++, 1, Elements.ObjectId);
             var actor = Actors[actorIndex];
             actor.Cycle = 1;
             SetActorCode(actorIndex, code);
@@ -61,7 +60,7 @@ public class LabelTests(Context context) : OopTestFixture(context)
         var x = 1;
         var actors = programs.Select(code =>
         {
-            var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+            var actorIndex = SpawnTo(x++, 1, Elements.ObjectId);
             var actor = Actors[actorIndex];
             actor.Cycle = 1;
             SetActorCode(actorIndex, code);
@@ -119,7 +118,7 @@ public class LabelTests(Context context) : OopTestFixture(context)
         var x = 1;
         var actors = programs.Select(code =>
         {
-            var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+            var actorIndex = SpawnTo(x++, 1, Elements.ObjectId);
             var actor = Actors[actorIndex];
             actor.Cycle = 1;
             SetActorCode(actorIndex, code);

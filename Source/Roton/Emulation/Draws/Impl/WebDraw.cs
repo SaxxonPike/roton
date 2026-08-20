@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
@@ -11,7 +11,7 @@ public sealed class WebDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(Engine.State.WebChars[Engine.Adjacent(location, Engine.ElementList.WebId)],
+        return new AnsiChar(Engine.State.WebChars[Engine.Adjacent(location, Engine.Elements.WebId)],
             Engine.Tiles[location].Color);
     }
 }

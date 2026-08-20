@@ -6,7 +6,7 @@ namespace Roton.Test.Infrastructure;
 
 public class TestKeyboard : IKeyboard
 {
-    private readonly Queue<IKeyPress> _queue = new();
+    private readonly Queue<KeyPress> _queue = new();
     private KeyMod _mod;
 
     public void Clear() =>
@@ -15,7 +15,7 @@ public class TestKeyboard : IKeyboard
     public bool KeyIsAvailable =>
         _queue.Count > 0;
 
-    public IKeyPress GetKey() =>
+    public KeyPress? GetKey() =>
         _queue.Count > 0
             ? _queue.Dequeue()
             : null;
@@ -26,7 +26,7 @@ public class TestKeyboard : IKeyboard
     public KeyMod GetMod() =>
         _mod;
 
-    public void Press(IKeyPress keyPress)
+    public void Press(KeyPress keyPress)
     {
         SetMod(keyPress.Mod);
         _queue.Enqueue(keyPress);

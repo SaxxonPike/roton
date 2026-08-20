@@ -8,7 +8,7 @@ public abstract class ElementTestFixture(Context context) : AllContextIntegratio
     [SetUp]
     public void __Setup()
     {
-        if (ElementList.ObjectId < 0)
+        if (Elements.ObjectId < 0)
         {
             Assert.Inconclusive();
             return;

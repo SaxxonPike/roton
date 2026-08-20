@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 

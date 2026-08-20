@@ -1,12 +1,10 @@
-﻿using Roton.Emulation.Core.Impl;
-
-namespace Roton.Emulation.Core;
+﻿namespace Roton.Emulation.Core;
 
 public interface IKeyboard
 {
     void Clear();
     bool KeyIsAvailable { get; }
-    IKeyPress? GetKey();
+    KeyPress? GetKey();
     int BufferLength { get; }
     KeyMod GetMod();
 }

@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
@@ -15,7 +15,7 @@ public class BombTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(3, 3);
 
         // Place the bomb.
-        var bombIndex = SpawnTo(4, 3, ElementList.BombId);
+        var bombIndex = SpawnTo(4, 3, Elements.BombId);
         var bomb = Actors[bombIndex];
         bomb.P1 = 0;
 
@@ -26,9 +26,9 @@ public class BombTests(Context context) : ElementTestFixture(context)
         // Assert.
         ((int)bomb.P1).Should().Be(Facts.BombCountdownStart - 1,
             "bomb should start countdown and decrement on first cycle");
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+        TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should remain in place");
-        TileAt(4, 3).Id.Should().Be(ElementList.BombId,
+        TileAt(4, 3).Id.Should().Be(Elements.BombId,
             "bomb should remain at its location");
     }
 
@@ -41,7 +41,7 @@ public class BombTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(3, 3);
 
         // Place the bomb and light it.
-        var bombIndex = SpawnTo(4, 3, ElementList.BombId);
+        var bombIndex = SpawnTo(4, 3, Elements.BombId);
         Actors[bombIndex].P1 = 5;
 
         // Move the player into the bomb.
@@ -49,9 +49,9 @@ public class BombTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(4, 3).Id.Should().Be(ElementList.PlayerId,
+        TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should push the bomb");
-        TileAt(5, 3).Id.Should().Be(ElementList.BombId,
+        TileAt(5, 3).Id.Should().Be(Elements.BombId,
             "bomb should have been pushed");
     }
 
@@ -61,17 +61,17 @@ public class BombTests(Context context) : ElementTestFixture(context)
         // Bombs explode within a radius using breakable tiles.
 
         // Place a bomb that will explode on the next tick.
-        var bombIndex = SpawnTo(5, 5, ElementList.BombId);
+        var bombIndex = SpawnTo(5, 5, Elements.BombId);
         var bomb = Actors[bombIndex];
         bomb.P1 = 2;
         bomb.Cycle = 1;
 
         // Place both a breakable and solid wall on either side.
-        PlotTo(6, 5, ElementList.BreakableId);
-        PlotTo(4, 5, ElementList.SolidId);
+        PlotTo(6, 5, Elements.BreakableId);
+        PlotTo(4, 5, Elements.SolidId);
 
         // Place a gem that will be destroyed by the explosion.
-        PlotTo(5, 6, ElementList.GemId);
+        PlotTo(5, 6, Elements.GemId);
 
         // Wait for the bomb to explode.
         Step();
@@ -79,11 +79,11 @@ public class BombTests(Context context) : ElementTestFixture(context)
         // Assert.
         ((int)bomb.P1).Should().Be(1,
             "countdown should decrease to 1");
-        TileAt(5, 6).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 6).Id.Should().Be(Elements.EmptyId,
             "breakable tiles should be destroyed");
-        TileAt(6, 5).Id.Should().Be(ElementList.BreakableId,
+        TileAt(6, 5).Id.Should().Be(Elements.BreakableId,
             "breakable walls should remain breakable walls");
-        TileAt(4, 5).Id.Should().Be(ElementList.SolidId,
+        TileAt(4, 5).Id.Should().Be(Elements.SolidId,
             "non-breakable walls should not change");
     }
 
@@ -93,24 +93,24 @@ public class BombTests(Context context) : ElementTestFixture(context)
         // Bombs clear out all breakable walls within the blast radius after the explosion.
 
         // Place a bomb that will clean up on the next tick.
-        var bombIndex = SpawnTo(5, 5, ElementList.BombId);
+        var bombIndex = SpawnTo(5, 5, Elements.BombId);
         var bomb = Actors[bombIndex];
         bomb.P1 = 1;
         bomb.Cycle = 1;
 
         // Place both a breakable and solid wall on either side.
-        PlotTo(6, 5, ElementList.BreakableId);
-        PlotTo(4, 5, ElementList.SolidId);
+        PlotTo(6, 5, Elements.BreakableId);
+        PlotTo(4, 5, Elements.SolidId);
 
         // Wait for the bomb to clean up.
         Step();
 
         // Assert.
-        TileAt(5, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(5, 5).Id.Should().Be(Elements.EmptyId,
             "bomb should have been destroyed");
-        TileAt(6, 5).Id.Should().Be(ElementList.EmptyId,
+        TileAt(6, 5).Id.Should().Be(Elements.EmptyId,
             "breakable wall should have been removed");
-        TileAt(4, 5).Id.Should().Be(ElementList.SolidId,
+        TileAt(4, 5).Id.Should().Be(Elements.SolidId,
             "non-breakable walls should not change");
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -35,7 +35,7 @@ public sealed class RuffianAction(IEngineAccessor engine) : IAction
             }
 
             var target = actor.Location + actor.Vector;
-            if (Engine.Tiles.ElementAt(target).Id == Engine.ElementList.PlayerId)
+            if (Engine.Tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
             {
                 Engine.Attack(index, target);
             }

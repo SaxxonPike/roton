@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl
 {

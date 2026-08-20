@@ -1,34 +1,27 @@
 ﻿using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : Alerts
+public sealed class SuperAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
 {
+    private Bool _dark;
+    private Bool _notDark;
+    private Bool _noTorches;
+    private Bool _torchPickup;
+
     public override IMessage AmmoMessage => new Message("Ammunition:", $"{facts.AmmoPerPickup} shots");
 
-    public override bool AmmoPickup
-    {
-        get => memory.ReadBool(0x7C0B);
-        set => memory.WriteBool(0x7C0B, value);
-    }
+    public override ref Bool AmmoPickup => ref memory.GetRef<Bool>(0x7C0B);
 
     public override IMessage BombMessage { get; } = new Message("Bomb activated!");
 
-    public override bool CantShootHere
-    {
-        get => memory.ReadBool(0x7C0D);
-        set => memory.WriteBool(0x7C0D, value);
-    }
+    public override ref Bool CantShootHere => ref memory.GetRef<Bool>(0x7C0D);
 
-    public override bool Dark
-    {
-        get => false;
-        set { }
-    }
+    public override ref Bool Dark => ref _dark;
 
     public override IMessage DarkMessage { get; } = new Message();
 
@@ -44,11 +37,7 @@ public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : 
 
     public override IMessage EnergizerMessage { get; } = new Message("Shield:", "You are invincible");
 
-    public override bool EnergizerPickup
-    {
-        get => memory.ReadBool(0x7C11);
-        set => memory.WriteBool(0x7C11, value);
-    }
+    public override ref Bool EnergizerPickup => ref memory.GetRef<Bool>(0x7C11);
 
     public override IMessage ErrorMessage(ReadOnlySpan<char> error)
     {
@@ -57,27 +46,15 @@ public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : 
 
     public override IMessage FakeMessage { get; } = new Message("A fake wall:", "secret passage!");
 
-    public override bool FakeWall
-    {
-        get => memory.ReadBool(0x7C0F);
-        set => memory.WriteBool(0x7C0F, value);
-    }
+    public override ref Bool FakeWall => ref memory.GetRef<Bool>(0x7C0F);
 
-    public override bool Forest
-    {
-        get => memory.ReadBool(0x7C0E);
-        set => memory.WriteBool(0x7C0E, value);
-    }
+    public override ref Bool Forest => ref memory.GetRef<Bool>(0x7C0E);
 
     public override IMessage ForestMessage { get; } = new Message("A path is cleared", "through the forest.");
     public override IMessage GameOverMessage { get; } = new Message("Game over", "-- Press ESCAPE --");
     public override IMessage GemMessage { get; } = new Message("Gems give you health!");
 
-    public override bool GemPickup
-    {
-        get => memory.ReadBool(0x7C10);
-        set => memory.WriteBool(0x7C10, value);
-    }
+    public override ref Bool GemPickup => ref memory.GetRef<Bool>(0x7C10);
 
     public override IMessage InvisibleMessage { get; } = new Message("You are blocked", "by an invisible wall.");
 
@@ -94,39 +71,23 @@ public sealed class SuperAlerts(IMemory memory, IColors colors, IFacts facts) : 
     public override IMessage NoAmmoMessage { get; } = new Message("You don't have", "any ammo!");
     public override IMessage NoShootMessage { get; } = new Message("Can't shoot", "in this place!");
 
-    public override bool NotDark
-    {
-        get => false;
-        set { }
-    }
+    public override ref Bool NotDark => ref _notDark;
 
     public override IMessage NotDarkMessage { get; } = new Message();
 
-    public override bool NoTorches
-    {
-        get => false;
-        set { }
-    }
+    public override ref Bool NoTorches => ref _noTorches;
 
     public override IMessage NoTorchMessage { get; } = new Message();
 
     public override IMessage OuchMessage { get; } = new Message("Ouch!");
 
-    public override bool OutOfAmmo
-    {
-        get => memory.ReadBool(0x7C0C);
-        set => memory.WriteBool(0x7C0C, value);
-    }
+    public override ref Bool OutOfAmmo => ref memory.GetRef<Bool>(0x7C0C);
 
     public override IMessage StoneMessage { get; } = new Message("You have found a", "Stone of Power!");
     public override IMessage TimeMessage { get; } = new Message("Running out of time!");
     public override IMessage TorchMessage { get; } = new Message();
 
-    public override bool TorchPickup
-    {
-        get => false;
-        set { }
-    }
+    public override ref Bool TorchPickup => ref _torchPickup;
 
     public override IMessage WaterMessage { get; } = new Message("Your way is", "blocked by lava.");
 }

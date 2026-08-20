@@ -1,7 +1,7 @@
 using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 

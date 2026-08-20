@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Roton.Emulation.Data;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 

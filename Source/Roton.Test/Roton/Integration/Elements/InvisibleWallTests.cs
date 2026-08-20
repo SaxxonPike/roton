@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
@@ -13,16 +13,16 @@ public class InvisibleWallTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(3, 3);
         
         // Place the invisible wall.
-        PlotTo(4, 3, ElementList.InvisibleId);
+        PlotTo(4, 3, Elements.InvisibleId);
 
         // Move the player into the wall.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        TileAt(4, 3).Id.Should().Be(ElementList.NormalId,
+        TileAt(4, 3).Id.Should().Be(Elements.NormalId,
             "invisible wall should convert to a normal wall when touched");
-        TileAt(3, 3).Id.Should().Be(ElementList.PlayerId,
+        TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should remain in place and not move through invisible wall");
     }
 
@@ -33,7 +33,7 @@ public class InvisibleWallTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(3, 3);
         
         // Place the invisible wall.
-        PlotTo(4, 3, ElementList.InvisibleId);
+        PlotTo(4, 3, Elements.InvisibleId);
 
         // Move the player into the wall.
         Type(AnsiKey.Right);

@@ -2,7 +2,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
@@ -110,13 +110,13 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location] = new Tile(Engine.ElementList.EmptyId, 0);
+        Engine.Tiles[Engine.Player.Location] = new Tile(Engine.Elements.EmptyId, 0);
     }
 
     public void ForcePlayerColor(int index)
     {
         var actor = Engine.Actors[index];
-        var playerElement = Engine.ElementList.Player();
+        var playerElement = Engine.Elements.Player();
         if (Engine.Tiles[actor.Location].Color == playerElement.Color &&
             playerElement.Character == Engine.Facts.PlayerCharacter)
             return;
@@ -142,7 +142,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
     {
         var target = Engine.Player.Location + Engine.State.KeyVector;
 
-        if (Engine.ElementAt(Engine.Player.Location).Id == Engine.ElementList.PlayerId)
+        if (Engine.ElementAt(Engine.Player.Location).Id == Engine.Elements.PlayerId)
         {
             Engine.MoveActor(0, target);
         }
@@ -151,7 +151,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.Player.Location += Engine.State.KeyVector;
             Engine.Tiles[Engine.Player.Location] =
-                new Tile(Engine.ElementList.PlayerId, Engine.ElementList.Player().Color);
+                new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
             Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
@@ -193,7 +193,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
     private bool TestAdjacent(Location location, int id)
     {
         var eId = Engine.Tiles[location].Id;
-        return eId == id || eId == Engine.ElementList.BoardEdgeId;
+        return eId == id || eId == Engine.Elements.BoardEdgeId;
     }
 
     public int GetAdjacent(Location location, int id) =>
@@ -240,7 +240,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void RemoveItem(Location location)
     {
-        Engine.Tiles[location].Id = Engine.ElementList.EmptyId;
+        Engine.Tiles[location].Id = Engine.Elements.EmptyId;
         Engine.UpdateBoard(location);
     }
 

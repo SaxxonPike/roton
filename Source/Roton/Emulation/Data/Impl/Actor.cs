@@ -1,14 +1,13 @@
 ﻿using System;
-using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
 public sealed class Actor : IActor
 {
     private readonly IMemory _memory;
-    private readonly IHeap _heap;
+    private readonly ICodeHeap _heap;
 
-    internal Actor(IMemory memory, IHeap heap, int offset)
+    internal Actor(IMemory memory, ICodeHeap heap, int offset)
     {
         _memory = memory;
         _heap = heap;

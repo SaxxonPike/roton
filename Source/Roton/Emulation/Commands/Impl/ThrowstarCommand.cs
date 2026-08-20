@@ -1,6 +1,6 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
@@ -14,7 +14,7 @@ public sealed class ThrowstarCommand(IEngineAccessor engine) : ICommand
     {
         if (Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
         {
-            var projectile = Engine.ElementList.Star();
+            var projectile = Engine.Elements.Star();
             Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
         }
 

@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -15,7 +16,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         const int targetY = 10;
 
         // Create the centipede head.
-        var index = SpawnTo(x, y, ElementList.HeadId);
+        var index = SpawnTo(x, y, Elements.HeadId);
         var actor = Actors[index];
         actor.Cycle = 1;
 
@@ -31,9 +32,9 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(x, y).Id.Should().Be(ElementList.EmptyId,
+        TileAt(x, y).Id.Should().Be(Elements.EmptyId,
             "centipede head must move");
-        TileAt(targetX, targetY).Id.Should().Be(ElementList.HeadId,
+        TileAt(targetX, targetY).Id.Should().Be(Elements.HeadId,
             "centipede head must have moved in its current vector");
     }
 
@@ -44,14 +45,14 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         const int y = 10;
 
         // Create a centipede head.
-        var headIndex = SpawnTo(x, y, ElementList.HeadId);
+        var headIndex = SpawnTo(x, y, Elements.HeadId);
         var headActor = Actors[headIndex];
         headActor.Cycle = 1;
         headActor.P1 = 0;
         headActor.P2 = 0;
 
         // Create a centipede segment that follows the head.
-        var segmentIndex = SpawnTo(x - 1, y, ElementList.SegmentId);
+        var segmentIndex = SpawnTo(x - 1, y, Elements.SegmentId);
         var segmentActor = Actors[segmentIndex];
         segmentActor.Cycle = 1;
 
@@ -67,9 +68,9 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         Step();
 
         // Assert.
-        TileAt(x + 1, y).Id.Should().Be(ElementList.HeadId,
+        TileAt(x + 1, y).Id.Should().Be(Elements.HeadId,
             "centipede head must move");
-        TileAt(x, y).Id.Should().Be(ElementList.SegmentId,
+        TileAt(x, y).Id.Should().Be(Elements.SegmentId,
             "centipede segment must follow the head");
     }
 
@@ -77,9 +78,9 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
     public void CentipedeHead_ShouldReverse_WhenBlockedInAllDirections()
     {
         // Create the centipede, which consists of a head and two segments.
-        var headIndex = SpawnTo(10, 10, ElementList.HeadId);
-        var seg1Index = SpawnTo(9, 10, ElementList.SegmentId);
-        var seg2Index = SpawnTo(8, 10, ElementList.SegmentId);
+        var headIndex = SpawnTo(10, 10, Elements.HeadId);
+        var seg1Index = SpawnTo(9, 10, Elements.SegmentId);
+        var seg2Index = SpawnTo(8, 10, Elements.SegmentId);
 
         var head = Actors[headIndex];
         var seg1 = Actors[seg1Index];
@@ -98,19 +99,19 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         head.Vector = Vector.East;
 
         // Place walls on all sides of the head.
-        PlotTo(11, 10, ElementList.SolidId);
-        PlotTo(10, 9, ElementList.SolidId);
-        PlotTo(10, 11, ElementList.SolidId);
+        PlotTo(11, 10, Elements.SolidId);
+        PlotTo(10, 9, Elements.SolidId);
+        PlotTo(10, 11, Elements.SolidId);
 
         // Execute.
         Step();
 
         // Assert board elements.
-        TileAt(10, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(10, 10).Id.Should().Be(Elements.SegmentId,
             "centipede head should become segment");
-        TileAt(9, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(9, 10).Id.Should().Be(Elements.SegmentId,
             "center of centipede should remain segment");
-        TileAt(8, 10).Id.Should().Be(ElementList.HeadId,
+        TileAt(8, 10).Id.Should().Be(Elements.HeadId,
             "rear of centipede should become head");
 
         // Assert centipede linkage.
@@ -134,7 +135,7 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
     public void CentipedeHead_ShouldTurn_WhenBlockedInForwardDirection()
     {
         // Create the centipede head.
-        var index = SpawnTo(10, 10, ElementList.HeadId);
+        var index = SpawnTo(10, 10, Elements.HeadId);
         var actor = Actors[index];
         actor.Cycle = 1;
         actor.P1 = 0;
@@ -149,16 +150,16 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         actor.Vector = Vector.East;
 
         // Block the east and north so that the centipede will turn south.
-        PlotTo(11, 10, ElementList.SolidId);
-        PlotTo(10, 9, ElementList.SolidId);
+        PlotTo(11, 10, Elements.SolidId);
+        PlotTo(10, 9, Elements.SolidId);
 
         // Execute.
         Step();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.EmptyId,
+        TileAt(10, 10).Id.Should().Be(Elements.EmptyId,
             "centipede head must move");
-        TileAt(10, 11).Id.Should().Be(ElementList.HeadId,
+        TileAt(10, 11).Id.Should().Be(Elements.HeadId,
             "centipede head must have moved south");
     }
 
@@ -167,9 +168,9 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
     {
         // Create a centipede with three segments. This is what
         // you get when you destroy the head.
-        var headIndex = SpawnTo(10, 10, ElementList.SegmentId);
-        var seg1Index = SpawnTo(9, 10, ElementList.SegmentId);
-        var seg2Index = SpawnTo(8, 10, ElementList.SegmentId);
+        var headIndex = SpawnTo(10, 10, Elements.SegmentId);
+        var seg1Index = SpawnTo(9, 10, Elements.SegmentId);
+        var seg2Index = SpawnTo(8, 10, Elements.SegmentId);
 
         var head = Actors[headIndex];
         var seg1 = Actors[seg1Index];
@@ -190,40 +191,40 @@ public class CentipedeTests(Context context) : ElementTestFixture(context)
         seg2.Cycle = 1;
         
         // Guarantee that the head will move east by placing walls to the north and south.
-        PlotTo(10, 9, ElementList.SolidId);
-        PlotTo(10, 11, ElementList.SolidId);
+        PlotTo(10, 9, Elements.SolidId);
+        PlotTo(10, 11, Elements.SolidId);
 
         // Execute the first phase.
         Step();
 
         // Segments should not have moved yet.
-        TileAt(10, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(10, 10).Id.Should().Be(Elements.SegmentId,
             "segment 0 should not have moved without an established head");
-        TileAt(9, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(9, 10).Id.Should().Be(Elements.SegmentId,
             "segment 1 should not have moved without an established head");
-        TileAt(8, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(8, 10).Id.Should().Be(Elements.SegmentId,
             "segment 2 should not have moved without an established head");
 
         // Execute the second phase.
         Step();
         
         // Head should be established.
-        TileAt(10, 10).Id.Should().Be(ElementList.HeadId,
+        TileAt(10, 10).Id.Should().Be(Elements.HeadId,
             "segment 0 should have become the head");
-        TileAt(9, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(9, 10).Id.Should().Be(Elements.SegmentId,
             "segment 1 should not have moved yet");
-        TileAt(8, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(8, 10).Id.Should().Be(Elements.SegmentId,
             "segment 2 should not have moved yet");
         
         // Execute the third phase.
         Step();
         
         // Assert that the centipede is now moving again.
-        TileAt(11, 10).Id.Should().Be(ElementList.HeadId,
+        TileAt(11, 10).Id.Should().Be(Elements.HeadId,
             "head should have moved");
-        TileAt(10, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(10, 10).Id.Should().Be(Elements.SegmentId,
             "segment 1 should have followed the head");
-        TileAt(9, 10).Id.Should().Be(ElementList.SegmentId,
+        TileAt(9, 10).Id.Should().Be(Elements.SegmentId,
             "segment 2 should have followed segment 1");
     }
 }

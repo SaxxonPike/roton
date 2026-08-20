@@ -10,7 +10,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
     public void Flags_ShouldBeSetBySetCommand()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -32,7 +32,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
         Flags.Add("F1");
 
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -51,7 +51,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
     public void Flags_ShouldNotBeSetTwice()
     {
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,
@@ -81,7 +81,7 @@ public class FlagTests(Context context) : OopTestFixture(context)
             .ToList();
 
         // Place the test actor.
-        var index = SpawnTo(1, 1, ElementList.ObjectId);
+        var index = SpawnTo(1, 1, Elements.ObjectId);
         var actor = Actors[index];
         actor.Cycle = 1;
         SetActorCode(index,

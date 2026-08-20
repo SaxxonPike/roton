@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -19,7 +19,7 @@ public class ForestTests(Context context) : AllContextIntegrationTestFixture(con
         MovePlayerTo(10, 10);
 
         // Place a forest tile to the right of the player.
-        PlotTo(11, 10, ElementList.ForestId);
+        PlotTo(11, 10, Elements.ForestId);
 
         // Move the player through the forest tile.
         Type(AnsiKey.Right);
@@ -27,9 +27,9 @@ public class ForestTests(Context context) : AllContextIntegrationTestFixture(con
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(12, 10).Id.Should().Be(Elements.PlayerId,
             "player should be able to walk on forest");
-        ((bool)ElementList[TileAt(11, 10).Id].IsFloor).Should().BeTrue(
+        ((bool)Elements[TileAt(11, 10).Id].IsFloor).Should().BeTrue(
             "forest should become walkable");
     }
 
@@ -42,8 +42,8 @@ public class ForestTests(Context context) : AllContextIntegrationTestFixture(con
         MovePlayerTo(10, 10);
 
         // Place forest tiles to the right of the player.
-        PlotTo(11, 10, ElementList.ForestId);
-        PlotTo(12, 10, ElementList.ForestId);
+        PlotTo(11, 10, Elements.ForestId);
+        PlotTo(12, 10, Elements.ForestId);
 
         // Move the player through the forest tiles.
         Type(AnsiKey.Right);
@@ -51,6 +51,6 @@ public class ForestTests(Context context) : AllContextIntegrationTestFixture(con
         StepAllKeys();
 
         // Assert.
-        Alerts.Forest.Should().BeFalse();
+        ((bool)Alerts.Forest).Should().BeFalse();
     }
 }

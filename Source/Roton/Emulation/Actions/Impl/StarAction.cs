@@ -1,5 +1,5 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -22,7 +22,7 @@ public sealed class StarAction(IEngineAccessor engine) : IAction
                 var targetLocation = actor.Location + actor.Vector;
                 var targetElement = Engine.Tiles.ElementAt(targetLocation);
 
-                if (targetElement.Id == Engine.ElementList.PlayerId || targetElement.Id == Engine.ElementList.BreakableId)
+                if (targetElement.Id == Engine.Elements.PlayerId || targetElement.Id == Engine.Elements.BreakableId)
                 {
                     Engine.Attack(index, targetLocation);
                 }
@@ -33,7 +33,7 @@ public sealed class StarAction(IEngineAccessor engine) : IAction
                         Engine.Push(targetLocation, actor.Vector);
                     }
 
-                    if (targetElement.IsFloor || targetElement.Id == Engine.ElementList.WaterId)
+                    if (targetElement.IsFloor || targetElement.Id == Engine.Elements.WaterId)
                     {
                         Engine.MoveActor(index, targetLocation);
                     }

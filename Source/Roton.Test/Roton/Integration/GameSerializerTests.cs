@@ -1,7 +1,6 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Infrastructure;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration;
@@ -17,7 +16,7 @@ public class GameSerializerTests(Context context) : AllContextIntegrationTestFix
         // Add some code.
         var allCode = Enumerable.Range(0, 50).Select(x =>
         {
-            var actor = SpawnTo(x + 1, 10, ElementList.ObjectId);
+            var actor = SpawnTo(x + 1, 10, Elements.ObjectId);
             var code = Create<string>();
             SetActorCode(actor, code);
             return code;

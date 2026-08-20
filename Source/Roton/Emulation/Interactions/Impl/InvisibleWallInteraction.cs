@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
@@ -12,7 +12,7 @@ public sealed class InvisibleWallInteraction(IEngineAccessor engine) : IInteract
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.Tiles[location].Id = Engine.ElementList.NormalId;
+        Engine.Tiles[location].Id = Engine.Elements.NormalId;
         Engine.UpdateBoard(location);
         Engine.PlaySound(3, Engine.Sounds.Invisible);
         Engine.SetMessage(Engine.Facts.ShortMessageDuration, Engine.Alerts.InvisibleMessage);

@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -23,11 +23,11 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;
-            var emptyElement = Engine.ElementList.EmptyId;
+            var emptyElement = Engine.Elements.EmptyId;
 
             var rayElement = actor.Vector.X == 0
-                ? Engine.ElementList.BlinkRayVId
-                : Engine.ElementList.BlinkRayHId;
+                ? Engine.Elements.BlinkRayVId
+                : Engine.Elements.BlinkRayHId;
 
             var color = Engine.Tiles[actor.Location].Color;
             var rayTile = new Tile(rayElement, color);
@@ -50,7 +50,7 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                     Engine.Destroy(target);
                 }
 
-                if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
+                if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
                 {
                     var playerIndex = Engine.Actors.ActorIndexAt(target);
                     Vector testVector;
@@ -81,7 +81,7 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                         }
                     }
 
-                    if (Engine.Tiles[target].Id == Engine.ElementList.PlayerId)
+                    if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
                     {
                         while (Engine.World.Health > 0)
                         {

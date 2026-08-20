@@ -1,7 +1,7 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -37,19 +37,19 @@ public sealed class CentipedeHeadAction(IEngineAccessor engine) : IAction
 
             var vector = actor.Vector;
             var element = Engine.Tiles.ElementAt(actor.Location + actor.Vector);
-            if (!element.IsFloor && element.Id != Engine.ElementList.PlayerId)
+            if (!element.IsFloor && element.Id != Engine.Elements.PlayerId)
             {
                 actor.Vector = Engine.RndP(vector);
                 element = Engine.Tiles.ElementAt(actor.Location + actor.Vector);
-                if (!element.IsFloor && element.Id != Engine.ElementList.PlayerId)
+                if (!element.IsFloor && element.Id != Engine.Elements.PlayerId)
                 {
                     actor.Vector = -actor.Vector;
                     element = Engine.Tiles.ElementAt(actor.Location + actor.Vector);
-                    if (!element.IsFloor && element.Id != Engine.ElementList.PlayerId)
+                    if (!element.IsFloor && element.Id != Engine.Elements.PlayerId)
                     {
                         actor.Vector = -vector;
                         element = Engine.Tiles.ElementAt(actor.Location + actor.Vector);
-                        if (!element.IsFloor && element.Id != Engine.ElementList.PlayerId)
+                        if (!element.IsFloor && element.Id != Engine.Elements.PlayerId)
                         {
                             actor.Vector = Vector.Idle;
                         }
@@ -62,7 +62,7 @@ public sealed class CentipedeHeadAction(IEngineAccessor engine) : IAction
         {
             // Reverse the centipede
 
-            Engine.Tiles[actor.Location].Id = Engine.ElementList.SegmentId;
+            Engine.Tiles[actor.Location].Id = Engine.Elements.SegmentId;
             Engine.UpdateBoard(actor.Location);
             var segmentIndex = index;
             while (true)
@@ -78,7 +78,7 @@ public sealed class CentipedeHeadAction(IEngineAccessor engine) : IAction
             }
 
             var newHead = Engine.Actors[segmentIndex];
-            Engine.Tiles[newHead.Location].Id = Engine.ElementList.HeadId;
+            Engine.Tiles[newHead.Location].Id = Engine.Elements.HeadId;
             Engine.UpdateBoard(newHead.Location);
         }
         else
@@ -87,14 +87,14 @@ public sealed class CentipedeHeadAction(IEngineAccessor engine) : IAction
 
             var target = actor.Location + actor.Vector;
 
-            if (Engine.Tiles.ElementAt(target).Id == Engine.ElementList.PlayerId)
+            if (Engine.Tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
             {
                 // The centipede is moving into a player
 
                 if (actor.Follower > 0)
                 {
                     var follower = Engine.Actors[actor.Follower];
-                    Engine.Tiles[follower.Location].Id = Engine.ElementList.HeadId;
+                    Engine.Tiles[follower.Location].Id = Engine.Elements.HeadId;
                     follower.Leader = -1;
                     Engine.UpdateBoard(follower.Location);
                 }
@@ -119,17 +119,17 @@ public sealed class CentipedeHeadAction(IEngineAccessor engine) : IAction
                     if (segment.Follower < 0)
                     {
                         // Determine if there are any eligible new follower segments
-                        if (Engine.Tiles.ElementAt(origin - vector).Id == Engine.ElementList.SegmentId &&
+                        if (Engine.Tiles.ElementAt(origin - vector).Id == Engine.Elements.SegmentId &&
                             Engine.ActorAt(origin - vector).Leader <= 0)
                         {
                             segment.Follower = Engine.ActorIndexAt(origin - vector);
                         }
-                        else if (Engine.Tiles.ElementAt(origin - vector.Swap()).Id == Engine.ElementList.SegmentId &&
+                        else if (Engine.Tiles.ElementAt(origin - vector.Swap()).Id == Engine.Elements.SegmentId &&
                                  Engine.ActorAt(origin - vector.Swap()).Leader <= 0)
                         {
                             segment.Follower = Engine.ActorIndexAt(origin - vector.Swap());
                         }
-                        else if (Engine.Tiles.ElementAt(origin + vector.Swap()).Id == Engine.ElementList.SegmentId &&
+                        else if (Engine.Tiles.ElementAt(origin + vector.Swap()).Id == Engine.Elements.SegmentId &&
                                  Engine.ActorAt(origin + vector.Swap()).Leader <= 0)
                         {
                             segment.Follower = Engine.ActorIndexAt(origin + vector.Swap());

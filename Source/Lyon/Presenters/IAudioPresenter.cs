@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Roton.Composers.Audio.Impl;
+using Roton.Composers.Audio;
 
 namespace Lyon.Presenters;
 

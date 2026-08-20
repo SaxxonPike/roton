@@ -1,7 +1,7 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -14,14 +14,14 @@ public sealed class SpinningGunAction(IEngineAccessor engine) : IAction
     public void Act(int index)
     {
         var actor = Engine.Actors[index];
-        var firingElement = Engine.ElementList.BulletId;
+        var firingElement = Engine.Elements.BulletId;
         var shot = false;
 
         Engine.UpdateBoard(actor.Location);
 
         if (actor.P2 >= 0x80)
         {
-            firingElement = Engine.ElementList.StarId;
+            firingElement = Engine.Elements.StarId;
         }
 
         if ((actor.P2 & 0x7F) > Engine.Random.GetNext(9))

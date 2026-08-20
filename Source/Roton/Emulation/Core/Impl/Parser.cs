@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Items;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
@@ -16,6 +16,13 @@ public sealed class Parser(IEngineAccessor engine) : IParser
         [DebuggerStepThrough] get => engine.Instance;
     }
 
+    private ReadOnlySpan<char> GetActorCode(int index)
+    {
+        var actor = Engine.Actors[index];
+        var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
+        return actor.Code.Span.Slice(0, codeLength);
+    }
+
     public int Search(int index, ReadOnlySpan<char> term)
     {
         var result = -1;
@@ -23,48 +30,38 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             return result;
 
         var termLength = term.Length;
-        var actor = Engine.Actors[index];
-        Word offs = default;
+        var code = GetActorCode(index);
 
-        while (offs < actor.Length)
+        var startIdx = 0;
+
+        while (startIdx < code.Length)
         {
-            var oldOffset = offs;
-            var termOffset = 0;
-            bool success;
+            var foundIdx = code
+                .Slice(startIdx)
+                .IndexOf(term, StringComparison.OrdinalIgnoreCase);
 
-            while (true)
+            if (foundIdx < 0)
+                break;
+
+            startIdx += foundIdx;
+
+            var endIdx = startIdx + termLength;
+
+            var endChar = endIdx >= code.Length
+                ? '\0'
+                : code[endIdx].ToUpperCase();
+
+            if (endChar is '_' or >= 'A' and <= 'Z')
             {
-                ReadByte(index, ref offs);
-                if (term[termOffset].ToUpperCase() != Engine.State.OopByte.ToUpper())
-                {
-                    success = false;
-                    break;
-                }
-
-                termOffset++;
-                if (termOffset >= termLength)
-                {
-                    success = true;
-                    break;
-                }
+                startIdx++;
+                continue;
             }
 
-            if (success)
-            {
-                ReadByte(index, ref offs);
-                Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-                if ((int)Engine.State.OopByte is not (>= 0x41 and <= 0x5A or 0x5F))
-                {
-                    result = oldOffset;
-                    break;
-                }
-            }
-
-            oldOffset++;
-            offs = oldOffset;
+            Engine.State.OopByte = endChar;
+            return startIdx;
         }
 
-        return result;
+        return -1;
     }
 
     public char ReadByte(int index, ref Word instruction)
@@ -88,93 +85,108 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
     public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
     {
+        var code = GetActorCode(index);
         var length = 0;
+        int instr = instruction;
 
-        ReadByte(index, ref instruction);
+        var b = instr < code.Length
+            ? code[instr++]
+            : '\0';
 
-        while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
+        while (b != '\0' && b != '\r')
         {
             if (length < buffer.Length)
-                buffer[length++] = Engine.State.OopByte;
-            ReadByte(index, ref instruction);
+                buffer[length++] = b;
+            b = instr < code.Length
+                ? code[instr++]
+                : '\0';
         }
 
+        instruction = instr;
+
+        Engine.State.OopByte = b;
         return buffer.Slice(0, length);
     }
 
     public int ReadNumber(int index, ref Word instruction)
     {
+        var code = GetActorCode(index);
         var success = false;
         var resultInt = 0;
+        int instr = instruction;
+        var b = '\0';
 
-        while (ReadByte(index, ref instruction) == 0x20)
+        // Skip spaces.
+
+        while (instr < code.Length)
         {
+            b = code[instr++];
+            if (b != ' ')
+                break;
         }
 
-        Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-        while ((int)Engine.State.OopByte is >= 0x30 and <= 0x39)
+        if (instr >= code.Length)
+            b = '\0';
+
+        while (b is >= '0' and <= '9')
         {
             success = true;
-            resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
-            ReadByte(index, ref instruction);
+            resultInt = resultInt * 10 + (b - 0x30);
+            b = instr < code.Length
+                ? code[instr++]
+                : '\0';
         }
 
-        if (instruction > 0)
-        {
-            instruction--;
-        }
+        if (instr > 0) 
+            instr--;
+
+        instruction = instr;
+        Engine.State.OopByte = b.ToUpperCase();
 
         if (!success)
-        {
             Engine.State.OopNumber = -1;
-        }
         else
-        {
             Engine.State.OopNumber = resultInt;
-        }
 
         return Engine.State.OopNumber;
-    }
-
-    public void ReadWord(int index, ref Word instruction)
-    {
-        Span<char> result = stackalloc char[byte.MaxValue];
-        ReadWord(index, ref instruction, result);
     }
 
     public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
     {
         var length = 0;
+        var code = GetActorCode(index);
+        int instr = instruction;
+        var b = '\0';
 
-        while (true)
+        while (instr < code.Length)
         {
-            ReadByte(index, ref instruction);
-            if (Engine.State.OopByte != 0x20)
-            {
+            b = code[instr++];
+            if (b != ' ')
                 break;
-            }
         }
 
-        Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-        var oopByte = Engine.State.OopByte;
+        b = b.ToUpperCase();
 
-        if ((int)oopByte is not (>= 0x30 and <= 0x39))
+        if (b is not (>= '0' and <= '9'))
         {
-            while ((int)oopByte is >= 0x41 and <= 0x5A or >= 0x30 and <= 0x39 or 0x3A or 0x5F)
+            while (b is >= 'A' and <= 'Z' or >= '0' and <= '9' or ':' or '_')
             {
                 if (length < buffer.Length)
-                    buffer[length++] = oopByte;
-                ReadByte(index, ref instruction);
-                Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-                oopByte = Engine.State.OopByte;
+                    buffer[length++] = b;
+                b = instr < code.Length
+                    ? code[instr++].ToUpperCase()
+                    : '\0';
             }
         }
 
-        if (instruction > 0)
-            instruction--;
+        if (instr > 0)
+            instr--;
 
         var result = buffer.Slice(0, length);
         Engine.State.SetOopWord(result);
+        Engine.State.OopByte = b;
+        instruction = instr;
+
         return result;
     }
 
@@ -189,7 +201,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             return false;
         }
 
-        var condition = Engine.ConditionList.Get(name);
+        var condition = Engine.Conditions.Get(name);
         result = condition?.Execute(ref oopContext, ref instruction) ?? Engine.World.Flags.Contains(name);
         return true;
     }
@@ -198,9 +210,9 @@ public sealed class Parser(IEngineAccessor engine) : IParser
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        var direction = Engine.DirectionList.Get(name);
+        var direction = Engine.Directions.Get(name);
 
-        if (direction?.Execute(ref oopContext, ref instruction) is not {} temp)
+        if (direction?.Execute(ref oopContext, ref instruction) is not { } temp)
         {
             result = default;
             return false;
@@ -232,7 +244,7 @@ public sealed class Parser(IEngineAccessor engine) : IParser
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
 
-        var elementId = Engine.ElementList.IndexOf(word);
+        var elementId = Engine.Elements.IndexOf(word);
         if (elementId >= 0)
         {
             success = true;

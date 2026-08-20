@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -14,14 +14,14 @@ public class FakeWallTests(Context context) : AllContextIntegrationTestFixture(c
         MovePlayerTo(10, 10);
         
         // Put a fake wall to the right of the player.
-        PlotTo(11, 10, ElementList.FakeId);
+        PlotTo(11, 10, Elements.FakeId);
         
         // Move the player into the fake wall.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        TileAt(11, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(11, 10).Id.Should().Be(Elements.PlayerId,
             "player should be able to walk on fake wall");
     }
 
@@ -34,8 +34,8 @@ public class FakeWallTests(Context context) : AllContextIntegrationTestFixture(c
         MovePlayerTo(10, 10);
         
         // Place fake walls to the right.
-        PlotTo(11, 10, ElementList.FakeId);
-        PlotTo(12, 10, ElementList.FakeId);
+        PlotTo(11, 10, Elements.FakeId);
+        PlotTo(12, 10, Elements.FakeId);
         
         // Move the player through the fake wall tiles.
         Type(AnsiKey.Right);
@@ -43,6 +43,6 @@ public class FakeWallTests(Context context) : AllContextIntegrationTestFixture(c
         StepAllKeys();
 
         // Assert.
-        Alerts.FakeWall.Should().BeFalse();
+        ((bool)Alerts.FakeWall).Should().BeFalse();
     }
 }

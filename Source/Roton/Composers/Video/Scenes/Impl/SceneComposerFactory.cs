@@ -1,6 +1,6 @@
 using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Palettes;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Composers.Video.Scenes.Impl;
 

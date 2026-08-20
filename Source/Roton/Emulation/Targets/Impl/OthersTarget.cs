@@ -1,15 +1,14 @@
 using System;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original, "OTHERS")]
 [Context(Context.Super, "OTHERS")]
-public sealed class OthersTarget(IActors actors) : ITarget
+public sealed class OthersTarget(IActorList actors) : ITarget
 {
-    private IActors Actors => actors;
+    private IActorList Actors => actors;
 
     public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {

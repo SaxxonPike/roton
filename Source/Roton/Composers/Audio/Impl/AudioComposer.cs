@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 
@@ -13,7 +11,7 @@ public sealed class AudioComposer : IAudioComposer
 
     private const long AccumulatorMultiplier = 10000;
 
-    private readonly IDrumBank _drumBank;
+    private readonly IDrumSoundList _drumBank;
     private readonly IConfig _config;
     private readonly int _samplesPerDrumFrequency;
     private long[]? _frequencyDutyCycleTable;
@@ -34,7 +32,7 @@ public sealed class AudioComposer : IAudioComposer
     private int _stepCounter;
     private int _stepLength;
 
-    public AudioComposer(IDrumBank drumBank, IConfig config)
+    public AudioComposer(IDrumSoundList drumBank, IConfig config)
     {
         _drumBank = drumBank;
         _config = config;

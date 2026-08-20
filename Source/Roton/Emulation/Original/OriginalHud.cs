@@ -5,8 +5,8 @@ using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
@@ -112,11 +112,11 @@ public sealed class OriginalHud : Hud
             DrawString(0x40, 0x0A, "   Gems:", 0x1E);
             DrawString(0x40, 0x0B, "  Score:", 0x1E);
             DrawString(0x40, 0x0C, "   Keys:", 0x1E);
-            DrawChar(0x3E, 0x07, new AnsiChar(Engine.ElementList.Player().Character, 0x1F));
-            DrawChar(0x3E, 0x08, new AnsiChar(Engine.ElementList.Ammo().Character, 0x1B));
-            DrawChar(0x3E, 0x09, new AnsiChar(Engine.ElementList.Torch().Character, 0x16));
-            DrawChar(0x3E, 0x0A, new AnsiChar(Engine.ElementList.Gem().Character, 0x1B));
-            DrawChar(0x3E, 0x0C, new AnsiChar(Engine.ElementList.Key().Character, 0x1F));
+            DrawChar(0x3E, 0x07, new AnsiChar(Engine.Elements.Player().Character, 0x1F));
+            DrawChar(0x3E, 0x08, new AnsiChar(Engine.Elements.Ammo().Character, 0x1B));
+            DrawChar(0x3E, 0x09, new AnsiChar(Engine.Elements.Torch().Character, 0x16));
+            DrawChar(0x3E, 0x0A, new AnsiChar(Engine.Elements.Gem().Character, 0x1B));
+            DrawChar(0x3E, 0x0C, new AnsiChar(Engine.Elements.Key().Character, 0x1F));
             DrawString(0x3E, 0x0E, " T ", 0x70);
             DrawString(0x41, 0x0E, " Torch", 0x1F);
             DrawString(0x3E, 0x0F, " B ", 0x30);
@@ -164,7 +164,7 @@ public sealed class OriginalHud : Hud
             return;
 
         var x = (60 - text.Length) / 2;
-        DrawString(x, 24, $" {text} ", color);
+        DrawString(x, 24, " ", text, " ", color);
     }
 
     public override void DrawPausing()
@@ -184,6 +184,16 @@ public sealed class OriginalHud : Hud
     public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
         Terminal.Write(x, y, text, color);
+    }
+
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
+    {
+        Terminal.Write(x, y, text0, text1, color);
+    }
+
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color)
+    {
+        Terminal.Write(x, y, text0, text1, text2, color);
     }
 
     public override void DrawTile(int x, int y, AnsiChar ac)
@@ -216,11 +226,6 @@ public sealed class OriginalHud : Hud
         Terminal.SetSize(Engine.State.EditorMode ? 60 : 80, 25, false);
     }
 
-    private static string IntToString(int i)
-    {
-        return $"{i} ";
-    }
-
     public override void RedrawBoard() => FadeMatrix.FadeIn();
 
     public override void UpdateBorder()
@@ -240,6 +245,8 @@ public sealed class OriginalHud : Hud
 
     public override void UpdateStatus()
     {
+        var buffer = (stackalloc char[16]);
+
         if (Engine.TitleScreen)
             return;
 
@@ -250,7 +257,7 @@ public sealed class OriginalHud : Hud
         else
         {
             DrawString(0x40, 0x06, "   Time:", 0x1E);
-            DrawString(0x48, 0x06, IntToString(Engine.Board.TimeLimit - Engine.World.TimePassed), 0x1E);
+            DrawString(0x48, 0x06, (Engine.Board.TimeLimit - Engine.World.TimePassed).ToCharSpan(buffer), 0x1E);
         }
 
         if (Engine.World.Health < 0)
@@ -258,11 +265,12 @@ public sealed class OriginalHud : Hud
             Engine.World.Health = 0;
         }
 
-        DrawString(0x48, 0x07, IntToString(Engine.World.Health), 0x1E);
-        DrawString(0x48, 0x08, IntToString(Engine.World.Ammo), 0x1E);
-        DrawString(0x48, 0x09, IntToString(Engine.World.Torches), 0x1E);
-        DrawString(0x48, 0x0A, IntToString(Engine.World.Gems), 0x1E);
-        DrawString(0x48, 0x0B, IntToString(Engine.World.Score), 0x1E);
+        DrawString(0x48, 0x07, ((int)Engine.World.Health).ToCharSpan(buffer), 0x1E);
+        DrawString(0x48, 0x08, ((int)Engine.World.Ammo).ToCharSpan(buffer), 0x1E);
+        DrawString(0x48, 0x09, ((int)Engine.World.Torches).ToCharSpan(buffer), 0x1E);
+        DrawString(0x48, 0x0A, ((int)Engine.World.Gems).ToCharSpan(buffer), 0x1E);
+        DrawString(0x48, 0x0B, ((int)Engine.World.Score).ToCharSpan(buffer), 0x1E);
+
         if (Engine.World.TorchCycles > 0)
         {
             for (var i = 2; i <= 5; i++)
@@ -280,14 +288,14 @@ public sealed class OriginalHud : Hud
         {
             DrawChar(0x47 + i, 0x0C,
                 Engine.World.Keys[i - 1]
-                    ? new AnsiChar(Engine.ElementList.Key().Character, 0x18 + i)
+                    ? new AnsiChar(Engine.Elements.Key().Character, 0x18 + i)
                     : new AnsiChar(0x20, 0x1F));
         }
 
         DrawString(0x41, 0x0F, Engine.State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
 
         if (Engine.World.Flags.Contains("DEBUG"))
-            DrawString(0x3E, 0x04, $"Used: {Engine.MemoryUsage}", 0x1E);
+            DrawString(0x3E, 0x04, $"Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
     }
 
     public override string EnterCheat()

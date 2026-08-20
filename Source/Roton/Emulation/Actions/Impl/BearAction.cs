@@ -1,7 +1,7 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
@@ -36,7 +36,7 @@ public sealed class BearAction(IEngineAccessor engine) : IAction
         {
             Engine.MoveActor(index, target);
         }
-        else if (targetElement.Id == Engine.ElementList.PlayerId || targetElement.Id == Engine.ElementList.BreakableId)
+        else if (targetElement.Id == Engine.Elements.PlayerId || targetElement.Id == Engine.Elements.BreakableId)
         {
             Engine.Attack(index, target);
         }

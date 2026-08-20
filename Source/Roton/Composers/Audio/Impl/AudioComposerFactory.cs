@@ -1,12 +1,12 @@
 using Roton.Emulation.Data;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed class AudioComposerFactory(
-    IDrumBank drumBank,
+    IDrumSoundList drumBank,
     IConfig config) : IAudioComposerFactory
 {
     public IAudioComposer Get()

@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
@@ -12,7 +12,7 @@ public sealed class ClockwiseConveyorDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return ((Engine.State.GameCycle / Engine.ElementList.Clockwise().Cycle) & 0x3) switch
+        return ((Engine.State.GameCycle / Engine.Elements.Clockwise().Cycle) & 0x3) switch
         {
             0 => new AnsiChar(0xB3, Engine.Tiles[location].Color),
             1 => new AnsiChar(0x2F, Engine.Tiles[location].Color),

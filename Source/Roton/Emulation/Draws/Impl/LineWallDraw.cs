@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
@@ -12,7 +12,7 @@ public sealed class LineWallDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(Engine.State.LineChars[Engine.Adjacent(location, Engine.ElementList.LineId)],
+        return new AnsiChar(Engine.State.LineChars[Engine.Adjacent(location, Engine.Elements.LineId)],
             Engine.Tiles[location].Color);
     }
 }

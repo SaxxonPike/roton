@@ -1,6 +1,7 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -14,7 +15,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the transporter right of the player, facing south.
-        var index = SpawnTo(11, 10, ElementList.TransporterId);
+        var index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(index, Vector.South);
 
         // Attempt to move the player into the transporter.
@@ -22,7 +23,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved into the transporter");
     }
 
@@ -33,7 +34,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the transporter right of the player, aimed at the player.
-        var index = SpawnTo(11, 10, ElementList.TransporterId);
+        var index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(index, Vector.West);
 
         // Attempt to move the player into the transporter.
@@ -41,7 +42,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved into the transporter");
     }
 
@@ -52,7 +53,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the transporter left of the player, aimed away from the player.
-        var index = SpawnTo(11, 10, ElementList.TransporterId);
+        var index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(index, Vector.West);
 
         // Move the player into the transporter.
@@ -60,9 +61,9 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.EmptyId,
+        TileAt(12, 10).Id.Should().Be(Elements.EmptyId,
             "player should have moved through the transporter");
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should have moved to the back side of the transporter");
     }
 
@@ -73,22 +74,22 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the transporter left of the player, aimed away from the player.
-        var index = SpawnTo(11, 10, ElementList.TransporterId);
+        var index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(index, Vector.West);
 
         // Place a boulder behind the transporter.
-        PlotTo(10, 10, ElementList.BoulderId);
+        PlotTo(10, 10, Elements.BoulderId);
 
         // Move the player into the transporter.
         Type(AnsiKey.Left);
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.EmptyId,
+        TileAt(12, 10).Id.Should().Be(Elements.EmptyId,
             "player should have moved through the transporter");
-        TileAt(9, 10).Id.Should().Be(ElementList.BoulderId,
+        TileAt(9, 10).Id.Should().Be(Elements.BoulderId,
             "boulder should have been pushed away from the transporter");
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should have moved to the back side of the transporter");
     }
 
@@ -99,14 +100,14 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the right transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Block the left side of the right transporter.
-        PlotTo(10, 10, ElementList.SolidId);
+        PlotTo(10, 10, Elements.SolidId);
 
         // Place the left transporter.
-        var t2Index = SpawnTo(5, 10, ElementList.TransporterId);
+        var t2Index = SpawnTo(5, 10, Elements.TransporterId);
         FaceActor(t2Index, Vector.East);
 
         // Move the player into the right transporter.
@@ -114,7 +115,7 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(4, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(4, 10).Id.Should().Be(Elements.PlayerId,
             "player should have moved through the transporter out the left side");
     }
 
@@ -125,27 +126,27 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the right transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Block the left side of the right transporter.
-        PlotTo(10, 10, ElementList.SolidId);
+        PlotTo(10, 10, Elements.SolidId);
 
         // Place the left transporter.
-        var t2Index = SpawnTo(5, 10, ElementList.TransporterId);
+        var t2Index = SpawnTo(5, 10, Elements.TransporterId);
         FaceActor(t2Index, Vector.East);
 
         // Place a boulder on the left side of the left transporter.
-        PlotTo(4, 10, ElementList.BoulderId);
+        PlotTo(4, 10, Elements.BoulderId);
 
         // Move the player into the right transporter.
         Type(AnsiKey.Left);
         StepAllKeys();
 
         // Assert.
-        TileAt(3, 10).Id.Should().Be(ElementList.BoulderId,
+        TileAt(3, 10).Id.Should().Be(Elements.BoulderId,
             "boulder should have been pushed left");
-        TileAt(4, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(4, 10).Id.Should().Be(Elements.PlayerId,
             "player should have moved through teh transporter on the left side");
     }
 
@@ -156,18 +157,18 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Block the left side of the transporter.
-        PlotTo(10, 10, ElementList.SolidId);
+        PlotTo(10, 10, Elements.SolidId);
 
         // Attempt to move the player into the transporter.
         Type(AnsiKey.Left);
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(12, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved through the transporter");
     }
 
@@ -178,25 +179,25 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(12, 10);
 
         // Place the right transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Block the left side of the right transporter.
-        PlotTo(10, 10, ElementList.SolidId);
+        PlotTo(10, 10, Elements.SolidId);
 
         // Place the left transporter.
-        var t2Index = SpawnTo(5, 10, ElementList.TransporterId);
+        var t2Index = SpawnTo(5, 10, Elements.TransporterId);
         FaceActor(t2Index, Vector.East);
 
         // Block the left side of the left transporter.
-        PlotTo(4, 10, ElementList.SolidId);
+        PlotTo(4, 10, Elements.SolidId);
 
         // Attempt to move the player into the transporter.
         Type(AnsiKey.Left);
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(12, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved through the transporter");
     }
 
@@ -207,20 +208,20 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(13, 10);
 
         // Place the transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Place a boulder in front of the transporter.
-        PlotTo(12, 10, ElementList.BoulderId);
+        PlotTo(12, 10, Elements.BoulderId);
 
         // Move the player into the boulder.
         Type(AnsiKey.Left);
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(12, 10).Id.Should().Be(Elements.PlayerId,
             "player should have pushed the boulder");
-        TileAt(10, 10).Id.Should().Be(ElementList.BoulderId,
+        TileAt(10, 10).Id.Should().Be(Elements.BoulderId,
             "boulder should have been sent through the transporter");
     }
 
@@ -231,17 +232,17 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(13, 10);
 
         // Place the right transporter.
-        var t1Index = SpawnTo(11, 10, ElementList.TransporterId);
+        var t1Index = SpawnTo(11, 10, Elements.TransporterId);
         FaceActor(t1Index, Vector.West);
 
         // Block the left side of the right transporter.
-        PlotTo(10, 10, ElementList.SolidId);
+        PlotTo(10, 10, Elements.SolidId);
         
         // Place a boulder in front of the right transporter.
-        PlotTo(12, 10, ElementList.BoulderId);
+        PlotTo(12, 10, Elements.BoulderId);
 
         // Place the left transporter.
-        var t2Index = SpawnTo(5, 10, ElementList.TransporterId);
+        var t2Index = SpawnTo(5, 10, Elements.TransporterId);
         FaceActor(t2Index, Vector.East);
 
         // Move the player into the boulder.
@@ -249,9 +250,9 @@ public class TransporterTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        TileAt(12, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(12, 10).Id.Should().Be(Elements.PlayerId,
             "player should have pushed the boulder");
-        TileAt(4, 10).Id.Should().Be(ElementList.BoulderId,
+        TileAt(4, 10).Id.Should().Be(Elements.BoulderId,
             "boulder should have been sent through the transporter");
     }
 }

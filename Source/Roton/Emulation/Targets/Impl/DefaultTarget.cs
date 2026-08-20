@@ -1,16 +1,15 @@
 using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DefaultTarget(IActors actors, IParser parser) : ITarget
+public sealed class DefaultTarget(IActorList actors, IParser parser) : ITarget
 {
-    private IActors Actors => actors;
+    private IActorList Actors => actors;
 
     private IParser Parser => parser;
 

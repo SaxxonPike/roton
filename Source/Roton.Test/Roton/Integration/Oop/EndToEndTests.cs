@@ -1,7 +1,7 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
@@ -82,7 +82,7 @@ public class EndToEndTests(Context context) : OopTestFixture(context)
         var x = 1;
         var actors = bluesCodes.Select(code =>
         {
-            var actorIndex = SpawnTo(x++, 1, ElementList.ObjectId);
+            var actorIndex = SpawnTo(x++, 1, Elements.ObjectId);
             var actor = Actors[actorIndex];
             actor.Cycle = 1;
             SetActorCode(actorIndex, code);

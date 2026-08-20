@@ -1,6 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
@@ -16,14 +16,14 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         MovePlayerTo(10, 10);
 
         // Place the edge tile.
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
 
         // Move the player into the edge.
         Type(AnsiKey.Right);
         StepAllKeys();
 
         // Assert.
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should not have moved");
         BoardIndex.Should().Be(0,
             "board should not have changed");
@@ -49,11 +49,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1.
         GoToBoard(1);
-        PlotTo(tX, tY, ElementList.EmptyId);
+        PlotTo(tX, tY, Elements.EmptyId);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(10 + dX, 10 + dY, ElementList.BoardEdgeId);
+        PlotTo(10 + dX, 10 + dY, Elements.BoardEdgeId);
         Board.Exits[(int)dir] = 1;
 
         // Place the player.
@@ -66,7 +66,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         // Assert.
         BoardIndex.Should().Be(1,
             "board should have changed");
-        TileAt(tX, tY).Id.Should().Be(ElementList.PlayerId,
+        TileAt(tX, tY).Id.Should().Be(Elements.PlayerId,
             "player should have entered at the correct coordinate");
     }
 
@@ -78,11 +78,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1.
         GoToBoard(1);
-        PlotTo(1, 10, ElementList.SolidId);
+        PlotTo(1, 10, Elements.SolidId);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
@@ -95,7 +95,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         // Assert.
         BoardIndex.Should().Be(0,
             "board should not have changed");
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId,
             "player should have been blocked from moving");
     }
 
@@ -109,11 +109,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1. Place a key at the edge for the player to interact with.
         GoToBoard(1);
-        PlotTo(1, 10, ElementList.KeyId, 9);
+        PlotTo(1, 10, Elements.KeyId, 9);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
@@ -126,7 +126,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         // Assert.
         BoardIndex.Should().Be(1,
             "board should have changed");
-        TileAt(1, 10).Id.Should().Be(ElementList.PlayerId,
+        TileAt(1, 10).Id.Should().Be(Elements.PlayerId,
             "player should have entered the board on the left side");
         Keys[0].Should().BeTrue(
             "player should have picked up the key");
@@ -142,11 +142,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         // Set up board 1. This places an invisible wall that changes the destination tile
         // but still blocks the player.
         GoToBoard(1);
-        PlotTo(1, 10, ElementList.InvisibleId);
+        PlotTo(1, 10, Elements.InvisibleId);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
@@ -162,7 +162,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Assert board 1.
         GoToBoard(1);
-        TileAt(1, 10).Id.Should().Be(ElementList.NormalId,
+        TileAt(1, 10).Id.Should().Be(Elements.NormalId,
             "player should have interacted with the blocking target tile");
     }
 
@@ -175,7 +175,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1. This is the neighbor board that contains the passage to board 2.
         GoToBoard(1);
-        var passageIndex = SpawnTo(1, 10, ElementList.PassageId, 1);
+        var passageIndex = SpawnTo(1, 10, Elements.PassageId, 1);
         Actors[passageIndex].P3 = 2;
 
         // Set up board 2.
@@ -183,11 +183,11 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set the player "under tile" on the target board. This is
         // something to check due to the Super engine behavior.
-        Player.UnderTile = new(ElementList.FakeId, 1);
+        Player.UnderTile = new(Elements.FakeId, 1);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
@@ -201,13 +201,13 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
         {
             BoardIndex.Should().Be(2,
                 "board should have changed");
-            TileAt(1, 10).Id.Should().Be(ElementList.FakeId);
+            TileAt(1, 10).Id.Should().Be(Elements.FakeId);
         }
         else
         {
             BoardIndex.Should().Be(0,
                 "board should not have changed");
-            TileAt(10, 10).Id.Should().Be(ElementList.PlayerId);
+            TileAt(10, 10).Id.Should().Be(Elements.PlayerId);
         }
     }
 
@@ -220,17 +220,17 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1. This is the neighbor board that contains the passage to board 2.
         GoToBoard(1);
-        var p1Index = SpawnTo(1, 10, ElementList.PassageId, 1);
+        var p1Index = SpawnTo(1, 10, Elements.PassageId, 1);
         Actors[p1Index].P3 = 2;
 
         // Set up board 2. The target tile here is blocked, and a matching passage is created.
         GoToBoard(2);
-        var p2Index = SpawnTo(1, 10, ElementList.PassageId, 1);
+        var p2Index = SpawnTo(1, 10, Elements.PassageId, 1);
         Actors[p2Index].P3 = 2;
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
@@ -242,7 +242,7 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         BoardIndex.Should().Be(0,
             "board should not have changed");
-        TileAt(10, 10).Id.Should().Be(ElementList.PlayerId);
+        TileAt(10, 10).Id.Should().Be(Elements.PlayerId);
     }
 
     [Test]
@@ -253,16 +253,16 @@ public class BoardEdgeTests(Context context) : ElementTestFixture(context)
 
         // Set up board 1. This is the neighbor board that contains the passage to board 2.
         GoToBoard(1);
-        var passageIndex = SpawnTo(1, 10, ElementList.PassageId, 1);
+        var passageIndex = SpawnTo(1, 10, Elements.PassageId, 1);
         Actors[passageIndex].P3 = 2;
 
         // Set up board 2. The target tile here is walkable.
         GoToBoard(2);
-        PlotTo(1, 10, ElementList.EmptyId);
+        PlotTo(1, 10, Elements.EmptyId);
 
         // Set up board 0.
         GoToBoard(0);
-        PlotTo(11, 10, ElementList.BoardEdgeId);
+        PlotTo(11, 10, Elements.BoardEdgeId);
         Board.Exits.East = 1;
 
         // Place the player.
