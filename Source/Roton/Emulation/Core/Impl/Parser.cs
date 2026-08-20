@@ -85,50 +85,68 @@ public sealed class Parser(IEngineAccessor engine) : IParser
 
     public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
     {
+        var code = GetActorCode(index);
         var length = 0;
+        int instr = instruction;
 
-        ReadByte(index, ref instruction);
+        var b = instr < code.Length
+            ? code[instr++]
+            : '\0';
 
-        while (Engine.State.OopByte != 0x00 && Engine.State.OopByte != 0x0D)
+        while (b != '\0' && b != '\r')
         {
             if (length < buffer.Length)
-                buffer[length++] = Engine.State.OopByte;
-            ReadByte(index, ref instruction);
+                buffer[length++] = b;
+            b = instr < code.Length
+                ? code[instr++]
+                : '\0';
         }
 
+        instruction = instr;
+
+        Engine.State.OopByte = b;
         return buffer.Slice(0, length);
     }
 
     public int ReadNumber(int index, ref Word instruction)
     {
+        var code = GetActorCode(index);
         var success = false;
         var resultInt = 0;
+        int instr = instruction;
+        var b = '\0';
 
-        while (ReadByte(index, ref instruction) == 0x20)
+        // Skip spaces.
+
+        while (instr < code.Length)
         {
+            b = code[instr++];
+            if (b != ' ')
+                break;
         }
 
-        Engine.State.OopByte = Engine.State.OopByte.ToUpper();
-        while ((int)Engine.State.OopByte is >= 0x30 and <= 0x39)
+        if (instr >= code.Length)
+            b = '\0';
+
+        while (b is >= '0' and <= '9')
         {
             success = true;
-            resultInt = resultInt * 10 + (Engine.State.OopByte - 0x30);
-            ReadByte(index, ref instruction);
+            resultInt = resultInt * 10 + (b - 0x30);
+            b = instr < code.Length
+                ? code[instr++]
+                : '\0';
         }
 
-        if (instruction > 0)
-        {
-            instruction--;
-        }
+        if (instr > 0) 
+            instr--;
+
+        instruction = instr;
+        Engine.State.OopByte = b.ToUpperCase();
 
         if (!success)
-        {
             Engine.State.OopNumber = -1;
-        }
         else
-        {
             Engine.State.OopNumber = resultInt;
-        }
 
         return Engine.State.OopNumber;
     }
