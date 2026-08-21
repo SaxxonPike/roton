@@ -265,11 +265,11 @@ public sealed class OriginalHud : Hud
             Engine.World.Health = 0;
         }
 
-        DrawString(0x48, 0x07, ((int)Engine.World.Health).ToCharSpan(buffer), 0x1E);
-        DrawString(0x48, 0x08, ((int)Engine.World.Ammo).ToCharSpan(buffer), 0x1E);
-        DrawString(0x48, 0x09, ((int)Engine.World.Torches).ToCharSpan(buffer), 0x1E);
-        DrawString(0x48, 0x0A, ((int)Engine.World.Gems).ToCharSpan(buffer), 0x1E);
-        DrawString(0x48, 0x0B, ((int)Engine.World.Score).ToCharSpan(buffer), 0x1E);
+        DrawString(0x48, 0x07, ((int)Engine.World.Health).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x08, ((int)Engine.World.Ammo).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x09, ((int)Engine.World.Torches).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x0A, ((int)Engine.World.Gems).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x0B, ((int)Engine.World.Score).ToCharSpan(buffer), " ", 0x1E);
 
         if (Engine.World.TorchCycles > 0)
         {
