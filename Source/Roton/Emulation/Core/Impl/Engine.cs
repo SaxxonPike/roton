@@ -485,7 +485,7 @@ public sealed class Engine : IEngine, IDisposable
                     break;
                 case '/':
                 case '?':
-                    if (context.Command == 0x2F)
+                    if (context.Command == '/')
                         context.Repeat = true;
 
                     if (!Parser.TryEvalDirection(ref context, ref instruction, out var vector))
@@ -496,8 +496,7 @@ public sealed class Engine : IEngine, IDisposable
 
                     ObjectMover.ExecuteDirection(ref context, vector);
 
-                    ReadActorCodeByte(index, ref instruction);
-                    if (State.OopByte != 0x0D)
+                    if (ReadActorCodeByte(index, ref instruction) != '\r')
                         instruction--;
                     context.Moved = true;
 
@@ -1062,6 +1061,7 @@ public sealed class Engine : IEngine, IDisposable
         SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
         PlaySound(5, Sounds.Error);
         Tracer.TraceError(ref context, error);
+        Actors[context.Index].Instruction = -1;
     }
 
     public IRandomizer Random { get; }
