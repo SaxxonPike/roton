@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using DotSDL.Events;
-using DotSDL.Input.Keyboard;
 using Roton;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;

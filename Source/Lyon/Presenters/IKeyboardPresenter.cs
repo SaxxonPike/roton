@@ -1,5 +1,4 @@
-﻿using DotSDL.Events;
-using Roton.Emulation.Core;
+﻿using Roton.Emulation.Core;
 
 namespace Lyon.Presenters;
 
