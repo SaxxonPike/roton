@@ -45,7 +45,8 @@ public sealed class Engine : IEngine, IDisposable
         ISpeaker speaker, IDrumSoundList drumBank, IObjectMover objectMover,
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
-        IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor)
+        IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor,
+        IJoystick joystick)
     {
         engineAccessor.Instance = this;
 
@@ -93,10 +94,13 @@ public sealed class Engine : IEngine, IDisposable
         _fileDialog = fileDialog;
         Tracer = tracer;
         _engineAccessor = engineAccessor;
+        Joystick = joystick;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
     }
+
+    public IJoystick Joystick { get; }
 
     private void ClockTick(object? sender, EventArgs args)
     {
@@ -1437,7 +1441,7 @@ public sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    private bool WaitForTickNormalCondition() => 
+    private bool WaitForTickNormalCondition() =>
         _ticksToRun > 0 || !ThreadActive;
 
     public void WaitForTick()
@@ -1841,12 +1845,37 @@ public sealed class Engine : IEngine, IDisposable
         return (EngineKeyCode)bytes[0];
     }
 
-    public void ReadInput()
+    private void ReadInputJoystick()
+    {
+        if (!Joystick.IsConnected)
+            return;
+
+        var x = Joystick.X;
+        var y = Joystick.Y;
+        var buttons = Joystick.Buttons;
+        var deadZone = Config.JoystickDeadZone;
+
+        if (x <= -deadZone)
+            State.KeyVector = Vector.West;
+        else if (x >= deadZone)
+            State.KeyVector = Vector.East;
+        else if (y <= -deadZone)
+            State.KeyVector = Vector.North;
+        else if (y >= deadZone) 
+            State.KeyVector = Vector.South;
+
+        if (buttons.HasFlag(JoystickButtons.Primary))
+            State.KeyPressed = EngineKeyCode.Space;
+        else if (buttons.HasFlag(JoystickButtons.Secondary))
+            State.KeyShift = true;
+    }
+
+    private void ReadInputKeyboard()
     {
         var mod = Keyboard.GetMod();
         State.KeyShift = mod.HasFlag(KeyMod.Shift);
         State.KeyPressed = 0;
-        State.KeyVector = new Vector(0, 0);
+        State.KeyVector = Vector.Idle;
 
         if (!Keyboard.KeyIsAvailable)
             return;
@@ -1875,6 +1904,13 @@ public sealed class Engine : IEngine, IDisposable
 
         if (State.KeyVector.IsNonZero())
             State.KeyLastVector = State.KeyVector;
+    }
+
+    public void ReadInput()
+    {
+        ReadInputKeyboard();
+        if (State.KeyVector.IsNonZero())
+            ReadInputJoystick();
     }
 
     private void ShowAbout() => Features.ShowAbout();

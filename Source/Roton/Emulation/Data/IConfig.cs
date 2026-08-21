@@ -14,4 +14,5 @@ public interface IConfig
     int MasterClockDenominator { get; }
     bool FastMode { get; }
     bool NoPesterMode { get; }
+    float JoystickDeadZone { get; }
 }

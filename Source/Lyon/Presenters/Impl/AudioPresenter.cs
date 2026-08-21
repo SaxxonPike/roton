@@ -36,7 +36,7 @@ public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
         };
 
         // Create the audio stream.
-        if (!SDL_Init(SDL_InitFlags.SDL_INIT_AUDIO))
+        if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO))
             throw new Exception($"Failed to initialize SDL audio subsystem: {SDL_GetError()}");
 
         _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);

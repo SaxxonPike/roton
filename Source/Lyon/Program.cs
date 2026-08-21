@@ -38,6 +38,7 @@ public static class Program
             FastMode = switches.Contains("--fast"),
             TraceOop = switches.Contains("--trace"),
             NoPesterMode = switches.Contains("--no-pester"),
+            JoystickDeadZone = 0.3f
         };
 
         fileName ??= "TOWN.ZZT";
