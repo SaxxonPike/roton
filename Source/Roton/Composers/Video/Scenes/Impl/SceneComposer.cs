@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Linq;
+#if NET10_0_OR_GREATER
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+#endif
 using Roton.Composers.Video.Glyphs;
 using Roton.Composers.Video.Palettes;
 using Roton.Emulation.Data;
@@ -177,8 +182,24 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         var foregroundColor = !_hideBlinkingCharacters || (ac.Color & 0x80) == 0
             ? colors[ac.Color & 0x0F]
             : backgroundColor;
+#if NET10_0_OR_GREATER
+        var vFg = Vector128.Create(foregroundColor);
+        var vBg = Vector128.Create(backgroundColor);
+#endif
         for (var y = 0; y < height; y++)
         {
+#if NET10_0_OR_GREATER
+            var x = 0;
+            while (x <= width - 4)
+            {
+                var vIn = Vector128.LoadUnsafe(ref Unsafe.Add(ref MemoryMarshal.GetReference(inputBits), inputOffset));
+                Vector128.ConditionalSelect(vIn, vFg, vBg)
+                    .StoreUnsafe(ref outputBits[baseOffset + x]);
+                inputOffset += 4;
+                x += 4;
+            }
+            baseOffset += _stride;
+#else
             var outputOffset = baseOffset;
             for (var x = 0; x < width; x++)
             {
@@ -187,6 +208,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
             }
 
             baseOffset += _stride;
+#endif
         }
 
         SceneUpdated?.Invoke(this, new SceneUpdatedEventArgs());
