@@ -19,6 +19,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     private readonly HashSet<SDL_JoystickID> _connected = [];
     private readonly Dictionary<(SDL_JoystickID, JoystickAxis), float> _axes = [];
     private readonly HashSet<(SDL_JoystickID, JoystickButtons)> _buttons = [];
+    private readonly Dictionary<SDL_JoystickID, nint> _gamepads = [];
 
     public JoystickPresenter()
     {
@@ -49,24 +50,27 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
         _active = _precedence.FirstOrDefault(x => _connected.Contains(x));
 
     /// <inheritdoc />
-    public void Connect(SDL_JoystickID id)
+    public unsafe void Connect(SDL_JoystickID id)
     {
         lock (_deviceLock)
         {
             if (!_precedence.Contains(id))
                 _precedence.Add(id);
             _connected.Add(id);
+            _gamepads[id] = (nint)SDL_OpenGamepad(id);
             UpdateActive();
         }
     }
 
     /// <inheritdoc />
-    public void Disconnect(SDL_JoystickID id)
+    public unsafe void Disconnect(SDL_JoystickID id)
     {
         lock (_deviceLock)
         {
             _connected.Remove(id);
             UpdateActive();
+            SDL_CloseGamepad((SDL_Gamepad*)_gamepads[id]);
+            _gamepads.Remove(id);
 
             var axesToRemove = _axes.Where(x => x.Key.Item1 == id).ToList();
             foreach (var item in axesToRemove)

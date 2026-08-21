@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Autofac;
-using Lyon.Autofac;
+using Lyon;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Roton.Emulation.Cheats;
@@ -28,6 +28,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected Config Config { get; private set; }
     protected TestTerminal Terminal { get; private set; }
     protected TestKeyboard Keyboard { get; private set; }
+    protected TestJoystick Joystick { get; private set; }
     protected Mock<ISpeaker> SpeakerMock { get; private set; }
     protected ITracer Tracer { get; private set; }
 
@@ -55,7 +56,6 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IState State => Engine.State;
     protected ITargetList Targets => Engine.TargetList;
     protected ITiles Tiles => Engine.Tiles;
-    //protected IWorld World => Engine.World;
     protected IGameSerializer GameSerializer => Engine.GameSerializer;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
@@ -135,48 +135,37 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         };
         Terminal = new TestTerminal();
         Keyboard = new TestKeyboard();
+        Joystick = new TestJoystick();
         SpeakerMock = new Mock<ISpeaker>();
         ClockMock = new Mock<IClock>();
         Tracer = new Tracer();
 
-        // Outer container
-        var builder = new ContainerBuilder();
-        builder.RegisterModule(new RotonModule(Context));
-        builder.Register(_ => FileSystem)
-            .As<IFileSystem>()
-            .SingleInstance();
-        builder.Register(_ => Terminal)
-            .As<ITerminal>()
-            .SingleInstance();
-        builder.Register(_ => Keyboard)
-            .As<IKeyboard>()
-            .SingleInstance();
-        builder.Register(_ => SpeakerMock.Object)
-            .As<ISpeaker>()
-            .SingleInstance();
-        builder.Register(_ => ClockMock.Object)
-            .As<IClock>()
-            .SingleInstance();
-        builder.RegisterType<AssemblyResourceService>()
-            .As<IAssemblyResourceService>()
-            .SingleInstance();
-        builder.Register(_ => Config)
-            .As<IConfig>()
-            .SingleInstance();
-        builder.Register(_ => Tracer)
-            .As<ITracer>()
-            .SingleInstance();
+        var services = new ServiceCollection();
+        services.AddRoton(Context, typeof(ContextBaseIntegrationTestFixture).Assembly);
+        services.AddSingleton<IFileSystem>(FileSystem);
+        services.AddSingleton<ITerminal>(Terminal);
+        services.AddSingleton<IKeyboard>(Keyboard);
+        services.AddSingleton<IJoystick>(Joystick);
+        services.AddSingleton(SpeakerMock.Object);
+        services.AddSingleton(ClockMock.Object);
+        services.AddSingleton<IAssemblyResourceService, AssemblyResourceService>();
+        services.AddSingleton<IConfig>(Config);
+        services.AddSingleton(Tracer);
 
-        var container = builder.Build();
-
-        // Inner container
-        Engine = container.Resolve<IEngine>();
+        var container = services.BuildServiceProvider();
+        Engine = container.GetRequiredService<IEngine>();
 
         // Preconfiguration
         Engine.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
         State.PlayerElement = Elements.PlayerId;
+    }
+
+    [TearDown]
+    public void __TearDownContext()
+    {
+        
     }
 
     protected Context Context { get; } = context;

@@ -1901,16 +1901,15 @@ public sealed class Engine : IEngine, IDisposable
                 State.KeyVector = Vector.South;
                 break;
         }
-
-        if (State.KeyVector.IsNonZero())
-            State.KeyLastVector = State.KeyVector;
     }
 
     public void ReadInput()
     {
         ReadInputKeyboard();
-        if (State.KeyVector.IsNonZero())
+        if (State.KeyVector.IsZero())
             ReadInputJoystick();
+        if (State.KeyVector.IsNonZero())
+            State.KeyLastVector = State.KeyVector;
     }
 
     private void ShowAbout() => Features.ShowAbout();

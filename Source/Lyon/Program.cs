@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Autofac;
 using Lyon;
 using Lyon.App;
-using Lyon.Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
@@ -47,28 +45,23 @@ if (contextEngine == Context.Super)
     config.VideoScaleY *= 1.25f;
 
 // Create the DI container.
-var builder = new ContainerBuilder();
-
-builder.RegisterInstance(config)
-    .As<IConfig>()
-    .SingleInstance();
-
-builder.RegisterModule(new RotonModule(contextEngine, typeof(ILauncher).Assembly));
-builder.RegisterModule(new LyonModule(args));
+var services = new ServiceCollection();
+services.AddRoton(contextEngine, typeof(ILauncher).Assembly);
+services.AddLyon(args, config);
 
 // Build the container and run the app.
 try
 {
-    using var container = builder.Build();
+    using var container = services.BuildServiceProvider();
 
     if (config.TraceOop)
         container
-            .Resolve<ITracer>()
+            .GetService<ITracer>()?
             .Attach(Console.Out);
 
     container
-        .Resolve<ILauncher>()
-        .Launch(container.Resolve<IEngine>());
+        .GetRequiredService<ILauncher>()
+        .Launch(container.GetRequiredService<IEngine>());
 }
 catch (Exception e)
 {
