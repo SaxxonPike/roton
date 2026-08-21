@@ -7,7 +7,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
     private readonly int[] _data;
     private readonly int _height;
 
-    public VgaGlyphComposer(IBitmapFont font)
+    public VgaGlyphComposer(BitmapFont font)
     {
         if (font == null)
             throw new ArgumentNullException(nameof(font));

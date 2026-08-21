@@ -4,12 +4,12 @@ namespace Roton.Composers.Video.Glyphs.Impl;
 
 public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
 {
-    private readonly IGlyphComposer? _innerGlyphComposer;
+    private readonly VgaGlyphComposer? _innerGlyphComposer;
 
     public AutoDetectBinaryGlyphComposer(ReadOnlyMemory<byte> sourceData)
     {
         var bytes = sourceData.Span;
-        IBitmapFont? font = null;
+        BitmapFont? font = null;
 
         if ((sourceData.Length & 0xFF) == 0)
         {
