@@ -475,12 +475,12 @@ public sealed class Engine : IEngine, IDisposable
 
             switch (context.Command)
             {
-                case 0x27: // '
-                case 0x40: // @
+                case '\'':
+                case '@':
                     Parser.DiscardLine(index, ref instruction);
                     break;
-                case 0x2F: // /
-                case 0x3F: // ?
+                case '/':
+                case '?':
                     if (context.Command == 0x2F)
                         context.Repeat = true;
 
@@ -498,18 +498,18 @@ public sealed class Engine : IEngine, IDisposable
                     context.Moved = true;
 
                     break;
-                case 0x23: // #
+                case '#':
                     Interpreter.Execute(ref context, ref instruction);
                     break;
-                case 0x0D: // enter
+                case '\r':
                     if (context.HasMessage)
                         context.AddMessage(string.Empty);
                     break;
-                case 0x00:
+                case '\0':
                     context.Finished = true;
                     break;
                 default:
-                    context.AddMessage($"{context.Command.ToChar()}{Parser.ReadLine(context.Index, ref instruction)}");
+                    context.AddMessage($"{context.Command}{Parser.ReadLine(context.Index, ref instruction)}");
                     break;
             }
 
@@ -1807,7 +1807,7 @@ public sealed class Engine : IEngine, IDisposable
         return gameIsActive;
     }
 
-    private int ReadActorCodeByte(int index, ref Word instruction)
+    private char ReadActorCodeByte(int index, ref Word instruction)
     {
         var actor = Actors[index];
         var value = (char)0;
