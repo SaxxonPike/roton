@@ -35,12 +35,15 @@ public sealed unsafe class Window : IWindow
         SDL_Window* window;
         SDL_Renderer* renderer;
 
+        // Create the window and renderer. The window starts hidden
+        // so we can show it when we are ready to render.
         SDL_CreateWindowAndRenderer(Title, WindowWidth, WindowHeight,
             SDL_WindowFlags.SDL_WINDOW_HIDDEN, &window, &renderer);
 
         _window = window;
         _renderer = renderer;
 
+        // Create the background texture to which we will render the scene.
         _background = SDL_CreateTexture(
             _renderer,
             SDL_PIXELFORMAT_BGRA32,
@@ -50,7 +53,11 @@ public sealed unsafe class Window : IWindow
         );
 
         SDL_SetTextureScaleMode(_background, SDL_ScaleMode.SDL_SCALEMODE_PIXELART);
-        SDL_SetRenderVSync(renderer, 1);
+
+        // Not all adapters support adaptive vsync, so use the regular
+        // method if this fails.
+        if (!SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE))
+            SDL_SetRenderVSync(renderer, 1);
     }
 
     public int RenderWidth { get; }

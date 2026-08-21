@@ -60,15 +60,18 @@ public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
         if (!Presenters.TryGetValue((nint)stream, out var presenter))
             return;
 
-        var floats = (stackalloc float[required / sizeof(float)]);
+        // We ask for 2x the buffer size so that there's a double
+        // buffer of audio data.
         var have = presenter._buffer.Count;
+        var want = required / sizeof(float) * 2;
 
-        if (have < floats.Length * 2)
+        if (have < want)
         {
-            Console.WriteLine($"Audio buffer underflow: need {floats.Length}, got {have}");
+            Console.WriteLine($"Audio buffer underflow: need {want}, got {have}");
             return;
         }
 
+        var floats = (stackalloc float[want]);
         var count = Math.Min(have, floats.Length);
 
         for (var i = 0; i < count; i++)
