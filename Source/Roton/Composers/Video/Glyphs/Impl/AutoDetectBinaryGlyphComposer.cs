@@ -11,10 +11,10 @@ public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
         var bytes = sourceData.Span;
         IBitmapFont? font = null;
 
-        if ((bytes.Length & 0xFF) == 0)
+        if ((sourceData.Length & 0xFF) == 0)
         {
             // if we have an exact multiple of 256, we likely have a raw font
-            font = new BitmapFont(bytes, 8, bytes.Length >> 8);
+            font = new BitmapFont(sourceData, 8, bytes.Length >> 8);
         }
         else
         {
@@ -26,13 +26,13 @@ public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
                 int fontOffset = bytes[3];
                 fontOffset <<= 8;
                 fontOffset |= bytes[2];
-                font = new BitmapFont(bytes.Slice(fontOffset, fontHeight * 256), 8, fontHeight);
+                font = new BitmapFont(sourceData.Slice(fontOffset, fontHeight * 256), 8, fontHeight);
             }
             else if (bytes[0] == 0xB8 && bytes[1] == 0x63 && ((bytes.Length - 139) & 0xFF) == 0)
             {
                 // fonted 2.0 (lesser known but still needs support)
                 var fontLength = bytes.Length - 139;
-                font = new BitmapFont(bytes.Slice(139, fontLength), 8, fontLength >> 8);
+                font = new BitmapFont(sourceData.Slice(139, fontLength), 8, fontLength >> 8);
             }
         }
 
@@ -45,7 +45,7 @@ public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
         MaxHeight = font.Height;
     }
 
-    public IGlyph? ComposeGlyph(int index) =>
+    public Glyph? ComposeGlyph(int index) =>
         _innerGlyphComposer?.ComposeGlyph(index);
 
     public int MaxWidth { get; }

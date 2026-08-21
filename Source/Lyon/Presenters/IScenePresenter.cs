@@ -10,5 +10,5 @@ public interface IScenePresenter
     /// <summary>
     /// Renders the scene.
     /// </summary>
-    IBitmap? Render();
+    Bitmap? Render();
 }

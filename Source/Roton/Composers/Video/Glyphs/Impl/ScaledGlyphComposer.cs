@@ -2,12 +2,13 @@
 
 public sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX, int scaleY) : IGlyphComposer
 {
-    public IGlyph? ComposeGlyph(int index)
+    public Glyph? ComposeGlyph(int index)
     {
         var glyph = glyphComposer.ComposeGlyph(index);
         if (glyph == null)
             return null;
 
+        var bytes = glyph.Data.Span;
         var scaledRow = (stackalloc int[glyph.Width*scaleX]);
         var scaledData = (stackalloc int[glyph.Data.Length*scaleX*scaleY]);
         var src = 0;
@@ -20,7 +21,7 @@ public sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX
 
             for (var x = 0; x < glyph.Width; x++)
             {
-                var bits = glyph.Data[src++];
+                var bits = bytes[src++];
                 for (var i = 0; i < scaleX; i++)
                     scaledRow[dest++] = bits;
             }
@@ -32,7 +33,7 @@ public sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX
             }
         }
 
-        return new Glyph(index, glyph.Width * scaleX, glyph.Height * scaleY, scaledData);
+        return new Glyph(index, glyph.Width * scaleX, glyph.Height * scaleY, scaledData.ToArray());
     }
 
     public int MaxWidth { get; } = glyphComposer.MaxWidth*scaleX;

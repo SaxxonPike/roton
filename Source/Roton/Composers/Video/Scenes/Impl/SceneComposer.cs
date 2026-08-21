@@ -12,7 +12,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Composers.Video.Scenes.Impl;
 
-public sealed class SceneComposer : ISceneComposer, IDisposable
+public sealed class SceneComposer : ISceneComposer
 {
     public event EventHandler<FontDataChangedEventArgs>? FontDataChanged;
     public event EventHandler<PaletteDataChangedEventArgs>? PaletteDataChanged;
@@ -50,7 +50,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         InitializeNewBitmap();
     }
 
-    public IBitmap? Bitmap { get; private set; }
+    public Bitmap? Bitmap { get; private set; }
 
     public bool HideBlinkingCharacters
     {
@@ -158,20 +158,16 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        Bitmap?.Dispose();
-    }
-
     private void DrawGlyph(AnsiChar ac, int offset)
     {
         if (_glyphComposer?.ComposeGlyph(ac.Char) is not { } glyph)
             return;
-        if (Bitmap?.Bits is not { } outputBits)
+        if (Bitmap == null || Bitmap.Bits.IsEmpty)
             return;
 
+        var outputBits = Bitmap.Bits;
         var colors = _colors.Span;
-        var inputBits = glyph.Data;
+        var inputBits = glyph.Data.Span;
         var width = glyph.Width;
         var height = glyph.Height;
         var baseOffset = offset;
@@ -239,10 +235,8 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
                 return;
         }
 
-        var oldBitmap = Bitmap;
         _stride = stride;
         Bitmap = new Bitmap(stride, height);
-        oldBitmap?.Dispose();
     }
 
     private void InitializeFont()
@@ -257,7 +251,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
                 InitializeNewBitmap();
         }
 
-        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs(_fontData.ToArray()));
+        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs(_fontData));
     }
 
     private void InitializePalette()
@@ -269,7 +263,7 @@ public sealed class SceneComposer : ISceneComposer, IDisposable
             .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
             .ToArray();
 
-        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs(_paletteData.ToArray()));
+        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs(_paletteData));
     }
 
     private bool IsOutOfBounds(int x, int y)

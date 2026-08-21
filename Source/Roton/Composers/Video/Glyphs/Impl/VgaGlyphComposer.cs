@@ -21,7 +21,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
         MaxHeight = font.Height;
     }
 
-    public IGlyph ComposeGlyph(int index)
+    public Glyph ComposeGlyph(int index)
     {
         var output = new int[_height*8];
         var outputOffset = 0;

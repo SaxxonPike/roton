@@ -25,7 +25,6 @@ public static class ServiceCollectionExtensions
             c.GetRequiredService<IFileSystemFactory>().Create(c.GetRequiredService<IConfig>().HomePath ?? ".")
         );
 
-        services.AddSingleton<IAudioComposer>(c => c.GetRequiredService<IAudioComposerFactory>().Get());
         services.AddSingleton<ISceneComposer>(c => c.GetRequiredService<ISceneComposerFactory>().Get());
         services.AddSingleton<ISpeaker>(c => c.GetRequiredService<IAudioComposer>());
         services.AddSingleton<ITerminal>(c => c.GetRequiredService<ISceneComposer>());

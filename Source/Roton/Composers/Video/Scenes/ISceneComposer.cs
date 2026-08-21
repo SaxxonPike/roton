@@ -14,6 +14,5 @@ public interface ISceneComposer : ITerminal
     int Rows { get; }
     void Update(int x, int y);
     int Columns { get; }
-
-    IBitmap? Bitmap { get; }
+    Bitmap? Bitmap { get; }
 }

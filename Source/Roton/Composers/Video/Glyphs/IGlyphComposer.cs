@@ -1,4 +1,6 @@
-﻿namespace Roton.Composers.Video.Glyphs;
+﻿using Roton.Composers.Video.Glyphs.Impl;
+
+namespace Roton.Composers.Video.Glyphs;
 
 /// <summary>
 /// Interface for getting 32-bit two-dimensional bitmaps for use as character glyphs.
@@ -8,7 +10,7 @@ public interface IGlyphComposer
     /// <summary>
     /// Render a glyph bitmap.
     /// </summary>
-    IGlyph? ComposeGlyph(int index);
+    Glyph? ComposeGlyph(int index);
 
     int MaxWidth { get; }
 

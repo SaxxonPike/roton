@@ -2,9 +2,10 @@
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class BitmapFont(ReadOnlySpan<byte> data, int width, int height) : IBitmapFont
+public sealed class BitmapFont(ReadOnlyMemory<byte> data, int width, int height)
+    : IBitmapFont
 {
-    public ReadOnlyMemory<byte> Data { get; } = data.ToArray();
-    public int Height { get; } = height;
-    public int Width { get; } = width;
+    public ReadOnlyMemory<byte> Data => data;
+    public int Height => height;
+    public int Width => width;
 }

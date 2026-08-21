@@ -2,18 +2,22 @@
 using System.Buffers;
 using System.Linq;
 using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Impl;
 
-public sealed class AudioComposer : IAudioComposer
+[Context(Context.Original)]
+[Context(Context.Super)]
+public sealed class AudioComposer(
+    IDrumSoundList drumBank,
+    IConfig config)
+    : IAudioComposer
 {
     public event EventHandler<AudioComposerDataEventArgs>? BufferReady;
 
     private const long AccumulatorMultiplier = 10000;
 
-    private readonly IDrumSoundList _drumBank;
-    private readonly IConfig _config;
-    private readonly int _samplesPerDrumFrequency;
+    private readonly int _samplesPerDrumFrequency = config.AudioDrumRate;
     private long[]? _frequencyDutyCycleTable;
     private long _accumulatorLimit;
 
@@ -31,14 +35,6 @@ public sealed class AudioComposer : IAudioComposer
     private int _sampleRate;
     private int _stepCounter;
     private int _stepLength;
-
-    public AudioComposer(IDrumSoundList drumBank, IConfig config)
-    {
-        _drumBank = drumBank;
-        _config = config;
-        SampleRate = config.AudioSampleRate;
-        _samplesPerDrumFrequency = config.AudioDrumRate;
-    }
 
     private int ComposeAudio(Span<float> buffer)
     {
@@ -104,7 +100,7 @@ public sealed class AudioComposer : IAudioComposer
     public void PlayDrum(int index)
     {
         _drumSoundSamplesRemaining = _samplesPerDrumFrequency;
-        _currentDrumSound = _drumBank[index];
+        _currentDrumSound = drumBank[index];
         _drumSoundFrequenciesRemaining = _currentDrumSound.Count;
         _drumSoundFrequencyIndex = 0;
         _accumulatorAmount = _currentDrumSound[0] * AccumulatorMultiplier;
@@ -158,8 +154,8 @@ public sealed class AudioComposer : IAudioComposer
                 .Select(i => (long)i)
         ];
 
-        _bufferDenominator = _config.MasterClockDenominator;
-        _bufferNumerator = _sampleRate * _config.MasterClockNumerator;
+        _bufferDenominator = config.MasterClockDenominator;
+        _bufferNumerator = _sampleRate * config.MasterClockNumerator;
         _bufferAccumulator = 0;
         _stepLength = _sampleRate / 22050 + 1;
     }

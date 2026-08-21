@@ -220,7 +220,10 @@ internal sealed unsafe class Window(
             // Render the scene.
             var bitmap = scenePresenter.Render();
             if (bitmap is { Bits.Length: > 0 })
-                SDL_UpdateTexture(_background, null, bitmap.BitsPointer, RenderWidth * 4);
+            {
+                fixed (void* bitmapBits = bitmap.Bits)
+                    SDL_UpdateTexture(_background, null, (nint)bitmapBits, bitmap.Stride);
+            }
 
             // Set the scene scale.
             SDL_SetRenderLogicalPresentation(

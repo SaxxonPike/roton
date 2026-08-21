@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Composers.Video.Palettes;
 
-public readonly struct PaletteDataChangedEventArgs(byte[] data)
+public readonly struct PaletteDataChangedEventArgs(ReadOnlyMemory<byte> data)
 {
-    public byte[] Data => data;
+    public ReadOnlyMemory<byte> Data => data;
 }
