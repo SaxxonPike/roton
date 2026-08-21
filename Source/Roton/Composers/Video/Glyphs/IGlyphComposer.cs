@@ -1,6 +1,4 @@
-﻿using Roton.Composers.Video.Glyphs.Impl;
-
-namespace Roton.Composers.Video.Glyphs;
+﻿namespace Roton.Composers.Video.Glyphs;
 
 /// <summary>
 /// Interface for getting 32-bit two-dimensional bitmaps for use as character glyphs.
