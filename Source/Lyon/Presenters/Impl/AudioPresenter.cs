@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
-using DotSDL.Audio;
 using Roton;
 using Roton.Composers.Audio;
 using Roton.Emulation.Core;
@@ -13,46 +14,68 @@ namespace Lyon.Presenters.Impl;
 
 [Context(Context.Startup)]
 // ReSharper disable once UnusedMember.Global
-public sealed class AudioPresenter : IDisposable, IAudioPresenter
+public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
 {
     private bool _isDisposed;
     private bool _running;
-    private readonly Queue<double> _buffer;
+    private readonly Queue<float> _buffer;
     private readonly Lock _bufferLock = new();
-    private readonly Playback _audio;
+    private readonly SDL_AudioStream* _stream;
+    private static readonly Dictionary<nint, AudioPresenter> Presenters = [];
 
     public AudioPresenter(IConfig config, IEngine engine, IAudioComposer composer)
     {
         _buffer = [];
-        _audio = new Playback(config.AudioSampleRate, AudioFormat.Integer16, ChannelCount.Mono,
-            (ushort)config.AudioBufferSize);
-        Volume = 0.1;
+
+        SampleRate = config.AudioSampleRate;
+        var spec = new SDL_AudioSpec
+        {
+            channels = 1,
+            format = SDL_AUDIO_F32,
+            freq = config.AudioSampleRate
+        };
+
+        // Create the audio stream.
+        if (!SDL_Init(SDL_InitFlags.SDL_INIT_AUDIO))
+            throw new Exception($"Failed to initialize SDL audio subsystem: {SDL_GetError()}");
+
+        _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
+        if (_stream == null)
+            throw new Exception($"Failed to create audio stream: {SDL_GetError()}");
+
+        Presenters.Add((nint)_stream, this);
+        Volume = 0.1f;
 
         composer.BufferReady += (_, a) => Update(a);
         composer.SampleRate = SampleRate;
+
         Start();
 
         engine.Tick += (_, _) => composer.Tick();
-
-        _audio.BufferEmpty += BufferEmpty;
-        _audio.Play();
     }
 
-    private void BufferEmpty(object sender, AudioBuffer e)
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void OnCallback(nint userData, SDL_AudioStream* stream, int required, int total)
     {
-        lock (_bufferLock)
+        if (!Presenters.TryGetValue((nint)stream, out var presenter))
+            return;
+
+        var floats = (stackalloc float[required / sizeof(float)]);
+        var have = presenter._buffer.Count;
+
+        if (have < floats.Length * 2)
         {
-            if (_buffer.Count < e.Length)
-            {
-                Debug.WriteLine($"Audio buffer underflow: need {e.Length}, got {_buffer.Count}");
-                return;
-            }
-
-            var count = Math.Min(_buffer.Count, e.Length);
-
-            for (var i = 0; i < count; i++)
-                e.Samples[Channel.Mono][i] = _buffer.Dequeue();
+            Console.WriteLine($"Audio buffer underflow: need {floats.Length}, got {have}");
+            return;
         }
+
+        var count = Math.Min(have, floats.Length);
+
+        for (var i = 0; i < count; i++)
+            floats[i] = presenter._buffer.Dequeue();
+
+        fixed (float* floatsPtr = floats)
+            SDL_PutAudioStreamData(stream, (IntPtr)floatsPtr, count * sizeof(float));
     }
 
     public void Start()
@@ -60,6 +83,7 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
         if (_running)
             return;
 
+        SDL_ResumeAudioStreamDevice(_stream);
         _running = true;
     }
 
@@ -77,11 +101,11 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
             foreach (var sample in data)
                 _buffer.Enqueue(sample * Volume);
         }
-        
+
         e.Memory.Dispose();
     }
 
-    public int SampleRate => _audio.Frequency;
+    public int SampleRate { get; private set; }
 
     public void Stop()
     {
@@ -91,7 +115,7 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
         _running = false;
     }
 
-    public double Volume { get; set; }
+    public float Volume { get; set; }
 
     public void Dispose()
     {
@@ -100,6 +124,6 @@ public sealed class AudioPresenter : IDisposable, IAudioPresenter
 
         _isDisposed = true;
         Stop();
-        _audio.Close();
+        SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO);
     }
 }
