@@ -37,7 +37,7 @@ public ref struct OopContext(IEngineAccessor engine)
 
     public SearchContext Search;
 
-    public int Command;
+    public char Command;
 
     public void AddMessage(ReadOnlySpan<char> message)
     {
