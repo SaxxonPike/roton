@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class SpinningGunTests(Context context) : ElementTestFixture(context)
+public class SpinningGunTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void SpinningGun_ShouldFireBulletTowardsPlayer_WhenAlignedHorizontally()

@@ -1,16 +1,15 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration.Elements;
+namespace Roton.Test.Roton.Integration.Elements.Original;
 
-public class SharkTests(Context context) : ElementTestFixture(context)
+public class SharkTests : OriginalContextTestFixture
 {
     [Test]
     public void Shark_ShouldMoveOnWaterTowardsPlayer_WhenSeeking()
     {
         // Sharks can only move on water.
-
-        RequireElement(Elements.SharkId);
 
         // Place the player.
         MovePlayerTo(10, 5);
@@ -38,8 +37,6 @@ public class SharkTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Shark_ShouldNotMoveOntoEmptyFloor()
     {
-        RequireElement(Elements.SharkId);
-
         // Place the player.
         MovePlayerTo(10, 5);
         var sharkIndex = SpawnTo(5, 5, Elements.SharkId);
@@ -58,8 +55,6 @@ public class SharkTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Shark_ShouldAttackPlayer_WhenAdjacent()
     {
-        RequireElement(Elements.SharkId);
-
         // Place the player.
         MovePlayerTo(6, 5);
         

@@ -5,7 +5,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class ForestTests(Context context) : AllContextIntegrationTestFixture(context)
+public class ForestTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Forest_ShouldBecomeWalkable_WhenPlayerWalksOnIt()

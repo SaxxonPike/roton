@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class TigerTests(Context context) : ElementTestFixture(context)
+public class TigerTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Tiger_ShouldFireBulletTowardsPlayer_WhenAlignedVertically()

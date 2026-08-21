@@ -5,7 +5,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class FakeWallTests(Context context) : AllContextIntegrationTestFixture(context)
+public class FakeWallTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void FakeWall_ShouldBeWalkable()

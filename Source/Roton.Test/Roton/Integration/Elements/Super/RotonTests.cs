@@ -1,19 +1,17 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration.Elements;
+namespace Roton.Test.Roton.Integration.Elements.Super;
 
-public class RotonTests(Context context) : ElementTestFixture(context)
+public class RotonTests : SuperContextTestFixture
 {
     [Test]
     public void Roton_ShouldMoveTowardsPlayer_WhenSeeking()
     {
         // Rotons are interesting little creatures that move rapidly either
         // toward the player or clockwise to the player.
-
-        if (Elements.RotonId < 0)
-            Assert.Pass("Roton (the enemy type) does not exist in this context");
 
         // Place the player.
         MovePlayerTo(10, 5);
@@ -40,9 +38,6 @@ public class RotonTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Roton_ShouldAttackPlayer_WhenAdjacent()
     {
-        if (Elements.RotonId < 0)
-            Assert.Pass("Roton (the enemy type) does not exist in this context");
-
         // Place the player.
         MovePlayerTo(6, 5);
 
@@ -66,9 +61,6 @@ public class RotonTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Roton_ShouldDamagePlayer_WhenPlayerTouchesRoton()
     {
-        if (Elements.RotonId < 0)
-            Assert.Pass("Roton (the enemy type) does not exist in this context");
-
         // Place the player.
         MovePlayerTo(3, 3);
 

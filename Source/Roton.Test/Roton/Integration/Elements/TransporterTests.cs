@@ -2,11 +2,11 @@ using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class TransporterTests(Context context) : ElementTestFixture(context)
+public class TransporterTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Transporter_BlocksMovementFromPerpendicularSide()

@@ -3,7 +3,7 @@ using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public abstract class OopTestFixture(Context context) : AllContextIntegrationTestFixture(context)
+public abstract class OopTestFixture(Context context) : AllContextTestFixture(context)
 {
     [SetUp]
     public void __Setup()

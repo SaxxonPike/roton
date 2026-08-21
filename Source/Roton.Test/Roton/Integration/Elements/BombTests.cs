@@ -1,10 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class BombTests(Context context) : ElementTestFixture(context)
+public class BombTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Bomb_ShouldBecomeLit_WhenTouchedByPlayer_AndUnlit()

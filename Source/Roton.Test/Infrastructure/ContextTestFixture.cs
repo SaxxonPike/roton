@@ -21,7 +21,7 @@ using Random = System.Random;
 
 namespace Roton.Test.Infrastructure;
 
-public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseTestFixture
+public abstract class ContextTestFixture(Context context) : BaseTestFixture
 {
     protected Mock<IClock> ClockMock { get; private set; } = null!;
     protected FixedFileSystem FileSystem { get; private set; } = null!;
@@ -139,9 +139,10 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         SpeakerMock = Freeze<ISpeaker>();
         ClockMock = Freeze<IClock>();
         Tracer = new Tracer();
+        EnableTracer();
 
         var services = new ServiceCollection();
-        services.AddRoton(Context, typeof(ContextBaseIntegrationTestFixture).Assembly);
+        services.AddRoton(Context, typeof(ContextTestFixture).Assembly);
         services.AddSingleton<IFileSystem>(FileSystem);
         services.AddSingleton<ITerminal>(Terminal);
         services.AddSingleton<IKeyboard>(Keyboard);
@@ -205,6 +206,93 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             key: key,
             mod: mod
         ));
+
+    protected void Type(string text)
+    {
+        foreach (var c in text)
+        {
+            switch (c)
+            {
+                case 'A': Type(AnsiKey.A, KeyMod.Shift); break;
+                case 'B': Type(AnsiKey.B, KeyMod.Shift); break;
+                case 'C': Type(AnsiKey.C, KeyMod.Shift); break;
+                case 'D': Type(AnsiKey.D, KeyMod.Shift); break;
+                case 'E': Type(AnsiKey.E, KeyMod.Shift); break;
+                case 'F': Type(AnsiKey.F, KeyMod.Shift); break;
+                case 'G': Type(AnsiKey.G, KeyMod.Shift); break;
+                case 'H': Type(AnsiKey.H, KeyMod.Shift); break;
+                case 'I': Type(AnsiKey.I, KeyMod.Shift); break;
+                case 'J': Type(AnsiKey.J, KeyMod.Shift); break;
+                case 'K': Type(AnsiKey.K, KeyMod.Shift); break;
+                case 'L': Type(AnsiKey.L, KeyMod.Shift); break;
+                case 'M': Type(AnsiKey.M, KeyMod.Shift); break;
+                case 'N': Type(AnsiKey.N, KeyMod.Shift); break;
+                case 'O': Type(AnsiKey.O, KeyMod.Shift); break;
+                case 'P': Type(AnsiKey.P, KeyMod.Shift); break;
+                case 'Q': Type(AnsiKey.Q, KeyMod.Shift); break;
+                case 'R': Type(AnsiKey.R, KeyMod.Shift); break;
+                case 'S': Type(AnsiKey.S, KeyMod.Shift); break;
+                case 'T': Type(AnsiKey.T, KeyMod.Shift); break;
+                case 'U': Type(AnsiKey.U, KeyMod.Shift); break;
+                case 'V': Type(AnsiKey.V, KeyMod.Shift); break;
+                case 'W': Type(AnsiKey.W, KeyMod.Shift); break;
+                case 'X': Type(AnsiKey.X, KeyMod.Shift); break;
+                case 'Y': Type(AnsiKey.Y, KeyMod.Shift); break;
+                case 'Z': Type(AnsiKey.Z, KeyMod.Shift); break;
+                case 'a': Type(AnsiKey.A); break;
+                case 'b': Type(AnsiKey.B); break;
+                case 'c': Type(AnsiKey.C); break;
+                case 'd': Type(AnsiKey.D); break;
+                case 'e': Type(AnsiKey.E); break;
+                case 'f': Type(AnsiKey.F); break;
+                case 'g': Type(AnsiKey.G); break;
+                case 'h': Type(AnsiKey.H); break;
+                case 'i': Type(AnsiKey.I); break;
+                case 'j': Type(AnsiKey.J); break;
+                case 'k': Type(AnsiKey.K); break;
+                case 'l': Type(AnsiKey.L); break;
+                case 'm': Type(AnsiKey.M); break;
+                case 'n': Type(AnsiKey.N); break;
+                case 'o': Type(AnsiKey.O); break;
+                case 'p': Type(AnsiKey.P); break;
+                case 'q': Type(AnsiKey.Q); break;
+                case 'r': Type(AnsiKey.R); break;
+                case 's': Type(AnsiKey.S); break;
+                case 't': Type(AnsiKey.T); break;
+                case 'u': Type(AnsiKey.U); break;
+                case 'v': Type(AnsiKey.V); break;
+                case 'w': Type(AnsiKey.W); break;
+                case 'x': Type(AnsiKey.X); break;
+                case 'y': Type(AnsiKey.Y); break;
+                case 'z': Type(AnsiKey.Z); break;
+                case '0': Type(AnsiKey.D0); break;
+                case '1': Type(AnsiKey.D1); break;
+                case '2': Type(AnsiKey.D2); break;
+                case '3': Type(AnsiKey.D3); break;
+                case '4': Type(AnsiKey.D4); break;
+                case '5': Type(AnsiKey.D5); break;
+                case '6': Type(AnsiKey.D6); break;
+                case '7': Type(AnsiKey.D7); break;
+                case '8': Type(AnsiKey.D8); break;
+                case '9': Type(AnsiKey.D9); break;
+                case '!': Type(AnsiKey.D0, KeyMod.Shift); break;
+                case '@': Type(AnsiKey.D1, KeyMod.Shift); break;
+                case '#': Type(AnsiKey.D2, KeyMod.Shift); break;
+                case '$': Type(AnsiKey.D3, KeyMod.Shift); break;
+                case '%': Type(AnsiKey.D4, KeyMod.Shift); break;
+                case '^': Type(AnsiKey.D5, KeyMod.Shift); break;
+                case '&': Type(AnsiKey.D6, KeyMod.Shift); break;
+                case '*': Type(AnsiKey.D7, KeyMod.Shift); break;
+                case '(': Type(AnsiKey.D8, KeyMod.Shift); break;
+                case ')': Type(AnsiKey.D9, KeyMod.Shift); break;
+                case '-': Type(AnsiKey.Minus); break;
+                case '_': Type(AnsiKey.Minus, KeyMod.Shift); break;
+                case '=': Type(AnsiKey.Equals); break;
+                case '+': Type(AnsiKey.Equals, KeyMod.Shift); break;
+                case '?': Type(AnsiKey.Slash, KeyMod.Shift); break;
+            }
+        }
+    }
 
     protected int ActorIndexAt(int x, int y) =>
         Engine.ActorIndexAt(new Location(x, y));
@@ -285,6 +373,18 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         set => Engine.World.Stones = value;
     }
 
+    protected int TimePassed
+    {
+        get => Engine.World.TimePassed;
+        set => Engine.World.TimePassed = value;
+    }
+    
+    protected bool IsDark
+    {
+        get => Engine.Board.IsDark;
+        set => Engine.Board.IsDark = value;
+    }
+
     protected IFlags Flags => Engine.World.Flags;
 
 
@@ -300,5 +400,13 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     {
         if (elementId < 0)
             Assert.Pass("Element does not exist in this context.");
+    }
+
+    protected void TypeCheat(string cheat)
+    {
+        Type(AnsiKey.Slash, KeyMod.Shift);
+        Type(cheat);
+        Type(AnsiKey.Enter);
+        StepAllKeys();
     }
 }

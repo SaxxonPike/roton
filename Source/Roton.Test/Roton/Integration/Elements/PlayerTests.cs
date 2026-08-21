@@ -2,11 +2,11 @@ using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class PlayerTests(Context context) : ElementTestFixture(context)
+public class PlayerTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Player_ShouldBeAbleToPickUpAmmo()
@@ -27,31 +27,6 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
         Message.Should().BeEquivalentTo(Alerts.AmmoMessage.Text,
-            "correct message should be displayed");
-    }
-
-    [Test]
-    public void Player_ShouldBeAbleToPickUpTorch()
-    {
-        if (Elements.TorchId < 0)
-            Assert.Pass("Torch does not exist in this context");
-
-        // Place the player.
-        MovePlayerTo(3, 3);
-
-        // Place the torch.
-        PlotTo(4, 3, Elements.TorchId);
-
-        // Move the player into the torch.
-        Type(AnsiKey.Right);
-        StepAllKeys();
-
-        // Assert.
-        Torches.Should().Be(Facts.DefaultTorches + 1,
-            "torch count should be correct");
-        TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
-            "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.TorchMessage.Text,
             "correct message should be displayed");
     }
 
@@ -320,10 +295,6 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Player_ShouldBeAbleToInteractWithBullet()
     {
-        // Place the player.
-        if (Elements.BulletId < 0)
-            Assert.Pass("Star does not exist in this context");
-
         MovePlayerTo(3, 3);
 
         // Place the bullet. It cannot be spawned like normal because a
@@ -341,30 +312,6 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after interaction");
         Message.Should().BeEquivalentTo(Alerts.OuchMessage.Text,
-            "correct message should be displayed");
-    }
-
-    [Test]
-    public void Player_ShouldBeAbleToInteractWithWater()
-    {
-        // Water is only present in Original.
-        if (Elements.WaterId < 0)
-            Assert.Pass("Lava does not exist in this context");
-
-        // Place the player.
-        MovePlayerTo(3, 3);
-
-        // Place the water.
-        PlotTo(4, 3, Elements.WaterId);
-
-        // Move the player into the water.
-        Type(AnsiKey.Right);
-        StepAllKeys();
-
-        // Assert.
-        TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
-            "player should be in correct location after interaction");
-        Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
             "correct message should be displayed");
     }
 
@@ -473,6 +420,8 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
+        Ammo.Should().Be(9,
+            "ammo should have been consumed");
         TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.BulletId,
             "bullet should have been spawned");
     }
@@ -493,8 +442,88 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         StepAllKeys();
 
         // Assert.
+        Ammo.Should().Be(9,
+            "ammo should have been consumed");
         TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.BulletId,
             "bullet should have been spawned");
+    }
+
+    [Test]
+    public void Player_ShouldNotShoot_WhenOutOfAmmo()
+    {
+        // The player cannot shoot if they have no ammo, and an alert is
+        // displayed the first time this happens.
+
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Face the player to the right and try to shoot.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+
+        // Assert.
+        Ammo.Should().Be(0,
+            "player should be out of ammo");
+        TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.EmptyId,
+            "bullet should not have been spawned");
+        Message.Should().BeEquivalentTo(Alerts.NoAmmoMessage.Text,
+            "out of ammo message should be displayed");
+    }
+
+    [Test]
+    public void Player_ShouldNotShoot_WhenBoardProhibitsShooting()
+    {
+        // The player cannot shoot if the board's maximum bullet count is zero.
+
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Give the player some ammo.
+        Ammo = 10;
+        
+        // Prohibit shooting on this board.
+        Board.MaximumShots = 0;
+
+        // Face the player to the right and try to shoot.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+
+        // Assert.
+        Ammo.Should().Be(10,
+            "ammo should not have been consumed");
+        TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.EmptyId,
+            "bullet should not have been spawned");
+        Message.Should().BeEquivalentTo(Alerts.NoShootMessage.Text,
+            "shooting not allowed message should be displayed");
+    }
+
+    [Test]
+    public void Player_ShouldNotShoot_WhenBoardBulletLimitIsReached()
+    {
+        // The player cannot shoot if the board's maximum bullet count
+        // has been reached.
+
+        // Place the player.
+        MovePlayerTo(10, 10);
+
+        // Give the player some ammo.
+        Ammo = 10;
+        
+        // Limit the number of bullets.
+        Board.MaximumShots = 1;
+
+        // Face the player to the right and try to shoot twice.
+        Type(AnsiKey.Right, KeyMod.Shift);
+        Type(AnsiKey.Right, KeyMod.Shift);
+        StepAllKeys();
+
+        // Assert.
+        Ammo.Should().Be(9,
+            "only one ammo should have been consumed");
+        TileAt(Player.Location.X + 3, 10).Id.Should().Be(Elements.BulletId,
+            "first bullet should have been spawned");
+        TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.EmptyId,
+            "second bullet should not have spawned");
     }
 
     [Test]
@@ -549,23 +578,23 @@ public class PlayerTests(Context context) : ElementTestFixture(context)
         // On the title screen, actor 0 element will be Monitor instead of player.
         TileAt(Player.Location).Id = Elements.MonitorId;
         State.PlayerElement = Elements.MonitorId;
-        
+
         // Spawn a player clone.
         SpawnTo(5, 5, Elements.PlayerId);
-        
+
         // Place an object that will receive the clone's input.
         var objectId = SpawnTo(5, 4, Elements.ObjectId);
         Actors[objectId].Cycle = 1;
-        SetActorCode(objectId, 
+        SetActorCode(objectId,
             "#end",
             ":touch",
             "#set f1"
         );
-        
+
         // Make the player clone touch the object.
         Type(AnsiKey.Up);
         StepAllKeys();
-        
+
         // Assert.
         Flags.AsEnumerable().Should().Contain(["F1"]);
     }

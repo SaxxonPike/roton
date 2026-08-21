@@ -1,18 +1,17 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration.Elements;
+namespace Roton.Test.Roton.Integration.Elements.Super;
 
-public class SpiderTests(Context context) : ElementTestFixture(context)
+public class SpiderTests : SuperContextTestFixture
 {
     [Test]
     public void Spider_ShouldMoveOnWebTowardsPlayer_WhenSeeking()
     {
         // Spiders always move - if they can't get where they are going,
         // they will reverse direction or go perpendicular.
-
-        RequireElement(Elements.SpiderId);
 
         // Place the player.
         MovePlayerTo(10, 5);
@@ -25,7 +24,7 @@ public class SpiderTests(Context context) : ElementTestFixture(context)
         // Place the spider on it.
         var spiderIndex = SpawnTo(5, 5, Elements.SpiderId);
         var spider = Actors[spiderIndex];
-        
+
         // Can't set P1=10 normally, but this guarantees that the spider will move
         // toward the player.
         spider.P1 = 10;
@@ -46,11 +45,9 @@ public class SpiderTests(Context context) : ElementTestFixture(context)
     {
         // Spiders can only move on webs.
 
-        RequireElement(Elements.SpiderId);
-
         // Place the player.
         MovePlayerTo(10, 5);
-        
+
         // Place the spider.
         var spiderIndex = SpawnTo(5, 5, Elements.SpiderId);
         var spider = Actors[spiderIndex];
@@ -68,11 +65,9 @@ public class SpiderTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Spider_ShouldAttackPlayer_WhenAdjacent()
     {
-        RequireElement(Elements.SpiderId);
-
         // Place the player.
         MovePlayerTo(6, 5);
-        
+
         // Place the spider.
         var spiderIndex = SpawnTo(5, 5, Elements.SpiderId);
         var spider = Actors[spiderIndex];
@@ -93,11 +88,9 @@ public class SpiderTests(Context context) : ElementTestFixture(context)
     [Test]
     public void Spider_ShouldDamagePlayer_WhenPlayerTouchesSpider()
     {
-        RequireElement(Elements.SpiderId);
-
         // Place the player.
         MovePlayerTo(3, 3);
-        
+
         // Place the spider.
         SpawnTo(4, 3, Elements.SpiderId);
 

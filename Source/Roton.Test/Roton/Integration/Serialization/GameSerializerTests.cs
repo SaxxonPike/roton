@@ -3,9 +3,9 @@ using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration;
+namespace Roton.Test.Roton.Integration.Serialization;
 
-public class GameSerializerTests(Context context) : AllContextIntegrationTestFixture(context)
+public class GameSerializerTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void PackAndUnpack_ShouldProduceCorrectBoard()
@@ -21,16 +21,16 @@ public class GameSerializerTests(Context context) : AllContextIntegrationTestFix
             SetActorCode(actor, code);
             return code;
         }).ToList();
-            
+
         // Pack that board.
         Engine.PackBoard();
-            
+
         // Clear the board to setup for verification.
         Engine.ClearBoard();
-            
+
         // Unpack that board.
         Engine.UnpackBoard(0);
-            
+
         // Assert.
         Actors.Count.Should().Be(allCode.Count + 1);
         var observed = Actors.Select(x => x.Code.ToString()).Where(c => c.Length > 0).ToList();

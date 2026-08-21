@@ -1,7 +1,6 @@
 using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 
 namespace Roton.Test.Infrastructure;
 
