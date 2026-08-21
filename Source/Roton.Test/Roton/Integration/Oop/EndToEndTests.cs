@@ -2,10 +2,11 @@ using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class EndToEndTests(Context context) : OopTestFixture(context)
+public class EndToEndTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void TestCase_TownOfZztHouseOfBlues()

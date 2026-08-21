@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class ConditionTests(Context context) : OopTestFixture(context)
+public class ConditionTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void If_ShouldExecuteCurrentLine_WhenConditionIsMet()

@@ -962,16 +962,16 @@ public sealed class Engine : IEngine, IDisposable
 
     public void Push(Location location, Vector vector)
     {
-        // this is here to prevent endless push loops
-        // but doesn't exist in the original code
-        if (vector.IsZero())
-            throw Exceptions.PushStackOverflow;
-
         ref var tile = ref Tiles[location];
         if (tile.Id == Elements.SliderEwId && vector.Y == 0 ||
             tile.Id == Elements.SliderNsId && vector.X == 0 ||
             Elements[tile.Id].IsPushable)
         {
+            // this is here to prevent endless push loops
+            // but doesn't exist in the original code
+            if (vector.IsZero())
+                throw Exceptions.PushStackOverflow;
+
             ref var furtherTile = ref Tiles[location + vector];
             if (furtherTile.Id == Elements.TransporterId)
                 PushThroughTransporter(location, vector);

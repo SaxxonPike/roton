@@ -1,10 +1,11 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class LabelTests(Context context) : OopTestFixture(context)
+public class LabelTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void ZappingOwnLabels_ShouldProduceExpectedCode()

@@ -1,10 +1,11 @@
 using System.Linq;
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class FlagTests(Context context) : OopTestFixture(context)
+public class FlagTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Flags_ShouldBeSetBySetCommand()
