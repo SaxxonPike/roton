@@ -3,21 +3,35 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Dsl;
+using JetBrains.Annotations;
 using Moq;
+using NUnit.Framework;
 
 namespace Roton.Test.Infrastructure;
 
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Parallelizable(ParallelScope.All)]
+[PublicAPI]
 public abstract class BaseTestFixture
 {
-    private Lazy<Fixture> Fixture { get; } = new(() => new Fixture());
+    private Lazy<IFixture> Fixture { get; } = new(() => new Fixture()
+        .Customize(new AutoMoqCustomization()));
 
     [DebuggerStepThrough]
-    protected Mock<T> Mock<T>(Action<Mock<T>> setup) where T : class
+    protected Mock<T> Freeze<T>(Action<Mock<T>>? setup = null) where T : class
     {
-        var mock = new Mock<T>();
-        setup(mock);
+        var mock = Fixture.Value.Freeze<Mock<T>>();
+        setup?.Invoke(mock);
         return mock;
+    }
+    
+    [DebuggerStepThrough]
+    protected T Inject<T>(T instance)
+    {
+        Fixture.Value.Inject(instance);
+        return instance;
     }
 
     [DebuggerStepThrough]

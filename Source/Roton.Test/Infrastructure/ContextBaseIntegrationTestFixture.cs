@@ -23,18 +23,18 @@ namespace Roton.Test.Infrastructure;
 
 public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseTestFixture
 {
-    protected Mock<IClock> ClockMock { get; private set; }
-    protected FixedFileSystem FileSystem { get; private set; }
-    protected Config Config { get; private set; }
-    protected TestTerminal Terminal { get; private set; }
-    protected TestKeyboard Keyboard { get; private set; }
-    protected TestJoystick Joystick { get; private set; }
-    protected Mock<ISpeaker> SpeakerMock { get; private set; }
-    protected ITracer Tracer { get; private set; }
+    protected Mock<IClock> ClockMock { get; private set; } = null!;
+    protected FixedFileSystem FileSystem { get; private set; } = null!;
+    protected Config Config { get; private set; } = null!;
+    protected TestTerminal Terminal { get; private set; } = null!;
+    protected TestKeyboard Keyboard { get; private set; } = null!;
+    protected TestJoystick Joystick { get; private set; } = null!;
+    protected Mock<ISpeaker> SpeakerMock { get; private set; } = null!;
+    protected ITracer Tracer { get; private set; } = null!;
 
     private Random Rand { get; } = new();
 
-    protected IEngine Engine { get; private set; }
+    protected IEngine Engine { get; private set; } = null!;
     protected IActorList Actors => Engine.Actors;
     protected IAlerts Alerts => Engine.Alerts;
     protected IBoard Board => Engine.Board;
@@ -133,11 +133,11 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             MasterClockNumerator = 1,
             MasterClockDenominator = 1
         };
-        Terminal = new TestTerminal();
-        Keyboard = new TestKeyboard();
-        Joystick = new TestJoystick();
-        SpeakerMock = new Mock<ISpeaker>();
-        ClockMock = new Mock<IClock>();
+        Terminal = (TestTerminal)Inject<ITerminal>(new TestTerminal());
+        Keyboard = (TestKeyboard)Inject<IKeyboard>(new TestKeyboard());
+        Joystick = (TestJoystick)Inject<IJoystick>(new TestJoystick());
+        SpeakerMock = Freeze<ISpeaker>();
+        ClockMock = Freeze<IClock>();
         Tracer = new Tracer();
 
         var services = new ServiceCollection();
@@ -165,7 +165,6 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     [TearDown]
     public void __TearDownContext()
     {
-        
     }
 
     protected Context Context { get; } = context;
@@ -213,7 +212,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
     protected IActor ActorAt(int x, int y) =>
         Engine.ActorAt(new Location(x, y));
 
-    protected int RandomInt(int min, int max) => 
+    protected int RandomInt(int min, int max) =>
         Rand.Next(min, max + 1);
 
     protected void GoToBoard(int index)
@@ -231,7 +230,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
             Engine.UnpackBoard(index);
         }
     }
-    
+
     protected int BoardIndex
     {
         get => Engine.World.BoardIndex;
@@ -249,7 +248,7 @@ public abstract class ContextBaseIntegrationTestFixture(Context context) : BaseT
         get => Engine.World.Torches;
         set => Engine.World.Torches = value;
     }
-    
+
     protected int TorchCycles
     {
         get => Engine.World.TorchCycles;
