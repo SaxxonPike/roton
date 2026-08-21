@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
+using Lyon;
 using Lyon.App;
 using Lyon.Autofac;
 using Roton;
@@ -39,7 +40,7 @@ fileName ??= "TOWN.ZZT";
 // Determine which engine to use based on the world file name extension.
 var selector = new ContextEngineSelector();
 if (!selector.TryGetForWorldFileName(fileName, out var contextEngine))
-    throw new Exception($"Cannot determine the format of the world file: {fileName}");
+    throw new LyonException($"Cannot determine the format of the world file: {fileName}");
 
 // Games in the Super engine look a little nicer with slightly taller graphics.
 if (contextEngine == Context.Super)

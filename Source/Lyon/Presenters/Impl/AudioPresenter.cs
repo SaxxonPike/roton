@@ -23,7 +23,7 @@ public sealed unsafe class AudioPresenter(
     /// <summary>
     /// Current engine that the presenter is processing audio for.
     /// </summary>
-    private IEngine _engine;
+    private IEngine? _engine;
     
     /// <summary>
     /// Returns true if <see cref="Dispose"/> has been called.
@@ -113,14 +113,14 @@ public sealed unsafe class AudioPresenter(
         if (Presenters.Count == 0)
         {
             if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO))
-                throw new Exception($"Failed to initialize SDL audio subsystem: {SDL_GetError()}");
+                throw new SdlException("Failed to initialize SDL audio subsystem");
             composer.BufferReady += OnComposerBufferReady;
         }
 
         // Create the audio stream.
         _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
         if (_stream == null)
-            throw new Exception($"Failed to create audio stream: {SDL_GetError()}");
+            throw new SdlException("Failed to create audio stream");
         SDL_SetAudioStreamGain(_stream, 0.1f);
         Presenters.Add((nint)_stream, this);
 
@@ -137,17 +137,14 @@ public sealed unsafe class AudioPresenter(
     /// <summary>
     /// Handles when the engine runs a tick.
     /// </summary>
-    private void OnEngineTick(object sender, EventArgs e) => 
+    private void OnEngineTick(object? sender, EventArgs e) => 
         composer.Tick();
 
     /// <summary>
     /// Handles when the composer is ready to provide a buffer.
     /// </summary>
-    private void OnComposerBufferReady(object sender, AudioComposerDataEventArgs e)
+    private void OnComposerBufferReady(object? sender, AudioComposerDataEventArgs e)
     {
-        if (_buffer == null)
-            return;
-
         var data = e.Data;
 
         lock (_bufferLock)
@@ -173,7 +170,7 @@ public sealed unsafe class AudioPresenter(
         if (!_running)
             return;
         _running = false;
-        _engine.Tick -= OnEngineTick;
+        _engine?.Tick -= OnEngineTick;
         
         // If the last presenter is shut down, also shut down the SDL audio subsystem.
         if (Presenters.Remove((nint)_stream) && Presenters.Count == 0)

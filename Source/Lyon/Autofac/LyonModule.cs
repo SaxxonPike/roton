@@ -26,7 +26,7 @@ public sealed class LyonModule : Module
             .As<ICommandLine>()
             .SingleInstance();
 
-        builder.Register(c => c.Resolve<IFileSystemFactory>().Create(c.Resolve<IConfig>().HomePath))
+        builder.Register(c => c.Resolve<IFileSystemFactory>().Create(c.Resolve<IConfig>().HomePath ?? "."))
             .As<IFileSystem>()
             .AutoActivate()
             .SingleInstance();

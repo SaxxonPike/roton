@@ -26,7 +26,7 @@ public sealed class ContextEngineSelector : IContextEngineSelector
             return true;
         }
 
-        context = Context.Unknown;
+        context = default;
         return false;
     }
 }

@@ -8,7 +8,7 @@ public static class ContextMetadataServiceFactory
     public static IContextMetadataService GetForContext(Context context) =>
         context switch
         {
-            Context.Unknown => throw new RotonException($"Unknown {nameof(Context)}."),
+            0 => throw new RotonException($"Unknown {nameof(Context)}."),
             Context.Startup => new StartupContextMetadataService(),
             Context.Original => new OriginalContextMetadataService(),
             Context.Super => new SuperContextMetadataService(),

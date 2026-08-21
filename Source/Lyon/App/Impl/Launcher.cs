@@ -19,7 +19,7 @@ public sealed class Launcher(
     /// <summary>
     /// Handles when the engine exits.
     /// </summary>
-    private void OnExited(object sender, EventArgs e)
+    private void OnExited(object? sender, EventArgs e)
     {
         // When the game engine has exited, no need to keep the window open.
         Window.Close();

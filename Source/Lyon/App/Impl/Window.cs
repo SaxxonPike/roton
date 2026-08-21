@@ -57,7 +57,7 @@ internal sealed unsafe class Window(
     /// <summary>
     /// Title of the window.
     /// </summary>
-    public string Title { get; private set; }
+    public string Title { get; private set; } = "Lyon";
 
     /// <summary>
     /// If true, the window loop is running.
@@ -219,7 +219,7 @@ internal sealed unsafe class Window(
 
             // Render the scene.
             var bitmap = scenePresenter.Render();
-            if (bitmap.Bits.Length > 0)
+            if (bitmap is { Bits.Length: > 0 })
                 SDL_UpdateTexture(_background, null, bitmap.BitsPointer, RenderWidth * 4);
 
             // Set the scene scale.
@@ -262,7 +262,6 @@ internal sealed unsafe class Window(
         _closeWindow = false;
 
         // Window defaults.
-        Title = "Lyon";
         WindowWidth = (int)(640 * config.VideoScaleX);
         WindowHeight = (int)(350 * config.VideoScaleY);
         RenderWidth = 640;
