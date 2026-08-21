@@ -68,13 +68,13 @@ internal sealed unsafe class Window(
     /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_DOWN"/>.
     /// </summary>
     private void HandleKeyDown(ref SDL_KeyboardEvent e) =>
-        keyboardPresenter.Press(e);
+        keyboardPresenter.Press(e.key, e.mod);
 
     /// <summary>
     /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_UP"/>.
     /// </summary>
     private void HandleKeyUp(ref SDL_KeyboardEvent e) =>
-        keyboardPresenter.Release(e);
+        keyboardPresenter.Release(e.key, e.mod);
 
     /// <summary>
     /// Handles <see cref="SDL_EventType.SDL_EVENT_GAMEPAD_ADDED"/>.

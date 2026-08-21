@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using Roton;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
-using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl;
 
+/// <inheritdoc />
 [Context(Context.Startup)]
 // ReSharper disable once UnusedMember.Global
 public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
 {
+    /// <summary>
+    /// Maps SDL key codes to Roton key codes.
+    /// </summary>
     private static readonly IDictionary<SDL_Keycode, AnsiKey> Map = new Dictionary<SDL_Keycode, AnsiKey>
     {
         { SDL_Keycode.SDLK_A, AnsiKey.A },
@@ -108,6 +112,9 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
         { SDL_Keycode.SDLK_EQUALS, AnsiKey.Equals }
     };
 
+    /// <summary>
+    /// Converts SDL key modifiers to Roton key modifiers.
+    /// </summary>
     private static KeyMod ConvertKeyMod(SDL_Keymod mod) =>
         (mod.HasFlag(SDL_Keymod.SDL_KMOD_LSHIFT) |
          mod.HasFlag(SDL_Keymod.SDL_KMOD_RSHIFT)
@@ -122,38 +129,41 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
             ? KeyMod.Alt
             : 0);
 
-    private KeyMod UpdateMod(SDL_KeyboardEvent data)
+    /// <summary>
+    /// Update key modifier state.
+    /// </summary>
+    private KeyMod UpdateMod(SDL_Keymod mod)
     {
-        var newMod = ConvertKeyMod(data.mod);
+        var newMod = ConvertKeyMod(mod);
         SetMod(newMod);
         return newMod;
     }
 
-    public bool Press(SDL_KeyboardEvent data)
+    /// <inheritdoc />
+    public void Press(SDL_Keycode key, SDL_Keymod mod)
     {
-        var newMod = UpdateMod(data);
+        var newMod = UpdateMod(mod);
 
-        if (data.key == 0)
-            return false;
+        if (key == 0)
+            return;
 
         // Don't process command/Windows key shortcuts.
-        if ((data.mod & SDL_Keymod.SDL_KMOD_GUI) != 0)
-            return false;
+        if ((mod & SDL_Keymod.SDL_KMOD_GUI) != 0)
+            return;
 
-        if (!Map.TryGetValue(data.key, out var value))
-            return false;
+        if (!Map.TryGetValue(key, out var value))
+            return;
 
         Enqueue(new KeyPress
         (
             key: value,
             mod: newMod
         ));
-
-        return true;
     }
 
-    public void Release(SDL_KeyboardEvent data)
+    /// <inheritdoc />
+    public void Release(SDL_Keycode key, SDL_Keymod mod)
     {
-        UpdateMod(data);
+        UpdateMod(mod);
     }
 }

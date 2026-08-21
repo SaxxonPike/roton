@@ -9,6 +9,7 @@ using Roton.Infrastructure;
 
 namespace Lyon.Presenters.Impl;
 
+/// <inheritdoc />
 [Context(Context.Startup)]
 internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposable
 {
@@ -23,34 +24,31 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     {
         SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_GAMEPAD);
     }
-    
+
+    /// <inheritdoc />
     public override float X =>
         _axes.GetValueOrDefault((_active, JoystickAxis.X), 0);
 
+    /// <inheritdoc />
     public override float Y =>
         _axes.GetValueOrDefault((_active, JoystickAxis.Y), 0);
 
+    /// <inheritdoc />
     public override JoystickButtons Buttons =>
         (_buttons.Contains((_active, JoystickButtons.Primary)) ? JoystickButtons.Primary : default) |
         (_buttons.Contains((_active, JoystickButtons.Secondary)) ? JoystickButtons.Secondary : default);
 
+    /// <inheritdoc />
     public override bool IsConnected =>
         _active != default;
 
-    private void UpdateActive()
-    {
-        foreach (var item in _precedence)
-        {
-            if (_connected.Contains(item))
-            {
-                _active = item;
-                break;
-            }
-        }
+    /// <summary>
+    /// Updates the active joystick ID based on precedence and which ones are connected now.
+    /// </summary>
+    private void UpdateActive() =>
+        _active = _precedence.FirstOrDefault(x => _connected.Contains(x));
 
-        _active = default;
-    }
-
+    /// <inheritdoc />
     public void Connect(SDL_JoystickID id)
     {
         lock (_deviceLock)
@@ -62,6 +60,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
         }
     }
 
+    /// <inheritdoc />
     public void Disconnect(SDL_JoystickID id)
     {
         lock (_deviceLock)
@@ -79,9 +78,11 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
         }
     }
 
+    /// <inheritdoc />
     public void UpdateAxis(SDL_JoystickID id, JoystickAxis axis, float value) =>
         _axes[(id, axis)] = value;
 
+    /// <inheritdoc />
     public void UpdateButton(SDL_JoystickID id, JoystickButtons button, bool pressed)
     {
         if (!pressed)
@@ -90,6 +91,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
             _buttons.Add((id, button));
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMEPAD);
