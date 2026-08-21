@@ -62,20 +62,23 @@ public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
 
         // We ask for 2x the buffer size so that there's a double
         // buffer of audio data.
-        var have = presenter._buffer.Count;
         var want = required / sizeof(float) * 2;
-
-        if (have < want)
-        {
-            Console.WriteLine($"Audio buffer underflow: need {want}, got {have}");
-            return;
-        }
-
         var floats = (stackalloc float[want]);
-        var count = Math.Min(have, floats.Length);
+        int count;
 
-        for (var i = 0; i < count; i++)
-            floats[i] = presenter._buffer.Dequeue();
+        lock (presenter._bufferLock)
+        {
+            var have = presenter._buffer.Count;
+            if (have < want)
+            {
+                Console.WriteLine($"Audio buffer underflow: need {want}, got {have}");
+                return;
+            }
+
+            count = Math.Min(have, floats.Length);
+            for (var i = 0; i < count; i++)
+                floats[i] = presenter._buffer.Dequeue();
+        }
 
         fixed (float* floatsPtr = floats)
             SDL_PutAudioStreamData(stream, (IntPtr)floatsPtr, count * sizeof(float));
