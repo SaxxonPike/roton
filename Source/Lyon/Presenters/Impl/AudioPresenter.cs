@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -12,51 +11,57 @@ using Roton.Infrastructure;
 
 namespace Lyon.Presenters.Impl;
 
-[Context(Context.Startup)]
+/// <inheritdoc cref="IAudioPresenter"/>
+/// <inheritdoc cref="IDisposable"/>
 // ReSharper disable once UnusedMember.Global
-public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
+[Context(Context.Startup)]
+public sealed unsafe class AudioPresenter(
+    IConfig config, 
+    IAudioComposer composer)
+    : IDisposable, IAudioPresenter
 {
+    /// <summary>
+    /// Current engine that the presenter is processing audio for.
+    /// </summary>
+    private IEngine _engine;
+    
+    /// <summary>
+    /// Returns true if <see cref="Dispose"/> has been called.
+    /// </summary>
     private bool _isDisposed;
+    
+    /// <summary>
+    /// Returns true if the presenter is currently processing audio data.
+    /// </summary>
     private bool _running;
-    private readonly Queue<float> _buffer;
+    
+    /// <summary>
+    /// Audio data buffer.
+    /// </summary>
+    private readonly Queue<float> _buffer = [];
+    
+    /// <summary>
+    /// Mutex for modifying the audio data buffer.
+    /// </summary>
     private readonly Lock _bufferLock = new();
-    private readonly SDL_AudioStream* _stream;
+    
+    /// <summary>
+    /// Current SDL audio stream.
+    /// </summary>
+    private SDL_AudioStream* _stream;
+    
+    /// <summary>
+    /// Cache of all presenters, used by the static SDL callback handler.
+    /// </summary>
     private static readonly Dictionary<nint, AudioPresenter> Presenters = [];
 
-    public AudioPresenter(IConfig config, IEngine engine, IAudioComposer composer)
-    {
-        _buffer = [];
-
-        SampleRate = config.AudioSampleRate;
-        var spec = new SDL_AudioSpec
-        {
-            channels = 1,
-            format = SDL_AUDIO_F32,
-            freq = config.AudioSampleRate
-        };
-
-        // Create the audio stream.
-        if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO))
-            throw new Exception($"Failed to initialize SDL audio subsystem: {SDL_GetError()}");
-
-        _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
-        if (_stream == null)
-            throw new Exception($"Failed to create audio stream: {SDL_GetError()}");
-
-        Presenters.Add((nint)_stream, this);
-        Volume = 0.1f;
-
-        composer.BufferReady += (_, a) => Update(a);
-        composer.SampleRate = SampleRate;
-
-        Start();
-
-        engine.Tick += (_, _) => composer.Tick();
-    }
-
+    /// <summary>
+    /// Handler for SDL audio callbacks.
+    /// </summary>
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static void OnCallback(nint userData, SDL_AudioStream* stream, int required, int total)
     {
+        // If we aren't tracking the stream, don't do anything with it.
         if (!Presenters.TryGetValue((nint)stream, out var presenter))
             return;
 
@@ -75,25 +80,70 @@ public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
                 return;
             }
 
+            // Fill the buffer.
             count = Math.Min(have, floats.Length);
             for (var i = 0; i < count; i++)
                 floats[i] = presenter._buffer.Dequeue();
         }
 
+        // Send the buffer to SDL.
         fixed (float* floatsPtr = floats)
             SDL_PutAudioStreamData(stream, (IntPtr)floatsPtr, count * sizeof(float));
     }
 
-    public void Start()
+    /// <inheritdoc />
+    public void Start(IEngine engine)
     {
+        // If already running, bail.
         if (_running)
             return;
-
-        SDL_ResumeAudioStreamDevice(_stream);
         _running = true;
+        _engine = engine;
+
+        // Configure audio settings.
+        SampleRate = config.AudioSampleRate;
+        var spec = new SDL_AudioSpec
+        {
+            channels = 1,
+            format = SDL_AUDIO_F32,
+            freq = config.AudioSampleRate
+        };
+
+        // Start the SDL audio subsystem.
+        if (Presenters.Count == 0)
+        {
+            if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO))
+                throw new Exception($"Failed to initialize SDL audio subsystem: {SDL_GetError()}");
+            composer.BufferReady += OnComposerBufferReady;
+        }
+
+        // Create the audio stream.
+        _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
+        if (_stream == null)
+            throw new Exception($"Failed to create audio stream: {SDL_GetError()}");
+        SDL_SetAudioStreamGain(_stream, 0.1f);
+        Presenters.Add((nint)_stream, this);
+
+        // Set up event handlers.
+        composer.SampleRate = SampleRate;
+
+        // Connect the engine timer to the composer.
+        engine.Tick += OnEngineTick;
+
+        // Start playback.
+        SDL_ResumeAudioStreamDevice(_stream);
     }
 
-    public void Update(AudioComposerDataEventArgs e)
+    /// <summary>
+    /// Handles when the engine runs a tick.
+    /// </summary>
+    private void OnEngineTick(object sender, EventArgs e) => 
+        composer.Tick();
+
+    /// <summary>
+    /// Handles when the composer is ready to provide a buffer.
+    /// </summary>
+    private void OnComposerBufferReady(object sender, AudioComposerDataEventArgs e)
     {
         if (_buffer == null)
             return;
@@ -105,31 +155,52 @@ public sealed unsafe class AudioPresenter : IDisposable, IAudioPresenter
             _buffer.EnsureCapacity(_buffer.Count + data.Length);
 
             foreach (var sample in data)
-                _buffer.Enqueue(sample * Volume);
+                _buffer.Enqueue(sample);
         }
 
         e.Memory.Dispose();
     }
 
+    /// <summary>
+    /// Sampling rate of the audio stream.
+    /// </summary>
     public int SampleRate { get; private set; }
 
+    /// <inheritdoc />
     public void Stop()
     {
+        // If not running, bail.
         if (!_running)
             return;
-
         _running = false;
+        _engine.Tick -= OnEngineTick;
+        
+        // If the last presenter is shut down, also shut down the SDL audio subsystem.
+        if (Presenters.Remove((nint)_stream) && Presenters.Count == 0)
+        {
+            composer.BufferReady -= OnComposerBufferReady;
+            SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO);
+        }
     }
 
-    public float Volume { get; set; }
+    /// <summary>
+    /// Output gain of the audio signal. Defaults to 0.1. Due to the output
+    /// signal being pure square waves, it is generally recommended to keep this
+    /// value relatively low (it is very loud for its peak level.)
+    /// </summary>
+    public float Volume
+    {
+        get => SDL_GetAudioStreamGain(_stream);
+        set => SDL_SetAudioStreamGain(_stream, value);
+    }
 
     public void Dispose()
     {
         if (_isDisposed)
             return;
-
         _isDisposed = true;
+        
+        // Clean up.
         Stop();
-        SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO);
     }
 }

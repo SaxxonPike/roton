@@ -252,7 +252,7 @@ internal sealed unsafe class Window(
     }
 
     /// <inheritdoc />
-    public void Start(float rate)
+    public void Start()
     {
         // If already running, bail.
         if (Running)
