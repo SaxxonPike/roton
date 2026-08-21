@@ -6,33 +6,13 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 public class SuperExits(IMemory memory) : IExits
 {
-    public int this[int index]
-    {
-        get => memory.Read8(index + 0x7768);
-        set => memory.Write8(index + 0x7768, value);
-    }
+    public ref HWord this[int index] => ref memory.GetRef<HWord>(0x7768 + index);
 
-    public int East
-    {
-        get => memory.Read8(0x776B);
-        set => memory.Write8(0x776B, value);
-    }
+    public ref HWord East => ref memory.GetRef<HWord>(0x776B);
 
-    public int North
-    {
-        get => memory.Read8(0x7768);
-        set => memory.Write8(0x7768, value);
-    }
+    public ref HWord North => ref memory.GetRef<HWord>(0x7768);
 
-    public int South
-    {
-        get => memory.Read8(0x7769);
-        set => memory.Write8(0x7769, value);
-    }
+    public ref HWord South => ref memory.GetRef<HWord>(0x7769);
 
-    public int West
-    {
-        get => memory.Read8(0x776A);
-        set => memory.Write8(0x776A, value);
-    }
+    public ref HWord West => ref memory.GetRef<HWord>(0x776A);
 }

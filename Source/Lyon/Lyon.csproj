@@ -7,7 +7,6 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Include\DotSDL\DotSDL\DotSDL.csproj" />
         <ProjectReference Include="..\Roton\Roton.csproj"/>
     </ItemGroup>
     <ItemGroup>

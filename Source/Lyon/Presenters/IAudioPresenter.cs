@@ -4,7 +4,7 @@ namespace Lyon.Presenters;
 
 public interface IAudioPresenter
 {
-    double Volume { get; set; }
+    float Volume { get; set; }
     void Start();
     void Stop();
     void Update(AudioComposerDataEventArgs buffer);

@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using DotSDL.Events;
-using DotSDL.Input.Keyboard;
 using Roton;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 using Keyboard = Roton.Emulation.Core.Impl.Keyboard;
 
 namespace Lyon.Presenters.Impl;
@@ -14,128 +10,137 @@ namespace Lyon.Presenters.Impl;
 // ReSharper disable once UnusedMember.Global
 public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
 {
-    private static readonly IDictionary<Keycode, AnsiKey> Map = new Dictionary<Keycode, AnsiKey>
+    private static readonly IDictionary<SDL_Keycode, AnsiKey> Map = new Dictionary<SDL_Keycode, AnsiKey>
     {
-        { Keycode.A, AnsiKey.A },
-        { Keycode.B, AnsiKey.B },
-        { Keycode.C, AnsiKey.C },
-        { Keycode.D, AnsiKey.D },
-        { Keycode.E, AnsiKey.E },
-        { Keycode.F, AnsiKey.F },
-        { Keycode.G, AnsiKey.G },
-        { Keycode.H, AnsiKey.H },
-        { Keycode.I, AnsiKey.I },
-        { Keycode.J, AnsiKey.J },
-        { Keycode.K, AnsiKey.K },
-        { Keycode.L, AnsiKey.L },
-        { Keycode.M, AnsiKey.M },
-        { Keycode.N, AnsiKey.N },
-        { Keycode.O, AnsiKey.O },
-        { Keycode.P, AnsiKey.P },
-        { Keycode.Q, AnsiKey.Q },
-        { Keycode.R, AnsiKey.R },
-        { Keycode.S, AnsiKey.S },
-        { Keycode.T, AnsiKey.T },
-        { Keycode.U, AnsiKey.U },
-        { Keycode.V, AnsiKey.V },
-        { Keycode.W, AnsiKey.W },
-        { Keycode.X, AnsiKey.X },
-        { Keycode.Y, AnsiKey.Y },
-        { Keycode.Z, AnsiKey.Z },
-        { Keycode.Quote, AnsiKey.Apostophe },
-        { Keycode.Backslash, AnsiKey.Backslash },
-        { Keycode.Backspace, AnsiKey.Backspace },
-        { Keycode.Comma, AnsiKey.Comma },
-        { Keycode.Num0, AnsiKey.D0 },
-        { Keycode.Num1, AnsiKey.D1 },
-        { Keycode.Num2, AnsiKey.D2 },
-        { Keycode.Num3, AnsiKey.D3 },
-        { Keycode.Num4, AnsiKey.D4 },
-        { Keycode.Num5, AnsiKey.D5 },
-        { Keycode.Num6, AnsiKey.D6 },
-        { Keycode.Num7, AnsiKey.D7 },
-        { Keycode.Num8, AnsiKey.D8 },
-        { Keycode.Num9, AnsiKey.D9 },
-        { Keycode.Delete, AnsiKey.Delete },
-        { Keycode.Down, AnsiKey.Down },
-        { Keycode.End, AnsiKey.End },
-        { Keycode.Return, AnsiKey.Enter },
-        { Keycode.Plus, AnsiKey.Equals },
-        { Keycode.Escape, AnsiKey.Escape },
-        { Keycode.F1, AnsiKey.F1 },
-        { Keycode.F2, AnsiKey.F2 },
-        { Keycode.F3, AnsiKey.F3 },
-        { Keycode.F4, AnsiKey.F4 },
-        { Keycode.F5, AnsiKey.F5 },
-        { Keycode.F6, AnsiKey.F6 },
-        { Keycode.F7, AnsiKey.F7 },
-        { Keycode.F8, AnsiKey.F8 },
-        { Keycode.F9, AnsiKey.F9 },
-        { Keycode.F10, AnsiKey.F10 },
-        { Keycode.F11, AnsiKey.F11 },
-        { Keycode.F12, AnsiKey.F12 },
-        { Keycode.Backquote, AnsiKey.Grave },
-        { Keycode.Home, AnsiKey.Home },
-        { Keycode.Insert, AnsiKey.Insert },
-        { Keycode.Left, AnsiKey.Left },
-        { Keycode.LeftBracket, AnsiKey.LeftSquare },
-        { Keycode.Minus, AnsiKey.Minus },
-        { Keycode.NumPad0, AnsiKey.Num0 },
-        { Keycode.NumPad1, AnsiKey.Num1 },
-        { Keycode.NumPad2, AnsiKey.Num2 },
-        { Keycode.NumPad3, AnsiKey.Num3 },
-        { Keycode.NumPad4, AnsiKey.Num4 },
-        { Keycode.NumPad5, AnsiKey.Num5 },
-        { Keycode.NumPad6, AnsiKey.Num6 },
-        { Keycode.NumPad7, AnsiKey.Num7 },
-        { Keycode.NumPad8, AnsiKey.Num8 },
-        { Keycode.NumPad9, AnsiKey.Num9 },
-        { Keycode.NumPadEnter, AnsiKey.NumEnter },
-        { Keycode.NumPadMinus, AnsiKey.NumMinus },
-        { Keycode.NumPadPeriod, AnsiKey.NumPeriod },
-        { Keycode.NumPadPlus, AnsiKey.NumPlus },
-        { Keycode.NumPadDivide, AnsiKey.NumSlash },
-        { Keycode.NumPadMultiply, AnsiKey.NumStar },
-        { Keycode.PageDown, AnsiKey.PageDown },
-        { Keycode.PageUp, AnsiKey.PageUp },
-        { Keycode.Pause, AnsiKey.Pause },
-        { Keycode.Period, AnsiKey.Period },
-        { Keycode.PrintScreen, AnsiKey.PrintScreen },
-        { Keycode.Right, AnsiKey.Right },
-        { Keycode.RightBracket, AnsiKey.RightSquare },
-        { Keycode.Semicolon, AnsiKey.Semicolon },
-        { Keycode.Slash, AnsiKey.Slash },
-        { Keycode.Space, AnsiKey.Space },
-        { Keycode.Tab, AnsiKey.Tab },
-        { Keycode.Up, AnsiKey.Up },
-        { Keycode.Question, AnsiKey.Slash },
-        { Keycode.Equals, AnsiKey.Equals }
+        { SDL_Keycode.SDLK_A, AnsiKey.A },
+        { SDL_Keycode.SDLK_B, AnsiKey.B },
+        { SDL_Keycode.SDLK_C, AnsiKey.C },
+        { SDL_Keycode.SDLK_D, AnsiKey.D },
+        { SDL_Keycode.SDLK_E, AnsiKey.E },
+        { SDL_Keycode.SDLK_F, AnsiKey.F },
+        { SDL_Keycode.SDLK_G, AnsiKey.G },
+        { SDL_Keycode.SDLK_H, AnsiKey.H },
+        { SDL_Keycode.SDLK_I, AnsiKey.I },
+        { SDL_Keycode.SDLK_J, AnsiKey.J },
+        { SDL_Keycode.SDLK_K, AnsiKey.K },
+        { SDL_Keycode.SDLK_L, AnsiKey.L },
+        { SDL_Keycode.SDLK_M, AnsiKey.M },
+        { SDL_Keycode.SDLK_N, AnsiKey.N },
+        { SDL_Keycode.SDLK_O, AnsiKey.O },
+        { SDL_Keycode.SDLK_P, AnsiKey.P },
+        { SDL_Keycode.SDLK_Q, AnsiKey.Q },
+        { SDL_Keycode.SDLK_R, AnsiKey.R },
+        { SDL_Keycode.SDLK_S, AnsiKey.S },
+        { SDL_Keycode.SDLK_T, AnsiKey.T },
+        { SDL_Keycode.SDLK_U, AnsiKey.U },
+        { SDL_Keycode.SDLK_V, AnsiKey.V },
+        { SDL_Keycode.SDLK_W, AnsiKey.W },
+        { SDL_Keycode.SDLK_X, AnsiKey.X },
+        { SDL_Keycode.SDLK_Y, AnsiKey.Y },
+        { SDL_Keycode.SDLK_Z, AnsiKey.Z },
+        { SDL_Keycode.SDLK_APOSTROPHE, AnsiKey.Apostophe },
+        { SDL_Keycode.SDLK_BACKSLASH, AnsiKey.Backslash },
+        { SDL_Keycode.SDLK_BACKSPACE, AnsiKey.Backspace },
+        { SDL_Keycode.SDLK_COMMA, AnsiKey.Comma },
+        { SDL_Keycode.SDLK_0, AnsiKey.D0 },
+        { SDL_Keycode.SDLK_1, AnsiKey.D1 },
+        { SDL_Keycode.SDLK_2, AnsiKey.D2 },
+        { SDL_Keycode.SDLK_3, AnsiKey.D3 },
+        { SDL_Keycode.SDLK_4, AnsiKey.D4 },
+        { SDL_Keycode.SDLK_5, AnsiKey.D5 },
+        { SDL_Keycode.SDLK_6, AnsiKey.D6 },
+        { SDL_Keycode.SDLK_7, AnsiKey.D7 },
+        { SDL_Keycode.SDLK_8, AnsiKey.D8 },
+        { SDL_Keycode.SDLK_9, AnsiKey.D9 },
+        { SDL_Keycode.SDLK_DELETE, AnsiKey.Delete },
+        { SDL_Keycode.SDLK_DOWN, AnsiKey.Down },
+        { SDL_Keycode.SDLK_END, AnsiKey.End },
+        { SDL_Keycode.SDLK_RETURN, AnsiKey.Enter },
+        { SDL_Keycode.SDLK_PLUS, AnsiKey.Equals },
+        { SDL_Keycode.SDLK_ESCAPE, AnsiKey.Escape },
+        { SDL_Keycode.SDLK_F1, AnsiKey.F1 },
+        { SDL_Keycode.SDLK_F2, AnsiKey.F2 },
+        { SDL_Keycode.SDLK_F3, AnsiKey.F3 },
+        { SDL_Keycode.SDLK_F4, AnsiKey.F4 },
+        { SDL_Keycode.SDLK_F5, AnsiKey.F5 },
+        { SDL_Keycode.SDLK_F6, AnsiKey.F6 },
+        { SDL_Keycode.SDLK_F7, AnsiKey.F7 },
+        { SDL_Keycode.SDLK_F8, AnsiKey.F8 },
+        { SDL_Keycode.SDLK_F9, AnsiKey.F9 },
+        { SDL_Keycode.SDLK_F10, AnsiKey.F10 },
+        { SDL_Keycode.SDLK_F11, AnsiKey.F11 },
+        { SDL_Keycode.SDLK_F12, AnsiKey.F12 },
+        { SDL_Keycode.SDLK_GRAVE, AnsiKey.Grave },
+        { SDL_Keycode.SDLK_HOME, AnsiKey.Home },
+        { SDL_Keycode.SDLK_INSERT, AnsiKey.Insert },
+        { SDL_Keycode.SDLK_LEFT, AnsiKey.Left },
+        { SDL_Keycode.SDLK_LEFTBRACKET, AnsiKey.LeftSquare },
+        { SDL_Keycode.SDLK_MINUS, AnsiKey.Minus },
+        { SDL_Keycode.SDLK_KP_0, AnsiKey.D0 },
+        { SDL_Keycode.SDLK_KP_1, AnsiKey.D1 },
+        { SDL_Keycode.SDLK_KP_2, AnsiKey.D2 },
+        { SDL_Keycode.SDLK_KP_3, AnsiKey.D3 },
+        { SDL_Keycode.SDLK_KP_4, AnsiKey.D4 },
+        { SDL_Keycode.SDLK_KP_5, AnsiKey.D5 },
+        { SDL_Keycode.SDLK_KP_6, AnsiKey.D6 },
+        { SDL_Keycode.SDLK_KP_7, AnsiKey.D7 },
+        { SDL_Keycode.SDLK_KP_8, AnsiKey.D8 },
+        { SDL_Keycode.SDLK_KP_9, AnsiKey.D9 },
+        { SDL_Keycode.SDLK_KP_ENTER, AnsiKey.NumEnter },
+        { SDL_Keycode.SDLK_KP_MINUS, AnsiKey.NumMinus },
+        { SDL_Keycode.SDLK_KP_PERIOD, AnsiKey.NumPeriod },
+        { SDL_Keycode.SDLK_KP_PLUS, AnsiKey.NumPlus },
+        { SDL_Keycode.SDLK_KP_DIVIDE, AnsiKey.NumSlash },
+        { SDL_Keycode.SDLK_KP_MULTIPLY, AnsiKey.NumStar },
+        { SDL_Keycode.SDLK_PAGEDOWN, AnsiKey.PageDown },
+        { SDL_Keycode.SDLK_PAGEUP, AnsiKey.PageUp },
+        { SDL_Keycode.SDLK_PAUSE, AnsiKey.Pause },
+        { SDL_Keycode.SDLK_PERIOD, AnsiKey.Period },
+        { SDL_Keycode.SDLK_PRINTSCREEN, AnsiKey.PrintScreen },
+        { SDL_Keycode.SDLK_RIGHT, AnsiKey.Right },
+        { SDL_Keycode.SDLK_RIGHTBRACKET, AnsiKey.RightSquare },
+        { SDL_Keycode.SDLK_SEMICOLON, AnsiKey.Semicolon },
+        { SDL_Keycode.SDLK_SLASH, AnsiKey.Slash },
+        { SDL_Keycode.SDLK_SPACE, AnsiKey.Space },
+        { SDL_Keycode.SDLK_TAB, AnsiKey.Tab },
+        { SDL_Keycode.SDLK_UP, AnsiKey.Up },
+        { SDL_Keycode.SDLK_QUESTION, AnsiKey.Slash },
+        { SDL_Keycode.SDLK_EQUALS, AnsiKey.Equals }
     };
 
-    private static KeyMod ConvertKeyMod(Keymod mod) =>
-        (mod.HasFlag(Keymod.LShift) | mod.HasFlag(Keymod.RShift) ? KeyMod.Shift : 0) |
-        (mod.HasFlag(Keymod.LCtrl) | mod.HasFlag(Keymod.RCtrl) ? KeyMod.Control : 0) |
-        (mod.HasFlag(Keymod.LAlt) | mod.HasFlag(Keymod.RAlt) ? KeyMod.Alt : 0);
+    private static KeyMod ConvertKeyMod(SDL_Keymod mod) =>
+        (mod.HasFlag(SDL_Keymod.SDL_KMOD_LSHIFT) |
+         mod.HasFlag(SDL_Keymod.SDL_KMOD_RSHIFT)
+            ? KeyMod.Shift
+            : 0) |
+        (mod.HasFlag(SDL_Keymod.SDL_KMOD_LCTRL) |
+         mod.HasFlag(SDL_Keymod.SDL_KMOD_RCTRL)
+            ? KeyMod.Control
+            : 0) |
+        (mod.HasFlag(SDL_Keymod.SDL_KMOD_LALT) |
+         mod.HasFlag(SDL_Keymod.SDL_KMOD_RALT)
+            ? KeyMod.Alt
+            : 0);
 
-    private KeyMod UpdateMod(KeyboardEvent data)
+    private KeyMod UpdateMod(SDL_KeyboardEvent data)
     {
-        var newMod = ConvertKeyMod(data.Keymod);
+        var newMod = ConvertKeyMod(data.mod);
         SetMod(newMod);
         return newMod;
     }
 
-    public bool Press(KeyboardEvent data)
+    public bool Press(SDL_KeyboardEvent data)
     {
         var newMod = UpdateMod(data);
 
-        if (data.Keycode == 0)
+        if (data.key == 0)
             return false;
 
         // Don't process command/Windows key shortcuts.
-        if ((data.Keymod & Keymod.Gui) != 0)
+        if ((data.mod & SDL_Keymod.SDL_KMOD_GUI) != 0)
             return false;
 
-        if (!Map.TryGetValue(data.Keycode, out var value))
+        if (!Map.TryGetValue(data.key, out var value))
             return false;
 
         Enqueue(new KeyPress
@@ -147,7 +152,7 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
         return true;
     }
 
-    public void Release(KeyboardEvent data)
+    public void Release(SDL_KeyboardEvent data)
     {
         UpdateMod(data);
     }

@@ -1,7 +1,6 @@
 ﻿using Roton;
 using Roton.Composers.Video.Scenes;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl;
 

@@ -24,6 +24,8 @@ public sealed class Engine : IEngine, IDisposable
 {
     private readonly IConfigFileService _configFileService;
     private readonly IFileDialog _fileDialog;
+    private readonly Func<bool> _waitForTickFastDelegate;
+    private readonly Func<bool> _waitForTickNormalDelegate;
 
     private int _ticksToRun;
     private float _boardTimeHsec;
@@ -91,6 +93,9 @@ public sealed class Engine : IEngine, IDisposable
         _fileDialog = fileDialog;
         Tracer = tracer;
         _engineAccessor = engineAccessor;
+
+        _waitForTickFastDelegate = WaitForTickFastCondition;
+        _waitForTickNormalDelegate = WaitForTickNormalCondition;
     }
 
     private void ClockTick(object? sender, EventArgs args)
@@ -1420,23 +1425,28 @@ public sealed class Engine : IEngine, IDisposable
             State.SoundTicks--;
     }
 
+    private bool WaitForTickFastCondition()
+    {
+        if (_ticksToRun <= 0)
+            return true;
+
+        UpdateSound();
+        Tick?.Invoke(this, EventArgs.Empty);
+        _ticksToRun--;
+
+        return false;
+    }
+
+    private bool WaitForTickNormalCondition() => 
+        _ticksToRun > 0 || !ThreadActive;
+
     public void WaitForTick()
     {
         var isFast = State.GameWaitTime <= 0 && Config.FastMode;
 
         if (isFast)
         {
-            SpinWait.SpinUntil(() =>
-            {
-                if (_ticksToRun <= 0)
-                    return true;
-
-                UpdateSound();
-                Tick?.Invoke(this, EventArgs.Empty);
-                _ticksToRun--;
-
-                return false;
-            });
+            SpinWait.SpinUntil(_waitForTickFastDelegate);
         }
         else
         {
@@ -1444,7 +1454,7 @@ public sealed class Engine : IEngine, IDisposable
 
             Tick?.Invoke(this, EventArgs.Empty);
 
-            SpinWait.SpinUntil(() => _ticksToRun > 0 || !ThreadActive);
+            SpinWait.SpinUntil(_waitForTickNormalDelegate);
 
             if (_ticksToRun > 0)
                 _ticksToRun--;
