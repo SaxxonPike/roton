@@ -1,53 +1,114 @@
-﻿using System;
-using DotSDL.Events;
-using DotSDL.Graphics;
-using Lyon.Presenters;
+﻿using Lyon.Presenters;
 using Roton;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl;
 
 [Context(Context.Startup)]
-public sealed class Window : SdlWindow, IWindow
+public sealed unsafe class Window : IWindow
 {
+    private readonly SDL_Window* _window;
+    private readonly SDL_Renderer* _renderer;
+    private readonly SDL_Texture* _background;
     private readonly IKeyboardPresenter _keyboardPresenter;
     private readonly IScenePresenter _scenePresenter;
-    private bool _closeWindow;
 
-    private IKeyboardPresenter KeyboardPresenter => _keyboardPresenter;
-    private IScenePresenter ScenePresenter => _scenePresenter;
+    private bool _closeWindow;
 
     public Window(
         IConfig config,
         IKeyboardPresenter keyboardPresenter,
-        IScenePresenter scenePresenter) : base("Lyon",
-        new Point {X = WindowPosUndefined, Y = WindowPosUndefined},
-        (int)(640 * config.VideoScaleX), (int)(350 * config.VideoScaleY),
-        640, 350)
+        IScenePresenter scenePresenter)
     {
+        Title = "Lyon";
+        WindowWidth = (int)(640 * config.VideoScaleX);
+        WindowHeight = (int)(350 * config.VideoScaleY);
+        RenderWidth = 640;
+        RenderHeight = 350;
+
         _keyboardPresenter = keyboardPresenter;
         _scenePresenter = scenePresenter;
-        KeyPressed += OnKeyDown;
-        Closed += OnClosed;
 
-        ScalingQuality = ScalingQuality.PixelArt;
+        SDL_Init(SDL_InitFlags.SDL_INIT_VIDEO);
 
-        Background.GetCanvasPointer = () => {
-            var bitmap = ScenePresenter.Render();
-            return bitmap.Bits.Length == 0 ? IntPtr.Zero : bitmap.BitsPointer;
-        };
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+
+        SDL_CreateWindowAndRenderer(Title, WindowWidth, WindowHeight,
+            SDL_WindowFlags.SDL_WINDOW_HIDDEN, &window, &renderer);
+
+        _window = window;
+        _renderer = renderer;
+
+        _background = SDL_CreateTexture(
+            _renderer,
+            SDL_PIXELFORMAT_BGRA32,
+            SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING,
+            RenderWidth,
+            RenderHeight
+        );
+
+        SDL_SetTextureScaleMode(_background, SDL_ScaleMode.SDL_SCALEMODE_PIXELART);
+        SDL_SetRenderVSync(renderer, 1);
     }
 
-    private void OnClosed(object sender, WindowEvent e)
+    public int RenderWidth { get; }
+
+    public int RenderHeight { get; }
+
+    public int WindowWidth { get; }
+
+    public int WindowHeight { get; }
+
+    public string Title { get; }
+
+    public bool Running { get; private set; }
+
+    private void Loop(float rate)
     {
-        Close();
+        SDL_ShowWindow(_window);
+        Running = true;
+
+        while (Running)
+        {
+            SDL_Event e;
+
+            while (SDL_PollEvent(&e))
+            {
+                switch (e.Type)
+                {
+                    case SDL_EventType.SDL_EVENT_QUIT:
+                    case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                        Close();
+                        break;
+                    case SDL_EventType.SDL_EVENT_KEY_DOWN:
+                        _keyboardPresenter.Press(e.key);
+                        break;
+                    case SDL_EventType.SDL_EVENT_KEY_UP:
+                        _keyboardPresenter.Release(e.key);
+                        break;
+                }
+            }
+
+            var bitmap = _scenePresenter.Render();
+            if (bitmap.Bits.Length > 0)
+                SDL_UpdateTexture(_background, null, bitmap.BitsPointer, RenderWidth * 4);
+
+            SDL_RenderTexture(_renderer, _background, null, null);
+            SDL_RenderPresent(_renderer);
+
+            if (_closeWindow)
+                break;
+        }
+
+        Running = false;
+        SDL_DestroyWindow(_window);
     }
 
     public void SetSize(int width, int height)
     {
-        ScenePresenter.UpdateViewport();
+        _scenePresenter.UpdateViewport();
     }
 
     public void Close()
@@ -55,19 +116,8 @@ public sealed class Window : SdlWindow, IWindow
         _closeWindow = true;
     }
 
-    private void OnKeyDown(object obj, KeyboardEvent e)
+    public void Start(float rate)
     {
-        KeyboardPresenter.Press(e);
-    }
-
-    private void OnKeyUp(object obj, KeyboardEvent e)
-    {
-        KeyboardPresenter.Release(e);
-    }
-
-    protected override void OnUpdate(float delta)
-    {
-        if(_closeWindow)
-            Stop();
+        Loop(rate);
     }
 }

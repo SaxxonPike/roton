@@ -3,26 +3,17 @@ using Lyon.Presenters;
 using Roton;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 
 namespace Lyon.App.Impl;
 
 [Context(Context.Startup)]
-public sealed class Launcher : ILauncher
+public sealed class Launcher(
+    IWindow window,
+    IAudioPresenter audioPresenter)
+    : ILauncher
 {
-    private readonly IWindow _window;
-    private readonly IAudioPresenter _audioPresenter;
-
-    public Launcher(
-        IWindow window,
-        IAudioPresenter audioPresenter)
-    {
-        _window = window;
-        _audioPresenter = audioPresenter;
-    }
-
-    private IWindow Window => _window;
-    private IAudioPresenter AudioPresenter => _audioPresenter;
+    private IWindow Window => window;
+    private IAudioPresenter AudioPresenter => audioPresenter;
 
     private void OnExited(object sender, EventArgs e)
     {

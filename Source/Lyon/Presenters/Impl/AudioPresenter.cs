@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using DotSDL.Audio;
 using Roton;
 using Roton.Composers.Audio;
-using Roton.Composers.Audio.Impl;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
-using Roton.Infrastructure.Impl;
 
 namespace Lyon.Presenters.Impl;
 
