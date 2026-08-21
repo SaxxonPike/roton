@@ -2,9 +2,9 @@ namespace Roton.Emulation.Data;
 
 public interface IExits
 {
-    int this[int index] { get; set; }
-    int East { get; set; }
-    int North { get; set; }
-    int South { get; set; }
-    int West { get; set; }
+    ref HWord this[int index] { get; }
+    ref HWord East { get; }
+    ref HWord North { get; }
+    ref HWord South { get; }
+    ref HWord West { get; }
 }
