@@ -17,11 +17,4 @@ public sealed class ScenePresenter(ISceneComposer sceneComposer) : IScenePresent
     /// </summary>
     public IBitmap Render() => 
         sceneComposer.Bitmap;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public void UpdateViewport()
-    {
-    }
 }
