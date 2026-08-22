@@ -12,7 +12,7 @@ public sealed class StarDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        ref var tile = ref Engine.Tiles[location];
+        ref var tile = ref tiles[location];
         tile.Color++;
         if (tile.Color > 15)
             tile.Color = 9;

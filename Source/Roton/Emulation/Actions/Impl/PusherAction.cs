@@ -14,7 +14,7 @@ public sealed class PusherAction(IEngineAccessor engine) : IAction
         var actor = Engine.Actors[index];
         var source = actor.Location;
 
-        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
+        if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
         {
             Engine.Push(actor.Location + actor.Vector, actor.Vector);
         }
@@ -22,14 +22,14 @@ public sealed class PusherAction(IEngineAccessor engine) : IAction
         index = Engine.Actors.ActorIndexAt(source);
         actor = Engine.Actors[index];
 
-        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
+        if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             return;
 
         var behindLocation = actor.Location - actor.Vector;
         Engine.MoveActor(index, actor.Location + actor.Vector);
         Engine.PlaySound(2, Engine.Sounds.Push);
 
-        if (Engine.Tiles[behindLocation].Id != Engine.Elements.PusherId)
+        if (tiles[behindLocation].Id != Engine.Elements.PusherId)
             return;
 
         var behindIndex = Engine.Actors.ActorIndexAt(behindLocation);

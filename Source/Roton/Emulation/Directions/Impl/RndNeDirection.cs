@@ -6,13 +6,11 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RNDNE")]
 [Context(Context.Super, "RNDNE")]
-public sealed class RndNeDirection(IEngineAccessor engine) : IDirection
+public sealed class RndNeDirection(IRandomizer randomizer) : IDirection
 {
-    private IEngine Engine => engine.Instance;
-
     public Vector Execute(ref OopContext context, ref Word instruction)
     {
-        return Engine.Random.GetNext(2) == 0
+        return randomizer.GetNext(2) == 0
             ? Vector.North
             : Vector.East;
     }

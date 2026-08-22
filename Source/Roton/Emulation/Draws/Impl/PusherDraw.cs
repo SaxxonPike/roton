@@ -15,11 +15,11 @@ public sealed class PusherDraw(IEngineAccessor engine) : IDraw
         var actor = Engine.ActorAt(location);
         return actor.Vector.X switch
         {
-            1 => new AnsiChar(0x10, Engine.Tiles[location].Color),
-            -1 => new AnsiChar(0x11, Engine.Tiles[location].Color),
+            1 => new AnsiChar(0x10, tiles[location].Color),
+            -1 => new AnsiChar(0x11, tiles[location].Color),
             _ => actor.Vector.Y == -1
-                ? new AnsiChar(0x1E, Engine.Tiles[location].Color)
-                : new AnsiChar(0x1F, Engine.Tiles[location].Color)
+                ? new AnsiChar(0x1E, tiles[location].Color)
+                : new AnsiChar(0x1F, tiles[location].Color)
         };
     }
 }

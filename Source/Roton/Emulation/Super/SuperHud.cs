@@ -248,8 +248,8 @@ public sealed class SuperHud : Hud
         var cameraY = Engine.Player.Location.Y - WindowHeight / 2;
 
         Engine.Board.Camera = new Location16(
-            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth + 1), 1),
-            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight + 1), 1)
+            Math.Max(Math.Min(cameraX, tiles.Width - WindowWidth + 1), 1),
+            Math.Max(Math.Min(cameraY, tiles.Height - WindowHeight + 1), 1)
         );
     }
 
@@ -270,8 +270,8 @@ public sealed class SuperHud : Hud
 
         // Max bounds of the camera (so that the scroll doesn't go off the right or bottom of the board.)
 
-        var maxCameraX = Engine.Tiles.Width - WindowWidth + 1;
-        var maxCameraY = Engine.Tiles.Height - WindowHeight + 1;
+        var maxCameraX = tiles.Width - WindowWidth + 1;
+        var maxCameraY = tiles.Height - WindowHeight + 1;
 
         var player = Engine.Player.Location;
         var newCamera = new Location16(Engine.Board.Camera.X, Engine.Board.Camera.Y);

@@ -25,11 +25,11 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
 
             if ((Engine.State.GameCycle & 0x01) == 0)
             {
-                Engine.Tiles[actor.Location].Color = ((Engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
+                tiles[actor.Location].Color = ((Engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
             }
             else
             {
-                Engine.Tiles[actor.Location].Color = 0x0F;
+                tiles[actor.Location].Color = 0x0F;
             }
 
             Engine.UpdateBoard(actor.Location);
@@ -74,7 +74,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
                 {
                     var bulletCount =
                         Engine.Actors.Count(
-                            a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.Elements.BulletId);
+                            a => a.P1 == 0 && tiles[a.Location].Id == Engine.Elements.BulletId);
                     if (bulletCount < Engine.Board.MaximumShots)
                     {
                         if (Engine.SpawnProjectile(Engine.Elements.BulletId, actor.Location,
@@ -108,7 +108,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
         {
             // Movement logic
 
-            Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
+            Engine.InteractionList.Get(tiles[actor.Location + Engine.State.KeyVector].Id)
                 .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
                     
             if (!Engine.State.KeyVector.IsZero())
@@ -118,7 +118,7 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
                     Engine.PlayStep();
                 }
 
-                if (Engine.Tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
+                if (tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
                 {
                     Engine.MoveActor(0, actor.Location + Engine.State.KeyVector);
                 }

@@ -29,11 +29,11 @@ public sealed class RotonAction(IEngineAccessor engine) : IAction
         }
 
         var target = actor.Location + actor.Vector;
-        if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);
         }
-        else if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
+        else if (tiles[target].Id == Engine.Elements.PlayerId)
         {
             Engine.Attack(index, target);
         }

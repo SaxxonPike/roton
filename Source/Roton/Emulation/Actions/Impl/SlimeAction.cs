@@ -17,7 +17,7 @@ public sealed class SlimeAction(IEngineAccessor engine) : IAction
         if (actor.P1 >= actor.P2)
         {
             var spawnCount = 0;
-            var color = Engine.Tiles[actor.Location].Color;
+            var color = tiles[actor.Location].Color;
             var slimeElement = Engine.Elements.Slime();
             var slimeTrailTile = new Tile(Engine.Elements.BreakableId, color);
             var source = actor.Location;
@@ -26,12 +26,12 @@ public sealed class SlimeAction(IEngineAccessor engine) : IAction
             for (var i = 0; i < 4; i++)
             {
                 var target = source + Engine.GetCardinalVector(i);
-                if (Engine.Tiles.ElementAt(target).IsFloor)
+                if (tiles.ElementAt(target).IsFloor)
                 {
                     if (spawnCount == 0)
                     {
                         Engine.MoveActor(index, target);
-                        Engine.Tiles[source] = slimeTrailTile;
+                        tiles[source] = slimeTrailTile;
                         Engine.UpdateBoard(source);
                     }
                     else
@@ -47,7 +47,7 @@ public sealed class SlimeAction(IEngineAccessor engine) : IAction
             if (spawnCount == 0)
             {
                 Engine.RemoveActor(index);
-                Engine.Tiles[source] = slimeTrailTile;
+                tiles[source] = slimeTrailTile;
                 Engine.UpdateBoard(source);
             }
         }

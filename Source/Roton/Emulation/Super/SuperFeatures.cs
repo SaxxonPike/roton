@@ -34,7 +34,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         {
             var targetVector = Engine.GetCardinalVector(i);
             var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
-            var adjacentTile = Engine.Tiles[targetLocation];
+            var adjacentTile = tiles[targetLocation];
 
             if (Engine.Elements[adjacentTile.Id].Cycle >= 0)
                 adjacentTile = Engine.ActorAt(targetLocation).UnderTile;
@@ -55,9 +55,9 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         }
 
         if (result.Color == 0)
-            Engine.Tiles[location].Id = Engine.Elements.EmptyId;
+            tiles[location].Id = Engine.Elements.EmptyId;
         else
-            Engine.Tiles[location] = result;
+            tiles[location] = result;
 
         Engine.UpdateBoard(location);
     }
@@ -137,12 +137,12 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
     public bool CanPutTile(Location location)
     {
         // do not allow #put on the bottom row
-        return location.Y < Engine.Tiles.Height;
+        return location.Y < tiles.Height;
     }
 
     public void ClearForest(Location location)
     {
-        Engine.Tiles[location] = new Tile(Engine.Elements.FloorId, 0x02);
+        tiles[location] = new Tile(Engine.Elements.FloorId, 0x02);
     }
 
     public void CleanUpPauseMovement()
@@ -157,8 +157,8 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         {
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.Player.Location += Engine.State.KeyVector;
-            Engine.Player.UnderTile = Engine.Tiles[Engine.Player.Location];
-            Engine.Tiles[Engine.Player.Location] = new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
+            Engine.Player.UnderTile = tiles[Engine.Player.Location];
+            tiles[Engine.Player.Location] = new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
             Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
@@ -197,7 +197,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     private bool TestAdjacent(Location location, int id)
     {
-        var eId = Engine.Tiles[location].Id;
+        var eId = tiles[location].Id;
         if (eId == id || eId == Engine.Elements.BoardEdgeId)
             return true;
 
@@ -219,7 +219,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location] = Engine.Player.UnderTile;
+        tiles[Engine.Player.Location] = Engine.Player.UnderTile;
     }
 
     public void ForcePlayerColor(int index)

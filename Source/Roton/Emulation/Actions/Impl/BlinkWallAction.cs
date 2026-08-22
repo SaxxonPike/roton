@@ -29,12 +29,12 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                 ? Engine.Elements.BlinkRayVId
                 : Engine.Elements.BlinkRayHId;
 
-            var color = Engine.Tiles[actor.Location].Color;
+            var color = tiles[actor.Location].Color;
             var rayTile = new Tile(rayElement, color);
 
-            while (Engine.Tiles[target] == rayTile)
+            while (tiles[target] == rayTile)
             {
-                Engine.Tiles[target].Id = emptyElement;
+                tiles[target].Id = emptyElement;
                 Engine.UpdateBoard(target);
                 target += actor.Vector;
                 erasedRay = true;
@@ -45,12 +45,12 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
 
             do
             {
-                if (Engine.Tiles.ElementAt(target).IsDestructible)
+                if (tiles.ElementAt(target).IsDestructible)
                 {
                     Engine.Destroy(target);
                 }
 
-                if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
+                if (tiles[target].Id == Engine.Elements.PlayerId)
                 {
                     var playerIndex = Engine.Actors.ActorIndexAt(target);
                     Vector testVector;
@@ -58,11 +58,11 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                     if (actor.Vector.Y == 0)
                     {
                         testVector = new Vector(0, 1);
-                        if (Engine.Tiles[target - testVector].Id == emptyElement)
+                        if (tiles[target - testVector].Id == emptyElement)
                         {
                             Engine.MoveActor(playerIndex, target - testVector);
                         }
-                        else if (Engine.Tiles[target + testVector].Id == emptyElement)
+                        else if (tiles[target + testVector].Id == emptyElement)
                         {
                             Engine.MoveActor(playerIndex, target + testVector);
                         }
@@ -70,18 +70,18 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                     else
                     {
                         testVector = new Vector(1, 0);
-                        if (Engine.Tiles[target + testVector].Id == emptyElement)
+                        if (tiles[target + testVector].Id == emptyElement)
                         {
                             Engine.MoveActor(playerIndex, target + testVector);
                         }
-                        else if (Engine.Tiles[target - testVector].Id == emptyElement)
+                        else if (tiles[target - testVector].Id == emptyElement)
                         {
                             // "sum" is not a mistake; this is an original engine bug
                             Engine.MoveActor(playerIndex, target + testVector);
                         }
                     }
 
-                    if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
+                    if (tiles[target].Id == Engine.Elements.PlayerId)
                     {
                         while (Engine.World.Health > 0)
                         {
@@ -92,9 +92,9 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                     }
                 }
 
-                if (Engine.Tiles[target].Id == emptyElement)
+                if (tiles[target].Id == emptyElement)
                 {
-                    Engine.Tiles[target] = rayTile;
+                    tiles[target] = rayTile;
                     Engine.UpdateBoard(target);
                 }
                 else

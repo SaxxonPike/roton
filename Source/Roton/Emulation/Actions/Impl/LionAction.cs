@@ -20,7 +20,7 @@ public sealed class LionAction(IEngineAccessor engine) : IAction
             : Engine.Rnd();
 
         var target = actor.Location + vector;
-        var element = Engine.Tiles.ElementAt(target);
+        var element = tiles.ElementAt(target);
         if (element.IsFloor)
         {
             Engine.MoveActor(index, target);

@@ -21,10 +21,10 @@ public sealed class TransporterDraw(IEngineAccessor engine) : IDraw
         if (actor.Vector.X == 0)
         {
             index += (actor.Vector.Y << 1) + 2;
-            return new AnsiChar(Engine.State.TransporterVChars[index], Engine.Tiles[location].Color);
+            return new AnsiChar(Engine.State.TransporterVChars[index], tiles[location].Color);
         }
 
         index += (actor.Vector.X << 1) + 2;
-        return new AnsiChar(Engine.State.TransporterHChars[index], Engine.Tiles[location].Color);
+        return new AnsiChar(Engine.State.TransporterHChars[index], tiles[location].Color);
     }
 }

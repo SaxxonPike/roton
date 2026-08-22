@@ -27,10 +27,10 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
 
         var target = actor.Location + actor.Vector;
 
-        if (!Engine.Tiles.ElementAt(target).IsFloor)
+        if (!tiles.ElementAt(target).IsFloor)
             Engine.Push(target, actor.Vector);
 
-        if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);
 

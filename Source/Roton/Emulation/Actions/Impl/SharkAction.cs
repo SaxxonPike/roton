@@ -19,7 +19,7 @@ public sealed class SharkAction(IEngineAccessor engine) : IAction
             : Engine.Rnd();
 
         var target = actor.Location + vector;
-        var targetElement = Engine.Tiles.ElementAt(target);
+        var targetElement = tiles.ElementAt(target);
 
         if (targetElement.Id == Engine.Elements.WaterId || targetElement.Id == Engine.Elements.LavaId)
         {

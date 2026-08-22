@@ -2,7 +2,14 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class FadeMatrix(IEngineAccessor engine, int left, int top, int width, int height, int speed)
+public abstract class FadeMatrix(
+    IEngineAccessor engine,
+    IRandomizer randomizer,
+    int left, 
+    int top, 
+    int width, 
+    int height, 
+    int speed)
     : IFadeMatrix
 {
     public int Width => width;
@@ -29,7 +36,7 @@ public abstract class FadeMatrix(IEngineAccessor engine, int left, int top, int 
 
         for (var i = 0; i < count; i++)
         {
-            var targetIndex = Engine.Random.GetNext(_matrix.Length);
+            var targetIndex = randomizer.GetNext(_matrix.Length);
             (_matrix[i], _matrix[targetIndex]) =
                 (_matrix[targetIndex], _matrix[i]);
         }

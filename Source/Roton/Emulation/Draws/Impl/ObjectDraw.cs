@@ -12,6 +12,6 @@ public sealed class ObjectDraw(IEngineAccessor engine) : IDraw
 
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(Engine.ActorAt(location).P1, Engine.Tiles[location].Color);
+        return new AnsiChar(Engine.ActorAt(location).P1, tiles[location].Color);
     }
 }

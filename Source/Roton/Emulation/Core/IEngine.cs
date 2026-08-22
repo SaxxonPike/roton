@@ -1,14 +1,5 @@
 ﻿using System;
-using Roton.Emulation.Actions;
-using Roton.Emulation.Cheats;
-using Roton.Emulation.Commands;
-using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
-using Roton.Emulation.Directions;
-using Roton.Emulation.Draws;
-using Roton.Emulation.Interactions;
-using Roton.Emulation.Items;
-using Roton.Emulation.Targets;
 
 namespace Roton.Emulation.Core;
 
@@ -16,30 +7,8 @@ public interface IEngine
 {
     event EventHandler Exited;
     event EventHandler Tick;
-        
-    IActorList Actors { get; }
-    IAlerts Alerts { get; }
-    IBoard Board { get; }
-    ICheatList Cheats { get; }
-    IColorList Colors { get; }
-    ICommandList CommandList { get; }
-    IConditionList Conditions { get; }
-    IConfig Config { get; }
-    IDirectionList Directions { get; }
-    IElementList Elements { get; }
-    IGameSerializer GameSerializer { get; }
-    IHud Hud { get; }
-    IItemList ItemList { get; }
-    IParser Parser { get; }
-    IActor Player { get; }
-    IRandomizer Random { get; }
-    ISounds Sounds { get; }
-    IState State { get; }
-    ITargetList TargetList { get; }
-    ITiles Tiles { get; }
+
     bool TitleScreen { get; }
-    ITracer Tracer { get; }
-    IWorld World { get; }
     IActor ActorAt(Location location);
     int ActorIndexAt(Location location);
     int Adjacent(Location location, int id);
@@ -101,20 +70,10 @@ public interface IEngine
     void WaitForTick();
     void ClearForest(Location location);
     void CleanUpPassageMovement();
-    IActionList ActionList { get; }
-    IDrawList DrawList { get; }
-    IInteractionList InteractionList { get; }
-    IFacts Facts { get; }
-    ICodeHeap Heap { get; }
-    IMemory Memory { get; }
     void StepOnce();
     string[] GetMessageLines();
-    ITimers Timers { get; }
-    IDrumSoundList DrumSounds { get; }
     bool ThreadActive { get; }
     int MemoryUsage { get; }
-    IMusicEncoder MusicEncoder { get; }
-    IFileSystem Disk { get; }
     void Cheat();
     void PlayStep();
     string GetHighScoreName(string fileName);

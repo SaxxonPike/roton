@@ -100,7 +100,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
     public bool CanPutTile(Location location)
     {
         // do not allow #put on the bottom row
-        return location.Y < Engine.Tiles.Height;
+        return location.Y < tiles.Height;
     }
 
     public void ClearForest(Location location)
@@ -110,19 +110,19 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location] = new Tile(Engine.Elements.EmptyId, 0);
+        tiles[Engine.Player.Location] = new Tile(Engine.Elements.EmptyId, 0);
     }
 
     public void ForcePlayerColor(int index)
     {
         var actor = Engine.Actors[index];
         var playerElement = Engine.Elements.Player();
-        if (Engine.Tiles[actor.Location].Color == playerElement.Color &&
+        if (tiles[actor.Location].Color == playerElement.Color &&
             playerElement.Character == Engine.Facts.PlayerCharacter)
             return;
 
         playerElement.Character = Engine.Facts.PlayerCharacter;
-        Engine.Tiles[actor.Location].Color = playerElement.Color;
+        tiles[actor.Location].Color = playerElement.Color;
         Engine.UpdateBoard(actor.Location);
     }
 
@@ -150,7 +150,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         {
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.Player.Location += Engine.State.KeyVector;
-            Engine.Tiles[Engine.Player.Location] =
+            tiles[Engine.Player.Location] =
                 new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
             Engine.UpdateBoard(Engine.Player.Location);
             Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
@@ -192,7 +192,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     private bool TestAdjacent(Location location, int id)
     {
-        var eId = Engine.Tiles[location].Id;
+        var eId = tiles[location].Id;
         return eId == id || eId == Engine.Elements.BoardEdgeId;
     }
 
@@ -240,7 +240,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void RemoveItem(Location location)
     {
-        Engine.Tiles[location].Id = Engine.Elements.EmptyId;
+        tiles[location].Id = Engine.Elements.EmptyId;
         Engine.UpdateBoard(location);
     }
 

@@ -12,18 +12,18 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var searchColor = Engine.Tiles[location].Color;
+        var searchColor = tiles[location].Color;
         var passageIndex = Engine.ActorIndexAt(location);
         var passageTarget = Engine.Actors[passageIndex].P3;
         Engine.SetBoard(passageTarget);
         var target = new Location();
 
-        for (var x = 1; x <= Engine.Tiles.Width; x++)
+        for (var x = 1; x <= tiles.Width; x++)
         {
-            for (var y = 1; y <= Engine.Tiles.Height; y++)
+            for (var y = 1; y <= tiles.Height; y++)
             {
                 var loc = new Location(x, y);
-                if (Engine.Tiles[loc].Id == Engine.Elements.PassageId && Engine.Tiles[loc].Color == searchColor)
+                if (tiles[loc].Id == Engine.Elements.PassageId && tiles[loc].Color == searchColor)
                     target = new Location(x, y);
             }
         }

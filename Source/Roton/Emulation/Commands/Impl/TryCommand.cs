@@ -16,7 +16,7 @@ public sealed class TryCommand(IEngineAccessor engine) : ICommand
             return;
 
         var target = context.Actor.Location + vec;
-        if (!Engine.Tiles.ElementAt(target).IsFloor)
+        if (!tiles.ElementAt(target).IsFloor)
         {
             Engine.Push(target, vec);
         }

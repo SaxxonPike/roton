@@ -12,10 +12,10 @@ public sealed class SlimeInteraction(IEngineAccessor engine) : IInteraction
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var color = Engine.Tiles[location].Color;
+        var color = tiles[location].Color;
         var slimeIndex = Engine.ActorIndexAt(location);
         Engine.Harm(slimeIndex);
-        Engine.Tiles[location] = new Tile(Engine.Elements.BreakableId, color);
+        tiles[location] = new Tile(Engine.Elements.BreakableId, color);
         Engine.UpdateBoard(location);
         Engine.PlaySound(2, Engine.Sounds.SlimeDie);
     }

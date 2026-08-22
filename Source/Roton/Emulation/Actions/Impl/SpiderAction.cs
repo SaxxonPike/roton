@@ -35,7 +35,7 @@ public sealed class SpiderAction(IEngineAccessor engine) : IAction
     {
         var actor = Engine.Actors[index];
         var target = actor.Location + vector;
-        var targetElement = Engine.Tiles.ElementAt(target).Id;
+        var targetElement = tiles.ElementAt(target).Id;
 
         if (targetElement == Engine.Elements.WebId)
         {

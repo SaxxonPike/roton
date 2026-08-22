@@ -20,7 +20,7 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
         {
             case (_, -1):
                 targetBoard = Engine.Board.Exits.North;
-                target.Y = Engine.Tiles.Height;
+                target.Y = tiles.Height;
                 break;
             case (_, 1):
                 targetBoard = Engine.Board.Exits.South;
@@ -28,7 +28,7 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
                 break;
             case (-1, _):
                 targetBoard = Engine.Board.Exits.West;
-                target.X = Engine.Tiles.Width;
+                target.X = tiles.Width;
                 break;
             default:
                 targetBoard = Engine.Board.Exits.East;
@@ -40,16 +40,16 @@ public sealed class BoardEdgeInteraction(IEngineAccessor engine) : IInteraction
             return;
 
         Engine.SetBoard(targetBoard);
-        if (Engine.Tiles[target].Id != Engine.Elements.PlayerId)
+        if (tiles[target].Id != Engine.Elements.PlayerId)
         {
-            Engine.InteractionList.Get(Engine.Tiles[target].Id)
+            Engine.InteractionList.Get(tiles[target].Id)
                 .Interact(target, index, ref Engine.State.KeyVector);
         }
 
-        if (Engine.Tiles.ElementAt(target).IsFloor ||
-            Engine.Tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
+        if (tiles.ElementAt(target).IsFloor ||
+            tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
         {
-            if (Engine.Tiles.ElementAt(target).Id != Engine.Elements.PlayerId)
+            if (tiles.ElementAt(target).Id != Engine.Elements.PlayerId)
             {
                 Engine.MoveActor(0, target);
             }

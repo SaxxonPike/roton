@@ -6,7 +6,11 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
+public abstract class Hud(
+    IEngineAccessor engine,
+    IScroll scroll, 
+    IState state) 
+    : IHud
 {
     protected IEngine Engine
     {
@@ -138,7 +142,7 @@ public abstract class Hud(IEngineAccessor engine, IScroll scroll) : IHud
         {
             Engine.WaitForTick();
             Engine.ReadInput();
-            switch (Engine.State.KeyPressed.ToUpperCase())
+            switch (state.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Y:
                     return true;

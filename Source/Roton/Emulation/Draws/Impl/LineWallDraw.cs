@@ -13,6 +13,6 @@ public sealed class LineWallDraw(IEngineAccessor engine) : IDraw
     public AnsiChar Draw(Location location)
     {
         return new AnsiChar(Engine.State.LineChars[Engine.Adjacent(location, Engine.Elements.LineId)],
-            Engine.Tiles[location].Color);
+            tiles[location].Color);
     }
 }

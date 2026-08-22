@@ -16,7 +16,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
         while (true)
         {
             var target = actor.Location + actor.Vector;
-            var element = Engine.Tiles.ElementAt(target);
+            var element = tiles.ElementAt(target);
             if (element.IsFloor || element.Id == Engine.Elements.WaterId || element.Id == Engine.Elements.LavaId)
             {
                 Engine.MoveActor(index, target);
@@ -45,7 +45,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.Elements.RicochetId)
+                tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.Elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
@@ -54,7 +54,7 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.Elements.RicochetId)
+                tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.Elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();

@@ -17,10 +17,10 @@ public sealed class GoCommand(IEngineAccessor engine) : ICommand
 
         var target = context.Actor.Location + vec;
 
-        if (!Engine.Tiles.ElementAt(target).IsFloor)
+        if (!tiles.ElementAt(target).IsFloor)
             Engine.Push(target, vec);
 
-        if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(context.Index, target);
             context.Moved = true;

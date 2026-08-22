@@ -26,7 +26,7 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
 
                 var location = new Location(0, 1);
 
-                while (Engine.Tiles.FindTile(source, ref location))
+                while (tiles.FindTile(source, ref location))
                     Engine.PlotTile(location, target);
             }
         }

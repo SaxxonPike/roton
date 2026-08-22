@@ -21,7 +21,7 @@ public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
             return;
 
         var target = actor.Location + actor.Vector;
-        if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);
         }

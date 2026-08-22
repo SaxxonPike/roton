@@ -30,7 +30,7 @@ public sealed class BearAction(IEngineAccessor engine) : IAction
         }
 
         var target = actor.Location + vector;
-        var targetElement = Engine.Tiles.ElementAt(target);
+        var targetElement = tiles.ElementAt(target);
 
         if (targetElement.IsFloor)
         {

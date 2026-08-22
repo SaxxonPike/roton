@@ -20,7 +20,7 @@ public sealed class StarAction(IEngineAccessor engine) : IAction
             {
                 actor.Vector = Engine.Seek(actor.Location);
                 var targetLocation = actor.Location + actor.Vector;
-                var targetElement = Engine.Tiles.ElementAt(targetLocation);
+                var targetElement = tiles.ElementAt(targetLocation);
 
                 if (targetElement.Id == Engine.Elements.PlayerId || targetElement.Id == Engine.Elements.BreakableId)
                 {

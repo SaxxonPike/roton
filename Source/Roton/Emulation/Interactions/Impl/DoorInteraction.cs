@@ -12,7 +12,7 @@ public sealed class DoorInteraction(IEngineAccessor engine) : IInteraction
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var color = (Engine.Tiles[location].Color & 0x70) >> 4;
+        var color = (tiles[location].Color & 0x70) >> 4;
         var keyIndex = color - 1;
         if (!Engine.World.Keys[keyIndex])
         {

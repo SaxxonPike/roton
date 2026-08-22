@@ -12,7 +12,7 @@ public sealed class KeyInteraction(IEngineAccessor engine) : IInteraction
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var color = Engine.Tiles[location].Color & 0x07;
+        var color = tiles[location].Color & 0x07;
         var keyIndex = color - 1;
         if (Engine.World.Keys[keyIndex])
         {

@@ -17,27 +17,27 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
 
         if (actor.P1 > 4)
         {
-            if (Engine.Tiles[target].Id == Engine.Elements.PlayerId)
+            if (tiles[target].Id == Engine.Elements.PlayerId)
             {
-                Engine.InteractionList.Get(Engine.Tiles[source].Id)
+                Engine.InteractionList.Get(tiles[source].Id)
                     .Interact(source, 0, ref Engine.State.KeyVector);
             }
             else
             {
-                if (Engine.Tiles[target].Id != Engine.Elements.EmptyId)
+                if (tiles[target].Id != Engine.Elements.EmptyId)
                 {
                     var oppVec = -actor.Vector;
                     Engine.Push(target, oppVec);
                 }
 
-                if (Engine.Tiles[target].Id == Engine.Elements.EmptyId)
+                if (tiles[target].Id == Engine.Elements.EmptyId)
                 {
                     var sourceIndex = Engine.Actors.ActorIndexAt(source);
                     if (sourceIndex > 0)
                     {
                         if (Engine.State.ActorCount < Engine.Actors.Capacity - 2)
                         {
-                            ref var sourceTile = ref Engine.Tiles[source];
+                            ref var sourceTile = ref tiles[source];
                             Engine.SpawnActor(target, sourceTile, Engine.Actors[sourceIndex].Cycle,
                                 Engine.Actors[sourceIndex]);
                             Engine.UpdateBoard(target);
@@ -45,7 +45,7 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
                     }
                     else if (sourceIndex != 0)
                     {
-                        Engine.Tiles[target] = Engine.Tiles[source];
+                        tiles[target] = tiles[source];
                         Engine.UpdateBoard(target);
                     }
 
