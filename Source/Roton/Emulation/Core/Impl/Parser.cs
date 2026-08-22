@@ -170,17 +170,13 @@ public sealed class Parser(
         var length = 0;
         var code = GetActorCode(index);
         int instr = instruction;
-        var b = '\0';
 
-        while (instr < code.Length)
-        {
-            b = code[instr++];
-            if (b != ' ')
-                break;
-        }
+        // Skip leading spaces.
+        var codeWithoutSpaces = code.Slice(instr).TrimStart(' ');
+        instr = code.Length - codeWithoutSpaces.Length;
+        var b = instr < code.Length ? code[instr++].ToUpperCase() : '\0';
 
-        b = b.ToUpperCase();
-
+        // Match a word like this regex: ^[A-Z:_][A-Z0-9:_]*
         if (b is not (>= '0' and <= '9'))
         {
             while (b is >= 'A' and <= 'Z' or >= '0' and <= '9' or ':' or '_')
