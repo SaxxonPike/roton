@@ -78,6 +78,6 @@ public sealed class SuperElementList : ElementList
     public override int TransporterId => 0x1E;
     public override int WebId => 0x3F;
 
-    protected override IElement GetElement(int index) => 
+    protected override IElement InitItem(int index) => 
         new SuperElement(_memory, index);
 }

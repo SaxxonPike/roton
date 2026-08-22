@@ -4,7 +4,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class ElementList(int count) : FixedList<IElement>, IElementList
+public abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
 {
     private IDictionary<int, IElement> Cache { get; } = new Dictionary<int, IElement>();
 
@@ -78,19 +78,6 @@ public abstract class ElementList(int count) : FixedList<IElement>, IElementList
     }
 
     public abstract void Reset();
-
-    protected abstract IElement GetElement(int index);
-
-    protected sealed override IElement GetItem(int index)
-    {
-        Cache.TryGetValue(index, out var element);
-        if (element != null)
-            return element;
-
-        element = GetElement(index);
-        Cache[index] = element;
-        return element;
-    }
 
     protected sealed override void SetItem(int index, IElement value)
     {

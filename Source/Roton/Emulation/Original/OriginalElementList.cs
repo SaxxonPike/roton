@@ -69,6 +69,6 @@ public sealed class OriginalElementList : ElementList
     public override int TransporterId => 0x1E;
     public override int WaterId => 0x13;
 
-    protected override IElement GetElement(int index) 
+    protected override IElement InitItem(int index) 
         => new OriginalElement(_memory, index);
 }

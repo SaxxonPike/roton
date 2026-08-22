@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class ActorList(IMemory memory, int capacity) : FixedList<IActor>, IActorList
+public abstract class ActorList(IMemory memory, int capacity) : CachedFixedList<IActor>(capacity), IActorList
 {
     private IActor[] Cache { get; } = new IActor[capacity];
 
@@ -27,22 +27,6 @@ public abstract class ActorList(IMemory memory, int capacity) : FixedList<IActor
         }
 
         return -1;
-    }
-
-    protected abstract IActor GetActor(int index);
-
-    protected sealed override IActor GetItem(int index)
-    {
-        if (index < 0 || index >= Capacity)
-            return GetActor(index);
-
-        var actor = Cache[index];
-        if (actor != null) 
-            return actor;
-            
-        actor = GetActor(index);
-        Cache[index] = actor;
-        return actor;
     }
 
     protected sealed override void SetItem(int index, IActor value)

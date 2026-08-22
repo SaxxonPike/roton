@@ -49,7 +49,7 @@ public abstract class TypeListByName<T>(
 #if NET10_0_OR_GREATER
             return _items.TryGetValue(name, out var value) ? value : null;
 #else
-            foreach (var entry in _items)
+            foreach (var entry in _items!)
             {
                 if (name.Equals(entry.Key.AsSpan(), StringComparison.OrdinalIgnoreCase))
                     return entry.Value;
