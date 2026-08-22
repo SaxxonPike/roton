@@ -106,7 +106,7 @@ public sealed class ChoiceHud(
         {
             var update = false;
 
-            Engine.ReadInput();
+            Engine.ReadInput(true);
 
             switch (state.KeyPressed)
             {

@@ -16,4 +16,5 @@ public sealed class Config : IConfig
     public bool TraceOop { get; set; }
     public bool NoPesterMode { get; set; }
     public float JoystickDeadZone { get; set; }
+    public float JoystickDenoiseZone { get; set; }
 }

@@ -30,7 +30,7 @@ public sealed class Engine : IEngine, IDisposable
     private int _ticksToRun;
     private float _boardTimeHsec;
     private bool _step;
-    private readonly IEngineAccessor _engineAccessor;
+    private JoystickButtons _lastButtons;
 
     public Engine(IClock clock, IActorList actors, IAlerts alerts, IBoard board,
         IFileSystem fileSystem, IElementList elements,
@@ -93,7 +93,6 @@ public sealed class Engine : IEngine, IDisposable
         _configFileService = configFileService;
         _fileDialog = fileDialog;
         Tracer = tracer;
-        _engineAccessor = engineAccessor;
         Joystick = joystick;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
@@ -1633,7 +1632,7 @@ public sealed class Engine : IEngine, IDisposable
                 }
 
                 Hud.DrawPausing();
-                ReadInput();
+                ReadInput(false);
                 if (State.KeyPressed == EngineKeyCode.Escape)
                 {
                     if (World.Health > 0)
@@ -1666,6 +1665,13 @@ public sealed class Engine : IEngine, IDisposable
                         State.GameCycle = Random.GetNext(Facts.MainLoopRandomCycleRange);
                         World.IsLocked = true;
                     }
+                    else
+                    {
+                        // Added so that attempting to run into a wall while paused using
+                        // a joystick doesn't cause the game to freeze (the original engine
+                        // just added delays)
+                        WaitForTick();
+                    }
                 }
             }
 
@@ -1678,7 +1684,7 @@ public sealed class Engine : IEngine, IDisposable
                         if (State.GameCycle > Facts.MaxGameCycle) State.GameCycle = 1;
 
                         State.ActIndex = 0;
-                        ReadInput();
+                        ReadInput(false);
                     }
 
                 Tracer.TraceStep();
@@ -1845,29 +1851,136 @@ public sealed class Engine : IEngine, IDisposable
         return (EngineKeyCode)bytes[0];
     }
 
-    private void ReadInputJoystick()
+    private void ReadInputJoystick(bool isUiFocused)
     {
-        if (!Joystick.IsConnected)
-            return;
+        // This function does things a lot differently than the original engine,
+        // mostly for convenience in controls.
 
-        var x = Joystick.X;
-        var y = Joystick.Y;
-        var buttons = Joystick.Buttons;
+        var x = 0f;
+        var y = 0f;
+        JoystickButtons buttons = 0;
+
+        if (Joystick.IsConnected)
+        {
+            x = Joystick.X;
+            y = Joystick.Y;
+            buttons = Joystick.Buttons;
+        }
+
+        // Directional buttons should act like analog input for movement directions.
+
+        if (buttons.HasFlag(JoystickButtons.Up))
+            y = -1;
+        else if (buttons.HasFlag(JoystickButtons.Down))
+            y = 1;
+        else if (buttons.HasFlag(JoystickButtons.Left))
+            x = -1;
+        else if (buttons.HasFlag(JoystickButtons.Right))
+            x = 1;
+
+        // Determine which direction "wins" based on how far the stick is held from center.
+
         var deadZone = Config.JoystickDeadZone;
+        var maxMagnitude = 0f;
+        var finalKeyCode = (EngineKeyCode)0;
 
-        if (x <= -deadZone)
+        if (x <= -deadZone & x <= -maxMagnitude)
+        {
             State.KeyVector = Vector.West;
-        else if (x >= deadZone)
-            State.KeyVector = Vector.East;
-        else if (y <= -deadZone)
-            State.KeyVector = Vector.North;
-        else if (y >= deadZone) 
-            State.KeyVector = Vector.South;
+            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
+            finalKeyCode = EngineKeyCode.Left;
+        }
 
-        if (buttons.HasFlag(JoystickButtons.Primary))
-            State.KeyPressed = EngineKeyCode.Space;
-        else if (buttons.HasFlag(JoystickButtons.Secondary))
-            State.KeyShift = true;
+        if (x >= deadZone && x >= maxMagnitude)
+        {
+            State.KeyVector = Vector.East;
+            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
+            finalKeyCode = EngineKeyCode.Right;
+        }
+
+        if (y <= -deadZone && y <= -maxMagnitude)
+        {
+            State.KeyVector = Vector.North;
+            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
+            finalKeyCode = EngineKeyCode.Up;
+        }
+
+        if (y >= deadZone && y >= maxMagnitude)
+        {
+            State.KeyVector = Vector.South;
+            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
+            finalKeyCode = EngineKeyCode.Down;
+        }
+
+        if (finalKeyCode == EngineKeyCode.Left)
+            buttons |= JoystickButtons.Left;
+        else if (finalKeyCode == EngineKeyCode.Right)
+            buttons |= JoystickButtons.Right;
+        else if (finalKeyCode == EngineKeyCode.Up)
+            buttons |= JoystickButtons.Up;
+        else if (finalKeyCode == EngineKeyCode.Down)
+            buttons |= JoystickButtons.Down;
+
+        // The other buttons only activate when pressed and not every frame they're held.
+
+        var singleButtons = buttons & ~_lastButtons;
+
+        if (singleButtons.HasFlag(JoystickButtons.Left))
+            State.KeyPressed = EngineKeyCode.Left;
+        else if (singleButtons.HasFlag(JoystickButtons.Right))
+            State.KeyPressed = EngineKeyCode.Right;
+        else if (singleButtons.HasFlag(JoystickButtons.Up))
+            State.KeyPressed = EngineKeyCode.Up;
+        else if (singleButtons.HasFlag(JoystickButtons.Down))
+            State.KeyPressed = EngineKeyCode.Down;
+
+        // Process button actions.
+
+        if (buttons.HasFlag(JoystickButtons.Ok))
+        {
+            if (isUiFocused)
+            {
+                State.KeyPressed = EngineKeyCode.Enter;
+            }
+            else
+            {
+                if (State.KeyPressed != EngineKeyCode.None)
+                    State.KeyShift = true;
+                else
+                    State.KeyPressed = EngineKeyCode.Space;
+            }
+        }
+        else if (buttons.HasFlag(JoystickButtons.Cancel))
+        {
+            if (isUiFocused)
+                State.KeyPressed = EngineKeyCode.Escape;
+        }
+        else if (buttons.HasFlag(JoystickButtons.Shoot))
+        {
+            if (!isUiFocused)
+                State.KeyShift = true;
+        }
+
+        if (isUiFocused && singleButtons.HasFlag(JoystickButtons.PageUp))
+        {
+            State.KeyPressed = EngineKeyCode.PageUp;
+        }
+        else if (isUiFocused && singleButtons.HasFlag(JoystickButtons.PageDown))
+        {
+            State.KeyPressed = EngineKeyCode.PageDown;
+        }
+        else if (singleButtons.HasFlag(JoystickButtons.Start))
+        {
+            // If on the title screen, Start will begin the game.
+            // Otherwise, it will pause the game.
+
+            if (State.PlayerElement == Elements.MonitorId)
+                State.KeyPressed = Facts.StartGameKey;
+            else
+                State.KeyPressed = EngineKeyCode.P;
+        }
+
+        _lastButtons = buttons;
     }
 
     private void ReadInputKeyboard()
@@ -1903,11 +2016,11 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void ReadInput()
+    public void ReadInput(bool isUiFocused)
     {
         ReadInputKeyboard();
         if (State.KeyVector.IsZero())
-            ReadInputJoystick();
+            ReadInputJoystick(isUiFocused);
         if (State.KeyVector.IsNonZero())
             State.KeyLastVector = State.KeyVector;
     }

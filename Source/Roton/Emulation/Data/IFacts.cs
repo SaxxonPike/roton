@@ -1,3 +1,6 @@
+using Roton.Emulation.Core;
+using Roton.Emulation.Infrastructure;
+
 namespace Roton.Emulation.Data;
 
 public interface IFacts
@@ -49,4 +52,5 @@ public interface IFacts
     string TouchLabel { get; }
     string ThudLabel { get; }
     string ShotLabel { get; }
+    EngineKeyCode StartGameKey { get; }
 }

@@ -121,7 +121,7 @@ public sealed unsafe class AudioPresenter(
         _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
         if (_stream == null)
             throw new SdlException("Failed to create audio stream");
-        SDL_SetAudioStreamGain(_stream, 0.1f);
+        SDL_SetAudioStreamGain(_stream, 0.07f);
         Presenters.Add((nint)_stream, this);
 
         // Set up event handlers.
@@ -181,7 +181,7 @@ public sealed unsafe class AudioPresenter(
     }
 
     /// <summary>
-    /// Output gain of the audio signal. Defaults to 0.1. Due to the output
+    /// Output gain of the audio signal. Defaults to 0.07f. Due to the output
     /// signal being pure square waves, it is generally recommended to keep this
     /// value relatively low (it is very loud for its peak level.)
     /// </summary>

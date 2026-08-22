@@ -15,4 +15,5 @@ public interface IConfig
     bool FastMode { get; }
     bool NoPesterMode { get; }
     float JoystickDeadZone { get; }
+    float JoystickDenoiseZone { get; }
 }

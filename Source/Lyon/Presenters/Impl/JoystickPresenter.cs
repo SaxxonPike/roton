@@ -5,6 +5,7 @@ using System.Threading;
 using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Lyon.Presenters.Impl;
@@ -13,7 +14,9 @@ namespace Lyon.Presenters.Impl;
 [Context(Context.Startup)]
 internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposable
 {
+    private readonly IConfig _config;
     private readonly Lock _deviceLock = new();
+    private readonly Lock _buttonLock = new();
     private SDL_JoystickID _active;
     private readonly List<SDL_JoystickID> _precedence = [];
     private readonly HashSet<SDL_JoystickID> _connected = [];
@@ -21,23 +24,50 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     private readonly HashSet<(SDL_JoystickID, JoystickButtons)> _buttons = [];
     private readonly Dictionary<SDL_JoystickID, nint> _gamepads = [];
 
-    public JoystickPresenter()
+    public JoystickPresenter(IConfig config)
     {
+        _config = config;
         SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_GAMEPAD);
     }
 
     /// <inheritdoc />
-    public override float X =>
-        _axes.GetValueOrDefault((_active, JoystickAxis.X), 0);
+    public override float X
+    {
+        get
+        {
+            lock (_buttonLock)
+            {
+                return _axes.GetValueOrDefault((_active, JoystickAxis.X), 0);
+            }
+        }
+    }
 
     /// <inheritdoc />
-    public override float Y =>
-        _axes.GetValueOrDefault((_active, JoystickAxis.Y), 0);
+    public override float Y
+    {
+        get
+        {
+            lock (_buttonLock)
+            {
+                return _axes.GetValueOrDefault((_active, JoystickAxis.Y), 0);
+            }
+        }
+    }
 
     /// <inheritdoc />
-    public override JoystickButtons Buttons =>
-        (_buttons.Contains((_active, JoystickButtons.Primary)) ? JoystickButtons.Primary : default) |
-        (_buttons.Contains((_active, JoystickButtons.Secondary)) ? JoystickButtons.Secondary : default);
+    public override JoystickButtons Buttons
+    {
+        get
+        {
+            lock (_buttonLock)
+            {
+                return _buttons
+                    .Where(b => b.Item1 == _active)
+                    .Select(b => b.Item2)
+                    .Aggregate((JoystickButtons)0, (a, b) => a | b);
+            }
+        }
+    }
 
     /// <inheritdoc />
     public override bool IsConnected =>
@@ -46,7 +76,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     /// <summary>
     /// Updates the active joystick ID based on precedence and which ones are connected now.
     /// </summary>
-    private void UpdateActive() =>
+    private void UpdateActive() => 
         _active = _precedence.FirstOrDefault(x => _connected.Contains(x));
 
     /// <inheritdoc />
@@ -83,16 +113,28 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     }
 
     /// <inheritdoc />
-    public void UpdateAxis(SDL_JoystickID id, JoystickAxis axis, float value) =>
-        _axes[(id, axis)] = value;
+    public void UpdateAxis(SDL_JoystickID id, JoystickAxis axis, float value)
+    {
+        lock (_buttonLock)
+        {
+            var newVal = Math.Abs(value) >= _config.JoystickDenoiseZone ? value : 0;
+            var oldVal = _axes.GetValueOrDefault((id, axis));
+
+            if (newVal != oldVal)
+                _axes[(id, axis)] = newVal;
+        }
+    }
 
     /// <inheritdoc />
     public void UpdateButton(SDL_JoystickID id, JoystickButtons button, bool pressed)
     {
-        if (!pressed)
-            _buttons.Remove((id, button));
-        else
-            _buttons.Add((id, button));
+        lock (_buttonLock)
+        {
+            if (!pressed)
+                _buttons.Remove((id, button));
+            else
+                _buttons.Add((id, button));
+        }
     }
 
     /// <inheritdoc />

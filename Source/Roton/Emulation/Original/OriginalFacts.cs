@@ -1,4 +1,6 @@
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
@@ -10,4 +12,5 @@ public sealed class OriginalFacts : Facts
     public override int HealthPerGem => 1;
     public override string DefaultWorldName => "TOWN";
     public override int HighScoreNameLength => 50;
+    public override EngineKeyCode StartGameKey => EngineKeyCode.P;
 }

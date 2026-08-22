@@ -30,7 +30,8 @@ var config = new Config
     FastMode = switches.Contains("--fast"),
     TraceOop = switches.Contains("--trace"),
     NoPesterMode = switches.Contains("--no-pester"),
-    JoystickDeadZone = 0.3f
+    JoystickDeadZone = 0.5f,
+    JoystickDenoiseZone = 0.1f,
 };
 
 fileName ??= "TOWN.ZZT";

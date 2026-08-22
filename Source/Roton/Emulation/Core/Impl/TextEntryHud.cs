@@ -44,7 +44,7 @@ public sealed class TextEntryHud(
             }
 
             Engine.WaitForTick();
-            Engine.ReadInput();
+            Engine.ReadInput(true);
 
             var key = state.KeyPressed;
             if (key == EngineKeyCode.None)

@@ -146,7 +146,7 @@ public abstract class Hud(
         while (Engine.ThreadActive)
         {
             Engine.WaitForTick();
-            Engine.ReadInput();
+            Engine.ReadInput(true);
             switch (state.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Y:
