@@ -44,7 +44,7 @@ public interface IEngine
     void PushThroughTransporter(Location location, Vector vector);
     void PutTile(Location location, Vector vector, Tile kind);
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
-    void ReadInput();
+    void ReadInput(bool isUiFocused);
     void RemoveActor(int index);
     void RemoveItem(Location location);
     Vector Rnd();

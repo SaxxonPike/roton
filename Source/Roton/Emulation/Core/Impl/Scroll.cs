@@ -244,7 +244,7 @@ public abstract class Scroll(
                 update = false;
             }
 
-            Engine.ReadInput();
+            Engine.ReadInput(true);
 
             switch (state.KeyPressed)
             {

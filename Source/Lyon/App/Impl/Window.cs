@@ -112,23 +112,34 @@ internal sealed unsafe class Window(
         switch (e.Button)
         {
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_SOUTH:
-                joystickPresenter.UpdateButton(e.which, JoystickButtons.Primary, true);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Ok, true);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_EAST:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Cancel, true);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_WEST:
-            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_EAST:
-                joystickPresenter.UpdateButton(e.which, JoystickButtons.Secondary, true);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Shoot, true);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_START:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Start, true);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_LEFT:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.X, -1);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Left, true);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.X, 1);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Right, true);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_UP:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.Y, -1);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Up, true);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_DOWN:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.Y, 1);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Down, true);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_LEFT_SHOULDER:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.PageUp, true);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.PageDown, true);
                 break;
         }
     }
@@ -141,23 +152,34 @@ internal sealed unsafe class Window(
         switch (e.Button)
         {
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_SOUTH:
-                joystickPresenter.UpdateButton(e.which, JoystickButtons.Primary, false);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Ok, false);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_EAST:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Cancel, false);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_WEST:
-            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_EAST:
-                joystickPresenter.UpdateButton(e.which, JoystickButtons.Secondary, false);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Shoot, false);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_START:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Start, false);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_LEFT:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.X, 0);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Left, false);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.X, 0);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Right, false);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_UP:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.Y, 0);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Up, false);
                 break;
             case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_DPAD_DOWN:
-                joystickPresenter.UpdateAxis(e.which, JoystickAxis.Y, 0);
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.Down, false);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_LEFT_SHOULDER:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.PageUp, false);
+                break;
+            case SDL_GamepadButton.SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER:
+                joystickPresenter.UpdateButton(e.which, JoystickButtons.PageDown, false);
                 break;
         }
     }

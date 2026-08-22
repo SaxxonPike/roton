@@ -1,4 +1,6 @@
+using Roton.Emulation.Core;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
@@ -10,4 +12,5 @@ public sealed class SuperFacts : Facts
     public override int HealthPerGem => 10;
     public override string DefaultWorldName => "MONSTER";
     public override int HighScoreNameLength => 60;
+    public override EngineKeyCode StartGameKey => EngineKeyCode.Enter;
 }

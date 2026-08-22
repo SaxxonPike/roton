@@ -21,7 +21,7 @@ public abstract class CachedFixedList<T>(int count) : FixedList<T>
                 _cache[i] = InitItem(i);
         }
 
-        if (index < 0 || index >= count)
+        if (index >= 0 && index < count)
             return _cache[index];
 
         if (_cacheDict.TryGetValue(index, out var cachedItem))
