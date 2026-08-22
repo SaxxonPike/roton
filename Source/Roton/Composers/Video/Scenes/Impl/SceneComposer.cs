@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 #if NET10_0_OR_GREATER
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -22,22 +21,13 @@ public sealed class SceneComposer : ISceneComposer
     private IPaletteComposer? _paletteComposer;
 
     /// <inheritdoc />
-    public event EventHandler<FontDataChangedEventArgs>? FontDataChanged;
-
-    /// <inheritdoc />
-    public event EventHandler<PaletteDataChangedEventArgs>? PaletteDataChanged;
-
-    /// <inheritdoc />
     public event EventHandler<ResizedEventArgs>? Resized;
-
-    /// <inheritdoc />
-    public event EventHandler<SceneUpdatedEventArgs>? SceneUpdated;
 
     /// <summary>
     /// Character that is used when clearing the character buffer.
     /// </summary>
     private readonly AnsiChar _blankCharacter;
-    
+
     /// <summary>
     /// Composed palette in BGRA format.
     /// </summary>
@@ -47,22 +37,22 @@ public sealed class SceneComposer : ISceneComposer
     /// Raw font data.
     /// </summary>
     private ReadOnlyMemory<byte> _fontData;
-    
+
     /// <summary>
     /// A lookup table used to determine where to start setting pixels in the pixel buffer.
     /// </summary>
     private ReadOnlyMemory<int> _offsetLookUpTable;
-    
+
     /// <summary>
     /// Raw palette data.
     /// </summary>
     private ReadOnlyMemory<byte> _paletteData;
-    
+
     /// <summary>
     /// Bitmap that contains the pixels for the "blink on" state.
     /// </summary>
     private Bitmap? _blinkOnBitmap;
-    
+
     /// <summary>
     /// Bitmap that contains the pixels for the "blink off" state.
     /// </summary>
@@ -72,22 +62,22 @@ public sealed class SceneComposer : ISceneComposer
     /// Number of array items in a row of the pixel buffer.
     /// </summary>
     private int _stride;
-    
+
     /// <summary>
     /// If true, instead of blinking, characters with the highest color bit set
-    /// will show with high intensity color.
+    /// will show with high-intensity color.
     /// </summary>
     private bool _useFullBrightBackgrounds;
-    
-    /// <summary>
-    /// Number of times the scene has been updated since the last call to <see cref="GetBitmap"/>.
-    /// </summary>
-    private int _updateCount;
-    
+
     /// <summary>
     /// Blink state when the last call to <see cref="GetBitmap"/> was made.
     /// </summary>
     private bool _lastFetchBlinkStatus;
+
+    /// <summary>
+    /// Contains indices of characters that have been updated since the last call to <see cref="GetBitmap"/>.
+    /// </summary>
+    private Memory<bool> _dirtyIndices;
 
     /// <summary>
     /// Character buffer.
@@ -118,7 +108,19 @@ public sealed class SceneComposer : ISceneComposer
     /// <inheritdoc />
     public Bitmap? GetBitmap(bool onlyIfUpdated = false)
     {
-        var updated = Interlocked.Exchange(ref _updateCount, 0) != 0;
+        var dirty = _dirtyIndices.Span;
+        var updated = false;
+
+        for (var i = 0; i < _dirtyIndices.Length; i++)
+        {
+            if (!dirty[i])
+                continue;
+
+            dirty[i] = false;
+            DoUpdate(i);
+            updated = true;
+        }
+
         var blinkOn = BlinkIsOn;
 
         if (onlyIfUpdated && !updated && blinkOn == _lastFetchBlinkStatus)
@@ -152,13 +154,6 @@ public sealed class SceneComposer : ISceneComposer
     public int Rows { get; private set; }
 
     /// <inheritdoc />
-    public void Update(int x, int y)
-    {
-        var index = GetBufferOffset(x, y);
-        Update(index, _chars.Span[index]);
-    }
-
-    /// <inheritdoc />
     public void Clear()
     {
         for (var y = 0; y < Rows; y++)
@@ -179,7 +174,7 @@ public sealed class SceneComposer : ISceneComposer
             return;
 
         _chars.Span[index] = ac;
-        Update(index, ac);
+        _dirtyIndices.Span[index] = true;
     }
 
     /// <inheritdoc />
@@ -195,6 +190,7 @@ public sealed class SceneComposer : ISceneComposer
     {
         _fontData = data.ToArray();
         InitializeFont();
+        InvalidateAll();
     }
 
     /// <inheritdoc />
@@ -202,6 +198,7 @@ public sealed class SceneComposer : ISceneComposer
     {
         _paletteData = data.ToArray();
         InitializePalette();
+        InvalidateAll();
     }
 
     /// <inheritdoc />
@@ -216,6 +213,7 @@ public sealed class SceneComposer : ISceneComposer
 
         InitializeFont();
         InitializeBitmaps();
+        InvalidateAll();
 
         Resized?.Invoke(this, new ResizedEventArgs(width, height, wide));
     }
@@ -306,8 +304,6 @@ public sealed class SceneComposer : ISceneComposer
             baseOffset += _stride;
         }
 #endif
-
-        SceneUpdated?.Invoke(this, new SceneUpdatedEventArgs());
     }
 
     /// <summary>
@@ -333,6 +329,8 @@ public sealed class SceneComposer : ISceneComposer
                 _glyphComposer.MaxWidth * (i % Columns) + _glyphComposer.MaxHeight * stride * (i / Columns))
             .ToArray();
 
+        _dirtyIndices = new bool[charTotal];
+
         // Don't create new bitmaps if they are already the correct size.
         if (_blinkOnBitmap != null && _blinkOnBitmap.Height == height && _blinkOnBitmap.Width == stride)
             return;
@@ -340,7 +338,6 @@ public sealed class SceneComposer : ISceneComposer
         _stride = stride;
         _blinkOnBitmap = new Bitmap(stride, height);
         _blinkOffBitmap = new Bitmap(stride, height);
-        Interlocked.Increment(ref _updateCount);
     }
 
     /// <summary>
@@ -357,8 +354,6 @@ public sealed class SceneComposer : ISceneComposer
                 _glyphComposer.MaxWidth != oldGlyphComposer.MaxWidth)
                 InitializeBitmaps();
         }
-
-        FontDataChanged?.Invoke(this, new FontDataChangedEventArgs(_fontData));
     }
 
     /// <summary>
@@ -372,8 +367,6 @@ public sealed class SceneComposer : ISceneComposer
             .Range(0, 16)
             .Select(i => _paletteComposer.ComposeColor(i).ToArgb())
             .ToArray();
-
-        PaletteDataChanged?.Invoke(this, new PaletteDataChangedEventArgs(_paletteData));
     }
 
     /// <summary>
@@ -382,33 +375,32 @@ public sealed class SceneComposer : ISceneComposer
     private bool IsOutOfBounds(int x, int y) =>
         x < 0 || x >= Columns || y < 0 || y >= Rows;
 
-    /// <summary>
-    /// Triggers an update of the character at the specified index.
-    /// </summary>
-    /// <param name="index">
-    /// Index within the character buffer.
-    /// </param>
-    /// <param name="ac">
-    /// Character to draw.
-    /// </param>
-    private void Update(int index, AnsiChar ac)
+    private void DoUpdate(int index)
     {
-        DrawGlyph(ac, _offsetLookUpTable.Span[index]);
-        Interlocked.Increment(ref _updateCount);
+        DrawGlyph(_chars.Span[index], _offsetLookUpTable.Span[index]);
     }
+
+    /// <summary>
+    /// Invalidates all character indices, forcing a re-draw of the entire grid.
+    /// </summary>
+    private void InvalidateAll() =>
+        _dirtyIndices.Span.Fill(true);
 
     /// <summary>
     /// Forces an update of each character with the highest color bit set.
     /// </summary>
     private void UpdateAllBlinkingCharacters()
     {
+        var dirty = _dirtyIndices.Span;
+
         for (var y = 0; y < Rows; y++)
         for (var x = 0; x < Columns; x++)
         {
             var index = GetBufferOffset(x, y);
             var c = _chars.Span[index];
+
             if ((c.Color & 0x80) != 0)
-                Update(index, _chars.Span[index]);
+                dirty[index] = true;
         }
     }
 }

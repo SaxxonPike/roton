@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Roton.Composers.Video.Palettes;
 using Roton.Emulation.Core;
 
 namespace Roton.Composers.Video.Scenes;
@@ -12,24 +11,9 @@ namespace Roton.Composers.Video.Scenes;
 public interface ISceneComposer : ITerminal
 {
     /// <summary>
-    /// Raised when the font data has changed.
-    /// </summary>
-    event EventHandler<FontDataChangedEventArgs>? FontDataChanged;
-    
-    /// <summary>
-    /// Raised when the palette data has changed.
-    /// </summary>
-    event EventHandler<PaletteDataChangedEventArgs>? PaletteDataChanged;
-    
-    /// <summary>
     /// Raised when the pixel area has changed in size.
     /// </summary>
     event EventHandler<ResizedEventArgs>? Resized;
-    
-    /// <summary>
-    /// Raised when the bitmap data has changed.
-    /// </summary>
-    event EventHandler<SceneUpdatedEventArgs>? SceneUpdated;
 
     /// <summary>
     /// Number of character rows.
