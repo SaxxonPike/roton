@@ -1,12 +1,16 @@
 using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x03)]
-public sealed class SuperMonitorAction(IEngineAccessor engine) : IAction
+public sealed class SuperMonitorAction(
+    IEngineAccessor engine,
+    IState state)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
@@ -16,7 +20,7 @@ public sealed class SuperMonitorAction(IEngineAccessor engine) : IAction
         // However, since we still don't have the proper "title card" implementation
         // just yet, we will have to accept those inputs here.
 
-        Engine.State.BreakGameLoop |= Engine.State.KeyPressed.ToUpperCase() switch
+        state.BreakGameLoop |= state.KeyPressed.ToUpperCase() switch
         {
             EngineKeyCode.Escape or
                 EngineKeyCode.Enter or

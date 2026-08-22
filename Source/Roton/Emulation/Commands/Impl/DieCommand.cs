@@ -6,13 +6,16 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "DIE")]
 [Context(Context.Super, "DIE")]
-public sealed class DieCommand(IEngineAccessor engine) : ICommand
+public sealed class DieCommand(
+    IEngineAccessor engine,
+    IElementList elementList)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
         context.Died = true;
-        context.DeathTile = new Tile(Engine.Elements.EmptyId, 0);
+        context.DeathTile = new Tile(elementList.EmptyId, 0);
     }
 }

@@ -1,6 +1,8 @@
+using System;
+
 namespace Roton.Composers.Video.Scenes;
 
-public readonly struct FontDataChangedEventArgs(byte[]? data)
+public readonly struct FontDataChangedEventArgs(ReadOnlyMemory<byte> data)
 {
-    public byte[]? Data => data;
+    public ReadOnlyMemory<byte> Data => data;
 }

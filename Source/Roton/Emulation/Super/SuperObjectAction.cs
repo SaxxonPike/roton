@@ -6,13 +6,17 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x24)]
-public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
+public sealed class SuperObjectAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    ITiles tiles,
+    IFacts facts) : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         if (actor.P2 == 0 && actor.Instruction >= 0)
         {
             Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");
@@ -27,10 +31,10 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
 
         var target = actor.Location + actor.Vector;
 
-        if (!Engine.Tiles.ElementAt(target).IsFloor)
+        if (!tiles.ElementAt(target).IsFloor)
             Engine.Push(target, actor.Vector);
 
-        if (Engine.Tiles.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
             Engine.MoveActor(index, target);
 
@@ -43,7 +47,7 @@ public sealed class SuperObjectAction(IEngineAccessor engine) : IAction
         }
         else
         {
-            Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
+            Engine.BroadcastLabel(-index, facts.ThudLabel, false);
         }
     }
 }

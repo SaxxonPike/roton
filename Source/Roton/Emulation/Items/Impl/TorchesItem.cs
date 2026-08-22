@@ -1,11 +1,12 @@
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "TORCHES")]
-public sealed class TorchesItem(IEngineAccessor engine) : IItem
+public sealed class TorchesItem(
+    IWorld world)
+    : IItem
 {
-    public ref Word Value => ref engine.Instance.World.Torches;
+    public ref Word Value => ref world.Torches;
 }

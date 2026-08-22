@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Oop;
 
-public class SameLineTests(Context context) : OopTestFixture(context)
+public class SameLineTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void ShortMovement_ShouldRunCommandsOnSameLine()

@@ -5,13 +5,14 @@
         <LangVersion>default</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Roton\Roton.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="9.3.2" />
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
         <PackageReference Include="ppy.SDL3-CS" Version="2026.722.0" />
     </ItemGroup>
     <ItemGroup>

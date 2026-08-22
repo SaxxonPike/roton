@@ -11,7 +11,7 @@ public sealed class OriginalActorList(IMemory memory, ICodeHeap heap) : ActorLis
 
     private ICodeHeap Heap => heap;
 
-    protected override IActor GetActor(int index)
+    protected override IActor InitItem(int index)
     {
         return new Actor(Memory, Heap, 0x31CF + 0x0021 * index);
     }

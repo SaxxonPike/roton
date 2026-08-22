@@ -2,7 +2,13 @@
 
 namespace Lyon.App;
 
+/// <summary>
+/// Launches Lyon frontends over Roton backends.
+/// </summary>
 public interface ILauncher
 {
-    void Launch(IEngine context);
+    /// <summary>
+    /// Start Lyon using the specified engine.
+    /// </summary>
+    void Launch(IEngine engine);
 }

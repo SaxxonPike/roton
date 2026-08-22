@@ -1,11 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class PusherTests(Context context) : ElementTestFixture(context)
+public class PusherTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Pusher_ShouldMoveForward_WhenPathIsClear()
@@ -79,16 +79,16 @@ public class PusherTests(Context context) : ElementTestFixture(context)
         // If there is a pusher behind another pusher, the one behind will also move.
 
         // Place a pusher.
-        var leadingIndex = SpawnTo(5, 5, Elements.PusherId);
-        var leadingPusher = Actors[leadingIndex];
-        leadingPusher.Vector = Vector.East;
-        leadingPusher.Cycle = 1;
-
-        // Place a pusher behind it.
         var trailingIndex = SpawnTo(4, 5, Elements.PusherId);
         var trailingPusher = Actors[trailingIndex];
         trailingPusher.Vector = Vector.East;
         trailingPusher.Cycle = 1;
+
+        // Place a pusher in front of it.
+        var leadingIndex = SpawnTo(5, 5, Elements.PusherId);
+        var leadingPusher = Actors[leadingIndex];
+        leadingPusher.Vector = Vector.East;
+        leadingPusher.Cycle = 1;
 
         // Wait for the pushers to move.
         Step();

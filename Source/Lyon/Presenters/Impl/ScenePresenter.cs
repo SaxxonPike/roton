@@ -5,23 +5,11 @@ using Roton.Infrastructure;
 namespace Lyon.Presenters.Impl;
 
 /// <inheritdoc />
-/// <summary>
-/// Basic SDL renderer.
-/// </summary>
 [Context(Context.Startup)]
 // ReSharper disable once UnusedMember.Global
 public sealed class ScenePresenter(ISceneComposer sceneComposer) : IScenePresenter
 {
-    /// <summary>
-    /// Renders the scene.
-    /// </summary>
-    public IBitmap Render() => 
-        sceneComposer.Bitmap;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public void UpdateViewport()
-    {
-    }
+    /// <inheritdoc />
+    public Bitmap? Render() => 
+        sceneComposer.GetBitmap(true);
 }

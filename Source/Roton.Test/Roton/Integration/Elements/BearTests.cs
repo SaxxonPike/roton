@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class BearTests(Context context) : ElementTestFixture(context)
+public class BearTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Bear_ShouldMoveTowardsPlayer_WhenWithinSensitivityRange()

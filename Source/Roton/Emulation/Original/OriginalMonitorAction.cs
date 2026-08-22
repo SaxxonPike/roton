@@ -1,21 +1,25 @@
 using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original, 0x03)]
-public sealed class OriginalMonitorAction(IEngineAccessor engine) : IAction
+public sealed class OriginalMonitorAction(
+    IEngineAccessor engine,
+    IState state)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        if (Engine.State.KeyPressed == EngineKeyCode.None)
+        if (state.KeyPressed == EngineKeyCode.None)
             return;
 
-        Engine.State.BreakGameLoop |= Engine.State.KeyPressed.ToUpperCase() switch
+        state.BreakGameLoop |= state.KeyPressed.ToUpperCase() switch
         {
             EngineKeyCode.Escape or
                 EngineKeyCode.A or

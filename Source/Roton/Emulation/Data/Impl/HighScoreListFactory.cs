@@ -9,7 +9,12 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class HighScoreListFactory(IEngineAccessor engine, IFacts facts) : IHighScoreListFactory
+public sealed class HighScoreListFactory(
+    IEngineAccessor engine,
+    IFacts facts,
+    IFileSystem fileSystem,
+    IWorld world)
+    : IHighScoreListFactory
 {
     private IEngine Engine => engine.Instance;
     private IFacts Facts => facts;
@@ -18,7 +23,7 @@ public sealed class HighScoreListFactory(IEngineAccessor engine, IFacts facts) :
     {
         var list = new HighScoreList(Facts.HighScoreNameCount);
             
-        var file = Engine.Disk.GetFile(Engine.GetHighScoreName(Engine.World.Name));
+        var file = fileSystem.GetFile(Engine.GetHighScoreName(world.Name));
         if (file == null || file.Length != Facts.HighScoreNameCount * (Facts.HighScoreNameLength + 3))
             return list;
 
@@ -39,7 +44,7 @@ public sealed class HighScoreListFactory(IEngineAccessor engine, IFacts facts) :
 
     public void Save(IHighScoreList highScoreList)
     {
-        if (string.IsNullOrEmpty(Engine.World.Name))
+        if (string.IsNullOrEmpty(world.Name))
             return;
 
         using var stream = new MemoryStream();
@@ -56,6 +61,6 @@ public sealed class HighScoreListFactory(IEngineAccessor engine, IFacts facts) :
         }
 
         writer.Flush();
-        Engine.Disk.PutFile(Engine.GetHighScoreName(Engine.World.Name), stream.ToArray());
+        fileSystem.PutFile(Engine.GetHighScoreName(world.Name), stream.ToArray());
     }
 }

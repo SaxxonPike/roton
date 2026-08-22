@@ -11,7 +11,19 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperHud : Hud
+public sealed class SuperHud(
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IScroll scroll,
+    ITextEntryHud textEntryHud,
+    IFadeMatrix fadeMatrix,
+    IState state,
+    IBoard board,
+    IActorList actorList,
+    ITiles tiles,
+    IWorld world,
+    IElementList elementList)
+    : Hud(engine, scroll, state)
 {
     private readonly string _arrows = new([
         0x18.ToChar(),
@@ -24,24 +36,11 @@ public sealed class SuperHud : Hud
     
     private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
 
-    public SuperHud(IEngineAccessor engine,
-        ITerminal terminal,
-        IScroll scroll,
-        ITextEntryHud textEntryHud,
-        IFadeMatrix fadeMatrix)
-        : base(engine, scroll)
-    {
-        Terminal = terminal;
-        TextEntryHud = textEntryHud;
-        FadeMatrix = fadeMatrix;
-        fadeMatrix.Initialize();
-    }
+    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
 
-    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; }
+    private ITerminal Terminal { [DebuggerStepThrough] get; } = terminal;
 
-    private ITerminal Terminal { [DebuggerStepThrough] get; }
-
-    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; }
+    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; } = textEntryHud;
 
     private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 
@@ -196,7 +195,7 @@ public sealed class SuperHud : Hud
 
     private void DrawTileCommon(int x, int y, AnsiChar ac)
     {
-        if (Engine.State.EditorMode)
+        if (State.EditorMode)
         {
             if (x is >= 0 and < 96 && y is >= 0 and < 80)
             {
@@ -215,13 +214,13 @@ public sealed class SuperHud : Hud
         loc.X is >= 0x0E and <= 0x25 && loc.Y is >= 0x02 and <= 0x15;
 
     private Vector GetTranslation() =>
-        new(0x0F + -Engine.Board.Camera.X, 0x03 + -Engine.Board.Camera.Y);
+        new(0x0F + -board.Camera.X, 0x03 + -board.Camera.Y);
 
     public override void Initialize()
     {
         RandomizeFadeMatrix();
 
-        if (Engine.State.EditorMode)
+        if (State.EditorMode)
         {
             Terminal.SetSize(96, 80, true);
         }
@@ -244,12 +243,12 @@ public sealed class SuperHud : Hud
 
     private void UpdateCameraPosition()
     {
-        var cameraX = Engine.Player.Location.X - WindowWidth / 2;
-        var cameraY = Engine.Player.Location.Y - WindowHeight / 2;
+        var cameraX = actorList.Player.Location.X - WindowWidth / 2;
+        var cameraY = actorList.Player.Location.Y - WindowHeight / 2;
 
-        Engine.Board.Camera = new Location16(
-            Math.Max(Math.Min(cameraX, Engine.Tiles.Width - WindowWidth + 1), 1),
-            Math.Max(Math.Min(cameraY, Engine.Tiles.Height - WindowHeight + 1), 1)
+        board.Camera = new Location16(
+            Math.Max(Math.Min(cameraX, tiles.Width - WindowWidth + 1), 1),
+            Math.Max(Math.Min(cameraY, tiles.Height - WindowHeight + 1), 1)
         );
     }
 
@@ -270,11 +269,11 @@ public sealed class SuperHud : Hud
 
         // Max bounds of the camera (so that the scroll doesn't go off the right or bottom of the board.)
 
-        var maxCameraX = Engine.Tiles.Width - WindowWidth + 1;
-        var maxCameraY = Engine.Tiles.Height - WindowHeight + 1;
+        var maxCameraX = tiles.Width - WindowWidth + 1;
+        var maxCameraY = tiles.Height - WindowHeight + 1;
 
-        var player = Engine.Player.Location;
-        var newCamera = new Location16(Engine.Board.Camera.X, Engine.Board.Camera.Y);
+        var player = actorList.Player.Location;
+        var newCamera = new Location16(board.Camera.X, board.Camera.Y);
         var redrawRequired = false;
 
         var relativeX = player.X - newCamera.X;
@@ -283,7 +282,7 @@ public sealed class SuperHud : Hud
             if (player.X == OldPlayerLocation.X - 1)
             {
                 newCamera.X--;
-                Engine.Board.Camera = newCamera;
+                board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.East);
                 for (var y = 0; y < WindowHeight; y++)
                     Engine.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
@@ -305,7 +304,7 @@ public sealed class SuperHud : Hud
             if (player.X == OldPlayerLocation.X + 1)
             {
                 newCamera.X++;
-                Engine.Board.Camera = newCamera;
+                board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.West);
                 for (var y = 0; y < WindowHeight; y++)
                     Engine.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
@@ -329,7 +328,7 @@ public sealed class SuperHud : Hud
             if (player.Y == OldPlayerLocation.Y - 1)
             {
                 newCamera.Y--;
-                Engine.Board.Camera = newCamera;
+                board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.South);
                 for (var x = 0; x < WindowWidth; x++)
                     Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
@@ -351,7 +350,7 @@ public sealed class SuperHud : Hud
             if (player.Y == OldPlayerLocation.Y + 1)
             {
                 newCamera.Y++;
-                Engine.Board.Camera = newCamera;
+                board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.North);
                 for (var x = 0; x < WindowWidth; x++)
                     Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
@@ -370,10 +369,10 @@ public sealed class SuperHud : Hud
         }
 
         OldPlayerLocation = player;
-        if (newCamera == Engine.Board.Camera && !redrawRequired)
+        if (newCamera == board.Camera && !redrawRequired)
             return;
 
-        Engine.Board.Camera = newCamera;
+        board.Camera = newCamera;
         if (redrawRequired)
             RedrawBoard();
     }
@@ -383,12 +382,12 @@ public sealed class SuperHud : Hud
         if (Engine.TitleScreen)
             return;
 
-        if (Engine.World.Health < 0)
+        if (world.Health < 0)
         {
-            Engine.World.Health = 0;
+            world.Health = 0;
         }
 
-        var healthRemaining = (int)Engine.World.Health;
+        var healthRemaining = (int)world.Health;
         for (var x = 7; x < 12; x++)
         {
             switch (healthRemaining)
@@ -407,9 +406,9 @@ public sealed class SuperHud : Hud
             healthRemaining -= 20;
         }
 
-        DrawNumber(0x11, Engine.World.Gems);
-        DrawNumber(0x12, Engine.World.Ammo);
-        DrawNumber(0x15, Engine.World.Score);
+        DrawNumber(0x11, world.Gems);
+        DrawNumber(0x12, world.Ammo);
+        DrawNumber(0x15, world.Score);
         DrawString(0x00, 0x16, "            ", 0x6F);
 
         var stoneText = StoneText;
@@ -419,22 +418,22 @@ public sealed class SuperHud : Hud
             DrawString(0x01, 0x16, stoneText, 0x6F);
         }
 
-        if (Engine.World.Stones >= 0)
+        if (world.Stones >= 0)
         {
-            DrawNumber(0x16, Engine.World.Stones);
+            DrawNumber(0x16, world.Stones);
         }
 
         for (var i = 0; i < 7; i++)
         {
-            var keyChar = Engine.World.Keys[i] ? (byte)Engine.Elements.Key().Character : 0x20;
+            var keyChar = world.Keys[i] ? (byte)elementList.Key().Character : 0x20;
             var x = i & 0x3;
             var y = i >> 2;
             DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
         }
 
-        DrawString(0x03, 0x0A, Engine.State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
+        DrawString(0x03, 0x0A, State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
 
-        if (Engine.World.Flags.Contains("DEBUG"))
+        if (world.Flags.Contains("DEBUG"))
             DrawString(0x0E, 0x00, $"Used: {Engine.MemoryUsage}", 0x1E);
     }
 
@@ -442,7 +441,7 @@ public sealed class SuperHud : Hud
     {
         get
         {
-            foreach (var flag in Engine.World.Flags.Select(f => f.ToUpperInvariant()))
+            foreach (var flag in world.Flags.Select(f => f.ToUpperInvariant()))
             {
                 if (flag.Length > 0 && flag.StartsWith("Z"))
                 {
@@ -470,7 +469,7 @@ public sealed class SuperHud : Hud
         }
 
         string? name = null;
-        Scroll.Show($"New high score for {Engine.World.Name}",
+        Scroll.Show($"New high score for {world.Name}",
             [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
@@ -491,7 +490,7 @@ public sealed class SuperHud : Hud
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
+        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
     }
 
     private void VideoScroll(Location pos, int width, int height, Vector dir)

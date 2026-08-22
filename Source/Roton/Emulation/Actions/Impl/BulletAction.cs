@@ -1,42 +1,52 @@
 ﻿using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x12)]
 [Context(Context.Super, 0x45)]
-public sealed class BulletAction(IEngineAccessor engine) : IAction
+public sealed class BulletAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IElementList elementList,
+    ITiles tiles,
+    ISounds sounds,
+    IWorld world,
+    IState state,
+    IFacts facts)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         var canRicochet = true;
         while (true)
         {
             var target = actor.Location + actor.Vector;
-            var element = Engine.Tiles.ElementAt(target);
-            if (element.IsFloor || element.Id == Engine.Elements.WaterId || element.Id == Engine.Elements.LavaId)
+            var element = tiles.ElementAt(target);
+            if (element.IsFloor || element.Id == elementList.WaterId || element.Id == elementList.LavaId)
             {
                 Engine.MoveActor(index, target);
                 break;
             }
 
-            if (canRicochet && element.Id == Engine.Elements.RicochetId)
+            if (canRicochet && element.Id == elementList.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
-                Engine.PlaySound(1, Engine.Sounds.Ricochet);
+                Engine.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
-            if (element.Id == Engine.Elements.BreakableId ||
-                element.IsDestructible && (element.Id == Engine.Elements.PlayerId || actor.P1 == 0))
+            if (element.Id == elementList.BreakableId ||
+                element.IsDestructible && (element.Id == elementList.PlayerId || actor.P1 == 0))
             {
                 if (element.Points != 0)
                 {
-                    Engine.World.Score += element.Points;
+                    world.Score += element.Points;
                     Engine.UpdateStatus();
                 }
 
@@ -45,28 +55,28 @@ public sealed class BulletAction(IEngineAccessor engine) : IAction
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.Clockwise()].Id == Engine.Elements.RicochetId)
+                tiles[actor.Location + actor.Vector.Clockwise()].Id == elementList.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
-                Engine.PlaySound(1, Engine.Sounds.Ricochet);
+                Engine.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
             if (canRicochet &&
-                Engine.Tiles[actor.Location + actor.Vector.CounterClockwise()].Id == Engine.Elements.RicochetId)
+                tiles[actor.Location + actor.Vector.CounterClockwise()].Id == elementList.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
-                Engine.PlaySound(1, Engine.Sounds.Ricochet);
+                Engine.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
             Engine.RemoveActor(index);
-            Engine.State.ActIndex--;
-            if (element.Id == Engine.Elements.ObjectId || element.Id == Engine.Elements.ScrollId)
+            state.ActIndex--;
+            if (element.Id == elementList.ObjectId || element.Id == elementList.ScrollId)
             {
-                Engine.BroadcastLabel(-Engine.Actors.ActorIndexAt(target), Engine.Facts.ShotLabel, false);
+                Engine.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
             }
 
             break;

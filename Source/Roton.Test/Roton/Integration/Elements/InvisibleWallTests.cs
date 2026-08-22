@@ -1,10 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class InvisibleWallTests(Context context) : ElementTestFixture(context)
+public class InvisibleWallTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void InvisibleWall_ShouldBecomeNormalWall_WhenTouchedByPlayer()

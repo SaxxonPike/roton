@@ -1,6 +1,10 @@
 using System;
+#if NET10_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace Roton.Emulation.Infrastructure;
@@ -47,33 +51,47 @@ public static class Cp437
         '\u00B0', '\u2219', '\u00B7', '\u221A', '\u207F', '\u00B2', '\u25A0', '\u00A0'
     ];
 
+#if NET10_0_OR_GREATER
+    private static readonly FrozenDictionary<char, byte> CharToByteDict = ByteToCharArray
+        .Select((e, i) => new KeyValuePair<char, byte>(e, (byte)i))
+        .ToFrozenDictionary(x => x.Key, x => x.Value);
+#else
     private static readonly Dictionary<char, byte> CharToByteDict = ByteToCharArray
         .Select((e, i) => new KeyValuePair<char, byte>(e, (byte)i))
         .ToDictionary(x => x.Key, x => x.Value);
+#endif
 
     /// <summary>
     /// Converts from byte to char, preserving control characters.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ByteToChar(byte value) =>
-        value < 0x20 ? (char)value : ByteToUnicode(value);
+        value <= 0x7E ? (char)value : ByteToUnicode(value);
 
     /// <summary>
     /// Converts from byte to char, preserving graphics.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ByteToUnicode(byte value) =>
         ByteToCharArray[value];
 
     /// <summary>
     /// Converts from char to byte, preserving control characters.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte CharToByte(char value) =>
-        value < 0x20 ? unchecked((byte)value) : UnicodeToByte(value);
+        value <= 0x7E ? unchecked((byte)value) : UnicodeToByte(value);
 
     /// <summary>
     /// Converts from char to byte, preserving graphics.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte UnicodeToByte(char value) =>
+#if NET10_0_OR_GREATER
+        CharToByteDict.GetValueOrDefault(value, (byte)0x20);
+#else
         CharToByteDict.TryGetValue(value, out var result) ? result : (byte)0x20;
+#endif
 
     /// <summary>
     /// Converts from bytes to chars, preserving control characters.

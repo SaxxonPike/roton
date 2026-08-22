@@ -8,7 +8,10 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine)
+public sealed class ChoiceHud(
+    ITerminal terminal, 
+    IEngineAccessor engine,
+    IState state)
     : IChoiceHud
 {
     private ITerminal Terminal
@@ -105,7 +108,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine)
 
             Engine.ReadInput();
 
-            switch (Engine.State.KeyPressed)
+            switch (state.KeyPressed)
             {
                 case EngineKeyCode.None:
                     Engine.WaitForTick();
@@ -146,7 +149,7 @@ public sealed class ChoiceHud(ITerminal terminal, IEngineAccessor engine)
                 DrawPip(0x9F);
             }
 
-            if (Engine.State.KeyShift || Engine.State.KeyPressed is EngineKeyCode.Enter or EngineKeyCode.Escape)
+            if (state.KeyShift || state.KeyPressed is EngineKeyCode.Enter or EngineKeyCode.Escape)
             {
                 break;
             }

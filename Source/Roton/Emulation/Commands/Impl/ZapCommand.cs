@@ -7,7 +7,12 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCommand(IEngineAccessor engine) : ICommand
+public sealed class ZapCommand(
+    IEngineAccessor engine,
+    IParser parser,
+    IState state,
+    IActorList actorList)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
@@ -15,17 +20,17 @@ public sealed class ZapCommand(IEngineAccessor engine) : ICommand
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
-        Engine.Parser.ReadWord(context.Index, ref instruction);
+        parser.ReadWord(context.Index, ref instruction);
         context.Search.Index = 0;
 
         while (true)
         {
-            var result = Engine.ExecuteLabel(context.Index, ref context.Search, Engine.State.GetOopWord(buffer), "\r:");
+            var result = Engine.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(buffer), "\r:");
 
             if (!result)
                 break;
 
-            Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = '\'';
+            actorList[context.Search.Index].Code.Span[context.Search.Offset + 1] = '\'';
         }
     }
 }

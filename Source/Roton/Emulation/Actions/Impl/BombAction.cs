@@ -6,13 +6,17 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombAction(IEngineAccessor engine) : IAction
+public sealed class BombAction(
+    IEngineAccessor engine,
+    ISounds sounds,
+    IActorList actorList)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         if (actor.P1 <= 0) return;
 
         actor.P1--;
@@ -20,7 +24,7 @@ public sealed class BombAction(IEngineAccessor engine) : IAction
         switch ((int)actor.P1)
         {
             case 1:
-                Engine.PlaySound(1, Engine.Sounds.BombExplode);
+                Engine.PlaySound(1, sounds.BombExplode);
                 Engine.UpdateRadius(actor.Location, RadiusMode.Explode);
                 break;
             case 0:
@@ -29,7 +33,7 @@ public sealed class BombAction(IEngineAccessor engine) : IAction
                 Engine.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:
-                Engine.PlaySound(1, (actor.P1 & 0x01) == 0 ? Engine.Sounds.BombTock : Engine.Sounds.BombTick);
+                Engine.PlaySound(1, (actor.P1 & 0x01) == 0 ? sounds.BombTock : sounds.BombTick);
                 break;
         }
     }

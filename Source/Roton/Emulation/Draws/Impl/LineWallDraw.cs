@@ -6,13 +6,18 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1F)]
 [Context(Context.Super, 0x1F)]
-public sealed class LineWallDraw(IEngineAccessor engine) : IDraw
+public sealed class LineWallDraw(
+    IEngineAccessor engine,
+    IState state,
+    IElementList elementList,
+    ITiles tiles)
+    : IDraw
 {
     private IEngine Engine => engine.Instance;
 
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(Engine.State.LineChars[Engine.Adjacent(location, Engine.Elements.LineId)],
-            Engine.Tiles[location].Color);
+        return new AnsiChar(state.LineChars[Engine.Adjacent(location, elementList.LineId)],
+            tiles[location].Color);
     }
 }

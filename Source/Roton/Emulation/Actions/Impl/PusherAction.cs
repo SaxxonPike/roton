@@ -1,42 +1,50 @@
 ﻿using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
-public sealed class PusherAction(IEngineAccessor engine) : IAction
+public sealed class PusherAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    ITiles tiles,
+    ISounds sounds,
+    IElementList elementList,
+    IActionList actionList)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         var source = actor.Location;
 
-        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
+        if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
         {
             Engine.Push(actor.Location + actor.Vector, actor.Vector);
         }
 
-        index = Engine.Actors.ActorIndexAt(source);
-        actor = Engine.Actors[index];
-            
-        if (!Engine.Tiles.ElementAt(actor.Location + actor.Vector).IsFloor) 
+        index = actorList.ActorIndexAt(source);
+        actor = actorList[index];
+
+        if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             return;
 
-        Engine.MoveActor(index, actor.Location + actor.Vector);
-        Engine.PlaySound(2, Engine.Sounds.Push);
         var behindLocation = actor.Location - actor.Vector;
-            
-        if (Engine.Tiles[behindLocation].Id != Engine.Elements.PusherId) 
+        Engine.MoveActor(index, actor.Location + actor.Vector);
+        Engine.PlaySound(2, sounds.Push);
+
+        if (tiles[behindLocation].Id != elementList.PusherId)
             return;
 
-        var behindIndex = Engine.Actors.ActorIndexAt(behindLocation);
-        var behindActor = Engine.Actors[behindIndex];
+        var behindIndex = actorList.ActorIndexAt(behindLocation);
+        var behindActor = actorList[behindIndex];
         if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
         {
-            Engine.ActionList.Get(Engine.Elements.PusherId).Act(behindIndex);
+            actionList.Get(elementList.PusherId)?.Act(behindIndex);
         }
     }
 }

@@ -1,10 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class PassageTests(Context context) : ElementTestFixture(context)
+public class PassageTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Passage_ShouldPauseWhenEntering()

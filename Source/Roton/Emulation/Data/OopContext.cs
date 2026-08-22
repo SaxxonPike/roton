@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Data;
 
-public ref struct OopContext(IEngineAccessor engine)
+public ref struct OopContext(IActorList actorList)
 {
     private List<string>? _message;
-    private readonly IEngine _engine = engine.Instance;
 
-    public IActor Actor => _engine.Actors[Index];
+    public IActor Actor => actorList[Index];
 
     public int CommandsExecuted;
 

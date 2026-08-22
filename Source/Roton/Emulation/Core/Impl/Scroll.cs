@@ -8,7 +8,12 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScroll
+public abstract class Scroll(
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IState state,
+    IFileSystem fileSystem)
+    : IScroll
 {
     protected IEngine Engine
     {
@@ -154,7 +159,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             if (text.Contains(';'))
             {
                 var actualText = text.Substring(text.IndexOf(';') + 1);
-                Terminal.Write(x, y, actualText, 0x1F);                    
+                Terminal.Write(x, y, actualText, 0x1F);
             }
         }
         else if (text[0] == '!')
@@ -174,7 +179,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         var offset = state.Index;
         var message = state.Lines;
         var title = state.Title;
-            
+
         var center = (Height - 4) / 2;
         var line = offset - center;
         var bottom = Height + Top - 2;
@@ -191,7 +196,6 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
 
         while (y <= bottom)
         {
-
             if (state.IsHelp)
             {
                 if (line == -5)
@@ -205,7 +209,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
                     Terminal.Write(Left + 14, y, "Alt-P", 0x1F);
                 }
             }
-                
+
             if (line >= 0 && line < lineCount)
                 RenderText(message[line], y);
             else if (line == -1 || line == lineCount)
@@ -228,7 +232,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             Terminal.Plot(x2, y, dot);
     }
 
-    private bool MainLoop(IScrollState state)
+    private bool MainLoop(IScrollState st)
     {
         var update = false;
 
@@ -236,42 +240,42 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         {
             if (update)
             {
-                RenderContent(state);
+                RenderContent(st);
                 update = false;
             }
 
             Engine.ReadInput();
 
-            switch (Engine.State.KeyPressed)
+            switch (state.KeyPressed)
             {
                 case EngineKeyCode.Escape:
                     return false;
                 case EngineKeyCode.Enter:
                     return true;
                 case EngineKeyCode.PageUp:
-                    state.Index -= Height - 5;
+                    st.Index -= Height - 5;
                     update = true;
                     break;
                 case EngineKeyCode.PageDown:
-                    state.Index += Height - 5;
+                    st.Index += Height - 5;
                     update = true;
                     break;
                 case EngineKeyCode.Up:
-                    state.Index--;
+                    st.Index--;
                     update = true;
                     break;
                 case EngineKeyCode.Down:
-                    state.Index++;
+                    st.Index++;
                     update = true;
                     break;
             }
 
             if (update)
             {
-                if (state.Index >= state.Lines.Count)
-                    state.Index = state.Lines.Count - 1;
-                if (state.Index < 0)
-                    state.Index = 0;
+                if (st.Index >= st.Lines.Count)
+                    st.Index = st.Lines.Count - 1;
+                if (st.Index < 0)
+                    st.Index = 0;
             }
 
             Engine.WaitForTick();
@@ -279,10 +283,10 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
 
         return false;
     }
-        
+
     private bool LoadHelpFile(IScrollState state, string filename)
     {
-        var text = Engine.Disk
+        var text = fileSystem
             .GetFile($"{filename}.HLP")?
             .ToStringValue()
             .Replace("\xD\xA", "\xD")
@@ -312,7 +316,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             var innerJump = SelectLine(state);
             if (!innerJump)
                 break;
-        }                
+        }
     }
 
     private IScrollState Show(IScrollState state, Action<IScrollState> mainLoop)
@@ -324,10 +328,10 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
         Close(buffer);
         return state;
     }
-        
+
     public IScrollState Show(string title, string fileName)
     {
-        var state = new ScrollState(Engine.State)
+        var st = new ScrollState(state)
         {
             Index = 0,
             Label = null,
@@ -336,18 +340,19 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             Title = title
         };
 
-        if (LoadHelpFile(state, fileName))
-            return Show(state, ShowLoop);
+        if (LoadHelpFile(st, fileName))
+            return Show(st, ShowLoop);
 
-        return state;
+        return st;
     }
-        
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index) 
+
+    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index)
         => Show(title, message, isHelp, index, ShowLoop);
 
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index, Action<IScrollState> mainLoop)
+    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index,
+        Action<IScrollState> mainLoop)
     {
-        var state = new ScrollState(Engine.State)
+        var st = new ScrollState(state)
         {
             Index = index,
             Label = null,
@@ -357,7 +362,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
             Title = title
         };
 
-        return Show(state, mainLoop);
+        return Show(st, mainLoop);
     }
 
     public int TextWidth => Width - 4;
@@ -380,7 +385,7 @@ public abstract class Scroll(IEngineAccessor engine, ITerminal terminal) : IScro
 
         if (line.StartsWith("!") && label.StartsWith("-") && LoadHelpFile(state, label.Substring(1)))
             return true;
-            
+
         state.Label = label;
         label = $":{label};";
 

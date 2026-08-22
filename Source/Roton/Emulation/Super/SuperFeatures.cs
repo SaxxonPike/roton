@@ -7,57 +7,67 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
+public sealed class SuperFeatures(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IElementList elementList,
+    ITiles tiles,
+    IFacts facts,
+    IBoard board,
+    IHud hud,
+    IWorld world,
+    IState state)
+    : IFeatures
 {
     private IEngine Engine => engine.Instance;
 
     public void LockActor(int index)
     {
-        Engine.Actors[index].P3 = 1;
+        actorList[index].P3 = 1;
     }
 
     public void UnlockActor(int index)
     {
-        Engine.Actors[index].P3 = 0;
+        actorList[index].P3 = 0;
     }
 
     public bool IsActorLocked(int index)
     {
-        return Engine.Actors[index].P3 != 0;
+        return actorList[index].P3 != 0;
     }
 
     public void RemoveItem(Location location)
     {
-        var result = new Tile(Engine.Elements.FloorId, 0x00);
+        var result = new Tile(elementList.FloorId, 0x00);
 
         for (var i = 0; i < 4; i++)
         {
             var targetVector = Engine.GetCardinalVector(i);
             var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
-            var adjacentTile = Engine.Tiles[targetLocation];
+            var adjacentTile = tiles[targetLocation];
 
-            if (Engine.Elements[adjacentTile.Id].Cycle >= 0)
+            if (elementList[adjacentTile.Id].Cycle >= 0)
                 adjacentTile = Engine.ActorAt(targetLocation).UnderTile;
 
             var adjacentElement = adjacentTile.Id;
 
-            if (adjacentElement == Engine.Elements.EmptyId ||
-                adjacentElement == Engine.Elements.SliderEwId ||
-                adjacentElement == Engine.Elements.SliderNsId ||
-                adjacentElement == Engine.Elements.BoulderId)
+            if (adjacentElement == elementList.EmptyId ||
+                adjacentElement == elementList.SliderEwId ||
+                adjacentElement == elementList.SliderNsId ||
+                adjacentElement == elementList.BoulderId)
             {
                 result.Color = 0;
                 break;
             }
 
-            if (adjacentElement == Engine.Elements.FloorId)
+            if (adjacentElement == elementList.FloorId)
                 result.Color = adjacentTile.Color;
         }
 
         if (result.Color == 0)
-            Engine.Tiles[location].Id = Engine.Elements.EmptyId;
+            tiles[location].Id = elementList.EmptyId;
         else
-            Engine.Tiles[location] = result;
+            tiles[location] = result;
 
         Engine.UpdateBoard(location);
     }
@@ -68,16 +78,16 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void EnterBoard()
     {
-        Engine.BroadcastLabel(0, Engine.Facts.EnterLabel, false);
-        Engine.Board.Entrance = Engine.Actors.Player.Location;
-        Engine.Hud.UpdateCamera();
-        Engine.World.TimePassed = 0;
-        Engine.Hud.UpdateStatus();
+        Engine.BroadcastLabel(0, facts.EnterLabel, false);
+        board.Entrance = actorList.Player.Location;
+        hud.UpdateCamera();
+        world.TimePassed = 0;
+        hud.UpdateStatus();
     }
 
     public bool HandleTitleInput()
     {
-        switch (Engine.State.KeyPressed.ToUpperCase())
+        switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.Enter: // Enter
                 return true;
@@ -93,7 +103,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
                 break;
             case EngineKeyCode.Escape: // esc
             case EngineKeyCode.Q: // Q
-                Engine.State.QuitEngine = Engine.Hud.QuitEngineConfirmation();
+                state.QuitEngine = hud.QuitEngineConfirmation();
                 break;
         }
 
@@ -102,7 +112,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void ShowInGameHelp()
     {
-        Engine.BroadcastLabel(0, Engine.Facts.HintLabel, false);
+        Engine.BroadcastLabel(0, facts.HintLabel, false);
     }
 
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -115,17 +125,17 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         switch (message.Count)
         {
             case 1:
-                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(string.Empty, message[0]));
+                Engine.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
                 return null;
             case 2:
-                Engine.SetMessage(Engine.Facts.LongMessageDuration,
+                Engine.SetMessage(facts.LongMessageDuration,
                     new Message(message[0], message[1]));
                 return null;
             case 0:
                 return null;
             default:
-                Engine.State.KeyVector = Vector.Idle;
-                return Engine.Hud.ShowScroll(false, context.Name, [.. message]);
+                state.KeyVector = Vector.Idle;
+                return hud.ShowScroll(false, context.Name, [.. message]);
         }
     }
 
@@ -137,38 +147,38 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
     public bool CanPutTile(Location location)
     {
         // do not allow #put on the bottom row
-        return location.Y < Engine.Tiles.Height;
+        return location.Y < tiles.Height;
     }
 
     public void ClearForest(Location location)
     {
-        Engine.Tiles[location] = new Tile(Engine.Elements.FloorId, 0x02);
+        tiles[location] = new Tile(elementList.FloorId, 0x02);
     }
 
     public void CleanUpPauseMovement()
     {
-        var target = Engine.Player.Location + Engine.State.KeyVector;
+        var target = actorList.Player.Location + state.KeyVector;
 
-        if (Engine.ElementAt(Engine.Player.Location).Id == Engine.Elements.PlayerId)
+        if (Engine.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
         {
             Engine.MoveActor(0, target);
         }
         else
         {
-            Engine.UpdateBoard(Engine.Player.Location);
-            Engine.Player.Location += Engine.State.KeyVector;
-            Engine.Player.UnderTile = Engine.Tiles[Engine.Player.Location];
-            Engine.Tiles[Engine.Player.Location] = new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
-            Engine.UpdateBoard(Engine.Player.Location);
-            Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
+            Engine.UpdateBoard(actorList.Player.Location);
+            actorList.Player.Location += state.KeyVector;
+            actorList.Player.UnderTile = tiles[actorList.Player.Location];
+            tiles[actorList.Player.Location] = new Tile(elementList.PlayerId, elementList.Player().Color);
+            Engine.UpdateBoard(actorList.Player.Location);
+            Engine.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
+            Engine.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
         }
     }
 
-    public string? OpenWorld() => 
+    public string? OpenWorld() =>
         Engine.ShowLoad("Super ZZT Worlds", "szt");
 
-    public string? RestoreWorld() => 
+    public string? RestoreWorld() =>
         Engine.ShowLoad("Saved Games", "sav");
 
     public void CleanUpOop(ref OopContext context)
@@ -187,7 +197,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
         // When an object receives a label, the current
         // in-progress movement counter is reset.
 
-        Engine.Actors[index].P2 = 0;
+        actorList[index].P2 = 0;
     }
 
     public string GetSaveName(string baseName)
@@ -197,20 +207,20 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     private bool TestAdjacent(Location location, int id)
     {
-        var eId = Engine.Tiles[location].Id;
-        if (eId == id || eId == Engine.Elements.BoardEdgeId)
+        var eId = tiles[location].Id;
+        if (eId == id || eId == elementList.BoardEdgeId)
             return true;
 
         if (Engine.ElementAt(location).Cycle >= 0)
         {
             eId = Engine.ActorAt(location).UnderTile.Id;
-            if (eId == id || eId == Engine.Elements.BoardEdgeId)
+            if (eId == id || eId == elementList.BoardEdgeId)
                 return true;
         }
 
         return false;
     }
-    
+
     public int GetAdjacent(Location location, int id) =>
         (TestAdjacent(location + Vector.North, id) ? 1 : 0) |
         (TestAdjacent(location + Vector.South, id) ? 2 : 0) |
@@ -219,7 +229,7 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        Engine.Tiles[Engine.Player.Location] = Engine.Player.UnderTile;
+        tiles[actorList.Player.Location] = actorList.Player.UnderTile;
     }
 
     public void ForcePlayerColor(int index)
@@ -229,9 +239,9 @@ public sealed class SuperFeatures(IEngineAccessor engine) : IFeatures
 
     public string[] GetMessageLines()
     {
-        return string.IsNullOrEmpty(Engine.State.Message2)
-            ? [string.Empty, Engine.State.Message]
-            : [Engine.State.Message, Engine.State.Message2];
+        return string.IsNullOrEmpty(state.Message2)
+            ? [string.Empty, state.Message]
+            : [state.Message, state.Message2];
     }
 
     public void ShowAbout()

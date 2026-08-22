@@ -1,10 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class BoardEdgeTests(Context context) : ElementTestFixture(context)
+public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void BoardEdge_ShouldDoNothing_WhenNoNeighborExists()

@@ -6,13 +6,15 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "END")]
 [Context(Context.Super, "END")]
-public sealed class EndCommand(IEngineAccessor engine) : ICommand
+public sealed class EndCommand(
+    IEngineAccessor engine,
+    IState state) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Engine.State.OopByte = default;
+        state.OopByte = default;
         instruction = -1;
     }
 }

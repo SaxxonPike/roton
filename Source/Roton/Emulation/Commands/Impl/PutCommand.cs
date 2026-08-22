@@ -6,7 +6,10 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
-public sealed class PutCommand(IEngineAccessor engine) : ICommand
+public sealed class PutCommand(
+    IEngineAccessor engine,
+    IParser parser)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
@@ -14,9 +17,9 @@ public sealed class PutCommand(IEngineAccessor engine) : ICommand
     {
         var success = false;
 
-        if (Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (parser.TryEvalDirection(ref context, ref instruction, out var vec))
         {
-            if (Engine.Parser.TryEvalKind(ref context, ref instruction, out var k))
+            if (parser.TryEvalKind(ref context, ref instruction, out var k))
             {
                 success = true;
 

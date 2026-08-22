@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Roton.Emulation.Commands;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,7 +8,12 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInterpreter
+public sealed class Interpreter(
+    IEngineAccessor engine,
+    ITracer tracer,
+    IParser parser,
+    ICommandList commandList)
+    : IInterpreter
 {
     private IEngine Engine
     {
@@ -34,11 +40,11 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             context.Resume = false;
             context.Executed = true;
 
-            var name = Engine.Parser.ReadWord(context.Index, ref instruction, buffer);
+            var name = parser.ReadWord(context.Index, ref instruction, buffer);
             if (name.Length == 0)
                 break;
 
-            var command = Engine.CommandList.Get(name);
+            var command = commandList.Get(name);
 
             if (command != null)
             {
@@ -75,7 +81,7 @@ public sealed class Interpreter(IEngineAccessor engine, ITracer tracer) : IInter
             {
                 if (context.NextLine && instruction > 0)
                 {
-                    Engine.Parser.DiscardLine(context.Index, ref instruction);
+                    parser.DiscardLine(context.Index, ref instruction);
                 }
 
                 break;

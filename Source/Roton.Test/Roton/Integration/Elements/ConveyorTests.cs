@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class ConveyorTests(Context context) : ElementTestFixture(context)
+public class ConveyorTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void ClockwiseConveyor_ShouldConveyPushableClockwise()

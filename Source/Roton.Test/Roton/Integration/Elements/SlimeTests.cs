@@ -1,9 +1,10 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class SlimeTests(Context context) : ElementTestFixture(context)
+public class SlimeTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Slime_ShouldSpreadToSurroundingFloors_WhenTimerReachesThreshold()

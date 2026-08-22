@@ -8,13 +8,7 @@ namespace Lyon.Presenters;
 public interface IScenePresenter
 {
     /// <summary>
-    /// Renders the scene.
+    /// Renders the scene. If the scene has not been updated since the last render, returns null.
     /// </summary>
-    IBitmap Render();
-
-    /// <summary>
-    /// Updates the viewport of the renderer. This should be called when
-    /// the size of the renderer changes.
-    /// </summary>
-    void UpdateViewport();
+    Bitmap? Render();
 }

@@ -5,18 +5,24 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneInteraction(IEngineAccessor engine) : IInteraction
+public sealed class StoneInteraction(
+    IEngineAccessor engine,
+    IWorld world,
+    IHud hud,
+    IFacts facts,
+    IAlerts alerts) 
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        if (Engine.World.Stones < 0)
-            Engine.World.Stones = 0;
+        if (world.Stones < 0)
+            world.Stones = 0;
 
-        Engine.World.Stones++;
+        world.Stones++;
         Engine.Destroy(location);
-        Engine.Hud.UpdateStatus();
-        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.StoneMessage);
+        hud.UpdateStatus();
+        Engine.SetMessage(facts.LongMessageDuration, alerts.StoneMessage);
     }
 }

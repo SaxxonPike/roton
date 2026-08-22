@@ -6,17 +6,22 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
-public sealed class SlimeInteraction(IEngineAccessor engine) : IInteraction
+public sealed class SlimeInteraction(
+    IEngineAccessor engine,
+    ITiles tiles,
+    IElementList elementList,
+    ISounds sounds)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var color = Engine.Tiles[location].Color;
+        var color = tiles[location].Color;
         var slimeIndex = Engine.ActorIndexAt(location);
         Engine.Harm(slimeIndex);
-        Engine.Tiles[location] = new Tile(Engine.Elements.BreakableId, color);
+        tiles[location] = new Tile(elementList.BreakableId, color);
         Engine.UpdateBoard(location);
-        Engine.PlaySound(2, Engine.Sounds.SlimeDie);
+        Engine.PlaySound(2, sounds.SlimeDie);
     }
 }

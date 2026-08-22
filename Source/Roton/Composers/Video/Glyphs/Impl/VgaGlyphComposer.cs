@@ -7,7 +7,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
     private readonly int[] _data;
     private readonly int _height;
 
-    public VgaGlyphComposer(IBitmapFont font)
+    public VgaGlyphComposer(BitmapFont font)
     {
         if (font == null)
             throw new ArgumentNullException(nameof(font));
@@ -21,7 +21,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
         MaxHeight = font.Height;
     }
 
-    public IGlyph ComposeGlyph(int index)
+    public Glyph ComposeGlyph(int index)
     {
         var output = new int[_height*8];
         var outputOffset = 0;

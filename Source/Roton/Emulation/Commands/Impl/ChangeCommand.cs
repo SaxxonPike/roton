@@ -6,7 +6,12 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CHANGE")]
 [Context(Context.Super, "CHANGE")]
-public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
+public sealed class ChangeCommand(
+    IEngineAccessor engine,
+    IElementList elementList,
+    ITiles tiles,
+    IParser parser)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
@@ -14,11 +19,11 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
     {
         var success = false;
 
-        if (Engine.Parser.TryEvalKind(ref context, ref instruction, out var source))
+        if (parser.TryEvalKind(ref context, ref instruction, out var source))
         {
-            if (Engine.Parser.TryEvalKind(ref context, ref instruction, out var target))
+            if (parser.TryEvalKind(ref context, ref instruction, out var target))
             {
-                var targetElement = Engine.Elements[target.Id];
+                var targetElement = elementList[target.Id];
                 success = true;
 
                 if (target.Color == 0 && targetElement.Color < 0xF0)
@@ -26,7 +31,7 @@ public sealed class ChangeCommand(IEngineAccessor engine) : ICommand
 
                 var location = new Location(0, 1);
 
-                while (Engine.Tiles.FindTile(source, ref location))
+                while (tiles.FindTile(source, ref location))
                     Engine.PlotTile(location, target);
             }
         }

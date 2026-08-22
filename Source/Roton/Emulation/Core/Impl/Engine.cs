@@ -45,7 +45,8 @@ public sealed class Engine : IEngine, IDisposable
         ISpeaker speaker, IDrumSoundList drumBank, IObjectMover objectMover,
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
-        IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor)
+        IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor,
+        IJoystick joystick)
     {
         engineAccessor.Instance = this;
 
@@ -93,10 +94,13 @@ public sealed class Engine : IEngine, IDisposable
         _fileDialog = fileDialog;
         Tracer = tracer;
         _engineAccessor = engineAccessor;
+        Joystick = joystick;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
     }
+
+    public IJoystick Joystick { get; }
 
     private void ClockTick(object? sender, EventArgs args)
     {
@@ -425,7 +429,7 @@ public sealed class Engine : IEngine, IDisposable
             return Facts.EmptyTile;
 
         if (element.HasDrawCode)
-            return DrawList.Get(tile.Id).Draw(location);
+            return DrawList.Get(tile.Id)?.Draw(location) ?? new AnsiChar(0x4F, 0x41);
 
         if (tile.Id < elementCount - 7) return new AnsiChar(element.Character, tile.Color);
 
@@ -448,7 +452,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext(_engineAccessor)
+        var context = new OopContext(Actors)
         {
             Index = index,
             Name = name,
@@ -481,7 +485,7 @@ public sealed class Engine : IEngine, IDisposable
                     break;
                 case '/':
                 case '?':
-                    if (context.Command == 0x2F)
+                    if (context.Command == '/')
                         context.Repeat = true;
 
                     if (!Parser.TryEvalDirection(ref context, ref instruction, out var vector))
@@ -492,8 +496,7 @@ public sealed class Engine : IEngine, IDisposable
 
                     ObjectMover.ExecuteDirection(ref context, vector);
 
-                    ReadActorCodeByte(index, ref instruction);
-                    if (State.OopByte != 0x0D)
+                    if (ReadActorCodeByte(index, ref instruction) != '\r')
                         instruction--;
                     context.Moved = true;
 
@@ -880,7 +883,7 @@ public sealed class Engine : IEngine, IDisposable
             if (actorTile.Id == Elements.PlayerId)
             {
                 var targetLocation = actor.Location + vector;
-                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, ref vector);
+                InteractionList.Get(Tiles[targetLocation].Id)?.Interact(targetLocation, 0, ref vector);
             }
         }
 
@@ -959,16 +962,16 @@ public sealed class Engine : IEngine, IDisposable
 
     public void Push(Location location, Vector vector)
     {
-        // this is here to prevent endless push loops
-        // but doesn't exist in the original code
-        if (vector.IsZero())
-            throw Exceptions.PushStackOverflow;
-
         ref var tile = ref Tiles[location];
         if (tile.Id == Elements.SliderEwId && vector.Y == 0 ||
             tile.Id == Elements.SliderNsId && vector.X == 0 ||
             Elements[tile.Id].IsPushable)
         {
+            // this is here to prevent endless push loops
+            // but doesn't exist in the original code
+            if (vector.IsZero())
+                throw Exceptions.PushStackOverflow;
+
             ref var furtherTile = ref Tiles[location + vector];
             if (furtherTile.Id == Elements.TransporterId)
                 PushThroughTransporter(location, vector);
@@ -1058,6 +1061,7 @@ public sealed class Engine : IEngine, IDisposable
         SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
         PlaySound(5, Sounds.Error);
         Tracer.TraceError(ref context, error);
+        Actors[context.Index].Instruction = -1;
     }
 
     public IRandomizer Random { get; }
@@ -1437,7 +1441,7 @@ public sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    private bool WaitForTickNormalCondition() => 
+    private bool WaitForTickNormalCondition() =>
         _ticksToRun > 0 || !ThreadActive;
 
     public void WaitForTick()
@@ -1603,7 +1607,7 @@ public sealed class Engine : IEngine, IDisposable
                     var actorData = Actors[State.ActIndex];
                     if (actorData.Cycle != 0)
                         if (State.ActIndex % actorData.Cycle == State.GameCycle % actorData.Cycle)
-                            ActionList.Get(Tiles[actorData.Location].Id).Act(State.ActIndex);
+                            ActionList.Get(Tiles[actorData.Location].Id)?.Act(State.ActIndex);
 
                     State.ActIndex++;
                 }
@@ -1648,7 +1652,7 @@ public sealed class Engine : IEngine, IDisposable
                 if (!State.KeyVector.IsZero())
                 {
                     var target = Player.Location + State.KeyVector;
-                    InteractionList.Get(ElementAt(target).Id).Interact(target, 0, ref State.KeyVector);
+                    InteractionList.Get(ElementAt(target).Id)?.Interact(target, 0, ref State.KeyVector);
                 }
 
                 if (!State.KeyVector.IsZero())
@@ -1841,12 +1845,37 @@ public sealed class Engine : IEngine, IDisposable
         return (EngineKeyCode)bytes[0];
     }
 
-    public void ReadInput()
+    private void ReadInputJoystick()
+    {
+        if (!Joystick.IsConnected)
+            return;
+
+        var x = Joystick.X;
+        var y = Joystick.Y;
+        var buttons = Joystick.Buttons;
+        var deadZone = Config.JoystickDeadZone;
+
+        if (x <= -deadZone)
+            State.KeyVector = Vector.West;
+        else if (x >= deadZone)
+            State.KeyVector = Vector.East;
+        else if (y <= -deadZone)
+            State.KeyVector = Vector.North;
+        else if (y >= deadZone) 
+            State.KeyVector = Vector.South;
+
+        if (buttons.HasFlag(JoystickButtons.Primary))
+            State.KeyPressed = EngineKeyCode.Space;
+        else if (buttons.HasFlag(JoystickButtons.Secondary))
+            State.KeyShift = true;
+    }
+
+    private void ReadInputKeyboard()
     {
         var mod = Keyboard.GetMod();
         State.KeyShift = mod.HasFlag(KeyMod.Shift);
         State.KeyPressed = 0;
-        State.KeyVector = new Vector(0, 0);
+        State.KeyVector = Vector.Idle;
 
         if (!Keyboard.KeyIsAvailable)
             return;
@@ -1872,7 +1901,13 @@ public sealed class Engine : IEngine, IDisposable
                 State.KeyVector = Vector.South;
                 break;
         }
+    }
 
+    public void ReadInput()
+    {
+        ReadInputKeyboard();
+        if (State.KeyVector.IsZero())
+            ReadInputJoystick();
         if (State.KeyVector.IsNonZero())
             State.KeyLastVector = State.KeyVector;
     }

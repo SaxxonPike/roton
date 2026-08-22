@@ -2,34 +2,50 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
+using Roton.Emulation.Interactions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x04)]
 [Context(Context.Super, 0x04)]
-public sealed class PlayerAction(IEngineAccessor engine) : IAction
+public sealed class PlayerAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IElementList elementList,
+    IWorld world,
+    IState state,
+    ITiles tiles,
+    IAlerts alerts,
+    IBoard board,
+    IHud hud,
+    ISounds sounds,
+    IFacts facts,
+    IInteractionList interactionList,
+    ITimers timers,
+    IConfig config)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
-        var playerElement = Engine.Elements.Player();
+        var actor = actorList[index];
+        var playerElement = elementList.Player();
 
         // Energizer graphics
 
-        if (Engine.World.EnergyCycles > 0)
+        if (world.EnergyCycles > 0)
         {
             playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
-            if ((Engine.State.GameCycle & 0x01) == 0)
+            if ((state.GameCycle & 0x01) == 0)
             {
-                Engine.Tiles[actor.Location].Color = ((Engine.State.GameCycle % 7 + 1) << 4) | 0x0F;
+                tiles[actor.Location].Color = ((state.GameCycle % 7 + 1) << 4) | 0x0F;
             }
             else
             {
-                Engine.Tiles[actor.Location].Color = 0x0F;
+                tiles[actor.Location].Color = 0x0F;
             }
 
             Engine.UpdateBoard(actor.Location);
@@ -41,116 +57,116 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
 
         // Health logic
 
-        if (Engine.World.Health <= 0)
+        if (world.Health <= 0)
         {
-            Engine.State.KeyVector = new Vector(0, 0);
-            Engine.State.KeyShift = false;
-            if (Engine.Actors.ActorIndexAt(new Location(0, 0)) == -1)
+            state.KeyVector = new Vector(0, 0);
+            state.KeyShift = false;
+            if (actorList.ActorIndexAt(new Location(0, 0)) == -1)
             {
-                Engine.SetMessage(0x7D00, Engine.Alerts.GameOverMessage);
+                Engine.SetMessage(0x7D00, alerts.GameOverMessage);
             }
 
-            Engine.State.GameWaitTime = 0;
-            Engine.State.GameOver = true;
+            state.GameWaitTime = 0;
+            state.GameOver = true;
         }
 
         // In the Original engine, the check for player shooting is a little more complex.
         // In the Super engine, pressing Space is reinterpreted as Shift + Last Direction.
         // We use the Super method here for simplicity.
 
-        if (Engine.State.KeyPressed == EngineKeyCode.Space)
+        if (state.KeyPressed == EngineKeyCode.Space)
         {
-            Engine.State.KeyVector = Engine.State.KeyLastVector;
-            Engine.State.KeyShift = true;
+            state.KeyVector = state.KeyLastVector;
+            state.KeyShift = true;
         }
 
-        if (Engine.State.KeyVector.IsNonZero() && Engine.State.KeyShift)
+        if (state.KeyVector.IsNonZero() && state.KeyShift)
         {
             // Shooting logic
 
-            if (Engine.Board.MaximumShots > 0)
+            if (board.MaximumShots > 0)
             {
-                if (Engine.World.Ammo > 0)
+                if (world.Ammo > 0)
                 {
                     var bulletCount =
-                        Engine.Actors.Count(
-                            a => a.P1 == 0 && Engine.Tiles[a.Location].Id == Engine.Elements.BulletId);
-                    if (bulletCount < Engine.Board.MaximumShots)
+                        actorList.Count(a => a.P1 == 0 && tiles[a.Location].Id == elementList.BulletId);
+                    if (bulletCount < board.MaximumShots)
                     {
-                        if (Engine.SpawnProjectile(Engine.Elements.BulletId, actor.Location,
-                                Engine.State.KeyVector, false))
+                        if (Engine.SpawnProjectile(elementList.BulletId, actor.Location,
+                                state.KeyVector, false))
                         {
-                            Engine.World.Ammo--;
-                            Engine.Hud.UpdateStatus();
-                            Engine.PlaySound(2, Engine.Sounds.Shoot);
+                            world.Ammo--;
+                            hud.UpdateStatus();
+                            Engine.PlaySound(2, sounds.Shoot);
                         }
                     }
                 }
                 else
                 {
-                    if (Engine.Alerts.OutOfAmmo)
+                    if (alerts.OutOfAmmo)
                     {
-                        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoAmmoMessage);
-                        Engine.Alerts.OutOfAmmo = false;
+                        Engine.SetMessage(facts.LongMessageDuration, alerts.NoAmmoMessage);
+                        alerts.OutOfAmmo = false;
                     }
                 }
             }
             else
             {
-                if (Engine.Alerts.CantShootHere)
+                if (alerts.CantShootHere)
                 {
-                    Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoShootMessage);
-                    Engine.Alerts.CantShootHere = false;
+                    Engine.SetMessage(facts.LongMessageDuration, alerts.NoShootMessage);
+                    alerts.CantShootHere = false;
                 }
             }
         }
-        else if (Engine.State.KeyVector.IsNonZero())
+        else if (state.KeyVector.IsNonZero())
         {
             // Movement logic
 
-            Engine.InteractionList.Get(Engine.Tiles[actor.Location + Engine.State.KeyVector].Id)
-                .Interact(actor.Location + Engine.State.KeyVector, 0, ref Engine.State.KeyVector);
-                    
-            if (!Engine.State.KeyVector.IsZero())
+            interactionList.Get(tiles[actor.Location + state.KeyVector].Id)?
+                .Interact(actor.Location + state.KeyVector, 0, ref state.KeyVector);
+
+            if (!state.KeyVector.IsZero())
             {
-                if (!Engine.State.SoundPlaying)
+                if (!state.SoundPlaying)
                 {
                     Engine.PlayStep();
                 }
 
-                if (Engine.Tiles.ElementAt(actor.Location + Engine.State.KeyVector).IsFloor)
+                if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
                 {
-                    Engine.MoveActor(0, actor.Location + Engine.State.KeyVector);
+                    Engine.MoveActor(0, actor.Location + state.KeyVector);
                 }
             }
         }
 
         // Hotkey logic
 
-        switch (Engine.State.KeyPressed.ToUpperCase())
+        switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.Q:
             case EngineKeyCode.Escape:
-                Engine.State.BreakGameLoop = Engine.State.GameOver || Engine.Hud.EndGameConfirmation();
+                state.BreakGameLoop = state.GameOver || hud.EndGameConfirmation();
                 break;
             case EngineKeyCode.S:
-                if (Engine.Hud.SaveGame() is {} saveFileName)
+                if (hud.SaveGame() is { } saveFileName)
                 {
                     Engine.SaveWorld(saveFileName);
                 }
+
                 break;
             case EngineKeyCode.P:
-                if (Engine.World.Health > 0)
+                if (world.Health > 0)
                 {
-                    Engine.State.GamePaused = true;
+                    state.GamePaused = true;
                 }
 
                 break;
             case EngineKeyCode.B:
-                Engine.State.GameQuiet = !Engine.State.GameQuiet;
+                state.GameQuiet = !state.GameQuiet;
                 Engine.ClearSound();
-                Engine.Hud.UpdateStatus();
-                Engine.State.KeyPressed = EngineKeyCode.Space;
+                hud.UpdateStatus();
+                state.KeyPressed = EngineKeyCode.Space;
                 break;
             case EngineKeyCode.H:
                 Engine.ShowInGameHelp();
@@ -165,31 +181,31 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
 
         // Torch logic
 
-        if (Engine.World.TorchCycles > 0)
+        if (world.TorchCycles > 0)
         {
-            Engine.World.TorchCycles--;
-            if (Engine.World.TorchCycles <= 0)
+            world.TorchCycles--;
+            if (world.TorchCycles <= 0)
             {
                 Engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                Engine.PlaySound(3, Engine.Sounds.TorchOut);
+                Engine.PlaySound(3, sounds.TorchOut);
             }
 
-            if (Engine.World.TorchCycles % 40 == 0)
+            if (world.TorchCycles % 40 == 0)
             {
-                Engine.Hud.UpdateStatus();
+                hud.UpdateStatus();
             }
         }
 
         // Energizer logic
 
-        if (Engine.World.EnergyCycles > 0)
+        if (world.EnergyCycles > 0)
         {
-            Engine.World.EnergyCycles--;
-            if (Engine.World.EnergyCycles == 10)
+            world.EnergyCycles--;
+            if (world.EnergyCycles == 10)
             {
-                Engine.PlaySound(9, Engine.Sounds.EnergyOut);
+                Engine.PlaySound(9, sounds.EnergyOut);
             }
-            else if (Engine.World.EnergyCycles <= 0)
+            else if (world.EnergyCycles <= 0)
             {
                 Engine.ForcePlayerColor(index);
             }
@@ -197,24 +213,24 @@ public sealed class PlayerAction(IEngineAccessor engine) : IAction
 
         // Time limit logic
 
-        if (Engine.Board.TimeLimit > 0)
+        if (board.TimeLimit > 0)
         {
-            if (Engine.World.Health > 0)
+            if (world.Health > 0)
             {
-                if (Engine.Timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
+                if (timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
                 {
-                    Engine.World.TimePassed++;
-                    if (!Engine.Config.NoPesterMode && Engine.Board.TimeLimit - 10 == Engine.World.TimePassed)
+                    world.TimePassed++;
+                    if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
-                        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.TimeMessage);
-                        Engine.PlaySound(3, Engine.Sounds.TimeLow);
+                        Engine.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
+                        Engine.PlaySound(3, sounds.TimeLow);
                     }
-                    else if (Engine.World.TimePassed >= Engine.Board.TimeLimit)
+                    else if (world.TimePassed >= board.TimeLimit)
                     {
                         Engine.Harm(0);
                     }
 
-                    Engine.Hud.UpdateStatus();
+                    hud.UpdateStatus();
                 }
             }
         }

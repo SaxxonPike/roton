@@ -6,12 +6,11 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "CW")]
 [Context(Context.Super, "CW")]
-public sealed class CwDirection(IEngineAccessor engine) : IDirection
+public sealed class CwDirection(
+    IParser parser) : IDirection
 {
-    private IEngine Engine => engine.Instance;
-
     public Vector Execute(ref OopContext context, ref Word instruction) => 
-        Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec)
+        parser.TryEvalDirection(ref context, ref instruction, out var vec)
             ? vec.Clockwise()
             : Vector.Idle;
 }

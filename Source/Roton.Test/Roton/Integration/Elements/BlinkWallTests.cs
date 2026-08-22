@@ -1,11 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class BlinkWallTests(Context context) : ElementTestFixture(context)
+public class BlinkWallTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void BlinkWall_ShouldEmitHorizontalRay_WhenTriggered()

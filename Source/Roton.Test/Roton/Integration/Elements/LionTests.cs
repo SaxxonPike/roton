@@ -1,10 +1,11 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
 
-public class LionTests(Context context) : ElementTestFixture(context)
+public class LionTests(Context context) : AllContextTestFixture(context)
 {
     [Test]
     public void Lion_ShouldSeekPlayer()

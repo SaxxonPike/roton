@@ -2,82 +2,70 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Autofac;
+using Lyon;
 using Lyon.App;
-using Lyon.Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure.Impl;
 
-namespace Lyon;
+// Process command line arguments.
+var fileName = args.TakeWhile(s => !s.StartsWith("--")).FirstOrDefault();
+var switches = args.SkipWhile(s => !s.StartsWith("--")).Select(s => s.ToLower()).ToArray();
 
-public static class Program
+// Process configuration.
+var config = new Config
 {
-    // STAThread is required for open/save dialogs.
+    DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
+    RandomSeed = null,
+    HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
+    AudioDrumRate = 64,
+    AudioSampleRate = 44100,
+    AudioBufferSize = 2048,
+    VideoScaleX = 2,
+    VideoScaleY = 2,
+    MasterClockNumerator = 100,
+    MasterClockDenominator = 7275,
+    FastMode = switches.Contains("--fast"),
+    TraceOop = switches.Contains("--trace"),
+    NoPesterMode = switches.Contains("--no-pester"),
+    JoystickDeadZone = 0.3f
+};
 
-    [STAThread]
-    private static void Main(string[] args)
-    {
-        var fileName = args.TakeWhile(s => !s.StartsWith("--")).FirstOrDefault();
-        var switches = args.SkipWhile(s => !s.StartsWith("--")).Select(s => s.ToLower()).ToArray();
+fileName ??= "TOWN.ZZT";
 
-        var config = new Config
-        {
-            DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
-            RandomSeed = null,
-            HomePath = fileName != null ? Path.GetDirectoryName(fileName) : Environment.CurrentDirectory,
-            AudioDrumRate = 64,
-            AudioSampleRate = 44100,
-            AudioBufferSize = 2048,
-            VideoScaleX = 2,
-            VideoScaleY = 2,
-            MasterClockNumerator = 100,
-            MasterClockDenominator = 7275,
-            FastMode = switches.Contains("--fast"),
-            TraceOop = switches.Contains("--trace"),
-            NoPesterMode = switches.Contains("--no-pester"),
-        };
+// Determine which engine to use based on the world file name extension.
+var selector = new ContextEngineSelector();
+if (!selector.TryGetForWorldFileName(fileName, out var contextEngine))
+    throw new LyonException($"Cannot determine the format of the world file: {fileName}");
 
-        fileName ??= "TOWN.ZZT";
-        
-        var selector = new ContextEngineSelector();
-        
-        if (!selector.TryGetForWorldFileName(fileName, out var contextEngine))
-            throw new Exception($"Cannot determine the format of the world file: {fileName}");
-        
-        // Super ZZT looks a little nicer with slightly taller graphics.
-        if (contextEngine == Context.Super) 
-            config.VideoScaleY *= 1.25f;
+// Games in the Super engine look a little nicer with slightly taller graphics.
+if (contextEngine == Context.Super)
+    config.VideoScaleY *= 1.25f;
 
-        var builder = new ContainerBuilder();
+// Create the DI container.
+var services = new ServiceCollection();
+services.AddRoton(contextEngine, typeof(ILauncher).Assembly);
+services.AddLyon(args, config);
 
-        builder.RegisterInstance(config)
-            .As<IConfig>()
-            .SingleInstance();
+// Build the container and run the app.
+try
+{
+    using var container = services.BuildServiceProvider();
 
-        builder.RegisterModule(new RotonModule(contextEngine, typeof(ILauncher).Assembly));
-        builder.RegisterModule(new LyonModule(args));
+    if (config.TraceOop)
+        container
+            .GetService<ITracer>()?
+            .Attach(Console.Out);
 
-        try
-        {
-            using var container = builder.Build();
-
-            if (config.TraceOop)
-                container
-                    .Resolve<ITracer>()
-                    .Attach(Console.Out);
-            
-            container
-                .Resolve<ILauncher>()
-                .Launch(container.Resolve<IEngine>());
-        }
-        catch (Exception e)
-        {
-            if (Debugger.IsAttached)
-                throw;
-            Console.WriteLine(e);
-        }
-    }
+    container
+        .GetRequiredService<ILauncher>()
+        .Launch(container.GetRequiredService<IEngine>());
+}
+catch (Exception e)
+{
+    if (Debugger.IsAttached)
+        throw;
+    Console.WriteLine(e);
 }

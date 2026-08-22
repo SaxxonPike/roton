@@ -6,12 +6,14 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "ENDGAME")]
 [Context(Context.Super, "ENDGAME")]
-public sealed class EndgameCommand(IEngineAccessor engine) : ICommand
+public sealed class EndgameCommand(
+    IEngineAccessor engine,
+    IWorld world) : ICommand
 {
     private IEngine Engine => engine.Instance;
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Engine.World.Health = 0;
+        world.Health = 0;
     }
 }
