@@ -5,21 +5,28 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x06)]
-public sealed class TorchInteraction(IEngineAccessor engine) : IInteraction
+public sealed class TorchInteraction(
+    IEngineAccessor engine,
+    ISounds sounds,
+    IWorld world,
+    IHud hud,
+    IAlerts alerts,
+    IFacts facts)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.World.Torches++;
+        world.Torches++;
         Engine.RemoveItem(location);
-        Engine.Hud.UpdateStatus();
-        if (Engine.Alerts.TorchPickup)
+        hud.UpdateStatus();
+        if (alerts.TorchPickup)
         {
-            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.TorchMessage);
-            Engine.Alerts.TorchPickup = false;
+            Engine.SetMessage(facts.LongMessageDuration, alerts.TorchMessage);
+            alerts.TorchPickup = false;
         }
 
-        Engine.PlaySound(3, Engine.Sounds.Torch);
+        Engine.PlaySound(3, sounds.Torch);
     }
 }

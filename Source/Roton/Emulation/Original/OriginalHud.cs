@@ -11,35 +11,30 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalHud : Hud
+public sealed class OriginalHud(
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IScroll scroll,
+    ITextEntryHud textEntryHud,
+    IChoiceHud choiceHud,
+    ILongTextEntryHud longTextEntryHud,
+    IFadeMatrix fadeMatrix,
+    IState state,
+    IElementList elementList,
+    IWorld world,
+    IBoard board,
+    IFacts facts)
+    : Hud(engine, scroll, state)
 {
-    public OriginalHud(
-        IEngineAccessor engine,
-        ITerminal terminal,
-        IScroll scroll,
-        ITextEntryHud textEntryHud,
-        IChoiceHud choiceHud,
-        ILongTextEntryHud longTextEntryHud,
-        IFadeMatrix fadeMatrix)
-        : base(engine, scroll)
-    {
-        Terminal = terminal;
-        TextEntryHud = textEntryHud;
-        ChoiceHud = choiceHud;
-        LongTextEntryHud = longTextEntryHud;
-        FadeMatrix = fadeMatrix;
-        fadeMatrix.Initialize();
-    }
+    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
 
-    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } 
-    
-    private ITerminal Terminal { [DebuggerStepThrough] get; }
+    private ITerminal Terminal { [DebuggerStepThrough] get; } = terminal;
 
-    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; }
+    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; } = textEntryHud;
 
-    private IChoiceHud ChoiceHud { [DebuggerStepThrough] get; }
+    private IChoiceHud ChoiceHud { [DebuggerStepThrough] get; } = choiceHud;
 
-    private ILongTextEntryHud LongTextEntryHud { [DebuggerStepThrough] get; }
+    private ILongTextEntryHud LongTextEntryHud { [DebuggerStepThrough] get; } = longTextEntryHud;
 
     private const int ViewportHeight = 25;
 
@@ -86,7 +81,7 @@ public sealed class OriginalHud : Hud
         DrawString(0x3D, 2, "    - - - - -      ", 0x1F);
         if (Engine.TitleScreen)
         {
-            SelectParameter(false, 0x42, 0x15, "Game speed:;FS", Engine.State.GameSpeed, null);
+            SelectParameter(false, 0x42, 0x15, "Game speed:;FS", State.GameSpeed, null);
             DrawString(0x3E, 0x15, " S ", 0x70);
             DrawString(0x3E, 0x07, " W ", 0x30);
             DrawString(0x41, 0x07, " World:", 0x1E);
@@ -112,11 +107,11 @@ public sealed class OriginalHud : Hud
             DrawString(0x40, 0x0A, "   Gems:", 0x1E);
             DrawString(0x40, 0x0B, "  Score:", 0x1E);
             DrawString(0x40, 0x0C, "   Keys:", 0x1E);
-            DrawChar(0x3E, 0x07, new AnsiChar(Engine.Elements.Player().Character, 0x1F));
-            DrawChar(0x3E, 0x08, new AnsiChar(Engine.Elements.Ammo().Character, 0x1B));
-            DrawChar(0x3E, 0x09, new AnsiChar(Engine.Elements.Torch().Character, 0x16));
-            DrawChar(0x3E, 0x0A, new AnsiChar(Engine.Elements.Gem().Character, 0x1B));
-            DrawChar(0x3E, 0x0C, new AnsiChar(Engine.Elements.Key().Character, 0x1F));
+            DrawChar(0x3E, 0x07, new AnsiChar(elementList.Player().Character, 0x1F));
+            DrawChar(0x3E, 0x08, new AnsiChar(elementList.Ammo().Character, 0x1B));
+            DrawChar(0x3E, 0x09, new AnsiChar(elementList.Torch().Character, 0x16));
+            DrawChar(0x3E, 0x0A, new AnsiChar(elementList.Gem().Character, 0x1B));
+            DrawChar(0x3E, 0x0C, new AnsiChar(elementList.Key().Character, 0x1F));
             DrawString(0x3E, 0x0E, " T ", 0x70);
             DrawString(0x41, 0x0E, " Torch", 0x1F);
             DrawString(0x3E, 0x0F, " B ", 0x30);
@@ -149,7 +144,7 @@ public sealed class OriginalHud : Hud
     {
         DrawStatusLine(0x08);
         DrawString(0x45, 0x08,
-            Engine.World.Name.Length <= 0 ? Engine.Facts.UntitledWorldName : Engine.World.Name, 0x1F);
+            world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
     public override void DrawChar(int x, int y, AnsiChar ac)
@@ -223,7 +218,7 @@ public sealed class OriginalHud : Hud
     public override void Initialize()
     {
         RandomizeFadeMatrix();
-        Terminal.SetSize(Engine.State.EditorMode ? 60 : 80, 25, false);
+        Terminal.SetSize(State.EditorMode ? 60 : 80, 25, false);
     }
 
     public override void RedrawBoard() => FadeMatrix.FadeIn();
@@ -250,33 +245,33 @@ public sealed class OriginalHud : Hud
         if (Engine.TitleScreen)
             return;
 
-        if (Engine.Board.TimeLimit <= 0)
+        if (board.TimeLimit <= 0)
         {
             DrawStatusLine(6);
         }
         else
         {
             DrawString(0x40, 0x06, "   Time:", 0x1E);
-            DrawString(0x48, 0x06, (Engine.Board.TimeLimit - Engine.World.TimePassed).ToCharSpan(buffer), 0x1E);
+            DrawString(0x48, 0x06, (board.TimeLimit - world.TimePassed).ToCharSpan(buffer), 0x1E);
         }
 
-        if (Engine.World.Health < 0)
+        if (world.Health < 0)
         {
-            Engine.World.Health = 0;
+            world.Health = 0;
         }
 
-        DrawString(0x48, 0x07, ((int)Engine.World.Health).ToCharSpan(buffer), " ", 0x1E);
-        DrawString(0x48, 0x08, ((int)Engine.World.Ammo).ToCharSpan(buffer), " ", 0x1E);
-        DrawString(0x48, 0x09, ((int)Engine.World.Torches).ToCharSpan(buffer), " ", 0x1E);
-        DrawString(0x48, 0x0A, ((int)Engine.World.Gems).ToCharSpan(buffer), " ", 0x1E);
-        DrawString(0x48, 0x0B, ((int)Engine.World.Score).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x07, ((int)world.Health).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x08, ((int)world.Ammo).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x09, ((int)world.Torches).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x0A, ((int)world.Gems).ToCharSpan(buffer), " ", 0x1E);
+        DrawString(0x48, 0x0B, ((int)world.Score).ToCharSpan(buffer), " ", 0x1E);
 
-        if (Engine.World.TorchCycles > 0)
+        if (world.TorchCycles > 0)
         {
             for (var i = 2; i <= 5; i++)
             {
                 DrawChar(0x49 + i, 0x09,
-                    Engine.World.TorchCycles / 40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
+                    world.TorchCycles / 40 < i ? new AnsiChar(0xB0, 0x16) : new AnsiChar(0xB1, 0x16));
             }
         }
         else
@@ -287,14 +282,14 @@ public sealed class OriginalHud : Hud
         for (var i = 1; i <= 7; i++)
         {
             DrawChar(0x47 + i, 0x0C,
-                Engine.World.Keys[i - 1]
-                    ? new AnsiChar(Engine.Elements.Key().Character, 0x18 + i)
+                world.Keys[i - 1]
+                    ? new AnsiChar(elementList.Key().Character, 0x18 + i)
                     : new AnsiChar(0x20, 0x1F));
         }
 
-        DrawString(0x41, 0x0F, Engine.State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
+        DrawString(0x41, 0x0F, State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
 
-        if (Engine.World.Flags.Contains("DEBUG"))
+        if (world.Flags.Contains("DEBUG"))
             DrawString(0x3E, 0x04, $"Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
     }
 
@@ -344,7 +339,7 @@ public sealed class OriginalHud : Hud
         if (index >= 0)
         {
             string? name = null;
-            Scroll.Show($"New high score for {Engine.World.Name}",
+            Scroll.Show($"New high score for {world.Name}",
                 nameList,
                 false,
                 2,
@@ -352,7 +347,7 @@ public sealed class OriginalHud : Hud
             return name;
         }
 
-        Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
+        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
         return null;
     }
 
@@ -369,14 +364,14 @@ public sealed class OriginalHud : Hud
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        Scroll.Show($"High scores for {Engine.World.Name}", nameList, false, 0);
+        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
     }
     
     public override string SaveGame()
     {
         DrawString(65, 3, "Save game:", 0x1F);
         DrawString(71, 5, ".SAV", 0x0F);
-        var result = TextEntryHud.Show(63, 4, 8, 0x0F, 0x1F, Engine.State.DefaultSaveName);
+        var result = TextEntryHud.Show(63, 4, 8, 0x0F, 0x1F, State.DefaultSaveName);
         DrawStatusLine(3);
         DrawStatusLine(5);
         return result;

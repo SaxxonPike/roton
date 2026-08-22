@@ -35,28 +35,29 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     private Random Rand { get; } = new();
 
     protected IEngine Engine { get; private set; } = null!;
-    protected IActorList Actors => Engine.Actors;
-    protected IAlerts Alerts => Engine.Alerts;
-    protected IBoard Board => Engine.Board;
-    protected ICheatList Cheats => Engine.Cheats;
-    protected IColorList Colors => Engine.Colors;
-    protected ICommandList Commands => Engine.CommandList;
-    protected IConditionList Conditions => Engine.Conditions;
-    protected IDirectionList Directions => Engine.Directions;
-    protected IElementList Elements => Engine.Elements;
-    protected IFacts Facts => Engine.Facts;
-    protected ICodeHeap Heap => Engine.Heap;
-    protected IHud Hud => Engine.Hud;
-    protected IItemList Items => Engine.ItemList;
-    protected IMemory Memory => Engine.Memory;
-    protected IParser Parser => Engine.Parser;
-    protected IActor Player => Engine.Player;
-    protected IRandomizer Random => Engine.Random;
-    protected ISounds Sounds => Engine.Sounds;
-    protected IState State => Engine.State;
-    protected ITargetList Targets => Engine.TargetList;
-    protected ITiles Tiles => Engine.Tiles;
-    protected IGameSerializer GameSerializer => Engine.GameSerializer;
+    protected IActorList Actors { get; private set; } = null!;
+    protected IAlerts Alerts { get; private set; } = null!;
+    protected IBoard Board { get; private set; } = null!;
+    protected ICheatList Cheats { get; private set; } = null!;
+    protected IColorList Colors { get; private set; } = null!;
+    protected ICommandList Commands { get; private set; } = null!;
+    protected IConditionList Conditions { get; private set; } = null!;
+    protected IDirectionList Directions { get; private set; } = null!;
+    protected IElementList Elements { get; private set; } = null!;
+    protected IFacts Facts { get; private set; } = null!;
+    protected ICodeHeap Heap { get; private set; } = null!;
+    protected IHud Hud { get; private set; } = null!;
+    protected IItemList Items { get; private set; } = null!;
+    protected IMemory Memory { get; private set; } = null!;
+    protected IParser Parser { get; private set; } = null!;
+    protected IActor Player => Actors[0];
+    protected IRandomizer Random { get; private set; } = null!;
+    protected ISounds Sounds { get; private set; } = null!;
+    protected IState State { get; private set; } = null!;
+    protected ITargetList Targets { get; private set; } = null!;
+    protected ITiles Tiles { get; private set; } = null!;
+    protected IWorld World { get; private set; } = null!;
+    protected IGameSerializer GameSerializer { get; private set; } = null!;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
@@ -68,7 +69,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected void UnpackBoardResource(string path)
     {
-        GameSerializer.UnpackBoard(Engine.Tiles, GameSerializer.LoadBoardData(GetResource(path)));
+        GameSerializer.UnpackBoard(Tiles, GameSerializer.LoadBoardData(GetResource(path)));
     }
 
     protected void Step()
@@ -155,6 +156,28 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
         var container = services.BuildServiceProvider();
         Engine = container.GetRequiredService<IEngine>();
+        Actors = container.GetRequiredService<IActorList>();
+        Alerts = container.GetRequiredService<IAlerts>();
+        Board = container.GetRequiredService<IBoard>();
+        Cheats = container.GetRequiredService<ICheatList>();
+        Colors = container.GetRequiredService<IColorList>();
+        Commands = container.GetRequiredService<ICommandList>();
+        Conditions = container.GetRequiredService<IConditionList>();
+        Directions = container.GetRequiredService<IDirectionList>();
+        Elements = container.GetRequiredService<IElementList>();
+        Facts = container.GetRequiredService<IFacts>();
+        Heap = container.GetRequiredService<ICodeHeap>();
+        Hud = container.GetRequiredService<IHud>();
+        Items = container.GetRequiredService<IItemList>();
+        Memory = container.GetRequiredService<IMemory>();
+        Parser = container.GetRequiredService<IParser>();
+        Random = container.GetRequiredService<IRandomizer>();
+        Sounds = container.GetRequiredService<ISounds>();
+        State = container.GetRequiredService<IState>();
+        Targets = container.GetRequiredService<ITargetList>();
+        Tiles = container.GetRequiredService<ITiles>();
+        World = container.GetRequiredService<IWorld>();
+        GameSerializer = container.GetRequiredService<IGameSerializer>();
 
         // Preconfiguration
         Engine.ClearWorld();
@@ -321,76 +344,76 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected int BoardIndex
     {
-        get => Engine.World.BoardIndex;
-        set => Engine.World.BoardIndex = value;
+        get => World.BoardIndex;
+        set => World.BoardIndex = value;
     }
 
     protected int Ammo
     {
-        get => Engine.World.Ammo;
-        set => Engine.World.Ammo = value;
+        get => World.Ammo;
+        set => World.Ammo = value;
     }
 
     protected int Torches
     {
-        get => Engine.World.Torches;
-        set => Engine.World.Torches = value;
+        get => World.Torches;
+        set => World.Torches = value;
     }
 
     protected int TorchCycles
     {
-        get => Engine.World.TorchCycles;
-        set => Engine.World.Torches = value;
+        get => World.TorchCycles;
+        set => World.Torches = value;
     }
 
     protected int EnergyCycles
     {
-        get => Engine.World.EnergyCycles;
-        set => Engine.World.EnergyCycles = value;
+        get => World.EnergyCycles;
+        set => World.EnergyCycles = value;
     }
 
     protected int Gems
     {
-        get => Engine.World.Gems;
-        set => Engine.World.Gems = value;
+        get => World.Gems;
+        set => World.Gems = value;
     }
 
     protected int Health
     {
-        get => Engine.World.Health;
-        set => Engine.World.Health = value;
+        get => World.Health;
+        set => World.Health = value;
     }
 
     protected int Score
     {
-        get => Engine.World.Score;
-        set => Engine.World.Score = value;
+        get => World.Score;
+        set => World.Score = value;
     }
 
     protected int Stones
     {
-        get => Engine.World.Stones;
-        set => Engine.World.Stones = value;
+        get => World.Stones;
+        set => World.Stones = value;
     }
 
     protected int TimePassed
     {
-        get => Engine.World.TimePassed;
-        set => Engine.World.TimePassed = value;
+        get => World.TimePassed;
+        set => World.TimePassed = value;
     }
     
     protected bool IsDark
     {
-        get => Engine.Board.IsDark;
-        set => Engine.Board.IsDark = value;
+        get => Board.IsDark;
+        set => Board.IsDark = value;
     }
 
-    protected IFlags Flags => Engine.World.Flags;
+    protected IFlags Flags => World.Flags;
 
 
-    protected IKeyList Keys => Engine.World.Keys;
+    protected IKeyList Keys => World.Keys;
 
-    protected bool GamePaused => Engine.State.GamePaused;
+    protected bool GamePaused => State.GamePaused;
 
     /// <summary>
     /// Pass in ElementList IDs here. If the element is not present, the test will immediately

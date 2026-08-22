@@ -10,13 +10,16 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x18)]
 [Context(Context.Super, 0x19)]
 [Context(Context.Super, 0x1A)]
-public sealed class PuzzleInteraction(IEngineAccessor engine) : IInteraction
+public sealed class PuzzleInteraction(
+    IEngineAccessor engine,
+    ISounds sounds)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
         Engine.Push(location, vector);
-        Engine.PlaySound(2, Engine.Sounds.Push);
+        Engine.PlaySound(2, sounds.Push);
     }
 }

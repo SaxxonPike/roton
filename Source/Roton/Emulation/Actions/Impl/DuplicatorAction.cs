@@ -1,45 +1,54 @@
 ﻿using Roton.Emulation.Core;
+using Roton.Emulation.Data;
+using Roton.Emulation.Interactions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0C)]
 [Context(Context.Super, 0x0C)]
-public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
+public sealed class DuplicatorAction(
+    IEngineAccessor engine,
+    IInteractionList interactionList,
+    IState state,
+    IElementList elementList,
+    ITiles tiles,
+    IActorList actorList,
+    ISounds sounds)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         var source = actor.Location + actor.Vector;
         var target = actor.Location - actor.Vector;
 
         if (actor.P1 > 4)
         {
-            if (tiles[target].Id == Engine.Elements.PlayerId)
+            if (tiles[target].Id == elementList.PlayerId)
             {
-                Engine.InteractionList.Get(tiles[source].Id)
-                    .Interact(source, 0, ref Engine.State.KeyVector);
+                interactionList.Get(tiles[source].Id)?
+                    .Interact(source, 0, ref state.KeyVector);
             }
             else
             {
-                if (tiles[target].Id != Engine.Elements.EmptyId)
+                if (tiles[target].Id != elementList.EmptyId)
                 {
                     var oppVec = -actor.Vector;
                     Engine.Push(target, oppVec);
                 }
 
-                if (tiles[target].Id == Engine.Elements.EmptyId)
+                if (tiles[target].Id == elementList.EmptyId)
                 {
-                    var sourceIndex = Engine.Actors.ActorIndexAt(source);
+                    var sourceIndex = actorList.ActorIndexAt(source);
                     if (sourceIndex > 0)
                     {
-                        if (Engine.State.ActorCount < Engine.Actors.Capacity - 2)
+                        if (state.ActorCount < actorList.Capacity - 2)
                         {
-                            ref var sourceTile = ref tiles[source];
-                            Engine.SpawnActor(target, sourceTile, Engine.Actors[sourceIndex].Cycle,
-                                Engine.Actors[sourceIndex]);
+                            Engine.SpawnActor(target, tiles[source], actorList[sourceIndex].Cycle,
+                                actorList[sourceIndex]);
                             Engine.UpdateBoard(target);
                         }
                     }
@@ -49,11 +58,11 @@ public sealed class DuplicatorAction(IEngineAccessor engine) : IAction
                         Engine.UpdateBoard(target);
                     }
 
-                    Engine.PlaySound(3, Engine.Sounds.Duplicate);
+                    Engine.PlaySound(3, sounds.Duplicate);
                 }
                 else
                 {
-                    Engine.PlaySound(3, Engine.Sounds.DuplicateFail);
+                    Engine.PlaySound(3, sounds.DuplicateFail);
                 }
             }
 

@@ -9,7 +9,6 @@ public interface IFadeMatrix
     int Left { get; }
     int Top { get; }
 
-    void Initialize();
     void Randomize();
     void FadeOut(AnsiChar ac);
     void FadeIn();

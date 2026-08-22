@@ -12,6 +12,11 @@ public abstract class Hud(
     IState state) 
     : IHud
 {
+    protected IState State
+    {
+        [DebuggerStepThrough] get => state;
+    }
+
     protected IEngine Engine
     {
         [DebuggerStepThrough] get => engine.Instance;

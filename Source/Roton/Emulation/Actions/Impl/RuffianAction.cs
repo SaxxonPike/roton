@@ -6,43 +6,48 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x23)]
 [Context(Context.Super, 0x23)]
-public sealed class RuffianAction(IEngineAccessor engine) : IAction
+public sealed class RuffianAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IRandomizer randomizer,
+    ITiles tiles,
+    IElementList elementList)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
 
         if (actor.Vector.IsZero())
         {
-            if (actor.P2 + 8 <= Engine.Random.GetNext(17))
+            if (actor.P2 + 8 <= randomizer.GetNext(17))
             {
-                actor.Vector = actor.P1 >= Engine.Random.GetNext(9)
+                actor.Vector = actor.P1 >= randomizer.GetNext(9)
                     ? Engine.Seek(actor.Location)
-                    :Engine.Rnd();
-                
+                    : Engine.Rnd();
             }
         }
         else
         {
-            if (actor.Location.X == Engine.Player.Location.X || actor.Location.Y == Engine.Player.Location.Y)
+            if (actor.Location.X == actorList.Player.Location.X || actor.Location.Y == actorList.Player.Location.Y)
             {
-                if (actor.P1 >= Engine.Random.GetNext(9))
+                if (actor.P1 >= randomizer.GetNext(9))
                 {
                     actor.Vector = Engine.Seek(actor.Location);
                 }
             }
 
             var target = actor.Location + actor.Vector;
-            if (tiles.ElementAt(target).Id == Engine.Elements.PlayerId)
+            if (tiles.ElementAt(target).Id == elementList.PlayerId)
             {
                 Engine.Attack(index, target);
             }
             else if (Engine.ElementAt(target).IsFloor)
             {
                 Engine.MoveActor(index, target);
-                if (actor.P2 + 8 <= Engine.Random.GetNext(17))
+                if (actor.P2 + 8 <= randomizer.GetNext(17))
                 {
                     actor.Vector = new Vector(0, 0);
                 }

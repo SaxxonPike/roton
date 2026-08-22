@@ -6,23 +6,30 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x07)]
 [Context(Context.Super, 0x07)]
-public sealed class GemInteraction(IEngineAccessor engine) : IInteraction
+public sealed class GemInteraction(
+    IEngineAccessor engine,
+    IWorld world,
+    IFacts facts,
+    IHud hud,
+    ISounds sounds,
+    IAlerts alerts)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.World.Health += Engine.Facts.HealthPerGem;
-        Engine.World.Gems += 1;
-        Engine.World.Score += Engine.Facts.ScorePerGem;
+        world.Health += facts.HealthPerGem;
+        world.Gems += 1;
+        world.Score += facts.ScorePerGem;
         Engine.RemoveItem(location);
-        Engine.Hud.UpdateStatus();
-        Engine.PlaySound(2, Engine.Sounds.Gem);
+        hud.UpdateStatus();
+        Engine.PlaySound(2, sounds.Gem);
 
-        if (!Engine.Alerts.GemPickup)
+        if (!alerts.GemPickup)
             return;
 
-        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.GemMessage);
-        Engine.Alerts.GemPickup = false;
+        Engine.SetMessage(facts.LongMessageDuration, alerts.GemMessage);
+        alerts.GemPickup = false;
     }
 }

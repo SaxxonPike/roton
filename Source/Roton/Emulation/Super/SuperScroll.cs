@@ -7,7 +7,12 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperScroll(IEngineAccessor engine, ITerminal terminal) : Scroll(engine, terminal)
+public sealed class SuperScroll(
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IState state,
+    IFileSystem fileSystem)
+    : Scroll(engine, terminal, state, fileSystem)
 {
     protected override int Width => 37;
     protected override int Height => 23;

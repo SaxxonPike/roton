@@ -429,7 +429,7 @@ public sealed class Engine : IEngine, IDisposable
             return Facts.EmptyTile;
 
         if (element.HasDrawCode)
-            return DrawList.Get(tile.Id).Draw(location);
+            return DrawList.Get(tile.Id)?.Draw(location) ?? new AnsiChar(0x4F, 0x41);
 
         if (tile.Id < elementCount - 7) return new AnsiChar(element.Character, tile.Color);
 
@@ -452,7 +452,7 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext(_engineAccessor)
+        var context = new OopContext(Actors)
         {
             Index = index,
             Name = name,
@@ -883,7 +883,7 @@ public sealed class Engine : IEngine, IDisposable
             if (actorTile.Id == Elements.PlayerId)
             {
                 var targetLocation = actor.Location + vector;
-                InteractionList.Get(Tiles[targetLocation].Id).Interact(targetLocation, 0, ref vector);
+                InteractionList.Get(Tiles[targetLocation].Id)?.Interact(targetLocation, 0, ref vector);
             }
         }
 
@@ -1607,7 +1607,7 @@ public sealed class Engine : IEngine, IDisposable
                     var actorData = Actors[State.ActIndex];
                     if (actorData.Cycle != 0)
                         if (State.ActIndex % actorData.Cycle == State.GameCycle % actorData.Cycle)
-                            ActionList.Get(Tiles[actorData.Location].Id).Act(State.ActIndex);
+                            ActionList.Get(Tiles[actorData.Location].Id)?.Act(State.ActIndex);
 
                     State.ActIndex++;
                 }
@@ -1652,7 +1652,7 @@ public sealed class Engine : IEngine, IDisposable
                 if (!State.KeyVector.IsZero())
                 {
                     var target = Player.Location + State.KeyVector;
-                    InteractionList.Get(ElementAt(target).Id).Interact(target, 0, ref State.KeyVector);
+                    InteractionList.Get(ElementAt(target).Id)?.Interact(target, 0, ref State.KeyVector);
                 }
 
                 if (!State.KeyVector.IsZero())

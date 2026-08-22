@@ -7,13 +7,18 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalScroll(IEngineAccessor engine, ITerminal terminal) : Scroll(engine, terminal)
+public sealed class OriginalScroll(
+    IEngineAccessor engine,
+    ITerminal terminal,
+    IState state,
+    IFileSystem fileSystem)
+    : Scroll(engine, terminal, state, fileSystem)
 {
     protected override int Width => 49;
     protected override int Height => 19;
     protected override int Left => 5;
     protected override int Top => 3;
-        
+
     protected override IReadOnlyList<AnsiChar> GetScreenBuffer()
     {
         return [];

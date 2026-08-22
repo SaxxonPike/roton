@@ -6,7 +6,9 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "LOCK")]
 [Context(Context.Super, "LOCK")]
-public sealed class LockCommand(IEngineAccessor engine) : ICommand
+public sealed class LockCommand(
+    IEngineAccessor engine)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 

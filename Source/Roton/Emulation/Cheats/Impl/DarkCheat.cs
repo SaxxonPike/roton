@@ -1,17 +1,19 @@
 using System;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "DARK")]
-public sealed class DarkCheat(IEngineAccessor engine) : ICheat
+public sealed class DarkCheat(
+    IBoard board,
+    IHud hud)
+    : ICheat
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ReadOnlySpan<char> name, bool clear)
     {
-        Engine.Board.IsDark = !clear;
-        Engine.Hud.RedrawBoard();
+        board.IsDark = !clear;
+        hud.RedrawBoard();
     }
 }

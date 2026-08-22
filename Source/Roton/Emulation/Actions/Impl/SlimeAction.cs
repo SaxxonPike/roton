@@ -6,20 +6,26 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
-public sealed class SlimeAction(IEngineAccessor engine) : IAction
+public sealed class SlimeAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    ITiles tiles,
+    IElementList elementList,
+    IState state)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
 
         if (actor.P1 >= actor.P2)
         {
             var spawnCount = 0;
             var color = tiles[actor.Location].Color;
-            var slimeElement = Engine.Elements.Slime();
-            var slimeTrailTile = new Tile(Engine.Elements.BreakableId, color);
+            var slimeElement = elementList.Slime();
+            var slimeTrailTile = new Tile(elementList.BreakableId, color);
             var source = actor.Location;
             actor.P1 = 0;
 
@@ -36,8 +42,8 @@ public sealed class SlimeAction(IEngineAccessor engine) : IAction
                     }
                     else
                     {
-                        Engine.SpawnActor(target, new Tile(Engine.Elements.SlimeId, color), slimeElement.Cycle, null);
-                        Engine.Actors[Engine.State.ActorCount].P2 = actor.P2;
+                        Engine.SpawnActor(target, new Tile(elementList.SlimeId, color), slimeElement.Cycle, null);
+                        actorList[state.ActorCount].P2 = actor.P2;
                     }
 
                     spawnCount++;

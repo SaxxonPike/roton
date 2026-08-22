@@ -1,16 +1,16 @@
 using System;
-using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Super, "NOZ")]
-public sealed class NoZCheat(IEngineAccessor engine) : ICheat
+public sealed class NoZCheat(
+    IWorld world)
+    : ICheat
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ReadOnlySpan<char> name, bool clear)
     {
-        Engine.World.Stones = -1;
+        world.Stones = -1;
     }
 }

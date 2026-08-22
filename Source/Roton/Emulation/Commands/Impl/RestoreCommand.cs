@@ -7,7 +7,12 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "RESTORE")]
 [Context(Context.Super, "RESTORE")]
-public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
+public sealed class RestoreCommand(
+    IEngineAccessor engine,
+    IParser parser,
+    IActorList actorList,
+    IState state)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
@@ -18,19 +23,19 @@ public sealed class RestoreCommand(IEngineAccessor engine) : ICommand
         buffer[1] = '\'';
         var wordBuffer = buffer.Slice(2);
         
-        Engine.Parser.ReadWord(context.Index, ref instruction);
+        parser.ReadWord(context.Index, ref instruction);
         context.Search.Index = 0;
         while (true)
         {
-            var result = Engine.ExecuteLabel(context.Index, ref context.Search, Engine.State.GetOopWord(wordBuffer), "\r'");
+            var result = Engine.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
             if (!result)
                 break;
 
             while (context.Search.Offset >= 0)
             {
-                Engine.Actors[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
-                var word = Engine.State.GetOopWord(wordBuffer);
-                context.Search.Offset = Engine.Parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
+                actorList[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
+                var word = state.GetOopWord(wordBuffer);
+                context.Search.Offset = parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }
         }
     }

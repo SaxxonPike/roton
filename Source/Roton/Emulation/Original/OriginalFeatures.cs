@@ -7,38 +7,49 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
+public sealed class OriginalFeatures(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IAlerts alerts,
+    IBoard board,
+    IWorld world,
+    IFacts facts,
+    IState state,
+    IHud hud,
+    ITiles tiles,
+    IElementList elementList)
+    : IFeatures
 {
     private IEngine Engine => engine.Instance;
 
 
     public void LockActor(int index)
     {
-        Engine.Actors[index].P2 = 1;
+        actorList[index].P2 = 1;
     }
 
     public void UnlockActor(int index)
     {
-        Engine.Actors[index].P2 = 0;
+        actorList[index].P2 = 0;
     }
 
     public bool IsActorLocked(int index)
     {
-        return Engine.Actors[index].P2 != 0;
+        return actorList[index].P2 != 0;
     }
 
     public string GetHighScoreName(string baseName) => $"{baseName}.HI";
 
     public void EnterBoard()
     {
-        Engine.Board.Entrance = Engine.Player.Location;
-        if (Engine.Board.IsDark && Engine.Alerts.Dark)
+        board.Entrance = actorList.Player.Location;
+        if (board.IsDark && alerts.Dark)
         {
-            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.DarkMessage);
-            Engine.Alerts.Dark = false;
+            Engine.SetMessage(facts.LongMessageDuration, alerts.DarkMessage);
+            alerts.Dark = false;
         }
 
-        Engine.World.TimePassed = 0;
+        world.TimePassed = 0;
         Engine.UpdateStatus();
     }
 
@@ -49,11 +60,11 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
         switch (message)
         {
             case { Count: 1 }:
-                Engine.SetMessage(Engine.Facts.LongMessageDuration, new Message(message));
+                Engine.SetMessage(facts.LongMessageDuration, new Message(message));
                 return null;
             case { Count: > 1 }:
-                Engine.State.KeyVector = Vector.Idle;
-                return Engine.Hud.ShowScroll(false, context.Name, [.. message]);
+                state.KeyVector = Vector.Idle;
+                return hud.ShowScroll(false, context.Name, [.. message]);
             default:
                 return null;
         }
@@ -61,33 +72,33 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void HandlePlayerInput(IActor actor)
     {
-        switch (Engine.State.KeyPressed.ToUpperCase())
+        switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.T:
-                if (Engine.World.TorchCycles <= 0)
+                if (world.TorchCycles <= 0)
                 {
-                    if (Engine.World.Torches <= 0)
+                    if (world.Torches <= 0)
                     {
-                        if (Engine.Alerts.NoTorches)
+                        if (alerts.NoTorches)
                         {
-                            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NoTorchMessage);
-                            Engine.Alerts.NoTorches = false;
+                            Engine.SetMessage(facts.LongMessageDuration, alerts.NoTorchMessage);
+                            alerts.NoTorches = false;
                         }
                     }
-                    else if (!Engine.Board.IsDark)
+                    else if (!board.IsDark)
                     {
-                        if (Engine.Alerts.NotDark)
+                        if (alerts.NotDark)
                         {
-                            Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.NotDarkMessage);
-                            Engine.Alerts.NotDark = false;
+                            Engine.SetMessage(facts.LongMessageDuration, alerts.NotDarkMessage);
+                            alerts.NotDark = false;
                         }
                     }
                     else
                     {
-                        Engine.World.Torches--;
-                        Engine.World.TorchCycles = 0xC8;
+                        world.Torches--;
+                        world.TorchCycles = 0xC8;
                         Engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                        Engine.Hud.UpdateStatus();
+                        hud.UpdateStatus();
                     }
                 }
 
@@ -110,25 +121,25 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPassageMovement()
     {
-        tiles[Engine.Player.Location] = new Tile(Engine.Elements.EmptyId, 0);
+        tiles[actorList.Player.Location] = new Tile(elementList.EmptyId, 0);
     }
 
     public void ForcePlayerColor(int index)
     {
-        var actor = Engine.Actors[index];
-        var playerElement = Engine.Elements.Player();
+        var actor = actorList[index];
+        var playerElement = elementList.Player();
         if (tiles[actor.Location].Color == playerElement.Color &&
-            playerElement.Character == Engine.Facts.PlayerCharacter)
+            playerElement.Character == facts.PlayerCharacter)
             return;
 
-        playerElement.Character = Engine.Facts.PlayerCharacter;
+        playerElement.Character = facts.PlayerCharacter;
         tiles[actor.Location].Color = playerElement.Color;
         Engine.UpdateBoard(actor.Location);
     }
 
     public string[] GetMessageLines()
     {
-        return [Engine.State.Message];
+        return [state.Message];
     }
 
     public void ShowAbout()
@@ -140,21 +151,21 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void CleanUpPauseMovement()
     {
-        var target = Engine.Player.Location + Engine.State.KeyVector;
+        var target = actorList.Player.Location + state.KeyVector;
 
-        if (Engine.ElementAt(Engine.Player.Location).Id == Engine.Elements.PlayerId)
+        if (Engine.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
         {
             Engine.MoveActor(0, target);
         }
         else
         {
-            Engine.UpdateBoard(Engine.Player.Location);
-            Engine.Player.Location += Engine.State.KeyVector;
-            tiles[Engine.Player.Location] =
-                new Tile(Engine.Elements.PlayerId, Engine.Elements.Player().Color);
-            Engine.UpdateBoard(Engine.Player.Location);
-            Engine.UpdateRadius(Engine.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(Engine.Player.Location - Engine.State.KeyVector, RadiusMode.Update);
+            Engine.UpdateBoard(actorList.Player.Location);
+            actorList.Player.Location += state.KeyVector;
+            tiles[actorList.Player.Location] =
+                new Tile(elementList.PlayerId, elementList.Player().Color);
+            Engine.UpdateBoard(actorList.Player.Location);
+            Engine.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
+            Engine.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
         }
     }
 
@@ -193,7 +204,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
     private bool TestAdjacent(Location location, int id)
     {
         var eId = tiles[location].Id;
-        return eId == id || eId == Engine.Elements.BoardEdgeId;
+        return eId == id || eId == elementList.BoardEdgeId;
     }
 
     public int GetAdjacent(Location location, int id) =>
@@ -204,7 +215,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public bool HandleTitleInput()
     {
-        switch (Engine.State.KeyPressed.ToUpperCase())
+        switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.P:
                 return true;
@@ -217,9 +228,9 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
             case EngineKeyCode.E:
                 break;
             case EngineKeyCode.S:
-                Engine.Hud.CreateStatusText();
-                Engine.State.GameSpeed = Engine.Hud.SelectParameter(
-                    true, 0x42, 0x15, "Game speed:;FS", Engine.State.GameSpeed, null);
+                hud.CreateStatusText();
+                state.GameSpeed = hud.SelectParameter(
+                    true, 0x42, 0x15, "Game speed:;FS", state.GameSpeed, null);
                 break;
             case EngineKeyCode.R:
                 return Engine.RestoreWorld();
@@ -227,11 +238,11 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
                 Engine.ShowHighScores();
                 break;
             case EngineKeyCode.QuestionMark:
-                Engine.Hud.EnterCheat();
+                hud.EnterCheat();
                 break;
             case EngineKeyCode.Escape:
             case EngineKeyCode.Q:
-                Engine.State.QuitEngine = Engine.Hud.QuitEngineConfirmation();
+                state.QuitEngine = hud.QuitEngineConfirmation();
                 break;
         }
 
@@ -240,7 +251,7 @@ public sealed class OriginalFeatures(IEngineAccessor engine) : IFeatures
 
     public void RemoveItem(Location location)
     {
-        tiles[location].Id = Engine.Elements.EmptyId;
+        tiles[location].Id = elementList.EmptyId;
         Engine.UpdateBoard(location);
     }
 

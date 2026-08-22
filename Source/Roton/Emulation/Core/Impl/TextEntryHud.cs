@@ -8,7 +8,11 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class TextEntryHud(ITerminal terminal, IEngineAccessor engine) : ITextEntryHud
+public sealed class TextEntryHud(
+    ITerminal terminal,
+    IEngineAccessor engine,
+    IState state)
+    : ITextEntryHud
 {
     private ITerminal Terminal
     {
@@ -42,7 +46,7 @@ public sealed class TextEntryHud(ITerminal terminal, IEngineAccessor engine) : I
             Engine.WaitForTick();
             Engine.ReadInput();
 
-            var key = Engine.State.KeyPressed;
+            var key = state.KeyPressed;
             if (key == EngineKeyCode.None)
                 continue;
 

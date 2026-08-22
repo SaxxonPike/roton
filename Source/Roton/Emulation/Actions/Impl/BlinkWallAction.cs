@@ -6,13 +6,19 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
-public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
+public sealed class BlinkWallAction(
+    IEngineAccessor engine,
+    ITiles tiles,
+    IElementList elementList,
+    IActorList actorList,
+    IWorld world)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
 
         if (actor.P3 == 0)
             actor.P3 = unchecked((byte)(actor.P1 + 1));
@@ -23,11 +29,11 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;
-            var emptyElement = Engine.Elements.EmptyId;
+            var emptyElement = elementList.EmptyId;
 
             var rayElement = actor.Vector.X == 0
-                ? Engine.Elements.BlinkRayVId
-                : Engine.Elements.BlinkRayHId;
+                ? elementList.BlinkRayVId
+                : elementList.BlinkRayHId;
 
             var color = tiles[actor.Location].Color;
             var rayTile = new Tile(rayElement, color);
@@ -50,9 +56,9 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                     Engine.Destroy(target);
                 }
 
-                if (tiles[target].Id == Engine.Elements.PlayerId)
+                if (tiles[target].Id == elementList.PlayerId)
                 {
-                    var playerIndex = Engine.Actors.ActorIndexAt(target);
+                    var playerIndex = actorList.ActorIndexAt(target);
                     Vector testVector;
 
                     if (actor.Vector.Y == 0)
@@ -81,9 +87,9 @@ public sealed class BlinkWallAction(IEngineAccessor engine) : IAction
                         }
                     }
 
-                    if (tiles[target].Id == Engine.Elements.PlayerId)
+                    if (tiles[target].Id == elementList.PlayerId)
                     {
-                        while (Engine.World.Health > 0)
+                        while (world.Health > 0)
                         {
                             Engine.Harm(0);
                         }

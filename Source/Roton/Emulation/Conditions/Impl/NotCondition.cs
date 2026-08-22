@@ -6,12 +6,15 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "NOT")]
 [Context(Context.Super, "NOT")]
-public sealed class NotCondition(IEngineAccessor engine) : ICondition
+public sealed class NotCondition(
+    IEngineAccessor engine,
+    IParser parser)
+    : ICondition
 {
     private IEngine Engine => engine.Instance;
 
     public bool? Execute(ref OopContext context, ref Word instruction) =>
-        Engine.Parser.TryEvalCondition(ref context, ref instruction, out var result)
+        parser.TryEvalCondition(ref context, ref instruction, out var result)
             ? !result
             : null;
 }

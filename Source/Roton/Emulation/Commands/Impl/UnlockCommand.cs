@@ -6,7 +6,8 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "UNLOCK")]
 [Context(Context.Super, "UNLOCK")]
-public sealed class UnlockCommand(IEngineAccessor engine) : ICommand
+public sealed class UnlockCommand(
+    IEngineAccessor engine) : ICommand
 {
     private IEngine Engine => engine.Instance;
 

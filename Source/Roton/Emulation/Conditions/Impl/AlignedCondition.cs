@@ -6,13 +6,16 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ALLIGNED")]
 [Context(Context.Super, "ALLIGNED")]
-public sealed class AlignedCondition(IEngineAccessor engine) : ICondition
+public sealed class AlignedCondition(
+    IEngineAccessor engine,
+    IActorList actorList)
+    : ICondition
 {
     private IEngine Engine => engine.Instance;
 
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        return context.Actor.Location.X == Engine.Player.Location.X ||
-               context.Actor.Location.Y == Engine.Player.Location.Y;
+        return context.Actor.Location.X == actorList.Player.Location.X ||
+               context.Actor.Location.Y == actorList.Player.Location.Y;
     }
 }

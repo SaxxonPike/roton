@@ -1,23 +1,29 @@
 using Roton.Emulation.Actions;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original, 0x24)]
-public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
+public sealed class OriginalObjectAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    ITiles tiles,
+    IFacts facts)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         if (actor.Instruction >= 0)
         {
             Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");
         }
-            
-        if (actor.Vector.IsZero()) 
+
+        if (actor.Vector.IsZero())
             return;
 
         var target = actor.Location + actor.Vector;
@@ -27,7 +33,7 @@ public sealed class OriginalObjectAction(IEngineAccessor engine) : IAction
         }
         else
         {
-            Engine.BroadcastLabel(-index, Engine.Facts.ThudLabel, false);
+            Engine.BroadcastLabel(-index, facts.ThudLabel, false);
         }
     }
 }

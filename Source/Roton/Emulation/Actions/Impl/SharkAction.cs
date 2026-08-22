@@ -5,27 +5,33 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x26)]
-public sealed class SharkAction(IEngineAccessor engine) : IAction
+public sealed class SharkAction(
+    IEngineAccessor engine,
+    IActorList actorList,
+    IRandomizer randomizer,
+    ITiles tiles,
+    IElementList elementList) 
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = Engine.Actors[index];
+        var actor = actorList[index];
         var vector = new Vector();
 
-        vector = actor.P1 > Engine.Random.GetNext(10)
+        vector = actor.P1 > randomizer.GetNext(10)
             ? Engine.Seek(actor.Location)
             : Engine.Rnd();
 
         var target = actor.Location + vector;
         var targetElement = tiles.ElementAt(target);
 
-        if (targetElement.Id == Engine.Elements.WaterId || targetElement.Id == Engine.Elements.LavaId)
+        if (targetElement.Id == elementList.WaterId || targetElement.Id == elementList.LavaId)
         {
             Engine.MoveActor(index, target);
         }
-        else if (targetElement.Id == Engine.Elements.PlayerId)
+        else if (targetElement.Id == elementList.PlayerId)
         {
             Engine.Attack(index, target);
         }

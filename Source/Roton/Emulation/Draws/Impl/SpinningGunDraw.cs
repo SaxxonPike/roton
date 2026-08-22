@@ -6,13 +6,17 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public sealed class SpinningGunDraw(IEngineAccessor engine) : IDraw
+public sealed class SpinningGunDraw(
+    IEngineAccessor engine,
+    ITiles tiles,
+    IState state)
+    : IDraw
 {
     private IEngine Engine => engine.Instance;
 
     public AnsiChar Draw(Location location)
     {
-        switch (Engine.State.GameCycle & 0x7)
+        switch (state.GameCycle & 0x7)
         {
             case 0:
             case 1:

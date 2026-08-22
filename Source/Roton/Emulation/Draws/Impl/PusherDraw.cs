@@ -6,7 +6,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
-public sealed class PusherDraw(IEngineAccessor engine) : IDraw
+public sealed class PusherDraw(
+    IEngineAccessor engine,
+    ITiles tiles) 
+    : IDraw
 {
     private IEngine Engine => engine.Instance;
 

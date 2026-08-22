@@ -6,7 +6,14 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0B)]
 [Context(Context.Super, 0x0B)]
-public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
+public sealed class PassageInteraction(
+    IEngineAccessor engine,
+    ITiles tiles,
+    IActorList actorList,
+    IElementList elementList,
+    IState state,
+    ISounds sounds)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
@@ -14,7 +21,7 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
     {
         var searchColor = tiles[location].Color;
         var passageIndex = Engine.ActorIndexAt(location);
-        var passageTarget = Engine.Actors[passageIndex].P3;
+        var passageTarget = actorList[passageIndex].P3;
         Engine.SetBoard(passageTarget);
         var target = new Location();
 
@@ -23,7 +30,7 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
             for (var y = 1; y <= tiles.Height; y++)
             {
                 var loc = new Location(x, y);
-                if (tiles[loc].Id == Engine.Elements.PassageId && tiles[loc].Color == searchColor)
+                if (tiles[loc].Id == elementList.PassageId && tiles[loc].Color == searchColor)
                     target = new Location(x, y);
             }
         }
@@ -31,10 +38,10 @@ public sealed class PassageInteraction(IEngineAccessor engine) : IInteraction
         Engine.CleanUpPassageMovement();
 
         if (target.X != 0)
-            Engine.Player.Location = target;
+            actorList.Player.Location = target;
 
-        Engine.State.GamePaused = true;
-        Engine.PlaySound(4, Engine.Sounds.Passage);
+        state.GamePaused = true;
+        Engine.PlaySound(4, sounds.Passage);
         Engine.FadePurple();
         Engine.EnterBoard();
         vector = Vector.Idle;

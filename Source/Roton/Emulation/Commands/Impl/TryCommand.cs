@@ -6,13 +6,17 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "TRY")]
 [Context(Context.Super, "TRY")]
-public sealed class TryCommand(IEngineAccessor engine) : ICommand
+public sealed class TryCommand(
+    IEngineAccessor engine,
+    IParser parser,
+    ITiles tiles)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!Engine.Parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
             return;
 
         var target = context.Actor.Location + vec;

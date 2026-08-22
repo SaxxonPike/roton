@@ -6,7 +6,11 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterDraw(IEngineAccessor engine) : IDraw
+public sealed class TransporterDraw(
+    IEngineAccessor engine,
+    ITiles tiles,
+    IState state)
+    : IDraw
 {
     private IEngine Engine => engine.Instance;
 
@@ -15,16 +19,16 @@ public sealed class TransporterDraw(IEngineAccessor engine) : IDraw
         var actor = Engine.ActorAt(location);
 
         var index = actor.Cycle > 0 
-            ? (Engine.State.GameCycle / actor.Cycle) & 0x3 
+            ? (state.GameCycle / actor.Cycle) & 0x3 
             : 0;
                 
         if (actor.Vector.X == 0)
         {
             index += (actor.Vector.Y << 1) + 2;
-            return new AnsiChar(Engine.State.TransporterVChars[index], tiles[location].Color);
+            return new AnsiChar(state.TransporterVChars[index], tiles[location].Color);
         }
 
         index += (actor.Vector.X << 1) + 2;
-        return new AnsiChar(Engine.State.TransporterHChars[index], tiles[location].Color);
+        return new AnsiChar(state.TransporterHChars[index], tiles[location].Color);
     }
 }

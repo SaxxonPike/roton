@@ -6,15 +6,19 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x1B)]
 [Context(Context.Super, 0x1B)]
-public sealed class FakeWallInteraction(IEngineAccessor engine) : IInteraction
+public sealed class FakeWallInteraction(
+    IEngineAccessor engine,
+    IAlerts alerts,
+    IFacts facts)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        if (!Engine.Alerts.FakeWall) return;
+        if (!alerts.FakeWall) return;
 
-        Engine.Alerts.FakeWall = false;
-        Engine.SetMessage(Engine.Facts.LongMessageDuration, Engine.Alerts.FakeMessage);
+        alerts.FakeWall = false;
+        Engine.SetMessage(facts.LongMessageDuration, alerts.FakeMessage);
     }
 }

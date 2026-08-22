@@ -6,7 +6,10 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x24)]
 [Context(Context.Super, 0x24)]
-public sealed class ObjectDraw(IEngineAccessor engine) : IDraw
+public sealed class ObjectDraw(
+    IEngineAccessor engine,
+    ITiles tiles) 
+    : IDraw
 {
     private IEngine Engine => engine.Instance;
 
