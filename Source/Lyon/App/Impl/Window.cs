@@ -218,8 +218,7 @@ internal sealed unsafe class Window(
                 break;
 
             // Render the scene.
-            var bitmap = scenePresenter.Render();
-            if (bitmap is { Bits.Length: > 0 })
+            if (scenePresenter.Render() is { Bits.Length: > 0 } bitmap)
             {
                 fixed (void* bitmapBits = bitmap.Bits)
                     SDL_UpdateTexture(_background, null, (nint)bitmapBits, bitmap.Stride);
