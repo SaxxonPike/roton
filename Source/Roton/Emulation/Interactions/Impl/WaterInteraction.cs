@@ -11,7 +11,8 @@ public sealed class WaterInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
-    IConfig config)
+    IConfig config,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class WaterInteraction(
         if (config.NoPesterMode)
             return;
 
-        Engine.PlaySound(3, sounds.Water);
+        soundUnit.PlaySound(3, sounds.Water);
         Engine.SetMessage(facts.ShortMessageDuration, alerts.WaterMessage);
     }
 }

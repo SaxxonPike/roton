@@ -22,7 +22,8 @@ public sealed class SuperHud(
     IActorList actorList,
     ITiles tiles,
     IWorld world,
-    IElementList elementList)
+    IElementList elementList,
+    ISoundUnit soundUnit)
     : Hud(engine, scroll, state)
 {
     private readonly string _arrows = new([
@@ -33,7 +34,7 @@ public sealed class SuperHud(
     ]);
 
     private readonly string _bottomOfHelp = new(0xDC.ToChar(), 12);
-    
+
     private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
 
     private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
@@ -183,7 +184,8 @@ public sealed class SuperHud(
         Terminal.Write(x, y, text0, text1, color);
     }
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color)
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
+        int color)
     {
         Terminal.Write(x, y, text0, text1, text2, color);
     }
@@ -542,10 +544,10 @@ public sealed class SuperHud(
     public override void FailToLoadWorld()
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
-        Engine.PlayErrorSound();
+        soundUnit.PlayErrorSound();
         Engine.Delay(2000);
     }
-    
+
     public override void DrawPausing()
     {
         DrawString(21, 24, "Pausing...", 0x1E);

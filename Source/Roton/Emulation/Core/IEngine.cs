@@ -16,7 +16,6 @@ public interface IEngine
     bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
     void CleanUpOop(ref OopContext context);
     void ClearBoard();
-    void ClearSound();
     void ClearWorld();
     void Convey(Location center, int direction);
     void Destroy(Location location);
@@ -38,7 +37,6 @@ public interface IEngine
     void MoveActor(int index, Location location);
     void MoveActorOnRiver(int index);
     void NotifyActorSentLabel(int index);
-    void PlaySound(int priority, ISound sound, int? offset = null, int? length = null);
     void PlotTile(Location location, Tile tile);
     void Push(Location location, Vector vector);
     void PushThroughTransporter(Location location, Vector vector);
@@ -75,13 +73,11 @@ public interface IEngine
     bool ThreadActive { get; }
     int MemoryUsage { get; }
     void Cheat();
-    void PlayStep();
     string GetHighScoreName(string fileName);
     void ShowHighScores();
     string? ShowLoad(string title, string extension);
     void PackBoard();
     void UnpackBoard(int index);
     void Delay(int msec);
-    void PlayErrorSound();
     int ResetBoardTimeHsec();
 }

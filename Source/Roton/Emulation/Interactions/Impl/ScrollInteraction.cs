@@ -9,7 +9,8 @@ namespace Roton.Emulation.Interactions.Impl;
 public sealed class ScrollInteraction(
     IEngineAccessor engine,
     IActorList actorList,
-    IMusicEncoder musicEncoder)
+    IMusicEncoder musicEncoder,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -19,7 +20,7 @@ public sealed class ScrollInteraction(
         var scrollIndex = Engine.ActorIndexAt(location);
         var actor = actorList[scrollIndex];
 
-        Engine.PlaySound(2, musicEncoder.Encode("c-c+d-d+e-e+f-f+g-g"));
+        soundUnit.PlaySound(2, musicEncoder.Encode("c-c+d-d+e-e+f-f+g-g"));
         Engine.ExecuteCode(scrollIndex, ref actor.Instruction, "Scroll");
         Engine.RemoveActor(scrollIndex);
     }

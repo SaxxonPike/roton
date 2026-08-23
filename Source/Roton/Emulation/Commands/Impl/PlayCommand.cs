@@ -10,7 +10,8 @@ namespace Roton.Emulation.Commands.Impl;
 public sealed class PlayCommand(
     IEngineAccessor engine,
     IMusicEncoder musicEncoder,
-    IParser parser)
+    IParser parser,
+    ISoundUnit soundUnit)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class PlayCommand(
 
         var notes = parser.ReadLine(context.Index, ref instruction, buffer);
         var sound = musicEncoder.Encode(notes);
-        Engine.PlaySound(-1, sound);
+        soundUnit.PlaySound(-1, sound);
         context.NextLine = false;
     }
 }

@@ -24,6 +24,7 @@ public sealed class Engine : IEngine, IDisposable
 {
     private readonly IConfigFileService _configFileService;
     private readonly IFileDialog _fileDialog;
+    private readonly ISoundUnit _soundUnit;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -46,7 +47,7 @@ public sealed class Engine : IEngine, IDisposable
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
         IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor,
-        IJoystick joystick)
+        IJoystick joystick, ISoundUnit soundUnit)
     {
         engineAccessor.Instance = this;
 
@@ -92,6 +93,7 @@ public sealed class Engine : IEngine, IDisposable
         HighScoreListFactory = highScoreListFactory;
         _configFileService = configFileService;
         _fileDialog = fileDialog;
+        _soundUnit = soundUnit;
         Tracer = tracer;
         Joystick = joystick;
 
@@ -179,15 +181,7 @@ public sealed class Engine : IEngine, IDisposable
         cheat?.Execute(cheatText, clear);
         Hud.UpdateStatus();
 
-        PlaySound(10, Sounds.Cheat);
-    }
-
-    public void PlayStep()
-    {
-        if (State.GameOver || State.GameQuiet || State.SoundPlaying)
-            return;
-
-        Speaker.PlayStep();
+        _soundUnit.PlaySound(10, Sounds.Cheat);
     }
 
     public string GetHighScoreName(string fileName) => Features.GetHighScoreName(fileName);
@@ -240,7 +234,7 @@ public sealed class Engine : IEngine, IDisposable
         else
         {
             Destroy(location);
-            PlaySound(2, Sounds.EnemySuicide);
+            _soundUnit.PlaySound(2, Sounds.EnemySuicide);
         }
     }
 
@@ -284,12 +278,6 @@ public sealed class Engine : IEngine, IDisposable
     public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
     public void ClearForest(Location location) => Features.ClearForest(location);
-
-    public void ClearSound()
-    {
-        State.SoundPlaying = false;
-        Speaker.StopNote();
-    }
 
     public void ClearWorld()
     {
@@ -683,7 +671,7 @@ public sealed class Engine : IEngine, IDisposable
                     World.TimePassed = 0;
                     if (Board.RestartOnZap)
                     {
-                        PlaySound(4, Sounds.TimeOut);
+                        _soundUnit.PlaySound(4, Sounds.TimeOut);
                         RemoveItem(actor.Location);
                         var oldLocation = actor.Location;
                         actor.Location = Board.Entrance;
@@ -692,11 +680,11 @@ public sealed class Engine : IEngine, IDisposable
                         State.GamePaused = true;
                     }
 
-                    PlaySound(4, Sounds.Ouch);
+                    _soundUnit.PlaySound(4, Sounds.Ouch);
                 }
                 else
                 {
-                    PlaySound(5, Sounds.GameOver);
+                    _soundUnit.PlaySound(5, Sounds.GameOver);
                 }
             }
         }
@@ -704,8 +692,8 @@ public sealed class Engine : IEngine, IDisposable
         {
             var element = Tiles[actor.Location].Id;
             if (element == Elements.BulletId)
-                PlaySound(3, Sounds.BulletDie);
-            else if (element != Elements.ObjectId) PlaySound(3, Sounds.EnemyDie);
+                _soundUnit.PlaySound(3, Sounds.BulletDie);
+            else if (element != Elements.ObjectId) _soundUnit.PlaySound(3, Sounds.EnemyDie);
 
             RemoveActor(index);
         }
@@ -900,26 +888,6 @@ public sealed class Engine : IEngine, IDisposable
 
     public IActor Player => Actors[0];
 
-    public void PlaySound(int priority, ISound sound, int? offset = null, int? length = null)
-    {
-        if (State.GameOver || State.GameQuiet)
-            return;
-
-        var soundIsNotPlaying = !State.SoundPlaying;
-        var soundIsMusic = priority == -1;
-        var soundIsHigherPriority = State.SoundPriority != -1 && priority >= State.SoundPriority;
-
-        if (!(soundIsNotPlaying || soundIsMusic || soundIsHigherPriority))
-            return;
-
-        if (!soundIsMusic)
-            State.SoundBuffer.Clear();
-
-        State.SoundBuffer.Enqueue(sound, offset, length);
-        State.SoundPlaying = true;
-        State.SoundPriority = priority;
-    }
-
     public void PlotTile(Location location, Tile tile)
     {
         if (ElementAt(location).Id == Elements.PlayerId)
@@ -1037,7 +1005,7 @@ public sealed class Engine : IEngine, IDisposable
             if (target.X > 0)
             {
                 MoveTile(actor.Location - vector, target);
-                PlaySound(3, Sounds.Transporter);
+                _soundUnit.PlaySound(3, Sounds.Transporter);
             }
         }
     }
@@ -1058,7 +1026,7 @@ public sealed class Engine : IEngine, IDisposable
     public void RaiseError(ref OopContext context, ReadOnlySpan<char> error)
     {
         SetMessage(Facts.LongMessageDuration, Alerts.ErrorMessage(error));
-        PlaySound(5, Sounds.Error);
+        _soundUnit.PlaySound(5, Sounds.Error);
         Tracer.TraceError(ref context, error);
         Actors[context.Index].Instruction = -1;
     }
@@ -1316,7 +1284,7 @@ public sealed class Engine : IEngine, IDisposable
             return false;
 
         Destroy(target);
-        PlaySound(2, Sounds.BulletDie);
+        _soundUnit.PlaySound(2, Sounds.BulletDie);
         return true;
     }
 
@@ -1696,7 +1664,7 @@ public sealed class Engine : IEngine, IDisposable
 
             if (State.BreakGameLoop)
             {
-                ClearSound();
+                _soundUnit.ClearSound();
                 if (State.PlayerElement == Elements.PlayerId)
                 {
                     if (World.Health <= 0) EnterHighScore(World.Score);
@@ -2109,12 +2077,6 @@ public sealed class Engine : IEngine, IDisposable
         var waitUntil = DateTime.Now + TimeSpan.FromMilliseconds(msec);
         while (DateTime.Now < waitUntil)
             WaitForTick();
-    }
-
-    public void PlayErrorSound()
-    {
-        ClearSound();
-        PlaySound(1, MusicEncoder.Encode("s004x114x9"));
     }
 
     public int ResetBoardTimeHsec()

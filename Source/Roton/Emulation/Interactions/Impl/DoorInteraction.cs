@@ -13,7 +13,8 @@ public sealed class DoorInteraction(
     IAlerts alerts,
     IFacts facts,
     ISounds sounds,
-    IHud hud)
+    IHud hud,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +26,7 @@ public sealed class DoorInteraction(
         if (!world.Keys[keyIndex])
         {
             Engine.SetMessage(facts.LongMessageDuration, alerts.DoorLockedMessage(color));
-            Engine.PlaySound(3, sounds.DoorLocked);
+            soundUnit.PlaySound(3, sounds.DoorLocked);
         }
         else
         {
@@ -33,7 +34,7 @@ public sealed class DoorInteraction(
             Engine.RemoveItem(location);
             hud.UpdateStatus();
             Engine.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
-            Engine.PlaySound(3, sounds.DoorOpen);
+            soundUnit.PlaySound(3, sounds.DoorOpen);
         }
     }
 }

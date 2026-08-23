@@ -12,7 +12,8 @@ public sealed class GemInteraction(
     IFacts facts,
     IHud hud,
     ISounds sounds,
-    IAlerts alerts)
+    IAlerts alerts,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -24,7 +25,7 @@ public sealed class GemInteraction(
         world.Score += facts.ScorePerGem;
         Engine.RemoveItem(location);
         hud.UpdateStatus();
-        Engine.PlaySound(2, sounds.Gem);
+        soundUnit.PlaySound(2, sounds.Gem);
 
         if (!alerts.GemPickup)
             return;
