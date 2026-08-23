@@ -54,7 +54,6 @@ public sealed class Engine : IEngine, IDisposable
         Alerts = alerts;
         Board = board;
         Clock = clock;
-        Disk = fileSystem;
         Elements = elements;
         Interpreter = interpreter;
         Random = randomizer;
@@ -64,27 +63,18 @@ public sealed class Engine : IEngine, IDisposable
         Timers = timers;
         Parser = parser;
         Config = config;
-        Conditions = conditions;
-        Directions = directions;
-        Colors = colors;
         Cheats = cheats;
-        CommandList = commands;
-        TargetList = targets;
         Features = features;
-        GameSerializer = gameSerializer;
         Hud = hud;
         State = state;
         World = world;
-        ItemList = items;
         Boards = boards;
         ActionList = actionList;
         DrawList = drawList;
         InteractionList = interactionList;
         Facts = facts;
-        Memory = memory;
         Heap = heap;
         AnsiKeyTransformer = ansiKeyTransformer;
-        ScrollFormatter = scrollFormatter;
         Speaker = speaker;
         DrumSounds = drumBank;
         ObjectMover = objectMover;
@@ -101,7 +91,7 @@ public sealed class Engine : IEngine, IDisposable
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
     }
 
-    public IJoystick Joystick { get; }
+    private IJoystick Joystick { get; }
 
     private void ClockTick(object? sender, EventArgs args)
     {
@@ -125,27 +115,19 @@ public sealed class Engine : IEngine, IDisposable
 
     private IBoardList Boards { get; }
 
-    private Tile BorderTile => State.BorderTile;
-
-    public IFileSystem Disk { get; }
-
     private IFeatures Features { get; }
 
     private ISpeaker Speaker { get; }
-
-    public IGameSerializer GameSerializer { get; }
 
     private IInterpreter Interpreter { get; }
 
     private IKeyboard Keyboard { get; }
 
-    private IScrollFormatter ScrollFormatter { get; }
-
     public ITimers Timers { get; }
 
     public IDrumSoundList DrumSounds { get; }
 
-    public ITracer Tracer { get; }
+    private ITracer Tracer { get; }
 
     private Thread? Thread { get; set; }
 
@@ -189,13 +171,10 @@ public sealed class Engine : IEngine, IDisposable
     public void ShowHighScores()
     {
         var list = HighScoreListFactory.Load();
-        if (list == null)
-            return;
-
         Hud.ShowHighScores(list);
     }
 
-    public IActionList ActionList { get; }
+    private IActionList ActionList { get; }
 
     public IActor ActorAt(Location location) =>
         Actors.ActorAt(location);
@@ -206,11 +185,11 @@ public sealed class Engine : IEngine, IDisposable
     public event EventHandler? Exited;
     public event EventHandler? Tick;
 
-    public IActorList Actors { get; }
+    private IActorList Actors { get; }
 
     public int Adjacent(Location location, int id) => Features.GetAdjacent(location, id);
 
-    public IAlerts Alerts { get; }
+    private IAlerts Alerts { get; }
 
     public void Attack(int index, Location location)
     {
@@ -238,7 +217,7 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IBoard Board { get; }
+    private IBoard Board { get; }
 
     public bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock)
     {
@@ -273,19 +252,13 @@ public sealed class Engine : IEngine, IDisposable
         return success;
     }
 
-    public ICheatList Cheats { get; }
+    private ICheatList Cheats { get; }
 
     public void CleanUpPassageMovement() => Features.CleanUpPassageMovement();
 
     public void ClearForest(Location location) => Features.ClearForest(location);
 
-    public IColorList Colors { get; }
-
-    public ICommandList CommandList { get; }
-
-    public IConditionList Conditions { get; }
-
-    public IConfig Config { get; }
+    private IConfig Config { get; }
 
     public void Convey(Location center, int direction)
     {
@@ -369,8 +342,6 @@ public sealed class Engine : IEngine, IDisposable
             Harm(index);
     }
 
-    public IDirectionList Directions { get; }
-
     public AnsiChar Draw(Location location)
     {
         if (Board.IsDark && !ElementAt(location).IsAlwaysVisible &&
@@ -395,11 +366,11 @@ public sealed class Engine : IEngine, IDisposable
             : new AnsiChar(tile.Color, 0x0F);
     }
 
-    public IDrawList DrawList { get; }
+    private IDrawList DrawList { get; }
 
     public IElement ElementAt(Location location) => Elements[Tiles[location].Id];
 
-    public IElementList Elements { get; }
+    private IElementList Elements { get; }
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
@@ -562,11 +533,9 @@ public sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    public IFacts Facts { get; }
+    private IFacts Facts { get; }
 
-    public ICodeHeap Heap { get; }
-
-    public IMemory Memory { get; }
+    private ICodeHeap Heap { get; }
 
     public void StepOnce()
     {
@@ -675,11 +644,9 @@ public sealed class Engine : IEngine, IDisposable
     private int HsecToTicks(int hsec) =>
         Math.Max(1, hsec * (Config.MasterClockDenominator / Config.MasterClockNumerator + 50) / 100);
 
-    public IHud Hud { get; }
+    private IHud Hud { get; }
 
-    public IInteractionList InteractionList { get; }
-
-    public IItemList ItemList { get; }
+    private IInteractionList InteractionList { get; }
 
     public void LockActor(int index) => Features.LockActor(index);
 
@@ -712,7 +679,6 @@ public sealed class Engine : IEngine, IDisposable
             var squareDistanceY = (target.Y - sourceLocation.Y).Square();
             if (squareDistanceX + squareDistanceY == 1)
             {
-                var glowLocation = new Location();
                 for (var x = target.X - Facts.TorchDrawBoxVerticalSize;
                      x <= target.X + Facts.TorchDrawBoxVerticalSize;
                      x++)
@@ -720,7 +686,7 @@ public sealed class Engine : IEngine, IDisposable
                      y <= target.Y + Facts.TorchDrawBoxHorizontalSize;
                      y++)
                 {
-                    glowLocation = new Location(x, y);
+                    var glowLocation = new Location(x, y);
                     if (glowLocation.X >= 1 && glowLocation.X <= Tiles.Width && glowLocation.Y >= 1 &&
                         glowLocation.Y <= Tiles.Height)
                         if ((Distance(sourceLocation, glowLocation) < Facts.TorchRadius) ^
@@ -769,9 +735,9 @@ public sealed class Engine : IEngine, IDisposable
 
     public void NotifyActorSentLabel(int index) => Features.NotifyActorSentLabel(index);
 
-    public IParser Parser { get; }
+    private IParser Parser { get; }
 
-    public IActor Player => Actors[0];
+    private IActor Player => Actors[0];
 
     public void PlotTile(Location location, Tile tile)
     {
@@ -916,7 +882,7 @@ public sealed class Engine : IEngine, IDisposable
         Actors[context.Index].Instruction = -1;
     }
 
-    public IRandomizer Random { get; }
+    private IRandomizer Random { get; }
 
     public void RemoveActor(int index)
     {
@@ -1104,16 +1070,14 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IState State { get; }
+    private IState State { get; }
 
     public void Stop()
     {
         Thread = null;
     }
 
-    public ITargetList TargetList { get; }
-
-    public ITiles Tiles { get; }
+    private ITiles Tiles { get; }
 
     public bool TitleScreen => State.PlayerElement != Elements.PlayerId;
 
@@ -1238,7 +1202,7 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public IWorld World { get; }
+    private IWorld World { get; }
 
     private bool ActorIsLocked(int index) => Features.IsActorLocked(index);
 
@@ -1260,9 +1224,6 @@ public sealed class Engine : IEngine, IDisposable
     private void EnterHighScore(int score)
     {
         var list = HighScoreListFactory.Load();
-        if (list == null)
-            return;
-
         var name = Hud.EnterHighScore(list, score);
         if (name == null)
             return;
@@ -1289,10 +1250,10 @@ public sealed class Engine : IEngine, IDisposable
 
     private Vector GetConveyorVector(int index) => new(State.Vector8[index], State.Vector8[index + 8]);
 
-    private void InitializeElements(bool showInvisibles)
+    private void InitializeElements(bool showInvisibleTiles)
     {
         Elements.Reset();
-        Elements.Invisible().Character = showInvisibles ? 0xB0 : 0x20;
+        Elements.Invisible().Character = showInvisibleTiles ? 0xB0 : 0x20;
         Elements.Invisible().Color = 0xFF;
         Elements.Player().Character = 0x02;
     }
@@ -1806,8 +1767,6 @@ public sealed class Engine : IEngine, IDisposable
     public int ResetBoardTimeHsec() => 
         _boardTime.Elapse();
 
-    public void Dispose()
-    {
-        Clock?.Stop();
-    }
+    public void Dispose() => 
+        Clock.Stop();
 }
