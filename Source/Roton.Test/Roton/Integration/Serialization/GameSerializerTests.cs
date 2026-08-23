@@ -11,7 +11,7 @@ public class GameSerializerTests(Context context) : AllContextTestFixture(contex
     public void PackAndUnpack_ShouldProduceCorrectBoard()
     {
         // Set up board.
-        Engine.ClearBoard();
+        ClearBoard();
 
         // Add some code.
         var allCode = Enumerable.Range(0, 50).Select(x =>
@@ -23,13 +23,13 @@ public class GameSerializerTests(Context context) : AllContextTestFixture(contex
         }).ToList();
 
         // Pack that board.
-        Engine.PackBoard();
+        PackBoard();
 
         // Clear the board to setup for verification.
-        Engine.ClearBoard();
+        ClearBoard();
 
         // Unpack that board.
-        Engine.UnpackBoard(0);
+        UnpackBoard(0);
 
         // Assert.
         Actors.Count.Should().Be(allCode.Count + 1);

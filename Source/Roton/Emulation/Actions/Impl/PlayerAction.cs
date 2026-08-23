@@ -24,7 +24,8 @@ public sealed class PlayerAction(
     IInteractionList interactionList,
     ITimers timers,
     IConfig config,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IWorldUnit worldUnit)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -152,7 +153,7 @@ public sealed class PlayerAction(
             case EngineKeyCode.S:
                 if (hud.SaveGame() is { } saveFileName)
                 {
-                    Engine.SaveWorld(saveFileName);
+                    worldUnit.SaveWorld(saveFileName);
                 }
 
                 break;

@@ -13,4 +13,8 @@ public sealed class SuperFacts : Facts
     public override string DefaultWorldName => "MONSTER";
     public override int HighScoreNameLength => 60;
     public override EngineKeyCode StartGameKey => EngineKeyCode.Enter;
+    public override string SavedGameExtension => "SAV";
+    public override string WorldFileExtension => "SZT";
+    public override string SavedGameWindowTitle => "Saved Games";
+    public override string WorldFileWindowTitle => "Super ZZT Worlds";
 }

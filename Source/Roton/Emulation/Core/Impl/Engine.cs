@@ -23,13 +23,13 @@ namespace Roton.Emulation.Core.Impl;
 public sealed class Engine : IEngine, IDisposable
 {
     private readonly IConfigFileService _configFileService;
-    private readonly IFileDialog _fileDialog;
     private readonly ISoundUnit _soundUnit;
+    private readonly IWorldUnit _worldUnit;
+    private readonly IBoardTime _boardTime;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
     private int _ticksToRun;
-    private float _boardTimeHsec;
     private bool _step;
     private JoystickButtons _lastButtons;
 
@@ -47,7 +47,7 @@ public sealed class Engine : IEngine, IDisposable
         IMusicEncoder musicEncoder,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService,
         IFileDialog fileDialog, ITracer tracer, IEngineAccessor engineAccessor,
-        IJoystick joystick, ISoundUnit soundUnit)
+        IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit, IBoardTime boardTime)
     {
         engineAccessor.Instance = this;
 
@@ -92,8 +92,9 @@ public sealed class Engine : IEngine, IDisposable
         MusicEncoder = musicEncoder;
         HighScoreListFactory = highScoreListFactory;
         _configFileService = configFileService;
-        _fileDialog = fileDialog;
         _soundUnit = soundUnit;
+        _worldUnit = worldUnit;
+        _boardTime = boardTime;
         Tracer = tracer;
         Joystick = joystick;
 
@@ -109,7 +110,7 @@ public sealed class Engine : IEngine, IDisposable
             _ticksToRun++;
 
         if (!State.GamePaused)
-            _boardTimeHsec += Config.MasterClockNumerator * 100f / Config.MasterClockDenominator;
+            _boardTime.Advance();
 
         if (!ThreadActive)
             Clock.Stop();
@@ -279,36 +280,6 @@ public sealed class Engine : IEngine, IDisposable
 
     public void ClearForest(Location location) => Features.ClearForest(location);
 
-    public void ClearWorld()
-    {
-        State.BoardCount = 0;
-        Boards.Clear();
-
-        if (Config.NoPesterMode)
-            Alerts.SetAll();
-        else
-            Alerts.Reset();
-
-        ClearBoard();
-        Boards.Add(new PackedBoard(GameSerializer.PackBoard(Tiles)));
-        World.BoardIndex = 0;
-        World.Ammo = Facts.DefaultAmmo;
-        World.Gems = Facts.DefaultGems;
-        World.Health = Facts.DefaultHealth;
-        World.EnergyCycles = Facts.DefaultEnergyCycles;
-        World.Torches = Facts.DefaultTorches;
-        World.TorchCycles = Facts.DefaultTorchCycles;
-        World.Score = Facts.DefaultScore;
-        World.TimePassed = Facts.DefaultTimePassed;
-        World.Stones = Facts.DefaultStones;
-        World.Keys.Clear();
-        World.Flags.Clear();
-        SetBoard(0);
-        Board.Name = Facts.DefaultBoardTitle;
-        World.Name = Facts.DefaultWorldTitle;
-        State.WorldFileName = string.Empty;
-    }
-
     public IColorList Colors { get; }
 
     public ICommandList CommandList { get; }
@@ -430,12 +401,6 @@ public sealed class Engine : IEngine, IDisposable
     public IElement ElementAt(Location location) => Elements[Tiles[location].Id];
 
     public IElementList Elements { get; }
-
-    public void EnterBoard()
-    {
-        _boardTimeHsec = 0;
-        Features.EnterBoard();
-    }
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
@@ -716,85 +681,6 @@ public sealed class Engine : IEngine, IDisposable
     public IInteractionList InteractionList { get; }
 
     public IItemList ItemList { get; }
-
-    private void ShowFormattedScroll(string error) =>
-        Hud.ShowScroll(false, "Roton Error", ScrollFormatter.Format(error));
-
-    public bool LoadWorld(string name, bool savedGame)
-    {
-        var worldData = TryLoadWorld();
-
-        if (worldData == null || worldData.Length == 0)
-        {
-            ShowDosError();
-            return false;
-        }
-
-        using (var stream = new MemoryStream(worldData))
-        {
-            if (stream.Length == 0)
-                return false;
-
-            using var reader = new BinaryReader(stream);
-            var type = reader.ReadInt16();
-            if (type != World.WorldType)
-            {
-                Hud.FailToLoadWorld();
-                return false;
-            }
-
-            var numBoards = reader.ReadInt16();
-            if (numBoards < 0)
-                throw new RotonException("Board count must be zero or greater.");
-
-            State.BoardCount = numBoards;
-            GameSerializer.LoadWorld(stream);
-
-            var newBoards = Enumerable
-                .Range(0, numBoards + 1)
-                .Select(_ => new PackedBoard(GameSerializer.LoadBoardData(stream)))
-                .ToList();
-
-            Boards.Clear();
-
-            foreach (var rawBoard in newBoards)
-                Boards.Add(rawBoard);
-        }
-
-        Hud.CreateStatusWorld();
-        UnpackBoard(World.BoardIndex);
-        State.WorldLoaded = true;
-        return true;
-
-        byte[]? TryLoadWorld()
-        {
-            try
-            {
-                return Disk.GetFile(savedGame ? Features.GetSaveName(name) : Features.GetWorldName(name));
-            }
-            catch (IOException e)
-            {
-                ShowFormattedScroll(e.ToString());
-                return [];
-            }
-        }
-    }
-
-    private void ShowDosError()
-    {
-        Hud.ShowScroll(false, "Error",
-            [
-                "$DOS Error:",
-                string.Empty,
-                "This may be caused by missing",
-                "files or a bad disk. If you",
-                "are trying to save a game,",
-                "your disk may be full -- try",
-                "using a blank, formatted disk",
-                "for saving the game!"
-            ]
-        );
-    }
 
     public void LockActor(int index) => Features.LockActor(index);
 
@@ -1102,41 +988,6 @@ public sealed class Engine : IEngine, IDisposable
             ? vector.Clockwise()
             : vector.CounterClockwise();
 
-    public void SaveWorld(string name)
-    {
-        // Make sure the packed board data is up to date.
-
-        PackBoard();
-
-        using var stream = new MemoryStream();
-        using var writer = new BinaryWriter(stream);
-
-        // Write common world header.
-
-        var type = (short)World.WorldType;
-        var numBoards = (short)(Boards.Count - 1);
-
-        writer.Write(type);
-        writer.Write(numBoards);
-
-        // Write world data.
-
-        GameSerializer.SaveWorld(stream);
-
-        // Write each packed board.
-
-        foreach (var board in Boards)
-            GameSerializer.SaveBoardData(stream, board.Data);
-
-        stream.Flush();
-
-        // Save to disk. Extension depends on whether the game world has been
-        // modified in-game.
-
-        var fileName = World.IsLocked ? Features.GetSaveName(name) : Features.GetWorldName(name);
-        Disk.PutFile(fileName, stream.ToArray());
-    }
-
     public Vector Seek(Location location)
     {
         var result = new Vector();
@@ -1148,14 +999,6 @@ public sealed class Engine : IEngine, IDisposable
         if (World.EnergyCycles > 0) result = -result;
 
         return result;
-    }
-
-    public void SetBoard(int boardIndex)
-    {
-        var element = Elements.Player();
-        Tiles[Player.Location] = new Tile(element.Id, element.Color);
-        PackBoard();
-        UnpackBoard(boardIndex);
     }
 
     public void SetEditorMode()
@@ -1191,42 +1034,6 @@ public sealed class Engine : IEngine, IDisposable
     public void ShowHelp(string title, string filename) => Hud.ShowHelp(title, filename);
 
     public void ShowInGameHelp() => Features.ShowInGameHelp();
-
-    public void OpenWorld()
-    {
-        var name = Features.OpenWorld();
-        if (string.IsNullOrEmpty(name))
-            return;
-
-        LoadWorld(name!, false);
-        State.StartBoard = World.BoardIndex;
-        SetBoard(0);
-
-        var element = Elements[State.PlayerElement];
-        Tiles[Player.Location] = new Tile(element.Id, element.Color);
-
-        FadePurple();
-    }
-
-    public bool RestoreWorld()
-    {
-        var name = Features.RestoreWorld();
-        if (string.IsNullOrEmpty(name))
-            return false;
-
-        if (!LoadWorld(name!, true))
-            return false;
-
-        State.StartBoard = World.BoardIndex;
-        World.IsLocked = false;
-        SetBoard(State.StartBoard);
-        return true;
-    }
-
-    public string? ShowLoad(string title, string extension)
-    {
-        return _fileDialog.Open(title, extension);
-    }
 
     public ISounds Sounds { get; }
 
@@ -1436,67 +1243,6 @@ public sealed class Engine : IEngine, IDisposable
 
     private bool ActorIsLocked(int index) => Features.IsActorLocked(index);
 
-    public void ClearBoard()
-    {
-        var emptyId = Elements.EmptyId;
-        var boardEdgeId = State.EdgeTile.Id;
-        var boardBorderId = BorderTile.Id;
-        var boardBorderColor = BorderTile.Color;
-
-        // board properties
-        Board.Name = string.Empty;
-        State.Message = string.Empty;
-        Board.MaximumShots = Facts.DefaultMaximumShots;
-        Board.IsDark = false;
-        Board.RestartOnZap = false;
-        Board.TimeLimit = 0;
-        Board.Exits.East = 0;
-        Board.Exits.North = 0;
-        Board.Exits.South = 0;
-        Board.Exits.West = 0;
-
-        // build board edges
-        for (var y = 0; y <= Tiles.Height + 1; y++)
-        {
-            Tiles[new Location(0, y)].Id = boardEdgeId;
-            Tiles[new Location(Tiles.Width + 1, y)].Id = boardEdgeId;
-        }
-
-        for (var x = 0; x <= Tiles.Width + 1; x++)
-        {
-            Tiles[new Location(x, 0)].Id = boardEdgeId;
-            Tiles[new Location(x, Tiles.Height + 1)].Id = boardEdgeId;
-        }
-
-        // clear out board
-        for (var x = 1; x <= Tiles.Width; x++)
-        for (var y = 1; y <= Tiles.Height; y++)
-            Tiles[new Location(x, y)] = new Tile(emptyId, 0);
-
-        // build border
-        for (var y = 1; y <= Tiles.Height; y++)
-        {
-            Tiles[new Location(1, y)] = new Tile(boardBorderId, boardBorderColor);
-            Tiles[new Location(Tiles.Width, y)] = new Tile(boardBorderId, boardBorderColor);
-        }
-
-        for (var x = 1; x <= Tiles.Width; x++)
-        {
-            Tiles[new Location(x, 1)] = new Tile(boardBorderId, boardBorderColor);
-            Tiles[new Location(x, Tiles.Height)] = new Tile(boardBorderId, boardBorderColor);
-        }
-
-        // generate player actor
-        var element = Elements.Player();
-        State.ActorCount = 0;
-        Player.Location = new Location(Tiles.Width / 2, Tiles.Height / 2);
-        Tiles[Player.Location] = new Tile(element.Id, element.Color);
-        Player.Cycle = 1;
-        Player.UnderTile = new Tile(0, 0);
-        Player.Pointer = 0;
-        Player.Length = 0;
-    }
-
     private int ColorMatch(Tile tile)
     {
         var element = Elements[tile.Id];
@@ -1695,11 +1441,11 @@ public sealed class Engine : IEngine, IDisposable
             if (State.DefaultWorldName.Length > 0)
             {
                 State.AboutShown = true;
-                LoadWorld(State.DefaultWorldName, false);
+                _worldUnit.LoadWorld(State.DefaultWorldName, false);
             }
 
             State.StartBoard = World.BoardIndex;
-            SetBoard(0);
+            _worldUnit.SetBoard(0);
             State.Init = false;
         }
 
@@ -1735,26 +1481,10 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void PackBoard()
-    {
-        var board = new PackedBoard(GameSerializer.PackBoard(Tiles));
-        PackBoard(World.BoardIndex, board);
-    }
-
-    private void PackBoard(int boardIndex, IPackedBoard board)
-    {
-        // bit of a hack to make sure we don't go out of bounds
-        while (Boards.Count <= boardIndex)
-            Boards.Add(new PackedBoard([]));
-
-        State.BoardCount = Boards.Count - 1;
-        Boards[World.BoardIndex] = board;
-    }
-
     private void StartPlaying()
     {
-        SetBoard(State.StartBoard);
-        EnterBoard();
+        _worldUnit.SetBoard(State.StartBoard);
+        Features.EnterBoard();
         State.PlayerElement = Elements.PlayerId;
         State.GamePaused = true;
         MainLoop(true);
@@ -1766,7 +1496,7 @@ public sealed class Engine : IEngine, IDisposable
 
         if (World.IsLocked)
         {
-            LoadWorld(World.Name, false);
+            _worldUnit.LoadWorld(World.Name, false);
 
             if (State.WorldLoaded)
             {
@@ -2005,7 +1735,7 @@ public sealed class Engine : IEngine, IDisposable
         State.ForestIndex = 2;
         State.Init = true;
 
-        ClearWorld();
+        _worldUnit.ClearWorld();
 
         var cfg = _configFileService.Load();
         if (Config.DefaultWorld == null && cfg != null)
@@ -2042,7 +1772,8 @@ public sealed class Engine : IEngine, IDisposable
         Hud.Initialize();
         while (ThreadActive)
         {
-            if (!State.Init) SetBoard(0);
+            if (!State.Init) 
+                _worldUnit.SetBoard(0);
 
             while (ThreadActive)
             {
@@ -2066,12 +1797,6 @@ public sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public void UnpackBoard(int boardIndex)
-    {
-        GameSerializer.UnpackBoard(Tiles, Boards[boardIndex].Data);
-        World.BoardIndex = boardIndex;
-    }
-
     public void Delay(int msec)
     {
         var waitUntil = DateTime.Now + TimeSpan.FromMilliseconds(msec);
@@ -2079,12 +1804,8 @@ public sealed class Engine : IEngine, IDisposable
             WaitForTick();
     }
 
-    public int ResetBoardTimeHsec()
-    {
-        var result = (int)Math.Truncate(_boardTimeHsec);
-        _boardTimeHsec -= result;
-        return result;
-    }
+    public int ResetBoardTimeHsec() => 
+        _boardTime.Elapse();
 
     public void Dispose()
     {

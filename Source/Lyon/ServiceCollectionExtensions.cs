@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Lyon.App;
@@ -48,7 +49,11 @@ public static class ServiceCollectionExtensions
 
             // Add service mappings.
             foreach (var service in serviceGroup)
-                services.AddSingleton(service.Service, sp => sp.GetRequiredService(serviceGroup.Key));
+                services.AddSingleton(service.Service, sp =>
+                {
+                    Debug.WriteLine($"Resolving service ${service.Service.FullName}");
+                    return sp.GetRequiredService(serviceGroup.Key);
+                });
         }
     }
 }

@@ -16,7 +16,9 @@ public sealed class SuperFeatures(
     IBoard board,
     IHud hud,
     IWorld world,
-    IState state)
+    IState state,
+    IWorldUnit worldUnit,
+    IBoardTime boardTime)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -78,6 +80,7 @@ public sealed class SuperFeatures(
 
     public void EnterBoard()
     {
+        boardTime.Reset();
         Engine.BroadcastLabel(0, facts.EnterLabel, false);
         board.Entrance = actorList.Player.Location;
         hud.UpdateCamera();
@@ -92,10 +95,10 @@ public sealed class SuperFeatures(
             case EngineKeyCode.Enter: // Enter
                 return true;
             case EngineKeyCode.W: // W
-                Engine.OpenWorld();
+                worldUnit.OpenWorld();
                 break;
             case EngineKeyCode.R: // R
-                return Engine.RestoreWorld();
+                return worldUnit.RestoreWorld();
             case EngineKeyCode.H: // H
                 ShowInGameHelp();
                 break;
@@ -174,12 +177,6 @@ public sealed class SuperFeatures(
             Engine.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
         }
     }
-
-    public string? OpenWorld() =>
-        Engine.ShowLoad("Super ZZT Worlds", "szt");
-
-    public string? RestoreWorld() =>
-        Engine.ShowLoad("Saved Games", "sav");
 
     public void CleanUpOop(ref OopContext context)
     {
