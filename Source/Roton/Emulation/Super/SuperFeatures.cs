@@ -18,7 +18,10 @@ public sealed class SuperFeatures(
     IWorld world,
     IState state,
     IWorldUnit worldUnit,
-    IBoardTime boardTime)
+    IBoardTime boardTime,
+    IBoardUpdater boardUpdater,
+    IBroadcaster broadcaster,
+    IRadiusUpdater radiusUpdater)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -71,17 +74,15 @@ public sealed class SuperFeatures(
         else
             tiles[location] = result;
 
-        Engine.UpdateBoard(location);
+        boardUpdater.UpdateBoard(location);
     }
-
-    public string GetWorldName(string baseName) => $"{baseName}.SZT";
 
     public string GetHighScoreName(string baseName) => $"{baseName}.HGS";
 
     public void EnterBoard()
     {
         boardTime.Reset();
-        Engine.BroadcastLabel(0, facts.EnterLabel, false);
+        broadcaster.BroadcastLabel(0, facts.EnterLabel, false);
         board.Entrance = actorList.Player.Location;
         hud.UpdateCamera();
         world.TimePassed = 0;
@@ -115,7 +116,7 @@ public sealed class SuperFeatures(
 
     public void ShowInGameHelp()
     {
-        Engine.BroadcastLabel(0, facts.HintLabel, false);
+        broadcaster.BroadcastLabel(0, facts.HintLabel, false);
     }
 
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -168,13 +169,13 @@ public sealed class SuperFeatures(
         }
         else
         {
-            Engine.UpdateBoard(actorList.Player.Location);
+            boardUpdater.UpdateBoard(actorList.Player.Location);
             actorList.Player.Location += state.KeyVector;
             actorList.Player.UnderTile = tiles[actorList.Player.Location];
             tiles[actorList.Player.Location] = new Tile(elementList.PlayerId, elementList.Player().Color);
-            Engine.UpdateBoard(actorList.Player.Location);
-            Engine.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
+            boardUpdater.UpdateBoard(actorList.Player.Location);
+            radiusUpdater.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
+            radiusUpdater.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
         }
     }
 

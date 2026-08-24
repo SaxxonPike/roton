@@ -9,7 +9,8 @@ namespace Roton.Emulation.Interactions.Impl;
 public sealed class ObjectInteraction(
     IEngineAccessor engine,
     IFacts facts,
-    IActorList actorList)
+    IActorList actorList,
+    IBroadcaster broadcaster)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -17,6 +18,6 @@ public sealed class ObjectInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         var objectIndex = actorList.ActorIndexAt(location);
-        Engine.BroadcastLabel(-objectIndex, facts.TouchLabel, false);
+        broadcaster.BroadcastLabel(-objectIndex, facts.TouchLabel, false);
     }
 }

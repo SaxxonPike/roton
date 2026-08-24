@@ -56,4 +56,5 @@ public interface IFacts
     string WorldFileExtension { get; }
     string SavedGameWindowTitle { get; }
     string WorldFileWindowTitle { get; }
+    string HighScoreExtension { get; }
 }

@@ -7,11 +7,11 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "UNLOCK")]
 [Context(Context.Super, "UNLOCK")]
 public sealed class UnlockCommand(
-    IFeatures features) 
+    IActorLocker actorLocker) 
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        features.UnlockActor(context.Index);
+        actorLocker.UnlockActor(context.Index);
     }
 }

@@ -10,7 +10,9 @@ public sealed class SuperObjectAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,
-    IFacts facts) : IAction
+    IFacts facts,
+    IBroadcaster broadcaster) 
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
@@ -47,7 +49,7 @@ public sealed class SuperObjectAction(
         }
         else
         {
-            Engine.BroadcastLabel(-index, facts.ThudLabel, false);
+            broadcaster.BroadcastLabel(-index, facts.ThudLabel, false);
         }
     }
 }

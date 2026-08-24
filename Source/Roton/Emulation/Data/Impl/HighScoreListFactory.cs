@@ -22,7 +22,7 @@ public sealed class HighScoreListFactory(
     {
         var list = new HighScoreList(Facts.HighScoreNameCount);
             
-        var file = fileSystem.GetFile(features.GetHighScoreName(world.Name));
+        var file = fileSystem.GetFile($"{world.Name}.{facts.HighScoreExtension}");
         if (file == null || file.Length != Facts.HighScoreNameCount * (Facts.HighScoreNameLength + 3))
             return list;
 
@@ -60,6 +60,6 @@ public sealed class HighScoreListFactory(
         }
 
         writer.Flush();
-        fileSystem.PutFile(features.GetHighScoreName(world.Name), stream.ToArray());
+        fileSystem.PutFile($"{world.Name}.{facts.HighScoreExtension}", stream.ToArray());
     }
 }

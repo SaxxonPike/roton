@@ -15,7 +15,8 @@ public sealed class DuplicatorAction(
     ITiles tiles,
     IActorList actorList,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -50,13 +51,13 @@ public sealed class DuplicatorAction(
                         {
                             Engine.SpawnActor(target, tiles[source], actorList[sourceIndex].Cycle,
                                 actorList[sourceIndex]);
-                            Engine.UpdateBoard(target);
+                            boardUpdater.UpdateBoard(target);
                         }
                     }
                     else if (sourceIndex != 0)
                     {
                         tiles[target] = tiles[source];
-                        Engine.UpdateBoard(target);
+                        boardUpdater.UpdateBoard(target);
                     }
 
                     soundUnit.PlaySound(3, sounds.Duplicate);
@@ -74,7 +75,7 @@ public sealed class DuplicatorAction(
             actor.P1++;
         }
 
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
         actor.Cycle = (9 - actor.P2) * 3;
     }
 }

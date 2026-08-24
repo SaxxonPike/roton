@@ -11,7 +11,8 @@ public sealed class OriginalScroll(
     IEngineAccessor engine,
     ITerminal terminal,
     IState state,
-    IFileSystem fileSystem)
+    IFileSystem fileSystem,
+    IBoardUpdater boardUpdater)
     : Scroll(engine, terminal, state, fileSystem)
 {
     protected override int Width => 49;
@@ -27,6 +28,6 @@ public sealed class OriginalScroll(
     protected override void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y)
     {
         for (var x = Left; x < Left + Width; x++)
-            Engine.UpdateBoard(new Location(x + 1, y + 1));
+            boardUpdater.UpdateBoard(new Location(x + 1, y + 1));
     }
 }

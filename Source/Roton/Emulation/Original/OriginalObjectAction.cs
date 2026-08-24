@@ -10,7 +10,8 @@ public sealed class OriginalObjectAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,
-    IFacts facts)
+    IFacts facts,
+    IBroadcaster broadcaster)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -33,7 +34,7 @@ public sealed class OriginalObjectAction(
         }
         else
         {
-            Engine.BroadcastLabel(-index, facts.ThudLabel, false);
+            broadcaster.BroadcastLabel(-index, facts.ThudLabel, false);
         }
     }
 }

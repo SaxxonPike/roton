@@ -11,7 +11,8 @@ public sealed class RestoreCommand(
     IEngineAccessor engine,
     IParser parser,
     IActorList actorList,
-    IState state)
+    IState state,
+    IBroadcaster broadcaster)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -27,7 +28,7 @@ public sealed class RestoreCommand(
         context.Search.Index = 0;
         while (true)
         {
-            var result = Engine.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
+            var result = broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
             if (!result)
                 break;
 

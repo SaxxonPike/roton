@@ -10,7 +10,8 @@ public sealed class StarAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,
-    ITiles tiles)
+    ITiles tiles,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -47,7 +48,7 @@ public sealed class StarAction(
             }
             else
             {
-                Engine.UpdateBoard(actor.Location);
+                boardUpdater.UpdateBoard(actor.Location);
             }
         }
         else

@@ -16,7 +16,8 @@ public sealed class BulletAction(
     IState state,
     IFacts facts,
     ISoundUnit soundUnit,
-    IHud hud)
+    IHud hud,
+    IBroadcaster broadcaster)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -78,7 +79,7 @@ public sealed class BulletAction(
             state.ActIndex--;
             if (element.Id == elementList.ObjectId || element.Id == elementList.ScrollId)
             {
-                Engine.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
+                broadcaster.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
             }
 
             break;

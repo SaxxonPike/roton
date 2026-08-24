@@ -13,7 +13,8 @@ public sealed class ForestInteraction(
     ISounds sounds,
     IState state,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IFeatures features,
+    IBoardUpdater boardUpdater)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class ForestInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         features.ClearForest(location);
-        Engine.UpdateBoard(location);
+        boardUpdater.UpdateBoard(location);
 
         var forestSongLength = sounds.Forest.Length;
         var forestIndex = state.ForestIndex % forestSongLength;

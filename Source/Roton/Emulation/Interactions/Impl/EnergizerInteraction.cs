@@ -14,7 +14,8 @@ public sealed class EnergizerInteraction(
     IFacts facts,
     IAlerts alerts,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IFeatures features,
+    IBroadcaster broadcaster)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -32,6 +33,6 @@ public sealed class EnergizerInteraction(
             Engine.SetMessage(facts.LongMessageDuration, alerts.EnergizerMessage);
         }
 
-        Engine.BroadcastLabel(0, facts.EnergizeLabel, false);
+        broadcaster.BroadcastLabel(0, facts.EnergizeLabel, false);
     }
 }

@@ -16,4 +16,5 @@ public sealed class OriginalFacts : Facts
     public override string WorldFileExtension => "ZZT";
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "ZZT Worlds";
+    public override string HighScoreExtension => "HI";
 }

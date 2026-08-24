@@ -7,16 +7,15 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x11)]
 [Context(Context.Super, 0x11)]
 public sealed class CounterclockwiseConveyorAction(
-    IEngineAccessor engine,
-    IActorList actorList)
+    IActorList actorList,
+    IConveyor conveyor,
+    IBoardUpdater boardUpdater)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actorList[index];
-        Engine.UpdateBoard(actor.Location);
-        Engine.Convey(actor.Location, -1);
+        boardUpdater.UpdateBoard(actor.Location);
+        conveyor.Convey(actor.Location, -1);
     }
 }

@@ -23,7 +23,8 @@ public sealed class SuperHud(
     ITiles tiles,
     IWorld world,
     IElementList elementList,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IBoardUpdater boardUpdater)
     : Hud(engine, scroll, state)
 {
     private readonly string _arrows = new([
@@ -90,9 +91,12 @@ public sealed class SuperHud(
         }
         else
         {
-            DrawString(0x00, 0x00, new string(0xDC.ToChar(), 12), 0x1D);
+            var barBuffer = buffer.Slice(0, 12);
+            barBuffer.Fill(0xDC.ToChar());
+            DrawString(0x00, 0x00, barBuffer, 0x1D);
             DrawString(0x00, 0x01, "  Commands  ", 0x6F);
-            DrawString(0x00, 0x02, new string(0xDF.ToChar(), 12), 0x6D);
+            barBuffer.Fill(0xDF.ToChar());
+            DrawString(0x00, 0x02, barBuffer, 0x6D);
             DrawString(0x00, 0x03, " ", _arrows, "       ", 0x6F);
             DrawString(0x00, 0x04, "   Move     ", 0x6E);
             DrawString(0x00, 0x05, " Shift+", _arrows, " ", 0x6F);
@@ -130,11 +134,9 @@ public sealed class SuperHud(
     {
         for (var x = 0; x < 26; x++)
             DrawChar(0x0D + x, 0x01, new AnsiChar(0xDC, 0x1F));
-        // DrawString(0x0D, 0x01, new string(0xDC.ToChar(), 26), 0x1F);
         DrawChar(0x0D, 0x16, new AnsiChar(0xDF, 0x1F));
         for (var x = 0; x < 25; x++)
             DrawChar(0x0E + x, 0x16, new AnsiChar(0xDF, 0x7F));
-        // DrawString(0x0E, 0x16, new string(0xDF.ToChar(), 25), 0x7F);
 
         for (var y = 0x02; y <= 0x15; y++)
         {
@@ -189,34 +191,6 @@ public sealed class SuperHud(
     {
         Terminal.Write(x, y, text0, text1, text2, color);
     }
-
-    public override void DrawTile(int x, int y, AnsiChar ac)
-    {
-        DrawTileCommon(x, y, ac);
-    }
-
-    private void DrawTileCommon(int x, int y, AnsiChar ac)
-    {
-        if (State.EditorMode)
-        {
-            if (x is >= 0 and < 96 && y is >= 0 and < 80)
-            {
-                Terminal.Plot(x, y, ac);
-            }
-        }
-        else
-        {
-            var loc = new Location(x, y) + GetTranslation();
-            if (IsWithinCamera(loc))
-                Terminal.Plot(loc.X, loc.Y, ac);
-        }
-    }
-
-    private static bool IsWithinCamera(Location loc) =>
-        loc.X is >= 0x0E and <= 0x25 && loc.Y is >= 0x02 and <= 0x15;
-
-    private Vector GetTranslation() =>
-        new(0x0F + -board.Camera.X, 0x03 + -board.Camera.Y);
 
     public override void Initialize()
     {
@@ -287,7 +261,7 @@ public sealed class SuperHud(
                 board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.East);
                 for (var y = 0; y < WindowHeight; y++)
-                    Engine.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
+                    boardUpdater.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
             }
             else
             {
@@ -309,7 +283,7 @@ public sealed class SuperHud(
                 board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.West);
                 for (var y = 0; y < WindowHeight; y++)
-                    Engine.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
+                    boardUpdater.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
             }
             else
             {
@@ -333,7 +307,7 @@ public sealed class SuperHud(
                 board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.South);
                 for (var x = 0; x < WindowWidth; x++)
-                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
+                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
             }
             else
             {
@@ -355,7 +329,7 @@ public sealed class SuperHud(
                 board.Camera = newCamera;
                 VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.North);
                 for (var x = 0; x < WindowWidth; x++)
-                    Engine.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
+                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
             }
             else
             {

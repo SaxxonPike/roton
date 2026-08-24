@@ -11,7 +11,8 @@ public sealed class BlinkWallAction(
     ITiles tiles,
     IElementList elementList,
     IActorList actorList,
-    IWorld world)
+    IWorld world,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -41,7 +42,7 @@ public sealed class BlinkWallAction(
             while (tiles[target] == rayTile)
             {
                 tiles[target].Id = emptyElement;
-                Engine.UpdateBoard(target);
+                boardUpdater.UpdateBoard(target);
                 target += actor.Vector;
                 erasedRay = true;
             }
@@ -101,7 +102,7 @@ public sealed class BlinkWallAction(
                 if (tiles[target].Id == emptyElement)
                 {
                     tiles[target] = rayTile;
-                    Engine.UpdateBoard(target);
+                    boardUpdater.UpdateBoard(target);
                 }
                 else
                 {

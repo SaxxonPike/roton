@@ -12,7 +12,8 @@ public sealed class BombInteraction(
     IAlerts alerts,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IActorList actorList)
+    IActorList actorList,
+    IBoardUpdater boardUpdater)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -23,7 +24,7 @@ public sealed class BombInteraction(
         if (actor.P1 == 0)
         {
             actor.P1 = (byte)facts.BombCountdownStart;
-            Engine.UpdateBoard(location);
+            boardUpdater.UpdateBoard(location);
             Engine.SetMessage(facts.LongMessageDuration, alerts.BombMessage);
             soundUnit.PlaySound(4, sounds.BombActivate);
         }

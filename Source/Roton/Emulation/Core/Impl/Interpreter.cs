@@ -12,7 +12,8 @@ public sealed class Interpreter(
     IEngineAccessor engine,
     ITracer tracer,
     IParser parser,
-    ICommandList commandList)
+    ICommandList commandList,
+    IBroadcaster broadcaster)
     : IInterpreter
 {
     private IEngine Engine
@@ -52,7 +53,7 @@ public sealed class Interpreter(
             }
             else
             {
-                if (!Engine.BroadcastLabel(context.Index, name, false))
+                if (!broadcaster.BroadcastLabel(context.Index, name, false))
                 {
                     if (name.IndexOf(':') < 0) 
                         Engine.RaiseError(ref context, $"Bad command {name.ToString()}");

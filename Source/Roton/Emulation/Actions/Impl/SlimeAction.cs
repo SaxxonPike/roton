@@ -11,7 +11,8 @@ public sealed class SlimeAction(
     IActorList actorList,
     ITiles tiles,
     IElementList elementList,
-    IState state)
+    IState state,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -38,7 +39,7 @@ public sealed class SlimeAction(
                     {
                         Engine.MoveActor(index, target);
                         tiles[source] = slimeTrailTile;
-                        Engine.UpdateBoard(source);
+                        boardUpdater.UpdateBoard(source);
                     }
                     else
                     {
@@ -54,7 +55,7 @@ public sealed class SlimeAction(
             {
                 Engine.RemoveActor(index);
                 tiles[source] = slimeTrailTile;
-                Engine.UpdateBoard(source);
+                boardUpdater.UpdateBoard(source);
             }
         }
         else

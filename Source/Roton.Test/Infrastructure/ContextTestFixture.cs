@@ -38,6 +38,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IActorList Actors { get; private set; } = null!;
     protected IAlerts Alerts { get; private set; } = null!;
     protected IBoard Board { get; private set; } = null!;
+    protected IBroadcaster Broadcaster { get; private set; } = null!;
     protected ICheatList Cheats { get; private set; } = null!;
     protected IColorList Colors { get; private set; } = null!;
     protected ICommandList Commands { get; private set; } = null!;
@@ -67,7 +68,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected void TouchActor(int actorIndex)
     {
-        Engine.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
+        Broadcaster.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
     }
 
     protected void UnpackBoardResource(string path)

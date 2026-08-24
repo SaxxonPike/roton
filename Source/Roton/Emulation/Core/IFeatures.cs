@@ -4,12 +4,7 @@ namespace Roton.Emulation.Core;
 
 public interface IFeatures
 {
-    void LockActor(int index);
-    void UnlockActor(int index);
-    bool IsActorLocked(int index);
     void RemoveItem(Location location);
-    string GetWorldName(string baseName);
-    string GetHighScoreName(string baseName);
     void EnterBoard();
     bool HandleTitleInput();
     void ShowInGameHelp();
@@ -25,7 +20,5 @@ public interface IFeatures
     void CleanUpPauseMovement();
     void CleanUpOop(ref OopContext context);
     int GetColorMatchValue(int color);
-    void NotifyActorSentLabel(int index);
-    string GetSaveName(string baseName);
     int GetAdjacent(Location location, int elementId);
 }

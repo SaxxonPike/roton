@@ -11,7 +11,8 @@ public sealed class ZapCommand(
     IEngineAccessor engine,
     IParser parser,
     IState state,
-    IActorList actorList)
+    IActorList actorList,
+    IBroadcaster broadcaster)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +26,7 @@ public sealed class ZapCommand(
 
         while (true)
         {
-            var result = Engine.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(buffer), "\r:");
+            var result = broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(buffer), "\r:");
 
             if (!result)
                 break;

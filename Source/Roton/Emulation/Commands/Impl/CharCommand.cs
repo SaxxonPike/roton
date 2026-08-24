@@ -8,7 +8,8 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "CHAR")]
 public sealed class CharCommand(
     IEngineAccessor engine,
-    IParser parser)
+    IParser parser,
+    IBoardUpdater boardUpdater)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -19,7 +20,7 @@ public sealed class CharCommand(
         if (value >= 0)
         {
             context.Actor.P1 = unchecked((byte)value);
-            Engine.UpdateBoard(context.Actor.Location);
+            boardUpdater.UpdateBoard(context.Actor.Location);
         }
     }
 }

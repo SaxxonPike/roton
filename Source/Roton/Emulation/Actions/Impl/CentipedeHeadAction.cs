@@ -12,7 +12,8 @@ public sealed class CentipedeHeadAction(
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elementList,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -69,7 +70,7 @@ public sealed class CentipedeHeadAction(
             // Reverse the centipede
 
             tiles[actor.Location].Id = elementList.SegmentId;
-            Engine.UpdateBoard(actor.Location);
+            boardUpdater.UpdateBoard(actor.Location);
             var segmentIndex = index;
             while (true)
             {
@@ -85,7 +86,7 @@ public sealed class CentipedeHeadAction(
 
             var newHead = actorList[segmentIndex];
             tiles[newHead.Location].Id = elementList.HeadId;
-            Engine.UpdateBoard(newHead.Location);
+            boardUpdater.UpdateBoard(newHead.Location);
         }
         else
         {
@@ -102,7 +103,7 @@ public sealed class CentipedeHeadAction(
                     var follower = actorList[actor.Follower];
                     tiles[follower.Location].Id = elementList.HeadId;
                     follower.Leader = -1;
-                    Engine.UpdateBoard(follower.Location);
+                    boardUpdater.UpdateBoard(follower.Location);
                 }
 
                 actor.Follower = -1;

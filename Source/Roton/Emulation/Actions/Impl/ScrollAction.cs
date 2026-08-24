@@ -9,7 +9,8 @@ namespace Roton.Emulation.Actions.Impl;
 public sealed class ScrollAction(
     IEngineAccessor engine,
     IActorList actorList,
-    ITiles tiles)
+    ITiles tiles,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -25,6 +26,6 @@ public sealed class ScrollAction(
             color = 0x09;
         }
         tiles[actor.Location].Color = color;
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
     }
 }

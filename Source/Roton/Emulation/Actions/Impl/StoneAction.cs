@@ -9,7 +9,8 @@ public sealed class StoneAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,
-    ITiles tiles) 
+    ITiles tiles,
+    IBoardUpdater boardUpdater) 
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -19,6 +20,6 @@ public sealed class StoneAction(
         var actor = actorList[index];
         tiles[actor.Location].Color =
             (tiles[actor.Location].Color & 0x70) + randomizer.GetNext(7) + 9;
-        Engine.UpdateBoard(actorList[index].Location);
+        boardUpdater.UpdateBoard(actorList[index].Location);
     }
 }

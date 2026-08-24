@@ -12,7 +12,8 @@ public sealed class SlimeInteraction(
     IElementList elementList,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IActorList actorList)
+    IActorList actorList,
+    IBoardUpdater boardUpdater)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -23,7 +24,7 @@ public sealed class SlimeInteraction(
         var slimeIndex = actorList.ActorIndexAt(location);
         Engine.Harm(slimeIndex);
         tiles[location] = new Tile(elementList.BreakableId, color);
-        Engine.UpdateBoard(location);
+        boardUpdater.UpdateBoard(location);
         soundUnit.PlaySound(2, sounds.SlimeDie);
     }
 }

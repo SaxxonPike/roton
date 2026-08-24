@@ -52,8 +52,8 @@ public static class ServiceCollectionExtensions
                     {
                         var stack = DependencyStack.Value!;
                         if (stack.Contains(service.Service))
-                            throw new Exception($"Circular dependency detected: {service.Service.FullName} -> " +
-                                                string.Join(" -> ", stack.Select(rs => rs.ToString())));
+                            throw new Exception($"Circular dependency detected: {service.Service.FullName} <- " +
+                                                string.Join(" <- ", stack.Select(rs => rs.ToString())));
                         stack.Push(service.Service);
                         var result = sp.GetRequiredService(serviceGroup.Key);
                         stack.Pop();

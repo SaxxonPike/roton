@@ -9,7 +9,8 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "SEND")]
 public sealed class SendCommand(
     IEngineAccessor engine,
-    IParser parser)
+    IParser parser,
+    IBroadcaster broadcaster)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -18,6 +19,6 @@ public sealed class SendCommand(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var target = parser.ReadWord(context.Index, ref instruction, buffer);
-        context.NextLine = Engine.BroadcastLabel(context.Index, target, false);
+        context.NextLine = broadcaster.BroadcastLabel(context.Index, target, false);
     }
 }

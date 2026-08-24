@@ -10,13 +10,9 @@ public interface IEngine
 
     bool TitleScreen { get; }
     void Attack(int index, Location location);
-    bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
-    void Convey(Location center, int direction);
     void Destroy(Location location);
-    AnsiChar Draw(Location location);
     IElement ElementAt(Location location);
     void ExecuteCode(int index, ref Word instruction, string name);
-    bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix);
     bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take);
     void FadePurple();
     bool FindTile(Tile kind, Location location);
@@ -39,8 +35,6 @@ public interface IEngine
     bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned);
     void Start();
     void Stop();
-    void UpdateBoard(Location location);
-    void UpdateRadius(Location location, RadiusMode mode);
     void WaitForTick();
     void StepOnce();
     bool ThreadActive { get; }

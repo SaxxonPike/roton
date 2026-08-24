@@ -26,7 +26,9 @@ public sealed class PlayerAction(
     IConfig config,
     ISoundUnit soundUnit,
     IWorldUnit worldUnit,
-    IFeatures features)
+    IFeatures features,
+    IBoardUpdater boardUpdater,
+    IRadiusUpdater radiusUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -51,7 +53,7 @@ public sealed class PlayerAction(
                 tiles[actor.Location].Color = 0x0F;
             }
 
-            Engine.UpdateBoard(actor.Location);
+            boardUpdater.UpdateBoard(actor.Location);
         }
         else
         {
@@ -189,7 +191,7 @@ public sealed class PlayerAction(
             world.TorchCycles--;
             if (world.TorchCycles <= 0)
             {
-                Engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
                 soundUnit.PlaySound(3, sounds.TorchOut);
             }
 
