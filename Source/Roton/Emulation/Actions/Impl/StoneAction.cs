@@ -6,15 +6,12 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Super, 0x40)]
 public sealed class StoneAction(
-    IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,
     IBoardUpdater boardUpdater) 
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actorList[index];

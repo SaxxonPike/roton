@@ -7,13 +7,10 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
 public sealed class TransporterAction(
-    IEngineAccessor engine,
     IActorList actorList,
     IBoardUpdater boardUpdater)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         boardUpdater.UpdateBoard(actorList[index].Location);

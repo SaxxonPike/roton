@@ -7,14 +7,11 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
 public sealed class ScrollAction(
-    IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,
     IBoardUpdater boardUpdater)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actorList[index];

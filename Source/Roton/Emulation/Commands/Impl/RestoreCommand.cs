@@ -8,15 +8,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "RESTORE")]
 [Context(Context.Super, "RESTORE")]
 public sealed class RestoreCommand(
-    IEngineAccessor engine,
     IParser parser,
     IActorList actorList,
     IState state,
     IBroadcaster broadcaster)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];

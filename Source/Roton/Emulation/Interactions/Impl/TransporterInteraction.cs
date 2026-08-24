@@ -6,7 +6,9 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterInteraction(IEngineAccessor engine) : IInteraction
+public sealed class TransporterInteraction(
+    IEngineAccessor engine)
+    : IInteraction
 {
     private IEngine Engine => engine.Instance;
 

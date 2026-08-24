@@ -8,15 +8,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
 public sealed class ZapCommand(
-    IEngineAccessor engine,
     IParser parser,
     IState state,
     IActorList actorList,
     IBroadcaster broadcaster)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];

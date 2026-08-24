@@ -8,13 +8,10 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "SEND")]
 [Context(Context.Super, "SEND")]
 public sealed class SendCommand(
-    IEngineAccessor engine,
     IParser parser,
     IBroadcaster broadcaster)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
