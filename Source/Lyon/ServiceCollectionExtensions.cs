@@ -1,6 +1,8 @@
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Lyon.App;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
@@ -14,6 +16,8 @@ namespace Lyon;
 
 public static class ServiceCollectionExtensions
 {
+    private static readonly ThreadLocal<Stack<Type>> DependencyStack = new(() => []);
+    
     public static void AddLyon(
         this IServiceCollection services,
         string[] args,
@@ -36,9 +40,6 @@ public static class ServiceCollectionExtensions
         Context context,
         params Assembly[] additionalAssemblies)
     {
-        // Each concrete type must have all its services registered at the same time
-        // so that AutoFac knows that they all refer to the same instance.
-
         var map = RotonServices.Get(context, additionalAssemblies)
             .GroupBy(s => s.Implementation);
 
@@ -51,8 +52,14 @@ public static class ServiceCollectionExtensions
             foreach (var service in serviceGroup)
                 services.AddSingleton(service.Service, sp =>
                 {
-                    Debug.WriteLine($"Resolving service ${service.Service.FullName}");
-                    return sp.GetRequiredService(serviceGroup.Key);
+                    var stack = DependencyStack.Value!;
+                    if (stack.Contains(service.Service))
+                        throw new Exception($"Circular dependency detected: {service.Service.FullName} -> " +
+                                            string.Join(" -> ", stack.Select(rs => rs.ToString())));
+                    stack.Push(service.Service);
+                    var result = sp.GetRequiredService(serviceGroup.Key);
+                    stack.Pop();
+                    return result;
                 });
         }
     }
