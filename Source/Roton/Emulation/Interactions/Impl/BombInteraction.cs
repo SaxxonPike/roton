@@ -13,7 +13,8 @@ public sealed class BombInteraction(
     ISounds sounds,
     ISoundUnit soundUnit,
     IActorList actorList,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -30,7 +31,7 @@ public sealed class BombInteraction(
         }
         else
         {
-            Engine.Push(location, vector);
+            pusher.Push(location, vector);
         }
     }
 }

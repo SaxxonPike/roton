@@ -13,14 +13,15 @@ namespace Roton.Emulation.Interactions.Impl;
 public sealed class PuzzleInteraction(
     IEngineAccessor engine,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IPusher pusher)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.Push(location, vector);
+        pusher.Push(location, vector);
         soundUnit.PlaySound(2, sounds.Push);
     }
 }

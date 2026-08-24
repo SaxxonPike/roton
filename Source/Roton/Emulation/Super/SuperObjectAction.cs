@@ -11,7 +11,8 @@ public sealed class SuperObjectAction(
     IActorList actorList,
     ITiles tiles,
     IFacts facts,
-    IBroadcaster broadcaster) 
+    IBroadcaster broadcaster,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -34,7 +35,7 @@ public sealed class SuperObjectAction(
         var target = actor.Location + actor.Vector;
 
         if (!tiles.ElementAt(target).IsFloor)
-            Engine.Push(target, actor.Vector);
+            pusher.Push(target, actor.Vector);
 
         if (tiles.ElementAt(target).IsFloor)
         {

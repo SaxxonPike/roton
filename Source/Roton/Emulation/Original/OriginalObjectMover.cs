@@ -5,7 +5,9 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
+public sealed class OriginalObjectMover(
+    IEngineAccessor engine,
+    IPusher pusher) : IObjectMover
 {
     private IEngine Engine => engine.Instance;
 
@@ -20,7 +22,7 @@ public sealed class OriginalObjectMover(IEngineAccessor engine) : IObjectMover
             var target = context.Actor.Location + vector;
 
             if (!Engine.ElementAt(target).IsFloor)
-                Engine.Push(target, vector);
+                pusher.Push(target, vector);
 
             if (!Engine.ElementAt(target).IsFloor)
                 return;

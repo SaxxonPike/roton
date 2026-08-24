@@ -11,7 +11,8 @@ public sealed class StarAction(
     IActorList actorList,
     IElementList elementList,
     ITiles tiles,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -37,7 +38,7 @@ public sealed class StarAction(
                 {
                     if (!targetElement.IsFloor)
                     {
-                        Engine.Push(targetLocation, actor.Vector);
+                        pusher.Push(targetLocation, actor.Vector);
                     }
 
                     if (targetElement.IsFloor || targetElement.Id == elementList.WaterId)

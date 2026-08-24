@@ -54,6 +54,7 @@ public sealed class Engine : IEngine, IDisposable
     private readonly IPlayField _playField;
     private readonly IBroadcaster _broadcaster;
     private readonly IRadiusUpdater _radiusUpdater;
+    private readonly IPusher _pusher;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -74,7 +75,7 @@ public sealed class Engine : IEngine, IDisposable
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
-        IRadiusUpdater radiusUpdater)
+        IRadiusUpdater radiusUpdater, IPusher pusher)
     {
         engineAccessor.Instance = this;
 
@@ -116,6 +117,7 @@ public sealed class Engine : IEngine, IDisposable
         _playField = playField;
         _broadcaster = broadcaster;
         _radiusUpdater = radiusUpdater;
+        _pusher = pusher;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -555,89 +557,6 @@ public sealed class Engine : IEngine, IDisposable
         _boardUpdater.UpdateBoard(location);
     }
 
-    public void Push(Location location, Vector vector)
-    {
-        ref var tile = ref _tiles[location];
-        if (tile.Id == _elementList.SliderEwId && vector.Y == 0 ||
-            tile.Id == _elementList.SliderNsId && vector.X == 0 ||
-            _elementList[tile.Id].IsPushable)
-        {
-            // this is here to prevent endless push loops
-            // but doesn't exist in the original code
-            if (vector.IsZero())
-                throw Exceptions.PushStackOverflow;
-
-            ref var furtherTile = ref _tiles[location + vector];
-            if (furtherTile.Id == _elementList.TransporterId)
-                PushThroughTransporter(location, vector);
-            else if (furtherTile.Id != _elementList.EmptyId)
-                Push(location + vector, vector);
-
-            var furtherElement = _elementList[furtherTile.Id];
-            if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != _elementList.PlayerId)
-                Destroy(location + vector);
-
-            furtherElement = _elementList[furtherTile.Id];
-            if (furtherElement.IsFloor)
-                MoveTile(location, location + vector);
-        }
-    }
-
-    public void PushThroughTransporter(Location location, Vector vector)
-    {
-        var actor = ActorAt(location + vector);
-
-        if (actor.Vector == vector)
-        {
-            var search = actor.Location;
-            var target = new Location();
-            var ended = false;
-            var success = true;
-
-            while (!ended)
-            {
-                search += vector;
-                var element = ElementAt(search);
-                if (element.Id == _elementList.BoardEdgeId)
-                {
-                    ended = true;
-                }
-                else
-                {
-                    if (success)
-                    {
-                        success = false;
-                        if (!element.IsFloor)
-                        {
-                            Push(search, vector);
-                            element = ElementAt(search);
-                        }
-
-                        if (element.IsFloor)
-                        {
-                            ended = true;
-                            target = search;
-                        }
-                        else
-                        {
-                            target.X = 0;
-                        }
-                    }
-                }
-
-                if (element.Id == _elementList.TransporterId)
-                    if (ActorAt(search).Vector == -vector)
-                        success = true;
-            }
-
-            if (target.X > 0)
-            {
-                MoveTile(actor.Location - vector, target);
-                _soundUnit.PlaySound(3, _sounds.Transporter);
-            }
-        }
-    }
-
     public void PutTile(Location location, Vector vector, Tile kind)
     {
         if (!_features.CanPutTile(location))
@@ -646,7 +565,8 @@ public sealed class Engine : IEngine, IDisposable
         if (location.X >= 1 && location.X <= _tiles.Width && location.Y >= 1 &&
             location.Y <= _tiles.Height)
         {
-            if (!ElementAt(location).IsFloor) Push(location, vector);
+            if (!ElementAt(location).IsFloor) 
+                _pusher.Push(location, vector);
             PlotTile(location, kind);
         }
     }
@@ -1138,7 +1058,7 @@ public sealed class Engine : IEngine, IDisposable
         _state.ActIndex = _state.ActorCount + 1;
     }
 
-    private void MoveTile(Location source, Location target)
+    public void MoveTile(Location source, Location target)
     {
         var sourceIndex = ActorIndexAt(source);
         if (sourceIndex >= 0)

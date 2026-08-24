@@ -9,7 +9,8 @@ namespace Roton.Emulation.Commands.Impl;
 public sealed class TryCommand(
     IEngineAccessor engine,
     IParser parser,
-    ITiles tiles)
+    ITiles tiles,
+    IPusher pusher)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -22,7 +23,7 @@ public sealed class TryCommand(
         var target = context.Actor.Location + vec;
         if (!tiles.ElementAt(target).IsFloor)
         {
-            Engine.Push(target, vec);
+            pusher.Push(target, vec);
         }
         if (Engine.ElementAt(target).IsFloor)
         {

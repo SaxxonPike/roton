@@ -16,7 +16,8 @@ public sealed class DuplicatorAction(
     IActorList actorList,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -39,7 +40,7 @@ public sealed class DuplicatorAction(
                 if (tiles[target].Id != elementList.EmptyId)
                 {
                     var oppVec = -actor.Vector;
-                    Engine.Push(target, oppVec);
+                    pusher.Push(target, oppVec);
                 }
 
                 if (tiles[target].Id == elementList.EmptyId)
