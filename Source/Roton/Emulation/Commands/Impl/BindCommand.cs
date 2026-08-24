@@ -8,13 +8,10 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "BIND")]
 [Context(Context.Super, "BIND")]
 public sealed class BindCommand(
-    IEngineAccessor engine,
     IActorList actorList,
     IParser parser)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];

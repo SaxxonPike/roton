@@ -8,13 +8,10 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "CLEAR")]
 [Context(Context.Super, "CLEAR")]
 public sealed class ClearCommand(
-    IEngineAccessor engine,
     IWorld world,
     IParser parser)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];

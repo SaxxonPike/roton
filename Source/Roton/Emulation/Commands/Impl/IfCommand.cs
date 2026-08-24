@@ -7,12 +7,9 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "IF")]
 [Context(Context.Super, "IF")]
 public sealed class IfCommand(
-    IEngineAccessor engine,
     IParser parser)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         if (parser.TryEvalCondition(ref context, ref instruction, out var result))

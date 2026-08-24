@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Directions;
@@ -13,7 +12,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed class Parser(
-    IEngineAccessor engine,
     IActorList actorList,
     IState state,
     IConditionList conditionList,
@@ -25,11 +23,6 @@ public sealed class Parser(
     ITargetList targetList)
     : IParser
 {
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
     private ReadOnlySpan<char> GetActorCode(int index)
     {
         var actor = actorList[index];

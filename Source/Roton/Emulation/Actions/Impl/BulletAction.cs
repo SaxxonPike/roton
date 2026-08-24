@@ -15,7 +15,8 @@ public sealed class BulletAction(
     IWorld world,
     IState state,
     IFacts facts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IHud hud)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -48,7 +49,7 @@ public sealed class BulletAction(
                 if (element.Points != 0)
                 {
                     world.Score += element.Points;
-                    Engine.UpdateStatus();
+                    hud.UpdateStatus();
                 }
 
                 Engine.Attack(index, target);

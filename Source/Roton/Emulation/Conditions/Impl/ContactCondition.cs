@@ -1,4 +1,3 @@
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,12 +6,9 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Original, "CONTACT")]
 [Context(Context.Super, "CONTACT")]
 public sealed class ContactCondition(
-    IEngineAccessor engine,
     IActorList actorList)
     : ICondition
 {
-    private IEngine Engine => engine.Instance;
-
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
         var player = actorList.Player;

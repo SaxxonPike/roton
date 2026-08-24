@@ -53,7 +53,7 @@ public sealed class OriginalFeatures(
         }
 
         world.TimePassed = 0;
-        Engine.UpdateStatus();
+        hud.UpdateStatus();
     }
 
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -147,7 +147,7 @@ public sealed class OriginalFeatures(
 
     public void ShowAbout()
     {
-        Engine.ShowHelp("About Roton...", "ABOUT");
+        hud.ShowHelp("About Roton...", "ABOUT");
     }
 
     public int BaseMemoryUsage => 205791;
@@ -250,7 +250,7 @@ public sealed class OriginalFeatures(
 
     public void ShowInGameHelp()
     {
-        Engine.ShowHelp("Playing Roton", "GAME");
+        hud.ShowHelp("Playing Roton", "GAME");
     }
 
     public string GetWorldName(string baseName)

@@ -181,7 +181,7 @@ public sealed class Engine : IEngine, IDisposable
         if (index == 0 && _world.EnergyCycles > 0)
         {
             _world.Score += ElementAt(location).Points;
-            UpdateStatus();
+            _hud.UpdateStatus();
         }
         else
         {
@@ -193,7 +193,7 @@ public sealed class Engine : IEngine, IDisposable
         if (_tiles[location].Id == _elementList.PlayerId && _world.EnergyCycles > 0)
         {
             _world.Score += ElementAt(_actorList[index].Location).Points;
-            UpdateStatus();
+            _hud.UpdateStatus();
         }
         else
         {
@@ -552,7 +552,7 @@ public sealed class Engine : IEngine, IDisposable
             if (_world.Health > 0)
             {
                 _world.Health -= _facts.HealthLostPerHit;
-                UpdateStatus();
+                _hud.UpdateStatus();
                 SetMessage(_facts.ShortMessageDuration, _alerts.OuchMessage);
                 _tiles[actor.Location].Color = (ElementAt(actor.Location).Color & 0x0F) | 0x70;
 
@@ -937,8 +937,6 @@ public sealed class Engine : IEngine, IDisposable
         _state.Message2 = bottomMessage;
     }
 
-    public void ShowHelp(string title, string filename) => _hud.ShowHelp(title, filename);
-
     public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
         // must reserve one actor for player, and one for messenger
@@ -1054,8 +1052,6 @@ public sealed class Engine : IEngine, IDisposable
                 UpdateBoard(target);
             }
     }
-
-    public void UpdateStatus() => _hud.UpdateStatus();
 
     private void UpdateSound()
     {

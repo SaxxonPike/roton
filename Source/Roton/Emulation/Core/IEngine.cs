@@ -34,17 +34,13 @@ public interface IEngine
     Vector Rnd();
     Vector RndP(Vector vector);
     Vector Seek(Location location);
-    void SetEditorMode();
-    void SetGameMode();
     void SetMessage(int duration, IMessage message);
-    void ShowHelp(string title, string filename);
     void SpawnActor(Location location, Tile tile, int cycle, IActor? source);
     bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned);
     void Start();
     void Stop();
     void UpdateBoard(Location location);
     void UpdateRadius(Location location, RadiusMode mode);
-    void UpdateStatus();
     void WaitForTick();
     void StepOnce();
     bool ThreadActive { get; }

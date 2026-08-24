@@ -8,14 +8,11 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "PLAY")]
 [Context(Context.Super, "PLAY")]
 public sealed class PlayCommand(
-    IEngineAccessor engine,
     IMusicEncoder musicEncoder,
     IParser parser,
     ISoundUnit soundUnit)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];

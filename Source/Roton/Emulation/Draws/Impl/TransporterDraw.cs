@@ -1,5 +1,4 @@
-﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
@@ -7,14 +6,11 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
 public sealed class TransporterDraw(
-    IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,
     IState state)
     : IDraw
 {
-    private IEngine Engine => engine.Instance;
-
     public AnsiChar Draw(Location location)
     {
         var actor = actorList.ActorAt(location);
