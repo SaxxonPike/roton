@@ -12,7 +12,10 @@ public sealed class PassageInteraction(
     IActorList actorList,
     IElementList elementList,
     IState state,
-    ISounds sounds)
+    ISounds sounds,
+    ISoundUnit soundUnit,
+    IWorldUnit worldUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -22,7 +25,7 @@ public sealed class PassageInteraction(
         var searchColor = tiles[location].Color;
         var passageIndex = Engine.ActorIndexAt(location);
         var passageTarget = actorList[passageIndex].P3;
-        Engine.SetBoard(passageTarget);
+        worldUnit.SetBoard(passageTarget);
         var target = new Location();
 
         for (var x = 1; x <= tiles.Width; x++)
@@ -41,9 +44,9 @@ public sealed class PassageInteraction(
             actorList.Player.Location = target;
 
         state.GamePaused = true;
-        Engine.PlaySound(4, sounds.Passage);
+        soundUnit.PlaySound(4, sounds.Passage);
         Engine.FadePurple();
-        Engine.EnterBoard();
+        features.EnterBoard();
         vector = Vector.Idle;
     }
 }

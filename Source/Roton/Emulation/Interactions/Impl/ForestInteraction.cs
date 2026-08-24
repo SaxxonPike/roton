@@ -11,7 +11,8 @@ public sealed class ForestInteraction(
     IAlerts alerts,
     IFacts facts,
     ISounds sounds,
-    IState state)
+    IState state,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -24,7 +25,7 @@ public sealed class ForestInteraction(
         var forestSongLength = sounds.Forest.Length;
         var forestIndex = state.ForestIndex % forestSongLength;
         state.ForestIndex = (forestIndex + 2) % forestSongLength;
-        Engine.PlaySound(3, sounds.Forest, forestIndex, 2);
+        soundUnit.PlaySound(3, sounds.Forest, forestIndex, 2);
 
         if (!alerts.Forest)
             return;

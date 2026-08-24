@@ -17,7 +17,9 @@ public sealed class OriginalFeatures(
     IState state,
     IHud hud,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elementList,
+    IWorldUnit worldUnit,
+    IBoardTime boardTime)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -42,6 +44,7 @@ public sealed class OriginalFeatures(
 
     public void EnterBoard()
     {
+        boardTime.Reset();
         board.Entrance = actorList.Player.Location;
         if (board.IsDark && alerts.Dark)
         {
@@ -169,16 +172,6 @@ public sealed class OriginalFeatures(
         }
     }
 
-    public string? OpenWorld()
-    {
-        return Engine.ShowLoad("ZZT Worlds", "zzt");
-    }
-
-    public string? RestoreWorld()
-    {
-        return Engine.ShowLoad("Saved Games", "sav");
-    }
-
     public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;
@@ -220,7 +213,7 @@ public sealed class OriginalFeatures(
             case EngineKeyCode.P:
                 return true;
             case EngineKeyCode.W:
-                Engine.OpenWorld();
+                worldUnit.OpenWorld();
                 break;
             case EngineKeyCode.A:
                 ShowAbout();
@@ -233,7 +226,7 @@ public sealed class OriginalFeatures(
                     true, 0x42, 0x15, "Game speed:;FS", state.GameSpeed, null);
                 break;
             case EngineKeyCode.R:
-                return Engine.RestoreWorld();
+                return worldUnit.RestoreWorld();
             case EngineKeyCode.H:
                 Engine.ShowHighScores();
                 break;

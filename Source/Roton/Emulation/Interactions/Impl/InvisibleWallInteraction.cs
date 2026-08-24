@@ -12,7 +12,8 @@ public sealed class InvisibleWallInteraction(
     IElementList elementList,
     IAlerts alerts,
     ISounds sounds,
-    IFacts facts)
+    IFacts facts,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class InvisibleWallInteraction(
     {
         tiles[location].Id = elementList.NormalId;
         Engine.UpdateBoard(location);
-        Engine.PlaySound(3, sounds.Invisible);
+        soundUnit.PlaySound(3, sounds.Invisible);
         Engine.SetMessage(facts.ShortMessageDuration, alerts.InvisibleMessage);
     }
 }

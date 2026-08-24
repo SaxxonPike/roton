@@ -12,14 +12,15 @@ public sealed class EnergizerInteraction(
     IWorld world,
     IHud hud,
     IFacts facts,
-    IAlerts alerts)
+    IAlerts alerts,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.PlaySound(9, sounds.Energizer);
+        soundUnit.PlaySound(9, sounds.Energizer);
         Engine.RemoveItem(location);
         world.EnergyCycles = facts.EnergyCyclesPerEnergizer;
         hud.UpdateStatus();

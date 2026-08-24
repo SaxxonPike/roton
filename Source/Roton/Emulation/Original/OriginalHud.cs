@@ -23,7 +23,8 @@ public sealed class OriginalHud(
     IElementList elementList,
     IWorld world,
     IBoard board,
-    IFacts facts)
+    IFacts facts,
+    ISoundUnit soundUnit)
     : Hud(engine, scroll, state)
 {
     private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
@@ -381,7 +382,7 @@ public sealed class OriginalHud(
     {
         DrawString(62, 4, "You need a newer", 0x1E);
         DrawString(62, 5, " version of ZZT!", 0x1E);
-        Engine.PlayErrorSound();
+        soundUnit.PlayErrorSound();
         Engine.Delay(2000);
     }
 }

@@ -10,7 +10,8 @@ public sealed class ShootCommand(
     IEngineAccessor engine,
     IParser parser,
     IElementList elementList,
-    ISounds sounds)
+    ISounds sounds,
+    ISoundUnit soundUnit)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -24,7 +25,7 @@ public sealed class ShootCommand(
         var success = Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
 
         if (success)
-            Engine.PlaySound(2, sounds.EnemyShoot);
+            soundUnit.PlaySound(2, sounds.EnemyShoot);
 
         context.Moved = true;
     }

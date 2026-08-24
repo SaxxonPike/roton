@@ -1,4 +1,3 @@
-using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
@@ -27,6 +26,10 @@ public abstract class Facts : IFacts
     public string ThudLabel => "THUD";
     public string ShotLabel => "SHOT";
     public abstract EngineKeyCode StartGameKey { get; }
+    public abstract string SavedGameExtension { get; }
+    public abstract string WorldFileExtension { get; }
+    public abstract string SavedGameWindowTitle { get; }
+    public abstract string WorldFileWindowTitle { get; }
     public int DefaultGameSpeed => 4;
     public int DefaultAmmo => 0;
     public int DefaultGems => 0;

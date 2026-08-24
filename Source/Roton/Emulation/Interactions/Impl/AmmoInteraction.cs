@@ -11,7 +11,8 @@ public sealed class AmmoInteraction(
     IWorld world,
     ISounds sounds,
     IAlerts alerts,
-    IFacts facts)
+    IFacts facts,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class AmmoInteraction(
         world.Ammo += facts.AmmoPerPickup;
         Engine.RemoveItem(location);
         Engine.UpdateStatus();
-        Engine.PlaySound(2, sounds.Ammo);
+        soundUnit.PlaySound(2, sounds.Ammo);
 
         if (!alerts.AmmoPickup)
             return;

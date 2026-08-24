@@ -58,6 +58,8 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected ITiles Tiles { get; private set; } = null!;
     protected IWorld World { get; private set; } = null!;
     protected IGameSerializer GameSerializer { get; private set; } = null!;
+    protected IWorldUnit WorldUnit { get; private set; } = null!;
+    protected ISoundUnit SoundUnit { get; private set; } = null!;
 
     protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
@@ -178,9 +180,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Tiles = container.GetRequiredService<ITiles>();
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
+        WorldUnit = container.GetRequiredService<IWorldUnit>();
+        SoundUnit = container.GetRequiredService<ISoundUnit>();
 
         // Preconfiguration
-        Engine.ClearWorld();
+        WorldUnit.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
         State.PlayerElement = Elements.PlayerId;
@@ -330,15 +334,15 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     {
         while (State.BoardCount < index)
         {
-            Engine.PackBoard();
+            WorldUnit.PackBoard();
             BoardIndex = State.BoardCount + 1;
-            Engine.ClearBoard();
+            WorldUnit.ClearBoard();
         }
 
         if (BoardIndex != index)
         {
-            Engine.PackBoard();
-            Engine.UnpackBoard(index);
+            WorldUnit.PackBoard();
+            WorldUnit.UnpackBoard(index);
         }
     }
 
@@ -432,4 +436,13 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Type(AnsiKey.Enter);
         StepAllKeys();
     }
+
+    protected void ClearBoard() =>
+        WorldUnit.ClearBoard();
+    
+    protected void PackBoard() =>
+        WorldUnit.PackBoard();
+    
+    protected void UnpackBoard(int index) =>
+        WorldUnit.UnpackBoard(index);
 }

@@ -11,7 +11,8 @@ public sealed class TorchInteraction(
     IWorld world,
     IHud hud,
     IAlerts alerts,
-    IFacts facts)
+    IFacts facts,
+    ISoundUnit soundUnit)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -27,6 +28,6 @@ public sealed class TorchInteraction(
             alerts.TorchPickup = false;
         }
 
-        Engine.PlaySound(3, sounds.Torch);
+        soundUnit.PlaySound(3, sounds.Torch);
     }
 }

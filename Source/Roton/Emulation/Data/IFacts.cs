@@ -1,4 +1,3 @@
-using Roton.Emulation.Core;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data;
@@ -53,4 +52,8 @@ public interface IFacts
     string ThudLabel { get; }
     string ShotLabel { get; }
     EngineKeyCode StartGameKey { get; }
+    string SavedGameExtension { get; }
+    string WorldFileExtension { get; }
+    string SavedGameWindowTitle { get; }
+    string WorldFileWindowTitle { get; }
 }

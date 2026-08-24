@@ -23,7 +23,9 @@ public sealed class PlayerAction(
     IFacts facts,
     IInteractionList interactionList,
     ITimers timers,
-    IConfig config)
+    IConfig config,
+    ISoundUnit soundUnit,
+    IWorldUnit worldUnit)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -97,7 +99,7 @@ public sealed class PlayerAction(
                         {
                             world.Ammo--;
                             hud.UpdateStatus();
-                            Engine.PlaySound(2, sounds.Shoot);
+                            soundUnit.PlaySound(2, sounds.Shoot);
                         }
                     }
                 }
@@ -130,7 +132,7 @@ public sealed class PlayerAction(
             {
                 if (!state.SoundPlaying)
                 {
-                    Engine.PlayStep();
+                    soundUnit.PlayStep();
                 }
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
@@ -151,7 +153,7 @@ public sealed class PlayerAction(
             case EngineKeyCode.S:
                 if (hud.SaveGame() is { } saveFileName)
                 {
-                    Engine.SaveWorld(saveFileName);
+                    worldUnit.SaveWorld(saveFileName);
                 }
 
                 break;
@@ -164,7 +166,7 @@ public sealed class PlayerAction(
                 break;
             case EngineKeyCode.B:
                 state.GameQuiet = !state.GameQuiet;
-                Engine.ClearSound();
+                soundUnit.ClearSound();
                 hud.UpdateStatus();
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
@@ -187,7 +189,7 @@ public sealed class PlayerAction(
             if (world.TorchCycles <= 0)
             {
                 Engine.UpdateRadius(actor.Location, RadiusMode.Update);
-                Engine.PlaySound(3, sounds.TorchOut);
+                soundUnit.PlaySound(3, sounds.TorchOut);
             }
 
             if (world.TorchCycles % 40 == 0)
@@ -203,7 +205,7 @@ public sealed class PlayerAction(
             world.EnergyCycles--;
             if (world.EnergyCycles == 10)
             {
-                Engine.PlaySound(9, sounds.EnergyOut);
+                soundUnit.PlaySound(9, sounds.EnergyOut);
             }
             else if (world.EnergyCycles <= 0)
             {
@@ -223,7 +225,7 @@ public sealed class PlayerAction(
                     if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
                         Engine.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
-                        Engine.PlaySound(3, sounds.TimeLow);
+                        soundUnit.PlaySound(3, sounds.TimeLow);
                     }
                     else if (world.TimePassed >= board.TimeLimit)
                     {

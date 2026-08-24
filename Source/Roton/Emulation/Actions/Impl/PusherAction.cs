@@ -12,7 +12,8 @@ public sealed class PusherAction(
     ITiles tiles,
     ISounds sounds,
     IElementList elementList,
-    IActionList actionList)
+    IActionList actionList,
+    ISoundUnit soundUnit)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -35,7 +36,7 @@ public sealed class PusherAction(
 
         var behindLocation = actor.Location - actor.Vector;
         Engine.MoveActor(index, actor.Location + actor.Vector);
-        Engine.PlaySound(2, sounds.Push);
+        soundUnit.PlaySound(2, sounds.Push);
 
         if (tiles[behindLocation].Id != elementList.PusherId)
             return;

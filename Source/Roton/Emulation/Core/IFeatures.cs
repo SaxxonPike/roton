@@ -23,8 +23,6 @@ public interface IFeatures
     void ShowAbout();
     int BaseMemoryUsage { get; }
     void CleanUpPauseMovement();
-    string? OpenWorld();
-    string? RestoreWorld();
     void CleanUpOop(ref OopContext context);
     int GetColorMatchValue(int color);
     void NotifyActorSentLabel(int index);

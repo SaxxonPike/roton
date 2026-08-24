@@ -14,7 +14,8 @@ public sealed class DuplicatorAction(
     IElementList elementList,
     ITiles tiles,
     IActorList actorList,
-    ISounds sounds)
+    ISounds sounds,
+    ISoundUnit soundUnit)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -58,11 +59,11 @@ public sealed class DuplicatorAction(
                         Engine.UpdateBoard(target);
                     }
 
-                    Engine.PlaySound(3, sounds.Duplicate);
+                    soundUnit.PlaySound(3, sounds.Duplicate);
                 }
                 else
                 {
-                    Engine.PlaySound(3, sounds.DuplicateFail);
+                    soundUnit.PlaySound(3, sounds.DuplicateFail);
                 }
             }
 

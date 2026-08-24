@@ -32,6 +32,7 @@ var config = new Config
     NoPesterMode = switches.Contains("--no-pester"),
     JoystickDeadZone = 0.5f,
     JoystickDenoiseZone = 0.1f,
+    DisableJoystick = switches.Contains("--no-joystick")
 };
 
 fileName ??= "TOWN.ZZT";

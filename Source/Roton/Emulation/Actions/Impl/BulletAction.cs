@@ -14,7 +14,8 @@ public sealed class BulletAction(
     ISounds sounds,
     IWorld world,
     IState state,
-    IFacts facts)
+    IFacts facts,
+    ISoundUnit soundUnit)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -37,7 +38,7 @@ public sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
-                Engine.PlaySound(1, sounds.Ricochet);
+                soundUnit.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -59,7 +60,7 @@ public sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
-                Engine.PlaySound(1, sounds.Ricochet);
+                soundUnit.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -68,7 +69,7 @@ public sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
-                Engine.PlaySound(1, sounds.Ricochet);
+                soundUnit.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 

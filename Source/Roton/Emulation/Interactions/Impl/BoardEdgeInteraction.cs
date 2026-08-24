@@ -13,7 +13,9 @@ public sealed class BoardEdgeInteraction(
     ITiles tiles,
     IElementList elementList,
     IInteractionList interactionList,
-    IState state)
+    IState state,
+    IWorldUnit worldUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -47,7 +49,7 @@ public sealed class BoardEdgeInteraction(
         if (targetBoard == 0)
             return;
 
-        Engine.SetBoard(targetBoard);
+        worldUnit.SetBoard(targetBoard);
         if (tiles[target].Id != elementList.PlayerId)
         {
             interactionList.Get(tiles[target].Id)?
@@ -64,11 +66,11 @@ public sealed class BoardEdgeInteraction(
 
             Engine.FadePurple();
             vector = Vector.Idle;
-            Engine.EnterBoard();
+            features.EnterBoard();
         }
         else
         {
-            Engine.SetBoard(oldBoard);
+            worldUnit.SetBoard(oldBoard);
         }
     }
 }
