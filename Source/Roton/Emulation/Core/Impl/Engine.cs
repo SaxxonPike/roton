@@ -68,7 +68,7 @@ public sealed class Engine : IEngine, IDisposable
         ICodeHeap heap, IAnsiKeyTransformer ansiKeyTransformer,
         ISpeaker speaker, IObjectMover objectMover,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
-        IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit, 
+        IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime)
     {
         engineAccessor.Instance = this;
@@ -1466,6 +1466,9 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ReadInputJoystick(bool isUiFocused)
     {
+        if (!_joystick.IsConnected)
+            return;
+
         // This function does things a lot differently than the original engine,
         // mostly for convenience in controls.
 
