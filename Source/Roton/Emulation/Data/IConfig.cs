@@ -16,4 +16,5 @@ public interface IConfig
     bool NoPesterMode { get; }
     float JoystickDeadZone { get; }
     float JoystickDenoiseZone { get; }
+    bool DisableJoystick { get; }
 }

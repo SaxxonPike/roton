@@ -1466,7 +1466,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ReadInputJoystick(bool isUiFocused)
     {
-        if (!_joystick.IsConnected)
+        if (_config.DisableJoystick || !_joystick.IsConnected)
             return;
 
         // This function does things a lot differently than the original engine,
