@@ -1058,22 +1058,6 @@ public sealed class Engine : IEngine, IDisposable
         _state.ActIndex = _state.ActorCount + 1;
     }
 
-    public void MoveTile(Location source, Location target)
-    {
-        var sourceIndex = ActorIndexAt(source);
-        if (sourceIndex >= 0)
-        {
-            MoveActor(sourceIndex, target);
-        }
-        else
-        {
-            _tiles[target] = _tiles[source];
-            _boardUpdater.UpdateBoard(target);
-            _features.RemoveItem(source);
-            _boardUpdater.UpdateBoard(source);
-        }
-    }
-
     private void StartPlaying()
     {
         _worldUnit.SetBoard(_state.StartBoard);

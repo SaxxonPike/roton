@@ -12,7 +12,9 @@ public sealed class Pusher(
     IEngineAccessor engine,
     IActorList actorList,
     ISoundUnit soundUnit,
-    ISounds sounds)
+    ISounds sounds,
+    IBoardUpdater boardUpdater,
+    IFeatures features)
     : IPusher
 {
     private IEngine Engine => engine.Instance;
@@ -41,7 +43,7 @@ public sealed class Pusher(
 
             furtherElement = elementList[furtherTile.Id];
             if (furtherElement.IsFloor)
-                Engine.MoveTile(location, location + vector);
+                MoveTile(location, location + vector);
         }
     }
 
@@ -94,9 +96,25 @@ public sealed class Pusher(
 
             if (target.X > 0)
             {
-                Engine.MoveTile(actor.Location - vector, target);
+                MoveTile(actor.Location - vector, target);
                 soundUnit.PlaySound(3, sounds.Transporter);
             }
+        }
+    }
+    
+    private void MoveTile(Location source, Location target)
+    {
+        var sourceIndex = actorList.ActorIndexAt(source);
+        if (sourceIndex >= 0)
+        {
+            Engine.MoveActor(sourceIndex, target);
+        }
+        else
+        {
+            tiles[target] = tiles[source];
+            boardUpdater.UpdateBoard(target);
+            features.RemoveItem(source);
+            boardUpdater.UpdateBoard(source);
         }
     }
 }

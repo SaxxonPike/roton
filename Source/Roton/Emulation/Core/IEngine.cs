@@ -20,7 +20,6 @@ public interface IEngine
     void Harm(int index);
     void MoveActor(int index, Location location);
     void MoveActorOnRiver(int index);
-    void MoveTile(Location source, Location target);
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
