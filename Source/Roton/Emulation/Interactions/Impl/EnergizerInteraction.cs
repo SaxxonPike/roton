@@ -13,7 +13,8 @@ public sealed class EnergizerInteraction(
     IHud hud,
     IFacts facts,
     IAlerts alerts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ public sealed class EnergizerInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         soundUnit.PlaySound(9, sounds.Energizer);
-        Engine.RemoveItem(location);
+        features.RemoveItem(location);
         world.EnergyCycles = facts.EnergyCyclesPerEnergizer;
         hud.UpdateStatus();
 

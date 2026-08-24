@@ -7,13 +7,11 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "LOCK")]
 [Context(Context.Super, "LOCK")]
 public sealed class LockCommand(
-    IEngineAccessor engine)
+    IFeatures features)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        Engine.LockActor(context.Index);
+        features.LockActor(context.Index);
     }
 }

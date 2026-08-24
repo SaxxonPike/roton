@@ -12,14 +12,15 @@ public sealed class ForestInteraction(
     IFacts facts,
     ISounds sounds,
     IState state,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        Engine.ClearForest(location);
+        features.ClearForest(location);
         Engine.UpdateBoard(location);
 
         var forestSongLength = sounds.Forest.Length;

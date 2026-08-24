@@ -10,20 +10,19 @@ namespace Roton.Emulation.Data.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed class HighScoreListFactory(
-    IEngineAccessor engine,
     IFacts facts,
     IFileSystem fileSystem,
-    IWorld world)
+    IWorld world,
+    IFeatures features)
     : IHighScoreListFactory
 {
-    private IEngine Engine => engine.Instance;
     private IFacts Facts => facts;
         
     public IHighScoreList Load()
     {
         var list = new HighScoreList(Facts.HighScoreNameCount);
             
-        var file = fileSystem.GetFile(Engine.GetHighScoreName(world.Name));
+        var file = fileSystem.GetFile(features.GetHighScoreName(world.Name));
         if (file == null || file.Length != Facts.HighScoreNameCount * (Facts.HighScoreNameLength + 3))
             return list;
 
@@ -61,6 +60,6 @@ public sealed class HighScoreListFactory(
         }
 
         writer.Flush();
-        fileSystem.PutFile(Engine.GetHighScoreName(world.Name), stream.ToArray());
+        fileSystem.PutFile(features.GetHighScoreName(world.Name), stream.ToArray());
     }
 }

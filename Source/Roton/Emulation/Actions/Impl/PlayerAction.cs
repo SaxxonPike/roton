@@ -25,7 +25,8 @@ public sealed class PlayerAction(
     ITimers timers,
     IConfig config,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit)
+    IWorldUnit worldUnit,
+    IFeatures features)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -54,7 +55,7 @@ public sealed class PlayerAction(
         }
         else
         {
-            Engine.ForcePlayerColor(index);
+            features.ForcePlayerColor(index);
         }
 
         // Health logic
@@ -171,13 +172,13 @@ public sealed class PlayerAction(
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
             case EngineKeyCode.H:
-                Engine.ShowInGameHelp();
+                features.ShowInGameHelp();
                 break;
             case EngineKeyCode.QuestionMark:
                 Engine.Cheat();
                 break;
             default:
-                Engine.HandlePlayerInput(actor);
+                features.HandlePlayerInput(actor);
                 break;
         }
 
@@ -209,7 +210,7 @@ public sealed class PlayerAction(
             }
             else if (world.EnergyCycles <= 0)
             {
-                Engine.ForcePlayerColor(index);
+                features.ForcePlayerColor(index);
             }
         }
 

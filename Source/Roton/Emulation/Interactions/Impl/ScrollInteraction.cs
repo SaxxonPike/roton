@@ -17,7 +17,7 @@ public sealed class ScrollInteraction(
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var scrollIndex = Engine.ActorIndexAt(location);
+        var scrollIndex = actorList.ActorIndexAt(location);
         var actor = actorList[scrollIndex];
 
         soundUnit.PlaySound(2, musicEncoder.Encode("c-c+d-d+e-e+f-f+g-g"));

@@ -11,14 +11,15 @@ public sealed class BombInteraction(
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IActorList actorList)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var actor = Engine.ActorAt(location);
+        var actor = actorList.ActorAt(location);
         if (actor.P1 == 0)
         {
             actor.P1 = (byte)facts.BombCountdownStart;

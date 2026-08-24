@@ -8,6 +8,7 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super, 0x0C)]
 public sealed class DuplicatorDraw(
     IEngineAccessor engine,
+    IActorList actorList,
     ITiles tiles) 
     : IDraw
 {
@@ -15,7 +16,7 @@ public sealed class DuplicatorDraw(
 
     public AnsiChar Draw(Location location)
     {
-        return (int)Engine.ActorAt(location).P1 switch
+        return (int)actorList.ActorAt(location).P1 switch
         {
             2 => new AnsiChar(0xF9, tiles[location].Color),
             3 => new AnsiChar(0xF8, tiles[location].Color),

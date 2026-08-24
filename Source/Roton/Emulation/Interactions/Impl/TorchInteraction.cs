@@ -12,7 +12,8 @@ public sealed class TorchInteraction(
     IHud hud,
     IAlerts alerts,
     IFacts facts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -20,7 +21,7 @@ public sealed class TorchInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Torches++;
-        Engine.RemoveItem(location);
+        features.RemoveItem(location);
         hud.UpdateStatus();
         if (alerts.TorchPickup)
         {

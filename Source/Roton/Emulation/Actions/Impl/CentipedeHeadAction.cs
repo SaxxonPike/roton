@@ -126,19 +126,19 @@ public sealed class CentipedeHeadAction(
                     {
                         // Determine if there are any eligible new follower segments
                         if (tiles.ElementAt(origin - vector).Id == elementList.SegmentId &&
-                            Engine.ActorAt(origin - vector).Leader <= 0)
+                            actorList.ActorAt(origin - vector).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin - vector);
+                            segment.Follower = actorList.ActorIndexAt(origin - vector);
                         }
                         else if (tiles.ElementAt(origin - vector.Swap()).Id == elementList.SegmentId &&
-                                 Engine.ActorAt(origin - vector.Swap()).Leader <= 0)
+                                 actorList.ActorAt(origin - vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin - vector.Swap());
+                            segment.Follower = actorList.ActorIndexAt(origin - vector.Swap());
                         }
                         else if (tiles.ElementAt(origin + vector.Swap()).Id == elementList.SegmentId &&
-                                 Engine.ActorAt(origin + vector.Swap()).Leader <= 0)
+                                 actorList.ActorAt(origin + vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin + vector.Swap());
+                            segment.Follower = actorList.ActorIndexAt(origin + vector.Swap());
                         }
                         else
                         {

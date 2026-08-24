@@ -13,7 +13,8 @@ public sealed class GemInteraction(
     IHud hud,
     ISounds sounds,
     IAlerts alerts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -23,7 +24,7 @@ public sealed class GemInteraction(
         world.Health += facts.HealthPerGem;
         world.Gems += 1;
         world.Score += facts.ScorePerGem;
-        Engine.RemoveItem(location);
+        features.RemoveItem(location);
         hud.UpdateStatus();
         soundUnit.PlaySound(2, sounds.Gem);
 

@@ -9,12 +9,8 @@ public interface IEngine
     event EventHandler Tick;
 
     bool TitleScreen { get; }
-    IActor ActorAt(Location location);
-    int ActorIndexAt(Location location);
-    int Adjacent(Location location, int id);
     void Attack(int index, Location location);
     bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
-    void CleanUpOop(ref OopContext context);
     void Convey(Location center, int direction);
     void Destroy(Location location);
     AnsiChar Draw(Location location);
@@ -24,15 +20,10 @@ public interface IEngine
     bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take);
     void FadePurple();
     bool FindTile(Tile kind, Location location);
-    void ForcePlayerColor(int index);
     Vector GetCardinalVector(int index);
-    int GetColorMatchValue(int color);
-    void HandlePlayerInput(IActor actor);
     void Harm(int index);
-    void LockActor(int index);
     void MoveActor(int index, Location location);
     void MoveActorOnRiver(int index);
-    void NotifyActorSentLabel(int index);
     void PlotTile(Location location, Tile tile);
     void Push(Location location, Vector vector);
     void PushThroughTransporter(Location location, Vector vector);
@@ -40,7 +31,6 @@ public interface IEngine
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
     void ReadInput(bool isUiFocused);
     void RemoveActor(int index);
-    void RemoveItem(Location location);
     Vector Rnd();
     Vector RndP(Vector vector);
     Vector Seek(Location location);
@@ -48,24 +38,18 @@ public interface IEngine
     void SetGameMode();
     void SetMessage(int duration, IMessage message);
     void ShowHelp(string title, string filename);
-    void ShowInGameHelp();
     void SpawnActor(Location location, Tile tile, int cycle, IActor? source);
     bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned);
     void Start();
     void Stop();
-    void UnlockActor(int index);
     void UpdateBoard(Location location);
     void UpdateRadius(Location location, RadiusMode mode);
     void UpdateStatus();
     void WaitForTick();
-    void ClearForest(Location location);
-    void CleanUpPassageMovement();
     void StepOnce();
-    string[] GetMessageLines();
     bool ThreadActive { get; }
     int MemoryUsage { get; }
     void Cheat();
-    string GetHighScoreName(string fileName);
     void ShowHighScores();
     void Delay(int msec);
     int ResetBoardTimeHsec();

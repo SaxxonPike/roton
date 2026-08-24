@@ -14,7 +14,8 @@ public sealed class DoorInteraction(
     IFacts facts,
     ISounds sounds,
     IHud hud,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -31,7 +32,7 @@ public sealed class DoorInteraction(
         else
         {
             world.Keys[keyIndex] = false;
-            Engine.RemoveItem(location);
+            features.RemoveItem(location);
             hud.UpdateStatus();
             Engine.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
             soundUnit.PlaySound(3, sounds.DoorOpen);

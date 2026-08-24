@@ -161,8 +161,6 @@ public sealed class Engine : IEngine, IDisposable
         _soundUnit.PlaySound(10, _sounds.Cheat);
     }
 
-    public string GetHighScoreName(string fileName) => _features.GetHighScoreName(fileName);
-
     public void ShowHighScores()
     {
         var list = _highScoreListFactory.Load();
@@ -177,8 +175,6 @@ public sealed class Engine : IEngine, IDisposable
 
     public event EventHandler? Exited;
     public event EventHandler? Tick;
-
-    public int Adjacent(Location location, int id) => _features.GetAdjacent(location, id);
 
     public void Attack(int index, Location location)
     {
@@ -225,23 +221,19 @@ public sealed class Engine : IEngine, IDisposable
 
         while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (!ActorIsLocked(info.Index) || ignoreLock || sender == info.Index && !ignoreSelfLock)
+            if (!_features.IsActorLocked(info.Index) || ignoreLock || sender == info.Index && !ignoreSelfLock)
             {
                 if (sender == info.Index)
                     success = true;
 
                 _tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
                 _actorList[info.Index].Instruction = info.Offset;
-                NotifyActorSentLabel(info.Index);
+                _features.NotifyActorSentLabel(info.Index);
             }
         }
 
         return success;
     }
-
-    public void CleanUpPassageMovement() => _features.CleanUpPassageMovement();
-
-    public void ClearForest(Location location) => _features.ClearForest(location);
 
     public void Convey(Location center, int direction)
     {
@@ -320,7 +312,7 @@ public sealed class Engine : IEngine, IDisposable
     {
         var index = ActorIndexAt(location);
         if (index == -1)
-            RemoveItem(location);
+            _features.RemoveItem(location);
         else
             Harm(index);
     }
@@ -435,10 +427,8 @@ public sealed class Engine : IEngine, IDisposable
             ExecuteMessage(ref context);
 
         if (context.Died)
-            CleanUpOop(ref context);
+            _features.CleanUpOop(ref context);
     }
-
-    public void CleanUpOop(ref OopContext context) => _features.CleanUpOop(ref context);
 
     public bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix)
     {
@@ -519,19 +509,15 @@ public sealed class Engine : IEngine, IDisposable
         _step = false;
     }
 
-    public string[] GetMessageLines() => _features.GetMessageLines();
-
     public void FadePurple()
     {
         FadeBoard(_facts.FadeTile);
         _hud.RedrawBoard();
     }
 
-    public int GetColorMatchValue(int color) => _features.GetColorMatchValue(color);
-
     public bool FindTile(Tile kind, Location location)
     {
-        var matchColor = GetColorMatchValue(kind.Color);
+        var matchColor = _features.GetColorMatchValue(kind.Color);
 
         location.X++;
         while (location.Y <= _tiles.Height)
@@ -541,7 +527,7 @@ public sealed class Engine : IEngine, IDisposable
                 ref var tile = ref _tiles[location];
                 if (tile.Id == kind.Id)
                 {
-                    var foundColor = GetColorMatchValue(ColorMatch(_tiles[location]));
+                    var foundColor = _features.GetColorMatchValue(ColorMatch(_tiles[location]));
                     if (kind.Color == 0 || foundColor == matchColor)
                         return true;
                 }
@@ -556,11 +542,7 @@ public sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    public void ForcePlayerColor(int index) => _features.ForcePlayerColor(index);
-
     public Vector GetCardinalVector(int index) => new(_state.Vector4[index], _state.Vector4[index + 4]);
-
-    public void HandlePlayerInput(IActor actor) => _features.HandlePlayerInput(actor);
 
     public void Harm(int index)
     {
@@ -580,7 +562,7 @@ public sealed class Engine : IEngine, IDisposable
                     if (_board.RestartOnZap)
                     {
                         _soundUnit.PlaySound(4, _sounds.TimeOut);
-                        RemoveItem(actor.Location);
+                        _features.RemoveItem(actor.Location);
                         var oldLocation = actor.Location;
                         actor.Location = _board.Entrance;
                         UpdateRadius(oldLocation, 0);
@@ -619,8 +601,6 @@ public sealed class Engine : IEngine, IDisposable
     private int HsecToTicks(int hsec) =>
         Math.Max(1, hsec * (_config.MasterClockDenominator / _config.MasterClockNumerator + 50) / 100);
 
-    public void LockActor(int index) => _features.LockActor(index);
-
     public void MoveActor(int index, Location target)
     {
         var actor = _actorList[index];
@@ -638,7 +618,7 @@ public sealed class Engine : IEngine, IDisposable
         sourceTile = underTile;
         actor.Location = target;
         if (targetTile.Id == _elementList.PlayerId)
-            ForcePlayerColor(index);
+            _features.ForcePlayerColor(index);
 
         UpdateBoard(target);
         UpdateBoard(sourceLocation);
@@ -703,8 +683,6 @@ public sealed class Engine : IEngine, IDisposable
                 MoveActor(index, target);
         }
     }
-
-    public void NotifyActorSentLabel(int index) => _features.NotifyActorSentLabel(index);
 
     public void PlotTile(Location location, Tile tile)
     {
@@ -900,8 +878,6 @@ public sealed class Engine : IEngine, IDisposable
         _state.ActorCount--;
     }
 
-    public void RemoveItem(Location location) => _features.RemoveItem(location);
-
     public Vector Rnd()
     {
         var result = new Vector
@@ -962,8 +938,6 @@ public sealed class Engine : IEngine, IDisposable
     }
 
     public void ShowHelp(string title, string filename) => _hud.ShowHelp(title, filename);
-
-    public void ShowInGameHelp() => _features.ShowInGameHelp();
 
     public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
@@ -1039,8 +1013,6 @@ public sealed class Engine : IEngine, IDisposable
     }
 
     public bool TitleScreen => _state.PlayerElement != _elementList.PlayerId;
-
-    public void UnlockActor(int index) => _features.UnlockActor(index);
 
     public void UpdateBoard(Location location) => DrawTile(location, Draw(location));
 
@@ -1160,8 +1132,6 @@ public sealed class Engine : IEngine, IDisposable
                 _ticksToRun--;
         }
     }
-
-    private bool ActorIsLocked(int index) => _features.IsActorLocked(index);
 
     private int ColorMatch(Tile tile)
     {
@@ -1350,7 +1320,7 @@ public sealed class Engine : IEngine, IDisposable
         if (_state.Init)
         {
             if (!_state.AboutShown)
-                ShowAbout();
+                _features.ShowAbout();
 
             if (!ThreadActive)
                 return;
@@ -1393,7 +1363,7 @@ public sealed class Engine : IEngine, IDisposable
         {
             _tiles[target] = _tiles[source];
             UpdateBoard(target);
-            RemoveItem(source);
+            _features.RemoveItem(source);
             UpdateBoard(source);
         }
     }
@@ -1640,8 +1610,6 @@ public sealed class Engine : IEngine, IDisposable
         if (_state.KeyVector.IsNonZero())
             _state.KeyLastVector = _state.KeyVector;
     }
-
-    private void ShowAbout() => _features.ShowAbout();
 
     private void StartInit()
     {

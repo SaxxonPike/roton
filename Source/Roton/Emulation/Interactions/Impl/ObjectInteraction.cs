@@ -8,14 +8,15 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x24)]
 public sealed class ObjectInteraction(
     IEngineAccessor engine,
-    IFacts facts)
+    IFacts facts,
+    IActorList actorList)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var objectIndex = Engine.ActorIndexAt(location);
+        var objectIndex = actorList.ActorIndexAt(location);
         Engine.BroadcastLabel(-objectIndex, facts.TouchLabel, false);
     }
 }

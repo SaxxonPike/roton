@@ -49,7 +49,7 @@ public sealed class SuperFeatures(
             var adjacentTile = tiles[targetLocation];
 
             if (elementList[adjacentTile.Id].Cycle >= 0)
-                adjacentTile = Engine.ActorAt(targetLocation).UnderTile;
+                adjacentTile = actorList.ActorAt(targetLocation).UnderTile;
 
             var adjacentElement = adjacentTile.Id;
 
@@ -210,7 +210,7 @@ public sealed class SuperFeatures(
 
         if (Engine.ElementAt(location).Cycle >= 0)
         {
-            eId = Engine.ActorAt(location).UnderTile.Id;
+            eId = actorList.ActorAt(location).UnderTile.Id;
             if (eId == id || eId == elementList.BoardEdgeId)
                 return true;
         }

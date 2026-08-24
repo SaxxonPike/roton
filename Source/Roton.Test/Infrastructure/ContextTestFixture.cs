@@ -45,6 +45,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IDirectionList Directions { get; private set; } = null!;
     protected IElementList Elements { get; private set; } = null!;
     protected IFacts Facts { get; private set; } = null!;
+    protected IFeatures Features { get; private set; } = null!;
     protected ICodeHeap Heap { get; private set; } = null!;
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
@@ -61,7 +62,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IWorldUnit WorldUnit { get; private set; } = null!;
     protected ISoundUnit SoundUnit { get; private set; } = null!;
 
-    protected IEnumerable<string> FullMessage => Engine.GetMessageLines();
+    protected IEnumerable<string> FullMessage => Features.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
     protected void TouchActor(int actorIndex)
@@ -168,6 +169,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Directions = container.GetRequiredService<IDirectionList>();
         Elements = container.GetRequiredService<IElementList>();
         Facts = container.GetRequiredService<IFacts>();
+        Features = container.GetRequiredService<IFeatures>();
         Heap = container.GetRequiredService<ICodeHeap>();
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();
@@ -322,10 +324,10 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     }
 
     protected int ActorIndexAt(int x, int y) =>
-        Engine.ActorIndexAt(new Location(x, y));
+        Actors.ActorIndexAt(new Location(x, y));
 
     protected IActor ActorAt(int x, int y) =>
-        Engine.ActorAt(new Location(x, y));
+        Actors.ActorAt(new Location(x, y));
 
     protected int RandomInt(int min, int max) =>
         Rand.Next(min, max + 1);

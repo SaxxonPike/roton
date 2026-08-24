@@ -8,6 +8,7 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super, 0x24)]
 public sealed class ObjectDraw(
     IEngineAccessor engine,
+    IActorList actorList,
     ITiles tiles) 
     : IDraw
 {
@@ -15,6 +16,6 @@ public sealed class ObjectDraw(
 
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(Engine.ActorAt(location).P1, tiles[location].Color);
+        return new AnsiChar(actorList.ActorAt(location).P1, tiles[location].Color);
     }
 }

@@ -119,7 +119,7 @@ public sealed class OriginalFeatures(
 
     public void ClearForest(Location location)
     {
-        Engine.RemoveItem(location);
+        RemoveItem(location);
     }
 
     public void CleanUpPassageMovement()

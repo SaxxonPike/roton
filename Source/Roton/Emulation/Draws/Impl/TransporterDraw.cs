@@ -8,6 +8,7 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super, 0x1E)]
 public sealed class TransporterDraw(
     IEngineAccessor engine,
+    IActorList actorList,
     ITiles tiles,
     IState state)
     : IDraw
@@ -16,7 +17,7 @@ public sealed class TransporterDraw(
 
     public AnsiChar Draw(Location location)
     {
-        var actor = Engine.ActorAt(location);
+        var actor = actorList.ActorAt(location);
 
         var index = actor.Cycle > 0 
             ? (state.GameCycle / actor.Cycle) & 0x3 
