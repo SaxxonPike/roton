@@ -458,31 +458,33 @@ public sealed class Engine : IEngine, IDisposable
         _boardUpdater.UpdateBoard(sourceLocation);
         actor.UnderTile = nextUnderTile;
 
-        if (index == 0 && _board.IsDark)
+        if (index == 0)
         {
-            var squareDistanceX = (target.X - sourceLocation.X).Square();
-            var squareDistanceY = (target.Y - sourceLocation.Y).Square();
-            if (squareDistanceX + squareDistanceY == 1)
+            if (_board.IsDark)
             {
-                for (var x = target.X - _facts.TorchDrawBoxVerticalSize;
-                     x <= target.X + _facts.TorchDrawBoxVerticalSize;
-                     x++)
-                for (var y = target.Y - _facts.TorchDrawBoxHorizontalSize;
-                     y <= target.Y + _facts.TorchDrawBoxHorizontalSize;
-                     y++)
+                var squareDistanceX = (target.X - sourceLocation.X).Square();
+                var squareDistanceY = (target.Y - sourceLocation.Y).Square();
+                if (squareDistanceX + squareDistanceY == 1)
                 {
-                    var glowLocation = new Location(x, y);
-                    if (glowLocation.X >= 1 && glowLocation.X <= _tiles.Width && glowLocation.Y >= 1 &&
-                        glowLocation.Y <= _tiles.Height)
-                        if ((Distance(sourceLocation, glowLocation) < _facts.TorchRadius) ^
-                            (Distance(target, glowLocation) < _facts.TorchRadius))
-                            _boardUpdater.UpdateBoard(glowLocation);
+                    for (var x = target.X - _facts.TorchDrawBoxVerticalSize;
+                         x <= target.X + _facts.TorchDrawBoxVerticalSize;
+                         x++)
+                    for (var y = target.Y - _facts.TorchDrawBoxHorizontalSize;
+                         y <= target.Y + _facts.TorchDrawBoxHorizontalSize;
+                         y++)
+                    {
+                        var glowLocation = new Location(x, y);
+                        if (glowLocation.X >= 1 && glowLocation.X <= _tiles.Width && glowLocation.Y >= 1 &&
+                            glowLocation.Y <= _tiles.Height)
+                            if ((Distance(sourceLocation, glowLocation) < _facts.TorchRadius) ^
+                                (Distance(target, glowLocation) < _facts.TorchRadius))
+                                _boardUpdater.UpdateBoard(glowLocation);
+                    }
                 }
             }
-        }
 
-        if (index == 0)
             _hud.UpdateCamera();
+        }
     }
 
     public void MoveActorOnRiver(int index)
@@ -565,7 +567,7 @@ public sealed class Engine : IEngine, IDisposable
         if (location.X >= 1 && location.X <= _tiles.Width && location.Y >= 1 &&
             location.Y <= _tiles.Height)
         {
-            if (!ElementAt(location).IsFloor) 
+            if (!ElementAt(location).IsFloor)
                 _pusher.Push(location, vector);
             PlotTile(location, kind);
         }
@@ -717,7 +719,7 @@ public sealed class Engine : IEngine, IDisposable
             }
 
             _tiles[actor.Location].Id = tile.Id;
-            if (actor.Location.Y > 0) 
+            if (actor.Location.Y > 0)
                 _boardUpdater.UpdateBoard(actor.Location);
         }
     }

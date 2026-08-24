@@ -29,15 +29,11 @@ public sealed class Interpreter(
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var firstLine = true;
+
+        Tracer.TraceOop(ref context, ref instruction);
 
         while (true)
         {
-            if (firstLine)
-                firstLine = false;
-            else
-                Tracer?.TraceOop(ref context, ref instruction);
-
             context.Resume = false;
             context.Executed = true;
 
