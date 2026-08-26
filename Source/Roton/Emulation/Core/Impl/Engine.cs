@@ -583,6 +583,12 @@ public sealed class Engine : IEngine, IDisposable
 
     public void RemoveActor(int index)
     {
+        if (index < 0)
+        {
+            _tracer.TraceCrash("Attempted to remove invalid actor index");
+            return;
+        }
+
         var actor = _actorList[index];
         var freeCode = actor.Length > 0 && actor.Pointer != 0;
 

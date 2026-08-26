@@ -12,7 +12,8 @@ public sealed class BlinkWallAction(
     IElementList elementList,
     IActorList actorList,
     IWorld world,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    ITracer tracer)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -90,9 +91,19 @@ public sealed class BlinkWallAction(
 
                     if (tiles[target].Id == elementList.PlayerId)
                     {
-                        while (world.Health > 0)
+                        if (playerIndex != 0)
                         {
-                            Engine.Harm(0);
+                            // Ordinarily there is a hang if the player index
+                            // is anything but zero. We prevent that here.
+
+                            tracer.TraceCrash("Blink wall hit a trapped player clone");
+                        }
+                        else
+                        {
+                            while (world.Health > 0)
+                            {
+                                Engine.Harm(playerIndex);
+                            }
                         }
 
                         blocked = true;

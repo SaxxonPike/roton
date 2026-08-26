@@ -14,7 +14,8 @@ public sealed class Pusher(
     ISoundUnit soundUnit,
     ISounds sounds,
     IBoardUpdater boardUpdater,
-    IFeatures features)
+    IFeatures features,
+    ITracer tracer)
     : IPusher
 {
     private IEngine Engine => engine.Instance;
@@ -26,10 +27,12 @@ public sealed class Pusher(
             tile.Id == elementList.SliderNsId && vector.X == 0 ||
             elementList[tile.Id].IsPushable)
         {
-            // this is here to prevent endless push loops
-            // but doesn't exist in the original code
             if (vector.IsZero())
-                throw Exceptions.PushStackOverflow;
+            {
+                // This would ordinarily cause an infinite loop.
+                tracer.TraceCrash("Push called with zero vector");
+                return;
+            }
 
             ref var furtherTile = ref tiles[location + vector];
             if (furtherTile.Id == elementList.TransporterId)

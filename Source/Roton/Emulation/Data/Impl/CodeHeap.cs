@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
+using Roton.Emulation.Core;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class CodeHeap : ICodeHeap
+public sealed class CodeHeap(ITracer tracer)
+    : ICodeHeap
 {
     private int _nextEntry = 1;
     private readonly Memory<char>[] _entries = new Memory<char>[256];
@@ -31,8 +33,18 @@ public sealed class CodeHeap : ICodeHeap
         }
     }
 
-    public void Free(int index) =>
+    public void Free(int index)
+    {
+        if (index < 0 || index >= _entries.Length)
+        {
+            // Scrolls without an associated actor cause this crash when touched.
+
+            tracer.TraceCrash("Attempted to free invalid index");
+            return;
+        }
+
         _entries[index] = default;
+    }
 
     public void FreeAll()
     {
@@ -41,7 +53,9 @@ public sealed class CodeHeap : ICodeHeap
     }
 
     public Memory<char> this[int index] =>
-        _entries[index];
+        index >= 0 && index < _entries.Length
+            ? _entries[index]
+            : Memory<char>.Empty;
 
     private bool Contains(int index) =>
         !_entries[index].IsEmpty;

@@ -15,7 +15,7 @@ public static class MemoryExtensions
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal ref T GetRef<T>(int offset) where T : struct => 
-            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(offset))[0];
+            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
 
         [DebuggerStepThrough]
         internal Span<byte> Read(int offset, int length)

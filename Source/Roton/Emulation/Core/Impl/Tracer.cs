@@ -95,5 +95,15 @@ namespace Roton.Emulation.Core.Impl
                 writer.WriteLine(
                     $"{_stepNumber:D8}:{context.Index:D3} ERROR      [{context.Actor}] {message.ToString()}");
         }
+
+        public void TraceCrash(ReadOnlySpan<char> message)
+        {
+            if (_writers.Count == 0)
+                return;
+
+            foreach (var writer in _writers)
+                writer.WriteLine(
+                    $"{_stepNumber:D8}     CRASH      {message.ToString()}");
+        }
     }
 }
