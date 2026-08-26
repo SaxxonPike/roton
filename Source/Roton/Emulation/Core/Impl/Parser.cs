@@ -1,4 +1,5 @@
 using System;
+using Roton.Emulation.Colors;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Directions;
@@ -240,10 +241,9 @@ public sealed class Parser(
         var success = false;
         result = new Tile(0, 0);
 
-        var colorId = colorList.IndexOf(word);
-        if (colorId > 0)
+        if (colorList.Get(word) is { Value: > 0 } color)
         {
-            result.Color = colorId + 8;
+            result.Color = color.Value;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
 

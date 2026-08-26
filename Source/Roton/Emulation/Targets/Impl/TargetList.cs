@@ -9,4 +9,4 @@ namespace Roton.Emulation.Targets.Impl;
 public sealed class TargetList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListByName<ITarget>(contextMetadataService, serviceProvider), ITargetList;
+    : TypeList<ITarget>(contextMetadataService, serviceProvider), ITargetList;

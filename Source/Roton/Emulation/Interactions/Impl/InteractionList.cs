@@ -9,4 +9,4 @@ namespace Roton.Emulation.Interactions.Impl;
 public sealed class InteractionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListById<IInteraction>(contextMetadataService, serviceProvider), IInteractionList;
+    : TypeList<IInteraction>(contextMetadataService, serviceProvider), IInteractionList;

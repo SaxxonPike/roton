@@ -9,4 +9,4 @@ namespace Roton.Emulation.Conditions.Impl;
 public sealed class ConditionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListByName<ICondition>(contextMetadataService, serviceProvider), IConditionList;
+    : TypeList<ICondition>(contextMetadataService, serviceProvider), IConditionList;
