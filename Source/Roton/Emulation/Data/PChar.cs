@@ -14,8 +14,11 @@ public readonly struct PChar(byte value) : IEquatable<PChar>, IEquatable<int>, I
     {
     }
 
+    public static implicit operator byte(PChar ch) => ch._val;
+    public static implicit operator int(PChar ch) => ch._val;
     public static implicit operator char(PChar ch) => Cp437.ByteToChar(ch._val);
     public static implicit operator PChar(char value) => new(value);
+    public static implicit operator PChar(byte value) => new(value);
 
     public static bool operator ==(PChar left, PChar right) => left.Equals(right);
     public static bool operator !=(PChar left, PChar right) => !left.Equals(right);

@@ -1,11 +1,11 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public abstract class MemoryDrumSoundList : FixedList<IDrumSound>, IDrumSoundList
+public abstract class DrumSoundList : FixedList<IDrumSound>, IDrumSoundList
 {
     private readonly IMemory _memory;
     private readonly int _offset;
 
-    protected MemoryDrumSoundList(IMemory memory, int offset)
+    protected DrumSoundList(IMemory memory, int offset)
     {
         _memory = memory;
         _offset = offset;
@@ -17,7 +17,7 @@ public abstract class MemoryDrumSoundList : FixedList<IDrumSound>, IDrumSoundLis
 
     protected override IDrumSound GetItem(int index)
     {
-        return new MemoryDrumSound(_memory, _offset + index * 512, index);
+        return new DrumSound(_memory, _offset + index * 512, index);
     }
 
     private void GenerateSounds()

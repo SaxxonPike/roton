@@ -1,11 +1,11 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public sealed class MemoryDrumSound : FixedList<int>, IDrumSound
+public sealed class DrumSound : FixedList<int>, IDrumSound
 {
     private readonly IMemory _memory;
     private readonly int _offset;
 
-    internal MemoryDrumSound(IMemory memory, int offset, int index)
+    internal DrumSound(IMemory memory, int offset, int index)
     {
         _memory = memory;
         _offset = offset;

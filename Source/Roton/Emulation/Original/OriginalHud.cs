@@ -219,7 +219,7 @@ public sealed class OriginalHud(
         else
         {
             DrawString(0x40, 0x06, "   Time:", 0x1E);
-            DrawString(0x48, 0x06, (board.TimeLimit - world.TimePassed).ToCharSpan(buffer), 0x1E);
+            DrawString(0x48, 0x06, ((int)(board.TimeLimit - world.TimePassed)).ToCharSpan(buffer), 0x1E);
         }
 
         if (world.Health < 0)

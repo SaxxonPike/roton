@@ -28,7 +28,7 @@ public sealed class ZapCommand(
             if (!result)
                 break;
 
-            actorList[context.Search.Index].Code.Span[context.Search.Offset + 1] = '\'';
+            actorList[context.Search.Index].Code[context.Search.Offset + 1] = '\'';
         }
     }
 }

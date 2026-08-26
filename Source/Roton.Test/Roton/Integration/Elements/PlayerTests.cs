@@ -71,7 +71,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        Keys[keyColor - 1].Should().BeTrue(
+        ((bool)Keys[keyColor - 1]).Should().BeTrue(
             "correct key should be obtained");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
@@ -121,7 +121,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
         StepAllKeys();
 
         // Assert.
-        Keys[doorColor - 1].Should().BeFalse(
+        ((bool)Keys[doorColor - 1]).Should().BeFalse(
             "correct key should be consumed");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");

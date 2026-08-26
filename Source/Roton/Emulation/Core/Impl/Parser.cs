@@ -27,7 +27,7 @@ public sealed class Parser(
     {
         var actor = actorList[index];
         var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
-        return actor.Code.Span.Slice(0, codeLength);
+        return actor.Code.Slice(0, codeLength);
     }
 
     public int Search(int index, ReadOnlySpan<char> term)
@@ -82,7 +82,7 @@ public sealed class Parser(
         }
         else
         {
-            value = actor.Code.Span[instruction];
+            value = actor.Code[instruction];
             state.OopByte = value;
             instruction++;
         }

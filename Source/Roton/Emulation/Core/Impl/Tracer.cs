@@ -29,7 +29,7 @@ namespace Roton.Emulation.Core.Impl
             if (_writers.Count == 0)
                 return;
 
-            var code = context.Actor.Code.Span;
+            var code = context.Actor.Code;
             var offset = instruction;
             var end = instruction;
 

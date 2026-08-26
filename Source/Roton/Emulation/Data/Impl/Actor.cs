@@ -40,16 +40,16 @@ public sealed class Actor : IActor
 
     public ref Word Instruction => ref _memory.GetRef<Word>(Offset + 0x15);
 
-    public Memory<char> Code
+    public Span<char> Code
     {
-        get => _heap[Pointer];
+        get => _heap[Pointer].Span;
         set { }
     }
 
     public override string ToString()
     {
         var name = ReadOnlySpan<char>.Empty;
-        var data = Code.Span;
+        var data = Code;
 
         if (!data.IsEmpty)
         {

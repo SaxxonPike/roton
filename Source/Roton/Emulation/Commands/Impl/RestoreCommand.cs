@@ -31,7 +31,7 @@ public sealed class RestoreCommand(
 
             while (context.Search.Offset >= 0)
             {
-                actorList[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
+                actorList[context.Search.Index].Code[context.Search.Offset + 1] = ':';
                 var word = state.GetOopWord(wordBuffer);
                 context.Search.Offset = parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }

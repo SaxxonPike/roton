@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Lyon;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -147,7 +148,8 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         EnableTracer();
 
         var services = new ServiceCollection();
-        services.AddRoton(Context, typeof(ContextTestFixture).Assembly);
+        Assembly[] additionalAssemblies = [typeof(ContextTestFixture).Assembly];
+        services.AddRoton(Context, additionalAssemblies);
         services.AddSingleton<IFileSystem>(FileSystem);
         services.AddSingleton<ITerminal>(Terminal);
         services.AddSingleton<IKeyboard>(Keyboard);

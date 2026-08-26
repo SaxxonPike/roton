@@ -12,16 +12,16 @@ public interface IState
     ref Tile EdgeTile { get; }
     ref Vector KeyVector { get; }
     ref Vector KeyLastVector { get; }
-    IReadOnlyList<int> LineChars { get; }
+    IRefList<PChar> LineChars { get; }
     IReadOnlyList<string> ProgressAnimation { get; }
-    IReadOnlyList<int> ProgressColors { get; }
+    IRefList<HWord> ProgressColors { get; }
     ISoundBufferList SoundBuffer { get; }
-    IReadOnlyList<int> StarChars { get; }
-    IReadOnlyList<int> TransporterHChars { get; }
-    IReadOnlyList<int> TransporterVChars { get; }
-    IReadOnlyList<int> Vector4 { get; }
-    IReadOnlyList<int> Vector8 { get; }
-    IReadOnlyList<int> WebChars { get; }
+    IRefList<PChar> StarChars { get; }
+    IRefList<PChar> TransporterHChars { get; }
+    IRefList<PChar> TransporterVChars { get; }
+    IRefList<Word> Vector4 { get; }
+    IRefList<Word> Vector8 { get; }
+    IRefList<PChar> WebChars { get; }
     ref Bool AboutShown { get; }
     ref Word ActIndex { get; }
     ref Word ActorCount { get; }

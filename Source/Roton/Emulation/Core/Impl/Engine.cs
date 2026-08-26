@@ -1105,7 +1105,7 @@ public sealed class Engine : IEngine, IDisposable
         }
         else
         {
-            value = actor.Code.Span[instruction];
+            value = actor.Code[instruction];
             _state.OopByte = value;
             instruction++;
         }

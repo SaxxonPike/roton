@@ -4,6 +4,6 @@ namespace Roton.Emulation.Data;
 
 public interface IKeyList : IEnumerable<bool>
 {
-    bool this[int index] { get; set; }
+    ref Bool this[int index] { get; }
     void Clear();
 }
