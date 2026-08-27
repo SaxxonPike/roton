@@ -42,7 +42,7 @@ public sealed class Actor : IActor
 
     public Span<char> Code
     {
-        get => _heap[Pointer].Span;
+        get => _heap[Pointer];
         set { }
     }
 

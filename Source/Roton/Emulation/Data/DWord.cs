@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Roton.Emulation.Data;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct DWord : IEquatable<DWord>, IEquatable<int>, IEquatable<short>
+public struct DWord : IEquatable<DWord>, IEquatable<int>
 {
     public static implicit operator int(DWord word) => word.Value;
     public static implicit operator DWord(int value) => new DWord { Value = value };
@@ -30,7 +30,7 @@ public struct DWord : IEquatable<DWord>, IEquatable<int>, IEquatable<short>
         {
             if (BitConverter.IsLittleEndian)
             {
-                _val = unchecked((short)value);
+                _val = value;
                 return;
             }
 
@@ -45,9 +45,6 @@ public struct DWord : IEquatable<DWord>, IEquatable<int>, IEquatable<short>
         _val == other._val;
 
     public bool Equals(int other) =>
-        Value == other;
-
-    public bool Equals(short other) =>
         Value == other;
 
     public override bool Equals(object? obj) =>

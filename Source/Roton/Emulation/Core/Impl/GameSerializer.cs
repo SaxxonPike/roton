@@ -115,7 +115,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
         for (var i = 0; i <= count; i++)
         {
             var actor = new Actor(mem, Heap, ActorDataOffset + ActorDataLength * i);
-            var code = Memory<char>.Empty;
+            var code = Span<char>.Empty;
 
             if (actor.Pointer != 0)
             {
@@ -144,7 +144,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
             if (!code.IsEmpty)
             {
                 var codeBytes = new byte[code.Length];
-                Cp437.CharsToBytes(code.Span, codeBytes);
+                Cp437.CharsToBytes(code, codeBytes);
                 target.Write(codeBytes);
             }
         }
