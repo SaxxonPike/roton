@@ -48,7 +48,11 @@ public sealed class DuplicatorAction(
                     var sourceIndex = actorList.ActorIndexAt(source);
                     if (sourceIndex > 0)
                     {
-                        if (state.ActorCount < actorList.Capacity - 2)
+                        // This is a bug in the original code. Should be "- 2" instead of "+ 22".
+                        // The call to SpawnActor won't actually spawn anything, but the update still happens.
+                        // The bug is retained for compatibility.
+
+                        if (state.ActorCount < actorList.Capacity + 22)
                         {
                             Engine.SpawnActor(target, tiles[source], actorList[sourceIndex].Cycle,
                                 actorList[sourceIndex]);

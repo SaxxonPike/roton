@@ -56,6 +56,14 @@ public sealed class Pusher(
 
         if (actor.Vector == vector)
         {
+            if (vector.IsZero())
+            {
+                // Ordinarily this hangs indefinitely. We catch this situation
+                // and turn it into a no-op.
+                tracer.TraceCrash("Transport called with zero vector");
+                return;
+            }
+            
             var search = actor.Location;
             var target = new Location();
             var ended = false;

@@ -151,7 +151,9 @@ public sealed class CentipedeHeadAction(
                     var followerIndex = segment.Follower;
                     if (followerIndex == segmentIndex)
                     {
-                        throw Exceptions.SelfReferenceCentipede;
+                        // Ordinarily this will cause a hang, but we will detect this
+                        // situation and bail out instead.
+                        break;
                     }
 
                     if (followerIndex > 0)
