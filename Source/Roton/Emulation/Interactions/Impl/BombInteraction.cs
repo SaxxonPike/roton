@@ -11,24 +11,27 @@ public sealed class BombInteraction(
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IActorList actorList,
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
 
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var actor = Engine.ActorAt(location);
+        var actor = actorList.ActorAt(location);
         if (actor.P1 == 0)
         {
             actor.P1 = (byte)facts.BombCountdownStart;
-            Engine.UpdateBoard(location);
+            boardUpdater.UpdateBoard(location);
             Engine.SetMessage(facts.LongMessageDuration, alerts.BombMessage);
             soundUnit.PlaySound(4, sounds.BombActivate);
         }
         else
         {
-            Engine.Push(location, vector);
+            pusher.Push(location, vector);
         }
     }
 }

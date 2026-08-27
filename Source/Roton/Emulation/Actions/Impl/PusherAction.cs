@@ -13,7 +13,8 @@ public sealed class PusherAction(
     ISounds sounds,
     IElementList elementList,
     IActionList actionList,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +26,7 @@ public sealed class PusherAction(
 
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
         {
-            Engine.Push(actor.Location + actor.Vector, actor.Vector);
+            pusher.Push(actor.Location + actor.Vector, actor.Vector);
         }
 
         index = actorList.ActorIndexAt(source);

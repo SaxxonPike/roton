@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
@@ -8,41 +7,45 @@ namespace Roton.Emulation.Data.Impl;
 [Context(Context.Super)]
 public sealed class CodeHeap : ICodeHeap
 {
-    private int _nextEntry = 1;
-    private readonly Memory<char>[] _entries = new Memory<char>[256];
+    private int _nextEntry;
+    private readonly char[] _block = new char[short.MaxValue - 1];
 
-    public int Size => _entries.Where(e => !e.IsEmpty).Sum(e => e.Length);
+    public int Size => _nextEntry;
 
     public int Allocate(ReadOnlySpan<char> data)
     {
-        var allocated = new char[data.Length];
-        data.CopyTo(allocated);
+        if (data.Length == 0)
+            return 0;
 
-        while (true)
-        {
-            if (_nextEntry >= _entries.Length)
-                _nextEntry = 1;
+        var offset = _nextEntry;
+        _nextEntry += data.Length;
 
-            if (_entries[_nextEntry].IsEmpty)
-            {
-                _entries[_nextEntry] = allocated;
-                return _nextEntry++;
-            }
-        }
+        data.CopyTo(_block.AsSpan(offset, data.Length));
+        var result = offset | (data.Length << 16);
+
+        return result;
     }
 
-    public void Free(int index) =>
-        _entries[index] = default;
+    private Span<char> GetSpan(int pointer)
+    {
+        var length = unchecked((short)(pointer >> 16));
+        var offset = unchecked((short)pointer);
+        
+        if (length < 0 || offset < 0)
+            return Span<char>.Empty;
+        
+        return _block.AsSpan(offset, length);
+    }
+
+    public void Free(int pointer) => 
+        GetSpan(pointer).Clear();
 
     public void FreeAll()
     {
-        _entries.AsSpan().Clear();
-        _nextEntry = 1;
+        _block.AsSpan().Clear();
+        _nextEntry = 0;
     }
 
-    public Memory<char> this[int index] =>
-        _entries[index];
-
-    private bool Contains(int index) =>
-        !_entries[index].IsEmpty;
+    public Span<char> this[int pointer] =>
+        GetSpan(pointer);
 }

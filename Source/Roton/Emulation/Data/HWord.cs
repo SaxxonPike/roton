@@ -7,11 +7,12 @@ namespace Roton.Emulation.Data;
 /// Wraps an unsigned 8-bit value.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct HWord(int value) : IEquatable<HWord>, IEquatable<int>, IEquatable<byte>
+public readonly struct HWord(byte value) : IEquatable<HWord>, IEquatable<int>, IEquatable<byte>
 {
     public static implicit operator byte(HWord word) => word._val;
     public static implicit operator int(HWord word) => word._val;
-    public static implicit operator HWord(int value) => new(value);
+    public static implicit operator HWord(byte value) => new(value);
+    public static implicit operator HWord(int value) => new(unchecked((byte)value));
 
     public static bool operator ==(HWord left, HWord right) => left.Equals(right);
     public static bool operator !=(HWord left, HWord right) => !left.Equals(right);

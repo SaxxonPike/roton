@@ -129,7 +129,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
             "board should have changed");
         TileAt(1, 10).Id.Should().Be(Elements.PlayerId,
             "player should have entered the board on the left side");
-        Keys[0].Should().BeTrue(
+        ((bool)Keys[0]).Should().BeTrue(
             "player should have picked up the key");
     }
 

@@ -67,10 +67,6 @@ public abstract class Hud(
     {
     }
 
-    public virtual void DrawTile(int x, int y, AnsiChar ac)
-    {
-    }
-
     public virtual void DrawTitleStatus()
     {
     }

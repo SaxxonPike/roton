@@ -16,4 +16,5 @@ public sealed class SuperFacts : Facts
     public override string WorldFileExtension => "SZT";
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "Super ZZT Worlds";
+    public override string HighScoreExtension => "HGS";
 }

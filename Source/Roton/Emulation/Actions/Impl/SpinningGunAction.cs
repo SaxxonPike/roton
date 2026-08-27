@@ -11,7 +11,8 @@ public sealed class SpinningGunAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,
-    IElementList elementList)
+    IElementList elementList,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -22,7 +23,7 @@ public sealed class SpinningGunAction(
         var firingElement = elementList.BulletId;
         var shot = false;
 
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
 
         if (actor.P2 >= 0x80)
         {

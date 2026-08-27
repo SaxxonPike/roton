@@ -9,4 +9,4 @@ namespace Roton.Emulation.Items.Impl;
 public sealed class ItemList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListByName<IItem>(contextMetadataService, serviceProvider), IItemList;
+    : TypeList<IItem>(contextMetadataService, serviceProvider), IItemList;

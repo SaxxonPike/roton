@@ -1,5 +1,4 @@
-﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
@@ -7,14 +6,11 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Original, 0x11)]
 [Context(Context.Super, 0x11)]
 public sealed class CounterclockwiseConveyorDraw(
-    IEngineAccessor engine,
     ITiles tiles,
     IElementList elementList,
     IState state)
     : IDraw
 {
-    private IEngine Engine => engine.Instance;
-
     public AnsiChar Draw(Location location)
     {
         return ((state.GameCycle / elementList.Counter().Cycle) & 0x3) switch

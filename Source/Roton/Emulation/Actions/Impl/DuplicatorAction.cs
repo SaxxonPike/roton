@@ -15,7 +15,9 @@ public sealed class DuplicatorAction(
     ITiles tiles,
     IActorList actorList,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -38,7 +40,7 @@ public sealed class DuplicatorAction(
                 if (tiles[target].Id != elementList.EmptyId)
                 {
                     var oppVec = -actor.Vector;
-                    Engine.Push(target, oppVec);
+                    pusher.Push(target, oppVec);
                 }
 
                 if (tiles[target].Id == elementList.EmptyId)
@@ -46,17 +48,21 @@ public sealed class DuplicatorAction(
                     var sourceIndex = actorList.ActorIndexAt(source);
                     if (sourceIndex > 0)
                     {
-                        if (state.ActorCount < actorList.Capacity - 2)
+                        // This is a bug in the original code. Should be "- 2" instead of "+ 22".
+                        // The call to SpawnActor won't actually spawn anything, but the update still happens.
+                        // The bug is retained for compatibility.
+
+                        if (state.ActorCount < actorList.Capacity + 22)
                         {
                             Engine.SpawnActor(target, tiles[source], actorList[sourceIndex].Cycle,
                                 actorList[sourceIndex]);
-                            Engine.UpdateBoard(target);
+                            boardUpdater.UpdateBoard(target);
                         }
                     }
                     else if (sourceIndex != 0)
                     {
                         tiles[target] = tiles[source];
-                        Engine.UpdateBoard(target);
+                        boardUpdater.UpdateBoard(target);
                     }
 
                     soundUnit.PlaySound(3, sounds.Duplicate);
@@ -74,7 +80,7 @@ public sealed class DuplicatorAction(
             actor.P1++;
         }
 
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
         actor.Cycle = (9 - actor.P2) * 3;
     }
 }

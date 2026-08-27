@@ -15,7 +15,9 @@ public sealed class BulletAction(
     IWorld world,
     IState state,
     IFacts facts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IHud hud,
+    IBroadcaster broadcaster)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -48,7 +50,7 @@ public sealed class BulletAction(
                 if (element.Points != 0)
                 {
                     world.Score += element.Points;
-                    Engine.UpdateStatus();
+                    hud.UpdateStatus();
                 }
 
                 Engine.Attack(index, target);
@@ -77,7 +79,7 @@ public sealed class BulletAction(
             state.ActIndex--;
             if (element.Id == elementList.ObjectId || element.Id == elementList.ScrollId)
             {
-                Engine.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
+                broadcaster.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
             }
 
             break;

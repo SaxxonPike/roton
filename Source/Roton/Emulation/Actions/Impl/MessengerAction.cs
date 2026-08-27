@@ -11,6 +11,7 @@ public sealed class MessengerAction(
     IEngineAccessor engine,
     IActorList actorList,
     IHud hud,
+    IFeatures features,
     IState state)
     : IAction
 {
@@ -21,7 +22,7 @@ public sealed class MessengerAction(
         var actor = actorList[index];
         if (actor.Location.X == 0)
         {
-            hud.DrawMessage(new Message(Engine.GetMessageLines()), actor.P2 % 7 + 9);
+            hud.DrawMessage(new Message(features.GetMessageLines()), actor.P2 % 7 + 9);
             actor.P2--;
             if (actor.P2 > 0) return;
 

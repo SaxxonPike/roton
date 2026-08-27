@@ -10,7 +10,9 @@ public sealed class StarAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,
-    ITiles tiles)
+    ITiles tiles,
+    IBoardUpdater boardUpdater,
+    IPusher pusher)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -36,7 +38,7 @@ public sealed class StarAction(
                 {
                     if (!targetElement.IsFloor)
                     {
-                        Engine.Push(targetLocation, actor.Vector);
+                        pusher.Push(targetLocation, actor.Vector);
                     }
 
                     if (targetElement.IsFloor || targetElement.Id == elementList.WaterId)
@@ -47,7 +49,7 @@ public sealed class StarAction(
             }
             else
             {
-                Engine.UpdateBoard(actor.Location);
+                boardUpdater.UpdateBoard(actor.Location);
             }
         }
         else

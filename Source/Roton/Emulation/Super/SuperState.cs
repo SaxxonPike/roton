@@ -106,11 +106,11 @@ public sealed class SuperState : IState
 
     public ref Vector KeyLastVector => ref Memory.GetRef<Vector>(0xCC8A);
 
-    public IReadOnlyList<int> LineChars { get; }
+    public IRefList<PChar> LineChars { get; }
 
     public IReadOnlyList<string> ProgressAnimation { get; }
 
-    public IReadOnlyList<int> ProgressColors { get; }
+    public IRefList<HWord> ProgressColors { get; }
 
     public string Message
     {
@@ -140,19 +140,19 @@ public sealed class SuperState : IState
 
     public ref HWord SoundTicks => ref Memory.GetRef<HWord>(0xCF9D);
 
-    public IReadOnlyList<int> StarChars { get; }
+    public IRefList<PChar> StarChars { get; }
 
     public ref Word StartBoard => ref Memory.GetRef<Word>(0x7CA2);
 
-    public IReadOnlyList<int> TransporterHChars { get; }
+    public IRefList<PChar> TransporterHChars { get; }
 
-    public IReadOnlyList<int> TransporterVChars { get; }
+    public IRefList<PChar> TransporterVChars { get; }
 
-    public IReadOnlyList<int> Vector4 { get; }
+    public IRefList<Word> Vector4 { get; }
 
-    public IReadOnlyList<int> Vector8 { get; }
+    public IRefList<Word> Vector8 { get; }
 
-    public IReadOnlyList<int> WebChars { get; }
+    public IRefList<PChar> WebChars { get; }
 
     public string WorldFileName
     {

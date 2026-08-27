@@ -29,7 +29,7 @@ namespace Roton.Emulation.Core.Impl
             if (_writers.Count == 0)
                 return;
 
-            var code = context.Actor.Code.Span;
+            var code = context.Actor.Code;
             var offset = instruction;
             var end = instruction;
 
@@ -94,6 +94,16 @@ namespace Roton.Emulation.Core.Impl
             foreach (var writer in _writers)
                 writer.WriteLine(
                     $"{_stepNumber:D8}:{context.Index:D3} ERROR      [{context.Actor}] {message.ToString()}");
+        }
+
+        public void TraceCrash(ReadOnlySpan<char> message)
+        {
+            if (_writers.Count == 0)
+                return;
+
+            foreach (var writer in _writers)
+                writer.WriteLine(
+                    $"{_stepNumber:D8}     CRASH      {message.ToString()}");
         }
     }
 }

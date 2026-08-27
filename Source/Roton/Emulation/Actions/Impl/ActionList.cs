@@ -9,4 +9,4 @@ namespace Roton.Emulation.Actions.Impl;
 public sealed class ActionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListById<IAction>(contextMetadataService, serviceProvider), IActionList;
+    : TypeList<IAction>(contextMetadataService, serviceProvider), IActionList;

@@ -13,7 +13,7 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         TypeCheat("+flag");
         Flags.AsEnumerable().Should().Contain(["FLAG"]);
     }
-    
+
     [Test]
     public void MinusFlagCheat_ShouldClearFlag()
     {
@@ -21,7 +21,7 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         TypeCheat("-flag");
         Flags.AsEnumerable().Should().NotContain(["FLAG"]);
     }
-    
+
     [Test]
     public void GemsCheat_ShouldGiveGems()
     {
@@ -37,7 +37,7 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         Ammo.Should().Be(Facts.AmmoPerPickup,
             "player should have gained ammo");
     }
-    
+
     [Test]
     public void HealthCheat_ShouldGiveHealth()
     {
@@ -45,7 +45,7 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         Health.Should().Be(Facts.DefaultHealth + 50,
             "player should have gained health");
     }
-    
+
     [Test]
     public void TimeCheat_ShouldDecreaseTimePassed()
     {
@@ -53,24 +53,24 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         TimePassed.Should().Be(-30,
             "player should have received additional time");
     }
-    
+
     [Test]
     public void KeysCheat_ShouldGiveAllKeys()
     {
         TypeCheat("keys");
-        Keys[0].Should().BeTrue(
+        ((bool)Keys[0]).Should().BeTrue(
             "player should receive blue key");
-        Keys[1].Should().BeTrue(
+        ((bool)Keys[1]).Should().BeTrue(
             "player should receive green key");
-        Keys[2].Should().BeTrue(
+        ((bool)Keys[2]).Should().BeTrue(
             "player should receive cyan key");
-        Keys[3].Should().BeTrue(
+        ((bool)Keys[3]).Should().BeTrue(
             "player should receive red key");
-        Keys[4].Should().BeTrue(
+        ((bool)Keys[4]).Should().BeTrue(
             "player should receive purple key");
-        Keys[5].Should().BeTrue(
+        ((bool)Keys[5]).Should().BeTrue(
             "player should receive yellow key");
-        Keys[6].Should().BeTrue(
+        ((bool)Keys[6]).Should().BeTrue(
             "player should receive white key");
     }
 
@@ -79,7 +79,7 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
     {
         // Place the player.
         MovePlayerTo(10, 10);
-        
+
         // Place walls around the player.
         PlotTo(9, 9, Elements.SolidId);
         PlotTo(9, 10, Elements.SolidId);
@@ -89,10 +89,10 @@ public class CheatTests(Context context) : AllContextTestFixture(context)
         PlotTo(11, 9, Elements.SolidId);
         PlotTo(11, 10, Elements.SolidId);
         PlotTo(11, 11, Elements.SolidId);
-        
+
         // Execute the cheat.
         TypeCheat("zap");
-        
+
         // Assert.
         TileAt(9, 10).Id.Should().Be(Elements.EmptyId,
             "tile to the west should be cleared");

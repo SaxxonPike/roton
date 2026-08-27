@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -24,32 +23,20 @@ public sealed class OriginalHud(
     IWorld world,
     IBoard board,
     IFacts facts,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IBoardUpdater boardUpdater,
+    IPlayField playField)
     : Hud(engine, scroll, state)
 {
-    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
-
-    private ITerminal Terminal { [DebuggerStepThrough] get; } = terminal;
-
-    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; } = textEntryHud;
-
-    private IChoiceHud ChoiceHud { [DebuggerStepThrough] get; } = choiceHud;
-
-    private ILongTextEntryHud LongTextEntryHud { [DebuggerStepThrough] get; } = longTextEntryHud;
-
     private const int ViewportHeight = 25;
 
     private const int ViewportWidth = 60;
 
-    public override void ClearPausing()
-    {
+    public override void ClearPausing() => 
         DrawStatusLine(5);
-    }
 
-    public override void ClearTitleStatus()
-    {
+    public override void ClearTitleStatus() => 
         DrawStatusLine(6);
-    }
 
     protected override bool Confirm(string message)
     {
@@ -148,10 +135,8 @@ public sealed class OriginalHud(
             world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
-    public override void DrawChar(int x, int y, AnsiChar ac)
-    {
-        Terminal.Plot(x, y, ac);
-    }
+    public override void DrawChar(int x, int y, AnsiChar ac) => 
+        terminal.Plot(x, y, ac);
 
     public override void DrawMessage(IMessage message, int color)
     {
@@ -163,66 +148,47 @@ public sealed class OriginalHud(
         DrawString(x, 24, " ", text, " ", color);
     }
 
-    public override void DrawPausing()
-    {
+    public override void DrawPausing() => 
         DrawString(0x40, 0x05, "Pausing...", 0x1F);
-    }
 
     public override void DrawStatusLine(int y)
     {
         var blankChar = new AnsiChar(0x20, 0x11);
         for (var x = 60; x < 80; x++)
         {
-            Terminal.Plot(x, y, blankChar);
+            terminal.Plot(x, y, blankChar);
         }
     }
 
-    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
-    {
-        Terminal.Write(x, y, text, color);
-    }
+    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
+        terminal.Write(x, y, text, color);
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
-    {
-        Terminal.Write(x, y, text0, text1, color);
-    }
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) => 
+        terminal.Write(x, y, text0, text1, color);
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color)
-    {
-        Terminal.Write(x, y, text0, text1, text2, color);
-    }
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color) => 
+        terminal.Write(x, y, text0, text1, text2, color);
 
-    public override void DrawTile(int x, int y, AnsiChar ac)
-    {
-        DrawTileCommon(x, y, ac);
-    }
+    private void DrawTileAt(Location location) => 
+        DrawTileCommon(location.X, location.Y, boardUpdater.Draw(location + 1));
 
-    private void DrawTileAt(Location location)
-    {
-        DrawTileCommon(location.X, location.Y, Engine.Draw(location + 1));
-    }
+    private void DrawTileCommon(int x, int y, AnsiChar ac) => 
+        playField.DrawTile(x, y, ac);
 
-    private void DrawTileCommon(int x, int y, AnsiChar ac)
-    {
-        Terminal.Plot(x, y, ac);
-    }
-
-    public override void DrawTitleStatus()
-    {
+    public override void DrawTitleStatus() => 
         DrawString(0x3E, 0x05, "Pick a command:", 0x1B);
-    }
 
-    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
+    public override void FadeBoard(AnsiChar ac) => fadeMatrix.FadeOut(ac);
 
-    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
+    private void RandomizeFadeMatrix() => fadeMatrix.Randomize();
 
     public override void Initialize()
     {
         RandomizeFadeMatrix();
-        Terminal.SetSize(State.EditorMode ? 60 : 80, 25, false);
+        terminal.SetSize(State.EditorMode ? 60 : 80, 25, false);
     }
 
-    public override void RedrawBoard() => FadeMatrix.FadeIn();
+    public override void RedrawBoard() => fadeMatrix.FadeIn();
 
     public override void UpdateBorder()
     {
@@ -253,7 +219,7 @@ public sealed class OriginalHud(
         else
         {
             DrawString(0x40, 0x06, "   Time:", 0x1E);
-            DrawString(0x48, 0x06, (board.TimeLimit - world.TimePassed).ToCharSpan(buffer), 0x1E);
+            DrawString(0x48, 0x06, ((int)(board.TimeLimit - world.TimePassed)).ToCharSpan(buffer), 0x1E);
         }
 
         if (world.Health < 0)
@@ -298,17 +264,15 @@ public sealed class OriginalHud(
     {
         DrawStatusLine(4);
         DrawStatusLine(5);
-        var cheat = TextEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F, ReadOnlySpan<char>.Empty);
+        var cheat = textEntryHud.Show(0x3F, 0x04, 11, 0x0F, 0x1F, ReadOnlySpan<char>.Empty);
         DrawStatusLine(4);
         DrawStatusLine(5);
         return cheat;
     }
 
     public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
-        string? barText)
-    {
-        return ChoiceHud.Show(performSelection, x, y, message, currentValue, barText);
-    }
+        string? barText) =>
+        choiceHud.Show(performSelection, x, y, message, currentValue, barText);
 
     public override string? EnterHighScore(IHighScoreList highScoreList, int score)
     {
@@ -344,7 +308,7 @@ public sealed class OriginalHud(
                 nameList,
                 false,
                 2,
-                _ => name = LongTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
+                _ => name = longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
             return name;
         }
 
@@ -372,7 +336,7 @@ public sealed class OriginalHud(
     {
         DrawString(65, 3, "Save game:", 0x1F);
         DrawString(71, 5, ".SAV", 0x0F);
-        var result = TextEntryHud.Show(63, 4, 8, 0x0F, 0x1F, State.DefaultSaveName);
+        var result = textEntryHud.Show(63, 4, 8, 0x0F, 0x1F, State.DefaultSaveName);
         DrawStatusLine(3);
         DrawStatusLine(5);
         return result;

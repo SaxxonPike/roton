@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Lyon;
 using Lyon.App;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,8 @@ if (contextEngine == Context.Super)
 
 // Create the DI container.
 var services = new ServiceCollection();
-services.AddRoton(contextEngine, typeof(ILauncher).Assembly);
+Assembly[] additionalAssemblies = [typeof(ILauncher).Assembly];
+services.AddRoton(contextEngine, additionalAssemblies);
 services.AddLyon(args, config);
 
 // Build the container and run the app.

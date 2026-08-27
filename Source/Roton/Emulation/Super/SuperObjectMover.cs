@@ -6,12 +6,9 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 public sealed class SuperObjectMover(
-    IEngineAccessor engine,
     IParser parser)
     : IObjectMover
 {
-    private IEngine Engine => engine.Instance;
-
     public void ExecuteDirection(ref OopContext context, Vector vector)
     {
         var count = parser.ReadNumber(context.Index, ref context.Actor.Instruction);

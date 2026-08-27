@@ -9,4 +9,4 @@ namespace Roton.Emulation.Cheats.Impl;
 public sealed class CheatList(
     IContextMetadataService contextMetadataService, 
     IServiceProvider serviceProvider)
-    : TypeListByName<ICheat>(contextMetadataService, serviceProvider), ICheatList;
+    : TypeList<ICheat>(contextMetadataService, serviceProvider), ICheatList;

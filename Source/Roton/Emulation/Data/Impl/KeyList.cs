@@ -1,25 +1,25 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class KeyList(IMemory memory, int offset) : FixedList<bool>, IKeyList
+public abstract class KeyList(IMemory memory, int offset)
+    : IKeyList
 {
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => memory;
-    }
+    public int Count => 7;
 
-    public override int Count => 7;
+    public ref Bool this[int index] =>
+        ref memory.GetRef<Bool>(offset + index);
 
-    public override void Clear()
-    {
-        for (var i = 0; i < Count; i++)
-            this[i] = false;
-    }
+    public void Clear() =>
+        memory.Data.Slice(offset, Count).Fill(0);
 
-    protected override bool GetItem(int index) 
-        => Memory.ReadBool(offset + index);
+    public IEnumerator<bool> GetEnumerator() =>
+        Enumerable.Range(0, Count)
+            .Select(i => (bool)this[i])
+            .GetEnumerator();
 
-    protected override void SetItem(int index, bool value) 
-        => Memory.WriteBool(offset + index, value);
+    IEnumerator IEnumerable.GetEnumerator() => 
+        GetEnumerator();
 }

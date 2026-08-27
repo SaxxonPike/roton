@@ -9,4 +9,4 @@ namespace Roton.Emulation.Draws.Impl;
 public sealed class DrawList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListById<IDraw>(contextMetadataService, serviceProvider), IDrawList;
+    : TypeList<IDraw>(contextMetadataService, serviceProvider), IDrawList;

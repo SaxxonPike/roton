@@ -1,5 +1,4 @@
-﻿using Roton.Emulation.Core;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
@@ -7,13 +6,10 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
 public sealed class SpinningGunDraw(
-    IEngineAccessor engine,
     ITiles tiles,
     IState state)
     : IDraw
 {
-    private IEngine Engine => engine.Instance;
-
     public AnsiChar Draw(Location location)
     {
         switch (state.GameCycle & 0x7)

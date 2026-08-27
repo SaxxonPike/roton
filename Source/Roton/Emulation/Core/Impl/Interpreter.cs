@@ -12,7 +12,8 @@ public sealed class Interpreter(
     IEngineAccessor engine,
     ITracer tracer,
     IParser parser,
-    ICommandList commandList)
+    ICommandList commandList,
+    IBroadcaster broadcaster)
     : IInterpreter
 {
     private IEngine Engine
@@ -28,15 +29,11 @@ public sealed class Interpreter(
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var firstLine = true;
+
+        Tracer.TraceOop(ref context, ref instruction);
 
         while (true)
         {
-            if (firstLine)
-                firstLine = false;
-            else
-                Tracer?.TraceOop(ref context, ref instruction);
-
             context.Resume = false;
             context.Executed = true;
 
@@ -52,7 +49,7 @@ public sealed class Interpreter(
             }
             else
             {
-                if (!Engine.BroadcastLabel(context.Index, name, false))
+                if (!broadcaster.BroadcastLabel(context.Index, name, false))
                 {
                     if (name.IndexOf(':') < 0) 
                         Engine.RaiseError(ref context, $"Bad command {name.ToString()}");

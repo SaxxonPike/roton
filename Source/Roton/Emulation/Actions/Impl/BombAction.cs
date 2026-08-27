@@ -10,7 +10,9 @@ public sealed class BombAction(
     IEngineAccessor engine,
     ISounds sounds,
     IActorList actorList,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IBoardUpdater boardUpdater,
+    IRadiusUpdater radiusUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -18,20 +20,21 @@ public sealed class BombAction(
     public void Act(int index)
     {
         var actor = actorList[index];
-        if (actor.P1 <= 0) return;
+        if (actor.P1 <= 0)
+            return;
 
         actor.P1--;
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
         switch ((int)actor.P1)
         {
             case 1:
                 soundUnit.PlaySound(1, sounds.BombExplode);
-                Engine.UpdateRadius(actor.Location, RadiusMode.Explode);
+                radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Explode);
                 break;
             case 0:
                 var location = actor.Location;
                 Engine.RemoveActor(index);
-                Engine.UpdateRadius(location, RadiusMode.Clear);
+                radiusUpdater.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:
                 soundUnit.PlaySound(1, (actor.P1 & 0x01) == 0 ? sounds.BombTock : sounds.BombTick);

@@ -8,7 +8,8 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "GIVE")]
 public sealed class GiveCommand(
     IHud hud,
-    IEngineAccessor engine) : ICommand
+    IEngineAccessor engine)
+    : ICommand
 {
     private IEngine Engine => engine.Instance;
 

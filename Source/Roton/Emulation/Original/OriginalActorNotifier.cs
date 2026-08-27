@@ -1,0 +1,7 @@
+using Roton.Emulation.Core.Impl;
+using Roton.Infrastructure;
+
+namespace Roton.Emulation.Original;
+
+[Context(Context.Original)]
+public sealed class OriginalActorNotifier : ActorNotifier;

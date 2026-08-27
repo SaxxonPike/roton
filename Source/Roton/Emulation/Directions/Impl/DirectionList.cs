@@ -9,4 +9,4 @@ namespace Roton.Emulation.Directions.Impl;
 public sealed class DirectionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListByName<IDirection>(contextMetadataService, serviceProvider), IDirectionList;
+    : TypeList<IDirection>(contextMetadataService, serviceProvider), IDirectionList;

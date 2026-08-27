@@ -1,25 +1,23 @@
-﻿namespace Roton.Emulation.Data.Impl;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-public sealed class ByteString : FixedList<int>
+namespace Roton.Emulation.Data.Impl;
+
+public sealed class ByteString(IMemory memory, int offset)
+    : IRefList<PChar>
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
+    public int Count =>
+        memory.Read8(offset);
 
-    internal ByteString(IMemory memory, int offset)
-    {
-        _memory = memory;
-        _offset = offset;
-    }
+    public ref PChar this[int index] =>
+        ref memory.GetRef<PChar>(offset + index + 1);
 
-    public override int Count =>
-        _memory.Read8(_offset);
+    public IEnumerator<PChar> GetEnumerator() =>
+        Enumerable.Range(1, Count)
+            .Select(i => this[i])
+            .GetEnumerator();
 
-    protected override int GetItem(int index) =>
-        _memory.Read8(_offset + index + 1);
-
-    protected override void SetItem(int index, int value) =>
-        _memory.Write8(_offset + index + 1, value);
-
-    protected override bool EqualsItem(int index, int value) =>
-        GetItem(index) == value;
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 }

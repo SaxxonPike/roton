@@ -23,7 +23,7 @@ public sealed class PassageInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;
-        var passageIndex = Engine.ActorIndexAt(location);
+        var passageIndex = actorList.ActorIndexAt(location);
         var passageTarget = actorList[passageIndex].P3;
         worldUnit.SetBoard(passageTarget);
         var target = new Location();
@@ -38,7 +38,7 @@ public sealed class PassageInteraction(
             }
         }
 
-        Engine.CleanUpPassageMovement();
+        features.CleanUpPassageMovement();
 
         if (target.X != 0)
             actorList.Player.Location = target;

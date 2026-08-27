@@ -10,7 +10,10 @@ public sealed class SuperObjectAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,
-    IFacts facts) : IAction
+    IFacts facts,
+    IBroadcaster broadcaster,
+    IPusher pusher)
+    : IAction
 {
     private IEngine Engine => engine.Instance;
 
@@ -32,7 +35,7 @@ public sealed class SuperObjectAction(
         var target = actor.Location + actor.Vector;
 
         if (!tiles.ElementAt(target).IsFloor)
-            Engine.Push(target, actor.Vector);
+            pusher.Push(target, actor.Vector);
 
         if (tiles.ElementAt(target).IsFloor)
         {
@@ -47,7 +50,7 @@ public sealed class SuperObjectAction(
         }
         else
         {
-            Engine.BroadcastLabel(-index, facts.ThudLabel, false);
+            broadcaster.BroadcastLabel(-index, facts.ThudLabel, false);
         }
     }
 }

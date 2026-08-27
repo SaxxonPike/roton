@@ -14,7 +14,6 @@ public interface IHud
     void DrawMessage(IMessage message, int color);
     void DrawPausing();
     void DrawStatusLine(int y);
-    void DrawTile(int x, int y, AnsiChar ac);
     void DrawTitleStatus();
     bool EndGameConfirmation();
     string EnterCheat();

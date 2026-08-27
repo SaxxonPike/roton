@@ -14,5 +14,6 @@ namespace Roton.Emulation.Core
         void Attach(TextWriter writer);
         void Detach(TextWriter writer);
         void TraceError(ref OopContext context, ReadOnlySpan<char> message);
+        void TraceCrash(ReadOnlySpan<char> message);
     }
 }

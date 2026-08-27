@@ -19,7 +19,9 @@ public sealed class OriginalFeatures(
     ITiles tiles,
     IElementList elementList,
     IWorldUnit worldUnit,
-    IBoardTime boardTime)
+    IBoardTime boardTime,
+    IBoardUpdater boardUpdater,
+    IRadiusUpdater radiusUpdater)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -53,7 +55,7 @@ public sealed class OriginalFeatures(
         }
 
         world.TimePassed = 0;
-        Engine.UpdateStatus();
+        hud.UpdateStatus();
     }
 
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -100,7 +102,7 @@ public sealed class OriginalFeatures(
                     {
                         world.Torches--;
                         world.TorchCycles = 0xC8;
-                        Engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                        radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
                         hud.UpdateStatus();
                     }
                 }
@@ -119,7 +121,7 @@ public sealed class OriginalFeatures(
 
     public void ClearForest(Location location)
     {
-        Engine.RemoveItem(location);
+        RemoveItem(location);
     }
 
     public void CleanUpPassageMovement()
@@ -137,7 +139,7 @@ public sealed class OriginalFeatures(
 
         playerElement.Character = facts.PlayerCharacter;
         tiles[actor.Location].Color = playerElement.Color;
-        Engine.UpdateBoard(actor.Location);
+        boardUpdater.UpdateBoard(actor.Location);
     }
 
     public string[] GetMessageLines()
@@ -147,7 +149,7 @@ public sealed class OriginalFeatures(
 
     public void ShowAbout()
     {
-        Engine.ShowHelp("About Roton...", "ABOUT");
+        hud.ShowHelp("About Roton...", "ABOUT");
     }
 
     public int BaseMemoryUsage => 205791;
@@ -162,13 +164,13 @@ public sealed class OriginalFeatures(
         }
         else
         {
-            Engine.UpdateBoard(actorList.Player.Location);
+            boardUpdater.UpdateBoard(actorList.Player.Location);
             actorList.Player.Location += state.KeyVector;
             tiles[actorList.Player.Location] =
                 new Tile(elementList.PlayerId, elementList.Player().Color);
-            Engine.UpdateBoard(actorList.Player.Location);
-            Engine.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
-            Engine.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
+            boardUpdater.UpdateBoard(actorList.Player.Location);
+            radiusUpdater.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
+            radiusUpdater.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
         }
     }
 
@@ -182,11 +184,6 @@ public sealed class OriginalFeatures(
     public int GetColorMatchValue(int color)
     {
         return color;
-    }
-
-    public void NotifyActorSentLabel(int index)
-    {
-        // Does nothing in the original engine.
     }
 
     public string GetSaveName(string baseName)
@@ -245,12 +242,12 @@ public sealed class OriginalFeatures(
     public void RemoveItem(Location location)
     {
         tiles[location].Id = elementList.EmptyId;
-        Engine.UpdateBoard(location);
+        boardUpdater.UpdateBoard(location);
     }
 
     public void ShowInGameHelp()
     {
-        Engine.ShowHelp("Playing Roton", "GAME");
+        hud.ShowHelp("Playing Roton", "GAME");
     }
 
     public string GetWorldName(string baseName)

@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using Roton.Emulation.Colors;
 using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Directions;
@@ -13,7 +13,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed class Parser(
-    IEngineAccessor engine,
     IActorList actorList,
     IState state,
     IConditionList conditionList,
@@ -25,16 +24,11 @@ public sealed class Parser(
     ITargetList targetList)
     : IParser
 {
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
     private ReadOnlySpan<char> GetActorCode(int index)
     {
         var actor = actorList[index];
         var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
-        return actor.Code.Span.Slice(0, codeLength);
+        return actor.Code.Slice(0, codeLength);
     }
 
     public int Search(int index, ReadOnlySpan<char> term)
@@ -89,7 +83,7 @@ public sealed class Parser(
         }
         else
         {
-            value = actor.Code.Span[instruction];
+            value = actor.Code[instruction];
             state.OopByte = value;
             instruction++;
         }
@@ -247,10 +241,9 @@ public sealed class Parser(
         var success = false;
         result = new Tile(0, 0);
 
-        var colorId = colorList.IndexOf(word);
-        if (colorId > 0)
+        if (colorList.Get(word) is { Value: > 0 } color)
         {
-            result.Color = colorId + 8;
+            result.Color = color.Value;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
 

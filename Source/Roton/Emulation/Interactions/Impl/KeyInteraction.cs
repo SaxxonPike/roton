@@ -14,7 +14,8 @@ public sealed class KeyInteraction(
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IFeatures features)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -31,7 +32,7 @@ public sealed class KeyInteraction(
         else
         {
             world.Keys[keyIndex] = true;
-            Engine.RemoveItem(location);
+            features.RemoveItem(location);
             hud.UpdateStatus();
             Engine.SetMessage(facts.LongMessageDuration, alerts.KeyPickupMessage(color));
             soundUnit.PlaySound(2, sounds.Key);

@@ -9,4 +9,4 @@ namespace Roton.Emulation.Commands.Impl;
 public sealed class CommandList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
-    : TypeListByName<ICommand>(contextMetadataService, serviceProvider), ICommandList;
+    : TypeList<ICommand>(contextMetadataService, serviceProvider), ICommandList;

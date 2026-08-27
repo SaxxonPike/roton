@@ -9,7 +9,8 @@ namespace Roton.Emulation.Commands.Impl;
 public sealed class GoCommand(
     IParser parser,
     IEngineAccessor engine,
-    ITiles tiles)
+    ITiles tiles,
+    IPusher pusher)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -22,7 +23,7 @@ public sealed class GoCommand(
         var target = context.Actor.Location + vec;
 
         if (!tiles.ElementAt(target).IsFloor)
-            Engine.Push(target, vec);
+            pusher.Push(target, vec);
 
         if (tiles.ElementAt(target).IsFloor)
         {

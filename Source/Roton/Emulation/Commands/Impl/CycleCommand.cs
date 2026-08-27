@@ -7,12 +7,9 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "CYCLE")]
 [Context(Context.Super, "CYCLE")]
 public sealed class CycleCommand(
-    IEngineAccessor engine,
     IParser parser)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var value = parser.ReadNumber(context.Index, ref instruction);

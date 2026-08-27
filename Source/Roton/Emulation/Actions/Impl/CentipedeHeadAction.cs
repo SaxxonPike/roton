@@ -1,6 +1,5 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
@@ -12,7 +11,8 @@ public sealed class CentipedeHeadAction(
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elementList,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -69,7 +69,7 @@ public sealed class CentipedeHeadAction(
             // Reverse the centipede
 
             tiles[actor.Location].Id = elementList.SegmentId;
-            Engine.UpdateBoard(actor.Location);
+            boardUpdater.UpdateBoard(actor.Location);
             var segmentIndex = index;
             while (true)
             {
@@ -85,7 +85,7 @@ public sealed class CentipedeHeadAction(
 
             var newHead = actorList[segmentIndex];
             tiles[newHead.Location].Id = elementList.HeadId;
-            Engine.UpdateBoard(newHead.Location);
+            boardUpdater.UpdateBoard(newHead.Location);
         }
         else
         {
@@ -102,7 +102,7 @@ public sealed class CentipedeHeadAction(
                     var follower = actorList[actor.Follower];
                     tiles[follower.Location].Id = elementList.HeadId;
                     follower.Leader = -1;
-                    Engine.UpdateBoard(follower.Location);
+                    boardUpdater.UpdateBoard(follower.Location);
                 }
 
                 actor.Follower = -1;
@@ -126,19 +126,19 @@ public sealed class CentipedeHeadAction(
                     {
                         // Determine if there are any eligible new follower segments
                         if (tiles.ElementAt(origin - vector).Id == elementList.SegmentId &&
-                            Engine.ActorAt(origin - vector).Leader <= 0)
+                            actorList.ActorAt(origin - vector).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin - vector);
+                            segment.Follower = actorList.ActorIndexAt(origin - vector);
                         }
                         else if (tiles.ElementAt(origin - vector.Swap()).Id == elementList.SegmentId &&
-                                 Engine.ActorAt(origin - vector.Swap()).Leader <= 0)
+                                 actorList.ActorAt(origin - vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin - vector.Swap());
+                            segment.Follower = actorList.ActorIndexAt(origin - vector.Swap());
                         }
                         else if (tiles.ElementAt(origin + vector.Swap()).Id == elementList.SegmentId &&
-                                 Engine.ActorAt(origin + vector.Swap()).Leader <= 0)
+                                 actorList.ActorAt(origin + vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = Engine.ActorIndexAt(origin + vector.Swap());
+                            segment.Follower = actorList.ActorIndexAt(origin + vector.Swap());
                         }
                         else
                         {
@@ -150,7 +150,9 @@ public sealed class CentipedeHeadAction(
                     var followerIndex = segment.Follower;
                     if (followerIndex == segmentIndex)
                     {
-                        throw Exceptions.SelfReferenceCentipede;
+                        // Ordinarily this will cause a hang, but we will detect this
+                        // situation and bail out instead.
+                        break;
                     }
 
                     if (followerIndex > 0)

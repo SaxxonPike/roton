@@ -56,4 +56,5 @@ public abstract class Facts : IFacts
     public string BombedLabel => "BOMBED";
     public int MaxGameCycle => 420;
     public AnsiChar ErrorFadeTile => new(0xDB, 0x04);
+    public abstract string HighScoreExtension { get; }
 }

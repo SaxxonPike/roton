@@ -8,14 +8,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "RESTORE")]
 [Context(Context.Super, "RESTORE")]
 public sealed class RestoreCommand(
-    IEngineAccessor engine,
     IParser parser,
     IActorList actorList,
-    IState state)
+    IState state,
+    IBroadcaster broadcaster)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
@@ -27,13 +25,13 @@ public sealed class RestoreCommand(
         context.Search.Index = 0;
         while (true)
         {
-            var result = Engine.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
+            var result = broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
             if (!result)
                 break;
 
             while (context.Search.Offset >= 0)
             {
-                actorList[context.Search.Index].Code.Span[context.Search.Offset + 1] = ':';
+                actorList[context.Search.Index].Code[context.Search.Offset + 1] = ':';
                 var word = state.GetOopWord(wordBuffer);
                 context.Search.Offset = parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }

@@ -25,7 +25,10 @@ public sealed class PlayerAction(
     ITimers timers,
     IConfig config,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit)
+    IWorldUnit worldUnit,
+    IFeatures features,
+    IBoardUpdater boardUpdater,
+    IRadiusUpdater radiusUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -50,11 +53,11 @@ public sealed class PlayerAction(
                 tiles[actor.Location].Color = 0x0F;
             }
 
-            Engine.UpdateBoard(actor.Location);
+            boardUpdater.UpdateBoard(actor.Location);
         }
         else
         {
-            Engine.ForcePlayerColor(index);
+            features.ForcePlayerColor(index);
         }
 
         // Health logic
@@ -171,13 +174,13 @@ public sealed class PlayerAction(
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
             case EngineKeyCode.H:
-                Engine.ShowInGameHelp();
+                features.ShowInGameHelp();
                 break;
             case EngineKeyCode.QuestionMark:
                 Engine.Cheat();
                 break;
             default:
-                Engine.HandlePlayerInput(actor);
+                features.HandlePlayerInput(actor);
                 break;
         }
 
@@ -188,7 +191,7 @@ public sealed class PlayerAction(
             world.TorchCycles--;
             if (world.TorchCycles <= 0)
             {
-                Engine.UpdateRadius(actor.Location, RadiusMode.Update);
+                radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
                 soundUnit.PlaySound(3, sounds.TorchOut);
             }
 
@@ -209,7 +212,7 @@ public sealed class PlayerAction(
             }
             else if (world.EnergyCycles <= 0)
             {
-                Engine.ForcePlayerColor(index);
+                features.ForcePlayerColor(index);
             }
         }
 
