@@ -39,7 +39,18 @@ public sealed class Interpreter(
 
             var name = parser.ReadWord(context.Index, ref instruction, buffer);
             if (name.Length == 0)
+            {
+                // If the last character of a script is '#', the interpreter will
+                // ordinarily hang. We detect and prevent an infinite loop.
+
+                if (instruction >= context.Actor.Length - 1)
+                {
+                    tracer.TraceCrash("Last character of script is #");
+                    context.Finished = true;
+                }
+                
                 break;
+            }
 
             var command = commandList.Get(name);
 
