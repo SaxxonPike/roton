@@ -1,5 +1,3 @@
-using Roton.Emulation.Data;
-
 namespace Roton.Emulation.Colors;
 
 public interface IColor
