@@ -55,6 +55,7 @@ public sealed class Engine : IEngine, IDisposable
     private readonly IBroadcaster _broadcaster;
     private readonly IRadiusUpdater _radiusUpdater;
     private readonly IPusher _pusher;
+    private readonly IMessageHandler _messageHandler;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -75,7 +76,7 @@ public sealed class Engine : IEngine, IDisposable
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
-        IRadiusUpdater radiusUpdater, IPusher pusher)
+        IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler)
     {
         engineAccessor.Instance = this;
 
@@ -118,6 +119,7 @@ public sealed class Engine : IEngine, IDisposable
         _broadcaster = broadcaster;
         _radiusUpdater = radiusUpdater;
         _pusher = pusher;
+        _messageHandler = messageHandler;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -878,7 +880,7 @@ public sealed class Engine : IEngine, IDisposable
 
     private void ExecuteMessage(ref OopContext context)
     {
-        var result = _features.ExecuteMessage(ref context);
+        var result = _messageHandler.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Label: not null })
             context.NextLine = _broadcaster.BroadcastLabel(context.Index, result.Label, false);
     }

@@ -11,9 +11,12 @@ public sealed class SuperScroll(
     IEngineAccessor engine,
     ITerminal terminal,
     IState state,
-    IFileSystem fileSystem)
-    : Scroll(engine, terminal, state, fileSystem)
+    IFileSystem fileSystem,
+    IScrollContent scrollContent)
+    : Scroll(engine, terminal, state, fileSystem, scrollContent)
 {
+    private readonly ITerminal _terminal = terminal;
+
     protected override int Width => 37;
     protected override int Height => 23;
     protected override int Left => 1;
@@ -26,7 +29,7 @@ public sealed class SuperScroll(
             
         for (var y = 0; y < Height; y++)
         for (var x = 0; x < Width; x++)
-            buffer[i++] = Terminal.Read(x + Left, y + Top);
+            buffer[i++] = _terminal.Read(x + Left, y + Top);
 
         return buffer;
     }
@@ -35,6 +38,6 @@ public sealed class SuperScroll(
     {
         var i = Width * (y - Top);
         for (var x = Left; x < Left + Width; x++)
-            Terminal.Plot(x, y, buffer[i++]);
+            _terminal.Plot(x, y, buffer[i++]);
     }
 }

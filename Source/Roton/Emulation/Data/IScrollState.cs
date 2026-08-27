@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Roton.Emulation.Data;
+﻿namespace Roton.Emulation.Data;
 
 public interface IScrollState
 {
@@ -9,5 +7,4 @@ public interface IScrollState
     int Index { get; set; }
     string? Label { get; set; }
     bool Cancelled { get; set; }
-    IList<string> Lines { get; set; }
 }

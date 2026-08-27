@@ -8,7 +8,6 @@ public interface IFeatures
     void EnterBoard();
     bool HandleTitleInput();
     void ShowInGameHelp();
-    IScrollState? ExecuteMessage(ref OopContext context);
     void HandlePlayerInput(IActor actor);
     bool CanPutTile(Location location);
     void ClearForest(Location location);

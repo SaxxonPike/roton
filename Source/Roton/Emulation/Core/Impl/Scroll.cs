@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
@@ -12,18 +10,11 @@ public abstract class Scroll(
     IEngineAccessor engine,
     ITerminal terminal,
     IState state,
-    IFileSystem fileSystem)
+    IFileSystem fileSystem,
+    IScrollContent scrollContent)
     : IScroll
 {
-    protected IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
-    protected ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
+    private IEngine Engine => engine.Instance;
 
     private static readonly int[] ScrollCharsTop =
     [
@@ -57,12 +48,12 @@ public abstract class Scroll(
 
     private void RenderLine(IReadOnlyList<int> chars, int y)
     {
-        Terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
-        Terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
+        terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
+        terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
         for (var x = Left + 2; x < Left + Width - 2; x++)
-            Terminal.Plot(x, y, new AnsiChar(chars[2], 0x0F));
-        Terminal.Plot(Left + Width - 2, y, new AnsiChar(chars[3], 0x0F));
-        Terminal.Plot(Left + Width - 1, y, new AnsiChar(chars[4], 0x0F));
+            terminal.Plot(x, y, new AnsiChar(chars[2], 0x0F));
+        terminal.Plot(Left + Width - 2, y, new AnsiChar(chars[3], 0x0F));
+        terminal.Plot(Left + Width - 1, y, new AnsiChar(chars[4], 0x0F));
     }
 
     protected abstract void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y);
@@ -105,9 +96,10 @@ public abstract class Scroll(
         RenderBuffer(buffer, Top + Height / 2);
     }
 
-    private void RenderName(string title, IList<string> message, int offset)
+    private void RenderName(ReadOnlySpan<char> title, int offset)
     {
-        var line = message[offset];
+        var buffer = (stackalloc char[256]);
+        var line = scrollContent.GetLine(offset, buffer);
         var pips = false;
 
         if (line.Length > 0 && (line[0] == ':' || line[0] == '!'))
@@ -117,13 +109,13 @@ public abstract class Scroll(
         }
 
         var x = Left + Width / 2 - title.Length / 2;
-        Terminal.Write(x, Top + 1, title, 0x1E);
+        terminal.Write(x, Top + 1, title, 0x1E);
 
         // Avoid putting these directly in the string for Unicode conversion reasons
         if (pips)
         {
-            Terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
-            Terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
+            terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
+            terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
         }
     }
 
@@ -134,16 +126,16 @@ public abstract class Scroll(
         var blank = new AnsiChar(0x20, 0x1E);
 
         for (var x2 = x; x2 <= right; x2++)
-            Terminal.Plot(x2, y, blank);
+            terminal.Plot(x2, y, blank);
     }
 
     private void RenderPips(int y)
     {
-        Terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
-        Terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
+        terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
+        terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
     }
 
-    private void RenderText(string text, int y)
+    private void RenderText(ReadOnlySpan<char> text, int y)
     {
         var x = Left + 4;
         if (text.Length < 1)
@@ -151,40 +143,41 @@ public abstract class Scroll(
 
         if (text[0] == '$')
         {
-            var actualText = text.Substring(1);
-            Terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
+            var actualText = text.Slice(1);
+            terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
         }
         else if (text[0] == ':')
         {
-            if (text.Contains(';'))
+            if (text.IndexOf(';') >= 0)
             {
-                var actualText = text.Substring(text.IndexOf(';') + 1);
-                Terminal.Write(x, y, actualText, 0x1F);
+                var actualText = text.Slice(text.IndexOf(';') + 1);
+                terminal.Write(x, y, actualText, 0x1F);
             }
         }
         else if (text[0] == '!')
         {
-            var actualText = text.Substring(text.IndexOf(';') + 1);
-            Terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
-            Terminal.Write(Left + 6, y, actualText, 0x1F);
+            var actualText = text.Slice(text.IndexOf(';') + 1);
+            terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
+            terminal.Write(Left + 6, y, actualText, 0x1F);
         }
         else
         {
-            Terminal.Write(x, y, text, 0x1E);
+            terminal.Write(x, y, text, 0x1E);
         }
     }
 
-    private void RenderContent(IScrollState state)
+    private void RenderContent(IScrollState scrollState)
     {
-        var offset = state.Index;
-        var message = state.Lines;
-        var title = state.Title;
+        var offset = scrollState.Index;
+        var message = scrollContent;
+        var title = scrollState.Title;
+        var buffer = (stackalloc char[256]);
 
         var center = (Height - 4) / 2;
         var line = offset - center;
         var bottom = Height + Top - 2;
         var top = Top + 3;
-        var lineCount = message.Count;
+        var lineCount = message.LineCount;
         var y = top;
 
         RenderBlank(Top + 1);
@@ -196,22 +189,25 @@ public abstract class Scroll(
 
         while (y <= bottom)
         {
-            if (state.IsHelp)
+            if (scrollState.IsHelp)
             {
                 if (line == -5)
                 {
-                    Terminal.Write(Left + 5, y, "Use            to view text,", 0x1A);
-                    Terminal.Write(Left + 9, y, "\u2191 \u2193, Enter", 0x1F);
+                    terminal.Write(Left + 5, y, "Use            to view text,", 0x1A);
+                    terminal.Write(Left + 9, y, "\u2191 \u2193, Enter", 0x1F);
                 }
                 else if (line == -4)
                 {
-                    Terminal.Write(Left + 20, y, "to print.", 0x1A);
-                    Terminal.Write(Left + 14, y, "Alt-P", 0x1F);
+                    terminal.Write(Left + 20, y, "to print.", 0x1A);
+                    terminal.Write(Left + 14, y, "Alt-P", 0x1F);
                 }
             }
 
             if (line >= 0 && line < lineCount)
-                RenderText(message[line], y);
+            {
+                message.GetLine(line, buffer);
+                RenderText(message.GetLine(line, buffer), y);
+            }
             else if (line == -1 || line == lineCount)
                 RenderDots(y);
 
@@ -219,7 +215,7 @@ public abstract class Scroll(
             line++;
         }
 
-        RenderName(title ?? "", message, offset);
+        RenderName(title ?? "", offset);
     }
 
     private void RenderDots(int y)
@@ -229,7 +225,7 @@ public abstract class Scroll(
         var dot = new AnsiChar(0x07, 0x1E);
 
         for (var x2 = x; x2 <= right; x2 += 5)
-            Terminal.Plot(x2, y, dot);
+            terminal.Plot(x2, y, dot);
     }
 
     private bool MainLoop(IScrollState st)
@@ -272,8 +268,8 @@ public abstract class Scroll(
 
             if (update)
             {
-                if (st.Index >= st.Lines.Count)
-                    st.Index = st.Lines.Count - 1;
+                if (st.Index >= scrollContent.LineCount)
+                    st.Index = scrollContent.LineCount - 1;
                 if (st.Index < 0)
                     st.Index = 0;
             }
@@ -284,49 +280,50 @@ public abstract class Scroll(
         return false;
     }
 
-    private bool LoadHelpFile(IScrollState state, string filename)
+    private bool LoadHelpFile(IScrollState scrollState, string filename)
     {
         var text = fileSystem
             .GetFile($"{filename}.HLP")?
             .ToStringValue()
-            .Replace("\xD\xA", "\xD")
-            .Split('\xD');
+            .Replace("\r\n", "\r")
+            .Split('\r');
 
         if (text == null)
             return false;
 
-        state.Lines = text;
-        state.Index = 0;
-        state.IsHelp = true;
+        scrollContent.ClearLines();
+        scrollContent.AddLines(text);
+        scrollState.Index = 0;
+        scrollState.IsHelp = true;
         return true;
     }
 
-    private void ShowLoop(IScrollState state)
+    private void ShowLoop(IScrollState scrollState)
     {
         while (true)
         {
-            RenderContent(state);
-            var selected = MainLoop(state);
+            RenderContent(scrollState);
+            var selected = MainLoop(scrollState);
             if (!selected)
             {
-                state.Cancelled = true;
+                scrollState.Cancelled = true;
                 break;
             }
 
-            var innerJump = SelectLine(state);
+            var innerJump = SelectLine(scrollState);
             if (!innerJump)
                 break;
         }
     }
 
-    private IScrollState Show(IScrollState state, Action<IScrollState> mainLoop)
+    private IScrollState Show(ScrollState scrollState, Action<ScrollState> mainLoop)
     {
         var buffer = GetScreenBuffer();
         Open();
-        RenderContent(state);
-        mainLoop(state);
+        RenderContent(scrollState);
+        mainLoop(scrollState);
         Close(buffer);
-        return state;
+        return scrollState;
     }
 
     public IScrollState Show(string title, string fileName)
@@ -357,10 +354,12 @@ public abstract class Scroll(
             Index = index,
             Label = null,
             Cancelled = false,
-            Lines = [.. message],
             IsHelp = isHelp,
             Title = title
         };
+        
+        scrollContent.ClearLines();
+        scrollContent.AddLines(message);
 
         return Show(st, mainLoop);
     }
@@ -369,33 +368,36 @@ public abstract class Scroll(
 
     public int TextHeight => Height - 4;
 
-    private bool SelectLine(IScrollState state)
+    private bool SelectLine(IScrollState scrollState)
     {
-        if (state.Index < 0)
+        if (scrollState.Index < 0)
             return false;
 
-        var line = state.Lines[state.Index];
+        var buffer = (stackalloc char[256]);
+        var line = scrollContent.GetLine(scrollState.Index, buffer);
 
-        if (!line.StartsWith("!") || !line.Contains(";"))
+        if (line.Length == 0 || line[0] != '!' || line.IndexOf(';') < 0)
             return false;
 
         var label = line
-            .Substring(1, line.IndexOf(';') - 1)
+            .Slice(1, line.IndexOf(';') - 1)
+            .ToString()
             .ToUpperInvariant();
 
-        if (line.StartsWith("!") && label.StartsWith("-") && LoadHelpFile(state, label.Substring(1)))
+        if (line[0] == '!' && label.Length > 0 && label[0] == '-' && LoadHelpFile(scrollState, label.Substring(1)))
             return true;
 
-        state.Label = label;
+        scrollState.Label = label;
         label = $":{label};";
+        var lineCount = scrollContent.LineCount;
 
-        for (var i = 0; i < state.Lines.Count; i++)
+        for (var i = 0; i < lineCount; i++)
         {
-            line = state.Lines[i];
-            if (!line.ToUpperInvariant().StartsWith(label))
+            line = scrollContent.GetLine(i, buffer);
+            if (!line.StartsWith(label, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            state.Index = i;
+            scrollState.Index = i;
             return true;
         }
 

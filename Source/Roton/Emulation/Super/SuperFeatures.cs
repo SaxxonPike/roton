@@ -1,6 +1,5 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
@@ -25,21 +24,6 @@ public sealed class SuperFeatures(
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
-
-    public void LockActor(int index)
-    {
-        actorList[index].P3 = 1;
-    }
-
-    public void UnlockActor(int index)
-    {
-        actorList[index].P3 = 0;
-    }
-
-    public bool IsActorLocked(int index)
-    {
-        return actorList[index].P3 != 0;
-    }
 
     public void RemoveItem(Location location)
     {
@@ -76,8 +60,6 @@ public sealed class SuperFeatures(
 
         boardUpdater.UpdateBoard(location);
     }
-
-    public string GetHighScoreName(string baseName) => $"{baseName}.HGS";
 
     public void EnterBoard()
     {
@@ -117,30 +99,6 @@ public sealed class SuperFeatures(
     public void ShowInGameHelp()
     {
         broadcaster.BroadcastLabel(0, facts.HintLabel, false);
-    }
-
-    public IScrollState? ExecuteMessage(ref OopContext context)
-    {
-        if (!context.HasMessage)
-            return null;
-
-        var message = context.GetMessage();
-
-        switch (message.Count)
-        {
-            case 1:
-                Engine.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
-                return null;
-            case 2:
-                Engine.SetMessage(facts.LongMessageDuration,
-                    new Message(message[0], message[1]));
-                return null;
-            case 0:
-                return null;
-            default:
-                state.KeyVector = Vector.Idle;
-                return hud.ShowScroll(false, context.Name, [.. message]);
-        }
     }
 
     public void HandlePlayerInput(IActor actor)
@@ -188,19 +146,6 @@ public sealed class SuperFeatures(
     public int GetColorMatchValue(int color)
     {
         return color & 0x07;
-    }
-
-    public void NotifyActorSentLabel(int index)
-    {
-        // When an object receives a label, the current
-        // in-progress movement counter is reset.
-
-        actorList[index].P2 = 0;
-    }
-
-    public string GetSaveName(string baseName)
-    {
-        return $"{baseName}.SAV";
     }
 
     private bool TestAdjacent(Location location, int id)

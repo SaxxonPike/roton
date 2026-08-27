@@ -14,6 +14,4 @@ public sealed class ScrollState(IState state) : IScrollState
         get => state.CancelScroll;
         set => state.CancelScroll = value;
     }
-
-    public IList<string> Lines { get; set; } = [];
 }

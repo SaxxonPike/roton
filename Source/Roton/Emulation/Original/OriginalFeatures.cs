@@ -1,6 +1,5 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
@@ -26,24 +25,6 @@ public sealed class OriginalFeatures(
 {
     private IEngine Engine => engine.Instance;
 
-
-    public void LockActor(int index)
-    {
-        actorList[index].P2 = 1;
-    }
-
-    public void UnlockActor(int index)
-    {
-        actorList[index].P2 = 0;
-    }
-
-    public bool IsActorLocked(int index)
-    {
-        return actorList[index].P2 != 0;
-    }
-
-    public string GetHighScoreName(string baseName) => $"{baseName}.HI";
-
     public void EnterBoard()
     {
         boardTime.Reset();
@@ -56,23 +37,6 @@ public sealed class OriginalFeatures(
 
         world.TimePassed = 0;
         hud.UpdateStatus();
-    }
-
-    public IScrollState? ExecuteMessage(ref OopContext context)
-    {
-        var message = context.GetMessage();
-
-        switch (message)
-        {
-            case { Count: 1 }:
-                Engine.SetMessage(facts.LongMessageDuration, new Message(message));
-                return null;
-            case { Count: > 1 }:
-                state.KeyVector = Vector.Idle;
-                return hud.ShowScroll(false, context.Name, [.. message]);
-            default:
-                return null;
-        }
     }
 
     public void HandlePlayerInput(IActor actor)
