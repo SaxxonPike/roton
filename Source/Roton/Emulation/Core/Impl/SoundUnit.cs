@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -22,9 +23,10 @@ public sealed class SoundUnit(
         if (!(soundIsNotPlaying || soundIsMusic || soundIsHigherPriority))
             return;
 
-        if (!soundIsMusic)
+        if (!soundIsMusic || state.SoundPriority != -1)
             state.SoundBuffer.Clear();
 
+        Console.WriteLine($"enqueue sound priority={priority} len={sound.Length}");
         state.SoundBuffer.Enqueue(sound, offset, length);
         state.SoundPlaying = true;
         state.SoundPriority = priority;
