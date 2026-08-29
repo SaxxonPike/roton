@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
-public sealed class PusherAction(
+internal sealed class PusherAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,

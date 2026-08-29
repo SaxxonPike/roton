@@ -5,7 +5,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Pusher(
+internal sealed class Pusher(
     ITiles tiles,
     IElementList elementList,
     IEngineAccessor engine,

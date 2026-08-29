@@ -5,7 +5,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x2D)]
 [Context(Context.Super, 0x2D)]
-public sealed class CentipedeSegmentAction(
+internal sealed class CentipedeSegmentAction(
     IActorList actorList,
     ITiles tiles,
     IElementList elementList)

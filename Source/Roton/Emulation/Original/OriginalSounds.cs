@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalSounds : Sounds
+internal sealed class OriginalSounds : Sounds
 {
     public override ISound Forest { get; } = new Sound
     (

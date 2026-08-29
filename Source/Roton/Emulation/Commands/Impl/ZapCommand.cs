@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCommand(
+internal sealed class ZapCommand(
     IParser parser,
     IState state,
     IActorList actorList,

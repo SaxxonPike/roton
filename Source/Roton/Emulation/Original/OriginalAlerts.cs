@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
+internal sealed class OriginalAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
 {
     private string GetColorName(int color) =>
         colors.Get(color)?.Name ?? "";

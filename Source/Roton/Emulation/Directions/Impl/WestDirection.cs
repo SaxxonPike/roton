@@ -7,7 +7,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Original, "WEST")]
 [Context(Context.Super, "W")]
 [Context(Context.Super, "WEST")]
-public sealed class WestDirection : IDirection
+internal sealed class WestDirection : IDirection
 {
     public Vector Execute(ref OopContext context, ref Word instruction)
     {

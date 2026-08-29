@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ComposerResourceService(IAssemblyResourceService assemblyResourceService) : IComposerResourceService
+internal sealed class ComposerResourceService(IAssemblyResourceService assemblyResourceService) : IComposerResourceService
 {
     public const string PaletteDataFileName = "palette.bin";
     public const string FontDataFileName = "font.bin";

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x14)]
 [Context(Context.Super, 0x14)]
-public sealed class ForestInteraction(
+internal sealed class ForestInteraction(
     IEngineAccessor engine,
     IAlerts alerts,
     IFacts facts,

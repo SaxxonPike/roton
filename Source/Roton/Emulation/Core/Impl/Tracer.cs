@@ -10,7 +10,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Tracer : ITracer
+internal sealed class Tracer : ITracer
 {
     private long _stepNumber;
     private readonly List<TextWriter> _writers = [];

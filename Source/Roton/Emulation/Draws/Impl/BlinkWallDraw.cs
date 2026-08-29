@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
-public sealed class BlinkWallDraw(
+internal sealed class BlinkWallDraw(
     ITiles tiles)
     : IDraw
 {

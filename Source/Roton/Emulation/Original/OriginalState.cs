@@ -11,7 +11,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalState : IState
+internal sealed class OriginalState : IState
 {
     private Word _forestIndex;
 

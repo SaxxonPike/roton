@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x1C)]
 [Context(Context.Super, 0x1C)]
-public sealed class InvisibleWallInteraction(
+internal sealed class InvisibleWallInteraction(
     IEngineAccessor engine,
     ITiles tiles,
     IElementList elementList,

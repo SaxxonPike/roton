@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CLEAR")]
 [Context(Context.Super, "CLEAR")]
-public sealed class ClearCommand(
+internal sealed class ClearCommand(
     IWorld world,
     IParser parser)
     : ICommand

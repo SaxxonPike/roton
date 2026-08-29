@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
-public sealed class ScrollAction(
+internal sealed class ScrollAction(
     IActorList actorList,
     ITiles tiles,
     IBoardUpdater boardUpdater)

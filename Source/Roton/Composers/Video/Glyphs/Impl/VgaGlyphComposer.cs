@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class VgaGlyphComposer : IGlyphComposer
+internal sealed class VgaGlyphComposer : IGlyphComposer
 {
     private readonly int[] _data;
     private readonly int _height;

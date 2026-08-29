@@ -26,7 +26,7 @@ namespace Roton.Test.Infrastructure;
 public abstract class ContextTestFixture(Context context) : BaseTestFixture
 {
     protected Mock<IClock> ClockMock { get; private set; } = null!;
-    protected FixedFileSystem FileSystem { get; private set; } = null!;
+    protected IFileSystem FileSystem { get; private set; } = null!;
     protected Config Config { get; private set; } = null!;
     protected TestTerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;

@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "DARK")]
-public sealed class DarkCheat(
+internal sealed class DarkCheat(
     IBoard board,
     IHud hud)
     : ICheat

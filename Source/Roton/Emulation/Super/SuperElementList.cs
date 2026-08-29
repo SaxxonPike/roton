@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperElementList : ElementList
+internal sealed class SuperElementList : ElementList
 {
     private readonly IMemory _memory;
     private readonly Memory<byte> _data;

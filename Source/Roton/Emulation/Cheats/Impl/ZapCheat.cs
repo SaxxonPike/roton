@@ -7,7 +7,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCheat(
+internal sealed class ZapCheat(
     IEngineAccessor engine,
     IActorList actorList) : ICheat
 {

@@ -11,7 +11,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperHud(
+internal sealed class SuperHud(
     IEngineAccessor engine,
     ITerminal terminal,
     IScroll scroll,

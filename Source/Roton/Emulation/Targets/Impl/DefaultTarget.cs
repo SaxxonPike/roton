@@ -7,7 +7,7 @@ namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DefaultTarget(IActorList actors, IParser parser) : ITarget
+internal sealed class DefaultTarget(IActorList actors, IParser parser) : ITarget
 {
     private IActorList Actors => actors;
 

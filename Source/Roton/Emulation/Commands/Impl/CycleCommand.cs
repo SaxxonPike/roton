@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CYCLE")]
 [Context(Context.Super, "CYCLE")]
-public sealed class CycleCommand(
+internal sealed class CycleCommand(
     IParser parser)
     : ICommand
 {

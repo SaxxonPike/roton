@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "TAKE")]
 [Context(Context.Super, "TAKE")]
-public sealed class TakeCommand(
+internal sealed class TakeCommand(
     IEngineAccessor engine,
     IHud hud)
     : ICommand

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "TIME")]
 [Context(Context.Super, "TIME")]
-public sealed class TimeCheat(
+internal sealed class TimeCheat(
     IWorld world)
     : ICheat
 {

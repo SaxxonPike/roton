@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
-public sealed class SlimeAction(
+internal sealed class SlimeAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,

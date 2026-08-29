@@ -6,7 +6,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "AMMO")]
 [Context(Context.Super, "AMMO")]
-public sealed class AmmoCheat(
+internal sealed class AmmoCheat(
     IFacts facts,
     IWorld world)
     : ICheat

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
-public sealed class ScrollInteraction(
+internal sealed class ScrollInteraction(
     IEngineAccessor engine,
     IActorList actorList,
     IMusicEncoder musicEncoder,

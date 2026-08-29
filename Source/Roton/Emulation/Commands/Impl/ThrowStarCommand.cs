@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "THROWSTAR")]
 [Context(Context.Super, "THROWSTAR")]
-public sealed class ThrowStarCommand(
+internal sealed class ThrowStarCommand(
     IEngineAccessor engine,
     IParser parser,
     IElementList elementList)

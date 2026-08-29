@@ -10,7 +10,7 @@ namespace Roton.Composers.Video.Scenes.Impl;
 /// <remarks>
 /// Characters are still kept in a buffer, but no bitmap will be generated.
 /// </remarks>
-public sealed class NullSceneComposer : ISceneComposer
+internal sealed class NullSceneComposer : ISceneComposer
 {
     private AnsiChar[] _chars = [];
 

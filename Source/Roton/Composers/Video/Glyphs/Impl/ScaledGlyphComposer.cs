@@ -1,6 +1,6 @@
 ﻿namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX, int scaleY) : IGlyphComposer
+internal sealed class ScaledGlyphComposer(IGlyphComposer glyphComposer, int scaleX, int scaleY) : IGlyphComposer
 {
     public Glyph? ComposeGlyph(int index)
     {

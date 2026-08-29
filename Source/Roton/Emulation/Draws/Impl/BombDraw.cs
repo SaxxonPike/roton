@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombDraw(
+internal sealed class BombDraw(
     ITiles tiles,
     IActorList actorList)
     : IDraw

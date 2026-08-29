@@ -8,7 +8,7 @@ namespace Roton.Infrastructure.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class AssemblyResourceService : IAssemblyResourceService
+internal sealed class AssemblyResourceService : IAssemblyResourceService
 {
     private readonly Dictionary<Assembly, IResource> _cache = new();
         

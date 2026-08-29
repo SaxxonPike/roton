@@ -7,6 +7,7 @@ namespace Roton.Emulation.Data.Impl;
 public abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
 {
     private IDictionary<int, IElement> Cache { get; } = new Dictionary<int, IElement>();
+    public sealed override int Count { get; } = count;
 
     public virtual int AmmoId => -1;
     public virtual int BearId => -1;
@@ -19,7 +20,6 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
     public virtual int BreakableId => -1;
     public virtual int BulletId => -1;
     public virtual int ClockwiseId => -1;
-    public sealed override int Count { get; } = count;
     public virtual int CounterId => -1;
     public virtual int DoorId => -1;
     public virtual int DragonPupId => -1;

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x24)]
 [Context(Context.Super, 0x24)]
-public sealed class ObjectInteraction(
+internal sealed class ObjectInteraction(
     IFacts facts,
     IActorList actorList,
     IBroadcaster broadcaster)

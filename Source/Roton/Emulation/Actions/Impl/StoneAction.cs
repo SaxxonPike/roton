@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneAction(
+internal sealed class StoneAction(
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,

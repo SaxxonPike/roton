@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "WALK")]
 [Context(Context.Super, "WALK")]
-public sealed class WalkCommand(
+internal sealed class WalkCommand(
     IParser parser)
     : ICommand
 {

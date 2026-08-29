@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class TextEntryHud(
+internal sealed class TextEntryHud(
     ITerminal terminal,
     IEngineAccessor engine,
     IState state)

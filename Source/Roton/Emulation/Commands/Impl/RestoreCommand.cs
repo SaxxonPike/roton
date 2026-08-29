@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "RESTORE")]
 [Context(Context.Super, "RESTORE")]
-public sealed class RestoreCommand(
+internal sealed class RestoreCommand(
     IParser parser,
     IActorList actorList,
     IState state,

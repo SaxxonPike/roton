@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombInteraction(
+internal sealed class BombInteraction(
     IEngineAccessor engine,
     IFacts facts,
     IAlerts alerts,

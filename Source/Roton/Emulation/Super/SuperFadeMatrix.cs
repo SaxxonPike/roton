@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperFadeMatrix(
+internal sealed class SuperFadeMatrix(
     IEngineAccessor engine, 
     ITerminal terminal,
     IRandomizer randomizer,

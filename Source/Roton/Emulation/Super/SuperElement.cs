@@ -5,7 +5,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-public sealed class SuperElement(IMemory memory, int index) : Element(index)
+internal sealed class SuperElement(IMemory memory, int index) : Element(index)
 {
     private readonly int _offset = 0x7CAA + index * 0x00C2;
     private Bool _isAlwaysVisible;

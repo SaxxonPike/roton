@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x0C)]
 [Context(Context.Super, 0x0C)]
-public sealed class DuplicatorDraw(
+internal sealed class DuplicatorDraw(
     IActorList actorList,
     ITiles tiles) 
     : IDraw

@@ -5,7 +5,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "END")]
 [Context(Context.Super, "END")]
-public sealed class EndCommand(
+internal sealed class EndCommand(
     IState state)
     : ICommand
 {

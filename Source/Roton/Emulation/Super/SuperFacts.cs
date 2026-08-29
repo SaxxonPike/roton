@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperFacts : Facts
+internal sealed class SuperFacts : Facts
 {
     public override int AmmoPerPickup => 20;
     public override int HealthPerGem => 10;

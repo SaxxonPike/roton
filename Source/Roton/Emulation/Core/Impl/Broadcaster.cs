@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Broadcaster(
+internal sealed class Broadcaster(
     ITracer tracer,
     IActorList actorList,
     IParser parser,

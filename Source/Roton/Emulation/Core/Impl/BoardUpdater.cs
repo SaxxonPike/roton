@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class BoardUpdater(
+internal sealed class BoardUpdater(
     IDrawList drawList,
     IElementList elementList,
     IActorList actorList,

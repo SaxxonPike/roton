@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "BIND")]
 [Context(Context.Super, "BIND")]
-public sealed class BindCommand(
+internal sealed class BindCommand(
     IActorList actorList,
     IParser parser)
     : ICommand

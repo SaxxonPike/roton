@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFadeMatrix(
+internal sealed class OriginalFadeMatrix(
     IEngineAccessor engine,
     ITerminal terminal,
     IRandomizer randomizer,

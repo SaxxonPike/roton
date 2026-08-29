@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "TORCHES")]
-public sealed class TorchesCheat(
+internal sealed class TorchesCheat(
     IWorld world)
     : ICheat
 {

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x01)]
 [Context(Context.Super, 0x01)]
-public sealed class BoardEdgeInteraction(
+internal sealed class BoardEdgeInteraction(
     IEngineAccessor engine,
     IWorld world,
     IBoard board,

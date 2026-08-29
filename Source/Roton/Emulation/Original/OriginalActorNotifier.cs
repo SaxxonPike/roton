@@ -4,4 +4,4 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalActorNotifier : ActorNotifier;
+internal sealed class OriginalActorNotifier : ActorNotifier;

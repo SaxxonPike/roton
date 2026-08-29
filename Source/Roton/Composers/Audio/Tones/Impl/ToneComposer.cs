@@ -7,7 +7,7 @@ namespace Roton.Composers.Audio.Tones.Impl;
 /// <inheritdoc />
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ToneComposer(
+internal sealed class ToneComposer(
     ISynth synth
 ) : IToneComposer
 {

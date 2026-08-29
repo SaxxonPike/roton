@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Roton.Composers.Video.Palettes.Impl;
 
-public sealed class VgaPaletteComposer(ReadOnlyMemory<byte> data) : IPaletteComposer
+internal sealed class VgaPaletteComposer(ReadOnlyMemory<byte> data) : IPaletteComposer
 {
     public Color ComposeColor(int index)
     {

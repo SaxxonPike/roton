@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CHANGE")]
 [Context(Context.Super, "CHANGE")]
-public sealed class ChangeCommand(
+internal sealed class ChangeCommand(
     IEngineAccessor engine,
     IElementList elementList,
     ITiles tiles,

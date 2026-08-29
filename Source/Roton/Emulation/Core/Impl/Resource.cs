@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Core.Impl;
 
-public sealed class Resource : IResource
+internal sealed class Resource : IResource
 {
     private readonly byte[] _data;
 

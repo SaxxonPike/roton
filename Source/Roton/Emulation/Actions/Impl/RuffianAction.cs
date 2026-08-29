@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x23)]
 [Context(Context.Super, 0x23)]
-public sealed class RuffianAction(
+internal sealed class RuffianAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

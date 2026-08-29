@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x05)]
 [Context(Context.Super, 0x05)]
-public sealed class AmmoInteraction(
+internal sealed class AmmoInteraction(
     IEngineAccessor engine,
     IWorld world,
     ISounds sounds,

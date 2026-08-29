@@ -10,7 +10,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class MusicEncoder : IMusicEncoder
+internal sealed class MusicEncoder : IMusicEncoder
 {
     public ISound Encode(ReadOnlySpan<char> music)
     {

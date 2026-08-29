@@ -2,7 +2,7 @@
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
+internal sealed class AutoDetectBinaryGlyphComposer : IGlyphComposer
 {
     private readonly VgaGlyphComposer? _innerGlyphComposer;
 

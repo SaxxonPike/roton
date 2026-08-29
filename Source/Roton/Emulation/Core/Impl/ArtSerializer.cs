@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Super)]
-public sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSerializer
+internal sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSerializer
 {
     private IMemory Memory
     {

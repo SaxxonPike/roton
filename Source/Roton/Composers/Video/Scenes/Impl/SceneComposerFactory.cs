@@ -6,7 +6,7 @@ namespace Roton.Composers.Video.Scenes.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class SceneComposerFactory(
+internal sealed class SceneComposerFactory(
     IGlyphComposerFactory glyphComposerFactory,
     IPaletteComposerFactory paletteComposerFactory)
     : ISceneComposerFactory

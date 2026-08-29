@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x2A)]
 [Context(Context.Super, 0x2A)]
-public sealed class TigerAction(
+internal sealed class TigerAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

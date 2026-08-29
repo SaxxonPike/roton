@@ -4,7 +4,7 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class SoundBufferList : FixedList<int>, ISoundBufferList
+internal sealed class SoundBufferList : FixedList<int>, ISoundBufferList
 {
     private readonly int _offset;
 

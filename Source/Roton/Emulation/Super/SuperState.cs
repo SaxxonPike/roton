@@ -11,7 +11,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperState : IState
+internal sealed class SuperState : IState
 {
     private Bool _aboutShown;
     private Tile _borderTile;

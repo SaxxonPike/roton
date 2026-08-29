@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Super, "Z")]
-public sealed class ZCheat(
+internal sealed class ZCheat(
     IWorld world)
     : ICheat
 {

@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x3B)]
 [Context(Context.Super, 0x3B)]
-public sealed class RotonAction(
+internal sealed class RotonAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

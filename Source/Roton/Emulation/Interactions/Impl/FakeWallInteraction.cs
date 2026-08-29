@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x1B)]
 [Context(Context.Super, 0x1B)]
-public sealed class FakeWallInteraction(
+internal sealed class FakeWallInteraction(
     IEngineAccessor engine,
     IAlerts alerts,
     IFacts facts)

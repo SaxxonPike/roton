@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class FileDialog(
+internal sealed class FileDialog(
     IHud hud, 
     IFileSystem fileSystem,
     IScrollContent scrollContent)

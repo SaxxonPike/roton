@@ -12,7 +12,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Parser(
+internal sealed class Parser(
     IActorList actorList,
     IState state,
     IConditionList conditionList,

@@ -6,7 +6,7 @@ namespace Roton.Composers.Audio.Synths.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Synth(
+internal sealed class Synth(
     IConfig config)
     : ISynth
 {

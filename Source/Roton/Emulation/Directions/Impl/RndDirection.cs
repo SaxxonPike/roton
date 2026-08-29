@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RND")]
 [Context(Context.Super, "RND")]
-public sealed class RndDirection(IEngineAccessor engine) : IDirection
+internal sealed class RndDirection(IEngineAccessor engine) : IDirection
 {
     private IEngine Engine => engine.Instance;
 

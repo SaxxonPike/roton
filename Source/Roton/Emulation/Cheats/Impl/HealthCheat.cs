@@ -6,7 +6,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "HEALTH")]
 [Context(Context.Super, "HEALTH")]
-public sealed class HealthCheat(
+internal sealed class HealthCheat(
     IWorld world) 
     : ICheat
 {

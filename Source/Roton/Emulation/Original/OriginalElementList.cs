@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalElementList : ElementList
+internal sealed class OriginalElementList : ElementList
 {
     private readonly Memory<byte> _data;
     private readonly IMemory _memory;

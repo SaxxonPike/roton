@@ -5,7 +5,7 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class CodeHeap : ICodeHeap
+internal sealed class CodeHeap : ICodeHeap
 {
     private int _nextEntry;
     private readonly char[] _block = new char[short.MaxValue - 1];

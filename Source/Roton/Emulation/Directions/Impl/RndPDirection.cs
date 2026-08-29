@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RNDP")]
 [Context(Context.Super, "RNDP")]
-public sealed class RndPDirection(
+internal sealed class RndPDirection(
     IParser parser,
     IRandomizer randomizer)
     : IDirection

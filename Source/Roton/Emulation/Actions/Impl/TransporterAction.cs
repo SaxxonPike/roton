@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterAction(
+internal sealed class TransporterAction(
     IActorList actorList,
     IBoardUpdater boardUpdater)
     : IAction

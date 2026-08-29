@@ -6,7 +6,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DrawList(
+internal sealed class DrawList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<IDraw>(contextMetadataService, serviceProvider), IDrawList;

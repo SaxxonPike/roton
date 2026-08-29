@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "CCW")]
 [Context(Context.Super, "CCW")]
-public sealed class CcwDirection(
+internal sealed class CcwDirection(
     IParser parser)
     : IDirection
 {

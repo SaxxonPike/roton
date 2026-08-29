@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public sealed class SoundUnit(
+internal sealed class SoundUnit(
     IState state,
     ISpeaker speaker,
     IMusicEncoder musicEncoder)

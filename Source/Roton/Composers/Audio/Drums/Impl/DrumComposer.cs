@@ -7,7 +7,7 @@ namespace Roton.Composers.Audio.Drums.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DrumComposer(
+internal sealed class DrumComposer(
     ISynth synth,
     IConfig config)
     : IDrumComposer

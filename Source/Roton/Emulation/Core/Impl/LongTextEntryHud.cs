@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
-public sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEntryHud) : ILongTextEntryHud
+internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEntryHud) : ILongTextEntryHud
 {
     private ITerminal Terminal
     {

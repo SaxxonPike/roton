@@ -10,7 +10,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalHud(
+internal sealed class OriginalHud(
     IEngineAccessor engine,
     ITerminal terminal,
     IScroll scroll,

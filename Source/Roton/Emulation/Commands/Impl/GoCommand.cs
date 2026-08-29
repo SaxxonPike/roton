@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "GO")]
 [Context(Context.Super, "GO")]
-public sealed class GoCommand(
+internal sealed class GoCommand(
     IParser parser,
     IEngineAccessor engine,
     ITiles tiles,

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x10)]
 [Context(Context.Super, 0x10)]
-public sealed class ClockwiseConveyorAction(
+internal sealed class ClockwiseConveyorAction(
     IActorList actorList,
     IConveyor conveyor,
     IBoardUpdater boardUpdater) 

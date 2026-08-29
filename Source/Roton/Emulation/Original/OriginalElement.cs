@@ -5,7 +5,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
-public sealed class OriginalElement(IMemory memory, int index) : Element(index)
+internal sealed class OriginalElement(IMemory memory, int index) : Element(index)
 {
     private readonly int _offset = 0x4AD4 + index * 0x00C3;
 

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFacts : Facts
+internal sealed class OriginalFacts : Facts
 {
     public override int AmmoPerPickup => 5;
     public override int HealthPerGem => 1;

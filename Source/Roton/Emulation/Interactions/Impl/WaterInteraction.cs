@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x13)]
 [Context(Context.Super, 0x13)]
-public sealed class WaterInteraction(
+internal sealed class WaterInteraction(
     IEngineAccessor engine,
     ISounds sounds,
     IAlerts alerts,

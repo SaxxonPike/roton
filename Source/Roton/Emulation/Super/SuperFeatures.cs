@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperFeatures(
+internal sealed class SuperFeatures(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

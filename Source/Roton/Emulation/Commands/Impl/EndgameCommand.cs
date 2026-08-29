@@ -5,7 +5,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "ENDGAME")]
 [Context(Context.Super, "ENDGAME")]
-public sealed class EndgameCommand(
+internal sealed class EndgameCommand(
     IWorld world)
     : ICommand
 {

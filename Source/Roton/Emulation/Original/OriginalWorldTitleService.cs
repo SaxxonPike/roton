@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalWorldTitleService : IWorldTitleService
+internal sealed class OriginalWorldTitleService : IWorldTitleService
 {
     public string? GetTitle(string? fileName) =>
         fileName?.ToUpperInvariant() switch

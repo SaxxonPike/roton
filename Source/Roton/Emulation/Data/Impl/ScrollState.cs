@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class ScrollState(IState state) : IScrollState
+internal sealed class ScrollState(IState state) : IScrollState
 {
     public string? Title { get; set; }
     public bool IsHelp { get; set; }

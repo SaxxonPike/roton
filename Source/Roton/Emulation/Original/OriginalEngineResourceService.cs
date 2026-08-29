@@ -4,5 +4,5 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalEngineResourceService(IAssemblyResourceService assemblyResourceService)
+internal sealed class OriginalEngineResourceService(IAssemblyResourceService assemblyResourceService)
     : EngineResourceService(assemblyResourceService, "elements-zzt.bin", "memory-zzt.bin");

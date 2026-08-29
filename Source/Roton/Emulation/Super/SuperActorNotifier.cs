@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperActorNotifier(
+internal sealed class SuperActorNotifier(
     IActorList actorList)
     : ActorNotifier
 {

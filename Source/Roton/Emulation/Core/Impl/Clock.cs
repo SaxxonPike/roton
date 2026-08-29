@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public sealed class Clock(IConfig config) : IClock
+internal sealed class Clock(IConfig config) : IClock
 {
     private readonly long _numerator = config.MasterClockNumerator;
     private readonly long _denominator = config.MasterClockDenominator;

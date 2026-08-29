@@ -6,7 +6,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "NOT")]
 [Context(Context.Super, "NOT")]
-public sealed class NotCondition(
+internal sealed class NotCondition(
     IParser parser)
     : ICondition
 {

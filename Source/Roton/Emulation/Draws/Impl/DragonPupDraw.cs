@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x3C)]
-public sealed class DragonPupDraw(
+internal sealed class DragonPupDraw(
     ITiles tiles,
     IState state)
     : IDraw

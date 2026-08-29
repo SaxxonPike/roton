@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Interpreter(
+internal sealed class Interpreter(
     IEngineAccessor engine,
     ITracer tracer,
     IParser parser,

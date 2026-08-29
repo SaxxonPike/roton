@@ -9,7 +9,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x04)]
 [Context(Context.Super, 0x04)]
-public sealed class PlayerAction(
+internal sealed class PlayerAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x07)]
 [Context(Context.Super, 0x07)]
-public sealed class GemInteraction(
+internal sealed class GemInteraction(
     IEngineAccessor engine,
     IWorld world,
     IFacts facts,

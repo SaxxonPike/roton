@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombAction(
+internal sealed class BombAction(
     IEngineAccessor engine,
     ISounds sounds,
     IActorList actorList,

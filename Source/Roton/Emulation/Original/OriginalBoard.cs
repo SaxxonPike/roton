@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalBoard : IBoard
+internal sealed class OriginalBoard : IBoard
 {
     private readonly IMemory _memory;
     private Location16 _camera;

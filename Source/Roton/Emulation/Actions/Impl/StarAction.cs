@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
-public sealed class StarAction(
+internal sealed class StarAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

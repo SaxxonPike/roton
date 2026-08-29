@@ -5,7 +5,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ENERGIZED")]
 [Context(Context.Super, "ENERGIZED")]
-public sealed class EnergizedCondition(
+internal sealed class EnergizedCondition(
     IWorld world)
     : ICondition
 {

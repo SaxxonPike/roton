@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
-public sealed class PutCommand(
+internal sealed class PutCommand(
     IEngineAccessor engine,
     IParser parser)
     : ICommand

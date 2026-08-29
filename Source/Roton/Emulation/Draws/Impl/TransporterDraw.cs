@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public sealed class TransporterDraw(
+internal sealed class TransporterDraw(
     IActorList actorList,
     ITiles tiles,
     IState state)

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1F)]
 [Context(Context.Super, 0x1F)]
-public sealed class LineWallDraw(
+internal sealed class LineWallDraw(
     IState state,
     IElementList elementList,
     IFeatures features,

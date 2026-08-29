@@ -13,7 +13,7 @@ using Roton.Emulation.Infrastructure;
 namespace Roton.Composers.Video.Scenes.Impl;
 
 /// <inheritdoc />
-public sealed class SceneComposer : ISceneComposer
+internal sealed class SceneComposer : ISceneComposer
 {
     private readonly IGlyphComposerFactory _glyphComposerFactory;
     private readonly IPaletteComposerFactory _paletteComposerFactory;

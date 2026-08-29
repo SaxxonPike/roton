@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
-public sealed class BlinkWallAction(
+internal sealed class BlinkWallAction(
     IEngineAccessor engine,
     ITiles tiles,
     IElementList elementList,

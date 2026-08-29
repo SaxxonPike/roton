@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
-public sealed class PusherDraw(
+internal sealed class PusherDraw(
     IActorList actorList,
     ITiles tiles) 
     : IDraw

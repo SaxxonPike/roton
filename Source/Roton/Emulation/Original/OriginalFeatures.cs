@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFeatures(
+internal sealed class OriginalFeatures(
     IEngineAccessor engine,
     IActorList actorList,
     IAlerts alerts,

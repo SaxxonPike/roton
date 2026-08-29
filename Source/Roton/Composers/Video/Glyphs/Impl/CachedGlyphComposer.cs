@@ -2,7 +2,7 @@
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class CachedGlyphComposer(IGlyphComposer source) : IGlyphComposer
+internal sealed class CachedGlyphComposer(IGlyphComposer source) : IGlyphComposer
 {
     private readonly IReadOnlyList<Glyph?> _glyphs = source.ComposeAllGlyphs();
 

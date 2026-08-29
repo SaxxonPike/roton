@@ -6,7 +6,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ANY")]
 [Context(Context.Super, "ANY")]
-public sealed class AnyCondition(
+internal sealed class AnyCondition(
     IEngineAccessor engine,
     IParser parser) 
     : ICondition

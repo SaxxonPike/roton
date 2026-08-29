@@ -5,7 +5,7 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "GEMS")]
 [Context(Context.Super, "GEMS")]
-public sealed class GemsItem(
+internal sealed class GemsItem(
     IWorld world)
     : IItem
 {

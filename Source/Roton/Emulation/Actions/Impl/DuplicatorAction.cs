@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x0C)]
 [Context(Context.Super, 0x0C)]
-public sealed class DuplicatorAction(
+internal sealed class DuplicatorAction(
     IEngineAccessor engine,
     IInteractionList interactionList,
     IState state,

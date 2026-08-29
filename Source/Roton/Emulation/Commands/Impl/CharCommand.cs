@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CHAR")]
 [Context(Context.Super, "CHAR")]
-public sealed class CharCommand(
+internal sealed class CharCommand(
     IParser parser,
     IBoardUpdater boardUpdater)
     : ICommand

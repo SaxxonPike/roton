@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class InteractionList(
+internal sealed class InteractionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<IInteraction>(contextMetadataService, serviceProvider), IInteractionList;

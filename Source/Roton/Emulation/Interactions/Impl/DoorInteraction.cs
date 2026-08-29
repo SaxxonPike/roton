@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x09)]
 [Context(Context.Super, 0x09)]
-public sealed class DoorInteraction(
+internal sealed class DoorInteraction(
     IEngineAccessor engine,
     IWorld world,
     ITiles tiles,

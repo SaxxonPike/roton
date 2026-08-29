@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "BECOME")]
 [Context(Context.Super, "BECOME")]
-public sealed class BecomeCommand(
+internal sealed class BecomeCommand(
     IEngineAccessor engine,
     IParser parser)
     : ICommand

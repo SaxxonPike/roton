@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x03)]
-public sealed class SuperMonitorAction(
+internal sealed class SuperMonitorAction(
     IEngineAccessor engine,
     IState state)
     : IAction

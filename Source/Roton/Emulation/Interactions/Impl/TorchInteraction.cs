@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x06)]
-public sealed class TorchInteraction(
+internal sealed class TorchInteraction(
     IEngineAccessor engine,
     ISounds sounds,
     IWorld world,

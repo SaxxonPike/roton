@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original, 0x24)]
-public sealed class OriginalObjectAction(
+internal sealed class OriginalObjectAction(
     IEngineAccessor engine,
     IActorList actorList,
     ITiles tiles,

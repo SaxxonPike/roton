@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public sealed class SpinningGunAction(
+internal sealed class SpinningGunAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

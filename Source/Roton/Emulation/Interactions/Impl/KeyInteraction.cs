@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x08)]
 [Context(Context.Super, 0x08)]
-public sealed class KeyInteraction(
+internal sealed class KeyInteraction(
     IEngineAccessor engine,
     ITiles tiles,
     IWorld world,

@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public sealed class SpinningGunDraw(
+internal sealed class SpinningGunDraw(
     ITiles tiles,
     IState state)
     : IDraw

@@ -6,7 +6,7 @@ namespace Roton.Composers.Audio.Steps.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class StepComposer(
+internal sealed class StepComposer(
     IConfig config)
     : IStepComposer
 {

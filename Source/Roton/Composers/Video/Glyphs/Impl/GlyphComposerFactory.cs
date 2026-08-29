@@ -6,7 +6,7 @@ namespace Roton.Composers.Video.Glyphs.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class GlyphComposerFactory(IComposerResourceService composerResourceService) : IGlyphComposerFactory
+internal sealed class GlyphComposerFactory(IComposerResourceService composerResourceService) : IGlyphComposerFactory
 {
     public IGlyphComposer Get(ReadOnlyMemory<byte> data, bool wide)
     {

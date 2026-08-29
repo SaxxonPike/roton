@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ActionList(
+internal sealed class ActionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<IAction>(contextMetadataService, serviceProvider), IActionList;

@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x22)]
 [Context(Context.Super, 0x22)]
-public sealed class BearAction(
+internal sealed class BearAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

@@ -9,7 +9,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigFileService
+internal sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigFileService
 {
     private const string ConfigFileName = "ZZT.CFG";
 

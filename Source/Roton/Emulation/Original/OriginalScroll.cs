@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalScroll(
+internal sealed class OriginalScroll(
     IEngineAccessor engine,
     ITerminal terminal,
     IState state,

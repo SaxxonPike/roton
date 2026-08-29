@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x26)]
-public sealed class SharkAction(
+internal sealed class SharkAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

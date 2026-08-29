@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x10)]
 [Context(Context.Super, 0x10)]
-public sealed class ClockwiseConveyorDraw(
+internal sealed class ClockwiseConveyorDraw(
     IState state,
     IElementList elementList,
     ITiles tiles)

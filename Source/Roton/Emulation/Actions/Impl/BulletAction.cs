@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x12)]
 [Context(Context.Super, 0x45)]
-public sealed class BulletAction(
+internal sealed class BulletAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,

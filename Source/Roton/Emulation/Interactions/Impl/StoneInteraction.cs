@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneInteraction(
+internal sealed class StoneInteraction(
     IEngineAccessor engine,
     IWorld world,
     IHud hud,

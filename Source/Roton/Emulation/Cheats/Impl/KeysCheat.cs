@@ -6,7 +6,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "KEYS")]
 [Context(Context.Super, "KEYS")]
-public sealed class KeysCheat(
+internal sealed class KeysCheat(
     IKeyList keyList)
     : ICheat
 {

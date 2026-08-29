@@ -6,7 +6,7 @@ namespace Roton.Emulation.Targets.Impl;
 
 [Context(Context.Original, "OTHERS")]
 [Context(Context.Super, "OTHERS")]
-public sealed class OthersTarget(IActorList actors) : ITarget
+internal sealed class OthersTarget(IActorList actors) : ITarget
 {
     private IActorList Actors => actors;
 

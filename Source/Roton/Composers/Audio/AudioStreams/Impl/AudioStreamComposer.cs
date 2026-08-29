@@ -10,7 +10,7 @@ namespace Roton.Composers.Audio.AudioStreams.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class AudioStreamComposer(
+internal sealed class AudioStreamComposer(
     IDrumSoundList drumBank,
     IConfig config,
     IDrumComposer drumComposer,

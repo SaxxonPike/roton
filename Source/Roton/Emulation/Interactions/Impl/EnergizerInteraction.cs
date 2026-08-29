@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0E)]
 [Context(Context.Super, 0x0E)]
-public sealed class EnergizerInteraction(
+internal sealed class EnergizerInteraction(
     IEngineAccessor engine,
     ISounds sounds,
     IWorld world,

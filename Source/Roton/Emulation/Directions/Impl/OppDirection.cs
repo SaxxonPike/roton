@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "OPP")]
 [Context(Context.Super, "OPP")]
-public sealed class OppDirection(
+internal sealed class OppDirection(
     IParser parser)
     : IDirection
 {

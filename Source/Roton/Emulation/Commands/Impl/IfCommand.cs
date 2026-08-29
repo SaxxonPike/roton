@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "IF")]
 [Context(Context.Super, "IF")]
-public sealed class IfCommand(
+internal sealed class IfCommand(
     IParser parser)
     : ICommand
 {

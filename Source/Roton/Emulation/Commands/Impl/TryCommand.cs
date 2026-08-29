@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "TRY")]
 [Context(Context.Super, "TRY")]
-public sealed class TryCommand(
+internal sealed class TryCommand(
     IEngineAccessor engine,
     IParser parser,
     ITiles tiles,

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Super, "NOZ")]
-public sealed class NoZCheat(
+internal sealed class NoZCheat(
     IWorld world)
     : ICheat
 {

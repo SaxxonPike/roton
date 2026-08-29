@@ -6,7 +6,7 @@ namespace Roton.Emulation.Cheats.Impl;
 
 [Context(Context.Original, "GEMS")]
 [Context(Context.Super, "GEMS")]
-public sealed class GemsCheat(
+internal sealed class GemsCheat(
     IWorld world)
     : ICheat
 {

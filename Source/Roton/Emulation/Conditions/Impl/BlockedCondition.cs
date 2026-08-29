@@ -6,7 +6,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "BLOCKED")]
 [Context(Context.Super, "BLOCKED")]
-public sealed class BlockedCondition(
+internal sealed class BlockedCondition(
     IEngineAccessor engine,
     IParser parser)
     : ICondition

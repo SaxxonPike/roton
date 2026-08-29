@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Randomizer(IConfig config) : IRandomizer
+internal sealed class Randomizer(IConfig config) : IRandomizer
 {
     private IRandomState RandomState { get; } = config.RandomSeed.HasValue ? new RandomState(config.RandomSeed.Value) : new RandomState();
 

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Super, 0x3E)]
-public sealed class SpiderAction(
+internal sealed class SpiderAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

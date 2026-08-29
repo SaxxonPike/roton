@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
+internal sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
 {
     private Word _torchCycles;
     private Word _torches;

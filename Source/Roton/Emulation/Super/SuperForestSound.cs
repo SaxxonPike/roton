@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Super;
 
-public sealed class SuperForestSound(IMemory memory, int offset, int length) : ISound
+internal sealed class SuperForestSound(IMemory memory, int offset, int length) : ISound
 {
     public int this[int index] => (index & 1) == 1 ? 0x01 : memory.Read8(offset + (index >> 1));
 

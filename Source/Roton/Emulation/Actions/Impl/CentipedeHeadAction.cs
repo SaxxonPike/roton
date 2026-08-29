@@ -6,7 +6,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x2C)]
 [Context(Context.Super, 0x2C)]
-public sealed class CentipedeHeadAction(
+internal sealed class CentipedeHeadAction(
     IEngineAccessor engine,
     IActorList actorList,
     IRandomizer randomizer,

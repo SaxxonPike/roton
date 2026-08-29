@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Conveyor(
+internal sealed class Conveyor(
     ITiles tiles,
     IElementList elementList,
     IState state,

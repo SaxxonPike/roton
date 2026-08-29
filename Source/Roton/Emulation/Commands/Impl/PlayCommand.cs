@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PLAY")]
 [Context(Context.Super, "PLAY")]
-public sealed class PlayCommand(
+internal sealed class PlayCommand(
     IMusicEncoder musicEncoder,
     IParser parser,
     ISoundUnit soundUnit)

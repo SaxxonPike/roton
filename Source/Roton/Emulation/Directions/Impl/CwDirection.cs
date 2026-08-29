@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "CW")]
 [Context(Context.Super, "CW")]
-public sealed class CwDirection(
+internal sealed class CwDirection(
     IParser parser) : IDirection
 {
     public Vector Execute(ref OopContext context, ref Word instruction) => 

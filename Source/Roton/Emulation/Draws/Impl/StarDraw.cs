@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
-public sealed class StarDraw(
+internal sealed class StarDraw(
     ITiles tiles,
     IState state)
     : IDraw

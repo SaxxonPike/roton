@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 
 [Context(Context.Original, 0x02)]
 [Context(Context.Super, 0x02)]
-public sealed class MessengerAction(
+internal sealed class MessengerAction(
     IEngineAccessor engine,
     IActorList actorList,
     IHud hud,

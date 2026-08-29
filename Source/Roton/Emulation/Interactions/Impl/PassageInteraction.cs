@@ -6,7 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0B)]
 [Context(Context.Super, 0x0B)]
-public sealed class PassageInteraction(
+internal sealed class PassageInteraction(
     IEngineAccessor engine,
     ITiles tiles,
     IActorList actorList,

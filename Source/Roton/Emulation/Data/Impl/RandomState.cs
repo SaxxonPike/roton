@@ -3,7 +3,7 @@ using Roton.Emulation.Core;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class RandomState : IRandomState
+internal sealed class RandomState : IRandomState
 {
     internal RandomState()
     {

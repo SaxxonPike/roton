@@ -10,7 +10,7 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x18)]
 [Context(Context.Super, 0x19)]
 [Context(Context.Super, 0x1A)]
-public sealed class PuzzleInteraction(
+internal sealed class PuzzleInteraction(
     IEngineAccessor engine,
     ISounds sounds,
     ISoundUnit soundUnit,

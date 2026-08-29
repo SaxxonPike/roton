@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "SHOOT")]
 [Context(Context.Super, "SHOOT")]
-public sealed class ShootCommand(
+internal sealed class ShootCommand(
     IEngineAccessor engine,
     IParser parser,
     IElementList elementList,

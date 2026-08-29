@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperActorList(IMemory memory, ICodeHeap heap) : ActorList(memory, 129)
+internal sealed class SuperActorList(IMemory memory, ICodeHeap heap) : ActorList(memory, 129)
 {
     private ICodeHeap Heap => heap;
 

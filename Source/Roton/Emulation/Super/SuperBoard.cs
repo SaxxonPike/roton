@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperBoard : IBoard
+internal sealed class SuperBoard : IBoard
 {
     private readonly IMemory _memory;
     private Bool _isDark;

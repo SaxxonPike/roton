@@ -5,7 +5,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "CONTACT")]
 [Context(Context.Super, "CONTACT")]
-public sealed class ContactCondition(
+internal sealed class ContactCondition(
     IActorList actorList)
     : ICondition
 {

@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original, 0x03)]
-public sealed class OriginalMonitorAction(
+internal sealed class OriginalMonitorAction(
     IState state)
     : IAction
 {

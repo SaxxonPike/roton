@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "GIVE")]
 [Context(Context.Super, "GIVE")]
-public sealed class GiveCommand(
+internal sealed class GiveCommand(
     IHud hud,
     IEngineAccessor engine)
     : ICommand

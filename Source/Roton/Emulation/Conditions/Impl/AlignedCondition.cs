@@ -5,7 +5,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original, "ALLIGNED")]
 [Context(Context.Super, "ALLIGNED")]
-public sealed class AlignedCondition(
+internal sealed class AlignedCondition(
     IActorList actorList)
     : ICondition
 {

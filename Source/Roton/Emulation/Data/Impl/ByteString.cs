@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class ByteString(IMemory memory, int offset)
+internal sealed class ByteString(IMemory memory, int offset)
     : IRefList<PChar>
 {
     public int Count =>

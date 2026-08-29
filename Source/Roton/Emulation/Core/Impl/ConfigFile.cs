@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class ConfigFile : IConfigFile
+internal sealed class ConfigFile : IConfigFile
 {
     public ConfigFileFormat Format { get; set; }
     public int Value0 { get; set; }

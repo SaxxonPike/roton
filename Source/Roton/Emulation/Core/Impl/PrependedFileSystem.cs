@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class PrependedFileSystem(IFileSystem baseFileSystem, string basePath) : IFileSystem
+internal sealed class PrependedFileSystem(IFileSystem baseFileSystem, string basePath) : IFileSystem
 {
     public bool IsWriteable => baseFileSystem.IsWriteable;
 
