@@ -7,6 +7,7 @@ using Lyon.App;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Composers.Audio;
+using Roton.Composers.Audio.AudioStreams;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -31,7 +32,7 @@ public static class ServiceCollectionExtensions
             );
 
             services.AddSingleton<ISceneComposer>(c => c.GetRequiredService<ISceneComposerFactory>().Get());
-            services.AddSingleton<ISpeaker>(c => c.GetRequiredService<IAudioComposer>());
+            services.AddSingleton<ISpeaker>(c => c.GetRequiredService<IAudioStreamComposer>());
             services.AddSingleton<ITerminal>(c => c.GetRequiredService<ISceneComposer>());
         }
 

@@ -6,104 +6,103 @@ using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
-namespace Roton.Emulation.Core.Impl
+namespace Roton.Emulation.Core.Impl;
+
+[Context(Context.Original)]
+[Context(Context.Super)]
+public sealed class Tracer : ITracer
 {
-    [Context(Context.Original)]
-    [Context(Context.Super)]
-    public sealed class Tracer : ITracer
+    private long _stepNumber;
+    private readonly List<TextWriter> _writers = [];
+
+    public void TraceInput(EngineKeyCode keyCode)
     {
-        private long _stepNumber;
-        private readonly List<TextWriter> _writers = [];
+        if (_writers.Count == 0)
+            return;
 
-        public void TraceInput(EngineKeyCode keyCode)
+        foreach (var writer in _writers)
+            writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
+    }
+
+    public void TraceOop(ref OopContext context, ref Word instruction)
+    {
+        if (_writers.Count == 0)
+            return;
+
+        var code = context.Actor.Code;
+        var offset = instruction;
+        var end = instruction;
+
+        if (code.IsEmpty)
+            return;
+
+        while (end < code.Length)
         {
-            if (_writers.Count == 0)
-                return;
-
-            foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:    TRACE KEY  {keyCode}");
+            if (code[end] == 0x0D || code[end] == 0x00)
+                break;
+            end++;
         }
 
-        public void TraceOop(ref OopContext context, ref Word instruction)
+        var line = code.Slice(offset, end - offset).ToString();
+        foreach (var writer in _writers)
+            writer.WriteLine($"{_stepNumber:D8}:{context.Index:D3} TRACE OOP  [{context.Actor}] {line}");
+    }
+
+    public void TraceStep()
+    {
+        _stepNumber++;
+    }
+
+    public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock,
+        bool ignoreSelfLock)
+    {
+        if (_writers.Count == 0)
+            return;
+
+        if (sender == targetIndex && !ignoreLock && !ignoreSelfLock)
+            return;
+
+        var options = new[]
         {
-            if (_writers.Count == 0)
-                return;
+            ignoreLock ? "IgnoreLock" : string.Empty,
+            ignoreSelfLock ? "IgnoreSelfLock" : string.Empty
+        };
 
-            var code = context.Actor.Code;
-            var offset = instruction;
-            var end = instruction;
+        var optionsString = string.Join(" ", options.Where(o => !string.IsNullOrEmpty(o)));
 
-            if (code.IsEmpty)
-                return;
+        foreach (var writer in _writers)
+            writer.WriteLine(
+                $"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
+    }
 
-            while (end < code.Length)
-            {
-                if (code[end] == 0x0D || code[end] == 0x00)
-                    break;
-                end++;
-            }
+    public void Attach(TextWriter writer)
+    {
+        if (!_writers.Contains(writer))
+            _writers.Add(writer);
+    }
 
-            var line = code.Slice(offset, end - offset).ToString();
-            foreach (var writer in _writers)
-                writer.WriteLine($"{_stepNumber:D8}:{context.Index:D3} TRACE OOP  [{context.Actor}] {line}");
-        }
+    public void Detach(TextWriter writer)
+    {
+        _writers.Remove(writer);
+    }
 
-        public void TraceStep()
-        {
-            _stepNumber++;
-        }
+    public void TraceError(ref OopContext context, ReadOnlySpan<char> message)
+    {
+        if (_writers.Count == 0)
+            return;
 
-        public void TraceBroadcast(int sender, ReadOnlySpan<char> term, int targetIndex, bool ignoreLock,
-            bool ignoreSelfLock)
-        {
-            if (_writers.Count == 0)
-                return;
+        foreach (var writer in _writers)
+            writer.WriteLine(
+                $"{_stepNumber:D8}:{context.Index:D3} ERROR      [{context.Actor}] {message.ToString()}");
+    }
 
-            if (sender == targetIndex && !ignoreLock && !ignoreSelfLock)
-                return;
+    public void TraceCrash(ReadOnlySpan<char> message)
+    {
+        if (_writers.Count == 0)
+            return;
 
-            var options = new[]
-            {
-                ignoreLock ? "IgnoreLock" : string.Empty,
-                ignoreSelfLock ? "IgnoreSelfLock" : string.Empty
-            };
-
-            var optionsString = string.Join(" ", options.Where(o => !string.IsNullOrEmpty(o)));
-
-            foreach (var writer in _writers)
-                writer.WriteLine(
-                    $"{_stepNumber:D8}:{sender:D3} BROADCAST  {term.ToString()} -> {targetIndex}  {optionsString}");
-        }
-
-        public void Attach(TextWriter writer)
-        {
-            if (!_writers.Contains(writer))
-                _writers.Add(writer);
-        }
-
-        public void Detach(TextWriter writer)
-        {
-            _writers.Remove(writer);
-        }
-
-        public void TraceError(ref OopContext context, ReadOnlySpan<char> message)
-        {
-            if (_writers.Count == 0)
-                return;
-
-            foreach (var writer in _writers)
-                writer.WriteLine(
-                    $"{_stepNumber:D8}:{context.Index:D3} ERROR      [{context.Actor}] {message.ToString()}");
-        }
-
-        public void TraceCrash(ReadOnlySpan<char> message)
-        {
-            if (_writers.Count == 0)
-                return;
-
-            foreach (var writer in _writers)
-                writer.WriteLine(
-                    $"{_stepNumber:D8}     CRASH      {message.ToString()}");
-        }
+        foreach (var writer in _writers)
+            writer.WriteLine(
+                $"{_stepNumber:D8}     CRASH      {message.ToString()}");
     }
 }

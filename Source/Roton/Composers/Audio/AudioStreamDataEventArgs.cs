@@ -3,7 +3,7 @@ using System.Buffers;
 
 namespace Roton.Composers.Audio;
 
-public readonly struct AudioComposerDataEventArgs(
+public readonly struct AudioStreamDataEventArgs(
     IMemoryOwner<float> memory,
     int length)
 {

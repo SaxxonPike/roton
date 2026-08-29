@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Roton;
 using Roton.Composers.Audio;
+using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -17,7 +18,7 @@ namespace Lyon.Presenters.Impl;
 [Context(Context.Startup)]
 public sealed unsafe class AudioPresenter(
     IConfig config, 
-    IAudioComposer composer)
+    IAudioStreamComposer composer)
     : IDisposable, IAudioPresenter
 {
     /// <summary>
@@ -143,7 +144,7 @@ public sealed unsafe class AudioPresenter(
     /// <summary>
     /// Handles when the composer is ready to provide a buffer.
     /// </summary>
-    private void OnComposerBufferReady(object? sender, AudioComposerDataEventArgs e)
+    private void OnComposerBufferReady(object? sender, AudioStreamDataEventArgs e)
     {
         var data = e.Data;
 

@@ -1,10 +1,9 @@
 using System;
 using Roton.Emulation.Data;
 
-namespace Roton.Emulation.Targets
+namespace Roton.Emulation.Targets;
+
+public interface ITarget
 {
-    public interface ITarget
-    {
-        bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term);
-    }
+    bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term);
 }
