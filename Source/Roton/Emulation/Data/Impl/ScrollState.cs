@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Roton.Emulation.Data.Impl;
+﻿namespace Roton.Emulation.Data.Impl;
 
 internal sealed class ScrollState(IState state) : IScrollState
 {

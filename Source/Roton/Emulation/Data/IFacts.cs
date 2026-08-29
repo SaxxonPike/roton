@@ -8,7 +8,6 @@ public interface IFacts
     int AmmoPerPickup { get; }
     int HealthPerGem { get; }
     int ScorePerGem { get; }
-    int PauseFlashInterval { get; }
     int MainLoopRandomCycleRange { get; }
     string DefaultSavedGameName { get; }
     string DefaultBoardName { get; }

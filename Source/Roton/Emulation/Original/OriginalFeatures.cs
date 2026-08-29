@@ -150,11 +150,6 @@ internal sealed class OriginalFeatures(
         return color;
     }
 
-    public string GetSaveName(string baseName)
-    {
-        return $"{baseName}.SAV";
-    }
-
     private bool TestAdjacent(Location location, int id)
     {
         var eId = tiles[location].Id;
@@ -212,10 +207,5 @@ internal sealed class OriginalFeatures(
     public void ShowInGameHelp()
     {
         hud.ShowHelp("Playing Roton", "GAME");
-    }
-
-    public string GetWorldName(string baseName)
-    {
-        return $"{baseName}.ZZT";
     }
 }

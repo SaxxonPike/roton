@@ -19,7 +19,7 @@ internal sealed class BearAction(
     public void Act(int index)
     {
         var actor = actorList[index];
-        var vector = new Vector();
+        Vector vector;
 
         if (actorList.Player.Location.X == actor.Location.X ||
             8 - actor.P1 < actorList.Player.Location.Y.AbsDiff(actor.Location.Y))

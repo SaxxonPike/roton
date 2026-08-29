@@ -19,9 +19,8 @@ internal sealed class LionAction(
     public void Act(int index)
     {
         var actor = actorList[index];
-        var vector = new Vector();
 
-        vector = actor.P1 >= randomizer.GetNext(10)
+        var vector = actor.P1 >= randomizer.GetNext(10)
             ? Engine.Seek(actor.Location)
             : Engine.Rnd();
 

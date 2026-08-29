@@ -35,7 +35,7 @@ internal sealed class PackedBoard : IPackedBoard
         {
             if (Data.Length >= 260)
             {
-                var nameLength = (byte)((value?.Length ?? 0) & 0xFF);
+                var nameLength = (byte)(value.Length & 0xFF);
                 Data[0] = nameLength;
                 if (nameLength > 0)
                 {

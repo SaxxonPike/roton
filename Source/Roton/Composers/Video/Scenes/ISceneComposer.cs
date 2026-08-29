@@ -13,7 +13,7 @@ public interface ISceneComposer : ITerminal
     /// <summary>
     /// Raised when the pixel area has changed in size.
     /// </summary>
-    event EventHandler<ResizedEventArgs>? Resized;
+    event EventHandler<ResizedEventData>? Resized;
 
     /// <summary>
     /// Number of character rows.

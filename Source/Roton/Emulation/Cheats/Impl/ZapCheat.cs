@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -13,7 +12,7 @@ internal sealed class ZapCheat(
 {
     private IEngine Engine => engine.Instance;
 
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         for (var i = 0; i < 4; i++)
         {

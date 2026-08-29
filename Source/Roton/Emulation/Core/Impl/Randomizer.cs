@@ -8,7 +8,10 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Randomizer(IConfig config) : IRandomizer
 {
-    private IRandomState RandomState { get; } = config.RandomSeed.HasValue ? new RandomState(config.RandomSeed.Value) : new RandomState();
+    private RandomState RandomState { get; } = 
+        config.RandomSeed.HasValue
+            ? new RandomState(config.RandomSeed.Value) 
+            : new RandomState();
 
     public int GetNext(int exclusiveUpperBound)
     {

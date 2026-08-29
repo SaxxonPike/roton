@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
@@ -60,10 +59,6 @@ public abstract class Hud(
     }
 
     public virtual void DrawStatusLine(int y)
-    {
-    }
-
-    public virtual void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
     }
 

@@ -29,13 +29,14 @@ internal sealed class Clock(IConfig config) : IClock
 
     private void Initialize()
     {
-        if (!_initialized)
-        {
-            _running = true;
-            _initialized = true;
-            var thread = new Thread(ThreadLoop);
-            thread.Start();
-        }
+        if (_initialized) 
+            return;
+
+        _running = true;
+        _initialized = true;
+
+        var thread = new Thread(ThreadLoop);
+        thread.Start();
     }
 
     private void ThreadLoop()

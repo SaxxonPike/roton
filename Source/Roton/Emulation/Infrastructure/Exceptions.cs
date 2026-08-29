@@ -13,12 +13,4 @@ public static class Exceptions
     public static RotonException InvalidSet => new(
         "Can't set this property."
     );
-
-    public static RotonException PushStackOverflow => new(
-        "Pushing requires a non-zero vector."
-    );
-
-    public static RotonException SelfReferenceCentipede => new(
-        "Centipede segments must not self-reference."
-    );
 }

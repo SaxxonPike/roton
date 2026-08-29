@@ -34,15 +34,16 @@ internal sealed class Broadcaster(
 
         while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (!actorLocker.IsActorLocked(info.Index) || ignoreLock || sender == info.Index && !ignoreSelfLock)
-            {
-                if (sender == info.Index)
-                    success = true;
+            if (actorLocker.IsActorLocked(info.Index) && !ignoreLock &&
+                (sender != info.Index || ignoreSelfLock)) 
+                continue;
 
-                tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
-                actorList[info.Index].Instruction = info.Offset;
-                actorNotifier.NotifyActorSentLabel(info.Index);
-            }
+            if (sender == info.Index)
+                success = true;
+
+            tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
+            actorList[info.Index].Instruction = info.Offset;
+            actorNotifier.NotifyActorSentLabel(info.Index);
         }
 
         return success;

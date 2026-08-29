@@ -16,24 +16,6 @@ internal sealed class ZipFileSystem : IFileSystem
         _file = file;
     }
 
-    public string GetCombinedPath(params string[] paths)
-    {
-        return string.Join("/", paths);
-    }
-
-    public IEnumerable<string> GetDirectoryNames(string path)
-    {
-        using var archiveStream = new MemoryStream(_file);
-        using var archive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
-        return
-        [
-            .. archive.Entries
-                .Where(e => e.FullName.StartsWith(path) && e.FullName != path)
-                .Select(e => e.FullName.Split('/').Last())
-        ];
-    }
-
-    // TODO: make zips writeable
     public bool IsWriteable => false;
 
     public bool FileExists(string path)

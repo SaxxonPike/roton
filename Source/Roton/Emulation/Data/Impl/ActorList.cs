@@ -4,8 +4,6 @@ namespace Roton.Emulation.Data.Impl;
 
 public abstract class ActorList(IMemory memory, int capacity) : CachedFixedList<IActor>(capacity), IActorList
 {
-    private IActor[] Cache { get; } = new IActor[capacity];
-
     protected IMemory Memory => memory;
 
     public int Capacity { get; } = capacity;

@@ -14,7 +14,7 @@ internal sealed class NullSceneComposer : ISceneComposer
 {
     private AnsiChar[] _chars = [];
 
-    public event EventHandler<ResizedEventArgs>? Resized;
+    public event EventHandler<ResizedEventData>? Resized;
 
     public void Clear() =>
         _chars.AsSpan().Clear();
@@ -46,7 +46,7 @@ internal sealed class NullSceneComposer : ISceneComposer
         Rows = height;
         Columns = width;
         Wide = wide;
-        Resized?.Invoke(this, new ResizedEventArgs(width, height, wide));
+        Resized?.Invoke(this, new ResizedEventData(width, height, wide));
     }
 
     public void Write(int x, int y, ReadOnlySpan<char> value, int color)

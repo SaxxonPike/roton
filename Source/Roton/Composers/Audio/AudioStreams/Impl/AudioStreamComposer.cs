@@ -88,9 +88,8 @@ internal sealed class AudioStreamComposer(
         var mem = MemoryPool<float>.Shared.Rent(length);
         var buffer = mem.Memory.Span.Slice(0, length);
 
-        ComposeAudio(buffer);
-
-        var args = new AudioStreamDataEventArgs(mem, length);
+        var actual = ComposeAudio(buffer);
+        var args = new AudioStreamDataEventArgs(mem, actual);
         BufferReady?.Invoke(this, args);
     }
 

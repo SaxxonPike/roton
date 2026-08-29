@@ -176,7 +176,7 @@ internal sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
+    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
         Terminal.Write(x, y, text, color);
     }
@@ -419,7 +419,7 @@ internal sealed class SuperHud(
         {
             foreach (var flag in world.Flags.Select(f => f.ToUpperInvariant()))
             {
-                if (flag.Length > 0 && flag.StartsWith("Z"))
+                if (flag.Length > 0 && flag.StartsWith("Z", StringComparison.OrdinalIgnoreCase))
                 {
                     return flag.Substring(1);
                 }

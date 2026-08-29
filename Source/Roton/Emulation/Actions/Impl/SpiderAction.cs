@@ -18,9 +18,8 @@ internal sealed class SpiderAction(
     public void Act(int index)
     {
         var actor = actorList[index];
-        var vector = new Vector();
 
-        vector = actor.P1 <= randomizer.GetNext(10)
+        var vector = actor.P1 <= randomizer.GetNext(10)
             ? Engine.Rnd()
             : Engine.Seek(actor.Location);
 

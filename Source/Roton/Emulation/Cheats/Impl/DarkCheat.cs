@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -11,7 +10,7 @@ internal sealed class DarkCheat(
     IHud hud)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         board.IsDark = !clear;
         hud.RedrawBoard();

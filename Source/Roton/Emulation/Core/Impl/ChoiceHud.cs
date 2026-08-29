@@ -47,25 +47,6 @@ internal sealed class ChoiceHud(
 
     public int Show(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {
-        void DrawPip(int col)
-        {
-            for (var x2 = 0; x2 < 8; x2++)
-                DrawChar(x + x2 + 1, y + 1, new AnsiChar(0x20, col));
-
-            if (barText == null)
-            {
-                DrawChar(x + currentValue + 1,
-                    y + 1,
-                    new AnsiChar(0x1F, col));
-            }
-            else
-            {
-                DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
-                    y + 1,
-                    new AnsiChar(0x1F, 0x1F));
-            }
-        }
-
         DrawStatusLine(x, y);
         DrawStatusLine(x, y + 1);
         DrawStatusLine(x, y + 2);
@@ -161,5 +142,24 @@ internal sealed class ChoiceHud(
         DrawPip(0x1F);
 
         return currentValue;
+
+        void DrawPip(int col)
+        {
+            for (var x2 = 0; x2 < 8; x2++)
+                DrawChar(x + x2 + 1, y + 1, new AnsiChar(0x20, col));
+
+            if (barText == null)
+            {
+                DrawChar(x + currentValue + 1,
+                    y + 1,
+                    new AnsiChar(0x1F, col));
+            }
+            else
+            {
+                DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
+                    y + 1,
+                    new AnsiChar(0x1F, 0x1F));
+            }
+        }
     }
 }

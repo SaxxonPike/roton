@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
 public abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
 {
-    private IDictionary<int, IElement> Cache { get; } = new Dictionary<int, IElement>();
     public sealed override int Count { get; } = count;
 
     public virtual int AmmoId => -1;

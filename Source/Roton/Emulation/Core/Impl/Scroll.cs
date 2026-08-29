@@ -46,7 +46,7 @@ public abstract class Scroll(
 
     protected abstract IReadOnlyList<AnsiChar> GetScreenBuffer();
 
-    private void RenderLine(IReadOnlyList<int> chars, int y)
+    private void RenderLine(int[] chars, int y)
     {
         terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
         terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
@@ -141,28 +141,36 @@ public abstract class Scroll(
         if (text.Length < 1)
             return;
 
-        if (text[0] == '$')
+        switch (text[0])
         {
-            var actualText = text.Slice(1);
-            terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
-        }
-        else if (text[0] == ':')
-        {
-            if (text.IndexOf(';') >= 0)
+            case '$':
+            {
+                var actualText = text.Slice(1);
+                terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
+                break;
+            }
+            case ':':
+            {
+                if (text.IndexOf(';') >= 0)
+                {
+                    var actualText = text.Slice(text.IndexOf(';') + 1);
+                    terminal.Write(x, y, actualText, 0x1F);
+                }
+
+                break;
+            }
+            case '!':
             {
                 var actualText = text.Slice(text.IndexOf(';') + 1);
-                terminal.Write(x, y, actualText, 0x1F);
+                terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
+                terminal.Write(Left + 6, y, actualText, 0x1F);
+                break;
             }
-        }
-        else if (text[0] == '!')
-        {
-            var actualText = text.Slice(text.IndexOf(';') + 1);
-            terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
-            terminal.Write(Left + 6, y, actualText, 0x1F);
-        }
-        else
-        {
-            terminal.Write(x, y, text, 0x1E);
+            default:
+            {
+                terminal.Write(x, y, text, 0x1E);
+                break;
+            }
         }
     }
 

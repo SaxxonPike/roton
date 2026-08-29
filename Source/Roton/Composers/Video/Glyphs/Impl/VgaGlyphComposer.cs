@@ -35,7 +35,7 @@ internal sealed class VgaGlyphComposer : IGlyphComposer
                 bits <<= 1;
             }
         }
-        return new Glyph(index, 8, _height, output);
+        return new Glyph(8, _height, output);
     }
 
     public int MaxWidth { get; }

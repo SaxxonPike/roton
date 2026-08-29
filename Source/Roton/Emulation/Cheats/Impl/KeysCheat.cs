@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -10,7 +9,7 @@ internal sealed class KeysCheat(
     IKeyList keyList)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         for (var i = 0; i < 7; i++)
             keyList[i] = true;

@@ -160,7 +160,7 @@ internal sealed class OriginalHud(
         }
     }
 
-    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
+    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
         terminal.Write(x, y, text, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) => 
@@ -257,7 +257,7 @@ internal sealed class OriginalHud(
         DrawString(0x41, 0x0F, State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
 
         if (world.Flags.Contains("DEBUG"))
-            DrawString(0x3E, 0x04, $"Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
+            DrawString(0x3E, 0x04, "Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
     }
 
     public override string EnterCheat()

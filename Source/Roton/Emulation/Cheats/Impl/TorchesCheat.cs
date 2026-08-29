@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -9,7 +8,7 @@ internal sealed class TorchesCheat(
     IWorld world)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         world.Torches += 3;
     }

@@ -17,11 +17,12 @@ internal sealed class Pusher(
     ITracer tracer)
     : IPusher
 {
+    private ITiles _tiles = tiles;
     private IEngine Engine => engine.Instance;
 
     public void Push(Location location, Vector vector)
     {
-        ref var tile = ref tiles[location];
+        ref var tile = ref _tiles[location];
         if (tile.Id == elementList.SliderEwId && vector.Y == 0 ||
             tile.Id == elementList.SliderNsId && vector.X == 0 ||
             elementList[tile.Id].IsPushable)
@@ -33,7 +34,7 @@ internal sealed class Pusher(
                 return;
             }
 
-            ref var furtherTile = ref tiles[location + vector];
+            ref var furtherTile = ref _tiles[location + vector];
             if (furtherTile.Id == elementList.TransporterId)
                 Transport(location, vector);
             else if (furtherTile.Id != elementList.EmptyId)
@@ -71,7 +72,7 @@ internal sealed class Pusher(
             while (!ended)
             {
                 search += vector;
-                var element = tiles.ElementAt(search);
+                var element = _tiles.ElementAt(search);
                 if (element.Id == elementList.BoardEdgeId)
                 {
                     ended = true;
@@ -84,7 +85,7 @@ internal sealed class Pusher(
                         if (!element.IsFloor)
                         {
                             Push(search, vector);
-                            element = tiles.ElementAt(search);
+                            element = _tiles.ElementAt(search);
                         }
 
                         if (element.IsFloor)
@@ -121,7 +122,7 @@ internal sealed class Pusher(
         }
         else
         {
-            tiles[target] = tiles[source];
+            _tiles[target] = _tiles[source];
             boardUpdater.UpdateBoard(target);
             features.RemoveItem(source);
             boardUpdater.UpdateBoard(source);

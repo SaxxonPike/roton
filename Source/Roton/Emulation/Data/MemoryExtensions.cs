@@ -48,27 +48,6 @@ public static class MemoryExtensions
         }
 
         [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int Read32(int offset)
-        {
-            unchecked
-            {
-                var span = memory.Data;
-                return span[offset & 0xFFFF] |
-                       (span[(offset + 1) & 0xFFFF] << 8) |
-                       (span[(offset + 2) & 0xFFFF] << 16) |
-                       (span[(offset + 3) & 0xFFFF] << 24);
-            }
-        }
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool ReadBool(int offset)
-        {
-            return memory.Data[offset & 0xFFFF] != 0;
-        }
-
-        [DebuggerStepThrough]
         internal string ReadString(int offset = 0)
         {
             unchecked
@@ -157,11 +136,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void FastWrite16(int offset, int value) =>
-            BinaryPrimitives.WriteInt16LittleEndian(memory.Data.Slice(offset), unchecked((short)value));
-
 
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -173,28 +147,6 @@ public static class MemoryExtensions
                 span[offset & 0xFFFF] = (byte)value;
                 span[(offset + 1) & 0xFFFF] = (byte)(value >> 8);
             }
-        }
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Write32(int offset, int value)
-        {
-            unchecked
-            {
-                var span = memory.Data;
-                span[offset & 0xFFFF] = (byte)value;
-                span[(offset + 1) & 0xFFFF] = (byte)(value >> 8);
-                span[(offset + 2) & 0xFFFF] = (byte)(value >> 16);
-                span[(offset + 3) & 0xFFFF] = (byte)(value >> 24);
-            }
-        }
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void WriteBool(int offset, bool value)
-        {
-            var span = memory.Data;
-            span[offset & 0xFFFF] = value ? (byte)1 : (byte)0;
         }
 
         [DebuggerStepThrough]
@@ -217,7 +169,7 @@ public static class MemoryExtensions
                     {
                         // Fallback for wrap-around
                         for (var i = 0; i < length; i++)
-                            span[(offset + 1 + i) & 0xFFFF] = Cp437.CharToByte(value![i]);
+                            span[(offset + 1 + i) & 0xFFFF] = Cp437.CharToByte(value[i]);
                     }
                 }
             }

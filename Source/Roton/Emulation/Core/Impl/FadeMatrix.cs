@@ -17,7 +17,7 @@ public abstract class FadeMatrix(
     public int Left => left;
     public int Top => top;
 
-    protected IEngine Engine => engine.Instance;
+    private IEngine Engine => engine.Instance;
 
     private readonly Location[] _matrix = new Location[width * height];
 

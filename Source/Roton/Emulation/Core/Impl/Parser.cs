@@ -33,9 +33,8 @@ internal sealed class Parser(
 
     public int Search(int index, ReadOnlySpan<char> term)
     {
-        var result = -1;
         if (term.IsEmpty)
-            return result;
+            return -1;
 
         var termLength = term.Length;
         var code = GetActorCode(index);

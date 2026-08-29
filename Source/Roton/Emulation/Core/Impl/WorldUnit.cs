@@ -162,7 +162,7 @@ public class WorldUnit(
         if (string.IsNullOrEmpty(name))
             return;
 
-        LoadWorld(name!, false);
+        LoadWorld(name, false);
         state.StartBoard = world.BoardIndex;
         SetBoard(0);
 
@@ -179,7 +179,7 @@ public class WorldUnit(
         if (string.IsNullOrEmpty(name))
             return false;
 
-        if (!LoadWorld(name!, true))
+        if (!LoadWorld(name, true))
             return false;
 
         state.StartBoard = world.BoardIndex;
@@ -190,18 +190,18 @@ public class WorldUnit(
 
     public void PackBoard()
     {
-        var board = new PackedBoard(gameSerializer.PackBoard(tiles));
-        PackBoard(world.BoardIndex, board);
+        var packed = new PackedBoard(gameSerializer.PackBoard(tiles));
+        PackBoard(world.BoardIndex, packed);
     }
 
-    private void PackBoard(int boardIndex, IPackedBoard board)
+    private void PackBoard(int boardIndex, IPackedBoard packed)
     {
         // bit of a hack to make sure we don't go out of bounds
         while (boardList.Count <= boardIndex)
             boardList.Add(new PackedBoard([]));
 
         state.BoardCount = boardList.Count - 1;
-        boardList[world.BoardIndex] = board;
+        boardList[world.BoardIndex] = packed;
     }
 
     public void UnpackBoard(int boardIndex)
@@ -279,7 +279,7 @@ public class WorldUnit(
         actorList.Player.Length = 0;
     }
 
-    public string? ShowLoad(string title, string extension)
+    private string? ShowLoad(string title, string extension)
     {
         return fileDialog.Open(title, extension);
     }

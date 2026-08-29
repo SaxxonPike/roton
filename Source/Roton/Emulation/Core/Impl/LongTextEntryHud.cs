@@ -39,7 +39,7 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
         0xC6, 0xCF, 0xCD, 0xCF, 0xB5
     ];
         
-    private IReadOnlyList<AnsiChar> LoadBuffer(int left, int top, int width, int height)
+    private AnsiChar[] LoadBuffer(int left, int top, int width, int height)
     {
         var buffer = new AnsiChar[width * height];
         var i = 0;
@@ -65,16 +65,6 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
         var titleX = x + 2 + (width - title.Length) / 2;
         const int height = 6;
 
-        void RenderLine(int lineY, IReadOnlyList<int> chars)
-        {
-            Terminal.Plot(x, lineY, new AnsiChar(chars[0], pipColor));
-            Terminal.Plot(x + 1, lineY, new AnsiChar(chars[1], pipColor));
-            for (var lineX = x + 2; lineX < x + width - 2; lineX++)
-                Terminal.Plot(lineX, lineY, new AnsiChar(chars[2], pipColor));
-            Terminal.Plot(x + width - 2, lineY, new AnsiChar(chars[3], pipColor));
-            Terminal.Plot(x + width - 1, lineY, new AnsiChar(chars[4], pipColor));
-        }
-
         var buffer = LoadBuffer(x, y, width, height);
             
         RenderLine(y, ScrollCharsTop);
@@ -89,5 +79,15 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
             
         RestoreBuffer(buffer, x, y, width, height);
         return result;
+
+        void RenderLine(int lineY, IReadOnlyList<int> chars)
+        {
+            Terminal.Plot(x, lineY, new AnsiChar(chars[0], pipColor));
+            Terminal.Plot(x + 1, lineY, new AnsiChar(chars[1], pipColor));
+            for (var lineX = x + 2; lineX < x + width - 2; lineX++)
+                Terminal.Plot(lineX, lineY, new AnsiChar(chars[2], pipColor));
+            Terminal.Plot(x + width - 2, lineY, new AnsiChar(chars[3], pipColor));
+            Terminal.Plot(x + width - 1, lineY, new AnsiChar(chars[4], pipColor));
+        }
     }
 }

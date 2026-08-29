@@ -153,22 +153,25 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (!string.IsNullOrEmpty(cheatText))
         {
-            if (cheatText![0] == '-')
+            switch (cheatText[0])
             {
-                cheatText = cheatText.Substring(1);
-                while (_world.Flags.Contains(cheatText))
-                    _world.Flags.Remove(cheatText);
-                clear = true;
-            }
-            else if (cheatText[0] == '+')
-            {
-                cheatText = cheatText.Substring(1);
-                _world.Flags.Add(cheatText);
+                case '-':
+                {
+                    cheatText = cheatText.Substring(1);
+                    while (_world.Flags.Contains(cheatText))
+                        _world.Flags.Remove(cheatText);
+                    clear = true;
+                    break;
+                }
+                case '+':
+                    cheatText = cheatText.Substring(1);
+                    _world.Flags.Add(cheatText);
+                    break;
             }
         }
 
         var cheat = _cheats.Get(cheatText);
-        cheat?.Execute(cheatText, clear);
+        cheat?.Execute(clear);
         _hud.UpdateStatus();
 
         _soundUnit.PlaySound(10, _sounds.Cheat);
@@ -179,12 +182,6 @@ internal sealed class Engine : IEngine, IDisposable
         var list = _highScoreListFactory.Load();
         _hud.ShowHighScores(list);
     }
-
-    public IActor ActorAt(Location location) =>
-        _actorList.ActorAt(location);
-
-    public int ActorIndexAt(Location location) =>
-        _actorList.ActorIndexAt(location);
 
     public event EventHandler? Exited;
     public event EventHandler? Tick;
@@ -217,7 +214,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void Destroy(Location location)
     {
-        var index = ActorIndexAt(location);
+        var index = _actorList.ActorIndexAt(location);
         if (index == -1)
             _features.RemoveItem(location);
         else
@@ -669,13 +666,7 @@ internal sealed class Engine : IEngine, IDisposable
         return result;
     }
 
-    public void SetEditorMode()
-    {
-        InitializeElements(true);
-        _state.EditorMode = true;
-    }
-
-    public void SetGameMode()
+    private void SetGameMode()
     {
         InitializeElements(false);
         _state.EditorMode = false;
@@ -683,7 +674,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void SetMessage(int duration, IMessage message)
     {
-        var index = ActorIndexAt(new Location(0, 0));
+        var index = _actorList.ActorIndexAt(new Location(0, 0));
         if (index >= 0)
         {
             RemoveActor(index);
@@ -789,18 +780,24 @@ internal sealed class Engine : IEngine, IDisposable
             {
                 var sound = _state.SoundBuffer.Dequeue();
                 _state.SoundTicks = sound.Duration << 2;
-                if (sound.Note >= 0xF0)
+                switch (sound.Note)
                 {
-                    _speaker.PlayDrum(sound.Note - 0xF0);
-                }
-                else if (sound.Note > 0x00)
-                {
-                    var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
-                    _speaker.PlayNote(actualNote);
-                }
-                else
-                {
-                    _speaker.StopNote();
+                    case >= 0xF0:
+                    {
+                        _speaker.PlayDrum(sound.Note - 0xF0);
+                        break;
+                    }
+                    case > 0x00:
+                    {
+                        var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                        _speaker.PlayNote(actualNote);
+                        break;
+                    }
+                    default:
+                    {
+                        _speaker.StopNote();
+                        break;
+                    }
                 }
             }
             else
@@ -1019,7 +1016,13 @@ internal sealed class Engine : IEngine, IDisposable
                 _soundUnit.ClearSound();
                 if (_state.PlayerElement == _elementList.PlayerId)
                 {
-                    if (_world.Health <= 0) 
+                    // This game speed reset isn't here in the original code,
+                    // but it solves some issues with game speed when returning
+                    // to the title screen.
+
+                    ResetGameSpeed();
+
+                    if (_world.Health <= 0)
                         EnterHighScore(_world.Score);
                 }
                 else if (_state.PlayerElement == _elementList.MonitorId)
@@ -1067,10 +1070,13 @@ internal sealed class Engine : IEngine, IDisposable
         if (doFade)
             FadePurple();
 
-        _state.GameWaitTime = _state.GameSpeed << 1;
+        ResetGameSpeed();
         _state.GameCycle = _randomizer.GetNext(_facts.MainLoopRandomCycleRange);
         _state.ActIndex = _state.ActorCount + 1;
     }
+
+    private void ResetGameSpeed() =>
+        _state.GameWaitTime = _state.GameSpeed << 1;
 
     private void StartPlaying()
     {
@@ -1289,21 +1295,14 @@ internal sealed class Engine : IEngine, IDisposable
 
         _state.KeyPressed = ConvertKey(keyValue);
 
-        switch (_state.KeyPressed)
+        _state.KeyVector = _state.KeyPressed switch
         {
-            case EngineKeyCode.Left:
-                _state.KeyVector = Vector.West;
-                break;
-            case EngineKeyCode.Right:
-                _state.KeyVector = Vector.East;
-                break;
-            case EngineKeyCode.Up:
-                _state.KeyVector = Vector.North;
-                break;
-            case EngineKeyCode.Down:
-                _state.KeyVector = Vector.South;
-                break;
-        }
+            EngineKeyCode.Left => Vector.West,
+            EngineKeyCode.Right => Vector.East,
+            EngineKeyCode.Up => Vector.North,
+            EngineKeyCode.Down => Vector.South,
+            _ => _state.KeyVector
+        };
     }
 
     public void ReadInput(bool isUiFocused)

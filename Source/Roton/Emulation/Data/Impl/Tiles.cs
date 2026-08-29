@@ -6,9 +6,6 @@ namespace Roton.Emulation.Data.Impl;
 public abstract class Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
     : ITiles
 {
-    public int Count =>
-        TotalWidth * TotalHeight;
-
     private int TotalHeight =>
         Height + 2;
 

@@ -7,13 +7,10 @@ public interface IHud
 {
     void ClearPausing();
     void ClearTitleStatus();
-    void CreateStatusBar();
     void CreateStatusText();
-    void DrawChar(int x, int y, AnsiChar ac);
     void FailToLoadWorld();
     void DrawMessage(IMessage message, int color);
     void DrawPausing();
-    void DrawStatusLine(int y);
     void DrawTitleStatus();
     bool EndGameConfirmation();
     string EnterCheat();

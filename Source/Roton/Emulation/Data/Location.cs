@@ -46,9 +46,6 @@ public struct Location : IEquatable<Location>
     public override string ToString() =>
         $"({X}, {Y})";
 
-    public bool IsNonZero() => X != 0 || Y != 0;
-    public bool IsZero() => X == 0 && Y == 0;
-
     public override bool Equals(object? obj)
     {
         if (obj is Location other)

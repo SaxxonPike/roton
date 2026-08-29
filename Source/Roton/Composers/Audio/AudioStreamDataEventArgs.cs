@@ -8,6 +8,5 @@ public readonly struct AudioStreamDataEventArgs(
     int length)
 {
     public IMemoryOwner<float> Memory => memory;
-    public int Length => length;
     public Span<float> Data => memory.Memory.Span.Slice(0, length);
 }
