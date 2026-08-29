@@ -14,7 +14,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Engine : IEngine, IDisposable
+internal sealed class Engine : IEngine, IDisposable
 {
     private readonly IClock _clock;
     private readonly IActorList _actorList;
@@ -868,6 +868,9 @@ public sealed class Engine : IEngine, IDisposable
 
     private void EnterHighScore(int score)
     {
+        if (score <= 0)
+            return;
+
         var list = _highScoreListFactory.Load();
         var name = _hud.EnterHighScore(list, score);
         if (name == null)
@@ -1016,7 +1019,8 @@ public sealed class Engine : IEngine, IDisposable
                 _soundUnit.ClearSound();
                 if (_state.PlayerElement == _elementList.PlayerId)
                 {
-                    if (_world.Health <= 0) EnterHighScore(_world.Score);
+                    if (_world.Health <= 0) 
+                        EnterHighScore(_world.Score);
                 }
                 else if (_state.PlayerElement == _elementList.MonitorId)
                 {
