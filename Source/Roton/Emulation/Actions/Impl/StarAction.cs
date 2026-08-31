@@ -48,9 +48,7 @@ internal sealed class StarAction(
                 if (!targetElement.IsFloor)
                     pusher.Push(targetLocation, actor.Vector);
 
-                if (targetElement.IsFloor || 
-                    targetElement.Id == elements.WaterId ||
-                    targetElement.Id == elements.LavaId)
+                if (targetElement.IsFloor || elements.IsWater(targetElement.Id))
                     Engine.MoveActor(index, targetLocation);
             }
         }

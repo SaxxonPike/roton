@@ -68,4 +68,5 @@ public interface IElementList : IEnumerable<IElement>
 
     int IndexOf(ReadOnlySpan<char> name);
     void Reset();
+    bool IsWater(int index);
 }

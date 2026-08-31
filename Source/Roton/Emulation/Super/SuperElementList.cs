@@ -22,6 +22,9 @@ internal sealed class SuperElementList : ElementList
 
     public override void Reset() => _memory.Write(0x7CAA, _data.Span);
 
+    public override bool IsWater(int index) =>
+        index == LavaId;
+
     public override int AmmoId => 0x05;
     public override int BearId => 0x22;
     public override int BlinkRayHId => 0x46;

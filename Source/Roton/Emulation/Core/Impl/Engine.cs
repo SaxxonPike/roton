@@ -723,14 +723,21 @@ internal sealed class Engine : IEngine, IDisposable
         }
     }
 
-    public bool SpawnProjectile(int id, Location location, Vector vector, bool enemyOwned)
+    public bool SpawnProjectile(int elementId, Location location, Vector vector, bool enemyOwned)
     {
         var target = location + vector;
         var element = ElementAt(target);
 
-        if (element.IsFloor || element.Id == _elementList.WaterId)
+        if (element.IsFloor || _elementList.IsWater(element.Id))
         {
-            SpawnActor(target, new Tile(id, _elementList[id].Color), 1, _state.DefaultActor);
+            // The logic spawns the actor and then immediately attempts to retrieve it,
+            // assuming it is the last actor in the list. But if the actor list is already
+            // full, no new actors will be spawned, and the following logic affects the
+            // last actor in the list anyway, regardless if it's a projectile. This is a bug
+            // in all versions of the original code.
+
+            SpawnActor(target, new Tile(elementId, _elementList[elementId].Color), 1, _state.DefaultActor);
+
             var actor = _actorList[_state.ActorCount];
             actor.P1 = unchecked((byte)(enemyOwned ? 1 : 0));
             actor.Vector = vector;

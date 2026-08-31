@@ -77,8 +77,8 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
 
     public abstract void Reset();
 
-    protected sealed override void SetItem(int index, IElement value)
-    {
+    public abstract bool IsWater(int index);
+
+    protected sealed override void SetItem(int index, IElement value) =>
         throw Exceptions.InvalidSet;
-    }
 }

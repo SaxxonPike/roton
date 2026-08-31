@@ -13,7 +13,7 @@ internal sealed class SharkAction(
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -29,9 +29,9 @@ internal sealed class SharkAction(
         var target = actor.Location + vector;
         var targetElement = tiles.ElementAt(target);
 
-        if (targetElement.Id == elementList.WaterId)
+        if (elements.IsWater(targetElement.Id))
             Engine.MoveActor(index, target);
-        else if (targetElement.Id == elementList.PlayerId)
+        else if (targetElement.Id == elements.PlayerId)
             Engine.Attack(index, target);
     }
 }

@@ -12,7 +12,7 @@ namespace Roton.Emulation.Actions.Impl;
 internal sealed class BulletAction(
     IEngineAccessor engine,
     IActorList actorList,
-    IElementList elementList,
+    IElementList elements,
     ITiles tiles,
     ISounds sounds,
     IWorld world,
@@ -33,13 +33,13 @@ internal sealed class BulletAction(
         {
             var target = actor.Location + actor.Vector;
             var element = tiles.ElementAt(target);
-            if (element.IsFloor || element.Id == elementList.WaterId || element.Id == elementList.LavaId)
+            if (element.IsFloor || elements.IsWater(element.Id))
             {
                 Engine.MoveActor(index, target);
                 break;
             }
 
-            if (canRicochet && element.Id == elementList.RicochetId)
+            if (canRicochet && element.Id == elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
@@ -47,8 +47,8 @@ internal sealed class BulletAction(
                 continue;
             }
 
-            if (element.Id == elementList.BreakableId ||
-                element.IsDestructible && (element.Id == elementList.PlayerId || actor.P1 == 0))
+            if (element.Id == elements.BreakableId ||
+                element.IsDestructible && (element.Id == elements.PlayerId || actor.P1 == 0))
             {
                 if (element.Points != 0)
                 {
@@ -61,7 +61,7 @@ internal sealed class BulletAction(
             }
 
             if (canRicochet &&
-                tiles[actor.Location + actor.Vector.Clockwise()].Id == elementList.RicochetId)
+                tiles[actor.Location + actor.Vector.Clockwise()].Id == elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
@@ -70,7 +70,7 @@ internal sealed class BulletAction(
             }
 
             if (canRicochet &&
-                tiles[actor.Location + actor.Vector.CounterClockwise()].Id == elementList.RicochetId)
+                tiles[actor.Location + actor.Vector.CounterClockwise()].Id == elements.RicochetId)
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
@@ -80,7 +80,7 @@ internal sealed class BulletAction(
 
             Engine.RemoveActor(index);
             state.ActIndex--;
-            if (element.Id == elementList.ObjectId || element.Id == elementList.ScrollId)
+            if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {
                 broadcaster.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
             }
