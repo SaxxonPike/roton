@@ -9,10 +9,7 @@ public abstract class EngineResourceService(
     string memoryFileName)
     : IEngineResourceService
 {
-    private readonly Lazy<IResource> _resource = new(assemblyResourceService.GetFromAssemblyOf<IEngine>);
-
-    private IResource Resource =>
-        _resource.Value;
+    private IResource Resource { get; } = assemblyResourceService.GetFromAssemblyOf<IEngine>();
 
     public ReadOnlySpan<byte> GetElementData() =>
         Resource.System.GetFile(elementFileName);

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -7,16 +6,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSerializer
 {
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => memory;
-    }
-
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
     public void Deserialize(int startOffset)
     {
         var offset = startOffset;
@@ -29,13 +18,13 @@ internal sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSe
         {
             if (count > 0)
             {
-                Terminal.Plot(x, y, output);
+                terminal.Plot(x, y, output);
                 count--;
                 x++;
                 continue;
             }
 
-            var data = Memory.Read8(offset++);
+            var data = memory.Read8(offset++);
 
             switch (data)
             {
@@ -57,14 +46,14 @@ internal sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSe
                 }
                 case 0x19:
                 {
-                    count = Memory.Read8(offset++) + 1;
+                    count = memory.Read8(offset++) + 1;
                     output = new AnsiChar(0x20, output.Color);
                     break;
                 }
                 case 0x1A:
                 {
-                    count = Memory.Read8(offset++) + 1;
-                    output = new AnsiChar(Memory.Read8(offset++), output.Color);
+                    count = memory.Read8(offset++) + 1;
+                    output = new AnsiChar(memory.Read8(offset++), output.Color);
                     break;
                 }
                 default:

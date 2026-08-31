@@ -14,19 +14,15 @@ internal sealed class SoundBufferList : FixedList<int>, ISoundBufferList
         _offset = offset;
     }
 
-    private IMemory Memory { [DebuggerStepThrough] get; }
+    private IMemory Memory { get; }
 
     public override int Count => Memory.Read8(_offset);
 
-    protected override int GetItem(int index)
-    {
-        return Memory.Read8(_offset + index + 1);
-    }
+    protected override int GetItem(int index) => 
+        Memory.Read8(_offset + index + 1);
 
-    protected override void SetItem(int index, int value)
-    {
+    protected override void SetItem(int index, int value) => 
         Memory.Write8(_offset + index + 1, value);
-    }
 
     public void Enqueue(ISound sound, int? offset = null, int? length = null)
     {

@@ -19,8 +19,6 @@ internal sealed class Mover(
     IPlayerUpdater playerUpdater)
     : IMover
 {
-    private ITiles _tiles = tiles;
-
     private static int Distance(Location a, Location b) =>
         (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
@@ -28,8 +26,8 @@ internal sealed class Mover(
     {
         var actor = actors[index];
         var sourceLocation = actor.Location;
-        ref var sourceTile = ref _tiles[actor.Location];
-        ref var targetTile = ref _tiles[target];
+        ref var sourceTile = ref tiles[actor.Location];
+        ref var targetTile = ref tiles[target];
         var underTile = actor.UnderTile;
         var nextUnderTile = targetTile;
 
@@ -64,8 +62,8 @@ internal sealed class Mover(
                          y++)
                     {
                         var glowLocation = new Location(x, y);
-                        if (glowLocation.X >= 1 && glowLocation.X <= _tiles.Width && glowLocation.Y >= 1 &&
-                            glowLocation.Y <= _tiles.Height)
+                        if (glowLocation.X >= 1 && glowLocation.X <= tiles.Width && glowLocation.Y >= 1 &&
+                            glowLocation.Y <= tiles.Height)
                             if ((Distance(sourceLocation, glowLocation) < facts.TorchRadius) ^
                                 (Distance(target, glowLocation) < facts.TorchRadius))
                                 boardUpdater.UpdateBoard(glowLocation);
@@ -94,18 +92,18 @@ internal sealed class Mover(
 
         if (vector.IsNonZero())
         {
-            ref var actorTile = ref _tiles[actor.Location];
+            ref var actorTile = ref tiles[actor.Location];
             if (actorTile.Id == elements.PlayerId)
             {
                 var targetLocation = actor.Location + vector;
-                interactions.Get(_tiles[targetLocation].Id)?.Interact(targetLocation, 0, ref vector);
+                interactions.Get(tiles[targetLocation].Id)?.Interact(targetLocation, 0, ref vector);
             }
         }
 
         if (vector.IsNonZero())
         {
             var target = actor.Location + vector;
-            if (_tiles.ElementAt(target).IsFloor)
+            if (tiles.ElementAt(target).IsFloor)
                 MoveActor(index, target);
         }
     }

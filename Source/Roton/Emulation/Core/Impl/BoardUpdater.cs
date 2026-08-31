@@ -19,8 +19,6 @@ internal sealed class BoardUpdater(
     IPlayField playField)
     : IBoardUpdater
 {
-    private ITiles _tiles = tiles;
-
     private static int Distance(Location a, Location b) =>
         (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
@@ -29,12 +27,12 @@ internal sealed class BoardUpdater(
 
     public AnsiChar Draw(Location location)
     {
-        if (board.IsDark && !_tiles.ElementAt(location).IsAlwaysVisible &&
+        if (board.IsDark && !tiles.ElementAt(location).IsAlwaysVisible &&
             (world.TorchCycles <= 0 || Distance(actors.Player.Location, location) >= facts.TorchRadius) &&
             !state.EditorMode)
             return facts.DarknessTile;
 
-        ref var tile = ref _tiles[location];
+        ref var tile = ref tiles[location];
         var element = elements[tile.Id];
         var elementCount = elements.Count;
 

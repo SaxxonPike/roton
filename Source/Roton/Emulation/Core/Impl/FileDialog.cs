@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -13,16 +12,6 @@ internal sealed class FileDialog(
     IScrollContent scrollContent)
     : IFileDialog
 {
-    private IHud Hud
-    {
-        [DebuggerStepThrough] get => hud;
-    }
-
-    private IFileSystem FileSystem
-    {
-        [DebuggerStepThrough] get => fileSystem;
-    }
-
     public string? Open(string title, string extension)
     {
         var line = (stackalloc char[256]);
@@ -30,14 +19,14 @@ internal sealed class FileDialog(
 
         while (true)
         {
-            var files = FileSystem
+            var files = fileSystem
                 .GetFileNames(path, extension)
                 .Select(f => f.Substring(0, f.Length - extension.Length - 1))
                 .OrderBy(f => f)
                 .Concat(["Exit"])
                 .ToArray();
 
-            var result = Hud.ShowScroll(false, title, files);
+            var result = hud.ShowScroll(false, title, files);
             if (result.Cancelled)
                 return null;
                 

@@ -16,10 +16,7 @@ internal sealed class TextEntryHud(
     IInputReader inputReader)
     : ITextEntryHud
 {
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
+    private IEngine Engine => engine.Instance;
 
     public string Show(int x, int y, int maxLength, int textColor, int pipColor, ReadOnlySpan<char> initText = default)
     {

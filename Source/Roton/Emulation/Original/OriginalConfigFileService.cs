@@ -9,11 +9,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfigFileService
+internal sealed class OriginalConfigFileService(
+    IFileSystem fileSystem)
+    : IConfigFileService
 {
     private const string ConfigFileName = "ZZT.CFG";
-
-    private IFileSystem FileSystem => fileSystem;
 
     private static ConfigFile Decode(byte[] data)
     {
@@ -82,13 +82,13 @@ internal sealed class OriginalConfigFileService(IFileSystem fileSystem) : IConfi
 
     public IConfigFile? Load()
     {
-        var file = FileSystem.GetFile(ConfigFileName);
+        var file = fileSystem.GetFile(ConfigFileName);
         return file != null ? Decode(file) : null;
     }
 
     public void Save(IConfigFile configFile)
     {
         var file = Encode(configFile);
-        FileSystem.PutFile(ConfigFileName, file);
+        fileSystem.PutFile(ConfigFileName, file);
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -16,19 +15,11 @@ internal sealed class ChoiceHud(
     IInputReader inputReader)
     : IChoiceHud
 {
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
+    private IEngine Engine => engine.Instance;
+    
     private void DrawChar(int x, int y, AnsiChar ac)
     {
-        Terminal.Plot(x, y, ac);
+        terminal.Plot(x, y, ac);
     }
 
     private void DrawStatusLine(int x, int y)
@@ -36,16 +27,16 @@ internal sealed class ChoiceHud(
         var blankChar = new AnsiChar(0x20, 0x11);
         for (var i = 0; i < 14; i++)
         {
-            Terminal.Plot(x + i, y, blankChar);
+            terminal.Plot(x + i, y, blankChar);
         }
     }
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
-        Terminal.Write(x, y, text, color);
+        terminal.Write(x, y, text, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
         int color) =>
-        Terminal.Write(x, y, text0, text1, text2, color);
+        terminal.Write(x, y, text0, text1, text2, color);
 
     public int Show(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {

@@ -40,12 +40,6 @@ internal sealed class SuperHud(
 
     private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
 
-    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
-
-    private ITerminal Terminal { [DebuggerStepThrough] get; } = terminal;
-
-    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; } = textEntryHud;
-
     private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
@@ -150,7 +144,7 @@ internal sealed class SuperHud(
 
     public override void DrawChar(int x, int y, AnsiChar ac)
     {
-        Terminal.Plot(x, y, ac);
+        terminal.Plot(x, y, ac);
     }
 
     public override void DrawMessage(IMessage message, int color)
@@ -180,18 +174,18 @@ internal sealed class SuperHud(
 
     public void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
     {
-        Terminal.Write(x, y, text, color);
+        terminal.Write(x, y, text, color);
     }
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
     {
-        Terminal.Write(x, y, text0, text1, color);
+        terminal.Write(x, y, text0, text1, color);
     }
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
         int color)
     {
-        Terminal.Write(x, y, text0, text1, text2, color);
+        terminal.Write(x, y, text0, text1, text2, color);
     }
 
     public override void Initialize()
@@ -200,18 +194,18 @@ internal sealed class SuperHud(
 
         if (State.EditorMode)
         {
-            Terminal.SetSize(96, 80, true);
+            terminal.SetSize(96, 80, true);
         }
         else
         {
-            Terminal.SetSize(40, 25, true);
+            terminal.SetSize(40, 25, true);
         }
     }
 
     public override void RedrawBoard()
     {
         UpdateCameraPosition();
-        FadeMatrix.FadeIn();
+        fadeMatrix.FadeIn();
     }
 
     public override void UpdateBorder()
@@ -434,7 +428,7 @@ internal sealed class SuperHud(
     public override string EnterCheat()
     {
         UpdateBorder();
-        var cheat = TextEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
+        var cheat = textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
         UpdateBorder();
         return cheat;
     }
@@ -451,7 +445,7 @@ internal sealed class SuperHud(
             [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
-            _ => name = TextEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
+            _ => name = textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
         return name;
     }
 
@@ -485,7 +479,7 @@ internal sealed class SuperHud(
 
         for (var iy = 0; iy < height; iy++)
         for (var ix = 0; ix < width; ix++)
-            buffer[bufIdx++] = Terminal.Read(ix + pos.X, iy + pos.Y);
+            buffer[bufIdx++] = terminal.Read(ix + pos.X, iy + pos.Y);
 
         // Blit it back out where it goes.
 
@@ -500,7 +494,7 @@ internal sealed class SuperHud(
             var py = iy + finalY;
 
             if (px >= minX && px < maxX && py >= minY && py < maxY)
-                Terminal.Plot(px, py, data);
+                terminal.Plot(px, py, data);
         }
     }
 
@@ -508,14 +502,14 @@ internal sealed class SuperHud(
     {
         DrawString(13, 24, "Save game:", 0x1F);
         DrawString(33, 24, ".SAV", 0x0F);
-        var result = TextEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
+        var result = textEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
         UpdateBorder();
         return result;
     }
 
-    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
+    public override void FadeBoard(AnsiChar ac) => fadeMatrix.FadeOut(ac);
 
-    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
+    private void RandomizeFadeMatrix() => fadeMatrix.Randomize();
 
     public override void FailToLoadWorld()
     {

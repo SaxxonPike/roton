@@ -7,7 +7,6 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 public class SuperMessageHandler(
-    IEngineAccessor engine,
     IHud hud,
     IFacts facts,
     IState state,

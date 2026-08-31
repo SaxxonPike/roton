@@ -16,21 +16,13 @@ internal sealed class Interpreter(
     IBroadcaster broadcaster)
     : IInterpreter
 {
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
-    private ITracer Tracer
-    {
-        [DebuggerStepThrough] get => tracer;
-    }
+    private IEngine Engine => engine.Instance;
 
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
-        Tracer.TraceOop(ref context, ref instruction);
+        tracer.TraceOop(ref context, ref instruction);
 
         while (true)
         {

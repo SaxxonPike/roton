@@ -15,8 +15,6 @@ internal sealed class Conveyor(
     IMover mover)
     : IConveyor
 {
-    private ITiles _tiles = tiles;
-
     private Vector GetConveyorVector(int index) => new(state.Vector8[index], state.Vector8[index + 8]);
 
     public void Convey(Location center, int direction)
@@ -40,7 +38,7 @@ internal sealed class Conveyor(
         var pushable = true;
         for (var i = beginIndex; i != endIndex; i += direction)
         {
-            surrounding[i] = _tiles[center + GetConveyorVector(i)];
+            surrounding[i] = tiles[center + GetConveyorVector(i)];
             var element = elements[surrounding[i].Id];
             if (element.Id == elements.EmptyId)
                 pushable = true;
@@ -60,22 +58,22 @@ internal sealed class Conveyor(
                     var target = center + GetConveyorVector((i + 8 - direction) % 8);
                     if (element.Cycle > -1)
                     {
-                        ref var tile = ref _tiles[source];
+                        ref var tile = ref tiles[source];
                         var index = actors.ActorIndexAt(source);
-                        _tiles[source] = surrounding[i];
-                        _tiles[target].Id = elements.EmptyId;
+                        tiles[source] = surrounding[i];
+                        tiles[target].Id = elements.EmptyId;
                         mover.MoveActor(index, target);
-                        _tiles[source] = tile;
+                        tiles[source] = tile;
                     }
                     else
                     {
-                        _tiles[target] = surrounding[i];
+                        tiles[target] = surrounding[i];
                         boardUpdater.UpdateBoard(target);
                     }
 
                     if (!elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
                     {
-                        _tiles[source].Id = elements.EmptyId;
+                        tiles[source].Id = elements.EmptyId;
                         boardUpdater.UpdateBoard(source);
                     }
                 }
