@@ -137,7 +137,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void Cheat()
     {
-        var cheatText = _hud.EnterCheat().UpCased();
+        var cheatText = _hud.EnterCheat().UpCased() ?? "";
         var clear = false;
 
         if (!ThreadActive)
@@ -176,7 +176,6 @@ internal sealed class Engine : IEngine, IDisposable
     }
 
     public event EventHandler? Exited;
-    public event EventHandler? Tick;
 
     public void Attack(int index, Location location)
     {
@@ -300,31 +299,6 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (context.Died)
             _features.CleanUpOop(ref context);
-    }
-
-    public bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take)
-    {
-        // Does the item exist?
-        if (!_parser.TryEvalItem(ref context, ref instruction, out var item))
-            return false;
-
-        // Do we have a valid amount?
-        var amount = _parser.ReadNumber(context.Index, ref context.Actor.Instruction);
-        if (amount <= 0)
-            return true;
-
-        // Modify value if we are taking.
-        if (take)
-            _state.OopNumber = -_state.OopNumber;
-
-        // Determine if the result will be in range.
-        var pendingAmount = item!.Value + _state.OopNumber;
-        if ((pendingAmount & 0xFFFF) >= 0x8000)
-            return true;
-
-        // Successful transaction.
-        item.Value = pendingAmount;
-        return false;
     }
 
     public void StepOnce()

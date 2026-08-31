@@ -7,15 +7,13 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "TAKE")]
 [Context(Context.Super, "TAKE")]
 internal sealed class TakeCommand(
-    IEngineAccessor engine,
-    IHud hud)
+    IHud hud,
+    ITransactor transactor)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        context.Resume = Engine.ExecuteTransaction(ref context, ref instruction, true);
+        context.Resume = transactor.Execute(ref context, ref instruction, true);
         hud.UpdateStatus();
     }
 }

@@ -8,14 +8,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "GIVE")]
 internal sealed class GiveCommand(
     IHud hud,
-    IEngineAccessor engine)
+    ITransactor transactor)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        context.Resume = Engine.ExecuteTransaction(ref context, ref instruction, false);
+        context.Resume = transactor.Execute(ref context, ref instruction, false);
         hud.UpdateStatus();
     }
 }

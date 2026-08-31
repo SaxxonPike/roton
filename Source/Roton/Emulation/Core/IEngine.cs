@@ -11,7 +11,6 @@ public interface IEngine
     void Attack(int index, Location location);
     void Destroy(Location location);
     void ExecuteCode(int index, ref Word instruction, string name);
-    bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take);
     void FadePurple();
     bool FindTile(Tile kind, Location location);
     Vector GetCardinalVector(int index);
