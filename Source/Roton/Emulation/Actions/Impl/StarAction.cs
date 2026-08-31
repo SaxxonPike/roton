@@ -9,7 +9,7 @@ namespace Roton.Emulation.Actions.Impl;
 internal sealed class StarAction(
     IEngineAccessor engine,
     IActorList actorList,
-    IElementList elementList,
+    IElementList elements,
     ITiles tiles,
     IBoardUpdater boardUpdater,
     IPusher pusher)
@@ -22,39 +22,38 @@ internal sealed class StarAction(
         var actor = actorList[index];
 
         actor.P2 = unchecked((byte)((actor.P2 - 1) & 0xFF));
-        if (actor.P2 > 0)
+
+        if (actor.P2 <= 0)
         {
-            if ((actor.P2 & 1) == 0)
+            Engine.RemoveActor(index);
+            return;
+        }
+
+        if ((actor.P2 & 1) == 0)
+        {
+            actor.Vector = Engine.Seek(actor.Location);
+
+            var targetLocation = actor.Location + actor.Vector;
+            var targetElement = tiles.ElementAt(targetLocation);
+
+            if (targetElement.Id == elements.PlayerId || targetElement.Id == elements.BreakableId)
             {
-                actor.Vector = Engine.Seek(actor.Location);
-                var targetLocation = actor.Location + actor.Vector;
-                var targetElement = tiles.ElementAt(targetLocation);
-
-                if (targetElement.Id == elementList.PlayerId || targetElement.Id == elementList.BreakableId)
-                {
-                    Engine.Attack(index, targetLocation);
-                }
-                else
-                {
-                    if (!targetElement.IsFloor)
-                    {
-                        pusher.Push(targetLocation, actor.Vector);
-                    }
-
-                    if (targetElement.IsFloor || targetElement.Id == elementList.WaterId)
-                    {
-                        Engine.MoveActor(index, targetLocation);
-                    }
-                }
+                Engine.Attack(index, targetLocation);
             }
             else
             {
-                boardUpdater.UpdateBoard(actor.Location);
+                if (!targetElement.IsFloor)
+                    pusher.Push(targetLocation, actor.Vector);
+
+                if (targetElement.IsFloor || 
+                    targetElement.Id == elements.WaterId ||
+                    targetElement.Id == elements.LavaId)
+                    Engine.MoveActor(index, targetLocation);
             }
         }
         else
         {
-            Engine.RemoveActor(index);
+            boardUpdater.UpdateBoard(actor.Location);
         }
     }
 }
