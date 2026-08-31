@@ -21,7 +21,7 @@ internal sealed class OriginalFeatures(
     IBoardTime boardTime,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
-    IMover mover)
+    IMessenger messenger)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -32,7 +32,7 @@ internal sealed class OriginalFeatures(
         board.Entrance = actorList.Player.Location;
         if (board.IsDark && alerts.Dark)
         {
-            Engine.SetMessage(facts.LongMessageDuration, alerts.DarkMessage);
+            messenger.SetMessage(facts.LongMessageDuration, alerts.DarkMessage);
             alerts.Dark = false;
         }
 
@@ -51,7 +51,7 @@ internal sealed class OriginalFeatures(
                     {
                         if (alerts.NoTorches)
                         {
-                            Engine.SetMessage(facts.LongMessageDuration, alerts.NoTorchMessage);
+                            messenger.SetMessage(facts.LongMessageDuration, alerts.NoTorchMessage);
                             alerts.NoTorches = false;
                         }
                     }
@@ -59,7 +59,7 @@ internal sealed class OriginalFeatures(
                     {
                         if (alerts.NotDark)
                         {
-                            Engine.SetMessage(facts.LongMessageDuration, alerts.NotDarkMessage);
+                            messenger.SetMessage(facts.LongMessageDuration, alerts.NotDarkMessage);
                             alerts.NotDark = false;
                         }
                     }
@@ -87,24 +87,6 @@ internal sealed class OriginalFeatures(
     public void ClearForest(Location location)
     {
         RemoveItem(location);
-    }
-
-    public void CleanUpPassageMovement()
-    {
-        tiles[actorList.Player.Location] = new Tile(elementList.EmptyId, 0);
-    }
-
-    public void ForcePlayerColor(int index)
-    {
-        var actor = actorList[index];
-        var playerElement = elementList.Player();
-        if (tiles[actor.Location].Color == playerElement.Color &&
-            playerElement.Character == facts.PlayerCharacter)
-            return;
-
-        playerElement.Character = facts.PlayerCharacter;
-        tiles[actor.Location].Color = playerElement.Color;
-        boardUpdater.UpdateBoard(actor.Location);
     }
 
     public string[] GetMessageLines()

@@ -6,18 +6,16 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x06)]
 internal sealed class TorchInteraction(
-    IEngineAccessor engine,
     ISounds sounds,
     IWorld world,
     IHud hud,
     IAlerts alerts,
     IFacts facts,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IFeatures features,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Torches++;
@@ -25,7 +23,7 @@ internal sealed class TorchInteraction(
         hud.UpdateStatus();
         if (alerts.TorchPickup)
         {
-            Engine.SetMessage(facts.LongMessageDuration, alerts.TorchMessage);
+            messenger.SetMessage(facts.LongMessageDuration, alerts.TorchMessage);
             alerts.TorchPickup = false;
         }
 

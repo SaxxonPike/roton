@@ -4,4 +4,5 @@ public interface IPlayerUpdater
 {
     void ForcePlayerColor(int index);
     void CleanUpPauseMovement();
+    void CleanUpPassageMovement();
 }

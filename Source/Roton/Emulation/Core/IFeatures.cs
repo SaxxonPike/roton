@@ -11,7 +11,6 @@ public interface IFeatures
     void HandlePlayerInput(IActor actor);
     bool CanPutTile(Location location);
     void ClearForest(Location location);
-    void CleanUpPassageMovement();
     string[] GetMessageLines();
     void ShowAbout();
     int BaseMemoryUsage { get; }

@@ -7,18 +7,16 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x05)]
 [Context(Context.Super, 0x05)]
 internal sealed class AmmoInteraction(
-    IEngineAccessor engine,
     IWorld world,
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
     ISoundUnit soundUnit,
     IFeatures features,
-    IHud hud)
+    IHud hud,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Ammo += facts.AmmoPerPickup;
@@ -29,7 +27,7 @@ internal sealed class AmmoInteraction(
         if (!alerts.AmmoPickup)
             return;
 
-        Engine.SetMessage(facts.LongMessageDuration, alerts.AmmoMessage);
+        messenger.SetMessage(facts.LongMessageDuration, alerts.AmmoMessage);
         alerts.AmmoPickup = false;
     }
 }

@@ -36,7 +36,6 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IWorld _world;
     private readonly IBoardList _boardList;
     private readonly IActionList _actionList;
-    private readonly IDrawList _drawList;
     private readonly IInteractionList _interactionList;
     private readonly IFacts _facts;
     private readonly ICodeHeap _heap;
@@ -59,6 +58,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly ISpawner _spawner;
     private readonly IMover _mover;
     private readonly IPlayerUpdater _playerUpdater;
+    private readonly IMessenger _messenger;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -80,7 +80,7 @@ internal sealed class Engine : IEngine, IDisposable
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
         IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
-        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater)
+        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater, IMessenger messenger)
     {
         engineAccessor.Instance = this;
 
@@ -104,7 +104,6 @@ internal sealed class Engine : IEngine, IDisposable
         _world = world;
         _boardList = boardList;
         _actionList = actionList;
-        _drawList = drawList;
         _interactionList = interactionList;
         _facts = facts;
         _heap = heap;
@@ -127,6 +126,7 @@ internal sealed class Engine : IEngine, IDisposable
         _spawner = spawner;
         _mover = mover;
         _playerUpdater = playerUpdater;
+        _messenger = messenger;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -393,7 +393,7 @@ internal sealed class Engine : IEngine, IDisposable
             {
                 _world.Health -= _facts.HealthLostPerHit;
                 _hud.UpdateStatus();
-                SetMessage(_facts.ShortMessageDuration, _alerts.OuchMessage);
+                _messenger.SetMessage(_facts.ShortMessageDuration, _alerts.OuchMessage);
                 _tiles[actor.Location].Color = (ElementAt(actor.Location).Color & 0x0F) | 0x70;
 
                 if (_world.Health > 0)
@@ -496,7 +496,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void RaiseError(ref OopContext context, ReadOnlySpan<char> error)
     {
-        SetMessage(_facts.LongMessageDuration, _alerts.ErrorMessage(error));
+        _messenger.SetMessage(_facts.LongMessageDuration, _alerts.ErrorMessage(error));
         _soundUnit.PlaySound(5, _sounds.Error);
         _tracer.TraceError(ref context, error);
         _actorList[context.Index].Instruction = -1;
@@ -592,24 +592,6 @@ internal sealed class Engine : IEngine, IDisposable
     {
         InitializeElements(false);
         _state.EditorMode = false;
-    }
-
-    public void SetMessage(int duration, IMessage message)
-    {
-        var index = _actorList.ActorIndexAt(new Location(0, 0));
-        if (index >= 0)
-        {
-            RemoveActor(index);
-            _hud.UpdateBorder();
-        }
-
-        var topMessage = message.Text[0];
-        var bottomMessage = message.Text.Count > 1 ? message.Text[1] : string.Empty;
-
-        _spawner.SpawnActor(new Location(0, 0), new Tile(_elementList.MessengerId, 0), 1, _state.DefaultActor);
-        _actorList[_state.ActorCount].P2 = unchecked((byte)(duration / (_state.GameWaitTime + 1)));
-        _state.Message = topMessage;
-        _state.Message2 = bottomMessage;
     }
 
     public void Start()
@@ -938,7 +920,7 @@ internal sealed class Engine : IEngine, IDisposable
         _tiles[_actorList.Player.Location] = new Tile(element.Id, element.Color);
         if (_state.PlayerElement == _elementList.MonitorId)
         {
-            SetMessage(0, new Message());
+            _messenger.SetMessage(0, new Message());
             _hud.DrawTitleStatus();
         }
 

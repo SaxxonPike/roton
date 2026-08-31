@@ -10,11 +10,10 @@ public class SuperMessageHandler(
     IEngineAccessor engine,
     IHud hud,
     IFacts facts,
-    IState state)
+    IState state,
+    IMessenger messenger)
     : IMessageHandler
 {
-    private IEngine Engine => engine.Instance;
-    
     public IScrollState? ExecuteMessage(ref OopContext context)
     {
         if (!context.HasMessage)
@@ -25,10 +24,10 @@ public class SuperMessageHandler(
         switch (message.Count)
         {
             case 1:
-                Engine.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
+                messenger.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
                 return null;
             case 2:
-                Engine.SetMessage(facts.LongMessageDuration,
+                messenger.SetMessage(facts.LongMessageDuration,
                     new Message(message[0], message[1]));
                 return null;
             case 0:

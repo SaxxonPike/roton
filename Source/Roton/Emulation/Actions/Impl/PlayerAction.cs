@@ -34,7 +34,8 @@ internal sealed class PlayerAction(
     IRadiusUpdater radiusUpdater,
     ISpawner spawner,
     IMover mover,
-    IPlayerUpdater playerUpdater)
+    IPlayerUpdater playerUpdater,
+    IMessenger messenger)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -70,7 +71,7 @@ internal sealed class PlayerAction(
             state.KeyShift = false;
 
             if (actors.ActorIndexAt(new Location(0, 0)) == -1)
-                Engine.SetMessage(0x7D00, alerts.GameOverMessage);
+                messenger.SetMessage(0x7D00, alerts.GameOverMessage);
 
             state.GameWaitTime = 0;
             state.GameOver = true;
@@ -110,7 +111,7 @@ internal sealed class PlayerAction(
                 {
                     if (alerts.OutOfAmmo)
                     {
-                        Engine.SetMessage(facts.LongMessageDuration, alerts.NoAmmoMessage);
+                        messenger.SetMessage(facts.LongMessageDuration, alerts.NoAmmoMessage);
                         alerts.OutOfAmmo = false;
                     }
                 }
@@ -119,7 +120,7 @@ internal sealed class PlayerAction(
             {
                 if (alerts.CantShootHere)
                 {
-                    Engine.SetMessage(facts.LongMessageDuration, alerts.NoShootMessage);
+                    messenger.SetMessage(facts.LongMessageDuration, alerts.NoShootMessage);
                     alerts.CantShootHere = false;
                 }
             }
@@ -230,7 +231,7 @@ internal sealed class PlayerAction(
 
                     if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
-                        Engine.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
+                        messenger.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
                         soundUnit.PlaySound(3, sounds.TimeLow);
                     }
                     else if (world.TimePassed >= board.TimeLimit)

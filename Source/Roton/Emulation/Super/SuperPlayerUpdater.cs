@@ -17,4 +17,7 @@ internal sealed class SuperPlayerUpdater(
 
     public void CleanUpPauseMovement() => 
         actors.Player.UnderTile = tiles[actors.Player.Location];
+    
+    public void CleanUpPassageMovement() => 
+        tiles[actors.Player.Location] = actors.Player.UnderTile;
 }

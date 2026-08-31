@@ -11,7 +11,6 @@ public interface IEngine
     bool TitleScreen { get; }
     void Attack(int index, Location location);
     void Destroy(Location location);
-    IElement ElementAt(Location location);
     void ExecuteCode(int index, ref Word instruction, string name);
     bool ExecuteTransaction(ref OopContext context, ref Word instruction, bool take);
     void FadePurple();
@@ -26,7 +25,6 @@ public interface IEngine
     Vector Rnd();
     Vector RndP(Vector vector);
     Vector Seek(Location location);
-    void SetMessage(int duration, IMessage message);
     void Start();
     void Stop();
     void WaitForTick();

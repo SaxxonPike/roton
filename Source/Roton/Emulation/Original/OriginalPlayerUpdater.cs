@@ -30,4 +30,7 @@ internal sealed class OriginalPlayerUpdater(
     {
         // No-op in the original engine.
     }
+
+    public void CleanUpPassageMovement() =>
+        tiles[actorList.Player.Location] = new Tile(elementList.EmptyId, 0);
 }

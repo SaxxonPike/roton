@@ -7,7 +7,6 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x08)]
 [Context(Context.Super, 0x08)]
 internal sealed class KeyInteraction(
-    IEngineAccessor engine,
     ITiles tiles,
     IWorld world,
     IHud hud,
@@ -15,18 +14,17 @@ internal sealed class KeyInteraction(
     IAlerts alerts,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IFeatures features,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = tiles[location].Color & 0x07;
         var keyIndex = color - 1;
         if (world.Keys[keyIndex])
         {
-            Engine.SetMessage(facts.LongMessageDuration, alerts.KeyAlreadyMessage(color));
+            messenger.SetMessage(facts.LongMessageDuration, alerts.KeyAlreadyMessage(color));
             soundUnit.PlaySound(2, sounds.KeyAlready);
         }
         else
@@ -34,7 +32,7 @@ internal sealed class KeyInteraction(
             world.Keys[keyIndex] = true;
             features.RemoveItem(location);
             hud.UpdateStatus();
-            Engine.SetMessage(facts.LongMessageDuration, alerts.KeyPickupMessage(color));
+            messenger.SetMessage(facts.LongMessageDuration, alerts.KeyPickupMessage(color));
             soundUnit.PlaySound(2, sounds.Key);
         }
     }

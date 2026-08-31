@@ -15,7 +15,8 @@ internal sealed class PassageInteraction(
     ISounds sounds,
     ISoundUnit soundUnit,
     IWorldUnit worldUnit,
-    IFeatures features)
+    IFeatures features,
+    IPlayerUpdater playerUpdater)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -38,7 +39,7 @@ internal sealed class PassageInteraction(
             }
         }
 
-        features.CleanUpPassageMovement();
+        playerUpdater.CleanUpPassageMovement();
 
         if (target.X != 0)
             actorList.Player.Location = target;

@@ -7,18 +7,16 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x14)]
 [Context(Context.Super, 0x14)]
 internal sealed class ForestInteraction(
-    IEngineAccessor engine,
     IAlerts alerts,
     IFacts facts,
     ISounds sounds,
     IState state,
     ISoundUnit soundUnit,
     IFeatures features,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         features.ClearForest(location);
@@ -32,7 +30,7 @@ internal sealed class ForestInteraction(
         if (!alerts.Forest)
             return;
 
-        Engine.SetMessage(facts.LongMessageDuration, alerts.ForestMessage);
+        messenger.SetMessage(facts.LongMessageDuration, alerts.ForestMessage);
         alerts.Forest = false;
     }
 }

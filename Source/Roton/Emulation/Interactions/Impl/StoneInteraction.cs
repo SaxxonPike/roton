@@ -10,7 +10,8 @@ internal sealed class StoneInteraction(
     IWorld world,
     IHud hud,
     IFacts facts,
-    IAlerts alerts) 
+    IAlerts alerts,
+    IMessenger messenger) 
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -23,6 +24,6 @@ internal sealed class StoneInteraction(
         world.Stones++;
         Engine.Destroy(location);
         hud.UpdateStatus();
-        Engine.SetMessage(facts.LongMessageDuration, alerts.StoneMessage);
+        messenger.SetMessage(facts.LongMessageDuration, alerts.StoneMessage);
     }
 }

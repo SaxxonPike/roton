@@ -7,18 +7,16 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x07)]
 [Context(Context.Super, 0x07)]
 internal sealed class GemInteraction(
-    IEngineAccessor engine,
     IWorld world,
     IFacts facts,
     IHud hud,
     ISounds sounds,
     IAlerts alerts,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IFeatures features,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Health += facts.HealthPerGem;
@@ -31,7 +29,7 @@ internal sealed class GemInteraction(
         if (!alerts.GemPickup)
             return;
 
-        Engine.SetMessage(facts.LongMessageDuration, alerts.GemMessage);
+        messenger.SetMessage(facts.LongMessageDuration, alerts.GemMessage);
         alerts.GemPickup = false;
     }
 }

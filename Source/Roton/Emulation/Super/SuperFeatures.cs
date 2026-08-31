@@ -19,9 +19,7 @@ internal sealed class SuperFeatures(
     IWorldUnit worldUnit,
     IBoardTime boardTime,
     IBoardUpdater boardUpdater,
-    IBroadcaster broadcaster,
-    IRadiusUpdater radiusUpdater,
-    IMover mover)
+    IBroadcaster broadcaster)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -150,16 +148,6 @@ internal sealed class SuperFeatures(
         (TestAdjacent(location + Vector.South, id) ? 2 : 0) |
         (TestAdjacent(location + Vector.West, id) ? 4 : 0) |
         (TestAdjacent(location + Vector.East, id) ? 8 : 0);
-
-    public void CleanUpPassageMovement()
-    {
-        tiles[actorList.Player.Location] = actorList.Player.UnderTile;
-    }
-
-    public void ForcePlayerColor(int index)
-    {
-        // Super does not enforce player's background color.
-    }
 
     public string[] GetMessageLines()
     {

@@ -7,18 +7,16 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
 internal sealed class BombInteraction(
-    IEngineAccessor engine,
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
     ISoundUnit soundUnit,
     IActorList actorList,
     IBoardUpdater boardUpdater,
-    IPusher pusher)
+    IPusher pusher,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var actor = actorList.ActorAt(location);
@@ -26,7 +24,7 @@ internal sealed class BombInteraction(
         {
             actor.P1 = (byte)facts.BombCountdownStart;
             boardUpdater.UpdateBoard(location);
-            Engine.SetMessage(facts.LongMessageDuration, alerts.BombMessage);
+            messenger.SetMessage(facts.LongMessageDuration, alerts.BombMessage);
             soundUnit.PlaySound(4, sounds.BombActivate);
         }
         else
