@@ -18,8 +18,8 @@ internal sealed class PlayCommand(
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
         var notes = parser.ReadLine(context.Index, ref instruction, buffer);
-        var sound = musicEncoder.Encode(notes);
-        soundUnit.PlaySound(-1, sound);
+        using var sound = musicEncoder.Encode(notes);
+        soundUnit.PlaySound(-1, sound.Span);
         context.NextLine = false;
     }
 }

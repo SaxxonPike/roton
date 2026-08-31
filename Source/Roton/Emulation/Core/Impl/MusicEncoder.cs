@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
+using JetBrains.Annotations;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
@@ -12,16 +9,21 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class MusicEncoder : IMusicEncoder
 {
-    public ISound Encode(ReadOnlySpan<char> music)
+    [MustDisposeResource]
+    public TempMemory<byte> Encode(ReadOnlySpan<char> music)
     {
+        var buffer = (stackalloc byte[512]);
         var speed = 1;
         var octave = 3;
-        var result = new List<int>();
         var isNote = false;
         var note = -1;
+        var len = 0;
 
         foreach (var c in music)
         {
+            if (len >= buffer.Length)
+                break;
+
             var ch = c.ToUpperCase();
 
             if (!isNote)
@@ -41,8 +43,8 @@ internal sealed class MusicEncoder : IMusicEncoder
                 }
 
                 isNote = false;
-                result.Add(note + (octave << 4));
-                result.Add(speed);
+                buffer[len++] = unchecked((byte)(note + (octave << 4)));
+                buffer[len++] = unchecked((byte)speed);
             }
 
             switch (ch)
@@ -108,8 +110,8 @@ internal sealed class MusicEncoder : IMusicEncoder
                     isNote = true;
                     break;
                 case 'X':
-                    result.Add(0);
-                    result.Add(speed);
+                    buffer[len++] = 0;
+                    buffer[len++] = unchecked((byte)speed);
                     break;
                 case '0':
                 case '1':
@@ -120,18 +122,18 @@ internal sealed class MusicEncoder : IMusicEncoder
                 case '7':
                 case '8':
                 case '9':
-                    result.Add(0xF0 | (ch - 0x30));
-                    result.Add(speed);
+                    buffer[len++] = unchecked((byte)(0xF0 | (ch - 0x30)));
+                    buffer[len++] = unchecked((byte)speed);
                     break;
             }
         }
 
-        if (isNote)
+        if (isNote && len < buffer.Length)
         {
-            result.Add(note + (octave << 4));
-            result.Add(speed);
+            buffer[len++] = unchecked((byte)(note + (octave << 4)));
+            buffer[len++] = unchecked((byte)speed);
         }
 
-        return new Sound([.. result.Take(254)]);
+        return new TempMemory<byte>(buffer.Slice(0, len));
     }
 }

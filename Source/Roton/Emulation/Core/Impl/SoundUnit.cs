@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -10,7 +11,7 @@ internal sealed class SoundUnit(
     IMusicEncoder musicEncoder)
     : ISoundUnit
 {
-    public void PlaySound(int priority, ISound sound, int? offset = null, int? length = null)
+    public void PlaySound(int priority, ReadOnlySpan<byte> sound)
     {
         if (state.GameOver || state.GameQuiet)
             return;
@@ -25,7 +26,7 @@ internal sealed class SoundUnit(
         if (!soundIsMusic)
             state.SoundBuffer.Clear();
 
-        state.SoundBuffer.Enqueue(sound, offset, length);
+        state.SoundBuffer.Enqueue(sound);
         state.SoundPlaying = true;
         state.SoundPriority = priority;
     }
@@ -47,6 +48,7 @@ internal sealed class SoundUnit(
     public void PlayErrorSound()
     {
         ClearSound();
-        PlaySound(1, musicEncoder.Encode("s004x114x9"));
+        using var mem = musicEncoder.Encode("s004x114x9");
+        PlaySound(1, mem.Span);
     }
 }

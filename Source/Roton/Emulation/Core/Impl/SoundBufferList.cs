@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -24,16 +25,15 @@ internal sealed class SoundBufferList : FixedList<int>, ISoundBufferList
     protected override void SetItem(int index, int value) => 
         Memory.Write8(_offset + index + 1, value);
 
-    public void Enqueue(ISound sound, int? offset = null, int? length = null)
+    public void Enqueue(ReadOnlySpan<byte> sound)
     {
-        var inLength = length ?? sound.Length;
-        var inOffset = offset ?? 0;
+        var inLength = sound.Length;
             
         var totalLength = inLength + Memory.Read8(_offset);
         if (totalLength >= 255)
             return;
 
-        var sourceIndex = inOffset;
+        var sourceIndex = 0;
         var targetIndex = Memory.Read8(_offset) + 1 + _offset;
         var remaining = inLength;
         while (remaining-- > 0)

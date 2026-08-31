@@ -1,10 +1,10 @@
-using Roton.Emulation.Data;
+using System;
 
 namespace Roton.Emulation.Core;
 
 public interface ISoundUnit
 {
-    void PlaySound(int priority, ISound sound, int? offset = null, int? length = null);
+    void PlaySound(int priority, ReadOnlySpan<byte> sound);
     void ClearSound();
     void PlayStep();
     void PlayErrorSound();

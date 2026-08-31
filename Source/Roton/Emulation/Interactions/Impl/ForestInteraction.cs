@@ -25,7 +25,7 @@ internal sealed class ForestInteraction(
         var forestSongLength = sounds.Forest.Length;
         var forestIndex = state.ForestIndex % forestSongLength;
         state.ForestIndex = (forestIndex + 2) % forestSongLength;
-        soundUnit.PlaySound(3, sounds.Forest, forestIndex, 2);
+        soundUnit.PlaySound(3, sounds.Forest.Slice(forestIndex, 2));
 
         if (!alerts.Forest)
             return;

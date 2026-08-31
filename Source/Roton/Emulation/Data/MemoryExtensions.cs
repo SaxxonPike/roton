@@ -103,6 +103,14 @@ public static class MemoryExtensions
         }
 
         [DebuggerStepThrough]
+        internal Span<byte> Slice(int offset) => 
+            memory.Data.Slice(offset);
+
+        [DebuggerStepThrough]
+        internal Span<byte> Slice(int offset, int length) => 
+            memory.Data.Slice(offset, length);
+
+        [DebuggerStepThrough]
         internal void Write(int offset, ReadOnlySpan<byte> data)
         {
             unchecked
