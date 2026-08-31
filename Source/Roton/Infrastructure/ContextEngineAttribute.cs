@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace Roton.Infrastructure;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-[MeansImplicitUse]
+[MeansImplicitUse(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ContextAttribute(Context context, string name, int id = -1) : Attribute
 {
     public Context Context { get; } = context;
