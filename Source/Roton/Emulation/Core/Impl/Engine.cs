@@ -60,6 +60,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IPlayerUpdater _playerUpdater;
     private readonly IMessenger _messenger;
     private readonly IScheduler _scheduler;
+    private readonly IColorMatcher _colorMatcher;
 
     private bool _step;
     private JoystickButtons _lastButtons;
@@ -79,7 +80,7 @@ internal sealed class Engine : IEngine, IDisposable
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
         IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
         ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater, IMessenger messenger,
-        IScheduler scheduler)
+        IScheduler scheduler, IColorMatcher colorMatcher)
     {
         engineAccessor.Instance = this;
 
@@ -127,6 +128,7 @@ internal sealed class Engine : IEngine, IDisposable
         _playerUpdater = playerUpdater;
         _messenger = messenger;
         _scheduler = scheduler;
+        _colorMatcher = colorMatcher;
     }
 
     private Thread? Thread { get; set; }
@@ -316,7 +318,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public bool FindTile(Tile kind, Location location)
     {
-        var matchColor = _features.GetColorMatchValue(kind.Color);
+        var matchColor = _colorMatcher.GetColorMatchValue(kind.Color);
 
         location.X++;
         while (location.Y <= _tiles.Height)
@@ -326,7 +328,7 @@ internal sealed class Engine : IEngine, IDisposable
                 ref var tile = ref _tiles[location];
                 if (tile.Id == kind.Id)
                 {
-                    var foundColor = _features.GetColorMatchValue(ColorMatch(_tiles[location]));
+                    var foundColor = _colorMatcher.GetColorMatchValue(ColorMatch(_tiles[location]));
                     if (kind.Color == 0 || foundColor == matchColor)
                         return true;
                 }

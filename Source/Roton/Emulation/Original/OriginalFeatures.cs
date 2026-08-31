@@ -108,11 +108,6 @@ internal sealed class OriginalFeatures(
         Engine.PlotTile(location, context.DeathTile);
     }
 
-    public int GetColorMatchValue(int color)
-    {
-        return color;
-    }
-
     private bool TestAdjacent(Location location, int id)
     {
         var eId = tiles[location].Id;

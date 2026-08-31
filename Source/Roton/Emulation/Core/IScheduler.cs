@@ -1,6 +1,6 @@
 using System;
 
-namespace Roton.Emulation.Core.Impl;
+namespace Roton.Emulation.Core;
 
 public interface IScheduler
 {

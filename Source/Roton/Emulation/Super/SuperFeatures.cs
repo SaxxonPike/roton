@@ -122,11 +122,6 @@ internal sealed class SuperFeatures(
         Engine.PlotTile(location, context.DeathTile);
     }
 
-    public int GetColorMatchValue(int color)
-    {
-        return color & 0x07;
-    }
-
     private bool TestAdjacent(Location location, int id)
     {
         var eId = tiles[location].Id;
