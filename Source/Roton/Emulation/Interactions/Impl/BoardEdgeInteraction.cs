@@ -15,7 +15,8 @@ internal sealed class BoardEdgeInteraction(
     IInteractionList interactionList,
     IState state,
     IWorldUnit worldUnit,
-    IFeatures features)
+    IFeatures features,
+    IMover mover)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -61,7 +62,7 @@ internal sealed class BoardEdgeInteraction(
         {
             if (tiles.ElementAt(target).Id != elementList.PlayerId)
             {
-                Engine.MoveActor(0, target);
+                mover.MoveActor(0, target);
             }
 
             Engine.FadePurple();

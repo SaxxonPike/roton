@@ -20,7 +20,8 @@ internal sealed class BulletAction(
     IFacts facts,
     ISoundUnit soundUnit,
     IHud hud,
-    IBroadcaster broadcaster)
+    IBroadcaster broadcaster,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -35,7 +36,7 @@ internal sealed class BulletAction(
             var element = tiles.ElementAt(target);
             if (element.IsFloor || elements.IsWater(element.Id))
             {
-                Engine.MoveActor(index, target);
+                mover.MoveActor(index, target);
                 break;
             }
 

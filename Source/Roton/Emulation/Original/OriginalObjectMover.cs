@@ -6,11 +6,11 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalObjectMover(
-    IEngineAccessor engine,
-    IPusher pusher) : IObjectMover
+    IPusher pusher,
+    IMover mover,
+    ITiles tiles)
+    : IObjectMover
 {
-    private IEngine Engine => engine.Instance;
-
     public void ExecuteDirection(ref OopContext context, Vector vector)
     {
         if (vector.IsZero())
@@ -21,13 +21,13 @@ internal sealed class OriginalObjectMover(
         {
             var target = context.Actor.Location + vector;
 
-            if (!Engine.ElementAt(target).IsFloor)
+            if (!tiles.ElementAt(target).IsFloor)
                 pusher.Push(target, vector);
 
-            if (!Engine.ElementAt(target).IsFloor)
+            if (!tiles.ElementAt(target).IsFloor)
                 return;
 
-            Engine.MoveActor(context.Index, target);
+            mover.MoveActor(context.Index, target);
             context.Repeat = false;
         }
     }

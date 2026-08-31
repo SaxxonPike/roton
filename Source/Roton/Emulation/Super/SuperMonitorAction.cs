@@ -9,7 +9,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super, 0x03)]
 internal sealed class SuperMonitorAction(
     IEngineAccessor engine,
-    IState state)
+    IState state,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -31,6 +32,6 @@ internal sealed class SuperMonitorAction(
             _ => false
         };
 
-        Engine.MoveActorOnRiver(index);
+        mover.MoveActorOnRiver(index);
     }
 }

@@ -437,91 +437,6 @@ internal sealed class Engine : IEngine, IDisposable
     private int HsecToTicks(int hsec) =>
         Math.Max(1, hsec * (_config.MasterClockDenominator / _config.MasterClockNumerator + 50) / 100);
 
-    public void MoveActor(int index, Location target)
-    {
-        var actor = _actorList[index];
-        var sourceLocation = actor.Location;
-        ref var sourceTile = ref _tiles[actor.Location];
-        ref var targetTile = ref _tiles[target];
-        var underTile = actor.UnderTile;
-        var nextUnderTile = targetTile;
-
-        if (targetTile.Id == _elementList.EmptyId)
-            targetTile = new Tile(sourceTile.Id, sourceTile.Color & 0x0F);
-        else
-            targetTile = new Tile(sourceTile.Id, (targetTile.Color & 0x70) | (sourceTile.Color & 0x0F));
-
-        sourceTile = underTile;
-        actor.Location = target;
-        if (targetTile.Id == _elementList.PlayerId)
-            _features.ForcePlayerColor(index);
-
-        _boardUpdater.UpdateBoard(target);
-        _boardUpdater.UpdateBoard(sourceLocation);
-        actor.UnderTile = nextUnderTile;
-
-        if (index == 0)
-        {
-            if (_board.IsDark)
-            {
-                var squareDistanceX = (target.X - sourceLocation.X).Square();
-                var squareDistanceY = (target.Y - sourceLocation.Y).Square();
-                if (squareDistanceX + squareDistanceY == 1)
-                {
-                    for (var x = target.X - _facts.TorchDrawBoxVerticalSize;
-                         x <= target.X + _facts.TorchDrawBoxVerticalSize;
-                         x++)
-                    for (var y = target.Y - _facts.TorchDrawBoxHorizontalSize;
-                         y <= target.Y + _facts.TorchDrawBoxHorizontalSize;
-                         y++)
-                    {
-                        var glowLocation = new Location(x, y);
-                        if (glowLocation.X >= 1 && glowLocation.X <= _tiles.Width && glowLocation.Y >= 1 &&
-                            glowLocation.Y <= _tiles.Height)
-                            if ((Distance(sourceLocation, glowLocation) < _facts.TorchRadius) ^
-                                (Distance(target, glowLocation) < _facts.TorchRadius))
-                                _boardUpdater.UpdateBoard(glowLocation);
-                    }
-                }
-            }
-
-            _hud.UpdateCamera();
-        }
-    }
-
-    public void MoveActorOnRiver(int index)
-    {
-        var actor = _actorList[index];
-        var vector = new Vector();
-        var underId = actor.UnderTile.Id;
-
-        if (underId == _elementList.RiverNId)
-            vector = Vector.North;
-        else if (underId == _elementList.RiverSId)
-            vector = Vector.South;
-        else if (underId == _elementList.RiverWId)
-            vector = Vector.West;
-        else if (underId == _elementList.RiverEId)
-            vector = Vector.East;
-
-        if (vector.IsNonZero())
-        {
-            ref var actorTile = ref _tiles[actor.Location];
-            if (actorTile.Id == _elementList.PlayerId)
-            {
-                var targetLocation = actor.Location + vector;
-                _interactionList.Get(_tiles[targetLocation].Id)?.Interact(targetLocation, 0, ref vector);
-            }
-        }
-
-        if (vector.IsNonZero())
-        {
-            var target = actor.Location + vector;
-            if (ElementAt(target).IsFloor)
-                MoveActor(index, target);
-        }
-    }
-
     public void PlotTile(Location location, Tile tile)
     {
         if (ElementAt(location).Id == _elementList.PlayerId)
@@ -802,8 +717,6 @@ internal sealed class Engine : IEngine, IDisposable
             return ((tile.Color >> 4) & 0x0F) + 8;
         return tile.Color & 0x0F;
     }
-
-    private static int Distance(Location a, Location b) => (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
     private void DrawTile(Location location, AnsiChar ac) => _playField.DrawTile(location.X - 1, location.Y - 1, ac);
 

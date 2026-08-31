@@ -10,18 +10,16 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
 internal sealed class PusherAction(
-    IEngineAccessor engine,
     IActorList actors,
     ITiles tiles,
     ISounds sounds,
     IElementList elements,
     IActionList actions,
     ISoundUnit soundUnit,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -37,7 +35,7 @@ internal sealed class PusherAction(
             return;
 
         var behindLocation = actor.Location - actor.Vector;
-        Engine.MoveActor(index, actor.Location + actor.Vector);
+        mover.MoveActor(index, actor.Location + actor.Vector);
         soundUnit.PlaySound(2, sounds.Push);
 
         if (tiles[behindLocation].Id != elements.PusherId)

@@ -15,7 +15,8 @@ internal sealed class RotonAction(
     IActorList actors,
     IRandomizer randomizer,
     IElementList elements,
-    ITiles tiles)
+    ITiles tiles,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -41,7 +42,7 @@ internal sealed class RotonAction(
         var target = actor.Location + actor.Vector;
 
         if (tiles.ElementAt(target).IsFloor)
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
         else if (tiles[target].Id == elements.PlayerId)
             Engine.Attack(index, target);
     }

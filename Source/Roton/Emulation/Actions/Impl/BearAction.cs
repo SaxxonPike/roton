@@ -14,7 +14,8 @@ internal sealed class BearAction(
     IEngineAccessor engine,
     IActorList actorList,
     IElementList elementList,
-    ITiles tiles) 
+    ITiles tiles,
+    IMover mover) 
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -41,12 +42,8 @@ internal sealed class BearAction(
         var targetElement = tiles.ElementAt(target);
 
         if (targetElement.IsFloor)
-        {
-            Engine.MoveActor(index, target);
-        }
-        else if (targetElement.Id == elementList.PlayerId || targetElement.Id == elementList.BreakableId)
-        {
+            mover.MoveActor(index, target);
+        else if (targetElement.Id == elementList.PlayerId || targetElement.Id == elementList.BreakableId) 
             Engine.Attack(index, target);
-        }
     }
 }

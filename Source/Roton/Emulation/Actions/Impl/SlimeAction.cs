@@ -16,7 +16,8 @@ internal sealed class SlimeAction(
     IElementList elements,
     IState state,
     IBoardUpdater boardUpdater,
-    ISpawner spawner)
+    ISpawner spawner,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -44,7 +45,7 @@ internal sealed class SlimeAction(
 
                 if (spawnCount == 0)
                 {
-                    Engine.MoveActor(index, target);
+                    mover.MoveActor(index, target);
                     tiles[source] = slimeTrailTile;
                     boardUpdater.UpdateBoard(source);
                 }

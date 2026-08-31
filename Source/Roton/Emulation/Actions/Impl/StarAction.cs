@@ -15,7 +15,8 @@ internal sealed class StarAction(
     IElementList elements,
     ITiles tiles,
     IBoardUpdater boardUpdater,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -49,7 +50,7 @@ internal sealed class StarAction(
                     pusher.Push(targetLocation, actor.Vector);
 
                 if (targetElement.IsFloor || elements.IsWater(targetElement.Id))
-                    Engine.MoveActor(index, targetLocation);
+                    mover.MoveActor(index, targetLocation);
             }
         }
         else

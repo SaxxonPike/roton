@@ -13,7 +13,8 @@ internal sealed class SpiderAction(
     IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elements)
+    IElementList elements,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -46,7 +47,7 @@ internal sealed class SpiderAction(
 
         if (targetElement == elements.WebId)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
             return true;
         }
 

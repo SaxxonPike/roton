@@ -32,7 +32,9 @@ internal sealed class PlayerAction(
     IFeatures features,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
-    ISpawner spawner)
+    ISpawner spawner,
+    IMover mover,
+    IPlayerUpdater playerUpdater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -57,7 +59,7 @@ internal sealed class PlayerAction(
         }
         else
         {
-            features.ForcePlayerColor(index);
+            playerUpdater.ForcePlayerColor(index);
         }
 
         // Health logic
@@ -135,7 +137,7 @@ internal sealed class PlayerAction(
                     soundUnit.PlayStep();
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
-                    Engine.MoveActor(0, actor.Location + state.KeyVector);
+                    mover.MoveActor(0, actor.Location + state.KeyVector);
             }
         }
 
@@ -213,7 +215,7 @@ internal sealed class PlayerAction(
             if (world.EnergyCycles == 10)
                 soundUnit.PlaySound(9, sounds.EnergyOut);
             else if (world.EnergyCycles <= 0)
-                features.ForcePlayerColor(index);
+                playerUpdater.ForcePlayerColor(index);
         }
 
         // Time limit logic
@@ -241,6 +243,6 @@ internal sealed class PlayerAction(
             }
         }
 
-        Engine.MoveActorOnRiver(index);
+        mover.MoveActorOnRiver(index);
     }
 }

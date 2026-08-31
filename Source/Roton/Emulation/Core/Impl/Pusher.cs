@@ -14,7 +14,8 @@ internal sealed class Pusher(
     ISounds sounds,
     IBoardUpdater boardUpdater,
     IFeatures features,
-    ITracer tracer)
+    ITracer tracer,
+    IMover mover)
     : IPusher
 {
     private ITiles _tiles = tiles;
@@ -118,7 +119,7 @@ internal sealed class Pusher(
         var sourceIndex = actorList.ActorIndexAt(source);
         if (sourceIndex >= 0)
         {
-            Engine.MoveActor(sourceIndex, target);
+            mover.MoveActor(sourceIndex, target);
         }
         else
         {

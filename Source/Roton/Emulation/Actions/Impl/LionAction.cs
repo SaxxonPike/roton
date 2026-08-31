@@ -14,7 +14,8 @@ internal sealed class LionAction(
     IActorList actorList,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elementList,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -31,7 +32,7 @@ internal sealed class LionAction(
         var element = tiles.ElementAt(target);
         if (element.IsFloor)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
         }
         else if (element.Id == elementList.PlayerId)
         {

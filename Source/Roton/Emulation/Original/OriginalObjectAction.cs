@@ -11,7 +11,8 @@ internal sealed class OriginalObjectAction(
     IActorList actorList,
     ITiles tiles,
     IFacts facts,
-    IBroadcaster broadcaster)
+    IBroadcaster broadcaster,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -30,7 +31,7 @@ internal sealed class OriginalObjectAction(
         var target = actor.Location + actor.Vector;
         if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
         }
         else
         {

@@ -15,7 +15,8 @@ internal sealed class CentipedeHeadAction(
     IRandomizer randomizer,
     ITiles tiles,
     IElementList elementList,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -114,7 +115,7 @@ internal sealed class CentipedeHeadAction(
             }
             else
             {
-                Engine.MoveActor(index, target);
+                mover.MoveActor(index, target);
                 var segmentIndex = index;
 
                 // The centipede has moved, so move its followers
@@ -165,7 +166,7 @@ internal sealed class CentipedeHeadAction(
                         follower.P1 = segment.P1;
                         follower.P2 = segment.P2;
                         follower.Vector = new Vector(origin.X - follower.Location.X, origin.Y - follower.Location.Y);
-                        Engine.MoveActor(segment.Follower, origin);
+                        mover.MoveActor(segment.Follower, origin);
                     }
 
                     segmentIndex = segment.Follower;

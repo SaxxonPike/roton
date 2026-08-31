@@ -16,7 +16,8 @@ internal sealed class BlinkWallAction(
     IActorList actorList,
     IWorld world,
     IBoardUpdater boardUpdater,
-    ITracer tracer)
+    ITracer tracer,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -71,11 +72,11 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(0, 1);
                         if (tiles[target - testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target - testVector);
+                            mover.MoveActor(playerIndex, target - testVector);
                         }
                         else if (tiles[target + testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                     }
                     else
@@ -83,12 +84,12 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(1, 0);
                         if (tiles[target + testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                         else if (tiles[target - testVector].Id == emptyElement)
                         {
                             // "sum" is not a mistake; this is an original engine bug
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                     }
 

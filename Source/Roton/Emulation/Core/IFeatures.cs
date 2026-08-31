@@ -12,7 +12,6 @@ public interface IFeatures
     bool CanPutTile(Location location);
     void ClearForest(Location location);
     void CleanUpPassageMovement();
-    void ForcePlayerColor(int index);
     string[] GetMessageLines();
     void ShowAbout();
     int BaseMemoryUsage { get; }

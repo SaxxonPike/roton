@@ -12,7 +12,8 @@ internal sealed class SuperObjectAction(
     ITiles tiles,
     IFacts facts,
     IBroadcaster broadcaster,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -39,7 +40,7 @@ internal sealed class SuperObjectAction(
 
         if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
 
             if (actor.P2 <= 0)
                 return;

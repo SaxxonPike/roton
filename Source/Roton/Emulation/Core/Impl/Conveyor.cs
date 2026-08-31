@@ -11,12 +11,11 @@ internal sealed class Conveyor(
     IElementList elementList,
     IState state,
     IActorList actorList,
-    IEngineAccessor engine,
-    IBoardUpdater boardUpdater
-) : IConveyor
+    IBoardUpdater boardUpdater,
+    IMover mover)
+    : IConveyor
 {
     private ITiles _tiles = tiles;
-    private IEngine Engine => engine.Instance;
 
     private Vector GetConveyorVector(int index) => new(state.Vector8[index], state.Vector8[index + 8]);
 
@@ -65,7 +64,7 @@ internal sealed class Conveyor(
                         var index = actorList.ActorIndexAt(source);
                         _tiles[source] = surrounding[i];
                         _tiles[target].Id = elementList.EmptyId;
-                        Engine.MoveActor(index, target);
+                        mover.MoveActor(index, target);
                         _tiles[source] = tile;
                     }
                     else

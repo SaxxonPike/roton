@@ -8,13 +8,11 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "GO")]
 internal sealed class GoCommand(
     IParser parser,
-    IEngineAccessor engine,
     ITiles tiles,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
@@ -27,7 +25,7 @@ internal sealed class GoCommand(
 
         if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(context.Index, target);
+            mover.MoveActor(context.Index, target);
             context.Moved = true;
         }
         else

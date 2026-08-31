@@ -20,7 +20,8 @@ internal sealed class OriginalFeatures(
     IWorldUnit worldUnit,
     IBoardTime boardTime,
     IBoardUpdater boardUpdater,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    IMover mover)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -122,9 +123,9 @@ internal sealed class OriginalFeatures(
     {
         var target = actorList.Player.Location + state.KeyVector;
 
-        if (Engine.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
+        if (tiles.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
         {
-            Engine.MoveActor(0, target);
+            mover.MoveActor(0, target);
         }
         else
         {

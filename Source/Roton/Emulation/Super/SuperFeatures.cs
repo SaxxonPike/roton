@@ -20,7 +20,8 @@ internal sealed class SuperFeatures(
     IBoardTime boardTime,
     IBoardUpdater boardUpdater,
     IBroadcaster broadcaster,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    IMover mover)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -123,7 +124,7 @@ internal sealed class SuperFeatures(
 
         if (Engine.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
         {
-            Engine.MoveActor(0, target);
+            mover.MoveActor(0, target);
         }
         else
         {

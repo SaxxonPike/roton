@@ -53,6 +53,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
     protected IMemory Memory { get; private set; } = null!;
+    protected IMover Mover { get; private set; } = null!;
     protected IParser Parser { get; private set; } = null!;
     protected IActor Player => Actors[0];
     protected IRandomizer Random { get; private set; } = null!;
@@ -179,6 +180,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();
         Memory = container.GetRequiredService<IMemory>();
+        Mover = container.GetRequiredService<IMover>();
         Parser = container.GetRequiredService<IParser>();
         Random = container.GetRequiredService<IRandomizer>();
         Sounds = container.GetRequiredService<ISounds>();
@@ -205,11 +207,14 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected Context Context { get; } = context;
 
-    protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
+    protected void MovePlayerTo(int x, int y) =>
+        MoveActorTo(0, x, y);
 
-    protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
+    protected void MoveActorTo(int index, int x, int y) => 
+        Mover.MoveActor(index, new Location(x, y));
 
-    protected void FaceActor(int index, Vector vector) => Actors[index].Vector = vector;
+    protected void FaceActor(int index, Vector vector) =>
+        Actors[index].Vector = vector;
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
         Tiles[new Location(x, y)] = (new Tile(id, color ?? RandomInt(0x00, 0xFF)));

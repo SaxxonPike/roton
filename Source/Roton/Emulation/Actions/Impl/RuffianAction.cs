@@ -11,17 +11,18 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super, 0x23)]
 internal sealed class RuffianAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements,
+    IMover mover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         if (actor.Vector.IsZero())
         {
@@ -34,7 +35,7 @@ internal sealed class RuffianAction(
         }
         else
         {
-            if (actor.Location.X == actorList.Player.Location.X || actor.Location.Y == actorList.Player.Location.Y)
+            if (actor.Location.X == actors.Player.Location.X || actor.Location.Y == actors.Player.Location.Y)
             {
                 if (actor.P1 >= randomizer.GetNext(9))
                     actor.Vector = Engine.Seek(actor.Location);
@@ -42,13 +43,13 @@ internal sealed class RuffianAction(
 
             var target = actor.Location + actor.Vector;
 
-            if (tiles.ElementAt(target).Id == elementList.PlayerId)
+            if (tiles.ElementAt(target).Id == elements.PlayerId)
             {
                 Engine.Attack(index, target);
             }
             else if (Engine.ElementAt(target).IsFloor)
             {
-                Engine.MoveActor(index, target);
+                mover.MoveActor(index, target);
 
                 if (actor.P2 + 8 <= randomizer.GetNext(17))
                     actor.Vector = new Vector(0, 0);

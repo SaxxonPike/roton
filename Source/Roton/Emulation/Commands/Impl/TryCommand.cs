@@ -7,14 +7,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "TRY")]
 [Context(Context.Super, "TRY")]
 internal sealed class TryCommand(
-    IEngineAccessor engine,
     IParser parser,
     ITiles tiles,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
@@ -25,9 +23,9 @@ internal sealed class TryCommand(
         {
             pusher.Push(target, vec);
         }
-        if (Engine.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(context.Index, target);
+            mover.MoveActor(context.Index, target);
             context.Moved = true;
             context.Resume = false;
         }
