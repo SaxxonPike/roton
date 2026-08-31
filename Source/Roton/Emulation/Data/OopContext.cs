@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
-public ref struct OopContext(IActorList actorList)
+public ref struct OopContext(IActorList actors)
 {
     private List<string>? _message;
 
-    public IActor Actor => actorList[Index];
+    public IActor Actor => actors[Index];
 
     public int CommandsExecuted;
 

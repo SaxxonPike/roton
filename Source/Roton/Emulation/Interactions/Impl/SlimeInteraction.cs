@@ -9,10 +9,10 @@ namespace Roton.Emulation.Interactions.Impl;
 internal sealed class SlimeInteraction(
     IEngineAccessor engine,
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IActorList actorList,
+    IActorList actors,
     IBoardUpdater boardUpdater)
     : IInteraction
 {
@@ -21,9 +21,9 @@ internal sealed class SlimeInteraction(
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = tiles[location].Color;
-        var slimeIndex = actorList.ActorIndexAt(location);
+        var slimeIndex = actors.ActorIndexAt(location);
         Engine.Harm(slimeIndex);
-        tiles[location] = new Tile(elementList.BreakableId, color);
+        tiles[location] = new Tile(elements.BreakableId, color);
         boardUpdater.UpdateBoard(location);
         soundUnit.PlaySound(2, sounds.SlimeDie);
     }

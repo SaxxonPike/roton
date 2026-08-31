@@ -12,8 +12,8 @@ namespace Roton.Emulation.Actions.Impl;
 internal sealed class BlinkWallAction(
     IEngineAccessor engine,
     ITiles tiles,
-    IElementList elementList,
-    IActorList actorList,
+    IElementList elements,
+    IActorList actors,
     IWorld world,
     IBoardUpdater boardUpdater,
     ITracer tracer,
@@ -24,7 +24,7 @@ internal sealed class BlinkWallAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         if (actor.P3 == 0)
             actor.P3 = unchecked((byte)(actor.P1 + 1));
@@ -35,11 +35,11 @@ internal sealed class BlinkWallAction(
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;
-            var emptyElement = elementList.EmptyId;
+            var emptyElement = elements.EmptyId;
 
             var rayElement = actor.Vector.X == 0
-                ? elementList.BlinkRayVId
-                : elementList.BlinkRayHId;
+                ? elements.BlinkRayVId
+                : elements.BlinkRayHId;
 
             var color = tiles[actor.Location].Color;
             var rayTile = new Tile(rayElement, color);
@@ -62,9 +62,9 @@ internal sealed class BlinkWallAction(
                     Engine.Destroy(target);
                 }
 
-                if (tiles[target].Id == elementList.PlayerId)
+                if (tiles[target].Id == elements.PlayerId)
                 {
-                    var playerIndex = actorList.ActorIndexAt(target);
+                    var playerIndex = actors.ActorIndexAt(target);
                     Vector testVector;
 
                     if (actor.Vector.Y == 0)
@@ -93,7 +93,7 @@ internal sealed class BlinkWallAction(
                         }
                     }
 
-                    if (tiles[target].Id == elementList.PlayerId)
+                    if (tiles[target].Id == elements.PlayerId)
                     {
                         if (playerIndex != 0)
                         {

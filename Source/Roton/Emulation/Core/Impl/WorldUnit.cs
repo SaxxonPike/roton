@@ -11,8 +11,7 @@ public class WorldUnit(
     IHud hud,
     IWorld world,
     IState state,
-    IBoardList boardList,
-    //IFeatures features,
+    IBoardList boards,
     IGameSerializer gameSerializer,
     ITiles tiles,
     IFileSystem fileSystem,
@@ -22,8 +21,8 @@ public class WorldUnit(
     IConfig config,
     IAlerts alerts,
     IFacts facts,
-    IElementList elementList,
-    IActorList actorList)
+    IElementList elements,
+    IActorList actors)
     : IWorldUnit
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -66,10 +65,10 @@ public class WorldUnit(
                 .Select(_ => new PackedBoard(gameSerializer.LoadBoardData(stream)))
                 .ToList();
 
-            boardList.Clear();
+            boards.Clear();
 
             foreach (var rawBoard in newBoards)
-                boardList.Add(rawBoard);
+                boards.Add(rawBoard);
         }
 
         hud.CreateStatusWorld();
@@ -103,7 +102,7 @@ public class WorldUnit(
         // Write common world header.
 
         var type = (short)world.WorldType;
-        var numBoards = (short)(boardList.Count - 1);
+        var numBoards = (short)(boards.Count - 1);
 
         writer.Write(type);
         writer.Write(numBoards);
@@ -114,7 +113,7 @@ public class WorldUnit(
 
         // Write each packed board.
 
-        foreach (var item in boardList)
+        foreach (var item in boards)
             gameSerializer.SaveBoardData(stream, item.Data);
 
         stream.Flush();
@@ -129,7 +128,7 @@ public class WorldUnit(
     public void ClearWorld()
     {
         state.BoardCount = 0;
-        boardList.Clear();
+        boards.Clear();
 
         if (config.NoPesterMode)
             alerts.SetAll();
@@ -137,7 +136,7 @@ public class WorldUnit(
             alerts.Reset();
 
         ClearBoard();
-        boardList.Add(new PackedBoard(gameSerializer.PackBoard(tiles)));
+        boards.Add(new PackedBoard(gameSerializer.PackBoard(tiles)));
         world.BoardIndex = 0;
         world.Ammo = facts.DefaultAmmo;
         world.Gems = facts.DefaultGems;
@@ -166,8 +165,8 @@ public class WorldUnit(
         state.StartBoard = world.BoardIndex;
         SetBoard(0);
 
-        var element = elementList[state.PlayerElement];
-        tiles[actorList.Player.Location] = new Tile(element.Id, element.Color);
+        var element = elements[state.PlayerElement];
+        tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
 
         hud.FadeBoard(facts.FadeTile);
         hud.RedrawBoard();
@@ -197,30 +196,30 @@ public class WorldUnit(
     private void PackBoard(int boardIndex, IPackedBoard packed)
     {
         // bit of a hack to make sure we don't go out of bounds
-        while (boardList.Count <= boardIndex)
-            boardList.Add(new PackedBoard([]));
+        while (boards.Count <= boardIndex)
+            boards.Add(new PackedBoard([]));
 
-        state.BoardCount = boardList.Count - 1;
-        boardList[world.BoardIndex] = packed;
+        state.BoardCount = boards.Count - 1;
+        boards[world.BoardIndex] = packed;
     }
 
     public void UnpackBoard(int boardIndex)
     {
-        gameSerializer.UnpackBoard(tiles, boardList[boardIndex].Data);
+        gameSerializer.UnpackBoard(tiles, boards[boardIndex].Data);
         world.BoardIndex = boardIndex;
     }
 
     public void SetBoard(int boardIndex)
     {
-        var element = elementList.Player();
-        tiles[actorList.Player.Location] = new Tile(element.Id, element.Color);
+        var element = elements.Player();
+        tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
         PackBoard();
         UnpackBoard(boardIndex);
     }
 
     public void ClearBoard()
     {
-        var emptyId = elementList.EmptyId;
+        var emptyId = elements.EmptyId;
         var boardEdgeId = state.EdgeTile.Id;
         var boardBorderId = state.BorderTile.Id;
         var boardBorderColor = state.BorderTile.Color;
@@ -269,14 +268,14 @@ public class WorldUnit(
         }
 
         // generate player actor
-        var element = elementList.Player();
+        var element = elements.Player();
         state.ActorCount = 0;
-        actorList.Player.Location = new Location(tiles.Width / 2, tiles.Height / 2);
-        tiles[actorList.Player.Location] = new Tile(element.Id, element.Color);
-        actorList.Player.Cycle = 1;
-        actorList.Player.UnderTile = new Tile(0, 0);
-        actorList.Player.Pointer = 0;
-        actorList.Player.Length = 0;
+        actors.Player.Location = new Location(tiles.Width / 2, tiles.Height / 2);
+        tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
+        actors.Player.Cycle = 1;
+        actors.Player.UnderTile = new Tile(0, 0);
+        actors.Player.Pointer = 0;
+        actors.Player.Length = 0;
     }
 
     private string? ShowLoad(string title, string extension)

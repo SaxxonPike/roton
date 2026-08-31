@@ -6,13 +6,13 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
 internal sealed class PusherDraw(
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles) 
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        var actor = actorList.ActorAt(location);
+        var actor = actors.ActorAt(location);
         return actor.Vector.X switch
         {
             1 => new AnsiChar(0x10, tiles[location].Color),

@@ -8,7 +8,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original, 0x24)]
 internal sealed class OriginalObjectAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
     IFacts facts,
     IBroadcaster broadcaster,
@@ -19,7 +19,7 @@ internal sealed class OriginalObjectAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.Instruction >= 0)
         {
             Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");

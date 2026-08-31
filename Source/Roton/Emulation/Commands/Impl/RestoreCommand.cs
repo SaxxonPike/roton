@@ -9,7 +9,7 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "RESTORE")]
 internal sealed class RestoreCommand(
     IParser parser,
-    IActorList actorList,
+    IActorList actors,
     IState state,
     IBroadcaster broadcaster)
     : ICommand
@@ -31,7 +31,7 @@ internal sealed class RestoreCommand(
 
             while (context.Search.Offset >= 0)
             {
-                actorList[context.Search.Index].Code[context.Search.Offset + 1] = ':';
+                actors[context.Search.Index].Code[context.Search.Offset + 1] = ':';
                 var word = state.GetOopWord(wordBuffer);
                 context.Search.Offset = parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
             }

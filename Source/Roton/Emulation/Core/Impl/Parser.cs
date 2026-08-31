@@ -13,20 +13,20 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Parser(
-    IActorList actorList,
+    IActorList actors,
     IState state,
-    IConditionList conditionList,
-    IDirectionList directionList,
-    IItemList itemList,
-    IColorList colorList,
+    IConditionList conditions,
+    IDirectionList directions,
+    IItemList items,
+    IColorList colors,
     IFlags flags,
-    IElementList elementList,
-    ITargetList targetList)
+    IElementList elements,
+    ITargetList targets)
     : IParser
 {
     private ReadOnlySpan<char> GetActorCode(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
         return actor.Code.Slice(0, codeLength);
     }
@@ -73,7 +73,7 @@ internal sealed class Parser(
 
     public char ReadByte(int index, ref Word instruction)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var value = '\0';
 
         if (instruction < 0 || instruction >= actor.Length)
@@ -204,7 +204,7 @@ internal sealed class Parser(
             return false;
         }
 
-        var condition = conditionList.Get(name);
+        var condition = conditions.Get(name);
         result = condition?.Execute(ref oopContext, ref instruction) ?? flags.Contains(name);
         return true;
     }
@@ -213,7 +213,7 @@ internal sealed class Parser(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        var direction = directionList.Get(name);
+        var direction = directions.Get(name);
 
         if (direction?.Execute(ref oopContext, ref instruction) is not { } temp)
         {
@@ -229,7 +229,7 @@ internal sealed class Parser(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        result = itemList.Get(name);
+        result = items.Get(name);
         return result != null;
     }
 
@@ -240,13 +240,13 @@ internal sealed class Parser(
         var success = false;
         result = new Tile(0, 0);
 
-        if (colorList.Get(word) is { Value: > 0 } color)
+        if (colors.Get(word) is { Value: > 0 } color)
         {
             result.Color = color.Value;
             word = ReadWord(oopContext.Index, ref instruction, buffer);
         }
 
-        var elementId = elementList.IndexOf(word);
+        var elementId = elements.IndexOf(word);
         if (elementId >= 0)
         {
             success = true;
@@ -259,7 +259,7 @@ internal sealed class Parser(
     public bool TryEvalTarget(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
         context.Index++;
-        var target = targetList.Get(term) ?? targetList.Get(string.Empty);
+        var target = targets.Get(term) ?? targets.Get(string.Empty);
         return target?.Execute(index, ref context, term) ?? false;
     }
 }

@@ -10,7 +10,7 @@ namespace Roton.Emulation.Commands.Impl;
 internal sealed class ZapCommand(
     IParser parser,
     IState state,
-    IActorList actorList,
+    IActorList actors,
     IBroadcaster broadcaster)
     : ICommand
 {
@@ -28,7 +28,7 @@ internal sealed class ZapCommand(
             if (!result)
                 break;
 
-            actorList[context.Search.Index].Code[context.Search.Offset + 1] = '\'';
+            actors[context.Search.Index].Code[context.Search.Offset + 1] = '\'';
         }
     }
 }

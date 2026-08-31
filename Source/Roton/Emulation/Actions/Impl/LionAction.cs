@@ -11,10 +11,10 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super, 0x29)]
 internal sealed class LionAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IMover mover)
     : IAction
 {
@@ -22,7 +22,7 @@ internal sealed class LionAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         var vector = actor.P1 >= randomizer.GetNext(10)
             ? Engine.Seek(actor.Location)
@@ -34,7 +34,7 @@ internal sealed class LionAction(
         {
             mover.MoveActor(index, target);
         }
-        else if (element.Id == elementList.PlayerId)
+        else if (element.Id == elements.PlayerId)
         {
             Engine.Attack(index, target);
         }

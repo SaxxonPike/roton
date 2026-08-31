@@ -17,10 +17,10 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class Engine : IEngine, IDisposable
 {
     private readonly IClock _clock;
-    private readonly IActorList _actorList;
+    private readonly IActorList _actors;
     private readonly IAlerts _alerts;
     private readonly IBoard _board;
-    private readonly IElementList _elementList;
+    private readonly IElementList _elements;
     private readonly IInterpreter _interpreter;
     private readonly IRandomizer _randomizer;
     private readonly IKeyboard _keyboard;
@@ -36,7 +36,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IWorld _world;
     private readonly IBoardList _boardList;
     private readonly IActionList _actionList;
-    private readonly IInteractionList _interactionList;
+    private readonly IInteractionList _interactions;
     private readonly IFacts _facts;
     private readonly ICodeHeap _heap;
     private readonly IAnsiKeyTransformer _ansiKeyTransformer;
@@ -64,14 +64,14 @@ internal sealed class Engine : IEngine, IDisposable
     private bool _step;
     private JoystickButtons _lastButtons;
 
-    public Engine(IClock clock, IActorList actorList, IAlerts alerts, IBoard board,
-        IElementList elementList,
+    public Engine(IClock clock, IActorList actors, IAlerts alerts, IBoard board,
+        IElementList elements,
         IInterpreter interpreter, IRandomizer randomizer, IKeyboard keyboard,
         ITiles tiles, ISounds sounds, ITimers timers, IParser parser,
         IConfig config, ICheatList cheats,
         IFeatures features, IHud hud, IState state,
         IWorld world, IBoardList boardList, IActionList actionList,
-        IDrawList drawList, IInteractionList interactionList, IFacts facts,
+        IInteractionList interactions, IFacts facts,
         ICodeHeap heap, IAnsiKeyTransformer ansiKeyTransformer,
         ISpeaker speaker, IObjectMover objectMover,
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
@@ -84,10 +84,10 @@ internal sealed class Engine : IEngine, IDisposable
         engineAccessor.Instance = this;
 
         _clock = clock;
-        _actorList = actorList;
+        _actors = actors;
         _alerts = alerts;
         _board = board;
-        _elementList = elementList;
+        _elements = elements;
         _interpreter = interpreter;
         _randomizer = randomizer;
         _keyboard = keyboard;
@@ -103,7 +103,7 @@ internal sealed class Engine : IEngine, IDisposable
         _world = world;
         _boardList = boardList;
         _actionList = actionList;
-        _interactionList = interactionList;
+        _interactions = interactions;
         _facts = facts;
         _heap = heap;
         _ansiKeyTransformer = ansiKeyTransformer;
@@ -191,9 +191,9 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (index > 0 && index <= _state.ActIndex) _state.ActIndex--;
 
-        if (_tiles[location].Id == _elementList.PlayerId && _world.EnergyCycles > 0)
+        if (_tiles[location].Id == _elements.PlayerId && _world.EnergyCycles > 0)
         {
-            _world.Score += ElementAt(_actorList[index].Location).Points;
+            _world.Score += ElementAt(_actors[index].Location).Points;
             _hud.UpdateStatus();
         }
         else
@@ -205,18 +205,18 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void Destroy(Location location)
     {
-        var index = _actorList.ActorIndexAt(location);
+        var index = _actors.ActorIndexAt(location);
         if (index == -1)
             _features.RemoveItem(location);
         else
             Harm(index);
     }
 
-    public IElement ElementAt(Location location) => _elementList[_tiles[location].Id];
+    public IElement ElementAt(Location location) => _elements[_tiles[location].Id];
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext(_actorList)
+        var context = new OopContext(_actors)
         {
             Index = index,
             Name = name,
@@ -345,7 +345,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void Harm(int index)
     {
-        var actor = _actorList[index];
+        var actor = _actors[index];
         if (index == 0)
         {
             if (_world.Health > 0)
@@ -380,9 +380,9 @@ internal sealed class Engine : IEngine, IDisposable
         else
         {
             var element = _tiles[actor.Location].Id;
-            if (element == _elementList.BulletId)
+            if (element == _elements.BulletId)
                 _soundUnit.PlaySound(3, _sounds.BulletDie);
-            else if (element != _elementList.ObjectId) _soundUnit.PlaySound(3, _sounds.EnemyDie);
+            else if (element != _elements.ObjectId) _soundUnit.PlaySound(3, _sounds.EnemyDie);
 
             RemoveActor(index);
         }
@@ -402,10 +402,10 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void PlotTile(Location location, Tile tile)
     {
-        if (ElementAt(location).Id == _elementList.PlayerId)
+        if (ElementAt(location).Id == _elements.PlayerId)
             return;
 
-        var targetElement = _elementList[tile.Id];
+        var targetElement = _elements[tile.Id];
         ref var existingTile = ref _tiles[location];
         var targetColor = tile.Color;
         if (targetElement.Color >= 0xF0)
@@ -458,7 +458,7 @@ internal sealed class Engine : IEngine, IDisposable
         _messenger.SetMessage(_facts.LongMessageDuration, _alerts.ErrorMessage(error));
         _soundUnit.PlaySound(5, _sounds.Error);
         _tracer.TraceError(ref context, error);
-        _actorList[context.Index].Instruction = -1;
+        _actors[context.Index].Instruction = -1;
     }
 
     public void RemoveActor(int index)
@@ -469,7 +469,7 @@ internal sealed class Engine : IEngine, IDisposable
             return;
         }
 
-        var actor = _actorList[index];
+        var actor = _actors[index];
         var freeCode = actor.Length > 0 && actor.Pointer != 0;
 
         if (index < _state.ActIndex)
@@ -484,7 +484,7 @@ internal sealed class Engine : IEngine, IDisposable
 
         for (var i = 1; i <= _state.ActorCount; i++)
         {
-            var a = _actorList[i];
+            var a = _actors[i];
             if (a.Follower >= index)
             {
                 if (a.Follower == index)
@@ -513,7 +513,7 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (index < _state.ActorCount)
             for (var i = index; i < _state.ActorCount; i++)
-                _actorList[i].CopyFrom(_actorList[i + 1]);
+                _actors[i].CopyFrom(_actors[i + 1]);
 
         _state.ActorCount--;
     }
@@ -537,10 +537,10 @@ internal sealed class Engine : IEngine, IDisposable
     public Vector Seek(Location location)
     {
         var result = new Vector();
-        if (_randomizer.GetNext(2) == 0 || _actorList.Player.Location.Y == location.Y)
-            result.X = (_actorList.Player.Location.X - location.X).Polarity();
+        if (_randomizer.GetNext(2) == 0 || _actors.Player.Location.Y == location.Y)
+            result.X = (_actors.Player.Location.X - location.X).Polarity();
 
-        if (result.X == 0) result.Y = (_actorList.Player.Location.Y - location.Y).Polarity();
+        if (result.X == 0) result.Y = (_actors.Player.Location.Y - location.Y).Polarity();
 
         if (_world.EnergyCycles > 0)
             result = -result;
@@ -569,7 +569,7 @@ internal sealed class Engine : IEngine, IDisposable
         Thread = null;
     }
 
-    public bool TitleScreen => _state.PlayerElement != _elementList.PlayerId;
+    public bool TitleScreen => _state.PlayerElement != _elements.PlayerId;
 
     public void UpdateSound()
     {
@@ -619,7 +619,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     private int ColorMatch(Tile tile)
     {
-        var element = _elementList[tile.Id];
+        var element = _elements[tile.Id];
 
         if (element.Color < 0xF0)
             return element.Color & 7;
@@ -662,10 +662,10 @@ internal sealed class Engine : IEngine, IDisposable
 
     private void InitializeElements(bool showInvisibleTiles)
     {
-        _elementList.Reset();
-        _elementList.Invisible().Character = showInvisibleTiles ? 0xB0 : 0x20;
-        _elementList.Invisible().Color = 0xFF;
-        _elementList.Player().Character = 0x02;
+        _elements.Reset();
+        _elements.Invisible().Character = showInvisibleTiles ? 0xB0 : 0x20;
+        _elements.Invisible().Color = 0xFF;
+        _elements.Player().Character = 0x02;
     }
 
     private void MainLoop(bool doFade)
@@ -687,7 +687,7 @@ internal sealed class Engine : IEngine, IDisposable
             {
                 if (_state.ActIndex <= _state.ActorCount)
                 {
-                    var actorData = _actorList[_state.ActIndex];
+                    var actorData = _actors[_state.ActIndex];
                     if (actorData.Cycle != 0)
                         if (_state.ActIndex % actorData.Cycle == _state.GameCycle % actorData.Cycle)
                             _actionList.Get(_tiles[actorData.Location].Id)?.Act(_state.ActIndex);
@@ -704,15 +704,15 @@ internal sealed class Engine : IEngine, IDisposable
 
                 if (alternating)
                 {
-                    var playerElement = _elementList.Player();
-                    DrawTile(_actorList.Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
+                    var playerElement = _elements.Player();
+                    DrawTile(_actors.Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                 }
                 else
                 {
-                    if (_tiles[_actorList.Player.Location].Id == _elementList.PlayerId)
-                        DrawTile(_actorList.Player.Location, new AnsiChar(0x20, 0x0F));
+                    if (_tiles[_actors.Player.Location].Id == _elements.PlayerId)
+                        DrawTile(_actors.Player.Location, new AnsiChar(0x20, 0x0F));
                     else
-                        _boardUpdater.UpdateBoard(_actorList.Player.Location);
+                        _boardUpdater.UpdateBoard(_actors.Player.Location);
                 }
 
                 _hud.DrawPausing();
@@ -734,28 +734,28 @@ internal sealed class Engine : IEngine, IDisposable
 
                 if (!_state.KeyVector.IsZero())
                 {
-                    var target = _actorList.Player.Location + _state.KeyVector;
-                    _interactionList.Get(ElementAt(target).Id)?.Interact(target, 0, ref _state.KeyVector);
+                    var target = _actors.Player.Location + _state.KeyVector;
+                    _interactions.Get(ElementAt(target).Id)?.Interact(target, 0, ref _state.KeyVector);
                 }
 
                 if (!_state.KeyVector.IsZero())
                 {
-                    var target = _actorList.Player.Location + _state.KeyVector;
+                    var target = _actors.Player.Location + _state.KeyVector;
                     if (ElementAt(target).IsFloor)
                     {
-                        if (_tiles.ElementAt(_actorList.Player.Location).Id == _elementList.PlayerId)
+                        if (_tiles.ElementAt(_actors.Player.Location).Id == _elements.PlayerId)
                         {
                             _mover.MoveActor(0, target);
                         }
                         else
                         {
-                            _boardUpdater.UpdateBoard(_actorList.Player.Location);
-                            _actorList.Player.Location += _state.KeyVector;
+                            _boardUpdater.UpdateBoard(_actors.Player.Location);
+                            _actors.Player.Location += _state.KeyVector;
                             _playerUpdater.CleanUpPauseMovement();
-                            _tiles[_actorList.Player.Location] = new Tile(_elementList.PlayerId, _elementList.Player().Color);
-                            _boardUpdater.UpdateBoard(_actorList.Player.Location);
-                            _radiusUpdater.UpdateRadius(_actorList.Player.Location, RadiusMode.Update);
-                            _radiusUpdater.UpdateRadius(_actorList.Player.Location - _state.KeyVector, RadiusMode.Update);
+                            _tiles[_actors.Player.Location] = new Tile(_elements.PlayerId, _elements.Player().Color);
+                            _boardUpdater.UpdateBoard(_actors.Player.Location);
+                            _radiusUpdater.UpdateRadius(_actors.Player.Location, RadiusMode.Update);
+                            _radiusUpdater.UpdateRadius(_actors.Player.Location - _state.KeyVector, RadiusMode.Update);
                         }
 
                         _state.GamePaused = false;
@@ -795,7 +795,7 @@ internal sealed class Engine : IEngine, IDisposable
             if (_state.BreakGameLoop)
             {
                 _soundUnit.ClearSound();
-                if (_state.PlayerElement == _elementList.PlayerId)
+                if (_state.PlayerElement == _elements.PlayerId)
                 {
                     // This game speed reset isn't here in the original code,
                     // but it solves some issues with game speed when returning
@@ -806,13 +806,13 @@ internal sealed class Engine : IEngine, IDisposable
                     if (_world.Health <= 0)
                         EnterHighScore(_world.Score);
                 }
-                else if (_state.PlayerElement == _elementList.MonitorId)
+                else if (_state.PlayerElement == _elements.MonitorId)
                 {
                     _hud.ClearTitleStatus();
                 }
 
-                var element = _elementList.Player();
-                _tiles[_actorList.Player.Location] = new Tile(element.Id, element.Color);
+                var element = _elements.Player();
+                _tiles[_actors.Player.Location] = new Tile(element.Id, element.Color);
                 _state.GameOver = false;
                 break;
             }
@@ -840,9 +840,9 @@ internal sealed class Engine : IEngine, IDisposable
             _state.Init = false;
         }
 
-        var element = _elementList[_state.PlayerElement];
-        _tiles[_actorList.Player.Location] = new Tile(element.Id, element.Color);
-        if (_state.PlayerElement == _elementList.MonitorId)
+        var element = _elements[_state.PlayerElement];
+        _tiles[_actors.Player.Location] = new Tile(element.Id, element.Color);
+        if (_state.PlayerElement == _elements.MonitorId)
         {
             _messenger.SetMessage(0, new Message());
             _hud.DrawTitleStatus();
@@ -863,7 +863,7 @@ internal sealed class Engine : IEngine, IDisposable
     {
         _worldUnit.SetBoard(_state.StartBoard);
         _features.EnterBoard();
-        _state.PlayerElement = _elementList.PlayerId;
+        _state.PlayerElement = _elements.PlayerId;
         _state.GamePaused = true;
         MainLoop(true);
     }
@@ -895,7 +895,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     private char ReadActorCodeByte(int index, ref Word instruction)
     {
-        var actor = _actorList[index];
+        var actor = _actors[index];
         var value = (char)0;
 
         if (instruction < 0 || instruction >= actor.Length)
@@ -1051,7 +1051,7 @@ internal sealed class Engine : IEngine, IDisposable
             // If on the title screen, Start will begin the game.
             // Otherwise, it will pause the game.
 
-            if (_state.PlayerElement == _elementList.MonitorId)
+            if (_state.PlayerElement == _elements.MonitorId)
                 _state.KeyPressed = _facts.StartGameKey;
             else
                 _state.KeyPressed = EngineKeyCode.P;
@@ -1147,7 +1147,7 @@ internal sealed class Engine : IEngine, IDisposable
 
             while (ThreadActive)
             {
-                _state.PlayerElement = _elementList.MonitorId;
+                _state.PlayerElement = _elements.MonitorId;
                 _state.GamePaused = false;
                 MainLoop(gameEnded);
                 gameEnded = false;

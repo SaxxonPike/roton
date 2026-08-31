@@ -11,7 +11,7 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super, 0x45)]
 internal sealed class BulletAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IElementList elements,
     ITiles tiles,
     ISounds sounds,
@@ -28,7 +28,7 @@ internal sealed class BulletAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var canRicochet = true;
         while (true)
         {
@@ -83,7 +83,7 @@ internal sealed class BulletAction(
             state.ActIndex--;
             if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {
-                broadcaster.BroadcastLabel(-actorList.ActorIndexAt(target), facts.ShotLabel, false);
+                broadcaster.BroadcastLabel(-actors.ActorIndexAt(target), facts.ShotLabel, false);
             }
 
             break;

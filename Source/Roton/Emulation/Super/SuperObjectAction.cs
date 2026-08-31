@@ -8,7 +8,7 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super, 0x24)]
 internal sealed class SuperObjectAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
     IFacts facts,
     IBroadcaster broadcaster,
@@ -20,7 +20,7 @@ internal sealed class SuperObjectAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.P2 == 0 && actor.Instruction >= 0)
         {
             Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");

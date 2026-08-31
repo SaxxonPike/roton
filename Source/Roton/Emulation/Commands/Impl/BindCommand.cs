@@ -8,7 +8,7 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "BIND")]
 [Context(Context.Super, "BIND")]
 internal sealed class BindCommand(
-    IActorList actorList,
+    IActorList actors,
     IParser parser)
     : ICommand
 {
@@ -20,7 +20,7 @@ internal sealed class BindCommand(
         var target = parser.ReadWord(context.Index, ref instruction, buffer);
         if (parser.TryEvalTarget(context.Index, ref search, target))
         {
-            var targetActor = actorList[search.Index];
+            var targetActor = actors[search.Index];
             context.Actor.Pointer = targetActor.Pointer;
             context.Actor.Length = targetActor.Length;
             instruction = 0;

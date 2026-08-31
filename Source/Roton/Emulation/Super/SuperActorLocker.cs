@@ -7,9 +7,9 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 public class SuperActorLocker(
-    IActorList actorList)
+    IActorList actors)
     : ActorLocker
 {
     protected override ref Bool GetLockedRef(int index) =>
-        ref Unsafe.As<HWord, Bool>(ref actorList[index].P3);
+        ref Unsafe.As<HWord, Bool>(ref actors[index].P3);
 }

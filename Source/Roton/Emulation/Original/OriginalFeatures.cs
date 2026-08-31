@@ -8,7 +8,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalFeatures(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IAlerts alerts,
     IBoard board,
     IWorld world,
@@ -29,7 +29,7 @@ internal sealed class OriginalFeatures(
     public void EnterBoard()
     {
         boardTime.Reset();
-        board.Entrance = actorList.Player.Location;
+        board.Entrance = actors.Player.Location;
         if (board.IsDark && alerts.Dark)
         {
             messenger.SetMessage(facts.LongMessageDuration, alerts.DarkMessage);

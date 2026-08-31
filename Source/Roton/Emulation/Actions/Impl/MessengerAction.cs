@@ -12,7 +12,7 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super, 0x02)]
 internal sealed class MessengerAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IHud hud,
     IFeatures features,
     IState state)
@@ -22,7 +22,7 @@ internal sealed class MessengerAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.Location.X == 0)
         {
             hud.DrawMessage(new Message(features.GetMessageLines()), actor.P2 % 7 + 9);

@@ -8,8 +8,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 internal sealed class SuperFeatures(
     IEngineAccessor engine,
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     ITiles tiles,
     IFacts facts,
     IBoard board,
@@ -26,7 +26,7 @@ internal sealed class SuperFeatures(
 
     public void RemoveItem(Location location)
     {
-        var result = new Tile(elementList.FloorId, 0x00);
+        var result = new Tile(elements.FloorId, 0x00);
 
         for (var i = 0; i < 4; i++)
         {
@@ -34,26 +34,26 @@ internal sealed class SuperFeatures(
             var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
             var adjacentTile = tiles[targetLocation];
 
-            if (elementList[adjacentTile.Id].Cycle >= 0)
-                adjacentTile = actorList.ActorAt(targetLocation).UnderTile;
+            if (elements[adjacentTile.Id].Cycle >= 0)
+                adjacentTile = actors.ActorAt(targetLocation).UnderTile;
 
             var adjacentElement = adjacentTile.Id;
 
-            if (adjacentElement == elementList.EmptyId ||
-                adjacentElement == elementList.SliderEwId ||
-                adjacentElement == elementList.SliderNsId ||
-                adjacentElement == elementList.BoulderId)
+            if (adjacentElement == elements.EmptyId ||
+                adjacentElement == elements.SliderEwId ||
+                adjacentElement == elements.SliderNsId ||
+                adjacentElement == elements.BoulderId)
             {
                 result.Color = 0;
                 break;
             }
 
-            if (adjacentElement == elementList.FloorId)
+            if (adjacentElement == elements.FloorId)
                 result.Color = adjacentTile.Color;
         }
 
         if (result.Color == 0)
-            tiles[location].Id = elementList.EmptyId;
+            tiles[location].Id = elements.EmptyId;
         else
             tiles[location] = result;
 
@@ -64,7 +64,7 @@ internal sealed class SuperFeatures(
     {
         boardTime.Reset();
         broadcaster.BroadcastLabel(0, facts.EnterLabel, false);
-        board.Entrance = actorList.Player.Location;
+        board.Entrance = actors.Player.Location;
         hud.UpdateCamera();
         world.TimePassed = 0;
         hud.UpdateStatus();
@@ -113,7 +113,7 @@ internal sealed class SuperFeatures(
 
     public void ClearForest(Location location)
     {
-        tiles[location] = new Tile(elementList.FloorId, 0x02);
+        tiles[location] = new Tile(elements.FloorId, 0x02);
     }
 
     public void CleanUpOop(ref OopContext context)
@@ -130,13 +130,13 @@ internal sealed class SuperFeatures(
     private bool TestAdjacent(Location location, int id)
     {
         var eId = tiles[location].Id;
-        if (eId == id || eId == elementList.BoardEdgeId)
+        if (eId == id || eId == elements.BoardEdgeId)
             return true;
 
         if (tiles.ElementAt(location).Cycle >= 0)
         {
-            eId = actorList.ActorAt(location).UnderTile.Id;
-            if (eId == id || eId == elementList.BoardEdgeId)
+            eId = actors.ActorAt(location).UnderTile.Id;
+            if (eId == id || eId == elements.BoardEdgeId)
                 return true;
         }
 

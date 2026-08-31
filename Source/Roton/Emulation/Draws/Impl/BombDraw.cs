@@ -7,12 +7,12 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super, 0x0D)]
 internal sealed class BombDraw(
     ITiles tiles,
-    IActorList actorList)
+    IActorList actors)
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        var p1 = actorList.ActorAt(location).P1;
+        var p1 = actors.ActorAt(location).P1;
         return new AnsiChar(p1 > 1 ? 0x30 + p1 : 0x0B, tiles[location].Color);
     }
 }

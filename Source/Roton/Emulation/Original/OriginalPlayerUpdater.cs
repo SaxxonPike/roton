@@ -6,8 +6,8 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalPlayerUpdater(
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     IFacts facts,
     ITiles tiles,
     IBoardUpdater boardUpdater)
@@ -15,8 +15,8 @@ internal sealed class OriginalPlayerUpdater(
 {
     public void ForcePlayerColor(int index)
     {
-        var actor = actorList[index];
-        var playerElement = elementList.Player();
+        var actor = actors[index];
+        var playerElement = elements.Player();
         if (tiles[actor.Location].Color == playerElement.Color &&
             playerElement.Character == facts.PlayerCharacter)
             return;
@@ -32,5 +32,5 @@ internal sealed class OriginalPlayerUpdater(
     }
 
     public void CleanUpPassageMovement() =>
-        tiles[actorList.Player.Location] = new Tile(elementList.EmptyId, 0);
+        tiles[actors.Player.Location] = new Tile(elements.EmptyId, 0);
 }

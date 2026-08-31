@@ -7,9 +7,9 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 public class OriginalActorLocker(
-    IActorList actorList)
+    IActorList actors)
     : ActorLocker
 {
     protected override ref Bool GetLockedRef(int index) =>
-        ref Unsafe.As<HWord, Bool>(ref actorList[index].P2);
+        ref Unsafe.As<HWord, Bool>(ref actors[index].P2);
 }

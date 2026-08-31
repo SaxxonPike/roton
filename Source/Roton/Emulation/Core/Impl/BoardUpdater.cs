@@ -9,8 +9,8 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class BoardUpdater(
     IDrawList drawList,
-    IElementList elementList,
-    IActorList actorList,
+    IElementList elements,
+    IActorList actors,
     IFacts facts,
     IBoard board,
     IWorld world,
@@ -30,15 +30,15 @@ internal sealed class BoardUpdater(
     public AnsiChar Draw(Location location)
     {
         if (board.IsDark && !_tiles.ElementAt(location).IsAlwaysVisible &&
-            (world.TorchCycles <= 0 || Distance(actorList.Player.Location, location) >= facts.TorchRadius) &&
+            (world.TorchCycles <= 0 || Distance(actors.Player.Location, location) >= facts.TorchRadius) &&
             !state.EditorMode)
             return facts.DarknessTile;
 
         ref var tile = ref _tiles[location];
-        var element = elementList[tile.Id];
-        var elementCount = elementList.Count;
+        var element = elements[tile.Id];
+        var elementCount = elements.Count;
 
-        if (tile.Id == elementList.EmptyId)
+        if (tile.Id == elements.EmptyId)
             return facts.EmptyTile;
 
         if (element.HasDrawCode)

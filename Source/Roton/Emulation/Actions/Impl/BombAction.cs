@@ -12,7 +12,7 @@ namespace Roton.Emulation.Actions.Impl;
 internal sealed class BombAction(
     IEngineAccessor engine,
     ISounds sounds,
-    IActorList actorList,
+    IActorList actors,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater)
@@ -22,7 +22,7 @@ internal sealed class BombAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.P1 <= 0)
             return;
 

@@ -9,19 +9,19 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x2D)]
 [Context(Context.Super, 0x2D)]
 internal sealed class CentipedeSegmentAction(
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements)
     : IAction
 {
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.Leader < 0)
         {
             if (actor.Leader < -1)
             {
-                tiles[actor.Location].Id = elementList.HeadId;
+                tiles[actor.Location].Id = elements.HeadId;
             }
             else
             {

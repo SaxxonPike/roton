@@ -11,7 +11,7 @@ internal sealed class BombInteraction(
     IAlerts alerts,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IActorList actorList,
+    IActorList actors,
     IBoardUpdater boardUpdater,
     IPusher pusher,
     IMessenger messenger)
@@ -19,7 +19,7 @@ internal sealed class BombInteraction(
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var actor = actorList.ActorAt(location);
+        var actor = actors.ActorAt(location);
         if (actor.P1 == 0)
         {
             actor.P1 = (byte)facts.BombCountdownStart;

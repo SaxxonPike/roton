@@ -9,7 +9,7 @@ namespace Roton.Emulation.Actions.Impl;
 /// </summary>
 [Context(Context.Super, 0x40)]
 internal sealed class StoneAction(
-    IActorList actorList,
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
     IBoardUpdater boardUpdater)
@@ -17,8 +17,8 @@ internal sealed class StoneAction(
 {
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         tiles[actor.Location].Color = (tiles[actor.Location].Color & 0x70) + randomizer.GetNext(7) + 9;
-        boardUpdater.UpdateBoard(actorList[index].Location);
+        boardUpdater.UpdateBoard(actors[index].Location);
     }
 }

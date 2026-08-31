@@ -8,9 +8,9 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Conveyor(
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IState state,
-    IActorList actorList,
+    IActorList actors,
     IBoardUpdater boardUpdater,
     IMover mover)
     : IConveyor
@@ -41,8 +41,8 @@ internal sealed class Conveyor(
         for (var i = beginIndex; i != endIndex; i += direction)
         {
             surrounding[i] = _tiles[center + GetConveyorVector(i)];
-            var element = elementList[surrounding[i].Id];
-            if (element.Id == elementList.EmptyId)
+            var element = elements[surrounding[i].Id];
+            if (element.Id == elements.EmptyId)
                 pushable = true;
             else if (!element.IsPushable)
                 pushable = false;
@@ -50,7 +50,7 @@ internal sealed class Conveyor(
 
         for (var i = beginIndex; i != endIndex; i += direction)
         {
-            var element = elementList[surrounding[i].Id];
+            var element = elements[surrounding[i].Id];
 
             if (pushable)
             {
@@ -61,9 +61,9 @@ internal sealed class Conveyor(
                     if (element.Cycle > -1)
                     {
                         ref var tile = ref _tiles[source];
-                        var index = actorList.ActorIndexAt(source);
+                        var index = actors.ActorIndexAt(source);
                         _tiles[source] = surrounding[i];
-                        _tiles[target].Id = elementList.EmptyId;
+                        _tiles[target].Id = elements.EmptyId;
                         mover.MoveActor(index, target);
                         _tiles[source] = tile;
                     }
@@ -73,9 +73,9 @@ internal sealed class Conveyor(
                         boardUpdater.UpdateBoard(target);
                     }
 
-                    if (!elementList[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
+                    if (!elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
                     {
-                        _tiles[source].Id = elementList.EmptyId;
+                        _tiles[source].Id = elements.EmptyId;
                         boardUpdater.UpdateBoard(source);
                     }
                 }
@@ -86,7 +86,7 @@ internal sealed class Conveyor(
             }
             else
             {
-                if (element.Id == elementList.EmptyId)
+                if (element.Id == elements.EmptyId)
                     pushable = true;
             }
         }

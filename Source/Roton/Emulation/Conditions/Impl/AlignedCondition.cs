@@ -6,12 +6,12 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Original, "ALLIGNED")]
 [Context(Context.Super, "ALLIGNED")]
 internal sealed class AlignedCondition(
-    IActorList actorList)
+    IActorList actors)
     : ICondition
 {
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        return context.Actor.Location.X == actorList.Player.Location.X ||
-               context.Actor.Location.Y == actorList.Player.Location.Y;
+        return context.Actor.Location.X == actors.Player.Location.X ||
+               context.Actor.Location.Y == actors.Player.Location.Y;
     }
 }

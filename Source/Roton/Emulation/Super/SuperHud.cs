@@ -19,10 +19,10 @@ internal sealed class SuperHud(
     IFadeMatrix fadeMatrix,
     IState state,
     IBoard board,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
     IWorld world,
-    IElementList elementList,
+    IElementList elements,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
     IScheduler scheduler)
@@ -220,8 +220,8 @@ internal sealed class SuperHud(
 
     private void UpdateCameraPosition()
     {
-        var cameraX = actorList.Player.Location.X - WindowWidth / 2;
-        var cameraY = actorList.Player.Location.Y - WindowHeight / 2;
+        var cameraX = actors.Player.Location.X - WindowWidth / 2;
+        var cameraY = actors.Player.Location.Y - WindowHeight / 2;
 
         board.Camera = new Location16(
             Math.Max(Math.Min(cameraX, tiles.Width - WindowWidth + 1), 1),
@@ -249,7 +249,7 @@ internal sealed class SuperHud(
         var maxCameraX = tiles.Width - WindowWidth + 1;
         var maxCameraY = tiles.Height - WindowHeight + 1;
 
-        var player = actorList.Player.Location;
+        var player = actors.Player.Location;
         var newCamera = new Location16(board.Camera.X, board.Camera.Y);
         var redrawRequired = false;
 
@@ -402,7 +402,7 @@ internal sealed class SuperHud(
 
         for (var i = 0; i < 7; i++)
         {
-            var keyChar = world.Keys[i] ? (byte)elementList.Key().Character : 0x20;
+            var keyChar = world.Keys[i] ? (byte)elements.Key().Character : 0x20;
             var x = i & 0x3;
             var y = i >> 2;
             DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));

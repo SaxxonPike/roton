@@ -12,8 +12,8 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super, 0x22)]
 internal sealed class BearAction(
     IEngineAccessor engine,
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     ITiles tiles,
     IMover mover) 
     : IAction
@@ -22,20 +22,20 @@ internal sealed class BearAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         Vector vector;
 
-        if (actorList.Player.Location.X == actor.Location.X ||
-            8 - actor.P1 < actorList.Player.Location.Y.AbsDiff(actor.Location.Y))
+        if (actors.Player.Location.X == actor.Location.X ||
+            8 - actor.P1 < actors.Player.Location.Y.AbsDiff(actor.Location.Y))
         {
             vector = new Vector(0,
-                8 - actor.P1 < actorList.Player.Location.X.AbsDiff(actor.Location.X)
+                8 - actor.P1 < actors.Player.Location.X.AbsDiff(actor.Location.X)
                     ? 0
-                    : (actorList.Player.Location.Y - actor.Location.Y).Polarity());
+                    : (actors.Player.Location.Y - actor.Location.Y).Polarity());
         }
         else
         {
-            vector = new Vector((actorList.Player.Location.X - actor.Location.X).Polarity(), 0);
+            vector = new Vector((actors.Player.Location.X - actor.Location.X).Polarity(), 0);
         }
 
         var target = actor.Location + vector;
@@ -43,7 +43,7 @@ internal sealed class BearAction(
 
         if (targetElement.IsFloor)
             mover.MoveActor(index, target);
-        else if (targetElement.Id == elementList.PlayerId || targetElement.Id == elementList.BreakableId) 
+        else if (targetElement.Id == elements.PlayerId || targetElement.Id == elements.BreakableId) 
             Engine.Attack(index, target);
     }
 }

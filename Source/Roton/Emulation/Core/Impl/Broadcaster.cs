@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Broadcaster(
     ITracer tracer,
-    IActorList actorList,
+    IActorList actors,
     IParser parser,
     IFacts facts,
     IActorLocker actorLocker,
@@ -42,7 +42,7 @@ internal sealed class Broadcaster(
                 success = true;
 
             tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
-            actorList[info.Index].Instruction = info.Offset;
+            actors[info.Index].Instruction = info.Offset;
             actorNotifier.NotifyActorSentLabel(info.Index);
         }
 

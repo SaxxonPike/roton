@@ -9,12 +9,12 @@ namespace Roton.Emulation.Actions.Impl;
 /// </summary>
 [Context(Context.Super, 0x3C)]
 internal sealed class DragonPupAction(
-    IActorList actorList,
+    IActorList actors,
     IBoardUpdater boardUpdater) 
     : IAction
 {
     public void Act(int index)
     {
-        boardUpdater.UpdateBoard(actorList[index].Location);
+        boardUpdater.UpdateBoard(actors[index].Location);
     }
 }
