@@ -15,7 +15,8 @@ internal sealed class SpinningGunAction(
     IActorList actors,
     IRandomizer randomizer,
     IElementList elements,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    ISpawner spawner)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -38,19 +39,19 @@ internal sealed class SpinningGunAction(
         {
             if (actor.Location.X.AbsDiff(actors.Player.Location.X) <= 2)
             {
-                shot = Engine.SpawnProjectile(firingElement, actor.Location,
+                shot = spawner.SpawnProjectile(firingElement, actor.Location,
                     new Vector(0, (actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
             }
 
             if (!shot && actor.Location.Y.AbsDiff(actors.Player.Location.Y) <= 2)
             {
-                Engine.SpawnProjectile(firingElement, actor.Location,
+                spawner.SpawnProjectile(firingElement, actor.Location,
                     new Vector((actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
             }
         }
         else
         {
-            Engine.SpawnProjectile(firingElement, actor.Location, Engine.Rnd(), true);
+            spawner.SpawnProjectile(firingElement, actor.Location, Engine.Rnd(), true);
         }
     }
 }

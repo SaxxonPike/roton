@@ -7,19 +7,17 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "THROWSTAR")]
 [Context(Context.Super, "THROWSTAR")]
 internal sealed class ThrowStarCommand(
-    IEngineAccessor engine,
     IParser parser,
-    IElementList elementList)
+    IElementList elementList,
+    ISpawner spawner)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         if (parser.TryEvalDirection(ref context, ref instruction, out var vec))
         {
             var projectile = elementList.Star();
-            Engine.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
+            spawner.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
         }
 
         context.Moved = true;

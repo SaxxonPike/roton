@@ -56,6 +56,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IParser Parser { get; private set; } = null!;
     protected IActor Player => Actors[0];
     protected IRandomizer Random { get; private set; } = null!;
+    protected ISpawner Spawner { get; private set; } = null!;
     protected ISounds Sounds { get; private set; } = null!;
     protected IState State { get; private set; } = null!;
     protected ITargetList Targets { get; private set; } = null!;
@@ -181,6 +182,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Parser = container.GetRequiredService<IParser>();
         Random = container.GetRequiredService<IRandomizer>();
         Sounds = container.GetRequiredService<ISounds>();
+        Spawner = container.GetRequiredService<ISpawner>();
         State = container.GetRequiredService<IState>();
         Targets = container.GetRequiredService<ITargetList>();
         Tiles = container.GetRequiredService<ITiles>();
@@ -214,7 +216,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
-        Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? Elements[id].Color), Elements[id].Cycle,
+        Spawner.SpawnActor(new Location(x, y), new Tile(id, color ?? Elements[id].Color), Elements[id].Cycle,
             State.DefaultActor);
         return ActorIndexAt(x, y);
     }

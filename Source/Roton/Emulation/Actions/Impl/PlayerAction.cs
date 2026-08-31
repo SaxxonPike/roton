@@ -31,7 +31,8 @@ internal sealed class PlayerAction(
     IWorldUnit worldUnit,
     IFeatures features,
     IBoardUpdater boardUpdater,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    ISpawner spawner)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -95,7 +96,7 @@ internal sealed class PlayerAction(
 
                     if (bulletCount < board.MaximumShots)
                     {
-                        if (Engine.SpawnProjectile(elements.BulletId, actor.Location, state.KeyVector, false))
+                        if (spawner.SpawnProjectile(elements.BulletId, actor.Location, state.KeyVector, false))
                         {
                             world.Ammo--;
                             hud.UpdateStatus();

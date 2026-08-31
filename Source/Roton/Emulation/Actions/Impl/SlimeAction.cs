@@ -15,7 +15,8 @@ internal sealed class SlimeAction(
     ITiles tiles,
     IElementList elements,
     IState state,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    ISpawner spawner)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -49,7 +50,7 @@ internal sealed class SlimeAction(
                 }
                 else
                 {
-                    Engine.SpawnActor(target, new Tile(elements.SlimeId, color), slimeElement.Cycle, null);
+                    spawner.SpawnActor(target, new Tile(elements.SlimeId, color), slimeElement.Cycle, null);
                     actors[state.ActorCount].P2 = actor.P2;
                 }
 

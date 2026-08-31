@@ -11,37 +11,35 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x2A)]
 [Context(Context.Super, 0x2A)]
 internal sealed class TigerAction(
-    IEngineAccessor engine,
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     IRandomizer randomizer,
-    IActionList actionList)
+    IActionList actions,
+    ISpawner spawner)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var firingElement = elementList.BulletId;
+        var actor = actors[index];
+        var firingElement = elements.BulletId;
 
-        if (actor.P2 >= 0x80) 
-            firingElement = elementList.StarId;
+        if (actor.P2 >= 0x80)
+            firingElement = elements.StarId;
 
         if ((actor.P2 & 0x7F) > 3 * randomizer.GetNext(10))
         {
-            var shot = actor.Location.X.AbsDiff(actorList.Player.Location.X) <= 2 &&
-                       Engine.SpawnProjectile(firingElement, actor.Location,
-                           new Vector(0, (actorList.Player.Location.Y - actor.Location.Y).Polarity()), true);
+            var shot = actor.Location.X.AbsDiff(actors.Player.Location.X) <= 2 &&
+                       spawner.SpawnProjectile(firingElement, actor.Location,
+                           new Vector(0, (actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
 
-            if (!shot && actor.Location.Y.AbsDiff(actorList.Player.Location.Y) <= 2)
+            if (!shot && actor.Location.Y.AbsDiff(actors.Player.Location.Y) <= 2)
             {
-                Engine.SpawnProjectile(firingElement, actor.Location,
-                    new Vector((actorList.Player.Location.X - actor.Location.X).Polarity(), 0), true);
+                spawner.SpawnProjectile(firingElement, actor.Location,
+                    new Vector((actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
             }
         }
 
         // Proceed to lion code.
-        actionList.Get(elementList.LionId)?.Act(index);
+        actions.Get(elements.LionId)?.Act(index);
     }
 }

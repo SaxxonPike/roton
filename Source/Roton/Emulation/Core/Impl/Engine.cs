@@ -56,6 +56,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IRadiusUpdater _radiusUpdater;
     private readonly IPusher _pusher;
     private readonly IMessageHandler _messageHandler;
+    private readonly ISpawner _spawner;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -76,7 +77,8 @@ internal sealed class Engine : IEngine, IDisposable
         IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
-        IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler)
+        IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
+        ISpawner spawner)
     {
         engineAccessor.Instance = this;
 
@@ -120,6 +122,7 @@ internal sealed class Engine : IEngine, IDisposable
         _radiusUpdater = radiusUpdater;
         _pusher = pusher;
         _messageHandler = messageHandler;
+        _spawner = spawner;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -551,7 +554,7 @@ internal sealed class Engine : IEngine, IDisposable
             if (targetElement.Cycle < 0)
                 existingTile = new Tile(targetElement.Id, targetColor);
             else
-                SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
+                _spawner.SpawnActor(location, new Tile(targetElement.Id, targetColor), targetElement.Cycle,
                     _state.DefaultActor);
         }
 
@@ -684,76 +687,10 @@ internal sealed class Engine : IEngine, IDisposable
         var topMessage = message.Text[0];
         var bottomMessage = message.Text.Count > 1 ? message.Text[1] : string.Empty;
 
-        SpawnActor(new Location(0, 0), new Tile(_elementList.MessengerId, 0), 1, _state.DefaultActor);
+        _spawner.SpawnActor(new Location(0, 0), new Tile(_elementList.MessengerId, 0), 1, _state.DefaultActor);
         _actorList[_state.ActorCount].P2 = unchecked((byte)(duration / (_state.GameWaitTime + 1)));
         _state.Message = topMessage;
         _state.Message2 = bottomMessage;
-    }
-
-    public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
-    {
-        // must reserve one actor for player, and one for messenger
-        if (_state.ActorCount < _actorList.Capacity - 2)
-        {
-            _state.ActorCount++;
-            var actor = _actorList[_state.ActorCount];
-
-            source ??= _state.DefaultActor;
-
-            actor.CopyFrom(source);
-            actor.Location = location;
-            actor.Cycle = cycle;
-            actor.UnderTile = _tiles[location];
-            actor.Instruction = 0;
-
-            if (ElementAt(actor.Location).IsEditorFloor)
-            {
-                var newColor = _tiles[actor.Location].Color & 0x70;
-                newColor |= tile.Color & 0x0F;
-                _tiles[actor.Location].Color = newColor;
-            }
-            else
-            {
-                _tiles[actor.Location].Color = tile.Color;
-            }
-
-            _tiles[actor.Location].Id = tile.Id;
-            if (actor.Location.Y > 0)
-                _boardUpdater.UpdateBoard(actor.Location);
-        }
-    }
-
-    public bool SpawnProjectile(int elementId, Location location, Vector vector, bool enemyOwned)
-    {
-        var target = location + vector;
-        var element = ElementAt(target);
-
-        if (element.IsFloor || _elementList.IsWater(element.Id))
-        {
-            // The logic spawns the actor and then immediately attempts to retrieve it,
-            // assuming it is the last actor in the list. But if the actor list is already
-            // full, no new actors will be spawned, and the following logic affects the
-            // last actor in the list anyway, regardless if it's a projectile. This is a bug
-            // in all versions of the original code.
-
-            SpawnActor(target, new Tile(elementId, _elementList[elementId].Color), 1, _state.DefaultActor);
-
-            var actor = _actorList[_state.ActorCount];
-            actor.P1 = unchecked((byte)(enemyOwned ? 1 : 0));
-            actor.Vector = vector;
-            actor.P2 = 0x64;
-            return true;
-        }
-
-        if (element.Id != _elementList.BreakableId &&
-            (!element.IsDestructible ||
-             element.Id == _elementList.PlayerId != enemyOwned ||
-             _world.EnergyCycles != 0))
-            return false;
-
-        Destroy(target);
-        _soundUnit.PlaySound(2, _sounds.BulletDie);
-        return true;
     }
 
     public void Start()

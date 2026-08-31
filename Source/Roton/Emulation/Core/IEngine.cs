@@ -29,8 +29,6 @@ public interface IEngine
     Vector RndP(Vector vector);
     Vector Seek(Location location);
     void SetMessage(int duration, IMessage message);
-    void SpawnActor(Location location, Tile tile, int cycle, IActor? source);
-    bool SpawnProjectile(int elementId, Location location, Vector vector, bool enemyOwned);
     void Start();
     void Stop();
     void WaitForTick();
