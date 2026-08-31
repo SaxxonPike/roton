@@ -9,7 +9,8 @@ public abstract class Hud(
     IEngineAccessor engine,
     IScroll scroll, 
     IState state,
-    IScheduler scheduler) 
+    IScheduler scheduler,
+    IInputReader inputReader) 
     : IHud
 {
     protected IState State
@@ -138,7 +139,7 @@ public abstract class Hud(
         while (Engine.ThreadActive)
         {
             scheduler.WaitForTick();
-            Engine.ReadInput(true);
+            inputReader.Read(true);
             switch (state.KeyPressed.ToUpperCase())
             {
                 case EngineKeyCode.Y:

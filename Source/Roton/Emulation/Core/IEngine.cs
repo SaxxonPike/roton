@@ -18,7 +18,6 @@ public interface IEngine
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
-    void ReadInput(bool isUiFocused);
     void RemoveActor(int index);
     Vector Rnd();
     Vector RndP(Vector vector);

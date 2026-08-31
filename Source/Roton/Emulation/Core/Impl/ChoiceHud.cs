@@ -12,7 +12,8 @@ internal sealed class ChoiceHud(
     ITerminal terminal, 
     IEngineAccessor engine,
     IState state,
-    IScheduler scheduler)
+    IScheduler scheduler,
+    IInputReader inputReader)
     : IChoiceHud
 {
     private ITerminal Terminal
@@ -88,7 +89,7 @@ internal sealed class ChoiceHud(
         {
             var update = false;
 
-            Engine.ReadInput(true);
+            inputReader.Read(true);
 
             switch (state.KeyPressed)
             {

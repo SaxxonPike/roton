@@ -12,7 +12,8 @@ internal sealed class TextEntryHud(
     ITerminal terminal,
     IEngineAccessor engine,
     IState state,
-    IScheduler scheduler)
+    IScheduler scheduler,
+    IInputReader inputReader)
     : ITextEntryHud
 {
     private IEngine Engine
@@ -40,7 +41,7 @@ internal sealed class TextEntryHud(
             }
 
             scheduler.WaitForTick();
-            Engine.ReadInput(true);
+            inputReader.Read(true);
 
             var key = state.KeyPressed;
             if (key == EngineKeyCode.None)

@@ -151,9 +151,5 @@ internal sealed class SuperFeatures(
             : [state.Message, state.Message2];
     }
 
-    public void ShowAbout()
-    {
-    }
-
     public int BaseMemoryUsage => 203044;
 }

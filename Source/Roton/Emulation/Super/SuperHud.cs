@@ -25,8 +25,9 @@ internal sealed class SuperHud(
     IElementList elements,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
-    IScheduler scheduler)
-    : Hud(engine, scroll, state, scheduler)
+    IScheduler scheduler,
+    IInputReader inputReader)
+    : Hud(engine, scroll, state, scheduler, inputReader)
 {
     private readonly string _arrows = new([
         0x18.ToChar(),

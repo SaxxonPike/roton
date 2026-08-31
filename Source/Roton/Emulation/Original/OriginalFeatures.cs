@@ -21,7 +21,8 @@ internal sealed class OriginalFeatures(
     IBoardTime boardTime,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
-    IMessenger messenger)
+    IMessenger messenger,
+    IDialogs dialogs)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -94,10 +95,6 @@ internal sealed class OriginalFeatures(
         return [state.Message];
     }
 
-    public void ShowAbout()
-    {
-        hud.ShowHelp("About Roton...", "ABOUT");
-    }
 
     public int BaseMemoryUsage => 205791;
 
@@ -130,7 +127,7 @@ internal sealed class OriginalFeatures(
                 worldUnit.OpenWorld();
                 break;
             case EngineKeyCode.A:
-                ShowAbout();
+                dialogs.ShowAbout();
                 break;
             case EngineKeyCode.E:
                 break;
@@ -160,10 +157,5 @@ internal sealed class OriginalFeatures(
     {
         tiles[location].Id = elementList.EmptyId;
         boardUpdater.UpdateBoard(location);
-    }
-
-    public void ShowInGameHelp()
-    {
-        hud.ShowHelp("Playing Roton", "GAME");
     }
 }

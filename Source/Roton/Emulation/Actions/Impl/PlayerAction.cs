@@ -35,7 +35,8 @@ internal sealed class PlayerAction(
     ISpawner spawner,
     IMover mover,
     IPlayerUpdater playerUpdater,
-    IMessenger messenger)
+    IMessenger messenger,
+    IDialogs dialogs)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -176,7 +177,7 @@ internal sealed class PlayerAction(
             }
             case EngineKeyCode.H:
             {
-                features.ShowInGameHelp();
+                dialogs.ShowHelp();
                 break;
             }
             case EngineKeyCode.QuestionMark:

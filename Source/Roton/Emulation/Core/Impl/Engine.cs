@@ -5,7 +5,6 @@ using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
-using Roton.Emulation.Draws;
 using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
 using Roton.Infrastructure;
@@ -23,7 +22,6 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IElementList _elements;
     private readonly IInterpreter _interpreter;
     private readonly IRandomizer _randomizer;
-    private readonly IKeyboard _keyboard;
     private readonly ITiles _tiles;
     private readonly ISounds _sounds;
     private readonly ITimers _timers;
@@ -39,13 +37,11 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IInteractionList _interactions;
     private readonly IFacts _facts;
     private readonly ICodeHeap _heap;
-    private readonly IAnsiKeyTransformer _ansiKeyTransformer;
     private readonly ISpeaker _speaker;
     private readonly IObjectMover _objectMover;
     private readonly IHighScoreListFactory _highScoreListFactory;
     private readonly IConfigFileService _configFileService;
     private readonly ITracer _tracer;
-    private readonly IJoystick _joystick;
     private readonly ISoundUnit _soundUnit;
     private readonly IWorldUnit _worldUnit;
     private readonly IBoardTime _boardTime;
@@ -61,26 +57,57 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IMessenger _messenger;
     private readonly IScheduler _scheduler;
     private readonly IColorMatcher _colorMatcher;
+    private readonly IDialogs _dialogs;
+    private readonly IInputReader _inputReader;
 
     private bool _step;
-    private JoystickButtons _lastButtons;
 
-    public Engine(IClock clock, IActorList actors, IAlerts alerts, IBoard board,
+    public Engine(
+        IClock clock,
+        IActorList actors,
+        IAlerts alerts,
+        IBoard board,
         IElementList elements,
-        IInterpreter interpreter, IRandomizer randomizer, IKeyboard keyboard,
-        ITiles tiles, ISounds sounds, ITimers timers, IParser parser,
-        IConfig config, ICheatList cheats,
-        IFeatures features, IHud hud, IState state,
-        IWorld world, IBoardList boardList, IActionList actionList,
-        IInteractionList interactions, IFacts facts,
-        ICodeHeap heap, IAnsiKeyTransformer ansiKeyTransformer,
-        ISpeaker speaker, IObjectMover objectMover,
-        IHighScoreListFactory highScoreListFactory, IConfigFileService configFileService, ITracer tracer,
-        IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
-        IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
-        IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
-        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater, IMessenger messenger,
-        IScheduler scheduler, IColorMatcher colorMatcher)
+        IInterpreter interpreter,
+        IRandomizer randomizer,
+        ITiles tiles,
+        ISounds sounds,
+        ITimers timers,
+        IParser parser,
+        IConfig config,
+        ICheatList cheats,
+        IFeatures features,
+        IHud hud,
+        IState state,
+        IWorld world,
+        IBoardList boardList,
+        IActionList actionList,
+        IInteractionList interactions,
+        IFacts facts,
+        ICodeHeap heap,
+        ISpeaker speaker,
+        IObjectMover objectMover,
+        IHighScoreListFactory highScoreListFactory,
+        IConfigFileService configFileService,
+        ITracer tracer,
+        IEngineAccessor engineAccessor,
+        ISoundUnit soundUnit,
+        IWorldUnit worldUnit,
+        IBoardTime boardTime,
+        IBoardUpdater boardUpdater,
+        IPlayField playField,
+        IBroadcaster broadcaster,
+        IRadiusUpdater radiusUpdater,
+        IPusher pusher,
+        IMessageHandler messageHandler,
+        ISpawner spawner,
+        IMover mover,
+        IPlayerUpdater playerUpdater,
+        IMessenger messenger,
+        IScheduler scheduler,
+        IColorMatcher colorMatcher,
+        IDialogs dialogs,
+        IInputReader inputReader)
     {
         engineAccessor.Instance = this;
 
@@ -91,7 +118,6 @@ internal sealed class Engine : IEngine, IDisposable
         _elements = elements;
         _interpreter = interpreter;
         _randomizer = randomizer;
-        _keyboard = keyboard;
         _tiles = tiles;
         _sounds = sounds;
         _timers = timers;
@@ -107,13 +133,11 @@ internal sealed class Engine : IEngine, IDisposable
         _interactions = interactions;
         _facts = facts;
         _heap = heap;
-        _ansiKeyTransformer = ansiKeyTransformer;
         _speaker = speaker;
         _objectMover = objectMover;
         _highScoreListFactory = highScoreListFactory;
         _configFileService = configFileService;
         _tracer = tracer;
-        _joystick = joystick;
         _soundUnit = soundUnit;
         _worldUnit = worldUnit;
         _boardTime = boardTime;
@@ -129,6 +153,8 @@ internal sealed class Engine : IEngine, IDisposable
         _messenger = messenger;
         _scheduler = scheduler;
         _colorMatcher = colorMatcher;
+        _dialogs = dialogs;
+        _inputReader = inputReader;
     }
 
     private Thread? Thread { get; set; }
@@ -718,7 +744,7 @@ internal sealed class Engine : IEngine, IDisposable
                 }
 
                 _hud.DrawPausing();
-                ReadInput(false);
+                _inputReader.Read(false);
                 if (_state.KeyPressed == EngineKeyCode.Escape)
                 {
                     if (_world.Health > 0)
@@ -784,7 +810,7 @@ internal sealed class Engine : IEngine, IDisposable
                         if (_state.GameCycle > _facts.MaxGameCycle) _state.GameCycle = 1;
 
                         _state.ActIndex = 0;
-                        ReadInput(false);
+                        _inputReader.Read(false);
                     }
 
                 _tracer.TraceStep();
@@ -826,7 +852,7 @@ internal sealed class Engine : IEngine, IDisposable
         if (_state.Init)
         {
             if (!_state.AboutShown)
-                _features.ShowAbout();
+                _dialogs.ShowAbout();
 
             if (!ThreadActive)
                 return;
@@ -912,189 +938,6 @@ internal sealed class Engine : IEngine, IDisposable
         }
 
         return value;
-    }
-
-    private EngineKeyCode ConvertKey(KeyPress keyPress)
-    {
-        var bytes = _ansiKeyTransformer.GetBytes(keyPress);
-
-        if (bytes.IsEmpty)
-            return EngineKeyCode.None;
-
-        if (bytes.Length > 1 && (bytes[0] == 0 || bytes[0] >= 0x80))
-            return (EngineKeyCode)(bytes[1] | 0x80);
-
-        return (EngineKeyCode)bytes[0];
-    }
-
-    private void ReadInputJoystick(bool isUiFocused)
-    {
-        if (_config.DisableJoystick || !_joystick.IsConnected)
-            return;
-
-        // This function does things a lot differently than the original engine,
-        // mostly for convenience in controls.
-
-        var x = 0f;
-        var y = 0f;
-        JoystickButtons buttons = 0;
-
-        if (_joystick.IsConnected)
-        {
-            x = _joystick.X;
-            y = _joystick.Y;
-            buttons = _joystick.Buttons;
-        }
-
-        // Directional buttons should act like analog input for movement directions.
-
-        if (buttons.HasFlag(JoystickButtons.Up))
-            y = -1;
-        else if (buttons.HasFlag(JoystickButtons.Down))
-            y = 1;
-        else if (buttons.HasFlag(JoystickButtons.Left))
-            x = -1;
-        else if (buttons.HasFlag(JoystickButtons.Right))
-            x = 1;
-
-        // Determine which direction "wins" based on how far the stick is held from center.
-
-        var deadZone = _config.JoystickDeadZone;
-        var maxMagnitude = 0f;
-        var finalKeyCode = (EngineKeyCode)0;
-
-        if (x <= -deadZone & x <= -maxMagnitude)
-        {
-            _state.KeyVector = Vector.West;
-            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
-            finalKeyCode = EngineKeyCode.Left;
-        }
-
-        if (x >= deadZone && x >= maxMagnitude)
-        {
-            _state.KeyVector = Vector.East;
-            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
-            finalKeyCode = EngineKeyCode.Right;
-        }
-
-        if (y <= -deadZone && y <= -maxMagnitude)
-        {
-            _state.KeyVector = Vector.North;
-            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
-            finalKeyCode = EngineKeyCode.Up;
-        }
-
-        if (y >= deadZone && y >= maxMagnitude)
-        {
-            _state.KeyVector = Vector.South;
-            maxMagnitude = Math.Max(maxMagnitude, Math.Abs(x));
-            finalKeyCode = EngineKeyCode.Down;
-        }
-
-        if (finalKeyCode == EngineKeyCode.Left)
-            buttons |= JoystickButtons.Left;
-        else if (finalKeyCode == EngineKeyCode.Right)
-            buttons |= JoystickButtons.Right;
-        else if (finalKeyCode == EngineKeyCode.Up)
-            buttons |= JoystickButtons.Up;
-        else if (finalKeyCode == EngineKeyCode.Down)
-            buttons |= JoystickButtons.Down;
-
-        // The other buttons only activate when pressed and not every frame they're held.
-
-        var singleButtons = buttons & ~_lastButtons;
-
-        if (singleButtons.HasFlag(JoystickButtons.Left))
-            _state.KeyPressed = EngineKeyCode.Left;
-        else if (singleButtons.HasFlag(JoystickButtons.Right))
-            _state.KeyPressed = EngineKeyCode.Right;
-        else if (singleButtons.HasFlag(JoystickButtons.Up))
-            _state.KeyPressed = EngineKeyCode.Up;
-        else if (singleButtons.HasFlag(JoystickButtons.Down))
-            _state.KeyPressed = EngineKeyCode.Down;
-
-        // Process button actions.
-
-        if (buttons.HasFlag(JoystickButtons.Ok))
-        {
-            if (isUiFocused)
-            {
-                _state.KeyPressed = EngineKeyCode.Enter;
-            }
-            else
-            {
-                if (_state.KeyPressed != EngineKeyCode.None)
-                    _state.KeyShift = true;
-                else
-                    _state.KeyPressed = EngineKeyCode.Space;
-            }
-        }
-        else if (buttons.HasFlag(JoystickButtons.Cancel))
-        {
-            if (isUiFocused)
-                _state.KeyPressed = EngineKeyCode.Escape;
-        }
-        else if (buttons.HasFlag(JoystickButtons.Shoot))
-        {
-            if (!isUiFocused)
-                _state.KeyShift = true;
-        }
-
-        if (isUiFocused && singleButtons.HasFlag(JoystickButtons.PageUp))
-        {
-            _state.KeyPressed = EngineKeyCode.PageUp;
-        }
-        else if (isUiFocused && singleButtons.HasFlag(JoystickButtons.PageDown))
-        {
-            _state.KeyPressed = EngineKeyCode.PageDown;
-        }
-        else if (singleButtons.HasFlag(JoystickButtons.Start))
-        {
-            // If on the title screen, Start will begin the game.
-            // Otherwise, it will pause the game.
-
-            if (_state.PlayerElement == _elements.MonitorId)
-                _state.KeyPressed = _facts.StartGameKey;
-            else
-                _state.KeyPressed = EngineKeyCode.P;
-        }
-
-        _lastButtons = buttons;
-    }
-
-    private void ReadInputKeyboard()
-    {
-        var mod = _keyboard.GetMod();
-        _state.KeyShift = mod.HasFlag(KeyMod.Shift);
-        _state.KeyPressed = 0;
-        _state.KeyVector = Vector.Idle;
-
-        if (!_keyboard.KeyIsAvailable)
-            return;
-
-        var key = _keyboard.GetKey();
-        if (key is not { } keyValue || keyValue.Key == AnsiKey.None)
-            return;
-
-        _state.KeyPressed = ConvertKey(keyValue);
-
-        _state.KeyVector = _state.KeyPressed switch
-        {
-            EngineKeyCode.Left => Vector.West,
-            EngineKeyCode.Right => Vector.East,
-            EngineKeyCode.Up => Vector.North,
-            EngineKeyCode.Down => Vector.South,
-            _ => _state.KeyVector
-        };
-    }
-
-    public void ReadInput(bool isUiFocused)
-    {
-        ReadInputKeyboard();
-        if (_state.KeyVector.IsZero())
-            ReadInputJoystick(isUiFocused);
-        if (_state.KeyVector.IsNonZero())
-            _state.KeyLastVector = _state.KeyVector;
     }
 
     private void StartInit()

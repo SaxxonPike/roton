@@ -12,7 +12,8 @@ public abstract class Scroll(
     IState state,
     IFileSystem fileSystem,
     IScrollContent scrollContent,
-    IScheduler scheduler)
+    IScheduler scheduler, 
+    IInputReader inputReader)
     : IScroll
 {
     private IEngine Engine => engine.Instance;
@@ -249,7 +250,7 @@ public abstract class Scroll(
                 update = false;
             }
 
-            Engine.ReadInput(true);
+            inputReader.Read(true);
 
             switch (state.KeyPressed)
             {

@@ -13,8 +13,9 @@ internal sealed class SuperScroll(
     IState state,
     IFileSystem fileSystem,
     IScrollContent scrollContent,
-    IScheduler scheduler)
-    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler)
+    IScheduler scheduler,
+    IInputReader inputReader)
+    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler, inputReader)
 {
     private readonly ITerminal _terminal = terminal;
 
@@ -22,12 +23,12 @@ internal sealed class SuperScroll(
     protected override int Height => 23;
     protected override int Left => 1;
     protected override int Top => 2;
-        
+
     protected override IReadOnlyList<AnsiChar> GetScreenBuffer()
     {
         var buffer = new AnsiChar[Width * Height];
         var i = 0;
-            
+
         for (var y = 0; y < Height; y++)
         for (var x = 0; x < Width; x++)
             buffer[i++] = _terminal.Read(x + Left, y + Top);
