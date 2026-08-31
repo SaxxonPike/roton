@@ -22,7 +22,8 @@ public class WorldUnit(
     IAlerts alerts,
     IFacts facts,
     IElementList elements,
-    IActorList actors)
+    IActorList actors,
+    IFileTitles fileTitles)
     : IWorldUnit
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -157,7 +158,7 @@ public class WorldUnit(
 
     public void OpenWorld()
     {
-        var name = ShowLoad(facts.WorldFileWindowTitle, facts.WorldFileExtension);
+        var name = ShowLoad(facts.WorldFileWindowTitle, facts.WorldFileExtension, true);
         if (string.IsNullOrEmpty(name))
             return;
 
@@ -174,7 +175,7 @@ public class WorldUnit(
 
     public bool RestoreWorld()
     {
-        var name = ShowLoad(facts.SavedGameWindowTitle, facts.SavedGameExtension);
+        var name = ShowLoad(facts.SavedGameWindowTitle, facts.SavedGameExtension, false);
         if (string.IsNullOrEmpty(name))
             return false;
 
@@ -278,10 +279,8 @@ public class WorldUnit(
         actors.Player.Length = 0;
     }
 
-    private string? ShowLoad(string title, string extension)
-    {
-        return fileDialog.Open(title, extension);
-    }
+    private string? ShowLoad(string title, string extension, bool useTitles) => 
+        fileDialog.Open(title, extension, useTitles ? fileTitles : null);
 
     private void ShowDosError()
     {

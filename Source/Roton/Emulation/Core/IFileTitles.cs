@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Core;
 
-public interface IWorldTitleService
+public interface IFileTitles
 {
     string? GetTitle(string fileName);
 }
