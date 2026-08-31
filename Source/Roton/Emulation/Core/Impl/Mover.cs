@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class Mover(
+internal sealed class Mover(
     IActorList actors,
     ITiles tiles,
     IElementList elements,

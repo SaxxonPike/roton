@@ -25,4 +25,9 @@ internal sealed class OriginalPlayerUpdater(
         tiles[actor.Location].Color = playerElement.Color;
         boardUpdater.UpdateBoard(actor.Location);
     }
+
+    public void CleanUpPauseMovement()
+    {
+        // No-op in the original engine.
+    }
 }

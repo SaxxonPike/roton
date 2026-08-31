@@ -119,26 +119,6 @@ internal sealed class OriginalFeatures(
 
     public int BaseMemoryUsage => 205791;
 
-    public void CleanUpPauseMovement()
-    {
-        var target = actorList.Player.Location + state.KeyVector;
-
-        if (tiles.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
-        {
-            mover.MoveActor(0, target);
-        }
-        else
-        {
-            boardUpdater.UpdateBoard(actorList.Player.Location);
-            actorList.Player.Location += state.KeyVector;
-            tiles[actorList.Player.Location] =
-                new Tile(elementList.PlayerId, elementList.Player().Color);
-            boardUpdater.UpdateBoard(actorList.Player.Location);
-            radiusUpdater.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
-            radiusUpdater.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
-        }
-    }
-
     public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;

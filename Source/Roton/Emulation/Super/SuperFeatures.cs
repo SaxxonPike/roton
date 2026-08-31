@@ -118,26 +118,6 @@ internal sealed class SuperFeatures(
         tiles[location] = new Tile(elementList.FloorId, 0x02);
     }
 
-    public void CleanUpPauseMovement()
-    {
-        var target = actorList.Player.Location + state.KeyVector;
-
-        if (Engine.ElementAt(actorList.Player.Location).Id == elementList.PlayerId)
-        {
-            mover.MoveActor(0, target);
-        }
-        else
-        {
-            boardUpdater.UpdateBoard(actorList.Player.Location);
-            actorList.Player.Location += state.KeyVector;
-            actorList.Player.UnderTile = tiles[actorList.Player.Location];
-            tiles[actorList.Player.Location] = new Tile(elementList.PlayerId, elementList.Player().Color);
-            boardUpdater.UpdateBoard(actorList.Player.Location);
-            radiusUpdater.UpdateRadius(actorList.Player.Location, RadiusMode.Update);
-            radiusUpdater.UpdateRadius(actorList.Player.Location - state.KeyVector, RadiusMode.Update);
-        }
-    }
-
     public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;
@@ -155,7 +135,7 @@ internal sealed class SuperFeatures(
         if (eId == id || eId == elementList.BoardEdgeId)
             return true;
 
-        if (Engine.ElementAt(location).Cycle >= 0)
+        if (tiles.ElementAt(location).Cycle >= 0)
         {
             eId = actorList.ActorAt(location).UnderTile.Id;
             if (eId == id || eId == elementList.BoardEdgeId)

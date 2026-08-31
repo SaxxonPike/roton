@@ -15,7 +15,6 @@ public interface IFeatures
     string[] GetMessageLines();
     void ShowAbout();
     int BaseMemoryUsage { get; }
-    void CleanUpPauseMovement();
     void CleanUpOop(ref OopContext context);
     int GetColorMatchValue(int color);
     int GetAdjacent(Location location, int elementId);

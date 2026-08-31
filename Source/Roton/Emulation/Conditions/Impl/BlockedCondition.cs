@@ -7,17 +7,15 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Original, "BLOCKED")]
 [Context(Context.Super, "BLOCKED")]
 internal sealed class BlockedCondition(
-    IEngineAccessor engine,
-    IParser parser)
+    IParser parser,
+    ITiles tiles)
     : ICondition
 {
-    private IEngine Engine => engine.Instance;
-
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
         if (!parser.TryEvalDirection(ref context, ref instruction, out var val))
             return null;
 
-        return !Engine.ElementAt(context.Actor.Location + val).IsFloor;
+        return !tiles.ElementAt(context.Actor.Location + val).IsFloor;
     }
 }

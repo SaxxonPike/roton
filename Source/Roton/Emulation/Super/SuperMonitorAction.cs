@@ -8,13 +8,10 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x03)]
 internal sealed class SuperMonitorAction(
-    IEngineAccessor engine,
     IState state,
     IMover mover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         // Ordinarily, the game code will only check for Enter and Escape here.

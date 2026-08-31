@@ -57,6 +57,8 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IPusher _pusher;
     private readonly IMessageHandler _messageHandler;
     private readonly ISpawner _spawner;
+    private readonly IMover _mover;
+    private readonly IPlayerUpdater _playerUpdater;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -78,7 +80,7 @@ internal sealed class Engine : IEngine, IDisposable
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
         IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
-        ISpawner spawner)
+        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater)
     {
         engineAccessor.Instance = this;
 
@@ -123,6 +125,8 @@ internal sealed class Engine : IEngine, IDisposable
         _pusher = pusher;
         _messageHandler = messageHandler;
         _spawner = spawner;
+        _mover = mover;
+        _playerUpdater = playerUpdater;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -833,7 +837,21 @@ internal sealed class Engine : IEngine, IDisposable
                     var target = _actorList.Player.Location + _state.KeyVector;
                     if (ElementAt(target).IsFloor)
                     {
-                        _features.CleanUpPauseMovement();
+                        if (_tiles.ElementAt(_actorList.Player.Location).Id == _elementList.PlayerId)
+                        {
+                            _mover.MoveActor(0, target);
+                        }
+                        else
+                        {
+                            _boardUpdater.UpdateBoard(_actorList.Player.Location);
+                            _actorList.Player.Location += _state.KeyVector;
+                            _playerUpdater.CleanUpPauseMovement();
+                            _tiles[_actorList.Player.Location] = new Tile(_elementList.PlayerId, _elementList.Player().Color);
+                            _boardUpdater.UpdateBoard(_actorList.Player.Location);
+                            _radiusUpdater.UpdateRadius(_actorList.Player.Location, RadiusMode.Update);
+                            _radiusUpdater.UpdateRadius(_actorList.Player.Location - _state.KeyVector, RadiusMode.Update);
+                        }
+
                         _state.GamePaused = false;
                         _hud.ClearPausing();
                         _state.GameCycle = _randomizer.GetNext(_facts.MainLoopRandomCycleRange);

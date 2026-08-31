@@ -47,7 +47,7 @@ internal sealed class RuffianAction(
             {
                 Engine.Attack(index, target);
             }
-            else if (Engine.ElementAt(target).IsFloor)
+            else if (tiles.ElementAt(target).IsFloor)
             {
                 mover.MoveActor(index, target);
 
