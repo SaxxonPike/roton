@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -8,18 +7,11 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSerializer
+public abstract class GameSerializer(
+    IMemory memory,
+    ICodeHeap heap)
+    : IGameSerializer
 {
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => memory;
-    }
-
-    private ICodeHeap Heap
-    {
-        [DebuggerStepThrough] get => heap;
-    }
-
     public abstract int ActorCapacity { get; }
 
     public abstract int ActorDataCountOffset { get; }
@@ -47,18 +39,18 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
     {
         var reader = new BinaryReader(source);
         var header = reader.ReadBytes(WorldDataCapacity - 4);
-        Memory.Write(WorldDataOffset, header, 0, WorldDataSize);
+        memory.Write(WorldDataOffset, header, 0, WorldDataSize);
     }
 
     public byte[] PackBoard(ITiles tiles)
     {
         using var mem = new MemoryStream();
         var writer = new BinaryWriter(mem);
-        writer.Write([.. Memory.Read(BoardNameOffset, BoardNameLength)]);
+        writer.Write([.. memory.Read(BoardNameOffset, BoardNameLength)]);
         PackTiles(tiles, writer);
-        writer.Write([.. Memory.Read(BoardDataOffset, BoardDataLength)]);
-        var actorCount = Memory.Read16(ActorDataCountOffset);
-        writer.Write((short) actorCount);
+        writer.Write([.. memory.Read(BoardDataOffset, BoardDataLength)]);
+        var actorCount = memory.Read16(ActorDataCountOffset);
+        writer.Write((short)actorCount);
         PackActors(writer, actorCount);
         writer.Flush();
         return mem.ToArray();
@@ -72,7 +64,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
             throw Exceptions.DataTooLarge;
         }
 
-        writer.Write((short) data.Length);
+        writer.Write((short)data.Length);
         writer.Write(data);
         writer.Flush();
     }
@@ -80,7 +72,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
     public void SaveWorld(Stream target)
     {
         var worldBytes = new byte[WorldDataCapacity - 4];
-        var worldData = Memory.Read(WorldDataOffset, WorldDataSize);
+        var worldData = memory.Read(WorldDataOffset, WorldDataSize);
         worldData.CopyTo(worldBytes);
         target.Write(worldBytes, 0, worldBytes.Length);
     }
@@ -89,11 +81,11 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
     {
         using var mem = new MemoryStream(data);
         var reader = new BinaryReader(mem);
-        Memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
+        memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
         UnpackTiles(tiles, reader); // tiles
-        Memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
+        memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
         int actorCount = reader.ReadInt16();
-        Memory.Write16(ActorDataCountOffset, actorCount); // actor count
+        memory.Write16(ActorDataCountOffset, actorCount); // actor count
         UnpackActors(reader, actorCount); // actors
     }
 
@@ -110,16 +102,16 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
 
         // backed up memory (so we don't modify the working version)
         var mem = new Memory();
-        mem.Write(ActorDataOffset, Memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
+        mem.Write(ActorDataOffset, memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
 
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(mem, Heap, ActorDataOffset + ActorDataLength * i);
+            var actor = new Actor(mem, heap, ActorDataOffset + ActorDataLength * i);
             var code = Span<char>.Empty;
 
             if (actor.Pointer != 0)
             {
-                code = Heap[actor.Pointer];
+                code = heap[actor.Pointer];
 
                 // check to see if the code needs to be stored
                 if (!code.IsEmpty)
@@ -138,7 +130,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
             }
 
             // write memory to stream
-            target.Write([.. Memory.Read(actor.Offset, ActorDataLength)]);
+            target.Write([.. memory.Read(actor.Offset, ActorDataLength)]);
 
             // write code if applicable
             if (!code.IsEmpty)
@@ -164,9 +156,9 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
                 var tile = tiles[new Location(x, y)];
                 if (tile.Id != id || tile.Color != color || count == 255)
                 {
-                    target.Write((byte) (count & 0xFF));
-                    target.Write((byte) (id & 0xFF));
-                    target.Write((byte) (color & 0xFF));
+                    target.Write((byte)(count & 0xFF));
+                    target.Write((byte)(id & 0xFF));
+                    target.Write((byte)(color & 0xFF));
                     count = 0;
                     id = tile.Id;
                     color = tile.Color;
@@ -178,9 +170,9 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
 
         if (count > 0)
         {
-            target.Write((byte) (count & 0xFF));
-            target.Write((byte) (id & 0xFF));
-            target.Write((byte) (color & 0xFF));
+            target.Write((byte)(count & 0xFF));
+            target.Write((byte)(id & 0xFF));
+            target.Write((byte)(color & 0xFF));
         }
     }
 
@@ -195,20 +187,20 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
         }
 
         // clean out code heap (there are no cross-board references)
-        Heap.FreeAll();
+        heap.FreeAll();
 
         // load all actors
         var actorList = new List<IActor>();
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(Memory, Heap, ActorDataOffset + ActorDataLength * i);
-            Memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
+            var actor = new Actor(memory, heap, ActorDataOffset + ActorDataLength * i);
+            memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
             actor.Pointer = 0;
             if (actor.Length > 0)
             {
                 var code = source.ReadBytes(actor.Length);
                 Cp437.BytesToChars(code, buffer);
-                var pointer = Heap.Allocate(buffer.Slice(0, actor.Length));
+                var pointer = heap.Allocate(buffer.Slice(0, actor.Length));
                 actor.Pointer = pointer;
             }
 
@@ -220,7 +212,7 @@ public abstract class GameSerializer(IMemory memory, ICodeHeap heap) : IGameSeri
         {
             if (actorList[i].Length < 0)
             {
-                var actorCodeSource = new Actor(Memory, Heap,
+                var actorCodeSource = new Actor(memory, heap,
                     ActorDataOffset + -actorList[i].Length * ActorDataLength);
                 actorList[i].Length = actorCodeSource.Length;
                 actorList[i].Pointer = actorCodeSource.Pointer;

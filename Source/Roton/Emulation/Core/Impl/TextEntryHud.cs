@@ -11,14 +11,10 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class TextEntryHud(
     ITerminal terminal,
     IEngineAccessor engine,
-    IState state)
+    IState state,
+    IScheduler scheduler)
     : ITextEntryHud
 {
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
     private IEngine Engine
     {
         [DebuggerStepThrough] get => engine.Instance;
@@ -37,13 +33,13 @@ internal sealed class TextEntryHud(
             if (update)
             {
                 update = false;
-                Terminal.Write(x, y, new string(' ', maxLength + 1), pipColor);
-                Terminal.Plot(x + length, y, new AnsiChar(0x1F, pipColor));
-                Terminal.Write(x, y + 1, new string(' ', maxLength), textColor);
-                Terminal.Write(x, y + 1, chars, textColor);
+                terminal.Write(x, y, new string(' ', maxLength + 1), pipColor);
+                terminal.Plot(x + length, y, new AnsiChar(0x1F, pipColor));
+                terminal.Write(x, y + 1, new string(' ', maxLength), textColor);
+                terminal.Write(x, y + 1, chars, textColor);
             }
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
             Engine.ReadInput(true);
 
             var key = state.KeyPressed;
@@ -86,7 +82,7 @@ internal sealed class TextEntryHud(
         }
 
         for (var i = 0; i < 3; i++)
-            Terminal.Write(x, y + i, new string(' ', maxLength + 1), pipColor);
+            terminal.Write(x, y + i, new string(' ', maxLength + 1), pipColor);
 
         return chars.Slice(0, length).ToString();
     }

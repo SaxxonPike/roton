@@ -5,6 +5,7 @@ namespace Roton.Emulation.Core.Impl;
 public abstract class FadeMatrix(
     IEngineAccessor engine,
     IRandomizer randomizer,
+    IScheduler scheduler,
     int left,
     int top,
     int width,
@@ -41,7 +42,7 @@ public abstract class FadeMatrix(
     private void FadeWait(int i)
     {
         if (i % speed == 0)
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
     }
 
     public void FadeOut(AnsiChar ac)

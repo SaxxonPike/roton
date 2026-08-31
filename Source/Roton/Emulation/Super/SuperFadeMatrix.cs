@@ -11,8 +11,9 @@ internal sealed class SuperFadeMatrix(
     ITerminal terminal,
     IRandomizer randomizer,
     IBoard board,
-    IBoardUpdater boardUpdater)
-    : FadeMatrix(engine, randomizer, 14, 2, 24, 20, 0x40)
+    IBoardUpdater boardUpdater,
+    IScheduler scheduler)
+    : FadeMatrix(engine, randomizer, scheduler, 14, 2, 24, 20, 0x40)
 {
     protected override void DrawAt(int x, int y, AnsiChar ac) => 
         terminal.Plot(x + Left, y + Top, ac);

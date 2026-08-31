@@ -11,7 +11,8 @@ public abstract class Scroll(
     ITerminal terminal,
     IState state,
     IFileSystem fileSystem,
-    IScrollContent scrollContent)
+    IScrollContent scrollContent,
+    IScheduler scheduler)
     : IScroll
 {
     private IEngine Engine => engine.Instance;
@@ -71,7 +72,7 @@ public abstract class Scroll(
             for (var y2 = topY + 1; y2 < bottomY - 1; y2++)
                 RenderLine(ScrollCharsMid, y2);
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
         RenderLine(ScrollCharsMid, Top + Height - 2);
@@ -90,7 +91,7 @@ public abstract class Scroll(
             RenderBuffer(buffer, topY);
             RenderBuffer(buffer, bottomY);
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
         RenderBuffer(buffer, Top + Height / 2);
@@ -282,7 +283,7 @@ public abstract class Scroll(
                     st.Index = 0;
             }
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
         return false;

@@ -59,10 +59,8 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IMover _mover;
     private readonly IPlayerUpdater _playerUpdater;
     private readonly IMessenger _messenger;
-    private readonly Func<bool> _waitForTickFastDelegate;
-    private readonly Func<bool> _waitForTickNormalDelegate;
+    private readonly IScheduler _scheduler;
 
-    private int _ticksToRun;
     private bool _step;
     private JoystickButtons _lastButtons;
 
@@ -80,7 +78,8 @@ internal sealed class Engine : IEngine, IDisposable
         IEngineAccessor engineAccessor, IJoystick joystick, ISoundUnit soundUnit, IWorldUnit worldUnit,
         IBoardTime boardTime, IBoardUpdater boardUpdater, IPlayField playField, IBroadcaster broadcaster,
         IRadiusUpdater radiusUpdater, IPusher pusher, IMessageHandler messageHandler,
-        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater, IMessenger messenger)
+        ISpawner spawner, IMover mover, IPlayerUpdater playerUpdater, IMessenger messenger,
+        IScheduler scheduler)
     {
         engineAccessor.Instance = this;
 
@@ -127,21 +126,7 @@ internal sealed class Engine : IEngine, IDisposable
         _mover = mover;
         _playerUpdater = playerUpdater;
         _messenger = messenger;
-
-        _waitForTickFastDelegate = WaitForTickFastCondition;
-        _waitForTickNormalDelegate = WaitForTickNormalCondition;
-    }
-
-    private void ClockTick(object? sender, EventArgs args)
-    {
-        if (_ticksToRun < 3)
-            _ticksToRun++;
-
-        if (!_state.GamePaused)
-            _boardTime.Advance();
-
-        if (!ThreadActive)
-            _clock.Stop();
+        _scheduler = scheduler;
     }
 
     private Thread? Thread { get; set; }
@@ -583,7 +568,8 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (result.X == 0) result.Y = (_actorList.Player.Location.Y - location.Y).Polarity();
 
-        if (_world.EnergyCycles > 0) result = -result;
+        if (_world.EnergyCycles > 0)
+            result = -result;
 
         return result;
     }
@@ -598,7 +584,7 @@ internal sealed class Engine : IEngine, IDisposable
     {
         if (Thread == null)
         {
-            _ticksToRun = 0;
+            _scheduler.Reset();
             Thread = new Thread(StartMain);
             Thread.Start();
         }
@@ -611,7 +597,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public bool TitleScreen => _state.PlayerElement != _elementList.PlayerId;
 
-    private void UpdateSound()
+    public void UpdateSound()
     {
         if (!_state.SoundPlaying)
         {
@@ -655,42 +641,6 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (_state.SoundPlaying)
             _state.SoundTicks--;
-    }
-
-    private bool WaitForTickFastCondition()
-    {
-        if (_ticksToRun <= 0)
-            return true;
-
-        UpdateSound();
-        Tick?.Invoke(this, EventArgs.Empty);
-        _ticksToRun--;
-
-        return false;
-    }
-
-    private bool WaitForTickNormalCondition() =>
-        _ticksToRun > 0 || !ThreadActive;
-
-    public void WaitForTick()
-    {
-        var isFast = _state.GameWaitTime <= 0 && _config.FastMode;
-
-        if (isFast)
-        {
-            SpinWait.SpinUntil(_waitForTickFastDelegate);
-        }
-        else
-        {
-            UpdateSound();
-
-            Tick?.Invoke(this, EventArgs.Empty);
-
-            SpinWait.SpinUntil(_waitForTickNormalDelegate);
-
-            if (_ticksToRun > 0)
-                _ticksToRun--;
-        }
     }
 
     private int ColorMatch(Tile tile)
@@ -844,7 +794,7 @@ internal sealed class Engine : IEngine, IDisposable
                         // Added so that attempting to run into a wall while paused using
                         // a joystick doesn't cause the game to freeze (the original engine
                         // just added delays)
-                        WaitForTick();
+                        _scheduler.WaitForTick();
                     }
                 }
             }
@@ -865,7 +815,7 @@ internal sealed class Engine : IEngine, IDisposable
                 if (_step)
                     break;
 
-                WaitForTick();
+                _scheduler.WaitForTick();
             }
 
             if (_state.BreakGameLoop)
@@ -1202,10 +1152,10 @@ internal sealed class Engine : IEngine, IDisposable
 
     private void StartMain()
     {
-        _clock.OnTick += ClockTick;
+        _clock.OnTick += _scheduler.Advance;
         StartInit();
         TitleScreenLoop();
-        _clock.OnTick -= ClockTick;
+        _clock.OnTick -= _scheduler.Advance;
         Exited?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1247,7 +1197,7 @@ internal sealed class Engine : IEngine, IDisposable
     {
         var waitUntil = DateTime.Now + TimeSpan.FromMilliseconds(msec);
         while (DateTime.Now < waitUntil)
-            WaitForTick();
+            _scheduler.WaitForTick();
     }
 
     public int ResetBoardTimeHsec() =>

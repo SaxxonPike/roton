@@ -7,6 +7,7 @@ using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
+using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -18,7 +19,8 @@ namespace Lyon.Presenters.Impl;
 [Context(Context.Startup)]
 public sealed unsafe class AudioPresenter(
     IConfig config, 
-    IAudioStreamComposer composer)
+    IAudioStreamComposer composer,
+    IScheduler scheduler)
     : IDisposable, IAudioPresenter
 {
     /// <summary>
@@ -129,7 +131,7 @@ public sealed unsafe class AudioPresenter(
         composer.SampleRate = SampleRate;
 
         // Connect the engine timer to the composer.
-        engine.Tick += OnEngineTick;
+        scheduler.Tick += OnEngineTick;
 
         // Start playback.
         SDL_ResumeAudioStreamDevice(_stream);
@@ -171,7 +173,7 @@ public sealed unsafe class AudioPresenter(
         if (!_running)
             return;
         _running = false;
-        _engine?.Tick -= OnEngineTick;
+        scheduler.Tick -= OnEngineTick;
         
         // If the last presenter is shut down, also shut down the SDL audio subsystem.
         if (Presenters.Remove((nint)_stream) && Presenters.Count == 0)

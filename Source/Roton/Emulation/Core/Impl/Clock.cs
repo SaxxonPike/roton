@@ -15,7 +15,7 @@ internal sealed class Clock(IConfig config) : IClock
     private bool _running;
     private bool _initialized;
 
-    public event EventHandler? OnTick;
+    public event Action? OnTick;
 
     public void Start()
     {
@@ -61,7 +61,7 @@ internal sealed class Clock(IConfig config) : IClock
             while (currentTime - lastTime > frequency)
             {
                 lastTime += frequency;
-                OnTick?.Invoke(this, EventArgs.Empty);
+                OnTick?.Invoke();
             }
             
             return false;

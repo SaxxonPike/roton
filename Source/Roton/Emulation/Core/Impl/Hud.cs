@@ -8,7 +8,8 @@ namespace Roton.Emulation.Core.Impl;
 public abstract class Hud(
     IEngineAccessor engine,
     IScroll scroll, 
-    IState state) 
+    IState state,
+    IScheduler scheduler) 
     : IHud
 {
     protected IState State
@@ -136,7 +137,7 @@ public abstract class Hud(
     {
         while (Engine.ThreadActive)
         {
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
             Engine.ReadInput(true);
             switch (state.KeyPressed.ToUpperCase())
             {

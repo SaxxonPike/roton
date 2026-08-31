@@ -12,8 +12,9 @@ internal sealed class SuperScroll(
     ITerminal terminal,
     IState state,
     IFileSystem fileSystem,
-    IScrollContent scrollContent)
-    : Scroll(engine, terminal, state, fileSystem, scrollContent)
+    IScrollContent scrollContent,
+    IScheduler scheduler)
+    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler)
 {
     private readonly ITerminal _terminal = terminal;
 

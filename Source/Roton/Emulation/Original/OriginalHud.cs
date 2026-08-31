@@ -25,8 +25,9 @@ internal sealed class OriginalHud(
     IFacts facts,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
-    IPlayField playField)
-    : Hud(engine, scroll, state)
+    IPlayField playField,
+    IScheduler scheduler)
+    : Hud(engine, scroll, state, scheduler)
 {
     private const int ViewportHeight = 25;
 

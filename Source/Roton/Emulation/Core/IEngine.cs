@@ -6,7 +6,6 @@ namespace Roton.Emulation.Core;
 public interface IEngine
 {
     event EventHandler Exited;
-    event EventHandler Tick;
 
     bool TitleScreen { get; }
     void Attack(int index, Location location);
@@ -27,7 +26,6 @@ public interface IEngine
     Vector Seek(Location location);
     void Start();
     void Stop();
-    void WaitForTick();
     void StepOnce();
     bool ThreadActive { get; }
     int MemoryUsage { get; }
@@ -35,4 +33,5 @@ public interface IEngine
     void ShowHighScores();
     void Delay(int msec);
     int ResetBoardTimeHsec();
+    void UpdateSound();
 }

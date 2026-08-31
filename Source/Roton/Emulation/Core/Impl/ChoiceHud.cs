@@ -11,7 +11,8 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class ChoiceHud(
     ITerminal terminal, 
     IEngineAccessor engine,
-    IState state)
+    IState state,
+    IScheduler scheduler)
     : IChoiceHud
 {
     private ITerminal Terminal
@@ -92,7 +93,7 @@ internal sealed class ChoiceHud(
             switch (state.KeyPressed)
             {
                 case EngineKeyCode.None:
-                    Engine.WaitForTick();
+                    scheduler.WaitForTick();
                     continue;
                 case EngineKeyCode.Left:
                     if (barText == null)
@@ -135,7 +136,7 @@ internal sealed class ChoiceHud(
                 break;
             }
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
         DrawString(x, y, message, 0x1E);

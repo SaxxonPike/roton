@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
@@ -12,11 +11,6 @@ internal sealed class ScrollFormatter(IScroll scroll) : IScrollFormatter
 {
     private readonly char[] _newLineChars = Environment.NewLine.ToCharArray();
 
-    private IScroll Scroll
-    {
-        [DebuggerStepThrough] get => scroll;
-    }
-        
     public string[] Format(string text)
     {
         var output = new List<string>();
@@ -30,7 +24,7 @@ internal sealed class ScrollFormatter(IScroll scroll) : IScrollFormatter
             sb.Clear();
             foreach (var word in line.Split(' '))
             {
-                if (word.Length + 1 > Scroll.TextWidth)
+                if (word.Length + 1 > scroll.TextWidth)
                 {
                     output.Add(sb.ToString());
                     sb.Clear();
