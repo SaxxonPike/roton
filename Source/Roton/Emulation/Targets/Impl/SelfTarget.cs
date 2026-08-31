@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets.Impl;
 
+/// <summary>
+/// Represents the "SELF" target, which includes only the sender.
+/// </summary>
 [Context(Context.Original, "SELF")]
 [Context(Context.Super, "SELF")]
 internal sealed class SelfTarget : ITarget
