@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
+/// <summary>
+/// Represents the "DARK" cheat, which controls darkness state on the board.
+/// </summary>
 [Context(Context.Original, "DARK")]
 internal sealed class DarkCheat(
     IBoard board,
