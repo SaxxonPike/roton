@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the counter-clockwise conveyor element.
+/// </summary>
 [Context(Context.Original, 0x11)]
 [Context(Context.Super, 0x11)]
 internal sealed class CounterclockwiseConveyorAction(

@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the ruffian element.
+/// </summary>
 [Context(Context.Original, 0x23)]
 [Context(Context.Super, 0x23)]
 internal sealed class RuffianAction(
@@ -34,12 +37,11 @@ internal sealed class RuffianAction(
             if (actor.Location.X == actorList.Player.Location.X || actor.Location.Y == actorList.Player.Location.Y)
             {
                 if (actor.P1 >= randomizer.GetNext(9))
-                {
                     actor.Vector = Engine.Seek(actor.Location);
-                }
             }
 
             var target = actor.Location + actor.Vector;
+
             if (tiles.ElementAt(target).Id == elementList.PlayerId)
             {
                 Engine.Attack(index, target);
@@ -47,10 +49,9 @@ internal sealed class RuffianAction(
             else if (Engine.ElementAt(target).IsFloor)
             {
                 Engine.MoveActor(index, target);
+
                 if (actor.P2 + 8 <= randomizer.GetNext(17))
-                {
                     actor.Vector = new Vector(0, 0);
-                }
             }
             else
             {

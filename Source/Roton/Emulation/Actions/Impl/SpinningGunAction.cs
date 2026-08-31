@@ -5,13 +5,16 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the spinning gun element.
+/// </summary>
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
 internal sealed class SpinningGunAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IRandomizer randomizer,
-    IElementList elementList,
+    IElementList elements,
     IBoardUpdater boardUpdater)
     : IAction
 {
@@ -19,37 +22,35 @@ internal sealed class SpinningGunAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var firingElement = elementList.BulletId;
+        var actor = actors[index];
+        var firingElement = elements.BulletId;
         var shot = false;
 
         boardUpdater.UpdateBoard(actor.Location);
 
         if (actor.P2 >= 0x80)
+            firingElement = elements.StarId;
+
+        if ((actor.P2 & 0x7F) <= randomizer.GetNext(9)) 
+            return;
+
+        if (actor.P1 >= randomizer.GetNext(9))
         {
-            firingElement = elementList.StarId;
+            if (actor.Location.X.AbsDiff(actors.Player.Location.X) <= 2)
+            {
+                shot = Engine.SpawnProjectile(firingElement, actor.Location,
+                    new Vector(0, (actors.Player.Location.Y - actor.Location.Y).Polarity()), true);
+            }
+
+            if (!shot && actor.Location.Y.AbsDiff(actors.Player.Location.Y) <= 2)
+            {
+                Engine.SpawnProjectile(firingElement, actor.Location,
+                    new Vector((actors.Player.Location.X - actor.Location.X).Polarity(), 0), true);
+            }
         }
-
-        if ((actor.P2 & 0x7F) > randomizer.GetNext(9))
+        else
         {
-            if (actor.P1 >= randomizer.GetNext(9))
-            {
-                if (actor.Location.X.AbsDiff(actorList.Player.Location.X) <= 2)
-                {
-                    shot = Engine.SpawnProjectile(firingElement, actor.Location,
-                        new Vector(0, (actorList.Player.Location.Y - actor.Location.Y).Polarity()), true);
-                }
-
-                if (!shot && actor.Location.Y.AbsDiff(actorList.Player.Location.Y) <= 2)
-                {
-                    Engine.SpawnProjectile(firingElement, actor.Location,
-                        new Vector((actorList.Player.Location.X - actor.Location.X).Polarity(), 0), true);
-                }
-            }
-            else
-            {
-                Engine.SpawnProjectile(firingElement, actor.Location, Engine.Rnd(), true);
-            }
+            Engine.SpawnProjectile(firingElement, actor.Location, Engine.Rnd(), true);
         }
     }
 }

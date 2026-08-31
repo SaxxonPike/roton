@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the lion element.
+/// </summary>
 [Context(Context.Original, 0x29)]
 [Context(Context.Super, 0x29)]
 internal sealed class LionAction(

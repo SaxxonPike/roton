@@ -7,12 +7,15 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the player element.
+/// </summary>
 [Context(Context.Original, 0x04)]
 [Context(Context.Super, 0x04)]
 internal sealed class PlayerAction(
     IEngineAccessor engine,
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     IWorld world,
     IState state,
     ITiles tiles,
@@ -21,7 +24,7 @@ internal sealed class PlayerAction(
     IHud hud,
     ISounds sounds,
     IFacts facts,
-    IInteractionList interactionList,
+    IInteractionList interactions,
     ITimers timers,
     IConfig config,
     ISoundUnit soundUnit,
@@ -35,8 +38,8 @@ internal sealed class PlayerAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var playerElement = elementList.Player();
+        var actor = actors[index];
+        var playerElement = elements.Player();
 
         // Energizer graphics
 
@@ -45,13 +48,9 @@ internal sealed class PlayerAction(
             playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
             if ((state.GameCycle & 0x01) == 0)
-            {
                 tiles[actor.Location].Color = ((state.GameCycle % 7 + 1) << 4) | 0x0F;
-            }
             else
-            {
                 tiles[actor.Location].Color = 0x0F;
-            }
 
             boardUpdater.UpdateBoard(actor.Location);
         }
@@ -66,10 +65,9 @@ internal sealed class PlayerAction(
         {
             state.KeyVector = new Vector(0, 0);
             state.KeyShift = false;
-            if (actorList.ActorIndexAt(new Location(0, 0)) == -1)
-            {
+
+            if (actors.ActorIndexAt(new Location(0, 0)) == -1)
                 Engine.SetMessage(0x7D00, alerts.GameOverMessage);
-            }
 
             state.GameWaitTime = 0;
             state.GameOver = true;
@@ -93,12 +91,11 @@ internal sealed class PlayerAction(
             {
                 if (world.Ammo > 0)
                 {
-                    var bulletCount =
-                        actorList.Count(a => a.P1 == 0 && tiles[a.Location].Id == elementList.BulletId);
+                    var bulletCount = actors.Count(a => a.P1 == 0 && tiles[a.Location].Id == elements.BulletId);
+
                     if (bulletCount < board.MaximumShots)
                     {
-                        if (Engine.SpawnProjectile(elementList.BulletId, actor.Location,
-                                state.KeyVector, false))
+                        if (Engine.SpawnProjectile(elements.BulletId, actor.Location, state.KeyVector, false))
                         {
                             world.Ammo--;
                             hud.UpdateStatus();
@@ -128,20 +125,16 @@ internal sealed class PlayerAction(
         {
             // Movement logic
 
-            interactionList.Get(tiles[actor.Location + state.KeyVector].Id)?
+            interactions.Get(tiles[actor.Location + state.KeyVector].Id)?
                 .Interact(actor.Location + state.KeyVector, 0, ref state.KeyVector);
 
             if (!state.KeyVector.IsZero())
             {
                 if (!state.SoundPlaying)
-                {
                     soundUnit.PlayStep();
-                }
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
-                {
                     Engine.MoveActor(0, actor.Location + state.KeyVector);
-                }
             }
         }
 
@@ -151,37 +144,47 @@ internal sealed class PlayerAction(
         {
             case EngineKeyCode.Q:
             case EngineKeyCode.Escape:
+            {
                 state.BreakGameLoop = state.GameOver || hud.EndGameConfirmation();
                 break;
+            }
             case EngineKeyCode.S:
+            {
                 if (hud.SaveGame() is { } saveFileName)
-                {
                     worldUnit.SaveWorld(saveFileName);
-                }
 
                 break;
+            }
             case EngineKeyCode.P:
+            {
                 if (world.Health > 0)
-                {
                     state.GamePaused = true;
-                }
 
                 break;
+            }
             case EngineKeyCode.B:
+            {
                 state.GameQuiet = !state.GameQuiet;
                 soundUnit.ClearSound();
                 hud.UpdateStatus();
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
+            }
             case EngineKeyCode.H:
+            {
                 features.ShowInGameHelp();
                 break;
+            }
             case EngineKeyCode.QuestionMark:
+            {
                 Engine.Cheat();
                 break;
+            }
             default:
+            {
                 features.HandlePlayerInput(actor);
                 break;
+            }
         }
 
         // Torch logic
@@ -189,6 +192,7 @@ internal sealed class PlayerAction(
         if (world.TorchCycles > 0)
         {
             world.TorchCycles--;
+
             if (world.TorchCycles <= 0)
             {
                 radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
@@ -196,9 +200,7 @@ internal sealed class PlayerAction(
             }
 
             if (world.TorchCycles % 40 == 0)
-            {
                 hud.UpdateStatus();
-            }
         }
 
         // Energizer logic
@@ -206,14 +208,11 @@ internal sealed class PlayerAction(
         if (world.EnergyCycles > 0)
         {
             world.EnergyCycles--;
+
             if (world.EnergyCycles == 10)
-            {
                 soundUnit.PlaySound(9, sounds.EnergyOut);
-            }
             else if (world.EnergyCycles <= 0)
-            {
                 features.ForcePlayerColor(index);
-            }
         }
 
         // Time limit logic
@@ -225,6 +224,7 @@ internal sealed class PlayerAction(
                 if (timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
                 {
                     world.TimePassed++;
+
                     if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
                         Engine.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);

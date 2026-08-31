@@ -4,6 +4,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the blink wall element.
+/// </summary>
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
 internal sealed class BlinkWallAction(

@@ -5,13 +5,16 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the Roton element.
+/// </summary>
 [Context(Context.Original, 0x3B)]
 [Context(Context.Super, 0x3B)]
 internal sealed class RotonAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IRandomizer randomizer,
-    IElementList elementList,
+    IElementList elements,
     ITiles tiles)
     : IAction
 {
@@ -19,15 +22,15 @@ internal sealed class RotonAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         actor.P3--;
+
         if (actor.P3 < -actor.P2 % 10)
-        {
             actor.P3 = unchecked((byte)(actor.P2 * 10 + randomizer.GetNext(10)));
-        }
 
         actor.Vector = Engine.Seek(actor.Location);
+
         if (actor.P1 <= randomizer.GetNext(10))
         {
             var temp = actor.Vector.X;
@@ -36,13 +39,10 @@ internal sealed class RotonAction(
         }
 
         var target = actor.Location + actor.Vector;
+
         if (tiles.ElementAt(target).IsFloor)
-        {
             Engine.MoveActor(index, target);
-        }
-        else if (tiles[target].Id == elementList.PlayerId)
-        {
+        else if (tiles[target].Id == elements.PlayerId)
             Engine.Attack(index, target);
-        }
     }
 }

@@ -4,15 +4,18 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the pusher element.
+/// </summary>
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
 internal sealed class PusherAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
     ISounds sounds,
-    IElementList elementList,
-    IActionList actionList,
+    IElementList elements,
+    IActionList actions,
     ISoundUnit soundUnit,
     IPusher pusher)
     : IAction
@@ -21,16 +24,14 @@ internal sealed class PusherAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var source = actor.Location;
 
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
-        {
             pusher.Push(actor.Location + actor.Vector, actor.Vector);
-        }
 
-        index = actorList.ActorIndexAt(source);
-        actor = actorList[index];
+        index = actors.ActorIndexAt(source);
+        actor = actors[index];
 
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             return;
@@ -39,14 +40,13 @@ internal sealed class PusherAction(
         Engine.MoveActor(index, actor.Location + actor.Vector);
         soundUnit.PlaySound(2, sounds.Push);
 
-        if (tiles[behindLocation].Id != elementList.PusherId)
+        if (tiles[behindLocation].Id != elements.PusherId)
             return;
 
-        var behindIndex = actorList.ActorIndexAt(behindLocation);
-        var behindActor = actorList[behindIndex];
+        var behindIndex = actors.ActorIndexAt(behindLocation);
+        var behindActor = actors[behindIndex];
+
         if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)
-        {
-            actionList.Get(elementList.PusherId)?.Act(behindIndex);
-        }
+            actions.Get(elements.PusherId)?.Act(behindIndex);
     }
 }

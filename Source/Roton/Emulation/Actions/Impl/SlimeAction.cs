@@ -4,13 +4,16 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the slime element.
+/// </summary>
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
 internal sealed class SlimeAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IState state,
     IBoardUpdater boardUpdater)
     : IAction
@@ -19,36 +22,38 @@ internal sealed class SlimeAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         if (actor.P1 >= actor.P2)
         {
             var spawnCount = 0;
             var color = tiles[actor.Location].Color;
-            var slimeElement = elementList.Slime();
-            var slimeTrailTile = new Tile(elementList.BreakableId, color);
+            var slimeElement = elements.Slime();
+            var slimeTrailTile = new Tile(elements.BreakableId, color);
             var source = actor.Location;
+
             actor.P1 = 0;
 
             for (var i = 0; i < 4; i++)
             {
                 var target = source + Engine.GetCardinalVector(i);
-                if (tiles.ElementAt(target).IsFloor)
-                {
-                    if (spawnCount == 0)
-                    {
-                        Engine.MoveActor(index, target);
-                        tiles[source] = slimeTrailTile;
-                        boardUpdater.UpdateBoard(source);
-                    }
-                    else
-                    {
-                        Engine.SpawnActor(target, new Tile(elementList.SlimeId, color), slimeElement.Cycle, null);
-                        actorList[state.ActorCount].P2 = actor.P2;
-                    }
 
-                    spawnCount++;
+                if (!tiles.ElementAt(target).IsFloor)
+                    continue;
+
+                if (spawnCount == 0)
+                {
+                    Engine.MoveActor(index, target);
+                    tiles[source] = slimeTrailTile;
+                    boardUpdater.UpdateBoard(source);
                 }
+                else
+                {
+                    Engine.SpawnActor(target, new Tile(elements.SlimeId, color), slimeElement.Cycle, null);
+                    actors[state.ActorCount].P2 = actor.P2;
+                }
+
+                spawnCount++;
             }
 
             if (spawnCount == 0)

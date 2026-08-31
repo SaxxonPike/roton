@@ -5,6 +5,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the tiger element.
+/// </summary>
 [Context(Context.Original, 0x2A)]
 [Context(Context.Super, 0x2A)]
 internal sealed class TigerAction(
@@ -22,10 +25,8 @@ internal sealed class TigerAction(
         var actor = actorList[index];
         var firingElement = elementList.BulletId;
 
-        if (actor.P2 >= 0x80)
-        {
+        if (actor.P2 >= 0x80) 
             firingElement = elementList.StarId;
-        }
 
         if ((actor.P2 & 0x7F) > 3 * randomizer.GetNext(10))
         {

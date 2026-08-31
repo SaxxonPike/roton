@@ -4,11 +4,14 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the star element.
+/// </summary>
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
 internal sealed class StarAction(
     IEngineAccessor engine,
-    IActorList actorList,
+    IActorList actors,
     IElementList elements,
     ITiles tiles,
     IBoardUpdater boardUpdater,
@@ -19,7 +22,7 @@ internal sealed class StarAction(
 
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         actor.P2 = unchecked((byte)((actor.P2 - 1) & 0xFF));
 

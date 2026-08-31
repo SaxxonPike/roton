@@ -5,6 +5,9 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the messenger element.
+/// </summary>
 [Context(Context.Original, 0x02)]
 [Context(Context.Super, 0x02)]
 internal sealed class MessengerAction(
@@ -23,8 +26,10 @@ internal sealed class MessengerAction(
         if (actor.Location.X == 0)
         {
             hud.DrawMessage(new Message(features.GetMessageLines()), actor.P2 % 7 + 9);
+
             actor.P2--;
-            if (actor.P2 > 0) return;
+            if (actor.P2 > 0)
+                return;
 
             Engine.RemoveActor(index);
             state.ActIndex--;
