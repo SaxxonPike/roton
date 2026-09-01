@@ -13,9 +13,9 @@ internal sealed class Pusher(
     ISoundUnit soundUnit,
     ISounds sounds,
     IBoardUpdater boardUpdater,
-    IFeatures features,
     ITracer tracer,
-    IMover mover)
+    IMover mover,
+    ITileRemover tileRemover)
     : IPusher
 {
     private IEngine Engine => engine.Instance;
@@ -124,7 +124,7 @@ internal sealed class Pusher(
         {
             tiles[target] = tiles[source];
             boardUpdater.UpdateBoard(target);
-            features.RemoveItem(source);
+            tileRemover.RemoveItem(source);
             boardUpdater.UpdateBoard(source);
         }
     }

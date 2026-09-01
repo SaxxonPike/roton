@@ -12,14 +12,14 @@ internal sealed class ForestInteraction(
     ISounds sounds,
     IState state,
     ISoundUnit soundUnit,
-    IFeatures features,
     IBoardUpdater boardUpdater,
-    IMessenger messenger)
+    IMessenger messenger,
+    IForestHandler forestHandler)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
-        features.ClearForest(location);
+        forestHandler.ClearForest(location);
         boardUpdater.UpdateBoard(location);
 
         var forestSongLength = sounds.Forest.Length;

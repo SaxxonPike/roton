@@ -13,15 +13,15 @@ internal sealed class EnergizerInteraction(
     IFacts facts,
     IAlerts alerts,
     ISoundUnit soundUnit,
-    IFeatures features,
     IBroadcaster broadcaster,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
         soundUnit.PlaySound(9, sounds.Energizer);
-        features.RemoveItem(location);
+        tileRemover.RemoveItem(location);
         world.EnergyCycles = facts.EnergyCyclesPerEnergizer;
         hud.UpdateStatus();
 

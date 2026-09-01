@@ -59,6 +59,9 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IColorMatcher _colorMatcher;
     private readonly IDialogs _dialogs;
     private readonly IInputReader _inputReader;
+    private readonly IPlayerEnterHandler _playerEnterHandler;
+    private readonly IPlayerInputHandler _playerInputHandler;
+    private readonly ITileRemover _tileRemover;
 
     private bool _step;
 
@@ -107,7 +110,10 @@ internal sealed class Engine : IEngine, IDisposable
         IScheduler scheduler,
         IColorMatcher colorMatcher,
         IDialogs dialogs,
-        IInputReader inputReader)
+        IInputReader inputReader,
+        IPlayerEnterHandler playerEnterHandler,
+        IPlayerInputHandler playerInputHandler,
+        ITileRemover tileRemover)
     {
         engineAccessor.Instance = this;
 
@@ -155,6 +161,9 @@ internal sealed class Engine : IEngine, IDisposable
         _colorMatcher = colorMatcher;
         _dialogs = dialogs;
         _inputReader = inputReader;
+        _playerEnterHandler = playerEnterHandler;
+        _playerInputHandler = playerInputHandler;
+        _tileRemover = tileRemover;
     }
 
     private Thread? Thread { get; set; }
@@ -235,7 +244,7 @@ internal sealed class Engine : IEngine, IDisposable
     {
         var index = _actors.ActorIndexAt(location);
         if (index == -1)
-            _features.RemoveItem(location);
+            _tileRemover.RemoveItem(location);
         else
             Harm(index);
     }
@@ -389,7 +398,7 @@ internal sealed class Engine : IEngine, IDisposable
                     if (_board.RestartOnZap)
                     {
                         _soundUnit.PlaySound(4, _sounds.TimeOut);
-                        _features.RemoveItem(actor.Location);
+                        _tileRemover.RemoveItem(actor.Location);
                         var oldLocation = actor.Location;
                         actor.Location = _board.Entrance;
                         _radiusUpdater.UpdateRadius(oldLocation, 0);
@@ -469,7 +478,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void PutTile(Location location, Vector vector, Tile kind)
     {
-        if (!_features.CanPutTile(location))
+        if (!_tiles.CanPutTile(location))
             return;
 
         if (location.X >= 1 && location.X <= _tiles.Width && location.Y >= 1 &&
@@ -890,7 +899,7 @@ internal sealed class Engine : IEngine, IDisposable
     private void StartPlaying()
     {
         _worldUnit.SetBoard(_state.StartBoard);
-        _features.EnterBoard();
+        _playerEnterHandler.EnterBoard();
         _state.PlayerElement = _elements.PlayerId;
         _state.GamePaused = true;
         MainLoop(true);
@@ -1000,7 +1009,7 @@ internal sealed class Engine : IEngine, IDisposable
                 if (!ThreadActive)
                     break;
 
-                var startPlaying = _features.HandleTitleInput();
+                var startPlaying = _playerInputHandler.HandleTitleInput();
                 if (startPlaying)
                     gameEnded = PlayWorld();
 

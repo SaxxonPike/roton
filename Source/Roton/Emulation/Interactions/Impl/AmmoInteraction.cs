@@ -12,15 +12,15 @@ internal sealed class AmmoInteraction(
     IAlerts alerts,
     IFacts facts,
     ISoundUnit soundUnit,
-    IFeatures features,
     IHud hud,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Ammo += facts.AmmoPerPickup;
-        features.RemoveItem(location);
+        tileRemover.RemoveItem(location);
         hud.UpdateStatus();
         soundUnit.PlaySound(2, sounds.Ammo);
 

@@ -75,4 +75,10 @@ public abstract class Tiles(IMemory memory, IElementList elementList, int offset
         if (element.Color == 0xFE) return ((tile.Color >> 4) & 0x0F) + 8;
         return tile.Color & 0x0F;
     }
+
+    public virtual bool CanPutTile(Location location)
+    {
+        // do not allow #put on the bottom row
+        return location.Y < Height;
+    }
 }

@@ -29,14 +29,14 @@ internal sealed class PlayerAction(
     IConfig config,
     ISoundUnit soundUnit,
     IWorldUnit worldUnit,
-    IFeatures features,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
     ISpawner spawner,
     IMover mover,
     IPlayerUpdater playerUpdater,
     IMessenger messenger,
-    IDialogs dialogs)
+    IDialogs dialogs,
+    IPlayerInputHandler playerInputHandler)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -187,7 +187,7 @@ internal sealed class PlayerAction(
             }
             default:
             {
-                features.HandlePlayerInput(actor);
+                playerInputHandler.HandlePlayerInput(actor);
                 break;
             }
         }

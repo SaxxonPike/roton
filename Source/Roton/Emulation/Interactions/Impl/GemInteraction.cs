@@ -13,8 +13,8 @@ internal sealed class GemInteraction(
     ISounds sounds,
     IAlerts alerts,
     ISoundUnit soundUnit,
-    IFeatures features,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
@@ -22,7 +22,7 @@ internal sealed class GemInteraction(
         world.Health += facts.HealthPerGem;
         world.Gems += 1;
         world.Score += facts.ScorePerGem;
-        features.RemoveItem(location);
+        tileRemover.RemoveItem(location);
         hud.UpdateStatus();
         soundUnit.PlaySound(2, sounds.Gem);
 

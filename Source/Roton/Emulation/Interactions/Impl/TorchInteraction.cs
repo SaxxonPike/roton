@@ -12,14 +12,14 @@ internal sealed class TorchInteraction(
     IAlerts alerts,
     IFacts facts,
     ISoundUnit soundUnit,
-    IFeatures features,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Torches++;
-        features.RemoveItem(location);
+        tileRemover.RemoveItem(location);
         hud.UpdateStatus();
         if (alerts.TorchPickup)
         {

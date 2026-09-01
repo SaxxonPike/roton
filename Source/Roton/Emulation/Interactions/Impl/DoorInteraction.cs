@@ -14,8 +14,8 @@ internal sealed class DoorInteraction(
     ISounds sounds,
     IHud hud,
     ISoundUnit soundUnit,
-    IFeatures features,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
@@ -30,7 +30,7 @@ internal sealed class DoorInteraction(
         else
         {
             world.Keys[keyIndex] = false;
-            features.RemoveItem(location);
+            tileRemover.RemoveItem(location);
             hud.UpdateStatus();
             messenger.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
             soundUnit.PlaySound(3, sounds.DoorOpen);

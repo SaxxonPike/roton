@@ -15,8 +15,8 @@ internal sealed class PassageInteraction(
     ISounds sounds,
     ISoundUnit soundUnit,
     IWorldUnit worldUnit,
-    IFeatures features,
-    IPlayerUpdater playerUpdater)
+    IPlayerUpdater playerUpdater,
+    IPlayerEnterHandler playerEnterHandler)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -47,7 +47,7 @@ internal sealed class PassageInteraction(
         state.GamePaused = true;
         soundUnit.PlaySound(4, sounds.Passage);
         Engine.FadePurple();
-        features.EnterBoard();
+        playerEnterHandler.EnterBoard();
         vector = Vector.Idle;
     }
 }

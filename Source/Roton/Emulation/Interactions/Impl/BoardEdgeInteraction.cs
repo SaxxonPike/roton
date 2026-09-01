@@ -14,9 +14,9 @@ internal sealed class BoardEdgeInteraction(
     IInteractionList interactionList,
     IState state,
     IWorldUnit worldUnit,
-    IFeatures features,
     IMover mover,
-    IExits exits)
+    IExits exits,
+    IPlayerEnterHandler playerEnterHandler)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -67,7 +67,7 @@ internal sealed class BoardEdgeInteraction(
 
             Engine.FadePurple();
             vector = Vector.Idle;
-            features.EnterBoard();
+            playerEnterHandler.EnterBoard();
         }
         else
         {

@@ -14,8 +14,8 @@ internal sealed class KeyInteraction(
     IAlerts alerts,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IFeatures features,
-    IMessenger messenger)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
@@ -30,7 +30,7 @@ internal sealed class KeyInteraction(
         else
         {
             world.Keys[keyIndex] = true;
-            features.RemoveItem(location);
+            tileRemover.RemoveItem(location);
             hud.UpdateStatus();
             messenger.SetMessage(facts.LongMessageDuration, alerts.KeyPickupMessage(color));
             soundUnit.PlaySound(2, sounds.Key);
