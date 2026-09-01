@@ -9,14 +9,14 @@ namespace Roton.Emulation.Interactions.Impl;
 internal sealed class BoardEdgeInteraction(
     IEngineAccessor engine,
     IWorld world,
-    IBoard board,
     ITiles tiles,
     IElementList elementList,
     IInteractionList interactionList,
     IState state,
     IWorldUnit worldUnit,
     IFeatures features,
-    IMover mover)
+    IMover mover,
+    IExits exits)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -30,19 +30,19 @@ internal sealed class BoardEdgeInteraction(
         switch (vector.X, vector.Y)
         {
             case (_, -1):
-                targetBoard = board.Exits.North;
+                targetBoard = exits.North;
                 target.Y = tiles.Height;
                 break;
             case (_, 1):
-                targetBoard = board.Exits.South;
+                targetBoard = exits.South;
                 target.Y = 1;
                 break;
             case (-1, _):
-                targetBoard = board.Exits.West;
+                targetBoard = exits.West;
                 target.X = tiles.Width;
                 break;
             default:
-                targetBoard = board.Exits.East;
+                targetBoard = exits.East;
                 target.X = 1;
                 break;
         }

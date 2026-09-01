@@ -55,7 +55,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(10 + dX, 10 + dY, Elements.BoardEdgeId);
-        Board.Exits[(int)dir] = 1;
+        Exits[(int)dir] = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -84,7 +84,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -115,7 +115,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -148,7 +148,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -189,7 +189,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -232,7 +232,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);
@@ -264,7 +264,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
         // Set up board 0.
         GoToBoard(0);
         PlotTo(11, 10, Elements.BoardEdgeId);
-        Board.Exits.East = 1;
+        Exits.East = 1;
 
         // Place the player.
         MovePlayerTo(10, 10);

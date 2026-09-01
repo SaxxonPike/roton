@@ -23,7 +23,8 @@ public class WorldUnit(
     IFacts facts,
     IElementList elements,
     IActorList actors,
-    IFileTitles fileTitles)
+    IFileTitles fileTitles,
+    IExits exits)
     : IWorldUnit
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -162,7 +163,7 @@ public class WorldUnit(
         if (string.IsNullOrEmpty(name))
             return;
 
-        LoadWorld(name, false);
+        LoadWorld(name!, false);
         state.StartBoard = world.BoardIndex;
         SetBoard(0);
 
@@ -179,7 +180,7 @@ public class WorldUnit(
         if (string.IsNullOrEmpty(name))
             return false;
 
-        if (!LoadWorld(name, true))
+        if (!LoadWorld(name!, true))
             return false;
 
         state.StartBoard = world.BoardIndex;
@@ -232,10 +233,10 @@ public class WorldUnit(
         board.IsDark = false;
         board.RestartOnZap = false;
         board.TimeLimit = 0;
-        board.Exits.East = 0;
-        board.Exits.North = 0;
-        board.Exits.South = 0;
-        board.Exits.West = 0;
+        exits.East = 0;
+        exits.North = 0;
+        exits.South = 0;
+        exits.West = 0;
 
         // build board edges
         for (var y = 0; y <= tiles.Height + 1; y++)

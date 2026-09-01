@@ -9,12 +9,12 @@ internal sealed class WebDraw(
     ITiles tiles,
     IState state,
     IElementList elementList,
-    IFeatures features)
+    IAdjacentFinder adjacentFinder)
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(state.WebChars[features.GetAdjacent(location, elementList.WebId)],
+        return new AnsiChar(state.WebChars[adjacentFinder.GetAdjacent(location, elementList.WebId)],
             tiles[location].Color);
     }
 }

@@ -9,10 +9,11 @@ internal sealed class SuperBoard : IBoard
     private readonly IMemory _memory;
     private Bool _isDark;
 
-    public SuperBoard(IMemory memory)
+    public SuperBoard(IMemory memory, IExits exits)
     {
         _memory = memory;
-        Exits = new SuperExits(_memory);
+        Exits = exits;
+        // Exits = new SuperExits(_memory);
     }
 
     public ref Location16 Camera => ref _memory.GetRef<Location16>(0x776F);

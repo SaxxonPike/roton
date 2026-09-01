@@ -13,5 +13,4 @@ public interface IFeatures
     string[] GetMessageLines();
     int BaseMemoryUsage { get; }
     void CleanUpOop(ref OopContext context);
-    int GetAdjacent(Location location, int elementId);
 }

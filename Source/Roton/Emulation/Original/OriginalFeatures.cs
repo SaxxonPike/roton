@@ -105,18 +105,6 @@ internal sealed class OriginalFeatures(
         Engine.PlotTile(location, context.DeathTile);
     }
 
-    private bool TestAdjacent(Location location, int id)
-    {
-        var eId = tiles[location].Id;
-        return eId == id || eId == elementList.BoardEdgeId;
-    }
-
-    public int GetAdjacent(Location location, int id) =>
-        (TestAdjacent(location + Vector.North, id) ? 1 : 0) |
-        (TestAdjacent(location + Vector.South, id) ? 2 : 0) |
-        (TestAdjacent(location + Vector.West, id) ? 4 : 0) |
-        (TestAdjacent(location + Vector.East, id) ? 8 : 0);
-
     public bool HandleTitleInput()
     {
         switch (state.KeyPressed.ToUpperCase())
