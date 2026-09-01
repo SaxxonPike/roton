@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public class WorldUnit(
+internal sealed class WorldUnit(
     IHud hud,
     IWorld world,
     IState state,

@@ -1,18 +1,17 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperPlayField(
+internal sealed class SuperPlayField(
     IState state,
     ITerminal terminal,
     IBoard board)
-    : PlayField
+    : IPlayField
 {
-    public override void DrawTile(int x, int y, AnsiChar ac)
+    public void DrawTile(int x, int y, AnsiChar ac)
     {
         if (state.EditorMode)
         {

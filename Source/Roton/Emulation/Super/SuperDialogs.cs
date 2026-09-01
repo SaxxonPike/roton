@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperDialogs(
+internal sealed class SuperDialogs(
     IBroadcaster broadcaster,
     IFacts facts)
     : IDialogs

@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalActorLocker(
+internal sealed class OriginalActorLocker(
     IActorList actors)
     : ActorLocker
 {

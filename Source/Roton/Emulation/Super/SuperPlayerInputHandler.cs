@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperPlayerInputHandler(
+internal sealed class SuperPlayerInputHandler(
     IState state,
     IWorldUnit worldUnit,
     IDialogs dialogs,

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperForestHandler(
+internal sealed class SuperForestHandler(
     ITiles tiles,
     IElementList elements)
     : IForestHandler

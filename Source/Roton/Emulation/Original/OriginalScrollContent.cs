@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalScrollContent : ScrollContent
+internal sealed class OriginalScrollContent : ScrollContent
 {
     public override int LineWidth => 50;
 }

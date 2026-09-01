@@ -1,5 +1,4 @@
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -8,8 +7,8 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalPlayField(
     ITerminal terminal)
-    : PlayField
+    : IPlayField
 {
-    public override void DrawTile(int x, int y, AnsiChar ac) => 
+    public void DrawTile(int x, int y, AnsiChar ac) => 
         terminal.Plot(x, y, ac);
 }

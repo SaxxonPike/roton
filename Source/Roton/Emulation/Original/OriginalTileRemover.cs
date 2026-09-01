@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalTileRemover(
+internal sealed class OriginalTileRemover(
     ITiles tiles,
     IElementList elements,
     IBoardUpdater boardUpdater)

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalPlayerEnterHandler(
+internal sealed class OriginalPlayerEnterHandler(
     IBoardTime boardTime,
     IBoard board,
     IActorList actors,

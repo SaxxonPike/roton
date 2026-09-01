@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalMessageHandler(
+internal sealed class OriginalMessageHandler(
     IHud hud,
     IFacts facts,
     IState state,

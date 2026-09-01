@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperTileRemover(
+internal sealed class SuperTileRemover(
     IElementList elements,
     ITiles tiles,
     IActorList actors,

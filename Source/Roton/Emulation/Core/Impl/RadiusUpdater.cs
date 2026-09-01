@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class RadiusUpdater(
+internal sealed class RadiusUpdater(
     IEngineAccessor engine,
     ITiles tiles,
     IFacts facts,

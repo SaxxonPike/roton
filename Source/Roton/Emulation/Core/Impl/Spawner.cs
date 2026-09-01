@@ -5,7 +5,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class Spawner(
+internal sealed class Spawner(
     IEngineAccessor engine,
     IState state,
     IActorList actors,

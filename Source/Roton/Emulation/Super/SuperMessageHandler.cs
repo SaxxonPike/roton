@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperMessageHandler(
+internal sealed class SuperMessageHandler(
     IHud hud,
     IFacts facts,
     IState state,

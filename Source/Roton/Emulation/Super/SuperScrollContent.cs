@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperScrollContent : ScrollContent
+internal sealed class SuperScrollContent : ScrollContent
 {
     public override int LineWidth => 60;
 }

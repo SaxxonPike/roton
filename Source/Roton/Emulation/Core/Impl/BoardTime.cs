@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 /// <inheritdoc />
 [Context(Context.Startup)]
-public class BoardTime(
+internal sealed class BoardTime(
     IConfig config) 
     : IBoardTime
 {

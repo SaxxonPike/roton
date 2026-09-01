@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalPlayerInputHandler(
+internal sealed class OriginalPlayerInputHandler(
     IState state,
     IWorldUnit worldUnit,
     IDialogs dialogs,

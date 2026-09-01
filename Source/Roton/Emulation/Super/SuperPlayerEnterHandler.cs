@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperPlayerEnterHandler(
+internal sealed class SuperPlayerEnterHandler(
     IBoardTime boardTime,
     IBroadcaster broadcaster,
     IFacts facts,

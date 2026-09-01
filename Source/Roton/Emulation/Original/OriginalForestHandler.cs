@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalForestHandler(
+internal sealed class OriginalForestHandler(
     ITileRemover tileRemover)
     : IForestHandler
 {
