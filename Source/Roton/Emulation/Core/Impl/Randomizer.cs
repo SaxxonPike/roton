@@ -35,16 +35,12 @@ internal sealed class Randomizer(
 
     public int GetNext(int exclusiveUpperBound)
     {
-        unchecked
-        {
-            var newState = _randomState.State * 33797 + 1;
-            _randomState.State = newState;
-        }
+        _randomState.State = unchecked(_randomState.State * 0x08088405 + 1);
 
         if (exclusiveUpperBound == 0)
             return 0;
 
-        return ((_randomState.State >> 16) & 0xFFFF) % exclusiveUpperBound;
+        return unchecked((ushort)(_randomState.State >> 16)) % exclusiveUpperBound;
     }
 
     public int Seed
