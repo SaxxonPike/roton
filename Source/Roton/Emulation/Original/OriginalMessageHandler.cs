@@ -29,4 +29,9 @@ internal sealed class OriginalMessageHandler(
                 return null;
         }
     }
+
+    public string[] GetMessageLines()
+    {
+        return [state.Message];
+    }
 }

@@ -17,4 +17,5 @@ internal sealed class OriginalFacts : Facts
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "ZZT Worlds";
     public override string HighScoreExtension => "HI";
+    public override int BaseMemoryUsage => 205791;
 }

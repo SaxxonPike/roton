@@ -13,7 +13,6 @@ public interface IEngine
     void ExecuteCode(int index, ref Word instruction, string name);
     void FadePurple();
     bool FindTile(Tile kind, Location location);
-    Vector GetCardinalVector(int index);
     void Harm(int index);
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);

@@ -170,7 +170,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public bool ThreadActive => Thread != null || _step;
 
-    public int MemoryUsage => _features.BaseMemoryUsage + _heap.Size + _boardList.Sum(b => b.Data.Length);
+    public int MemoryUsage => _facts.BaseMemoryUsage + _heap.Size + _boardList.Sum(b => b.Data.Length);
 
     public void Cheat()
     {
@@ -218,7 +218,7 @@ internal sealed class Engine : IEngine, IDisposable
     {
         if (index == 0 && _world.EnergyCycles > 0)
         {
-            _world.Score += ElementAt(location).Points;
+            _world.Score += _tiles.ElementAt(location).Points;
             _hud.UpdateStatus();
         }
         else
@@ -230,7 +230,7 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (_tiles[location].Id == _elements.PlayerId && _world.EnergyCycles > 0)
         {
-            _world.Score += ElementAt(_actors[index].Location).Points;
+            _world.Score += _tiles.ElementAt(_actors[index].Location).Points;
             _hud.UpdateStatus();
         }
         else
@@ -248,8 +248,6 @@ internal sealed class Engine : IEngine, IDisposable
         else
             Harm(index);
     }
-
-    public IElement ElementAt(Location location) => _elements[_tiles[location].Id];
 
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
@@ -378,8 +376,6 @@ internal sealed class Engine : IEngine, IDisposable
         return false;
     }
 
-    public Vector GetCardinalVector(int index) => new(_state.Vector4[index], _state.Vector4[index + 4]);
-
     public void Harm(int index)
     {
         var actor = _actors[index];
@@ -390,7 +386,7 @@ internal sealed class Engine : IEngine, IDisposable
                 _world.Health -= _facts.HealthLostPerHit;
                 _hud.UpdateStatus();
                 _messenger.SetMessage(_facts.ShortMessageDuration, _alerts.OuchMessage);
-                _tiles[actor.Location].Color = (ElementAt(actor.Location).Color & 0x0F) | 0x70;
+                _tiles[actor.Location].Color = (_tiles.ElementAt(actor.Location).Color & 0x0F) | 0x70;
 
                 if (_world.Health > 0)
                 {
@@ -439,7 +435,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void PlotTile(Location location, Tile tile)
     {
-        if (ElementAt(location).Id == _elements.PlayerId)
+        if (_tiles.ElementAt(location).Id == _elements.PlayerId)
             return;
 
         var targetElement = _elements[tile.Id];
@@ -484,7 +480,7 @@ internal sealed class Engine : IEngine, IDisposable
         if (location.X >= 1 && location.X <= _tiles.Width && location.Y >= 1 &&
             location.Y <= _tiles.Height)
         {
-            if (!ElementAt(location).IsFloor)
+            if (!_tiles.ElementAt(location).IsFloor)
                 _pusher.Push(location, vector);
             PlotTile(location, kind);
         }
@@ -772,13 +768,13 @@ internal sealed class Engine : IEngine, IDisposable
                 if (!_state.KeyVector.IsZero())
                 {
                     var target = _actors.Player.Location + _state.KeyVector;
-                    _interactions.Get(ElementAt(target).Id)?.Interact(target, 0, ref _state.KeyVector);
+                    _interactions.Get(_tiles.ElementAt(target).Id)?.Interact(target, 0, ref _state.KeyVector);
                 }
 
                 if (!_state.KeyVector.IsZero())
                 {
                     var target = _actors.Player.Location + _state.KeyVector;
-                    if (ElementAt(target).IsFloor)
+                    if (_tiles.ElementAt(target).IsFloor)
                     {
                         if (_tiles.ElementAt(_actors.Player.Location).Id == _elements.PlayerId)
                         {

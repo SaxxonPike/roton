@@ -12,13 +12,6 @@ internal sealed class OriginalFeatures(
 {
     private IEngine Engine => engine.Instance;
 
-    public string[] GetMessageLines()
-    {
-        return [state.Message];
-    }
-
-    public int BaseMemoryUsage => 205791;
-
     public void CleanUpOop(ref OopContext context)
     {
         var location = context.Actor.Location;

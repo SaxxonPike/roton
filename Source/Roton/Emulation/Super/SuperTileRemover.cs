@@ -10,7 +10,8 @@ internal sealed class SuperTileRemover(
     ITiles tiles,
     IActorList actors,
     IBoardUpdater boardUpdater,
-    IEngineAccessor engine)
+    IEngineAccessor engine,
+    IState state)
     : ITileRemover
 {
     private IEngine Engine => engine.Instance;
@@ -21,7 +22,7 @@ internal sealed class SuperTileRemover(
 
         for (var i = 0; i < 4; i++)
         {
-            var targetVector = Engine.GetCardinalVector(i);
+            var targetVector = state.GetCardinalVector(i);
             var targetLocation = new Location(location.X + targetVector.X, location.Y + targetVector.Y);
             var adjacentTile = tiles[targetLocation];
 

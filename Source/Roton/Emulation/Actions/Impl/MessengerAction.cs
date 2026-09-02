@@ -14,8 +14,8 @@ internal sealed class MessengerAction(
     IEngineAccessor engine,
     IActorList actors,
     IHud hud,
-    IFeatures features,
-    IState state)
+    IState state,
+    IMessageHandler messageHandler)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +25,7 @@ internal sealed class MessengerAction(
         var actor = actors[index];
         if (actor.Location.X == 0)
         {
-            hud.DrawMessage(new Message(features.GetMessageLines()), actor.P2 % 7 + 9);
+            hud.DrawMessage(new Message(messageHandler.GetMessageLines()), actor.P2 % 7 + 9);
 
             actor.P2--;
             if (actor.P2 > 0)

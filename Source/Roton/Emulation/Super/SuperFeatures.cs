@@ -6,8 +6,7 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperFeatures(
-    IEngineAccessor engine,
-    IState state)
+    IEngineAccessor engine)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;
@@ -17,13 +16,4 @@ internal sealed class SuperFeatures(
         var location = context.Actor.Location;
         Engine.PlotTile(location, context.DeathTile);
     }
-
-    public string[] GetMessageLines()
-    {
-        return string.IsNullOrEmpty(state.Message2)
-            ? [string.Empty, state.Message]
-            : [state.Message, state.Message2];
-    }
-
-    public int BaseMemoryUsage => 203044;
 }

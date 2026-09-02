@@ -57,4 +57,5 @@ public abstract class Facts : IFacts
     public int MaxGameCycle => 420;
     public AnsiChar ErrorFadeTile => new(0xDB, 0x04);
     public abstract string HighScoreExtension { get; }
+    public abstract int BaseMemoryUsage { get; }
 }

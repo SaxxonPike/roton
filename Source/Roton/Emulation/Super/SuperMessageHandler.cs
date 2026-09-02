@@ -36,4 +36,11 @@ internal sealed class SuperMessageHandler(
                 return hud.ShowScroll(false, context.Name, [.. message]);
         }
     }
+
+    public string[] GetMessageLines()
+    {
+        return string.IsNullOrEmpty(state.Message2)
+            ? [string.Empty, state.Message]
+            : [state.Message, state.Message2];
+    }
 }

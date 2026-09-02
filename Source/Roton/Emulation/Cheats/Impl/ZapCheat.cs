@@ -11,7 +11,8 @@ namespace Roton.Emulation.Cheats.Impl;
 [Context(Context.Super, "ZAP")]
 internal sealed class ZapCheat(
     IEngineAccessor engine,
-    IActorList actors)
+    IActorList actors,
+    IState state)
     : ICheat
 {
     private IEngine Engine => engine.Instance;
@@ -19,6 +20,6 @@ internal sealed class ZapCheat(
     public void Execute(bool clear)
     {
         for (var i = 0; i < 4; i++)
-            Engine.Destroy(actors.Player.Location + Engine.GetCardinalVector(i));
+            Engine.Destroy(actors.Player.Location + state.GetCardinalVector(i));
     }
 }

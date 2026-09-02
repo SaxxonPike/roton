@@ -54,6 +54,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
     protected IMemory Memory { get; private set; } = null!;
+    protected IMessageHandler MessageHandler { get; private set; } = null!;
     protected IMover Mover { get; private set; } = null!;
     protected IParser Parser { get; private set; } = null!;
     protected IActor Player => Actors[0];
@@ -68,7 +69,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IWorldUnit WorldUnit { get; private set; } = null!;
     protected ISoundUnit SoundUnit { get; private set; } = null!;
 
-    protected IEnumerable<string> FullMessage => Features.GetMessageLines();
+    protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
     protected void TouchActor(int actorIndex)
@@ -182,6 +183,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();
         Memory = container.GetRequiredService<IMemory>();
+        MessageHandler = container.GetRequiredService<IMessageHandler>();
         Mover = container.GetRequiredService<IMover>();
         Parser = container.GetRequiredService<IParser>();
         Random = container.GetRequiredService<IRandomizer>();

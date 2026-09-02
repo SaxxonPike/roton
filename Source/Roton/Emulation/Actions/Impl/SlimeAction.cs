@@ -38,7 +38,7 @@ internal sealed class SlimeAction(
 
             for (var i = 0; i < 4; i++)
             {
-                var target = source + Engine.GetCardinalVector(i);
+                var target = source + state.GetCardinalVector(i);
 
                 if (!tiles.ElementAt(target).IsFloor)
                     continue;

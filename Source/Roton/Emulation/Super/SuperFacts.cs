@@ -17,4 +17,5 @@ internal sealed class SuperFacts : Facts
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "Super ZZT Worlds";
     public override string HighScoreExtension => "HGS";
+    public override int BaseMemoryUsage => 203044;
 }
