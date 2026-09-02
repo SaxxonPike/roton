@@ -12,7 +12,8 @@ internal sealed class SuperPlayerEnterHandler(
     IBoard board,
     IActorList actors,
     IHud hud,
-    IWorld world)
+    IWorld world,
+    ICamera camera)
     : IPlayerEnterHandler
 {
     public void EnterBoard()
@@ -20,7 +21,8 @@ internal sealed class SuperPlayerEnterHandler(
         boardTime.Reset();
         broadcaster.BroadcastLabel(0, facts.EnterLabel, false);
         board.Entrance = actors.Player.Location;
-        hud.UpdateCamera();
+        if (camera.UpdateCamera())
+            hud.RedrawBoard();
         world.TimePassed = 0;
         hud.UpdateStatus();
     }

@@ -7,7 +7,8 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalDialogs(
     IHud hud,
-    IHighScoreListFactory highScoreListFactory)
+    IHighScoreListFactory highScoreListFactory,
+    IHighScoreHud highScoreHud)
     : IDialogs
 {
     public void ShowAbout() =>
@@ -19,6 +20,6 @@ internal sealed class OriginalDialogs(
     public void ShowHighScores()
     {
         var list = highScoreListFactory.Load();
-        hud.ShowHighScores(list);
+        highScoreHud.ShowHighScores(list);
     }
 }

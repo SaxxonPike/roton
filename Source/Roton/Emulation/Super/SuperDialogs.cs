@@ -9,7 +9,7 @@ internal sealed class SuperDialogs(
     IBroadcaster broadcaster,
     IFacts facts,
     IHighScoreListFactory highScoreListFactory,
-    IHud hud)
+    IHighScoreHud highScoreHud)
     : IDialogs
 {
     public void ShowAbout()
@@ -23,6 +23,6 @@ internal sealed class SuperDialogs(
     public void ShowHighScores()
     {
         var list = highScoreListFactory.Load();
-        hud.ShowHighScores(list);
+        highScoreHud.ShowHighScores(list);
     }
 }

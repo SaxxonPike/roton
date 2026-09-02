@@ -11,204 +11,205 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Game(
-    IHud _hud,
-    IState _state,
-    IActorList _actors,
-    IActionList _actionList,
-    ITiles _tiles,
-    ITimers _timers,
-    IElementList _elements,
-    IBoardUpdater _boardUpdater,
-    IWorld _world,
-    IInputReader _inputReader,
-    IInteractionList _interactions,
-    IMover _mover,
-    IPlayerUpdater _playerUpdater,
-    IRadiusUpdater _radiusUpdater,
-    IRandomizer _randomizer,
-    IFacts _facts,
-    IScheduler _scheduler,
-    ITracer _tracer,
-    ISoundUnit _soundUnit,
-    IDialogs _dialogs,
+    IHud hud,
+    IState state,
+    IActorList actors,
+    IActionList actionList,
+    ITiles tiles,
+    ITimers timers,
+    IElementList elements,
+    IBoardUpdater boardUpdater,
+    IWorld world,
+    IInputReader inputReader,
+    IInteractionList interactions,
+    IMover mover,
+    IPlayerUpdater playerUpdater,
+    IRadiusUpdater radiusUpdater,
+    IRandomizer randomizer,
+    IFacts facts,
+    IScheduler scheduler,
+    ITracer tracer,
+    ISoundUnit soundUnit,
+    IDialogs dialogs,
     IWorldManager worldManager,
-    IMessenger _messenger,
-    IFader _fader,
-    IPlayField _playField,
-    IHighScoreListFactory _highScoreListFactory,
-    IGameThread _gameThread,
-    IConfig _config
-    )
+    IMessenger messenger,
+    IFader fader,
+    IPlayField playField,
+    IHighScoreListFactory highScoreListFactory,
+    IGameThread gameThread,
+    IConfig config,
+    IHighScoreHud highScoreHud
+)
     : IGame
 {
     private void MainLoopInit(bool doFade)
     {
-        if (_state.Init)
+        if (state.Init)
         {
-            if (!_state.AboutShown)
-                _dialogs.ShowAbout();
+            if (!state.AboutShown)
+                dialogs.ShowAbout();
 
-            if (!_gameThread.ThreadActive)
+            if (!gameThread.ThreadActive)
                 return;
 
-            if (_state.DefaultWorldName.Length > 0)
+            if (state.DefaultWorldName.Length > 0)
             {
-                _state.AboutShown = true;
-                worldManager.LoadWorld(_state.DefaultWorldName, false);
+                state.AboutShown = true;
+                worldManager.LoadWorld(state.DefaultWorldName, false);
             }
 
-            _state.StartBoard = _world.BoardIndex;
+            state.StartBoard = world.BoardIndex;
             worldManager.SetBoard(0);
-            _state.Init = false;
+            state.Init = false;
         }
 
-        var element = _elements[_state.PlayerElement];
-        _tiles[_actors.Player.Location] = new Tile(element.Id, element.Color);
-        if (_state.PlayerElement == _elements.MonitorId)
+        var element = elements[state.PlayerElement];
+        tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
+        if (state.PlayerElement == elements.MonitorId)
         {
-            _messenger.SetMessage(0, new Message());
-            _hud.DrawTitleStatus();
+            messenger.SetMessage(0, new Message());
+            hud.DrawTitleStatus();
         }
 
         if (doFade)
-            _fader.FadePurple();
+            fader.FadePurple();
 
         ResetGameSpeed();
-        _state.GameCycle = _randomizer.GetNext(_facts.MainLoopRandomCycleRange);
-        _state.ActIndex = _state.ActorCount + 1;
+        state.GameCycle = randomizer.GetNext(facts.MainLoopRandomCycleRange);
+        state.ActIndex = state.ActorCount + 1;
     }
 
     private void ResetGameSpeed() =>
-        _state.GameWaitTime = _state.GameSpeed << 1;
+        state.GameWaitTime = state.GameSpeed << 1;
 
     public void MainLoop(bool doFade)
     {
         var alternating = false;
 
-        if (!_gameThread.Step)
+        if (!gameThread.Step)
         {
-            _hud.CreateStatusText();
-            _hud.UpdateStatus();
+            hud.CreateStatusText();
+            hud.UpdateStatus();
             MainLoopInit(doFade);
         }
 
-        _state.BreakGameLoop = false;
+        state.BreakGameLoop = false;
 
-        while (_gameThread.ThreadActive)
+        while (gameThread.ThreadActive)
         {
-            if (!_state.GamePaused)
+            if (!state.GamePaused)
             {
-                if (_state.ActIndex <= _state.ActorCount)
+                if (state.ActIndex <= state.ActorCount)
                 {
-                    var actorData = _actors[_state.ActIndex];
+                    var actorData = actors[state.ActIndex];
                     if (actorData.Cycle != 0)
-                        if (_state.ActIndex % actorData.Cycle == _state.GameCycle % actorData.Cycle)
-                            _actionList.Get(_tiles[actorData.Location].Id)?.Act(_state.ActIndex);
+                        if (state.ActIndex % actorData.Cycle == state.GameCycle % actorData.Cycle)
+                            actionList.Get(tiles[actorData.Location].Id)?.Act(state.ActIndex);
 
-                    _state.ActIndex++;
+                    state.ActIndex++;
                 }
             }
             else
             {
-                _state.ActIndex = _state.ActorCount + 1;
+                state.ActIndex = state.ActorCount + 1;
 
-                if (_timers.Player.Clock(1, HsecToTicks(25)) > 0)
+                if (timers.Player.Clock(1, HsecToTicks(25)) > 0)
                     alternating = !alternating;
 
                 if (alternating)
                 {
-                    var playerElement = _elements.Player();
-                    DrawTile(_actors.Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
+                    var playerElement = elements.Player();
+                    DrawTile(actors.Player.Location, new AnsiChar(playerElement.Character, playerElement.Color));
                 }
                 else
                 {
-                    if (_tiles[_actors.Player.Location].Id == _elements.PlayerId)
-                        DrawTile(_actors.Player.Location, new AnsiChar(0x20, 0x0F));
+                    if (tiles[actors.Player.Location].Id == elements.PlayerId)
+                        DrawTile(actors.Player.Location, new AnsiChar(0x20, 0x0F));
                     else
-                        _boardUpdater.UpdateBoard(_actors.Player.Location);
+                        boardUpdater.UpdateBoard(actors.Player.Location);
                 }
 
-                _hud.DrawPausing();
-                _inputReader.Read(false);
-                if (_state.KeyPressed == EngineKeyCode.Escape)
+                hud.DrawPausing();
+                inputReader.Read(false);
+                if (state.KeyPressed == EngineKeyCode.Escape)
                 {
-                    if (_world.Health > 0)
+                    if (world.Health > 0)
                     {
-                        _state.BreakGameLoop = _hud.EndGameConfirmation();
+                        state.BreakGameLoop = hud.EndGameConfirmation();
                     }
                     else
                     {
-                        _state.BreakGameLoop = true;
-                        _hud.UpdateBorder();
+                        state.BreakGameLoop = true;
+                        hud.UpdateBorder();
                     }
 
-                    _state.KeyPressed = 0;
+                    state.KeyPressed = 0;
                 }
 
-                if (!_state.KeyVector.IsZero())
+                if (!state.KeyVector.IsZero())
                 {
-                    var target = _actors.Player.Location + _state.KeyVector;
-                    _interactions.Get(_tiles.ElementAt(target).Id)?.Interact(target, 0, ref _state.KeyVector);
+                    var target = actors.Player.Location + state.KeyVector;
+                    interactions.Get(tiles.ElementAt(target).Id)?.Interact(target, 0, ref state.KeyVector);
                 }
 
-                if (!_state.KeyVector.IsZero())
+                if (!state.KeyVector.IsZero())
                 {
-                    var target = _actors.Player.Location + _state.KeyVector;
-                    if (_tiles.ElementAt(target).IsFloor)
+                    var target = actors.Player.Location + state.KeyVector;
+                    if (tiles.ElementAt(target).IsFloor)
                     {
-                        if (_tiles.ElementAt(_actors.Player.Location).Id == _elements.PlayerId)
+                        if (tiles.ElementAt(actors.Player.Location).Id == elements.PlayerId)
                         {
-                            _mover.MoveActor(0, target);
+                            mover.MoveActor(0, target);
                         }
                         else
                         {
-                            _boardUpdater.UpdateBoard(_actors.Player.Location);
-                            _actors.Player.Location += _state.KeyVector;
-                            _playerUpdater.CleanUpPauseMovement();
-                            _tiles[_actors.Player.Location] = new Tile(_elements.PlayerId, _elements.Player().Color);
-                            _boardUpdater.UpdateBoard(_actors.Player.Location);
-                            _radiusUpdater.UpdateRadius(_actors.Player.Location, RadiusMode.Update);
-                            _radiusUpdater.UpdateRadius(_actors.Player.Location - _state.KeyVector, RadiusMode.Update);
+                            boardUpdater.UpdateBoard(actors.Player.Location);
+                            actors.Player.Location += state.KeyVector;
+                            playerUpdater.CleanUpPauseMovement();
+                            tiles[actors.Player.Location] = new Tile(elements.PlayerId, elements.Player().Color);
+                            boardUpdater.UpdateBoard(actors.Player.Location);
+                            radiusUpdater.UpdateRadius(actors.Player.Location, RadiusMode.Update);
+                            radiusUpdater.UpdateRadius(actors.Player.Location - state.KeyVector, RadiusMode.Update);
                         }
 
-                        _state.GamePaused = false;
-                        _hud.ClearPausing();
-                        _state.GameCycle = _randomizer.GetNext(_facts.MainLoopRandomCycleRange);
-                        _world.IsLocked = true;
+                        state.GamePaused = false;
+                        hud.ClearPausing();
+                        state.GameCycle = randomizer.GetNext(facts.MainLoopRandomCycleRange);
+                        world.IsLocked = true;
                     }
                     else
                     {
                         // Added so that attempting to run into a wall while paused using
                         // a joystick doesn't cause the game to freeze (the original engine
                         // just added delays)
-                        _scheduler.WaitForTick();
+                        scheduler.WaitForTick();
                     }
                 }
             }
 
-            if (_state.ActIndex > _state.ActorCount)
+            if (state.ActIndex > state.ActorCount)
             {
-                if (!_state.BreakGameLoop && !_state.GamePaused)
-                    if (_state.GameWaitTime <= 0 || _timers.Player.Clock(1, _state.GameWaitTime) > 0)
+                if (!state.BreakGameLoop && !state.GamePaused)
+                    if (state.GameWaitTime <= 0 || timers.Player.Clock(1, state.GameWaitTime) > 0)
                     {
-                        _state.GameCycle++;
-                        if (_state.GameCycle > _facts.MaxGameCycle) _state.GameCycle = 1;
+                        state.GameCycle++;
+                        if (state.GameCycle > facts.MaxGameCycle) state.GameCycle = 1;
 
-                        _state.ActIndex = 0;
-                        _inputReader.Read(false);
+                        state.ActIndex = 0;
+                        inputReader.Read(false);
                     }
 
-                _tracer.TraceStep();
-                if (_gameThread.Step)
+                tracer.TraceStep();
+                if (gameThread.Step)
                     break;
 
-                _scheduler.WaitForTick();
+                scheduler.WaitForTick();
             }
 
-            if (_state.BreakGameLoop)
+            if (state.BreakGameLoop)
             {
-                _soundUnit.ClearSound();
-                if (_state.PlayerElement == _elements.PlayerId)
+                soundUnit.ClearSound();
+                if (state.PlayerElement == elements.PlayerId)
                 {
                     // This game speed reset isn't here in the original code,
                     // but it solves some issues with game speed when returning
@@ -216,38 +217,38 @@ internal sealed class Game(
 
                     ResetGameSpeed();
 
-                    if (_world.Health <= 0)
-                        EnterHighScore(_world.Score);
+                    if (world.Health <= 0)
+                        EnterHighScore(world.Score);
                 }
-                else if (_state.PlayerElement == _elements.MonitorId)
+                else if (state.PlayerElement == elements.MonitorId)
                 {
-                    _hud.ClearTitleStatus();
+                    hud.ClearTitleStatus();
                 }
 
-                var element = _elements.Player();
-                _tiles[_actors.Player.Location] = new Tile(element.Id, element.Color);
-                _state.GameOver = false;
+                var element = elements.Player();
+                tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
+                state.GameOver = false;
                 break;
             }
         }
     }
-    
-    private void DrawTile(Location location, AnsiChar ac) => 
-        _playField.DrawTile(location.X - 1, location.Y - 1, ac);
+
+    private void DrawTile(Location location, AnsiChar ac) =>
+        playField.DrawTile(location.X - 1, location.Y - 1, ac);
 
     private void EnterHighScore(int score)
     {
         if (score <= 0)
             return;
 
-        var list = _highScoreListFactory.Load();
-        var name = _hud.EnterHighScore(list, score);
+        var list = highScoreListFactory.Load();
+        var name = highScoreHud.EnterHighScore(list, score);
         if (name == null)
             return;
 
         list.Add(name, score);
-        _highScoreListFactory.Save(list);
-        _dialogs.ShowHighScores();
+        highScoreListFactory.Save(list);
+        dialogs.ShowHighScores();
     }
 
     /// <summary>
@@ -260,6 +261,5 @@ internal sealed class Game(
     /// The equivalent number of ticks.
     /// </returns>
     private int HsecToTicks(int hsec) =>
-        Math.Max(1, hsec * (_config.MasterClockDenominator / _config.MasterClockNumerator + 50) / 100);
-
+        Math.Max(1, hsec * (config.MasterClockDenominator / config.MasterClockNumerator + 50) / 100);
 }

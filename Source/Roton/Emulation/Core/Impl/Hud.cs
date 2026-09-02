@@ -31,15 +31,7 @@ public abstract class Hud(
     {
     }
 
-    public virtual void CreateStatusBar()
-    {
-    }
-
     public virtual void CreateStatusText()
-    {
-    }
-
-    public virtual void DrawChar(int x, int y, AnsiChar ac)
     {
     }
 
@@ -108,24 +100,11 @@ public abstract class Hud(
     {
     }
 
-    public virtual void UpdateCamera()
-    {
-    }
-
     public virtual void UpdateStatus()
     {
     }
 
     public virtual void CreateStatusWorld()
-    {
-    }
-
-    public virtual string? EnterHighScore(IHighScoreList highScoreList, int score)
-    {
-        return null;
-    }
-
-    public virtual void ShowHighScores(IHighScoreList highScoreList)
     {
     }
 

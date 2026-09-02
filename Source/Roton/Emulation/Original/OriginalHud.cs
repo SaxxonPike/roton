@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -15,7 +14,6 @@ internal sealed class OriginalHud(
     IScroll scroll,
     ITextEntryHud textEntryHud,
     IChoiceHud choiceHud,
-    ILongTextEntryHud longTextEntryHud,
     IFadeMatrix fadeMatrix,
     IState state,
     IElementList elementList,
@@ -57,7 +55,7 @@ internal sealed class OriginalHud(
         return result;
     }
 
-    public override void CreateStatusBar()
+    public void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -142,7 +140,7 @@ internal sealed class OriginalHud(
             world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
-    public override void DrawChar(int x, int y, AnsiChar ac) => 
+    public void DrawChar(int x, int y, AnsiChar ac) => 
         terminal.Plot(x, y, ac);
 
     public override void DrawMessage(IMessage message, int color)
@@ -281,64 +279,6 @@ internal sealed class OriginalHud(
         string? barText) =>
         choiceHud.Show(performSelection, x, y, message, currentValue, barText);
 
-    public override string? EnterHighScore(IHighScoreList highScoreList, int score)
-    {
-        var index = -1;
-            
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
-
-        var nameIndex = 2;
-            
-        foreach (var hs in highScoreList)
-        {
-            if (score > 0 && index < 0 && hs.Score <= score)
-            {
-                index = nameIndex;
-                nameList.Add($"{score,5}  -- You! --");
-            }
-
-            if (string.IsNullOrEmpty(hs.Name))
-                continue;
-
-            nameList.Add($"{hs.Score,5}  {hs.Name}");
-            nameIndex++;
-        }
-
-        if (index >= 0)
-        {
-            string? name = null;
-            Scroll.Show($"New high score for {world.Name}",
-                nameList,
-                false,
-                2,
-                _ => name = longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
-            return name;
-        }
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-        return null;
-    }
-
-    public override void ShowHighScores(IHighScoreList highScoreList)
-    {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
-            
-        nameList.AddRange(
-            highScoreList
-                .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-    }
-    
     public override string SaveGame()
     {
         DrawString(65, 3, "Save game:", 0x1F);

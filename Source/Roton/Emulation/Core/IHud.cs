@@ -23,9 +23,6 @@ public interface IHud
     IScrollState ShowHelp(string title, string fileName);
     IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines);
     void UpdateBorder();
-    void UpdateCamera();
     void UpdateStatus();
     void CreateStatusWorld();
-    string? EnterHighScore(IHighScoreList highScoreList, int score);
-    void ShowHighScores(IHighScoreList highScoreList);
 }

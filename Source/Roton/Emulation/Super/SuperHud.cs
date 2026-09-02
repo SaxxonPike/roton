@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -22,12 +21,12 @@ internal sealed class SuperHud(
     IWorld world,
     IElementList elements,
     ISoundUnit soundUnit,
-    IBoardUpdater boardUpdater,
     IScheduler scheduler,
     IInputReader inputReader,
     IStatistics statistics,
     IGameThread gameThread,
-    IDelayer delayer)
+    IDelayer delayer,
+    ICamera camera)
     : Hud(scroll, state, scheduler, inputReader, gameThread)
 {
     private readonly string _arrows = new([
@@ -40,8 +39,6 @@ internal sealed class SuperHud(
     private readonly string _bottomOfHelp = new(0xDC.ToChar(), 12);
 
     private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
-
-    private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 
     private const int ViewportHeight = 25;
     private const int ViewportWidth = 40;
@@ -65,7 +62,7 @@ internal sealed class SuperHud(
         return result;
     }
 
-    public override void CreateStatusBar()
+    public void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -145,7 +142,7 @@ internal sealed class SuperHud(
         }
     }
 
-    public override void DrawChar(int x, int y, AnsiChar ac)
+    public void DrawChar(int x, int y, AnsiChar ac)
     {
         terminal.Plot(x, y, ac);
     }
@@ -227,130 +224,6 @@ internal sealed class SuperHud(
         );
     }
 
-    public override void UpdateCamera()
-    {
-        var upperLeft = new Location(WindowLeft, WindowTop);
-        const int viewCenterX = WindowWidth / 2;
-        const int viewCenterY = WindowHeight / 2;
-
-        // Thresholds are the number of tiles that the camera will try to keep in view relative to the player.
-        // The 8/6 mismatch on the Y axis is a bug in the Super engine itself. A perfectly centered camera
-        // would use 7 for both top and bottom.
-
-        const int scrollThresholdLeft = 9;
-        const int scrollThresholdRight = 9;
-        const int scrollThresholdTop = 8;
-        const int scrollThresholdBottom = 6;
-
-        // Max bounds of the camera (so that the scroll doesn't go off the right or bottom of the board.)
-
-        var maxCameraX = tiles.Width - WindowWidth + 1;
-        var maxCameraY = tiles.Height - WindowHeight + 1;
-
-        var player = actors.Player.Location;
-        var newCamera = new Location16(board.Camera.X, board.Camera.Y);
-        var redrawRequired = false;
-
-        var relativeX = player.X - newCamera.X;
-        if (relativeX < scrollThresholdLeft && newCamera.X > 1)
-        {
-            if (player.X == OldPlayerLocation.X - 1)
-            {
-                newCamera.X--;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.East);
-                for (var y = 0; y < WindowHeight; y++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
-            }
-            else
-            {
-                newCamera.X = player.X - viewCenterX;
-
-                if (newCamera.X < 1)
-                    newCamera.X = 1;
-                else if (newCamera.X > maxCameraX)
-                    newCamera.X = maxCameraX;
-
-                redrawRequired = true;
-            }
-        }
-        else if (relativeX >= WindowWidth - scrollThresholdRight && newCamera.X < maxCameraX)
-        {
-            if (player.X == OldPlayerLocation.X + 1)
-            {
-                newCamera.X++;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.West);
-                for (var y = 0; y < WindowHeight; y++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
-            }
-            else
-            {
-                newCamera.X = player.X - viewCenterX;
-
-                if (newCamera.X < 1)
-                    newCamera.X = 1;
-                else if (newCamera.X > maxCameraX)
-                    newCamera.X = maxCameraX;
-
-                redrawRequired = true;
-            }
-        }
-
-        var relativeY = player.Y - newCamera.Y;
-        if (relativeY < scrollThresholdTop && newCamera.Y > 1)
-        {
-            if (player.Y == OldPlayerLocation.Y - 1)
-            {
-                newCamera.Y--;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.South);
-                for (var x = 0; x < WindowWidth; x++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
-            }
-            else
-            {
-                newCamera.Y = player.Y - viewCenterY;
-
-                if (newCamera.Y < 1)
-                    newCamera.Y = 1;
-                else if (newCamera.Y > maxCameraY)
-                    newCamera.Y = maxCameraY;
-
-                redrawRequired = true;
-            }
-        }
-        else if (relativeY >= WindowHeight - scrollThresholdBottom && newCamera.Y < maxCameraY)
-        {
-            if (player.Y == OldPlayerLocation.Y + 1)
-            {
-                newCamera.Y++;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.North);
-                for (var x = 0; x < WindowWidth; x++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
-            }
-            else
-            {
-                newCamera.Y = player.Y - viewCenterY;
-
-                if (newCamera.Y < 1)
-                    newCamera.Y = 1;
-                else if (newCamera.Y > maxCameraY)
-                    newCamera.Y = maxCameraY;
-
-                redrawRequired = true;
-            }
-        }
-
-        OldPlayerLocation = player;
-        if (newCamera == board.Camera && !redrawRequired)
-            return;
-
-        board.Camera = newCamera;
-        if (redrawRequired)
-            RedrawBoard();
-    }
 
     public override void UpdateStatus()
     {
@@ -434,71 +307,6 @@ internal sealed class SuperHud(
         var cheat = textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
         UpdateBorder();
         return cheat;
-    }
-
-    public override string? EnterHighScore(IHighScoreList highScoreList, int score)
-    {
-        if (score <= 0 || !highScoreList.Any(hs => hs.Score <= score))
-        {
-            return null;
-        }
-
-        string? name = null;
-        Scroll.Show($"New high score for {world.Name}",
-            [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
-            false,
-            3,
-            _ => name = textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
-        return name;
-    }
-
-    public override void ShowHighScores(IHighScoreList highScoreList)
-    {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  --------------------"
-        };
-
-        nameList.AddRange(
-            highScoreList
-                .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-    }
-
-    private void VideoScroll(Location pos, int width, int height, Vector dir)
-    {
-        var buffer = new AnsiChar[width * height];
-        var bufIdx = 0;
-
-        var minX = pos.X;
-        var minY = pos.Y;
-        var maxX = pos.X + width;
-        var maxY = pos.Y + height;
-
-        // Copy source into memory.
-
-        for (var iy = 0; iy < height; iy++)
-        for (var ix = 0; ix < width; ix++)
-            buffer[bufIdx++] = terminal.Read(ix + pos.X, iy + pos.Y);
-
-        // Blit it back out where it goes.
-
-        bufIdx = 0;
-        var finalX = pos.X + dir.X;
-        var finalY = pos.Y + dir.Y;
-        for (var iy = 0; iy < height; iy++)
-        for (var ix = 0; ix < width; ix++)
-        {
-            var data = buffer[bufIdx++];
-            var px = ix + finalX;
-            var py = iy + finalY;
-
-            if (px >= minX && px < maxX && py >= minY && py < maxY)
-                terminal.Plot(px, py, data);
-        }
     }
 
     public override string SaveGame()
