@@ -6,12 +6,10 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RND")]
 [Context(Context.Super, "RND")]
-internal sealed class RndDirection(IEngineAccessor engine) : IDirection
+internal sealed class RndDirection(
+    INavigator navigator) 
+    : IDirection
 {
-    private IEngine Engine => engine.Instance;
-
-    public Vector Execute(ref OopContext context, ref Word instruction)
-    {
-        return Engine.Rnd();
-    }
+    public Vector Execute(ref OopContext context, ref Word instruction) => 
+        navigator.Rnd();
 }

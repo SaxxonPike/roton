@@ -15,7 +15,8 @@ internal sealed class LionAction(
     IRandomizer randomizer,
     ITiles tiles,
     IElementList elements,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -25,8 +26,8 @@ internal sealed class LionAction(
         var actor = actors[index];
 
         var vector = actor.P1 >= randomizer.GetNext(10)
-            ? Engine.Seek(actor.Location)
-            : Engine.Rnd();
+            ? navigator.Seek(actor.Location)
+            : navigator.Rnd();
 
         var target = actor.Location + vector;
         var element = tiles.ElementAt(target);

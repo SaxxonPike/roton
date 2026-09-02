@@ -14,7 +14,8 @@ internal sealed class SpiderAction(
     IRandomizer randomizer,
     ITiles tiles,
     IElementList elements,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -24,8 +25,8 @@ internal sealed class SpiderAction(
         var actor = actors[index];
 
         var vector = actor.P1 <= randomizer.GetNext(10)
-            ? Engine.Rnd()
-            : Engine.Seek(actor.Location);
+            ? navigator.Rnd()
+            : navigator.Seek(actor.Location);
 
         if (ActSpiderAttemptDirection(index, vector))
             return;

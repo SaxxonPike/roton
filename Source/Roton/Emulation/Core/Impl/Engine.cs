@@ -551,36 +551,6 @@ internal sealed class Engine : IEngine, IDisposable
         _state.ActorCount--;
     }
 
-    public Vector Rnd()
-    {
-        var result = new Vector
-        {
-            X = _randomizer.GetNext(3) - 1
-        };
-
-        result.Y = result.X == 0 ? (_randomizer.GetNext(2) << 1) - 1 : 0;
-        return result;
-    }
-
-    public Vector RndP(Vector vector) =>
-        _randomizer.GetNext(2) == 0
-            ? vector.Clockwise()
-            : vector.CounterClockwise();
-
-    public Vector Seek(Location location)
-    {
-        var result = new Vector();
-        if (_randomizer.GetNext(2) == 0 || _actors.Player.Location.Y == location.Y)
-            result.X = (_actors.Player.Location.X - location.X).Polarity();
-
-        if (result.X == 0) result.Y = (_actors.Player.Location.Y - location.Y).Polarity();
-
-        if (_world.EnergyCycles > 0)
-            result = -result;
-
-        return result;
-    }
-
     private void SetGameMode()
     {
         InitializeElements(false);

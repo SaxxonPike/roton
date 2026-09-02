@@ -16,7 +16,8 @@ internal sealed class RotonAction(
     IRandomizer randomizer,
     IElementList elements,
     ITiles tiles,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -30,7 +31,7 @@ internal sealed class RotonAction(
         if (actor.P3 < -actor.P2 % 10)
             actor.P3 = unchecked((byte)(actor.P2 * 10 + randomizer.GetNext(10)));
 
-        actor.Vector = Engine.Seek(actor.Location);
+        actor.Vector = navigator.Seek(actor.Location);
 
         if (actor.P1 <= randomizer.GetNext(10))
         {

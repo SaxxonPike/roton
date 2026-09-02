@@ -18,9 +18,6 @@ public interface IEngine
     void PutTile(Location location, Vector vector, Tile kind);
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
     void RemoveActor(int index);
-    Vector Rnd();
-    Vector RndP(Vector vector);
-    Vector Seek(Location location);
     void Start();
     void Stop();
     void StepOnce();

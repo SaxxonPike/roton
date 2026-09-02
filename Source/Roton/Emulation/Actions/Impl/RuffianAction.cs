@@ -15,7 +15,8 @@ internal sealed class RuffianAction(
     IRandomizer randomizer,
     ITiles tiles,
     IElementList elements,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -29,8 +30,8 @@ internal sealed class RuffianAction(
             if (actor.P2 + 8 <= randomizer.GetNext(17))
             {
                 actor.Vector = actor.P1 >= randomizer.GetNext(9)
-                    ? Engine.Seek(actor.Location)
-                    : Engine.Rnd();
+                    ? navigator.Seek(actor.Location)
+                    : navigator.Rnd();
             }
         }
         else
@@ -38,7 +39,7 @@ internal sealed class RuffianAction(
             if (actor.Location.X == actors.Player.Location.X || actor.Location.Y == actors.Player.Location.Y)
             {
                 if (actor.P1 >= randomizer.GetNext(9))
-                    actor.Vector = Engine.Seek(actor.Location);
+                    actor.Vector = navigator.Seek(actor.Location);
             }
 
             var target = actor.Location + actor.Vector;

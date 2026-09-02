@@ -16,7 +16,8 @@ internal sealed class CentipedeHeadAction(
     ITiles tiles,
     IElementList elements,
     IBoardUpdater boardUpdater,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -30,15 +31,15 @@ internal sealed class CentipedeHeadAction(
 
         if (player.Location.X == actor.Location.X && actor.P1 > randomizer.GetNext(10))
         {
-            actor.Vector = Engine.Seek(actor.Location);
+            actor.Vector = navigator.Seek(actor.Location);
         }
         else if (player.Location.Y == actor.Location.Y && actor.P1 > randomizer.GetNext(10))
         {
-            actor.Vector = Engine.Seek(actor.Location);
+            actor.Vector = navigator.Seek(actor.Location);
         }
         else if (actor.Vector.IsZero() || actor.P2 > randomizer.GetNext(10) << 2)
         {
-            actor.Vector = Engine.Rnd();
+            actor.Vector = navigator.Rnd();
         }
 
         if (actor.Vector.IsNonZero())
@@ -49,7 +50,7 @@ internal sealed class CentipedeHeadAction(
             var element = tiles.ElementAt(actor.Location + actor.Vector);
             if (!element.IsFloor && element.Id != elements.PlayerId)
             {
-                actor.Vector = Engine.RndP(vector);
+                actor.Vector = navigator.RndP(vector);
                 element = tiles.ElementAt(actor.Location + actor.Vector);
                 if (!element.IsFloor && element.Id != elements.PlayerId)
                 {

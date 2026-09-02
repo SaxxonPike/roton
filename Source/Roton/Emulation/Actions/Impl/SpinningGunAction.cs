@@ -16,7 +16,8 @@ internal sealed class SpinningGunAction(
     IRandomizer randomizer,
     IElementList elements,
     IBoardUpdater boardUpdater,
-    ISpawner spawner)
+    ISpawner spawner,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -51,7 +52,7 @@ internal sealed class SpinningGunAction(
         }
         else
         {
-            spawner.SpawnProjectile(firingElement, actor.Location, Engine.Rnd(), true);
+            spawner.SpawnProjectile(firingElement, actor.Location, navigator.Rnd(), true);
         }
     }
 }

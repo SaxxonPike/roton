@@ -16,7 +16,8 @@ internal sealed class StarAction(
     ITiles tiles,
     IBoardUpdater boardUpdater,
     IPusher pusher,
-    IMover mover)
+    IMover mover,
+    INavigator navigator)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -35,7 +36,7 @@ internal sealed class StarAction(
 
         if ((actor.P2 & 1) == 0)
         {
-            actor.Vector = Engine.Seek(actor.Location);
+            actor.Vector = navigator.Seek(actor.Location);
 
             var targetLocation = actor.Location + actor.Vector;
             var targetElement = tiles.ElementAt(targetLocation);
