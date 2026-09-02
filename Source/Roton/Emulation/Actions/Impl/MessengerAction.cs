@@ -11,15 +11,13 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x02)]
 [Context(Context.Super, 0x02)]
 internal sealed class MessengerAction(
-    IEngineAccessor engine,
     IActorList actors,
     IHud hud,
     IState state,
-    IMessageHandler messageHandler)
+    IMessageHandler messageHandler,
+    IActorRemover actorRemover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -31,7 +29,7 @@ internal sealed class MessengerAction(
             if (actor.P2 > 0)
                 return;
 
-            Engine.RemoveActor(index);
+            actorRemover.RemoveActor(index);
             state.ActIndex--;
             hud.UpdateBorder();
             state.Message = string.Empty;

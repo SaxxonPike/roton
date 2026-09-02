@@ -10,16 +10,14 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
 internal sealed class BombAction(
-    IEngineAccessor engine,
     ISounds sounds,
     IActorList actors,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    IActorRemover actorRemover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -36,7 +34,7 @@ internal sealed class BombAction(
                 break;
             case 0:
                 var location = actor.Location;
-                Engine.RemoveActor(index);
+                actorRemover.RemoveActor(index);
                 radiusUpdater.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:

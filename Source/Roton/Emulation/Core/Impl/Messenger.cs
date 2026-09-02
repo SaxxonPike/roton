@@ -6,22 +6,20 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Messenger(
-    IEngineAccessor engine,
     IActorList actors,
     IHud hud,
     ISpawner spawner,
     IState state,
-    IElementList elements) 
+    IElementList elements,
+    IActorRemover actorRemover) 
     : IMessenger
 {
-    private IEngine Engine => engine.Instance;
-    
     public void SetMessage(int duration, IMessage message)
     {
         var index = actors.ActorIndexAt(new Location(0, 0));
         if (index >= 0)
         {
-            Engine.RemoveActor(index);
+            actorRemover.RemoveActor(index);
             hud.UpdateBorder();
         }
 

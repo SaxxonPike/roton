@@ -21,7 +21,8 @@ internal sealed class BulletAction(
     ISoundUnit soundUnit,
     IHud hud,
     IBroadcaster broadcaster,
-    IMover mover)
+    IMover mover,
+    IActorRemover actorRemover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -79,7 +80,7 @@ internal sealed class BulletAction(
                 continue;
             }
 
-            Engine.RemoveActor(index);
+            actorRemover.RemoveActor(index);
             state.ActIndex--;
             if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {

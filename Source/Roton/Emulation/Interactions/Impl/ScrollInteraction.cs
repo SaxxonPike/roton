@@ -10,7 +10,8 @@ internal sealed class ScrollInteraction(
     IEngineAccessor engine,
     IActorList actors,
     IMusicEncoder musicEncoder,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IActorRemover actorRemover)
     : IInteraction
 {
     private IEngine Engine => engine.Instance;
@@ -33,6 +34,6 @@ internal sealed class ScrollInteraction(
 
         soundUnit.PlaySound(2, _scrollMusic);
         Engine.ExecuteCode(scrollIndex, ref actor.Instruction, "Scroll");
-        Engine.RemoveActor(scrollIndex);
+        actorRemover.RemoveActor(scrollIndex);
     }
 }

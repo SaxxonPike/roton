@@ -25,7 +25,8 @@ internal sealed class SuperHud(
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
     IScheduler scheduler,
-    IInputReader inputReader)
+    IInputReader inputReader,
+    IStatistics statistics)
     : Hud(engine, scroll, state, scheduler, inputReader)
 {
     private readonly string _arrows = new([
@@ -407,7 +408,7 @@ internal sealed class SuperHud(
         DrawString(0x03, 0x0A, State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
 
         if (world.Flags.Contains("DEBUG"))
-            DrawString(0x0E, 0x00, $"Used: {Engine.MemoryUsage}", 0x1E);
+            DrawString(0x0E, 0x00, $"Used: {statistics.CalculateMemoryUsage()}", 0x1E);
     }
 
     private string StoneText

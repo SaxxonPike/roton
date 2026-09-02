@@ -28,7 +28,8 @@ internal sealed class OriginalHud(
     IPlayField playField,
     IScheduler scheduler,
     IInputReader inputReader,
-    IElementList elements)
+    IElementList elements,
+    IStatistics statistics)
     : Hud(engine, scroll, state, scheduler, inputReader)
 {
     private const int ViewportHeight = 25;
@@ -262,7 +263,7 @@ internal sealed class OriginalHud(
         DrawString(0x41, 0x0F, State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
 
         if (world.Flags.Contains("DEBUG"))
-            DrawString(0x3E, 0x04, "Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
+            DrawString(0x3E, 0x04, "Used: ", statistics.CalculateMemoryUsage().ToCharSpan(buffer), 0x1E);
     }
 
     public override string EnterCheat()

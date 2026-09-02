@@ -61,6 +61,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IPlayerEnterHandler _playerEnterHandler;
     private readonly IPlayerInputHandler _playerInputHandler;
     private readonly ITileRemover _tileRemover;
+    private readonly IActorRemover _actorRemover;
 
     private bool _step;
 
@@ -111,7 +112,8 @@ internal sealed class Engine : IEngine, IDisposable
         IInputReader inputReader,
         IPlayerEnterHandler playerEnterHandler,
         IPlayerInputHandler playerInputHandler,
-        ITileRemover tileRemover)
+        ITileRemover tileRemover,
+        IActorRemover actorRemover)
     {
         engineAccessor.Instance = this;
 
@@ -161,13 +163,12 @@ internal sealed class Engine : IEngine, IDisposable
         _playerEnterHandler = playerEnterHandler;
         _playerInputHandler = playerInputHandler;
         _tileRemover = tileRemover;
+        _actorRemover = actorRemover;
     }
 
     private Thread? Thread { get; set; }
 
     public bool ThreadActive => Thread != null || _step;
-
-    public int MemoryUsage => _facts.BaseMemoryUsage + _heap.Size + _boardList.Sum(b => b.Data.Length);
 
     public void Cheat()
     {
@@ -414,7 +415,7 @@ internal sealed class Engine : IEngine, IDisposable
                 _soundUnit.PlaySound(3, _sounds.BulletDie);
             else if (element != _elements.ObjectId) _soundUnit.PlaySound(3, _sounds.EnemyDie);
 
-            RemoveActor(index);
+            _actorRemover.RemoveActor(index);
         }
     }
 
@@ -489,63 +490,6 @@ internal sealed class Engine : IEngine, IDisposable
         _soundUnit.PlaySound(5, _sounds.Error);
         _tracer.TraceError(ref context, error);
         _actors[context.Index].Instruction = -1;
-    }
-
-    public void RemoveActor(int index)
-    {
-        if (index < 0)
-        {
-            _tracer.TraceCrash("Attempted to remove invalid actor index");
-            return;
-        }
-
-        var actor = _actors[index];
-        var freeCode = actor.Length > 0 && actor.Pointer != 0;
-
-        if (index < _state.ActIndex)
-            _state.ActIndex--;
-
-        _tiles[actor.Location] = actor.UnderTile;
-
-        if (actor.Location.Y > 0)
-            _boardUpdater.UpdateBoard(actor.Location);
-
-        var pointer = actor.Pointer;
-
-        for (var i = 1; i <= _state.ActorCount; i++)
-        {
-            var a = _actors[i];
-            if (a.Follower >= index)
-            {
-                if (a.Follower == index)
-                    a.Follower = -1;
-                else
-                    a.Follower--;
-            }
-
-            if (a.Leader >= index)
-            {
-                if (a.Leader == index)
-                    a.Leader = -1;
-                else
-                    a.Leader--;
-            }
-
-            if (freeCode && i != index && a.Pointer == pointer)
-                freeCode = false;
-        }
-
-        if (freeCode)
-        {
-            _heap.Free(pointer);
-            actor.Pointer = 0;
-        }
-
-        if (index < _state.ActorCount)
-            for (var i = index; i < _state.ActorCount; i++)
-                _actors[i].CopyFrom(_actors[i + 1]);
-
-        _state.ActorCount--;
     }
 
     private void SetGameMode()

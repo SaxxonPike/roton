@@ -10,18 +10,16 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x25)]
 [Context(Context.Super, 0x25)]
 internal sealed class SlimeAction(
-    IEngineAccessor engine,
     IActorList actors,
     ITiles tiles,
     IElementList elements,
     IState state,
     IBoardUpdater boardUpdater,
     ISpawner spawner,
-    IMover mover)
+    IMover mover,
+    IActorRemover actorRemover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -60,7 +58,7 @@ internal sealed class SlimeAction(
 
             if (spawnCount == 0)
             {
-                Engine.RemoveActor(index);
+                actorRemover.RemoveActor(index);
                 tiles[source] = slimeTrailTile;
                 boardUpdater.UpdateBoard(source);
             }

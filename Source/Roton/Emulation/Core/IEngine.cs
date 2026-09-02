@@ -16,12 +16,10 @@ public interface IEngine
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);
     void RaiseError(ref OopContext oopContext, ReadOnlySpan<char> error);
-    void RemoveActor(int index);
     void Start();
     void Stop();
     void StepOnce();
     bool ThreadActive { get; }
-    int MemoryUsage { get; }
     void Cheat();
     void ShowHighScores();
     void Delay(int msec);

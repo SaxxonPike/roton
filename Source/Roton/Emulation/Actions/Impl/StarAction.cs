@@ -17,7 +17,8 @@ internal sealed class StarAction(
     IBoardUpdater boardUpdater,
     IPusher pusher,
     IMover mover,
-    INavigator navigator)
+    INavigator navigator,
+    IActorRemover actorRemover)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -30,7 +31,7 @@ internal sealed class StarAction(
 
         if (actor.P2 <= 0)
         {
-            Engine.RemoveActor(index);
+            actorRemover.RemoveActor(index);
             return;
         }
 
