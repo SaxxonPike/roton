@@ -52,7 +52,6 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IPlayerUpdater _playerUpdater;
     private readonly IMessenger _messenger;
     private readonly IScheduler _scheduler;
-    private readonly IColorMatcher _colorMatcher;
     private readonly IDialogs _dialogs;
     private readonly IInputReader _inputReader;
     private readonly IPlayerEnterHandler _playerEnterHandler;
@@ -103,7 +102,6 @@ internal sealed class Engine : IEngine, IDisposable
         IPlayerUpdater playerUpdater,
         IMessenger messenger,
         IScheduler scheduler,
-        IColorMatcher colorMatcher,
         IDialogs dialogs,
         IInputReader inputReader,
         IPlayerEnterHandler playerEnterHandler,
@@ -152,7 +150,6 @@ internal sealed class Engine : IEngine, IDisposable
         _playerUpdater = playerUpdater;
         _messenger = messenger;
         _scheduler = scheduler;
-        _colorMatcher = colorMatcher;
         _dialogs = dialogs;
         _inputReader = inputReader;
         _playerEnterHandler = playerEnterHandler;
@@ -335,33 +332,6 @@ internal sealed class Engine : IEngine, IDisposable
         _step = true;
         MainLoop(true);
         _step = false;
-    }
-
-    public bool FindTile(Tile kind, Location location)
-    {
-        var matchColor = _colorMatcher.GetColorMatchValue(kind.Color);
-
-        location.X++;
-        while (location.Y <= _tiles.Height)
-        {
-            while (location.X <= _tiles.Width)
-            {
-                ref var tile = ref _tiles[location];
-                if (tile.Id == kind.Id)
-                {
-                    var foundColor = _colorMatcher.GetColorMatchValue(ColorMatch(_tiles[location]));
-                    if (kind.Color == 0 || foundColor == matchColor)
-                        return true;
-                }
-
-                location.X++;
-            }
-
-            location.X = 1;
-            location.Y++;
-        }
-
-        return false;
     }
 
     public void Harm(int index)
@@ -547,17 +517,6 @@ internal sealed class Engine : IEngine, IDisposable
 
         if (_state.SoundPlaying)
             _state.SoundTicks--;
-    }
-
-    private int ColorMatch(Tile tile)
-    {
-        var element = _elements[tile.Id];
-
-        if (element.Color < 0xF0)
-            return element.Color & 7;
-        if (element.Color == 0xFE)
-            return ((tile.Color >> 4) & 0x0F) + 8;
-        return tile.Color & 0x0F;
     }
 
     private void DrawTile(Location location, AnsiChar ac) => 

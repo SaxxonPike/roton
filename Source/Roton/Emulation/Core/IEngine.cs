@@ -10,7 +10,6 @@ public interface IEngine
     void Attack(int index, Location location);
     void Destroy(Location location);
     void ExecuteCode(int index, ref Word instruction, string name);
-    bool FindTile(Tile kind, Location location);
     void Harm(int index);
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);
