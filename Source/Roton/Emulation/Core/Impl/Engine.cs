@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Cheats;
@@ -31,11 +30,9 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IHud _hud;
     private readonly IState _state;
     private readonly IWorld _world;
-    private readonly IBoardList _boardList;
     private readonly IActionList _actionList;
     private readonly IInteractionList _interactions;
     private readonly IFacts _facts;
-    private readonly ICodeHeap _heap;
     private readonly ISpeaker _speaker;
     private readonly IObjectMover _objectMover;
     private readonly IHighScoreListFactory _highScoreListFactory;
@@ -62,6 +59,7 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IPlayerInputHandler _playerInputHandler;
     private readonly ITileRemover _tileRemover;
     private readonly IActorRemover _actorRemover;
+    private readonly IFader _fader;
 
     private bool _step;
 
@@ -82,11 +80,9 @@ internal sealed class Engine : IEngine, IDisposable
         IHud hud,
         IState state,
         IWorld world,
-        IBoardList boardList,
         IActionList actionList,
         IInteractionList interactions,
         IFacts facts,
-        ICodeHeap heap,
         ISpeaker speaker,
         IObjectMover objectMover,
         IHighScoreListFactory highScoreListFactory,
@@ -113,7 +109,8 @@ internal sealed class Engine : IEngine, IDisposable
         IPlayerEnterHandler playerEnterHandler,
         IPlayerInputHandler playerInputHandler,
         ITileRemover tileRemover,
-        IActorRemover actorRemover)
+        IActorRemover actorRemover,
+        IFader fader)
     {
         engineAccessor.Instance = this;
 
@@ -133,11 +130,9 @@ internal sealed class Engine : IEngine, IDisposable
         _hud = hud;
         _state = state;
         _world = world;
-        _boardList = boardList;
         _actionList = actionList;
         _interactions = interactions;
         _facts = facts;
-        _heap = heap;
         _speaker = speaker;
         _objectMover = objectMover;
         _highScoreListFactory = highScoreListFactory;
@@ -164,6 +159,7 @@ internal sealed class Engine : IEngine, IDisposable
         _playerInputHandler = playerInputHandler;
         _tileRemover = tileRemover;
         _actorRemover = actorRemover;
+        _fader = fader;
     }
 
     private Thread? Thread { get; set; }
@@ -339,12 +335,6 @@ internal sealed class Engine : IEngine, IDisposable
         _step = true;
         MainLoop(true);
         _step = false;
-    }
-
-    public void FadePurple()
-    {
-        _hud.FadeBoard(_facts.FadeTile);
-        _hud.RedrawBoard();
     }
 
     public bool FindTile(Tile kind, Location location)
@@ -784,7 +774,7 @@ internal sealed class Engine : IEngine, IDisposable
         }
 
         if (doFade)
-            FadePurple();
+            _fader.FadePurple();
 
         ResetGameSpeed();
         _state.GameCycle = _randomizer.GetNext(_facts.MainLoopRandomCycleRange);

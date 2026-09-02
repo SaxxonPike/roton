@@ -7,7 +7,6 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x0B)]
 [Context(Context.Super, 0x0B)]
 internal sealed class PassageInteraction(
-    IEngineAccessor engine,
     ITiles tiles,
     IActorList actors,
     IElementList elements,
@@ -16,11 +15,10 @@ internal sealed class PassageInteraction(
     ISoundUnit soundUnit,
     IWorldUnit worldUnit,
     IPlayerUpdater playerUpdater,
-    IPlayerEnterHandler playerEnterHandler)
+    IPlayerEnterHandler playerEnterHandler,
+    IFader fader)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;
@@ -46,7 +44,7 @@ internal sealed class PassageInteraction(
 
         state.GamePaused = true;
         soundUnit.PlaySound(4, sounds.Passage);
-        Engine.FadePurple();
+        fader.FadePurple();
         playerEnterHandler.EnterBoard();
         vector = Vector.Idle;
     }

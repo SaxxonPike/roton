@@ -7,7 +7,6 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Original, 0x01)]
 [Context(Context.Super, 0x01)]
 internal sealed class BoardEdgeInteraction(
-    IEngineAccessor engine,
     IWorld world,
     ITiles tiles,
     IElementList elementList,
@@ -16,11 +15,10 @@ internal sealed class BoardEdgeInteraction(
     IWorldUnit worldUnit,
     IMover mover,
     IExits exits,
-    IPlayerEnterHandler playerEnterHandler)
+    IPlayerEnterHandler playerEnterHandler,
+    IFader fader)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var target = location;
@@ -65,7 +63,7 @@ internal sealed class BoardEdgeInteraction(
                 mover.MoveActor(0, target);
             }
 
-            Engine.FadePurple();
+            fader.FadePurple();
             vector = Vector.Idle;
             playerEnterHandler.EnterBoard();
         }
