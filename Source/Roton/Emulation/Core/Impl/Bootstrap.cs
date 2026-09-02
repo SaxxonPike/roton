@@ -16,7 +16,8 @@ internal sealed class Bootstrap(
     ITitleScreen titleScreen,
     IScheduler scheduler,
     IGameThread gameThread,
-    IElementList elements)
+    IElementList elements,
+    IRandomizer randomizer)
     : IBootstrap
 {
     public event EventHandler? Exited;
@@ -26,6 +27,7 @@ internal sealed class Bootstrap(
         if (gameThread.Current != null)
             return;
 
+        randomizer.Initialize();
         scheduler.Reset();
         gameThread.Start(StartMain);
     }
