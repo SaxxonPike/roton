@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
@@ -167,10 +166,9 @@ internal sealed class Scroll(
         }
     }
 
-    private void RenderContent(IScrollState scrollState)
+    private void RenderContent(ScrollState scrollState)
     {
         var offset = scrollState.Index;
-        var message = scrollContent;
         var title = scrollState.Title;
         var buffer = (stackalloc char[256]);
 
@@ -178,7 +176,7 @@ internal sealed class Scroll(
         var line = offset - center;
         var bottom = facts.ScrollHeight + facts.ScrollTop - 2;
         var top = facts.ScrollTop + 3;
-        var lineCount = message.LineCount;
+        var lineCount = scrollContent.LineCount;
         var y = top;
 
         RenderBlank(facts.ScrollTop + 1);
@@ -192,25 +190,32 @@ internal sealed class Scroll(
         {
             if (scrollState.IsHelp)
             {
-                if (line == -5)
+                switch (line)
                 {
-                    terminal.Write(facts.ScrollLeft + 5, y, "Use            to view text,", 0x1A);
-                    terminal.Write(facts.ScrollLeft + 9, y, "\u2191 \u2193, Enter", 0x1F);
-                }
-                else if (line == -4)
-                {
-                    terminal.Write(facts.ScrollLeft + 20, y, "to print.", 0x1A);
-                    terminal.Write(facts.ScrollLeft + 14, y, "Alt-P", 0x1F);
+                    case -5:
+                    {
+                        terminal.Write(facts.ScrollLeft + 5, y, "Use            to view text,", 0x1A);
+                        terminal.Write(facts.ScrollLeft + 9, y, "\u2191 \u2193, Enter", 0x1F);
+                        break;
+                    }
+                    case -4:
+                    {
+                        terminal.Write(facts.ScrollLeft + 20, y, "to print.", 0x1A);
+                        terminal.Write(facts.ScrollLeft + 14, y, "Alt-P", 0x1F);
+                        break;
+                    }
                 }
             }
 
             if (line >= 0 && line < lineCount)
             {
-                message.GetLine(line, buffer);
-                RenderText(message.GetLine(line, buffer), y);
+                scrollContent.GetLine(line, buffer);
+                RenderText(scrollContent.GetLine(line, buffer), y);
             }
             else if (line == -1 || line == lineCount)
+            {
                 RenderDots(y);
+            }
 
             y++;
             line++;
@@ -229,7 +234,7 @@ internal sealed class Scroll(
             terminal.Plot(x2, y, dot);
     }
 
-    private bool MainLoop(IScrollState st)
+    private ScrollResult MainLoop(ScrollState st)
     {
         var update = false;
 
@@ -246,9 +251,9 @@ internal sealed class Scroll(
             switch (state.KeyPressed)
             {
                 case EngineKeyCode.Escape:
-                    return false;
+                    return new ScrollResult(st.Index, st.Label, true, true);
                 case EngineKeyCode.Enter:
-                    return true;
+                    return new ScrollResult(st.Index, st.Label, false, true);
                 case EngineKeyCode.PageUp:
                     st.Index -= facts.ScrollHeight - 5;
                     update = true;
@@ -278,10 +283,10 @@ internal sealed class Scroll(
             scheduler.WaitForTick();
         }
 
-        return false;
+        return new ScrollResult(st.Index, st.Label, true, true);
     }
 
-    private bool LoadHelpFile(IScrollState scrollState, string filename)
+    private bool LoadHelpFile(string filename)
     {
         var text = fileSystem
             .GetFile($"{filename}.HLP")?
@@ -294,67 +299,66 @@ internal sealed class Scroll(
 
         scrollContent.ClearLines();
         scrollContent.AddLines(text);
-        scrollState.Index = 0;
-        scrollState.IsHelp = true;
         return true;
     }
 
-    private void ShowLoop(IScrollState scrollState)
+    private ScrollResult ShowLoop(ScrollState scrollState)
     {
         while (true)
         {
             RenderContent(scrollState);
-            var selected = MainLoop(scrollState);
-            if (!selected)
-            {
-                scrollState.Cancelled = true;
-                break;
-            }
+            var result = MainLoop(scrollState);
 
-            var innerJump = SelectLine(scrollState);
+            state.CancelScroll = result.Cancelled;
+
+            if (result.Cancelled)
+                return result;
+
+            var innerJump = SelectLine(result.Index, out var jumpLabel, out var jumpIndex);
             if (!innerJump)
-                break;
+                return result;
+
+            scrollState.Index = jumpIndex;
+            scrollState.Label = jumpLabel;
         }
     }
 
-    private IScrollState Show(ScrollState scrollState, Action<ScrollState> mainLoop)
+    private ScrollResult Show(ScrollState scrollState, Func<ScrollState, ScrollResult> mainLoop)
     {
         scrollBuffer.Capture();
         Open();
         RenderContent(scrollState);
-        mainLoop(scrollState);
+        var result = mainLoop(scrollState);
         Close();
-        return scrollState;
+        return result;
     }
 
-    public IScrollState ShowHelpFile(string title, string fileName)
+    public ScrollResult ShowHelpFile(string? title, string fileName)
     {
-        var st = new ScrollState(state)
+        var st = new ScrollState
         {
             Index = 0,
             Label = null,
-            Cancelled = false,
             IsHelp = true,
             Title = title
         };
 
-        if (LoadHelpFile(st, fileName))
+        if (LoadHelpFile(fileName))
             return Show(st, ShowLoop);
 
-        return st;
+        return default;
     }
 
-    public IScrollState ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index)
+    public ScrollResult ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index)
         => ShowMessage(title, message, isHelp, index, ShowLoop);
 
-    public IScrollState ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index,
-        Action<IScrollState> mainLoop)
+    public ScrollResult ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index,
+        Func<ScrollState, ScrollResult> mainLoop)
     {
-        var st = new ScrollState(state)
+        var st = new ScrollState
         {
             Index = index,
             Label = null,
-            Cancelled = false,
             IsHelp = isHelp,
             Title = title
         };
@@ -369,13 +373,16 @@ internal sealed class Scroll(
 
     public int TextHeight => facts.ScrollHeight - 4;
 
-    private bool SelectLine(IScrollState scrollState)
+    private bool SelectLine(int index, out string? newLabel, out int newIndex)
     {
-        if (scrollState.Index < 0)
+        newLabel = null;
+        newIndex = index;
+
+        if (index < 0)
             return false;
 
         var buffer = (stackalloc char[256]);
-        var line = scrollContent.GetLine(scrollState.Index, buffer);
+        var line = scrollContent.GetLine(index, buffer);
 
         if (line.Length == 0 || line[0] != '!' || line.IndexOf(';') < 0)
             return false;
@@ -385,10 +392,13 @@ internal sealed class Scroll(
             .ToString()
             .ToUpperInvariant();
 
-        if (line[0] == '!' && label.Length > 0 && label[0] == '-' && LoadHelpFile(scrollState, label.Substring(1)))
+        if (line[0] == '!' && label.Length > 0 && label[0] == '-' && LoadHelpFile(label.Substring(1)))
+        {
+            newIndex = 0;
             return true;
+        }
 
-        scrollState.Label = label;
+        newLabel = label;
         label = $":{label};";
         var lineCount = scrollContent.LineCount;
 
@@ -398,7 +408,7 @@ internal sealed class Scroll(
             if (!line.StartsWith(label, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            scrollState.Index = i;
+            newIndex = i;
             return true;
         }
 

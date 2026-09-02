@@ -13,10 +13,10 @@ internal sealed class SuperMessageHandler(
     IScroll scroll)
     : IMessageHandler
 {
-    public IScrollState? ExecuteMessage(ref OopContext context)
+    public ScrollResult ExecuteMessage(ref OopContext context)
     {
         if (!context.HasMessage)
-            return null;
+            return default;
 
         var message = context.GetMessage();
 
@@ -24,13 +24,13 @@ internal sealed class SuperMessageHandler(
         {
             case 1:
                 messenger.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
-                return null;
+                return default;
             case 2:
                 messenger.SetMessage(facts.LongMessageDuration,
                     new Message(message[0], message[1]));
-                return null;
+                return default;
             case 0:
-                return null;
+                return default;
             default:
                 state.KeyVector = Vector.Idle;
                 return scroll.ShowMessage(context.Name, [.. message], false, 0);

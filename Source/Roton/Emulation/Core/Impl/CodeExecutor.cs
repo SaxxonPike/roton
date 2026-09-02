@@ -109,7 +109,7 @@ public class CodeExecutor(
     private void ExecuteMessage(ref OopContext context)
     {
         var result = messageHandler.ExecuteMessage(ref context);
-        if (result is { Cancelled: false, Label: not null })
+        if (result is { Cancelled: false, Shown: true, Label: not null })
             context.NextLine = broadcaster.BroadcastLabel(context.Index, result.Label, false);
     }
 

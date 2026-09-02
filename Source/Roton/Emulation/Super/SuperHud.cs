@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -12,7 +10,6 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 internal sealed class SuperHud(
     ITerminal terminal,
-    IScroll scroll,
     ITextEntryHud textEntryHud,
     IFadeMatrix fadeMatrix,
     IState state,
@@ -201,9 +198,6 @@ internal sealed class SuperHud(
         fadeMatrix.FadeIn();
     }
 
-    public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
-        scroll.ShowMessage(title, lines, isHelp, 0);
-
     public void UpdateBorder() =>
         ClearMessage();
 
@@ -322,9 +316,6 @@ internal sealed class SuperHud(
     public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
         string? barText) =>
         currentValue;
-
-    public IScrollState ShowHelp(string title, string fileName) =>
-        scroll.ShowHelpFile(title, fileName);
 
     public void FadeBoard(AnsiChar ac) =>
         fadeMatrix.FadeOut(ac);

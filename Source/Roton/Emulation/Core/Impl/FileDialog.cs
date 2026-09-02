@@ -9,7 +9,8 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class FileDialog(
     IFileSystem fileSystem,
     IScrollContent scrollContent,
-    IScroll scroll)
+    IScroll scroll,
+    IState state)
     : IFileDialog
 {
     public string? Open(string title, string extension, IFileTitles? fileTitles)
@@ -33,7 +34,7 @@ internal sealed class FileDialog(
             .ToArray();
 
         var result = scroll.Show(title, files);
-        if (result.Cancelled)
+        if (state.CancelScroll)
             return null;
 
         // If the user selects "Exit", which is always at the bottom of the list:

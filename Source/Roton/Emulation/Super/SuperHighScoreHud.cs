@@ -25,7 +25,11 @@ internal sealed class SuperHighScoreHud(
             [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
-            _ => name = textEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
+            _ =>
+            {
+                name = textEntryHud.Show(12, 14, 15, 0x1E, 0x1F);
+                return default;
+            });
         return name;
     }
 

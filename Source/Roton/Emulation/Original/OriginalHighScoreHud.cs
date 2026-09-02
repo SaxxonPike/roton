@@ -47,7 +47,11 @@ internal sealed class OriginalHighScoreHud(
                 nameList,
                 false,
                 2,
-                _ => name = longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
+                _ =>
+                {
+                    name = longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F);
+                    return default;
+                });
             return name;
         }
 

@@ -13,7 +13,7 @@ internal sealed class OriginalMessageHandler(
     IScroll scroll)
     : IMessageHandler
 {
-    public IScrollState? ExecuteMessage(ref OopContext context)
+    public ScrollResult ExecuteMessage(ref OopContext context)
     {
         var message = context.GetMessage();
 
@@ -21,12 +21,12 @@ internal sealed class OriginalMessageHandler(
         {
             case { Count: 1 }:
                 messenger.SetMessage(facts.LongMessageDuration, new Message(message));
-                return null;
+                return default;
             case { Count: > 1 }:
                 state.KeyVector = Vector.Idle;
                 return scroll.ShowMessage(context.Name, [.. message], false, 0);
             default:
-                return null;
+                return default;
         }
     }
 

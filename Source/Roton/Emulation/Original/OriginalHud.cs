@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
@@ -11,7 +10,6 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalHud(
     ITerminal terminal,
-    IScroll scroll,
     ITextEntryHud textEntryHud,
     IChoiceHud choiceHud,
     IFadeMatrix fadeMatrix,
@@ -201,9 +199,6 @@ internal sealed class OriginalHud(
     public void RedrawBoard() =>
         fadeMatrix.FadeIn();
 
-    public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
-        scroll.ShowMessage(title, lines, isHelp, 0);
-
     public void UpdateBorder()
     {
         for (var x = 0; x < ViewportWidth; x++)
@@ -287,9 +282,6 @@ internal sealed class OriginalHud(
     public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
         string? barText) =>
         choiceHud.Show(performSelection, x, y, message, currentValue, barText);
-
-    public IScrollState ShowHelp(string title, string fileName) =>
-        scroll.ShowHelpFile(title, fileName);
 
     public string SaveGame()
     {
