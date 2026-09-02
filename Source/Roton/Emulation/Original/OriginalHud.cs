@@ -11,7 +11,6 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalHud(
-    IEngineAccessor engine,
     ITerminal terminal,
     IScroll scroll,
     ITextEntryHud textEntryHud,
@@ -30,8 +29,9 @@ internal sealed class OriginalHud(
     IInputReader inputReader,
     IElementList elements,
     IStatistics statistics,
-    IGameThread gameThread)
-    : Hud(engine, scroll, state, scheduler, inputReader, gameThread)
+    IGameThread gameThread,
+    IDelayer delayer)
+    : Hud(scroll, state, scheduler, inputReader, gameThread)
 {
     private const int ViewportHeight = 25;
 
@@ -354,6 +354,6 @@ internal sealed class OriginalHud(
         DrawString(62, 4, "You need a newer", 0x1E);
         DrawString(62, 5, " version of ZZT!", 0x1E);
         soundUnit.PlayErrorSound();
-        Engine.Delay(2000);
+        delayer.Delay(2000);
     }
 }

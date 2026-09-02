@@ -13,7 +13,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x04)]
 [Context(Context.Super, 0x04)]
 internal sealed class PlayerAction(
-    IEngineAccessor engine,
     IActorList actors,
     IElementList elements,
     IWorld world,
@@ -38,11 +37,10 @@ internal sealed class PlayerAction(
     IDialogs dialogs,
     IPlayerInputHandler playerInputHandler,
     ICheater cheater,
-    IDamager damager)
+    IDamager damager,
+    IBoardTime boardTime)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -228,7 +226,7 @@ internal sealed class PlayerAction(
         {
             if (world.Health > 0)
             {
-                if (timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
+                if (timers.TimeLimit.Clock(boardTime.Elapse(), 100) > 0)
                 {
                     world.TimePassed++;
 

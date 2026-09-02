@@ -3,6 +3,4 @@
 public interface IEngine
 {
     void StepOnce();
-    void Delay(int msec);
-    int ResetBoardTimeHsec();
 }

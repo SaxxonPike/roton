@@ -8,7 +8,6 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperScroll(
-    IEngineAccessor engine,
     ITerminal terminal,
     IState state,
     IFileSystem fileSystem,
@@ -16,7 +15,7 @@ internal sealed class SuperScroll(
     IScheduler scheduler,
     IInputReader inputReader,
     IGameThread gameThread)
-    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler, inputReader, gameThread)
+    : Scroll(terminal, state, fileSystem, scrollContent, scheduler, inputReader, gameThread)
 {
     private readonly ITerminal _terminal = terminal;
 

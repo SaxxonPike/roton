@@ -9,15 +9,12 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class TextEntryHud(
     ITerminal terminal,
-    IEngineAccessor engine,
     IState state,
     IScheduler scheduler,
     IInputReader inputReader,
     IGameThread gameThread)
     : ITextEntryHud
 {
-    private IEngine Engine => engine.Instance;
-
     public string Show(int x, int y, int maxLength, int textColor, int pipColor, ReadOnlySpan<char> initText = default)
     {
         var chars = (stackalloc char[maxLength]);

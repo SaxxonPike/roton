@@ -6,7 +6,6 @@ using Roton.Emulation.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 public abstract class Hud(
-    IEngineAccessor engine,
     IScroll scroll, 
     IState state,
     IScheduler scheduler,
@@ -17,11 +16,6 @@ public abstract class Hud(
     protected IState State
     {
         [DebuggerStepThrough] get => state;
-    }
-
-    protected IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
     }
 
     protected IScroll Scroll

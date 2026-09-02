@@ -7,7 +7,6 @@ using Roton.Emulation.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 public abstract class Scroll(
-    IEngineAccessor engine,
     ITerminal terminal,
     IState state,
     IFileSystem fileSystem,
@@ -17,8 +16,6 @@ public abstract class Scroll(
     IGameThread gameThread)
     : IScroll
 {
-    private IEngine Engine => engine.Instance;
-
     private static readonly int[] ScrollCharsTop =
     [
         0xC6, 0xD1, 0xCD, 0xD1, 0xB5

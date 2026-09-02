@@ -8,7 +8,6 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalScroll(
-    IEngineAccessor engine,
     ITerminal terminal,
     IState state,
     IFileSystem fileSystem,
@@ -17,7 +16,7 @@ internal sealed class OriginalScroll(
     IScheduler scheduler,
     IInputReader inputReader,
     IGameThread gameThread)
-    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler, inputReader, gameThread)
+    : Scroll(terminal, state, fileSystem, scrollContent, scheduler, inputReader, gameThread)
 {
     protected override int Width => 49;
     protected override int Height => 19;

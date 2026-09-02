@@ -11,7 +11,6 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperHud(
-    IEngineAccessor engine,
     ITerminal terminal,
     IScroll scroll,
     ITextEntryHud textEntryHud,
@@ -27,8 +26,9 @@ internal sealed class SuperHud(
     IScheduler scheduler,
     IInputReader inputReader,
     IStatistics statistics,
-    IGameThread gameThread)
-    : Hud(engine, scroll, state, scheduler, inputReader, gameThread)
+    IGameThread gameThread,
+    IDelayer delayer)
+    : Hud(scroll, state, scheduler, inputReader, gameThread)
 {
     private readonly string _arrows = new([
         0x18.ToChar(),
@@ -518,7 +518,7 @@ internal sealed class SuperHud(
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
         soundUnit.PlayErrorSound();
-        Engine.Delay(2000);
+        delayer.Delay(2000);
     }
 
     public override void DrawPausing()

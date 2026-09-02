@@ -12,7 +12,6 @@ internal sealed class Scheduler : IScheduler
 
     private int _ticksToRun;
 
-    private readonly IEngineAccessor _engine;
     private readonly IState _state;
     private readonly IConfig _config;
     private readonly IBoardTime _boardTime;
@@ -22,16 +21,13 @@ internal sealed class Scheduler : IScheduler
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
-    public Scheduler(
-        IEngineAccessor engine,
-        IState state,
+    public Scheduler(IState state,
         IConfig config,
         IBoardTime boardTime,
         IClock clock,
         IGameThread gameThread,
         ISoundUnit soundUnit)
     {
-        _engine = engine;
         _state = state;
         _config = config;
         _boardTime = boardTime;
@@ -42,8 +38,6 @@ internal sealed class Scheduler : IScheduler
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
     }
-
-    private IEngine Engine => _engine.Instance;
 
     private bool WaitForTickFastCondition()
     {
