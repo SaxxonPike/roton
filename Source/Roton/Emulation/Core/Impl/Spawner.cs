@@ -1,5 +1,5 @@
-using System;
 using Roton.Emulation.Data;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -15,12 +15,9 @@ internal sealed class Spawner(
     IWorld world,
     ISoundUnit soundUnit,
     ISounds sounds,
-    IServiceProvider serviceProvider)
+    IDeferred<IAttacker> attacker)
     : ISpawner
 {
-    private readonly Lazy<IAttacker> _attacker = new(() =>
-        (IAttacker)serviceProvider.GetService(typeof(IAttacker)));
-
     public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
         // must reserve one actor for player, and one for messenger
@@ -82,7 +79,7 @@ internal sealed class Spawner(
              world.EnergyCycles != 0))
             return false;
 
-        _attacker.Value.Destroy(target);
+        attacker.Instance.Destroy(target);
         soundUnit.PlaySound(2, sounds.BulletDie);
         return true;
     }

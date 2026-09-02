@@ -12,7 +12,7 @@ internal sealed class Deferred<T>(IServiceProvider serviceProvider)
     /// <summary>
     /// Holds the lazy service resolver.
     /// </summary>
-    private readonly Lazy<T> _service = new(() => (T)serviceProvider.GetService(typeof(T)));
+    private readonly Lazy<T> _service = new(() => (T)serviceProvider.GetService(typeof(T))!);
 
     /// <inheritdoc />
     public T Instance => _service.Value;
