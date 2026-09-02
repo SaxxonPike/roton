@@ -8,15 +8,13 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class ChoiceHud(
-    ITerminal terminal, 
-    IEngineAccessor engine,
+    ITerminal terminal,
     IState state,
     IScheduler scheduler,
-    IInputReader inputReader)
+    IInputReader inputReader,
+    IGameThread gameThread)
     : IChoiceHud
 {
-    private IEngine Engine => engine.Instance;
-    
     private void DrawChar(int x, int y, AnsiChar ac)
     {
         terminal.Plot(x, y, ac);
@@ -76,7 +74,7 @@ internal sealed class ChoiceHud(
 
         DrawPip(0x9F);
 
-        while (Engine.ThreadActive)
+        while (gameThread.ThreadActive)
         {
             var update = false;
 

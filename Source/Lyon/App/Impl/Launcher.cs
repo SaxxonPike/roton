@@ -10,7 +10,8 @@ namespace Lyon.App.Impl;
 [Context(Context.Startup)]
 public sealed class Launcher(
     IWindow window,
-    IAudioPresenter audioPresenter)
+    IAudioPresenter audioPresenter,
+    IBootstrap bootstrap)
     : ILauncher
 {
     /// <summary>
@@ -23,13 +24,13 @@ public sealed class Launcher(
     }
 
     /// <inheritdoc />
-    public void Launch(IEngine engine)
+    public void Launch()
     {
-        audioPresenter.Start(engine);
-        engine.Exited += OnExited;
-        engine.Start();
+        audioPresenter.Start();
+        bootstrap.Exited += OnExited;
+        bootstrap.Start();
         window.Start();
-        engine.Stop();
+        bootstrap.Stop();
         audioPresenter.Stop();
     }
 }

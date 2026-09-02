@@ -17,6 +17,8 @@ internal sealed class Scheduler : IScheduler
     private readonly IConfig _config;
     private readonly IBoardTime _boardTime;
     private readonly IClock _clock;
+    private readonly IGameThread _gameThread;
+    private readonly ISoundUnit _soundUnit;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -25,13 +27,17 @@ internal sealed class Scheduler : IScheduler
         IState state,
         IConfig config,
         IBoardTime boardTime,
-        IClock clock)
+        IClock clock,
+        IGameThread gameThread,
+        ISoundUnit soundUnit)
     {
         _engine = engine;
         _state = state;
         _config = config;
         _boardTime = boardTime;
         _clock = clock;
+        _gameThread = gameThread;
+        _soundUnit = soundUnit;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -44,7 +50,7 @@ internal sealed class Scheduler : IScheduler
         if (_ticksToRun <= 0)
             return true;
 
-        Engine.UpdateSound();
+        _soundUnit.UpdateSound();
         Tick?.Invoke(this, EventArgs.Empty);
         Interlocked.Decrement(ref _ticksToRun);
 
@@ -52,7 +58,7 @@ internal sealed class Scheduler : IScheduler
     }
 
     private bool WaitForTickNormalCondition() =>
-        _ticksToRun > 0 || !Engine.ThreadActive;
+        _ticksToRun > 0 || !_gameThread.ThreadActive;
 
     public void Advance()
     {
@@ -62,7 +68,7 @@ internal sealed class Scheduler : IScheduler
         if (!_state.GamePaused)
             _boardTime.Advance();
 
-        if (!Engine.ThreadActive)
+        if (!_gameThread.ThreadActive)
             _clock.Stop();
     }
 
@@ -79,7 +85,7 @@ internal sealed class Scheduler : IScheduler
         }
         else
         {
-            Engine.UpdateSound();
+            _soundUnit.UpdateSound();
 
             Tick?.Invoke(this, EventArgs.Empty);
 

@@ -11,7 +11,6 @@ internal sealed class OriginalPlayerInputHandler(
     IWorldUnit worldUnit,
     IDialogs dialogs,
     IHud hud,
-    IEngineAccessor engine,
     IWorld world,
     IAlerts alerts,
     IMessenger messenger,
@@ -20,8 +19,6 @@ internal sealed class OriginalPlayerInputHandler(
     IRadiusUpdater radiusUpdater)
     : IPlayerInputHandler
 {
-    private IEngine Engine => engine.Instance;
-
     public bool HandleTitleInput()
     {
         switch (state.KeyPressed.ToUpperCase())
@@ -44,7 +41,7 @@ internal sealed class OriginalPlayerInputHandler(
             case EngineKeyCode.R:
                 return worldUnit.RestoreWorld();
             case EngineKeyCode.H:
-                Engine.ShowHighScores();
+                dialogs.ShowHighScores();
                 break;
             case EngineKeyCode.QuestionMark:
                 hud.EnterCheat();

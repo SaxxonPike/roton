@@ -24,11 +24,6 @@ public sealed unsafe class AudioPresenter(
     : IDisposable, IAudioPresenter
 {
     /// <summary>
-    /// Current engine that the presenter is processing audio for.
-    /// </summary>
-    private IEngine? _engine;
-    
-    /// <summary>
     /// Returns true if <see cref="Dispose"/> has been called.
     /// </summary>
     private bool _isDisposed;
@@ -95,13 +90,12 @@ public sealed unsafe class AudioPresenter(
     }
 
     /// <inheritdoc />
-    public void Start(IEngine engine)
+    public void Start()
     {
         // If already running, bail.
         if (_running)
             return;
         _running = true;
-        _engine = engine;
 
         // Configure audio settings.
         SampleRate = config.AudioSampleRate;

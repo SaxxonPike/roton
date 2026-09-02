@@ -13,7 +13,8 @@ public abstract class Scroll(
     IFileSystem fileSystem,
     IScrollContent scrollContent,
     IScheduler scheduler, 
-    IInputReader inputReader)
+    IInputReader inputReader,
+    IGameThread gameThread)
     : IScroll
 {
     private IEngine Engine => engine.Instance;
@@ -242,7 +243,7 @@ public abstract class Scroll(
     {
         var update = false;
 
-        while (Engine.ThreadActive)
+        while (gameThread.ThreadActive)
         {
             if (update)
             {

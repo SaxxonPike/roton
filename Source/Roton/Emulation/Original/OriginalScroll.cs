@@ -15,8 +15,9 @@ internal sealed class OriginalScroll(
     IBoardUpdater boardUpdater,
     IScrollContent scrollContent,
     IScheduler scheduler,
-    IInputReader inputReader)
-    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler, inputReader)
+    IInputReader inputReader,
+    IGameThread gameThread)
+    : Scroll(engine, terminal, state, fileSystem, scrollContent, scheduler, inputReader, gameThread)
 {
     protected override int Width => 49;
     protected override int Height => 19;

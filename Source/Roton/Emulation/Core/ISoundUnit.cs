@@ -8,4 +8,5 @@ public interface ISoundUnit
     void ClearSound();
     void PlayStep();
     void PlayErrorSound();
+    void UpdateSound();
 }

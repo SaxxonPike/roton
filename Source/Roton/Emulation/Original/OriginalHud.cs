@@ -29,8 +29,9 @@ internal sealed class OriginalHud(
     IScheduler scheduler,
     IInputReader inputReader,
     IElementList elements,
-    IStatistics statistics)
-    : Hud(engine, scroll, state, scheduler, inputReader)
+    IStatistics statistics,
+    IGameThread gameThread)
+    : Hud(engine, scroll, state, scheduler, inputReader, gameThread)
 {
     private const int ViewportHeight = 25;
 

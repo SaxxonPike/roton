@@ -51,4 +51,50 @@ internal sealed class SoundUnit(
         using var mem = musicEncoder.Encode("s004x114x9");
         PlaySound(1, mem.Span);
     }
+
+    public void UpdateSound()
+    {
+        if (!state.SoundPlaying)
+        {
+            state.SoundBuffer.Clear();
+            return;
+        }
+
+        if (state.SoundTicks <= 0)
+        {
+            if (state.SoundBuffer.Count > 0)
+            {
+                var sound = state.SoundBuffer.Dequeue();
+                state.SoundTicks = sound.Duration << 2;
+                switch (sound.Note)
+                {
+                    case >= 0xF0:
+                    {
+                        speaker.PlayDrum(sound.Note - 0xF0);
+                        break;
+                    }
+                    case > 0x00:
+                    {
+                        var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                        speaker.PlayNote(actualNote);
+                        break;
+                    }
+                    default:
+                    {
+                        speaker.StopNote();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                state.SoundPlaying = false;
+                state.SoundPriority = 0;
+                speaker.StopNote();
+            }
+        }
+
+        if (state.SoundPlaying)
+            state.SoundTicks--;
+    }
 }

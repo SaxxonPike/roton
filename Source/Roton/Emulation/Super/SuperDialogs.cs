@@ -7,7 +7,9 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 internal sealed class SuperDialogs(
     IBroadcaster broadcaster,
-    IFacts facts)
+    IFacts facts,
+    IHighScoreListFactory highScoreListFactory,
+    IHud hud)
     : IDialogs
 {
     public void ShowAbout()
@@ -17,4 +19,10 @@ internal sealed class SuperDialogs(
 
     public void ShowHelp() =>
         broadcaster.BroadcastLabel(0, facts.HintLabel, false);
+    
+    public void ShowHighScores()
+    {
+        var list = highScoreListFactory.Load();
+        hud.ShowHighScores(list);
+    }
 }

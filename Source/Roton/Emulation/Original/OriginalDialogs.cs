@@ -1,10 +1,13 @@
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalDialogs(IHud hud)
+internal sealed class OriginalDialogs(
+    IHud hud,
+    IHighScoreListFactory highScoreListFactory)
     : IDialogs
 {
     public void ShowAbout() =>
@@ -12,4 +15,10 @@ internal sealed class OriginalDialogs(IHud hud)
 
     public void ShowHelp() =>
         hud.ShowHelp("Playing Roton", "GAME");
+
+    public void ShowHighScores()
+    {
+        var list = highScoreListFactory.Load();
+        hud.ShowHighScores(list);
+    }
 }

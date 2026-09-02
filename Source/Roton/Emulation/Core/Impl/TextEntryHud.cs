@@ -12,7 +12,8 @@ internal sealed class TextEntryHud(
     IEngineAccessor engine,
     IState state,
     IScheduler scheduler,
-    IInputReader inputReader)
+    IInputReader inputReader,
+    IGameThread gameThread)
     : ITextEntryHud
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +26,7 @@ internal sealed class TextEntryHud(
         var update = true;
         var done = false;
 
-        while (!done && Engine.ThreadActive)
+        while (!done && gameThread.ThreadActive)
         {
             if (update)
             {

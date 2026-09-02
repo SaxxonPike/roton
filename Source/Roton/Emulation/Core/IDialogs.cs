@@ -4,4 +4,5 @@ public interface IDialogs
 {
     void ShowAbout();
     void ShowHelp();
+    void ShowHighScores();
 }

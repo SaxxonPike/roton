@@ -26,8 +26,9 @@ internal sealed class SuperHud(
     IBoardUpdater boardUpdater,
     IScheduler scheduler,
     IInputReader inputReader,
-    IStatistics statistics)
-    : Hud(engine, scroll, state, scheduler, inputReader)
+    IStatistics statistics,
+    IGameThread gameThread)
+    : Hud(engine, scroll, state, scheduler, inputReader, gameThread)
 {
     private readonly string _arrows = new([
         0x18.ToChar(),

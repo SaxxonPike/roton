@@ -10,7 +10,8 @@ public abstract class Hud(
     IScroll scroll, 
     IState state,
     IScheduler scheduler,
-    IInputReader inputReader) 
+    IInputReader inputReader,
+    IGameThread gameThread) 
     : IHud
 {
     protected IState State
@@ -136,7 +137,7 @@ public abstract class Hud(
 
     protected virtual bool Confirm(string message)
     {
-        while (Engine.ThreadActive)
+        while (gameThread.ThreadActive)
         {
             scheduler.WaitForTick();
             inputReader.Read(true);
