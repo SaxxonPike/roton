@@ -11,7 +11,6 @@ public interface IEngine
     void PlotTile(Location location, Tile tile);
     void PutTile(Location location, Vector vector, Tile kind);
     void StepOnce();
-    void Cheat();
     void Delay(int msec);
     int ResetBoardTimeHsec();
 }

@@ -36,7 +36,8 @@ internal sealed class PlayerAction(
     IPlayerUpdater playerUpdater,
     IMessenger messenger,
     IDialogs dialogs,
-    IPlayerInputHandler playerInputHandler)
+    IPlayerInputHandler playerInputHandler,
+    ICheater cheater)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -182,7 +183,7 @@ internal sealed class PlayerAction(
             }
             case EngineKeyCode.QuestionMark:
             {
-                Engine.Cheat();
+                cheater.Cheat();
                 break;
             }
             default:
