@@ -57,4 +57,8 @@ public interface IFacts
     string WorldFileWindowTitle { get; }
     string HighScoreExtension { get; }
     int BaseMemoryUsage { get; }
+    int ScrollHeight { get; }
+    int ScrollWidth { get; }
+    int ScrollLeft { get; }
+    int ScrollTop { get; }
 }

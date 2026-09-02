@@ -18,4 +18,8 @@ internal sealed class SuperFacts : Facts
     public override string WorldFileWindowTitle => "Super ZZT Worlds";
     public override string HighScoreExtension => "HGS";
     public override int BaseMemoryUsage => 203044;
+    public override int ScrollHeight => 23;
+    public override int ScrollWidth => 37;
+    public override int ScrollLeft => 1;
+    public override int ScrollTop => 2;
 }

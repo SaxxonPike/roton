@@ -58,4 +58,8 @@ public abstract class Facts : IFacts
     public AnsiChar ErrorFadeTile => new(0xDB, 0x04);
     public abstract string HighScoreExtension { get; }
     public abstract int BaseMemoryUsage { get; }
+    public abstract int ScrollHeight { get; }
+    public abstract int ScrollWidth { get; }
+    public abstract int ScrollLeft { get; }
+    public abstract int ScrollTop { get; }
 }
