@@ -49,7 +49,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IElementList Elements { get; private set; } = null!;
     protected IExits Exits { get; private set; } = null!;
     protected IFacts Facts { get; private set; } = null!;
-    protected IFeatures Features { get; private set; } = null!;
     protected ICodeHeap Heap { get; private set; } = null!;
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
@@ -178,7 +177,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Elements = container.GetRequiredService<IElementList>();
         Exits = container.GetRequiredService<IExits>();
         Facts = container.GetRequiredService<IFacts>();
-        Features = container.GetRequiredService<IFeatures>();
         Heap = container.GetRequiredService<ICodeHeap>();
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();

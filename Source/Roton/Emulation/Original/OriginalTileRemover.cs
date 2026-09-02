@@ -8,9 +8,18 @@ namespace Roton.Emulation.Original;
 internal sealed class OriginalTileRemover(
     ITiles tiles,
     IElementList elements,
-    IBoardUpdater boardUpdater)
+    IBoardUpdater boardUpdater,
+    IEngineAccessor engine)
     : ITileRemover
 {
+    private IEngine Engine => engine.Instance;
+    
+    public void RemoveActor(Location location, int index, Tile tile)
+    {
+        Engine.Harm(index);
+        Engine.PlotTile(location, tile);
+    }
+
     public void RemoveItem(Location location)
     {
         tiles[location].Id = elements.EmptyId;

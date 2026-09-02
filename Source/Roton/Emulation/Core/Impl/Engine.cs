@@ -28,7 +28,6 @@ internal sealed class Engine : IEngine, IDisposable
     private readonly IParser _parser;
     private readonly IConfig _config;
     private readonly ICheatList _cheats;
-    private readonly IFeatures _features;
     private readonly IHud _hud;
     private readonly IState _state;
     private readonly IWorld _world;
@@ -79,7 +78,6 @@ internal sealed class Engine : IEngine, IDisposable
         IParser parser,
         IConfig config,
         ICheatList cheats,
-        IFeatures features,
         IHud hud,
         IState state,
         IWorld world,
@@ -130,7 +128,6 @@ internal sealed class Engine : IEngine, IDisposable
         _parser = parser;
         _config = config;
         _cheats = cheats;
-        _features = features;
         _hud = hud;
         _state = state;
         _world = world;
@@ -333,7 +330,7 @@ internal sealed class Engine : IEngine, IDisposable
             ExecuteMessage(ref context);
 
         if (context.Died)
-            _features.CleanUpOop(ref context);
+            _tileRemover.RemoveActor(context.Actor.Location, context.Index, context.DeathTile);
     }
 
     public void StepOnce()

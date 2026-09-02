@@ -16,6 +16,9 @@ internal sealed class SuperTileRemover(
 {
     private IEngine Engine => engine.Instance;
 
+    public void RemoveActor(Location location, int index, Tile tile) => 
+        Engine.PlotTile(location, tile);
+
     public void RemoveItem(Location location)
     {
         var result = new Tile(elements.FloorId, 0x00);
