@@ -6,16 +6,16 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalDialogs(
-    IHud hud,
     IHighScoreListFactory highScoreListFactory,
-    IHighScoreHud highScoreHud)
+    IHighScoreHud highScoreHud,
+    IScroll scroll)
     : IDialogs
 {
     public void ShowAbout() =>
-        hud.ShowHelp("About Roton...", "ABOUT");
+        scroll.ShowHelpFile("About Roton...", "ABOUT");
 
     public void ShowHelp() =>
-        hud.ShowHelp("Playing Roton", "GAME");
+        scroll.ShowHelpFile("Playing Roton", "GAME");
 
     public void ShowHighScores()
     {

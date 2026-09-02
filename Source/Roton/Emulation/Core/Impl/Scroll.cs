@@ -327,7 +327,7 @@ internal sealed class Scroll(
         return scrollState;
     }
 
-    public IScrollState Show(string title, string fileName)
+    public IScrollState ShowHelpFile(string title, string fileName)
     {
         var st = new ScrollState(state)
         {
@@ -344,10 +344,10 @@ internal sealed class Scroll(
         return st;
     }
 
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index)
-        => Show(title, message, isHelp, index, ShowLoop);
+    public IScrollState ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index)
+        => ShowMessage(title, message, isHelp, index, ShowLoop);
 
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index,
+    public IScrollState ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index,
         Action<IScrollState> mainLoop)
     {
         var st = new ScrollState(state)

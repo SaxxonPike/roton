@@ -21,7 +21,7 @@ internal sealed class SuperHighScoreHud(
         }
 
         string? name = null;
-        scroll.Show($"New high score for {world.Name}",
+        scroll.ShowMessage($"New high score for {world.Name}",
             [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
@@ -42,6 +42,6 @@ internal sealed class SuperHighScoreHud(
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        scroll.Show($"High scores for {world.Name}", nameList, false, 0);
+        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
     }
 }

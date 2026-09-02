@@ -7,9 +7,9 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class FileDialog(
-    IHud hud,
     IFileSystem fileSystem,
-    IScrollContent scrollContent)
+    IScrollContent scrollContent,
+    IScroll scroll)
     : IFileDialog
 {
     public string? Open(string title, string extension, IFileTitles? fileTitles)
@@ -32,7 +32,7 @@ internal sealed class FileDialog(
             .Concat(["Exit"])
             .ToArray();
 
-        var result = hud.ShowScroll(false, title, files);
+        var result = scroll.Show(title, files);
         if (result.Cancelled)
             return null;
 

@@ -7,10 +7,10 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalMessageHandler(
-    IHud hud,
     IFacts facts,
     IState state,
-    IMessenger messenger)
+    IMessenger messenger,
+    IScroll scroll)
     : IMessageHandler
 {
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -24,7 +24,7 @@ internal sealed class OriginalMessageHandler(
                 return null;
             case { Count: > 1 }:
                 state.KeyVector = Vector.Idle;
-                return hud.ShowScroll(false, context.Name, [.. message]);
+                return scroll.ShowMessage(context.Name, [.. message], false, 0);
             default:
                 return null;
         }

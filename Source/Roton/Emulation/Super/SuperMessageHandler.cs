@@ -7,10 +7,10 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperMessageHandler(
-    IHud hud,
     IFacts facts,
     IState state,
-    IMessenger messenger)
+    IMessenger messenger,
+    IScroll scroll)
     : IMessageHandler
 {
     public IScrollState? ExecuteMessage(ref OopContext context)
@@ -33,7 +33,7 @@ internal sealed class SuperMessageHandler(
                 return null;
             default:
                 state.KeyVector = Vector.Idle;
-                return hud.ShowScroll(false, context.Name, [.. message]);
+                return scroll.ShowMessage(context.Name, [.. message], false, 0);
         }
     }
 

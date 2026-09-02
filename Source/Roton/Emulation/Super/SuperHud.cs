@@ -202,7 +202,7 @@ internal sealed class SuperHud(
     }
 
     public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
-        scroll.Show(title, lines, isHelp, 0);
+        scroll.ShowMessage(title, lines, isHelp, 0);
 
     public void UpdateBorder() =>
         ClearMessage();
@@ -324,7 +324,7 @@ internal sealed class SuperHud(
         currentValue;
 
     public IScrollState ShowHelp(string title, string fileName) =>
-        scroll.Show(title, fileName);
+        scroll.ShowHelpFile(title, fileName);
 
     public void FadeBoard(AnsiChar ac) =>
         fadeMatrix.FadeOut(ac);

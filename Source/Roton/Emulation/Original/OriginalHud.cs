@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -203,7 +202,7 @@ internal sealed class OriginalHud(
         fadeMatrix.FadeIn();
 
     public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
-        scroll.Show(title, lines, isHelp, 0);
+        scroll.ShowMessage(title, lines, isHelp, 0);
 
     public void UpdateBorder()
     {
@@ -290,7 +289,7 @@ internal sealed class OriginalHud(
         choiceHud.Show(performSelection, x, y, message, currentValue, barText);
 
     public IScrollState ShowHelp(string title, string fileName) =>
-        scroll.Show(title, fileName);
+        scroll.ShowHelpFile(title, fileName);
 
     public string SaveGame()
     {

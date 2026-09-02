@@ -43,7 +43,7 @@ internal sealed class OriginalHighScoreHud(
         if (index >= 0)
         {
             string? name = null;
-            scroll.Show($"New high score for {world.Name}",
+            scroll.ShowMessage($"New high score for {world.Name}",
                 nameList,
                 false,
                 2,
@@ -51,7 +51,7 @@ internal sealed class OriginalHighScoreHud(
             return name;
         }
 
-        scroll.Show($"High scores for {world.Name}", nameList, false, 0);
+        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
         return null;
     }
 
@@ -68,6 +68,6 @@ internal sealed class OriginalHighScoreHud(
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        scroll.Show($"High scores for {world.Name}", nameList, false, 0);
+        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
     }
 }

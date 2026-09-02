@@ -24,7 +24,8 @@ internal sealed class WorldManager(
     IElementList elements,
     IActorList actors,
     IFileTitles fileTitles,
-    IExits exits)
+    IExits exits,
+    IScroll scroll)
     : IWorldManager
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -280,12 +281,12 @@ internal sealed class WorldManager(
         actors.Player.Length = 0;
     }
 
-    private string? ShowLoad(string title, string extension, bool useTitles) => 
+    private string? ShowLoad(string title, string extension, bool useTitles) =>
         fileDialog.Open(title, extension, useTitles ? fileTitles : null);
 
     private void ShowDosError()
     {
-        hud.ShowScroll(false, "Error",
+        scroll.ShowMessage("Error",
             [
                 "$DOS Error:",
                 string.Empty,
@@ -295,11 +296,11 @@ internal sealed class WorldManager(
                 "your disk may be full -- try",
                 "using a blank, formatted disk",
                 "for saving the game!"
-            ]
+            ],
+            false, 0
         );
     }
-    
-    private void ShowFormattedScroll(string error) =>
-        hud.ShowScroll(false, "Roton Error", scrollFormatter.Format(error));
 
+    private void ShowFormattedScroll(string error) =>
+        scroll.ShowMessage("Roton Error", scrollFormatter.Format(error), false, 0);
 }
