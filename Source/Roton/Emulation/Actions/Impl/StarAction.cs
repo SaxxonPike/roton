@@ -17,8 +17,8 @@ internal sealed class StarAction(
     IPusher pusher,
     IMover mover,
     INavigator navigator,
-    IActorRemover actorRemover,
-    IAttacker attacker)
+    IAttacker attacker,
+    IActorManager actorManager)
     : IAction
 {
     public void Act(int index)
@@ -29,7 +29,7 @@ internal sealed class StarAction(
 
         if (actor.P2 <= 0)
         {
-            actorRemover.RemoveActor(index);
+            actorManager.Free(index);
             return;
         }
 

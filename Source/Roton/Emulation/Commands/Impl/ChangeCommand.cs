@@ -7,7 +7,6 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "CHANGE")]
 [Context(Context.Super, "CHANGE")]
 internal sealed class ChangeCommand(
-    IEngineAccessor engine,
     IElementList elementList,
     ITiles tiles,
     IParser parser,
@@ -15,8 +14,6 @@ internal sealed class ChangeCommand(
     IPlotter plotter)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;

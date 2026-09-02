@@ -11,7 +11,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
 internal sealed class SpinningGunAction(
-    IEngineAccessor engine,
     IActorList actors,
     IRandomizer randomizer,
     IElementList elements,
@@ -20,8 +19,6 @@ internal sealed class SpinningGunAction(
     INavigator navigator)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];

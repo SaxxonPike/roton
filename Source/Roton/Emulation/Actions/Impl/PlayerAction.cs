@@ -38,7 +38,7 @@ internal sealed class PlayerAction(
     IDialogs dialogs,
     IPlayerInputHandler playerInputHandler,
     ICheater cheater,
-    IAttacker attacker)
+    IDamager damager)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -239,7 +239,7 @@ internal sealed class PlayerAction(
                     }
                     else if (world.TimePassed >= board.TimeLimit)
                     {
-                        attacker.Harm(0);
+                        damager.Harm(0);
                     }
 
                     hud.UpdateStatus();

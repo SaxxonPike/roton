@@ -6,22 +6,22 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public class CodeExecutor(
-    IActorList _actors,
-    ITracer _tracer,
-    IParser _parser,
-    IObjectMover _objectMover,
-    IInterpreter _interpreter,
-    IFacts _facts,
-    IState _state,
-    ITileRemover _tileRemover,
-    IMessageHandler _messageHandler,
-    IBroadcaster _broadcaster,
-    IErrorRaiser errorRaiser)
+    IActorList actors,
+    ITracer tracer,
+    IParser parser,
+    IObjectMover objectMover,
+    IInterpreter interpreter,
+    IFacts facts,
+    IState state,
+    IMessageHandler messageHandler,
+    IBroadcaster broadcaster,
+    IErrorRaiser errorRaiser,
+    IActorRemover actorRemover)
     : ICodeExecutor
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext(_actors)
+        var context = new OopContext(actors)
         {
             Index = index,
             Name = name,
@@ -33,7 +33,7 @@ public class CodeExecutor(
             if (instruction < 0)
                 break;
 
-            _tracer?.TraceOop(ref context, ref instruction);
+            tracer?.TraceOop(ref context, ref instruction);
 
             context.NextLine = true;
             context.PreviousInstruction = instruction;
@@ -41,8 +41,8 @@ public class CodeExecutor(
 
             while (context.Command == ':')
             {
-                _parser.DiscardLine(index, ref instruction);
-                _tracer?.TraceOop(ref context, ref instruction);
+                parser.DiscardLine(index, ref instruction);
+                tracer?.TraceOop(ref context, ref instruction);
                 context.Command = ReadActorCodeByte(index, ref instruction);
             }
 
@@ -50,20 +50,20 @@ public class CodeExecutor(
             {
                 case '\'':
                 case '@':
-                    _parser.DiscardLine(index, ref instruction);
+                    parser.DiscardLine(index, ref instruction);
                     break;
                 case '/':
                 case '?':
                     if (context.Command == '/')
                         context.Repeat = true;
 
-                    if (!_parser.TryEvalDirection(ref context, ref instruction, out var vector))
+                    if (!parser.TryEvalDirection(ref context, ref instruction, out var vector))
                     {
                         errorRaiser.RaiseError(ref context, "Bad direction");
                         break;
                     }
 
-                    _objectMover.ExecuteDirection(ref context, vector);
+                    objectMover.ExecuteDirection(ref context, vector);
 
                     if (ReadActorCodeByte(index, ref instruction) != '\r')
                         instruction--;
@@ -71,7 +71,7 @@ public class CodeExecutor(
 
                     break;
                 case '#':
-                    _interpreter.Execute(ref context, ref instruction);
+                    interpreter.Execute(ref context, ref instruction);
                     break;
                 case '\r':
                     if (context.HasMessage)
@@ -81,7 +81,7 @@ public class CodeExecutor(
                     context.Finished = true;
                     break;
                 default:
-                    context.AddMessage($"{context.Command}{_parser.ReadLine(context.Index, ref instruction)}");
+                    context.AddMessage($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
                     break;
             }
 
@@ -89,43 +89,43 @@ public class CodeExecutor(
                 context.Moved ||
                 context.Repeat ||
                 context.Died ||
-                context.CommandsExecuted >= _facts.MaxOopCommands)
+                context.CommandsExecuted >= facts.MaxOopCommands)
                 break;
         }
 
         if (context.Repeat)
             instruction = context.PreviousInstruction;
 
-        if (_state.OopByte == 0)
+        if (state.OopByte == 0)
             instruction = -1;
 
         if (context.HasMessage)
             ExecuteMessage(ref context);
 
         if (context.Died)
-            _tileRemover.RemoveActor(context.Actor.Location, context.Index, context.DeathTile);
+            actorRemover.RemoveActor(context.Actor.Location, context.Index, context.DeathTile);
     }
 
     private void ExecuteMessage(ref OopContext context)
     {
-        var result = _messageHandler.ExecuteMessage(ref context);
+        var result = messageHandler.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Label: not null })
-            context.NextLine = _broadcaster.BroadcastLabel(context.Index, result.Label, false);
+            context.NextLine = broadcaster.BroadcastLabel(context.Index, result.Label, false);
     }
 
     private char ReadActorCodeByte(int index, ref Word instruction)
     {
-        var actor = _actors[index];
+        var actor = actors[index];
         var value = (char)0;
 
         if (instruction < 0 || instruction >= actor.Length)
         {
-            _state.OopByte = default;
+            state.OopByte = default;
         }
         else
         {
             value = actor.Code[instruction];
-            _state.OopByte = value;
+            state.OopByte = value;
             instruction++;
         }
 

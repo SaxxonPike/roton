@@ -7,14 +7,11 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
 internal sealed class PutCommand(
-    IEngineAccessor engine,
     IParser parser,
     IErrorRaiser errorRaiser,
     IPlotter plotter)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;

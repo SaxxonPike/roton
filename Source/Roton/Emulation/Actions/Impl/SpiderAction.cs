@@ -9,7 +9,6 @@ namespace Roton.Emulation.Actions.Impl;
 /// </summary>
 [Context(Context.Super, 0x3E)]
 internal sealed class SpiderAction(
-    IEngineAccessor engine,
     IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
@@ -19,8 +18,6 @@ internal sealed class SpiderAction(
     IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];

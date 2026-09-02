@@ -10,7 +10,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x29)]
 [Context(Context.Super, 0x29)]
 internal sealed class LionAction(
-    IEngineAccessor engine,
     IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
@@ -20,8 +19,6 @@ internal sealed class LionAction(
     IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];

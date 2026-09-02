@@ -15,7 +15,7 @@ internal sealed class BombAction(
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
-    IActorRemover actorRemover)
+    IActorManager actorManager)
     : IAction
 {
     public void Act(int index)
@@ -34,7 +34,7 @@ internal sealed class BombAction(
                 break;
             case 0:
                 var location = actor.Location;
-                actorRemover.RemoveActor(index);
+                actorManager.Free(index);
                 radiusUpdater.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:

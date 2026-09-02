@@ -15,7 +15,7 @@ internal sealed class Spawner(
     IWorld world,
     ISoundUnit soundUnit,
     ISounds sounds,
-    IDeferred<IAttacker> attacker)
+    IDestroyer destroyer)
     : ISpawner
 {
     public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
@@ -79,7 +79,7 @@ internal sealed class Spawner(
              world.EnergyCycles != 0))
             return false;
 
-        attacker.Instance.Destroy(target);
+        destroyer.Destroy(target);
         soundUnit.PlaySound(2, sounds.BulletDie);
         return true;
     }

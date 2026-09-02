@@ -10,8 +10,8 @@ internal sealed class ScrollInteraction(
     IActorList actors,
     IMusicEncoder musicEncoder,
     ISoundUnit soundUnit,
-    IActorRemover actorRemover,
-    ICodeExecutor codeExecutor)
+    ICodeExecutor codeExecutor,
+    IActorManager actorManager)
     : IInteraction
 {
     private readonly byte[] _scrollMusic = EncodeScrollMusic(musicEncoder);
@@ -32,6 +32,6 @@ internal sealed class ScrollInteraction(
 
         soundUnit.PlaySound(2, _scrollMusic);
         codeExecutor.ExecuteCode(scrollIndex, ref actor.Instruction, "Scroll");
-        actorRemover.RemoveActor(scrollIndex);
+        actorManager.Free(scrollIndex);
     }
 }

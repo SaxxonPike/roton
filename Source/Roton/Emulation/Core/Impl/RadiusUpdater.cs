@@ -14,7 +14,7 @@ internal sealed class RadiusUpdater(
     IElementList elements,
     IRandomizer randomizer,
     IBoardUpdater boardUpdater,
-    IDeferred<IAttacker> attacker
+    IDestroyer destroyer
 ) : IRadiusUpdater
 {
     private static int Distance(Location a, Location b) =>
@@ -46,7 +46,7 @@ internal sealed class RadiusUpdater(
                             }
 
                             if (element.IsDestructible || element.Id == elements.StarId)
-                                attacker.Instance.Destroy(target);
+                                destroyer.Destroy(target);
 
                             if (element.Id == elements.EmptyId || element.Id == elements.BreakableId)
                                 tiles[target] = new Tile(elements.BreakableId, randomizer.GetNext(7) + 9);

@@ -10,7 +10,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x2C)]
 [Context(Context.Super, 0x2C)]
 internal sealed class CentipedeHeadAction(
-    IEngineAccessor engine,
     IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
@@ -21,8 +20,6 @@ internal sealed class CentipedeHeadAction(
     IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var player = actors.Player;

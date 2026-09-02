@@ -10,17 +10,14 @@ namespace Roton.Emulation.Cheats.Impl;
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
 internal sealed class ZapCheat(
-    IEngineAccessor engine,
     IActorList actors,
     IState state,
-    IAttacker attacker)
+    IDestroyer destroyer)
     : ICheat
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(bool clear)
     {
         for (var i = 0; i < 4; i++)
-            attacker.Destroy(actors.Player.Location + state.GetCardinalVector(i));
+            destroyer.Destroy(actors.Player.Location + state.GetCardinalVector(i));
     }
 }

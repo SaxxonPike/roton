@@ -9,7 +9,6 @@ namespace Roton.Emulation.Actions.Impl;
 /// </summary>
 [Context(Context.Original, 0x26)]
 internal sealed class SharkAction(
-    IEngineAccessor engine,
     IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
@@ -19,8 +18,6 @@ internal sealed class SharkAction(
     IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];

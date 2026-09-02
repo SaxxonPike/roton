@@ -17,7 +17,8 @@ internal sealed class BlinkWallAction(
     IBoardUpdater boardUpdater,
     ITracer tracer,
     IMover mover,
-    IAttacker attacker)
+    IDestroyer destroyer,
+    IDamager damager)
     : IAction
 {
     public void Act(int index)
@@ -57,7 +58,7 @@ internal sealed class BlinkWallAction(
             {
                 if (tiles.ElementAt(target).IsDestructible)
                 {
-                    attacker.Destroy(target);
+                    destroyer.Destroy(target);
                 }
 
                 if (tiles[target].Id == elements.PlayerId)
@@ -104,7 +105,7 @@ internal sealed class BlinkWallAction(
                         {
                             while (world.Health > 0)
                             {
-                                attacker.Harm(playerIndex);
+                                damager.Harm(playerIndex);
                             }
                         }
 

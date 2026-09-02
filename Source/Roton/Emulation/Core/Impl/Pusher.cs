@@ -15,7 +15,7 @@ internal sealed class Pusher(
     ITracer tracer,
     IMover mover,
     ITileRemover tileRemover,
-    IAttacker attacker)
+    IDestroyer destroyer)
     : IPusher
 {
     public void Push(Location location, Vector vector)
@@ -40,7 +40,7 @@ internal sealed class Pusher(
 
             var furtherElement = elements[furtherTile.Id];
             if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elements.PlayerId)
-                attacker.Destroy(location + vector);
+                destroyer.Destroy(location + vector);
 
             furtherElement = elements[furtherTile.Id];
             if (furtherElement.IsFloor)

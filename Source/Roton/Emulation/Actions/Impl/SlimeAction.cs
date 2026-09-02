@@ -17,7 +17,7 @@ internal sealed class SlimeAction(
     IBoardUpdater boardUpdater,
     ISpawner spawner,
     IMover mover,
-    IActorRemover actorRemover)
+    IActorManager actorManager)
     : IAction
 {
     public void Act(int index)
@@ -58,7 +58,7 @@ internal sealed class SlimeAction(
 
             if (spawnCount == 0)
             {
-                actorRemover.RemoveActor(index);
+                actorManager.Free(index);
                 tiles[source] = slimeTrailTile;
                 boardUpdater.UpdateBoard(source);
             }

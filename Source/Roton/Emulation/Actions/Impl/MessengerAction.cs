@@ -15,7 +15,7 @@ internal sealed class MessengerAction(
     IHud hud,
     IState state,
     IMessageHandler messageHandler,
-    IActorRemover actorRemover)
+    IActorManager actorManager)
     : IAction
 {
     public void Act(int index)
@@ -29,7 +29,7 @@ internal sealed class MessengerAction(
             if (actor.P2 > 0)
                 return;
 
-            actorRemover.RemoveActor(index);
+            actorManager.Free(index);
             state.ActIndex--;
             hud.UpdateBorder();
             state.Message = string.Empty;

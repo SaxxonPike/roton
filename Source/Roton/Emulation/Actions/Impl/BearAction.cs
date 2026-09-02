@@ -11,7 +11,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x22)]
 [Context(Context.Super, 0x22)]
 internal sealed class BearAction(
-    IEngineAccessor engine,
     IActorList actors,
     IElementList elements,
     ITiles tiles,
@@ -19,8 +18,6 @@ internal sealed class BearAction(
     IAttacker attacker) 
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];

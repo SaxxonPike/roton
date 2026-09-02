@@ -5,16 +5,16 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class ActorRemover(
+internal sealed class ActorManager(
     ITracer tracer,
     IActorList actors,
     IState state,
     ITiles tiles,
     IBoardUpdater boardUpdater,
     ICodeHeap heap) 
-    : IActorRemover
+    : IActorManager
 {
-    public void RemoveActor(int index)
+    public void Free(int index)
     {
         if (index < 0)
         {

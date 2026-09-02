@@ -11,7 +11,7 @@ internal sealed class Messenger(
     ISpawner spawner,
     IState state,
     IElementList elements,
-    IActorRemover actorRemover) 
+    IActorManager actorManager) 
     : IMessenger
 {
     public void SetMessage(int duration, IMessage message)
@@ -19,7 +19,7 @@ internal sealed class Messenger(
         var index = actors.ActorIndexAt(new Location(0, 0));
         if (index >= 0)
         {
-            actorRemover.RemoveActor(index);
+            actorManager.Free(index);
             hud.UpdateBorder();
         }
 

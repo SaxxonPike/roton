@@ -13,7 +13,7 @@ internal sealed class Plotter(
     IState state,
     IBoardUpdater boardUpdater,
     IDeferred<IPusher> pusher,
-    IDeferred<IAttacker> attacker)
+    IDestroyer destroyer)
     : IPlotter
 {
     private ITiles _tiles = tiles;
@@ -46,7 +46,7 @@ internal sealed class Plotter(
         }
         else
         {
-            attacker.Instance.Destroy(location);
+            destroyer.Destroy(location);
             if (targetElement.Cycle < 0)
                 existingTile = new Tile(targetElement.Id, targetColor);
             else

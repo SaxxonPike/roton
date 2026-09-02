@@ -10,7 +10,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x12)]
 [Context(Context.Super, 0x45)]
 internal sealed class BulletAction(
-    IEngineAccessor engine,
     IActorList actors,
     IElementList elements,
     ITiles tiles,
@@ -22,12 +21,10 @@ internal sealed class BulletAction(
     IHud hud,
     IBroadcaster broadcaster,
     IMover mover,
-    IActorRemover actorRemover,
-    IAttacker attacker)
+    IAttacker attacker,
+    IActorManager actorManager)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -81,7 +78,7 @@ internal sealed class BulletAction(
                 continue;
             }
 
-            actorRemover.RemoveActor(index);
+            actorManager.Free(index);
             state.ActIndex--;
             if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {
