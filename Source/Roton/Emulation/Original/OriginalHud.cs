@@ -27,12 +27,15 @@ internal sealed class OriginalHud(
     IBoardUpdater boardUpdater,
     IPlayField playField,
     IScheduler scheduler,
-    IInputReader inputReader)
+    IInputReader inputReader,
+    IElementList elements)
     : Hud(engine, scroll, state, scheduler, inputReader)
 {
     private const int ViewportHeight = 25;
 
     private const int ViewportWidth = 60;
+
+    private bool TitleScreen => State.PlayerElement != elements.PlayerId;
 
     public override void ClearPausing() => 
         DrawStatusLine(5);
@@ -69,7 +72,7 @@ internal sealed class OriginalHud(
         DrawString(0x3D, 0, "    - - - - -      ", 0x1F);
         DrawString(0x3E, 1, "     Roton     ", 0x70);
         DrawString(0x3D, 2, "    - - - - -      ", 0x1F);
-        if (Engine.TitleScreen)
+        if (TitleScreen)
         {
             SelectParameter(false, 0x42, 0x15, "Game speed:;FS", State.GameSpeed, null);
             DrawString(0x3E, 0x15, " S ", 0x70);
@@ -211,7 +214,7 @@ internal sealed class OriginalHud(
     {
         var buffer = (stackalloc char[16]);
 
-        if (Engine.TitleScreen)
+        if (TitleScreen)
             return;
 
         if (board.TimeLimit <= 0)

@@ -345,7 +345,7 @@ internal sealed class Engine : IEngine, IDisposable
 
     public void FadePurple()
     {
-        FadeBoard(_facts.FadeTile);
+        _hud.FadeBoard(_facts.FadeTile);
         _hud.RedrawBoard();
     }
 
@@ -572,8 +572,6 @@ internal sealed class Engine : IEngine, IDisposable
         Thread = null;
     }
 
-    public bool TitleScreen => _state.PlayerElement != _elements.PlayerId;
-
     public void UpdateSound()
     {
         if (!_state.SoundPlaying)
@@ -631,7 +629,8 @@ internal sealed class Engine : IEngine, IDisposable
         return tile.Color & 0x0F;
     }
 
-    private void DrawTile(Location location, AnsiChar ac) => _playField.DrawTile(location.X - 1, location.Y - 1, ac);
+    private void DrawTile(Location location, AnsiChar ac) => 
+        _playField.DrawTile(location.X - 1, location.Y - 1, ac);
 
     private void EnterHighScore(int score)
     {
@@ -653,14 +652,6 @@ internal sealed class Engine : IEngine, IDisposable
         var result = _messageHandler.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Label: not null })
             context.NextLine = _broadcaster.BroadcastLabel(context.Index, result.Label, false);
-    }
-
-    private void FadeBoard(AnsiChar ac) => _hud.FadeBoard(ac);
-
-    public void FadeRed()
-    {
-        FadeBoard(_facts.ErrorFadeTile);
-        _hud.RedrawBoard();
     }
 
     private void InitializeElements(bool showInvisibleTiles)

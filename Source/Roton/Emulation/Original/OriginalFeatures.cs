@@ -6,8 +6,7 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalFeatures(
-    IEngineAccessor engine,
-    IState state)
+    IEngineAccessor engine)
     : IFeatures
 {
     private IEngine Engine => engine.Instance;

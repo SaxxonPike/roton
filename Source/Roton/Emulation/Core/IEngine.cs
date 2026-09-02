@@ -7,7 +7,6 @@ public interface IEngine
 {
     event EventHandler Exited;
 
-    bool TitleScreen { get; }
     void Attack(int index, Location location);
     void Destroy(Location location);
     void ExecuteCode(int index, ref Word instruction, string name);

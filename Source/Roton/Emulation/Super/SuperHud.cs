@@ -51,6 +51,8 @@ internal sealed class SuperHud(
     private const int WindowRight = WindowLeft + WindowWidth - 1;
     private const int WindowBottom = WindowTop + WindowHeight - 1;
 
+    private bool TitleScreen => State.PlayerElement != elements.PlayerId;
+
     protected override bool Confirm(string message)
     {
         UpdateBorder();
@@ -78,7 +80,7 @@ internal sealed class SuperHud(
         var buffer = (stackalloc char[16]);
 
         CreateStatusBar();
-        if (Engine.TitleScreen)
+        if (TitleScreen)
         {
             DrawString(0x04, 0x0A, "Press", 0x1E);
             DrawString(0x04, 0x0C, "ENTER", 0x1F);
@@ -350,7 +352,7 @@ internal sealed class SuperHud(
 
     public override void UpdateStatus()
     {
-        if (Engine.TitleScreen)
+        if (TitleScreen)
             return;
 
         if (world.Health < 0)
