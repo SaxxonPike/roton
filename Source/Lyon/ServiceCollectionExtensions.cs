@@ -45,21 +45,28 @@ public static class ServiceCollectionExtensions
             foreach (var serviceGroup in map)
             {
                 // Add concrete implementation.
-                services.AddSingleton(serviceGroup.Key);
+                if (serviceGroup.Key.IsGenericTypeDefinition)
+                {
+                    services.AddSingleton(serviceGroup.Single().Service, serviceGroup.Key);
+                }
+                else
+                {
+                    services.AddSingleton(serviceGroup.Key);
 
-                // Add service mappings.
-                foreach (var service in serviceGroup)
-                    services.AddSingleton(service.Service, sp =>
-                    {
-                        var stack = DependencyStack.Value!;
-                        if (stack.Contains(service.Service))
-                            throw new Exception($"Circular dependency detected: {service.Service.FullName} <- " +
-                                                string.Join(" <- ", stack.Select(rs => rs.ToString())));
-                        stack.Push(service.Service);
-                        var result = sp.GetRequiredService(serviceGroup.Key);
-                        stack.Pop();
-                        return result;
-                    });
+                    // Add service mappings.
+                    foreach (var service in serviceGroup)
+                        services.AddSingleton(service.Service, sp =>
+                        {
+                            var stack = DependencyStack.Value!;
+                            if (stack.Contains(service.Service))
+                                throw new Exception($"Circular dependency detected: {service.Service.FullName} <- " +
+                                                    string.Join(" <- ", stack.Select(rs => rs.ToString())));
+                            stack.Push(service.Service);
+                            var result = sp.GetRequiredService(serviceGroup.Key);
+                            stack.Pop();
+                            return result;
+                        });
+                }
             }
         }
     }

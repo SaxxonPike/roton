@@ -8,18 +8,16 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class Pusher(
     ITiles tiles,
     IElementList elements,
-    IEngineAccessor engine,
     IActorList actors,
     ISoundUnit soundUnit,
     ISounds sounds,
     IBoardUpdater boardUpdater,
     ITracer tracer,
     IMover mover,
-    ITileRemover tileRemover)
+    ITileRemover tileRemover,
+    IAttacker attacker)
     : IPusher
 {
-    private IEngine Engine => engine.Instance;
-
     public void Push(Location location, Vector vector)
     {
         ref var tile = ref tiles[location];
@@ -42,7 +40,7 @@ internal sealed class Pusher(
 
             var furtherElement = elements[furtherTile.Id];
             if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elements.PlayerId)
-                Engine.Destroy(location + vector);
+                attacker.Destroy(location + vector);
 
             furtherElement = elements[furtherTile.Id];
             if (furtherElement.IsFloor)

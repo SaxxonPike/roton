@@ -17,7 +17,8 @@ internal sealed class CentipedeHeadAction(
     IElementList elements,
     IBoardUpdater boardUpdater,
     IMover mover,
-    INavigator navigator)
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -112,7 +113,7 @@ internal sealed class CentipedeHeadAction(
 
                 actor.Follower = -1;
                 actor.Leader = -1;
-                Engine.Attack(index, target);
+                attacker.Attack(index, target);
             }
             else
             {

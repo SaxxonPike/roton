@@ -24,12 +24,10 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x3E)]
 [Context(Context.Super, 0x45)]
 [Context(Context.Super, 0x48)]
-internal sealed class EnemyInteraction(IEngineAccessor engine) : IInteraction
+internal sealed class EnemyInteraction(
+    IAttacker attacker) 
+    : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
-    public void Interact(Location location, int index, ref Vector vector)
-    {
-        Engine.Attack(index, location);
-    }
+    public void Interact(Location location, int index, ref Vector vector) => 
+        attacker.Attack(index, location);
 }

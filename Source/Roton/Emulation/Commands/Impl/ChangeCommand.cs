@@ -11,7 +11,8 @@ internal sealed class ChangeCommand(
     IElementList elementList,
     ITiles tiles,
     IParser parser,
-    IErrorRaiser errorRaiser)
+    IErrorRaiser errorRaiser,
+    IPlotter plotter)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -33,7 +34,7 @@ internal sealed class ChangeCommand(
                 var location = new Location(0, 1);
 
                 while (tiles.FindTile(source, ref location))
-                    Engine.PlotTile(location, target);
+                    plotter.Plot(location, target);
             }
         }
 

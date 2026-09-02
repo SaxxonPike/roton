@@ -8,7 +8,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalPlayerInputHandler(
     IState state,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IDialogs dialogs,
     IHud hud,
     IWorld world,
@@ -26,7 +26,7 @@ internal sealed class OriginalPlayerInputHandler(
             case EngineKeyCode.P:
                 return true;
             case EngineKeyCode.W:
-                worldUnit.OpenWorld();
+                worldManager.OpenWorld();
                 break;
             case EngineKeyCode.A:
                 dialogs.ShowAbout();
@@ -39,7 +39,7 @@ internal sealed class OriginalPlayerInputHandler(
                     true, 0x42, 0x15, "Game speed:;FS", state.GameSpeed, null);
                 break;
             case EngineKeyCode.R:
-                return worldUnit.RestoreWorld();
+                return worldManager.RestoreWorld();
             case EngineKeyCode.H:
                 dialogs.ShowHighScores();
                 break;

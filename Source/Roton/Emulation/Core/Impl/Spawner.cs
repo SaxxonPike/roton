@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,7 +7,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Spawner(
-    IEngineAccessor engine,
     IState state,
     IActorList actors,
     ITiles tiles,
@@ -14,10 +14,12 @@ internal sealed class Spawner(
     IElementList elements,
     IWorld world,
     ISoundUnit soundUnit,
-    ISounds sounds)
+    ISounds sounds,
+    IServiceProvider serviceProvider)
     : ISpawner
 {
-    private IEngine Engine => engine.Instance;
+    private readonly Lazy<IAttacker> _attacker = new(() =>
+        (IAttacker)serviceProvider.GetService(typeof(IAttacker)));
 
     public void SpawnActor(Location location, Tile tile, int cycle, IActor? source)
     {
@@ -80,7 +82,7 @@ internal sealed class Spawner(
              world.EnergyCycles != 0))
             return false;
 
-        Engine.Destroy(target);
+        _attacker.Value.Destroy(target);
         soundUnit.PlaySound(2, sounds.BulletDie);
         return true;
     }

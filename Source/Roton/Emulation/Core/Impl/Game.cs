@@ -31,7 +31,7 @@ internal sealed class Game(
     ITracer _tracer,
     ISoundUnit _soundUnit,
     IDialogs _dialogs,
-    IWorldUnit _worldUnit,
+    IWorldManager worldManager,
     IMessenger _messenger,
     IFader _fader,
     IPlayField _playField,
@@ -54,11 +54,11 @@ internal sealed class Game(
             if (_state.DefaultWorldName.Length > 0)
             {
                 _state.AboutShown = true;
-                _worldUnit.LoadWorld(_state.DefaultWorldName, false);
+                worldManager.LoadWorld(_state.DefaultWorldName, false);
             }
 
             _state.StartBoard = _world.BoardIndex;
-            _worldUnit.SetBoard(0);
+            worldManager.SetBoard(0);
             _state.Init = false;
         }
 

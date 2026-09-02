@@ -12,7 +12,7 @@ internal sealed class BoardEdgeInteraction(
     IElementList elementList,
     IInteractionList interactionList,
     IState state,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IMover mover,
     IExits exits,
     IPlayerEnterHandler playerEnterHandler,
@@ -48,7 +48,7 @@ internal sealed class BoardEdgeInteraction(
         if (targetBoard == 0)
             return;
 
-        worldUnit.SetBoard(targetBoard);
+        worldManager.SetBoard(targetBoard);
         if (tiles[target].Id != elementList.PlayerId)
         {
             interactionList.Get(tiles[target].Id)?
@@ -69,7 +69,7 @@ internal sealed class BoardEdgeInteraction(
         }
         else
         {
-            worldUnit.SetBoard(oldBoard);
+            worldManager.SetBoard(oldBoard);
         }
     }
 }

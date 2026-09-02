@@ -13,7 +13,7 @@ internal sealed class PassageInteraction(
     IState state,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IPlayerUpdater playerUpdater,
     IPlayerEnterHandler playerEnterHandler,
     IFader fader)
@@ -24,7 +24,7 @@ internal sealed class PassageInteraction(
         var searchColor = tiles[location].Color;
         var passageIndex = actors.ActorIndexAt(location);
         var passageTarget = actors[passageIndex].P3;
-        worldUnit.SetBoard(passageTarget);
+        worldManager.SetBoard(passageTarget);
         var target = new Location();
 
         for (var x = 1; x <= tiles.Width; x++)

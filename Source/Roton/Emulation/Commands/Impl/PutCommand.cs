@@ -9,7 +9,8 @@ namespace Roton.Emulation.Commands.Impl;
 internal sealed class PutCommand(
     IEngineAccessor engine,
     IParser parser,
-    IErrorRaiser errorRaiser)
+    IErrorRaiser errorRaiser,
+    IPlotter plotter)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -25,7 +26,7 @@ internal sealed class PutCommand(
                 success = true;
 
                 var target = context.Actor.Location + vec;
-                Engine.PutTile(target, vec, k);
+                plotter.Put(target, vec, k);
             }
         }
 

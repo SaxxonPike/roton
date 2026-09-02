@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -9,15 +10,18 @@ internal sealed class OriginalTileRemover(
     ITiles tiles,
     IElementList elements,
     IBoardUpdater boardUpdater,
-    IEngineAccessor engine)
+    //IAttacker attacker,
+    IPlotter plotter,
+    IServiceProvider serviceProvider)
     : ITileRemover
 {
-    private IEngine Engine => engine.Instance;
+    private readonly Lazy<IAttacker> _attacker = new(() =>
+        (IAttacker)serviceProvider.GetService(typeof(IAttacker)));
     
     public void RemoveActor(Location location, int index, Tile tile)
     {
-        Engine.Harm(index);
-        Engine.PlotTile(location, tile);
+        _attacker.Value.Harm(index);
+        plotter.Plot(location, tile);
     }
 
     public void RemoveItem(Location location)

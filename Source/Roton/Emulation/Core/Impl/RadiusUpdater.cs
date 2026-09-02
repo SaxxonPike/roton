@@ -7,18 +7,16 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class RadiusUpdater(
-    IEngineAccessor engine,
     ITiles tiles,
     IFacts facts,
     IActorList actors,
     IBroadcaster broadcaster,
     IElementList elements,
     IRandomizer randomizer,
-    IBoardUpdater boardUpdater
+    IBoardUpdater boardUpdater,
+    IDeferred<IAttacker> attacker
 ) : IRadiusUpdater
 {
-    private IEngine Engine => engine.Instance;
-
     private static int Distance(Location a, Location b) =>
         (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
@@ -48,7 +46,7 @@ internal sealed class RadiusUpdater(
                             }
 
                             if (element.IsDestructible || element.Id == elements.StarId)
-                                Engine.Destroy(target);
+                                attacker.Instance.Destroy(target);
 
                             if (element.Id == elements.EmptyId || element.Id == elements.BreakableId)
                                 tiles[target] = new Tile(elements.BreakableId, randomizer.GetNext(7) + 9);

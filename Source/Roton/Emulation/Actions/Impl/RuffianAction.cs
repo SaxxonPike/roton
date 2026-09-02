@@ -16,7 +16,8 @@ internal sealed class RuffianAction(
     ITiles tiles,
     IElementList elements,
     IMover mover,
-    INavigator navigator)
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -46,7 +47,7 @@ internal sealed class RuffianAction(
 
             if (tiles.ElementAt(target).Id == elements.PlayerId)
             {
-                Engine.Attack(index, target);
+                attacker.Attack(index, target);
             }
             else if (tiles.ElementAt(target).IsFloor)
             {

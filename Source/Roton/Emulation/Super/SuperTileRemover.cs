@@ -10,14 +10,12 @@ internal sealed class SuperTileRemover(
     ITiles tiles,
     IActorList actors,
     IBoardUpdater boardUpdater,
-    IEngineAccessor engine,
-    IState state)
+    IState state,
+    IPlotter plotter)
     : ITileRemover
 {
-    private IEngine Engine => engine.Instance;
-
     public void RemoveActor(Location location, int index, Tile tile) => 
-        Engine.PlotTile(location, tile);
+        plotter.Plot(location, tile);
 
     public void RemoveItem(Location location)
     {

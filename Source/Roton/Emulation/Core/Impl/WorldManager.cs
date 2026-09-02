@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-internal sealed class WorldUnit(
+internal sealed class WorldManager(
     IHud hud,
     IWorld world,
     IState state,
@@ -25,7 +25,7 @@ internal sealed class WorldUnit(
     IActorList actors,
     IFileTitles fileTitles,
     IExits exits)
-    : IWorldUnit
+    : IWorldManager
 {
     private string GetFileName(string name, bool savedGame) =>
         savedGame

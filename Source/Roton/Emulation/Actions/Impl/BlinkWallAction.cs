@@ -10,18 +10,16 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
 internal sealed class BlinkWallAction(
-    IEngineAccessor engine,
     ITiles tiles,
     IElementList elements,
     IActorList actors,
     IWorld world,
     IBoardUpdater boardUpdater,
     ITracer tracer,
-    IMover mover)
+    IMover mover,
+    IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -59,7 +57,7 @@ internal sealed class BlinkWallAction(
             {
                 if (tiles.ElementAt(target).IsDestructible)
                 {
-                    Engine.Destroy(target);
+                    attacker.Destroy(target);
                 }
 
                 if (tiles[target].Id == elements.PlayerId)
@@ -106,7 +104,7 @@ internal sealed class BlinkWallAction(
                         {
                             while (world.Health > 0)
                             {
-                                Engine.Harm(playerIndex);
+                                attacker.Harm(playerIndex);
                             }
                         }
 

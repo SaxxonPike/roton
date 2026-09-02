@@ -8,7 +8,7 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 internal sealed class SuperPlayerInputHandler(
     IState state,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IDialogs dialogs,
     IHud hud)
     : IPlayerInputHandler
@@ -20,10 +20,10 @@ internal sealed class SuperPlayerInputHandler(
             case EngineKeyCode.Enter: // Enter
                 return true;
             case EngineKeyCode.W: // W
-                worldUnit.OpenWorld();
+                worldManager.OpenWorld();
                 break;
             case EngineKeyCode.R: // R
-                return worldUnit.RestoreWorld();
+                return worldManager.RestoreWorld();
             case EngineKeyCode.H: // H
                 dialogs.ShowHelp();
                 break;

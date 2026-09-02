@@ -1,6 +1,6 @@
 namespace Roton.Emulation.Core;
 
-public interface IWorldUnit
+public interface IWorldManager
 {
     bool LoadWorld(string name, bool savedGame);
     void SaveWorld(string name);

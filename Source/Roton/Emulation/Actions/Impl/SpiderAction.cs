@@ -15,7 +15,8 @@ internal sealed class SpiderAction(
     ITiles tiles,
     IElementList elements,
     IMover mover,
-    INavigator navigator)
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -54,7 +55,7 @@ internal sealed class SpiderAction(
 
         if (targetElement == elements.PlayerId)
         {
-            Engine.Attack(index, target);
+            attacker.Attack(index, target);
             return true;
         }
 

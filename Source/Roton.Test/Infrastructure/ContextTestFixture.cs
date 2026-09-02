@@ -65,7 +65,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected ITiles Tiles { get; private set; } = null!;
     protected IWorld World { get; private set; } = null!;
     protected IGameSerializer GameSerializer { get; private set; } = null!;
-    protected IWorldUnit WorldUnit { get; private set; } = null!;
+    protected IWorldManager WorldManager { get; private set; } = null!;
     protected ISoundUnit SoundUnit { get; private set; } = null!;
 
     protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
@@ -192,11 +192,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Tiles = container.GetRequiredService<ITiles>();
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
-        WorldUnit = container.GetRequiredService<IWorldUnit>();
+        WorldManager = container.GetRequiredService<IWorldManager>();
         SoundUnit = container.GetRequiredService<ISoundUnit>();
 
         // Preconfiguration
-        WorldUnit.ClearWorld();
+        WorldManager.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
         State.PlayerElement = Elements.PlayerId;
@@ -349,15 +349,15 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     {
         while (State.BoardCount < index)
         {
-            WorldUnit.PackBoard();
+            WorldManager.PackBoard();
             BoardIndex = State.BoardCount + 1;
-            WorldUnit.ClearBoard();
+            WorldManager.ClearBoard();
         }
 
         if (BoardIndex != index)
         {
-            WorldUnit.PackBoard();
-            WorldUnit.UnpackBoard(index);
+            WorldManager.PackBoard();
+            WorldManager.UnpackBoard(index);
         }
     }
 
@@ -453,11 +453,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     }
 
     protected void ClearBoard() =>
-        WorldUnit.ClearBoard();
+        WorldManager.ClearBoard();
     
     protected void PackBoard() =>
-        WorldUnit.PackBoard();
+        WorldManager.PackBoard();
     
     protected void UnpackBoard(int index) =>
-        WorldUnit.UnpackBoard(index);
+        WorldManager.UnpackBoard(index);
 }

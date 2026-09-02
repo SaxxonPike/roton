@@ -8,7 +8,7 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class TitleScreen(
     IState state,
     IHud hud,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IElementList elements,
     IPlayerInputHandler playerInputHandler,
     IWorld world,
@@ -23,7 +23,7 @@ internal sealed class TitleScreen(
 
         if (world.IsLocked)
         {
-            worldUnit.LoadWorld(world.Name, false);
+            worldManager.LoadWorld(world.Name, false);
 
             if (state.WorldLoaded)
             {
@@ -44,7 +44,7 @@ internal sealed class TitleScreen(
 
     private void StartPlaying()
     {
-        worldUnit.SetBoard(state.StartBoard);
+        worldManager.SetBoard(state.StartBoard);
         playerEnterHandler.EnterBoard();
         state.PlayerElement = elements.PlayerId;
         state.GamePaused = true;
@@ -61,7 +61,7 @@ internal sealed class TitleScreen(
         while (gameThread.ThreadActive)
         {
             if (!state.Init)
-                worldUnit.SetBoard(0);
+                worldManager.SetBoard(0);
 
             while (gameThread.ThreadActive)
             {

@@ -10,7 +10,7 @@ internal sealed class Bootstrap(
     IState state,
     IFacts facts,
     IConfig config,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IConfigFileService configFileService,
     IClock clock,
     ITitleScreen titleScreen,
@@ -48,7 +48,7 @@ internal sealed class Bootstrap(
         state.ForestIndex = 2;
         state.Init = true;
 
-        worldUnit.ClearWorld();
+        worldManager.ClearWorld();
 
         var cfg = configFileService.Load();
         if (config.DefaultWorld == null && cfg != null)

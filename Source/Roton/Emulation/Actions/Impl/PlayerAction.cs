@@ -28,7 +28,7 @@ internal sealed class PlayerAction(
     ITimers timers,
     IConfig config,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit,
+    IWorldManager worldManager,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
     ISpawner spawner,
@@ -37,7 +37,8 @@ internal sealed class PlayerAction(
     IMessenger messenger,
     IDialogs dialogs,
     IPlayerInputHandler playerInputHandler,
-    ICheater cheater)
+    ICheater cheater,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -157,7 +158,7 @@ internal sealed class PlayerAction(
             case EngineKeyCode.S:
             {
                 if (hud.SaveGame() is { } saveFileName)
-                    worldUnit.SaveWorld(saveFileName);
+                    worldManager.SaveWorld(saveFileName);
 
                 break;
             }
@@ -238,7 +239,7 @@ internal sealed class PlayerAction(
                     }
                     else if (world.TimePassed >= board.TimeLimit)
                     {
-                        Engine.Harm(0);
+                        attacker.Harm(0);
                     }
 
                     hud.UpdateStatus();

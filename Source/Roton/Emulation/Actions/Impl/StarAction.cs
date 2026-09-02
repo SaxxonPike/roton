@@ -10,7 +10,6 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Original, 0x0F)]
 [Context(Context.Super, 0x48)]
 internal sealed class StarAction(
-    IEngineAccessor engine,
     IActorList actors,
     IElementList elements,
     ITiles tiles,
@@ -18,11 +17,10 @@ internal sealed class StarAction(
     IPusher pusher,
     IMover mover,
     INavigator navigator,
-    IActorRemover actorRemover)
+    IActorRemover actorRemover,
+    IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         var actor = actors[index];
@@ -44,7 +42,7 @@ internal sealed class StarAction(
 
             if (targetElement.Id == elements.PlayerId || targetElement.Id == elements.BreakableId)
             {
-                Engine.Attack(index, targetLocation);
+                attacker.Attack(index, targetLocation);
             }
             else
             {

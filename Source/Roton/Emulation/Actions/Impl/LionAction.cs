@@ -16,7 +16,8 @@ internal sealed class LionAction(
     ITiles tiles,
     IElementList elements,
     IMover mover,
-    INavigator navigator)
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -37,7 +38,7 @@ internal sealed class LionAction(
         }
         else if (element.Id == elements.PlayerId)
         {
-            Engine.Attack(index, target);
+            attacker.Attack(index, target);
         }
     }
 }

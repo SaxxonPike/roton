@@ -22,7 +22,8 @@ internal sealed class BulletAction(
     IHud hud,
     IBroadcaster broadcaster,
     IMover mover,
-    IActorRemover actorRemover)
+    IActorRemover actorRemover,
+    IAttacker attacker)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -58,7 +59,7 @@ internal sealed class BulletAction(
                     hud.UpdateStatus();
                 }
 
-                Engine.Attack(index, target);
+                attacker.Attack(index, target);
                 break;
             }
 
