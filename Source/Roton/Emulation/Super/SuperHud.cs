@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
@@ -21,13 +22,10 @@ internal sealed class SuperHud(
     IWorld world,
     IElementList elements,
     ISoundUnit soundUnit,
-    IScheduler scheduler,
-    IInputReader inputReader,
     IStatistics statistics,
-    IGameThread gameThread,
     IDelayer delayer,
-    ICamera camera)
-    : Hud(scroll, state, scheduler, inputReader, gameThread)
+    IConfirmInputHandler confirmInputHandler)
+    : IHud
 {
     private readonly string _arrows = new([
         0x18.ToChar(),
@@ -50,14 +48,14 @@ internal sealed class SuperHud(
     private const int WindowRight = WindowLeft + WindowWidth - 1;
     private const int WindowBottom = WindowTop + WindowHeight - 1;
 
-    private bool TitleScreen => State.PlayerElement != elements.PlayerId;
+    private bool TitleScreen => state.PlayerElement != elements.PlayerId;
 
-    protected override bool Confirm(string message)
+    private bool Confirm(string message)
     {
         UpdateBorder();
         DrawString(0x0F, 0x18, message, 0x1F);
         DrawChar(0x0F + message.Length, 0x18, new AnsiChar(0x5F, 0x9E));
-        var result = base.Confirm(message);
+        var result = confirmInputHandler.Confirm();
         UpdateBorder();
         return result;
     }
@@ -74,7 +72,11 @@ internal sealed class SuperHud(
         }
     }
 
-    public override void CreateStatusText()
+    public void ClearTitleStatus()
+    {
+    }
+
+    public void CreateStatusText()
     {
         var buffer = (stackalloc char[16]);
 
@@ -142,12 +144,10 @@ internal sealed class SuperHud(
         }
     }
 
-    public void DrawChar(int x, int y, AnsiChar ac)
-    {
+    public void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
-    }
 
-    public override void DrawMessage(IMessage message, int color)
+    public void DrawMessage(IMessage message, int color)
     {
         var topText = message.Text.FirstOrDefault() ?? string.Empty;
         var bottomText = message.Text.Skip(1).FirstOrDefault() ?? string.Empty;
@@ -158,10 +158,8 @@ internal sealed class SuperHud(
         DrawString(bottomX, 24, " ", bottomText, " ", messageColor);
     }
 
-    private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
-    {
+    private void DrawSystemMessage(ReadOnlySpan<char> message, int color) =>
         DrawString(25 - message.Length / 2, 23, message, color);
-    }
 
     private void DrawNumber(int y, int value)
     {
@@ -172,46 +170,42 @@ internal sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
-    {
+    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
-    }
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
-    {
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
         terminal.Write(x, y, text0, text1, color);
-    }
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
-        int color)
-    {
+        int color) =>
         terminal.Write(x, y, text0, text1, text2, color);
-    }
 
-    public override void Initialize()
+    public void Initialize()
     {
         RandomizeFadeMatrix();
 
-        if (State.EditorMode)
-        {
+        if (state.EditorMode)
             terminal.SetSize(96, 80, true);
-        }
         else
-        {
             terminal.SetSize(40, 25, true);
-        }
     }
 
-    public override void RedrawBoard()
+    public bool QuitEngineConfirmation()
+    {
+        return Confirm("Quit to DOS? ");
+    }
+
+    public void RedrawBoard()
     {
         UpdateCameraPosition();
         fadeMatrix.FadeIn();
     }
 
-    public override void UpdateBorder()
-    {
+    public IScrollState ShowScroll(bool isHelp, string? title, IEnumerable<string> lines) =>
+        scroll.Show(title, lines, isHelp, 0);
+
+    public void UpdateBorder() =>
         ClearMessage();
-    }
 
     private void UpdateCameraPosition()
     {
@@ -225,7 +219,7 @@ internal sealed class SuperHud(
     }
 
 
-    public override void UpdateStatus()
+    public void UpdateStatus()
     {
         if (TitleScreen)
             return;
@@ -279,10 +273,14 @@ internal sealed class SuperHud(
             DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
         }
 
-        DrawString(0x03, 0x0A, State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
+        DrawString(0x03, 0x0A, state.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
 
         if (world.Flags.Contains("DEBUG"))
             DrawString(0x0E, 0x00, $"Used: {statistics.CalculateMemoryUsage()}", 0x1E);
+    }
+
+    public void CreateStatusWorld()
+    {
     }
 
     private string StoneText
@@ -301,7 +299,10 @@ internal sealed class SuperHud(
         }
     }
 
-    public override string EnterCheat()
+    public bool EndGameConfirmation() =>
+        Confirm("End this game? ");
+
+    public string EnterCheat()
     {
         UpdateBorder();
         var cheat = textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
@@ -309,7 +310,7 @@ internal sealed class SuperHud(
         return cheat;
     }
 
-    public override string SaveGame()
+    public string SaveGame()
     {
         DrawString(13, 24, "Save game:", 0x1F);
         DrawString(33, 24, ".SAV", 0x0F);
@@ -318,26 +319,35 @@ internal sealed class SuperHud(
         return result;
     }
 
-    public override void FadeBoard(AnsiChar ac) => fadeMatrix.FadeOut(ac);
+    public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
+        string? barText) =>
+        currentValue;
 
-    private void RandomizeFadeMatrix() => fadeMatrix.Randomize();
+    public IScrollState ShowHelp(string title, string fileName) =>
+        scroll.Show(title, fileName);
 
-    public override void FailToLoadWorld()
+    public void FadeBoard(AnsiChar ac) =>
+        fadeMatrix.FadeOut(ac);
+
+    private void RandomizeFadeMatrix() =>
+        fadeMatrix.Randomize();
+
+    public void FailToLoadWorld()
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
         soundUnit.PlayErrorSound();
         delayer.Delay(2000);
     }
 
-    public override void DrawPausing()
-    {
+    public void DrawPausing() =>
         DrawString(21, 24, "Pausing...", 0x1E);
+
+    public void DrawTitleStatus()
+    {
     }
 
-    public override void ClearPausing()
-    {
+    public void ClearPausing() =>
         ClearMessage();
-    }
 
     private void ClearMessage()
     {
