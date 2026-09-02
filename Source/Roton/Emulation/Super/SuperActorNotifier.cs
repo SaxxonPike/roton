@@ -1,4 +1,4 @@
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,9 +7,9 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super)]
 internal sealed class SuperActorNotifier(
     IActorList actors)
-    : ActorNotifier
+    : IActorNotifier
 {
-    public override void NotifyActorSentLabel(int index)
+    public void NotifyActorSentLabel(int index)
     {
         // When an object receives a label, the current
         // in-progress movement counter is reset.

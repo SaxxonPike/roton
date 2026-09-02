@@ -4,5 +4,5 @@ namespace Roton.Emulation.Core;
 
 public interface IAdjacentFinder
 {
-    int GetAdjacent(Location location, int elementId);
+    bool TestAdjacent(Location location, int id);
 }

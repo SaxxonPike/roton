@@ -77,7 +77,10 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
 
     public abstract void Reset();
 
-    public abstract bool IsWater(int index);
+    public abstract bool IsWater(int id);
+
+    public bool AreAdjacent(int idA, int idB) =>
+        idA == idB || idA == BoardEdgeId || idB == BoardEdgeId;
 
     protected sealed override void SetItem(int index, IElement value) =>
         throw Exceptions.InvalidSet;
