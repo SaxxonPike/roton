@@ -8,15 +8,13 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Interpreter(
-    IEngineAccessor engine,
     ITracer tracer,
     IParser parser,
     ICommandList commandList,
-    IBroadcaster broadcaster)
+    IBroadcaster broadcaster,
+    IErrorRaiser errorRaiser)
     : IInterpreter
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
@@ -54,7 +52,7 @@ internal sealed class Interpreter(
                 if (!broadcaster.BroadcastLabel(context.Index, name, false))
                 {
                     if (name.IndexOf(':') < 0) 
-                        Engine.RaiseError(ref context, $"Bad command {name.ToString()}");
+                        errorRaiser.RaiseError(ref context, $"Bad command {name.ToString()}");
                 }
                 else
                 {

@@ -12,7 +12,8 @@ internal sealed class OriginalObjectAction(
     ITiles tiles,
     IFacts facts,
     IBroadcaster broadcaster,
-    IMover mover)
+    IMover mover,
+    ICodeExecutor codeExecutor)
     : IAction
 {
     private IEngine Engine => engine.Instance;
@@ -22,7 +23,7 @@ internal sealed class OriginalObjectAction(
         var actor = actors[index];
         if (actor.Instruction >= 0)
         {
-            Engine.ExecuteCode(index, ref actor.Instruction, "Interaction");
+            codeExecutor.ExecuteCode(index, ref actor.Instruction, "Interaction");
         }
 
         if (actor.Vector.IsZero())

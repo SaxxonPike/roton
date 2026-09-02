@@ -10,7 +10,8 @@ internal sealed class ChangeCommand(
     IEngineAccessor engine,
     IElementList elementList,
     ITiles tiles,
-    IParser parser)
+    IParser parser,
+    IErrorRaiser errorRaiser)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -37,6 +38,6 @@ internal sealed class ChangeCommand(
         }
 
         if (!success)
-            Engine.RaiseError(ref context, "Bad #CHANGE");
+            errorRaiser.RaiseError(ref context, "Bad #CHANGE");
     }
 }

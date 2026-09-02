@@ -8,7 +8,8 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "PUT")]
 internal sealed class PutCommand(
     IEngineAccessor engine,
-    IParser parser)
+    IParser parser,
+    IErrorRaiser errorRaiser)
     : ICommand
 {
     private IEngine Engine => engine.Instance;
@@ -29,6 +30,6 @@ internal sealed class PutCommand(
         }
 
         if (!success)
-            Engine.RaiseError(ref context, "Bad #PUT");
+            errorRaiser.RaiseError(ref context, "Bad #PUT");
     }
 }
