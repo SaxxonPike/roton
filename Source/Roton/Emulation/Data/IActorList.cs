@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
@@ -10,4 +11,5 @@ public interface IActorList : IEnumerable<IActor>
     IActor Player { get; }
     IActor ActorAt(Location location);
     int ActorIndexAt(Location location);
+    Span<char> GetActorCode(int index);
 }

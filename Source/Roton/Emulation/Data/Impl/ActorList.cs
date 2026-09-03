@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Infrastructure;
+﻿using System;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
@@ -27,6 +28,8 @@ public abstract class ActorList(IMemory memory, int capacity)
 
         return -1;
     }
+
+    public abstract Span<char> GetActorCode(int index);
 
     protected sealed override void SetItem(int index, IActor value)
     {

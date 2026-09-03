@@ -158,7 +158,7 @@ internal sealed class Scroll(
         return default;
     }
 
-    public ScrollResult ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index,
+    public ScrollResult ShowMessage(ReadOnlySpan<char> title, IEnumerable<string> message, bool isHelp, int index,
         Func<ScrollState, ScrollResult>? mainLoop = null)
     {
         var st = new ScrollState
@@ -166,7 +166,7 @@ internal sealed class Scroll(
             Index = index,
             Label = null,
             IsHelp = isHelp,
-            Title = title
+            Title = title.ToString()
         };
 
         scrollContent.ClearLines();

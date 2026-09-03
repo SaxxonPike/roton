@@ -23,8 +23,9 @@ internal sealed class CodeExecutor(
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext(actors)
+        var context = new OopContext
         {
+            Actor = actors[index],
             Index = index,
             Name = name,
             PreviousInstruction = instruction

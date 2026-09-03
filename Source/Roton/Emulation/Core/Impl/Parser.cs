@@ -1,7 +1,6 @@
 using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
-using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -10,24 +9,16 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Parser(
     IActorList actors,
-    IState state,
-    ITargetList targets)
+    IState state)
     : IParser
 {
-    private ReadOnlySpan<char> GetActorCode(int index)
-    {
-        var actor = actors[index];
-        var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
-        return actor.Code.Slice(0, codeLength);
-    }
-
     public int Search(int index, ReadOnlySpan<char> term)
     {
         if (term.IsEmpty)
             return -1;
 
         var termLength = term.Length;
-        var code = GetActorCode(index);
+        var code = actors.GetActorCode(index);
 
         var startIdx = 0;
 
@@ -63,16 +54,16 @@ internal sealed class Parser(
 
     public char ReadByte(int index, ref Word instruction)
     {
-        var actor = actors[index];
+        var code = actors.GetActorCode(index);
         var value = '\0';
 
-        if (instruction < 0 || instruction >= actor.Length)
+        if (instruction < 0 || instruction >= code.Length)
         {
             state.OopByte = default;
         }
         else
         {
-            value = actor.Code[instruction];
+            value = code[instruction];
             state.OopByte = value;
             instruction++;
         }
@@ -82,7 +73,7 @@ internal sealed class Parser(
 
     public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
     {
-        var code = GetActorCode(index);
+        var code = actors.GetActorCode(index);
         var length = 0;
         int instr = instruction;
 
@@ -107,7 +98,7 @@ internal sealed class Parser(
 
     public int ReadNumber(int index, ref Word instruction)
     {
-        var code = GetActorCode(index);
+        var code = actors.GetActorCode(index);
         var success = false;
         var resultInt = 0;
         int instr = instruction;
@@ -150,8 +141,8 @@ internal sealed class Parser(
 
     public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
     {
+        var code = actors.GetActorCode(index);
         var length = 0;
-        var code = GetActorCode(index);
         int instr = instruction;
 
         // Skip leading spaces.
@@ -181,12 +172,5 @@ internal sealed class Parser(
         instruction = instr;
 
         return result;
-    }
-
-    public bool TryEvalTarget(int index, ref SearchContext context, ReadOnlySpan<char> term)
-    {
-        context.Index++;
-        var target = targets.Get(term) ?? targets.Get(string.Empty);
-        return target?.Execute(index, ref context, term) ?? false;
     }
 }
