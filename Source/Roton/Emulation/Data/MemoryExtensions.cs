@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Roton.Emulation.Infrastructure;
 
@@ -10,8 +9,11 @@ public static class MemoryExtensions
     extension(IMemory memory)
     {
         internal ref T GetRef<T>(int offset) where T : struct =>
-            ref Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(MemoryMarshal.Cast<byte, T>(memory.Data)), unchecked((ushort)offset));
-            // ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
+#if NET10_0_OR_GREATER
+            ref MemoryMarshal.AsRef<T>(memory.Data.Slice(unchecked((ushort)offset)));
+#else
+            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
+#endif
 
         internal Span<byte> Read(int offset, int length)
         {
@@ -41,7 +43,7 @@ public static class MemoryExtensions
 
                 if (end <= span.Length)
                     return span.Slice(offset + 1, length).ToStringValue();
-                
+
                 for (var i = 0; i < length; i++)
                     output[i] = span[++offset & 0xFFFF];
                 return output.ToStringValue();
