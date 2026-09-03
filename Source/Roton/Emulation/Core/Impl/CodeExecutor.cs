@@ -25,101 +25,150 @@ internal sealed class CodeExecutor(
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
-        var context = new OopContext
-        {
-            Actor = actors[index],
-            Index = index,
-            Name = name,
-            PreviousInstruction = instruction
-        };
+        // In the original code, there's a series of "goto" statements. To preserve
+        // the flow, we use nested loops.
 
         ref var oopByte = ref state.OopByte;
-        var code = actors.GetActorCode(index);
 
         while (true)
         {
-            if (instruction < 0)
-                break;
-
-            tracer?.TraceOop(ref context, ref instruction);
-
-            context.NextLine = true;
-            context.PreviousInstruction = instruction;
-            context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
-
-            while (context.Command == ':')
+            var context = new OopContext
             {
-                parser.DiscardLine(index, ref instruction);
-                tracer?.TraceOop(ref context, ref instruction);
-                context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
-            }
+                Actor = actors[index],
+                Index = index,
+                Name = name,
+                PreviousInstruction = instruction
+            };
 
-            switch (context.Command)
+            // The code reference must be reacquired each iteration because it is
+            // possible that the actor pointed to by "index" has changed.
+
+            var code = actors.GetActorCode(index);
+
+            while (true)
             {
-                case '\'':
-                case '@':
-                    parser.DiscardLine(index, ref instruction);
+                if (instruction < 0)
                     break;
-                case '/':
-                case '?':
-                    if (context.Command == '/')
-                        context.Repeat = true;
 
-                    if (!directionEvaluator.TryEval(ref context, ref instruction, out var vector))
+                tracer?.TraceOop(ref context, ref instruction);
+
+                // Command will contain the first character of a line.
+
+                context.NextLine = true;
+                context.PreviousInstruction = instruction;
+                context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
+
+                // Skip labels.
+
+                while (context.Command == ':')
+                {
+                    parser.DiscardLine(index, ref instruction);
+                    tracer?.TraceOop(ref context, ref instruction);
+                    context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
+                }
+
+                switch (context.Command)
+                {
+                    case '\'':
+                    case '@':
                     {
-                        errorRaiser.RaiseError(ref context, "Bad direction");
+                        // Comments and object names have no effect when executed.
+
+                        parser.DiscardLine(index, ref instruction);
                         break;
                     }
+                    case '/':
+                    case '?':
+                    {
+                        // Shorthand for #GO and #TRY.
 
-                    objectMover.ExecuteDirection(ref context, vector);
+                        if (context.Command == '/')
+                            context.Repeat = true;
 
-                    if (ReadActorCodeByte(ref context, ref instruction, ref oopByte, code) != '\r')
-                        instruction--;
-                    context.Moved = true;
+                        if (!directionEvaluator.TryEval(ref context, ref instruction, out var vector))
+                        {
+                            errorRaiser.RaiseError(ref context, "Bad direction");
+                            break;
+                        }
 
-                    break;
-                case '#':
-                    interpreter.Execute(ref context, ref instruction);
-                    code = actors.GetActorCode(index);
-                    break;
-                case '\r':
-                    if (scrollContent.LineCount > 0)
-                        scrollContent.AddLine(string.Empty);
-                    break;
-                case '\0':
-                    context.Finished = true;
-                    break;
-                default:
-                    scrollContent.AddLine($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
+                        objectMover.ExecuteDirection(ref context, vector);
+
+                        if (ReadActorCodeByte(ref context, ref instruction, ref oopByte, code) != '\r')
+                            instruction--;
+
+                        context.Moved = true;
+                        break;
+                    }
+                    case '#':
+                    {
+                        // Commands go to the interpreter.
+
+                        interpreter.Execute(ref context, ref instruction);
+                        code = actors.GetActorCode(index);
+                        break;
+                    }
+                    case '\r':
+                    {
+                        // Blank lines are included in the message content only if there is
+                        // already message content pending.
+
+                        if (scrollContent.LineCount > 0)
+                            scrollContent.AddLine(string.Empty);
+                        break;
+                    }
+                    case '\0':
+                    {
+                        // Not present in the code itself but returned by read functions
+                        // to indicate the end of the code has been reached.
+
+                        context.Finished = true;
+                        break;
+                    }
+                    default:
+                    {
+                        // All other lines become message content.
+
+                        scrollContent.AddLine($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
+                        break;
+                    }
+                }
+
+                if (context.Finished ||
+                    context.Moved ||
+                    context.Repeat ||
+                    context.Died ||
+                    context.CommandsExecuted >= facts.MaxOopCommands)
                     break;
             }
 
-            if (context.Finished ||
-                context.Moved ||
-                context.Repeat ||
-                context.Died ||
-                context.CommandsExecuted >= facts.MaxOopCommands)
-                break;
+            if (context.Repeat)
+                instruction = context.PreviousInstruction;
+
+            if (state.OopByte == 0)
+                instruction = -1;
+
+            if (scrollContent.LineCount > 0)
+                ExecuteMessage(ref context);
+
+            // If the player chooses a label in the message handler, it is immediately
+            // executed. This is indicated by setting "Continue" to true. The context
+            // resets when this happens.
+
+            if (context.Continue)
+                continue;
+
+            if (context.Died)
+                actorRemover.RemoveActor(context.Actor.Location, context.Index, context.DeathTile);
+
+            break;
         }
-
-        if (context.Repeat)
-            instruction = context.PreviousInstruction;
-
-        if (state.OopByte == 0)
-            instruction = -1;
-
-        if (scrollContent.LineCount > 0)
-            ExecuteMessage(ref context);
-
-        if (context.Died)
-            actorRemover.RemoveActor(context.Actor.Location, context.Index, context.DeathTile);
     }
 
     private void ExecuteMessage(ref OopContext context)
     {
         var result = messageHandler.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Shown: true, Label: not null })
-            context.NextLine = broadcaster.BroadcastLabel(context.Index, result.Label, false);
+            context.Continue = broadcaster.BroadcastLabel(context.Index, result.Label, false);
         scrollContent.ClearLines();
     }
 
