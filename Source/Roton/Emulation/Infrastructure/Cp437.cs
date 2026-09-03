@@ -4,7 +4,6 @@ using System.Collections.Frozen;
 #endif
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace Roton.Emulation.Infrastructure;
