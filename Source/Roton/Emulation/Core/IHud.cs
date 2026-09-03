@@ -8,7 +8,7 @@ public interface IHud
     void ClearTitleStatus();
     void CreateStatusText();
     void FailToLoadWorld();
-    void DrawMessage(IMessage message, int color);
+    void DrawMessage(int color);
     void DrawPausing();
     void DrawTitleStatus();
     bool EndGameConfirmation();

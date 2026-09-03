@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
@@ -139,18 +138,15 @@ internal sealed class OriginalHud(
     private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
-    public void DrawMessage(IMessage message, int color)
+    public void DrawMessage(int color)
     {
-        if (message.Text.Count == 0)
+        var message = state.Message;
+
+        if (message.Length == 0)
             return;
 
-        var text = message.Text[0];
-
-        if (string.IsNullOrEmpty(text))
-            return;
-
-        var x = (60 - text.Length) / 2;
-        DrawString(x, 24, " ", text, " ", color);
+        var x = (60 - message.Length) / 2;
+        DrawString(x, 24, " ", message, " ", color);
     }
 
     public void DrawPausing() =>

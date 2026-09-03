@@ -144,10 +144,10 @@ internal sealed class SuperHud(
     private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
-    public void DrawMessage(IMessage message, int color)
+    public void DrawMessage(int color)
     {
-        var topText = message.Text.FirstOrDefault() ?? string.Empty;
-        var bottomText = message.Text.Skip(1).FirstOrDefault() ?? string.Empty;
+        var topText = state.Message;
+        var bottomText = state.Message2;
         var topX = 26 - (topText.Length >> 1);
         var bottomX = 26 - (bottomText.Length >> 1);
         var messageColor = (color & 0x0F) | 0x10;

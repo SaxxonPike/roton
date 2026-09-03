@@ -10,23 +10,28 @@ internal sealed class OriginalMessageHandler(
     IFacts facts,
     IState state,
     IMessenger messenger,
-    IScroll scroll)
+    IScroll scroll,
+    IScrollContent scrollContent)
     : IMessageHandler
 {
     public ScrollResult ExecuteMessage(ref OopContext context)
     {
-        var message = context.GetMessage();
-
-        switch (message)
+        switch (scrollContent.LineCount)
         {
-            case { Count: 1 }:
-                messenger.SetMessage(facts.LongMessageDuration, new Message(message));
+            case 1:
+            {
+                messenger.SetMessage(facts.LongMessageDuration, new Message(scrollContent.GetLine(0)));
                 return default;
-            case { Count: > 1 }:
+            }
+            case > 1:
+            {
                 state.KeyVector = Vector.Idle;
-                return scroll.ShowMessage(context.Name, [.. message], false, 0);
+                return scroll.ShowMessage(context.Name, false, 0);
+            }
             default:
+            {
                 return default;
+            }
         }
     }
 

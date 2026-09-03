@@ -101,7 +101,6 @@ internal sealed class Scroll(
         if (text == null)
             return false;
 
-        scrollContent.ClearLines();
         scrollContent.AddLines(text);
         return true;
     }
@@ -132,13 +131,14 @@ internal sealed class Scroll(
         }
     }
 
-    private ScrollResult Show(ScrollState scrollState, Func<ScrollState, ScrollResult> mainLoop)
+    private ScrollResult ShowMessage(ScrollState scrollState, Func<ScrollState, ScrollResult> mainLoop)
     {
         scrollBuffer.Capture();
         scrollRenderer.Open();
         scrollRenderer.RenderContent(scrollState);
         var result = mainLoop(scrollState);
         scrollRenderer.Close();
+        scrollContent.ClearLines();
         return result;
     }
 
@@ -153,12 +153,12 @@ internal sealed class Scroll(
         };
 
         if (LoadHelpFile(fileName))
-            return Show(st, ShowLoop);
+            return ShowMessage(st, ShowLoop);
 
         return default;
     }
 
-    public ScrollResult ShowMessage(ReadOnlySpan<char> title, IEnumerable<string> message, bool isHelp, int index,
+    public ScrollResult ShowMessage(ReadOnlySpan<char> title, bool isHelp, int index,
         Func<ScrollState, ScrollResult>? mainLoop = null)
     {
         var st = new ScrollState
@@ -169,10 +169,8 @@ internal sealed class Scroll(
             Title = title.ToString()
         };
 
-        scrollContent.ClearLines();
-        scrollContent.AddLines(message);
-
-        return Show(st, mainLoop ?? ShowLoop);
+        var result = ShowMessage(st, mainLoop ?? ShowLoop);
+        return result;
     }
 
     public int TextWidth => facts.ScrollWidth - 4;

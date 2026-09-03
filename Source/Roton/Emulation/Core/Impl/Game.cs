@@ -248,6 +248,7 @@ internal sealed class Game(
 
         list.Add(name, score);
         highScoreListFactory.Save(list);
+        highScoreHud.ShowHighScores(list);
         dialogs.ShowHighScores();
     }
 

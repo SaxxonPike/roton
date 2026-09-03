@@ -19,7 +19,8 @@ internal sealed class CodeExecutor(
     IBroadcaster broadcaster,
     IErrorRaiser errorRaiser,
     IActorRemover actorRemover,
-    IDirectionEvaluator directionEvaluator)
+    IDirectionEvaluator directionEvaluator,
+    IScrollContent scrollContent)
     : ICodeExecutor
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
@@ -31,7 +32,7 @@ internal sealed class CodeExecutor(
             Name = name,
             PreviousInstruction = instruction
         };
-        
+
         ref var oopByte = ref state.OopByte;
         var code = actors.GetActorCode(index);
 
@@ -82,14 +83,14 @@ internal sealed class CodeExecutor(
                     code = actors.GetActorCode(index);
                     break;
                 case '\r':
-                    if (context.HasMessage)
-                        context.AddMessage(string.Empty);
+                    if (scrollContent.LineCount > 0)
+                        scrollContent.AddLine(string.Empty);
                     break;
                 case '\0':
                     context.Finished = true;
                     break;
                 default:
-                    context.AddMessage($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
+                    scrollContent.AddLine($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
                     break;
             }
 
@@ -107,7 +108,7 @@ internal sealed class CodeExecutor(
         if (state.OopByte == 0)
             instruction = -1;
 
-        if (context.HasMessage)
+        if (scrollContent.LineCount > 0)
             ExecuteMessage(ref context);
 
         if (context.Died)
@@ -119,6 +120,7 @@ internal sealed class CodeExecutor(
         var result = messageHandler.ExecuteMessage(ref context);
         if (result is { Cancelled: false, Shown: true, Label: not null })
             context.NextLine = broadcaster.BroadcastLabel(context.Index, result.Label, false);
+        scrollContent.ClearLines();
     }
 
     private static char ReadActorCodeByte(ref OopContext context, ref Word instruction, ref PChar oopByte,

@@ -10,19 +10,31 @@ namespace Roton.Emulation.Super;
 internal sealed class SuperHighScoreHud(
     IWorld world,
     ITextEntryHud textEntryHud,
-    IScroll scroll)
+    IScroll scroll,
+    IScrollContent scrollContent)
     : IHighScoreHud
 {
+    private void AddHighScoreHeader()
+    {
+        scrollContent.AddLine("Score  Name");
+        scrollContent.AddLine("-----  --------------------");
+    }
+
     public string? EnterHighScore(IHighScoreList highScoreList, int score)
     {
         if (score <= 0 || !highScoreList.Any(hs => hs.Score <= score))
-        {
             return null;
-        }
+
+        scrollContent.AddLines(
+            string.Empty,
+            " Enter your name:",
+            string.Empty,
+            string.Empty,
+            string.Empty
+        );
 
         string? name = null;
         scroll.ShowMessage($"New high score for {world.Name}",
-            [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
             false,
             3,
             _ =>
@@ -35,17 +47,13 @@ internal sealed class SuperHighScoreHud(
 
     public void ShowHighScores(IHighScoreList highScoreList)
     {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  --------------------"
-        };
+        AddHighScoreHeader();
 
-        nameList.AddRange(
+        scrollContent.AddLines(
             highScoreList
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
+        scroll.ShowMessage($"High scores for {world.Name}", false, 0);
     }
 }

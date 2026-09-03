@@ -33,12 +33,16 @@ internal sealed class FileDialog(
             .Concat(["Exit"])
             .ToArray();
 
-        var result = scroll.Show(title, files);
+        scrollContent.AddLines(files);
+        
+        var lineCount = scrollContent.LineCount;
+
+        var result = scroll.ShowMessage(title, false, 0);
         if (state.CancelScroll)
             return null;
 
         // If the user selects "Exit", which is always at the bottom of the list:
-        if (result.Index >= scrollContent.LineCount - 1)
+        if (result.Index >= lineCount - 1)
             return null;
 
         return titleMap[result.Index];

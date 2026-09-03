@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
 public ref struct OopContext
 {
-    private List<string>? _message;
-
     public IActor Actor;
 
     public int CommandsExecuted;
@@ -36,14 +33,4 @@ public ref struct OopContext
     public SearchContext Search;
 
     public char Command;
-
-    public void AddMessage(ReadOnlySpan<char> message)
-    {
-        _message ??= [];
-        _message.Add(message.ToString());
-    }
-
-    public bool HasMessage => _message != null;
-
-    public IReadOnlyList<string> GetMessage() => _message ?? [];
 }

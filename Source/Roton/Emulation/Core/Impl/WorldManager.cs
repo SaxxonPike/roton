@@ -26,7 +26,8 @@ internal sealed class WorldManager(
     IActorList actors,
     IFileTitles fileTitles,
     IExits exits,
-    IScroll scroll)
+    IScroll scroll,
+    IScrollContent scrollContent)
     : IWorldManager
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -287,21 +288,23 @@ internal sealed class WorldManager(
 
     private void ShowDosError()
     {
-        scroll.ShowMessage("Error",
-            [
-                "$DOS Error:",
-                string.Empty,
-                "This may be caused by missing",
-                "files or a bad disk. If you",
-                "are trying to save a game,",
-                "your disk may be full -- try",
-                "using a blank, formatted disk",
-                "for saving the game!"
-            ],
-            false, 0
+        scrollContent.AddLines(
+            "$DOS Error:",
+            string.Empty,
+            "This may be caused by missing",
+            "files or a bad disk. If you",
+            "are trying to save a game,",
+            "your disk may be full -- try",
+            "using a blank, formatted disk",
+            "for saving the game!"
         );
+
+        scroll.ShowMessage("Error", false, 0);
     }
 
-    private void ShowFormattedScroll(string error) =>
-        scroll.ShowMessage("Roton Error", scrollFormatter.Format(error), false, 0);
+    private void ShowFormattedScroll(string error)
+    {
+        scrollContent.AddLines(scrollFormatter.Format(error));
+        scroll.ShowMessage("Roton Error", false, 0);
+    }
 }
