@@ -6,31 +6,29 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0E)]
 [Context(Context.Super, 0x0E)]
-public sealed class EnergizerInteraction(
-    IEngineAccessor engine,
+internal sealed class EnergizerInteraction(
     ISounds sounds,
     IWorld world,
     IHud hud,
     IFacts facts,
     IAlerts alerts,
     ISoundUnit soundUnit,
-    IFeatures features,
-    IBroadcaster broadcaster)
+    IBroadcaster broadcaster,
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         soundUnit.PlaySound(9, sounds.Energizer);
-        features.RemoveItem(location);
+        tileRemover.RemoveItem(location);
         world.EnergyCycles = facts.EnergyCyclesPerEnergizer;
         hud.UpdateStatus();
 
         if (alerts.EnergizerPickup)
         {
             alerts.EnergizerPickup = false;
-            Engine.SetMessage(facts.LongMessageDuration, alerts.EnergizerMessage);
+            messenger.SetMessage(facts.LongMessageDuration, alerts.EnergizerMessage);
         }
 
         broadcaster.BroadcastLabel(0, facts.EnergizeLabel, false);

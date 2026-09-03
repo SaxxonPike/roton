@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -8,25 +7,17 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ChoiceHud(
-    ITerminal terminal, 
-    IEngineAccessor engine,
-    IState state)
+internal sealed class ChoiceHud(
+    ITerminal terminal,
+    IState state,
+    IScheduler scheduler,
+    IInputReader inputReader,
+    IGameThread gameThread)
     : IChoiceHud
 {
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
     private void DrawChar(int x, int y, AnsiChar ac)
     {
-        Terminal.Plot(x, y, ac);
+        terminal.Plot(x, y, ac);
     }
 
     private void DrawStatusLine(int x, int y)
@@ -34,38 +25,19 @@ public sealed class ChoiceHud(
         var blankChar = new AnsiChar(0x20, 0x11);
         for (var i = 0; i < 14; i++)
         {
-            Terminal.Plot(x + i, y, blankChar);
+            terminal.Plot(x + i, y, blankChar);
         }
     }
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
-        Terminal.Write(x, y, text, color);
+        terminal.Write(x, y, text, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
         int color) =>
-        Terminal.Write(x, y, text0, text1, text2, color);
+        terminal.Write(x, y, text0, text1, text2, color);
 
     public int Show(bool performSelection, int x, int y, string message, int currentValue, string? barText)
     {
-        void DrawPip(int col)
-        {
-            for (var x2 = 0; x2 < 8; x2++)
-                DrawChar(x + x2 + 1, y + 1, new AnsiChar(0x20, col));
-
-            if (barText == null)
-            {
-                DrawChar(x + currentValue + 1,
-                    y + 1,
-                    new AnsiChar(0x1F, col));
-            }
-            else
-            {
-                DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
-                    y + 1,
-                    new AnsiChar(0x1F, 0x1F));
-            }
-        }
-
         DrawStatusLine(x, y);
         DrawStatusLine(x, y + 1);
         DrawStatusLine(x, y + 2);
@@ -102,16 +74,16 @@ public sealed class ChoiceHud(
 
         DrawPip(0x9F);
 
-        while (Engine.ThreadActive)
+        while (gameThread.ThreadActive)
         {
             var update = false;
 
-            Engine.ReadInput(true);
+            inputReader.Read(true);
 
             switch (state.KeyPressed)
             {
                 case EngineKeyCode.None:
-                    Engine.WaitForTick();
+                    scheduler.WaitForTick();
                     continue;
                 case EngineKeyCode.Left:
                     if (barText == null)
@@ -154,12 +126,31 @@ public sealed class ChoiceHud(
                 break;
             }
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
         DrawString(x, y, message, 0x1E);
         DrawPip(0x1F);
 
         return currentValue;
+
+        void DrawPip(int col)
+        {
+            for (var x2 = 0; x2 < 8; x2++)
+                DrawChar(x + x2 + 1, y + 1, new AnsiChar(0x20, col));
+
+            if (barText == null)
+            {
+                DrawChar(x + currentValue + 1,
+                    y + 1,
+                    new AnsiChar(0x1F, col));
+            }
+            else
+            {
+                DrawChar(x + ((currentValue & 0x80) != 0 ? 0 : barText.IndexOf(' ') + 1) + 1,
+                    y + 1,
+                    new AnsiChar(0x1F, 0x1F));
+            }
+        }
     }
 }

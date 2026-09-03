@@ -1,27 +1,27 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "CHANGE")]
 [Context(Context.Super, "CHANGE")]
-public sealed class ChangeCommand(
-    IEngineAccessor engine,
+internal sealed class ChangeCommand(
     IElementList elementList,
     ITiles tiles,
-    IParser parser)
+    IErrorRaiser errorRaiser,
+    IPlotter plotter,
+    IKindEvaluator kindEvaluator)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
 
-        if (parser.TryEvalKind(ref context, ref instruction, out var source))
+        if (kindEvaluator.TryEval(ref context, ref instruction, out var source))
         {
-            if (parser.TryEvalKind(ref context, ref instruction, out var target))
+            if (kindEvaluator.TryEval(ref context, ref instruction, out var target))
             {
                 var targetElement = elementList[target.Id];
                 success = true;
@@ -32,11 +32,11 @@ public sealed class ChangeCommand(
                 var location = new Location(0, 1);
 
                 while (tiles.FindTile(source, ref location))
-                    Engine.PlotTile(location, target);
+                    plotter.Plot(location, target);
             }
         }
 
         if (!success)
-            Engine.RaiseError(ref context, "Bad #CHANGE");
+            errorRaiser.RaiseError(ref context, "Bad #CHANGE");
     }
 }

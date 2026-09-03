@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class Int8List(IMemory memory, int offset, int count) 
+internal sealed class Int8List(IMemory memory, int offset, int count) 
     : IRefList<HWord>
 {
     public int Count { get; } = count;

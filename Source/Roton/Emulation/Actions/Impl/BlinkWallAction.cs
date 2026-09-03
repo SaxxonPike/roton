@@ -4,23 +4,26 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the blink wall element.
+/// </summary>
 [Context(Context.Original, 0x1D)]
 [Context(Context.Super, 0x1D)]
-public sealed class BlinkWallAction(
-    IEngineAccessor engine,
+internal sealed class BlinkWallAction(
     ITiles tiles,
-    IElementList elementList,
-    IActorList actorList,
+    IElementList elements,
+    IActorList actors,
     IWorld world,
     IBoardUpdater boardUpdater,
-    ITracer tracer)
+    ITracer tracer,
+    IMover mover,
+    IDestroyer destroyer,
+    IDamager damager)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
 
         if (actor.P3 == 0)
             actor.P3 = unchecked((byte)(actor.P1 + 1));
@@ -31,11 +34,11 @@ public sealed class BlinkWallAction(
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;
-            var emptyElement = elementList.EmptyId;
+            var emptyElement = elements.EmptyId;
 
             var rayElement = actor.Vector.X == 0
-                ? elementList.BlinkRayVId
-                : elementList.BlinkRayHId;
+                ? elements.BlinkRayVId
+                : elements.BlinkRayHId;
 
             var color = tiles[actor.Location].Color;
             var rayTile = new Tile(rayElement, color);
@@ -55,12 +58,12 @@ public sealed class BlinkWallAction(
             {
                 if (tiles.ElementAt(target).IsDestructible)
                 {
-                    Engine.Destroy(target);
+                    destroyer.Destroy(target);
                 }
 
-                if (tiles[target].Id == elementList.PlayerId)
+                if (tiles[target].Id == elements.PlayerId)
                 {
-                    var playerIndex = actorList.ActorIndexAt(target);
+                    var playerIndex = actors.ActorIndexAt(target);
                     Vector testVector;
 
                     if (actor.Vector.Y == 0)
@@ -68,11 +71,11 @@ public sealed class BlinkWallAction(
                         testVector = new Vector(0, 1);
                         if (tiles[target - testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target - testVector);
+                            mover.MoveActor(playerIndex, target - testVector);
                         }
                         else if (tiles[target + testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                     }
                     else
@@ -80,16 +83,16 @@ public sealed class BlinkWallAction(
                         testVector = new Vector(1, 0);
                         if (tiles[target + testVector].Id == emptyElement)
                         {
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                         else if (tiles[target - testVector].Id == emptyElement)
                         {
                             // "sum" is not a mistake; this is an original engine bug
-                            Engine.MoveActor(playerIndex, target + testVector);
+                            mover.MoveActor(playerIndex, target + testVector);
                         }
                     }
 
-                    if (tiles[target].Id == elementList.PlayerId)
+                    if (tiles[target].Id == elements.PlayerId)
                     {
                         if (playerIndex != 0)
                         {
@@ -102,7 +105,7 @@ public sealed class BlinkWallAction(
                         {
                             while (world.Health > 0)
                             {
-                                Engine.Harm(playerIndex);
+                                damager.Harm(playerIndex);
                             }
                         }
 

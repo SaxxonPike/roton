@@ -5,7 +5,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "DIE")]
 [Context(Context.Super, "DIE")]
-public sealed class DieCommand(
+internal sealed class DieCommand(
     IElementList elementList)
     : ICommand
 {

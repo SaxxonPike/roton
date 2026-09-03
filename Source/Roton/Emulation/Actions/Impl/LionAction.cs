@@ -4,36 +4,38 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the lion element.
+/// </summary>
 [Context(Context.Original, 0x29)]
 [Context(Context.Super, 0x29)]
-public sealed class LionAction(
-    IEngineAccessor engine,
-    IActorList actorList,
+internal sealed class LionAction(
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements,
+    IMover mover,
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var vector = new Vector();
+        var actor = actors[index];
 
-        vector = actor.P1 >= randomizer.GetNext(10)
-            ? Engine.Seek(actor.Location)
-            : Engine.Rnd();
+        var vector = actor.P1 >= randomizer.GetNext(10)
+            ? navigator.Seek(actor.Location)
+            : navigator.Rnd();
 
         var target = actor.Location + vector;
         var element = tiles.ElementAt(target);
         if (element.IsFloor)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
         }
-        else if (element.Id == elementList.PlayerId)
+        else if (element.Id == elements.PlayerId)
         {
-            Engine.Attack(index, target);
+            attacker.Attack(index, target);
         }
     }
 }

@@ -6,8 +6,7 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x09)]
 [Context(Context.Super, 0x09)]
-public sealed class DoorInteraction(
-    IEngineAccessor engine,
+internal sealed class DoorInteraction(
     IWorld world,
     ITiles tiles,
     IAlerts alerts,
@@ -15,26 +14,25 @@ public sealed class DoorInteraction(
     ISounds sounds,
     IHud hud,
     ISoundUnit soundUnit,
-    IFeatures features)
+    IMessenger messenger,
+    ITileRemover tileRemover)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = (tiles[location].Color & 0x70) >> 4;
         var keyIndex = color - 1;
         if (!world.Keys[keyIndex])
         {
-            Engine.SetMessage(facts.LongMessageDuration, alerts.DoorLockedMessage(color));
+            messenger.SetMessage(facts.LongMessageDuration, alerts.DoorLockedMessage(color));
             soundUnit.PlaySound(3, sounds.DoorLocked);
         }
         else
         {
             world.Keys[keyIndex] = false;
-            features.RemoveItem(location);
+            tileRemover.RemoveItem(location);
             hud.UpdateStatus();
-            Engine.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
+            messenger.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
             soundUnit.PlaySound(3, sounds.DoorOpen);
         }
     }

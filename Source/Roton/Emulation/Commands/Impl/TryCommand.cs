@@ -1,23 +1,22 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "TRY")]
 [Context(Context.Super, "TRY")]
-public sealed class TryCommand(
-    IEngineAccessor engine,
-    IParser parser,
+internal sealed class TryCommand(
     ITiles tiles,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover,
+    IDirectionEvaluator directionEvaluator)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (!directionEvaluator.TryEval(ref context, ref instruction, out var vec))
             return;
 
         var target = context.Actor.Location + vec;
@@ -25,9 +24,9 @@ public sealed class TryCommand(
         {
             pusher.Push(target, vec);
         }
-        if (Engine.ElementAt(target).IsFloor)
+        if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(context.Index, target);
+            mover.MoveActor(context.Index, target);
             context.Moved = true;
             context.Resume = false;
         }

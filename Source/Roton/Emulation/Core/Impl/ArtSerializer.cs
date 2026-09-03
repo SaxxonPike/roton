@@ -1,22 +1,11 @@
-﻿using System.Diagnostics;
-using Roton.Emulation.Data;
+﻿using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Super)]
-public sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSerializer
+internal sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSerializer
 {
-    private IMemory Memory
-    {
-        [DebuggerStepThrough] get => memory;
-    }
-
-    private ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
     public void Deserialize(int startOffset)
     {
         var offset = startOffset;
@@ -29,44 +18,50 @@ public sealed class ArtSerializer(IMemory memory, ITerminal terminal) : IArtSeri
         {
             if (count > 0)
             {
-                Terminal.Plot(x, y, output);
+                terminal.Plot(x, y, output);
                 count--;
                 x++;
                 continue;
             }
 
-            var data = Memory.Read8(offset++);
-
-            if (data is >= 0x00 and <= 0x0F)
-            {
-                output = new AnsiChar(output.Char, (output.Color & 0xF0) | data);
-                continue;
-            }
-
-            if (data is >= 0x10 and <= 0x17)
-            {
-                output = new AnsiChar(output.Char, (output.Color & 0x0F) | ((data & 0x0F) << 4));
-                continue;
-            }
+            var data = memory.Read8(offset++);
 
             switch (data)
             {
+                case >= 0x00 and <= 0x0F:
+                {
+                    output = new AnsiChar(output.Char, (output.Color & 0xF0) | data);
+                    continue;
+                }
+                case >= 0x10 and <= 0x17:
+                {
+                    output = new AnsiChar(output.Char, (output.Color & 0x0F) | ((data & 0x0F) << 4));
+                    continue;
+                }
                 case 0x18:
+                {
                     x = 0;
                     y++;
                     break;
+                }
                 case 0x19:
-                    count = Memory.Read8(offset++) + 1;
+                {
+                    count = memory.Read8(offset++) + 1;
                     output = new AnsiChar(0x20, output.Color);
                     break;
+                }
                 case 0x1A:
-                    count = Memory.Read8(offset++) + 1;
-                    output = new AnsiChar(Memory.Read8(offset++), output.Color);
+                {
+                    count = memory.Read8(offset++) + 1;
+                    output = new AnsiChar(memory.Read8(offset++), output.Color);
                     break;
+                }
                 default:
+                {
                     count = 1;
                     output = new AnsiChar(data, output.Color);
                     break;
+                }
             }
         }
     }

@@ -4,9 +4,10 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets.Impl;
 
+/// <inheritdoc />
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class TargetList(
+internal sealed class TargetList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<ITarget>(contextMetadataService, serviceProvider), ITargetList;

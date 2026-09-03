@@ -6,7 +6,7 @@ namespace Roton.Composers.Video.Palettes.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class PaletteComposerFactory(IComposerResourceService composerResourceService)
+internal sealed class PaletteComposerFactory(IComposerResourceService composerResourceService)
     : IPaletteComposerFactory
 {
     public IPaletteComposer Get(ReadOnlyMemory<byte> data)

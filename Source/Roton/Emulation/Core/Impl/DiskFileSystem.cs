@@ -32,7 +32,7 @@ public sealed class DiskFileSystem(string basePath) : IFileSystem
     /// </summary>
     /// <param name="path">The path that should be evaluated.</param>
     /// <returns>The adjusted path, based on which files were found.</returns>
-    private string GetBestMatch(string path)
+    private static string GetBestMatch(string path)
     {
         // This function follows a few simple rules:
         //    1) Directory names are ignored. Those are assumed to be specified

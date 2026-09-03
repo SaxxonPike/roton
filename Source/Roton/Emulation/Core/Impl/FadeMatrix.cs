@@ -3,8 +3,8 @@ using Roton.Emulation.Data;
 namespace Roton.Emulation.Core.Impl;
 
 public abstract class FadeMatrix(
-    IEngineAccessor engine,
     IRandomizer randomizer,
+    IScheduler scheduler,
     int left,
     int top,
     int width,
@@ -16,8 +16,6 @@ public abstract class FadeMatrix(
     public int Height => height;
     public int Left => left;
     public int Top => top;
-
-    protected IEngine Engine => engine.Instance;
 
     private readonly Location[] _matrix = new Location[width * height];
 
@@ -41,7 +39,7 @@ public abstract class FadeMatrix(
     private void FadeWait(int i)
     {
         if (i % speed == 0)
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
     }
 
     public void FadeOut(AnsiChar ac)

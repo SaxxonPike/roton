@@ -13,7 +13,7 @@ public abstract class KeyList(IMemory memory, int offset)
         ref memory.GetRef<Bool>(offset + index);
 
     public void Clear() =>
-        memory.Data.Slice(offset, Count).Fill(0);
+        memory.Data.Slice(offset, Count).Clear();
 
     public IEnumerator<bool> GetEnumerator() =>
         Enumerable.Range(0, Count)

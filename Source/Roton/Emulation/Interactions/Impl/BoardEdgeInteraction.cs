@@ -6,20 +6,19 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x01)]
 [Context(Context.Super, 0x01)]
-public sealed class BoardEdgeInteraction(
-    IEngineAccessor engine,
+internal sealed class BoardEdgeInteraction(
     IWorld world,
-    IBoard board,
     ITiles tiles,
     IElementList elementList,
     IInteractionList interactionList,
     IState state,
-    IWorldUnit worldUnit,
-    IFeatures features)
+    IWorldManager worldManager,
+    IMover mover,
+    IExits exits,
+    IPlayerEnterHandler playerEnterHandler,
+    IFader fader)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var target = location;
@@ -29,19 +28,19 @@ public sealed class BoardEdgeInteraction(
         switch (vector.X, vector.Y)
         {
             case (_, -1):
-                targetBoard = board.Exits.North;
+                targetBoard = exits.North;
                 target.Y = tiles.Height;
                 break;
             case (_, 1):
-                targetBoard = board.Exits.South;
+                targetBoard = exits.South;
                 target.Y = 1;
                 break;
             case (-1, _):
-                targetBoard = board.Exits.West;
+                targetBoard = exits.West;
                 target.X = tiles.Width;
                 break;
             default:
-                targetBoard = board.Exits.East;
+                targetBoard = exits.East;
                 target.X = 1;
                 break;
         }
@@ -49,7 +48,7 @@ public sealed class BoardEdgeInteraction(
         if (targetBoard == 0)
             return;
 
-        worldUnit.SetBoard(targetBoard);
+        worldManager.SetBoard(targetBoard);
         if (tiles[target].Id != elementList.PlayerId)
         {
             interactionList.Get(tiles[target].Id)?
@@ -61,16 +60,16 @@ public sealed class BoardEdgeInteraction(
         {
             if (tiles.ElementAt(target).Id != elementList.PlayerId)
             {
-                Engine.MoveActor(0, target);
+                mover.MoveActor(0, target);
             }
 
-            Engine.FadePurple();
+            fader.FadePurple();
             vector = Vector.Idle;
-            features.EnterBoard();
+            playerEnterHandler.EnterBoard();
         }
         else
         {
-            worldUnit.SetBoard(oldBoard);
+            worldManager.SetBoard(oldBoard);
         }
     }
 }

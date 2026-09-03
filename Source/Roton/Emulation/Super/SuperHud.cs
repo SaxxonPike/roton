@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -11,21 +8,21 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperHud(
-    IEngineAccessor engine,
+internal sealed class SuperHud(
     ITerminal terminal,
-    IScroll scroll,
     ITextEntryHud textEntryHud,
     IFadeMatrix fadeMatrix,
     IState state,
     IBoard board,
-    IActorList actorList,
+    IActorList actors,
     ITiles tiles,
     IWorld world,
-    IElementList elementList,
+    IElementList elements,
     ISoundUnit soundUnit,
-    IBoardUpdater boardUpdater)
-    : Hud(engine, scroll, state)
+    IStatistics statistics,
+    IDelayer delayer,
+    IConfirmInputHandler confirmInputHandler)
+    : IHud
 {
     private readonly string _arrows = new([
         0x18.ToChar(),
@@ -38,14 +35,6 @@ public sealed class SuperHud(
 
     private readonly string _topOfStatus = new(0xDF.ToChar(), 12);
 
-    private IFadeMatrix FadeMatrix { [DebuggerStepThrough] get; } = fadeMatrix;
-
-    private ITerminal Terminal { [DebuggerStepThrough] get; } = terminal;
-
-    private ITextEntryHud TextEntryHud { [DebuggerStepThrough] get; } = textEntryHud;
-
-    private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
-
     private const int ViewportHeight = 25;
     private const int ViewportWidth = 40;
 
@@ -56,17 +45,19 @@ public sealed class SuperHud(
     private const int WindowRight = WindowLeft + WindowWidth - 1;
     private const int WindowBottom = WindowTop + WindowHeight - 1;
 
-    protected override bool Confirm(string message)
+    private bool TitleScreen => state.PlayerElement != elements.PlayerId;
+
+    private bool Confirm(string message)
     {
         UpdateBorder();
         DrawString(0x0F, 0x18, message, 0x1F);
         DrawChar(0x0F + message.Length, 0x18, new AnsiChar(0x5F, 0x9E));
-        var result = base.Confirm(message);
+        var result = confirmInputHandler.Confirm();
         UpdateBorder();
         return result;
     }
 
-    public override void CreateStatusBar()
+    public void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -78,12 +69,16 @@ public sealed class SuperHud(
         }
     }
 
-    public override void CreateStatusText()
+    public void ClearTitleStatus()
+    {
+    }
+
+    public void CreateStatusText()
     {
         var buffer = (stackalloc char[16]);
 
         CreateStatusBar();
-        if (Engine.TitleScreen)
+        if (TitleScreen)
         {
             DrawString(0x04, 0x0A, "Press", 0x1E);
             DrawString(0x04, 0x0C, "ENTER", 0x1F);
@@ -146,12 +141,10 @@ public sealed class SuperHud(
         }
     }
 
-    public override void DrawChar(int x, int y, AnsiChar ac)
-    {
-        Terminal.Plot(x, y, ac);
-    }
+    public void DrawChar(int x, int y, AnsiChar ac) =>
+        terminal.Plot(x, y, ac);
 
-    public override void DrawMessage(IMessage message, int color)
+    public void DrawMessage(IMessage message, int color)
     {
         var topText = message.Text.FirstOrDefault() ?? string.Empty;
         var bottomText = message.Text.Skip(1).FirstOrDefault() ?? string.Empty;
@@ -162,10 +155,8 @@ public sealed class SuperHud(
         DrawString(bottomX, 24, " ", bottomText, " ", messageColor);
     }
 
-    private void DrawSystemMessage(ReadOnlySpan<char> message, int color)
-    {
+    private void DrawSystemMessage(ReadOnlySpan<char> message, int color) =>
         DrawString(25 - message.Length / 2, 23, message, color);
-    }
 
     private void DrawNumber(int y, int value)
     {
@@ -176,51 +167,44 @@ public sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color)
-    {
-        Terminal.Write(x, y, text, color);
-    }
+    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
+        terminal.Write(x, y, text, color);
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color)
-    {
-        Terminal.Write(x, y, text0, text1, color);
-    }
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
+        terminal.Write(x, y, text0, text1, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
-        int color)
-    {
-        Terminal.Write(x, y, text0, text1, text2, color);
-    }
+        int color) =>
+        terminal.Write(x, y, text0, text1, text2, color);
 
-    public override void Initialize()
+    public void Initialize()
     {
         RandomizeFadeMatrix();
 
-        if (State.EditorMode)
-        {
-            Terminal.SetSize(96, 80, true);
-        }
+        if (state.EditorMode)
+            terminal.SetSize(96, 80, true);
         else
-        {
-            Terminal.SetSize(40, 25, true);
-        }
+            terminal.SetSize(40, 25, true);
     }
 
-    public override void RedrawBoard()
+    public bool QuitEngineConfirmation()
+    {
+        return Confirm("Quit to DOS? ");
+    }
+
+    public void RedrawBoard()
     {
         UpdateCameraPosition();
-        FadeMatrix.FadeIn();
+        fadeMatrix.FadeIn();
     }
 
-    public override void UpdateBorder()
-    {
+    public void UpdateBorder() =>
         ClearMessage();
-    }
 
     private void UpdateCameraPosition()
     {
-        var cameraX = actorList.Player.Location.X - WindowWidth / 2;
-        var cameraY = actorList.Player.Location.Y - WindowHeight / 2;
+        var cameraX = actors.Player.Location.X - WindowWidth / 2;
+        var cameraY = actors.Player.Location.Y - WindowHeight / 2;
 
         board.Camera = new Location16(
             Math.Max(Math.Min(cameraX, tiles.Width - WindowWidth + 1), 1),
@@ -228,134 +212,10 @@ public sealed class SuperHud(
         );
     }
 
-    public override void UpdateCamera()
+
+    public void UpdateStatus()
     {
-        var upperLeft = new Location(WindowLeft, WindowTop);
-        const int viewCenterX = WindowWidth / 2;
-        const int viewCenterY = WindowHeight / 2;
-
-        // Thresholds are the number of tiles that the camera will try to keep in view relative to the player.
-        // The 8/6 mismatch on the Y axis is a bug in the Super engine itself. A perfectly centered camera
-        // would use 7 for both top and bottom.
-
-        const int scrollThresholdLeft = 9;
-        const int scrollThresholdRight = 9;
-        const int scrollThresholdTop = 8;
-        const int scrollThresholdBottom = 6;
-
-        // Max bounds of the camera (so that the scroll doesn't go off the right or bottom of the board.)
-
-        var maxCameraX = tiles.Width - WindowWidth + 1;
-        var maxCameraY = tiles.Height - WindowHeight + 1;
-
-        var player = actorList.Player.Location;
-        var newCamera = new Location16(board.Camera.X, board.Camera.Y);
-        var redrawRequired = false;
-
-        var relativeX = player.X - newCamera.X;
-        if (relativeX < scrollThresholdLeft && newCamera.X > 1)
-        {
-            if (player.X == OldPlayerLocation.X - 1)
-            {
-                newCamera.X--;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.East);
-                for (var y = 0; y < WindowHeight; y++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X, newCamera.Y + y));
-            }
-            else
-            {
-                newCamera.X = player.X - viewCenterX;
-
-                if (newCamera.X < 1)
-                    newCamera.X = 1;
-                else if (newCamera.X > maxCameraX)
-                    newCamera.X = maxCameraX;
-
-                redrawRequired = true;
-            }
-        }
-        else if (relativeX >= WindowWidth - scrollThresholdRight && newCamera.X < maxCameraX)
-        {
-            if (player.X == OldPlayerLocation.X + 1)
-            {
-                newCamera.X++;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.West);
-                for (var y = 0; y < WindowHeight; y++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + WindowWidth - 1, newCamera.Y + y));
-            }
-            else
-            {
-                newCamera.X = player.X - viewCenterX;
-
-                if (newCamera.X < 1)
-                    newCamera.X = 1;
-                else if (newCamera.X > maxCameraX)
-                    newCamera.X = maxCameraX;
-
-                redrawRequired = true;
-            }
-        }
-
-        var relativeY = player.Y - newCamera.Y;
-        if (relativeY < scrollThresholdTop && newCamera.Y > 1)
-        {
-            if (player.Y == OldPlayerLocation.Y - 1)
-            {
-                newCamera.Y--;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.South);
-                for (var x = 0; x < WindowWidth; x++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y));
-            }
-            else
-            {
-                newCamera.Y = player.Y - viewCenterY;
-
-                if (newCamera.Y < 1)
-                    newCamera.Y = 1;
-                else if (newCamera.Y > maxCameraY)
-                    newCamera.Y = maxCameraY;
-
-                redrawRequired = true;
-            }
-        }
-        else if (relativeY >= WindowHeight - scrollThresholdBottom && newCamera.Y < maxCameraY)
-        {
-            if (player.Y == OldPlayerLocation.Y + 1)
-            {
-                newCamera.Y++;
-                board.Camera = newCamera;
-                VideoScroll(upperLeft, WindowWidth, WindowHeight, Vector.North);
-                for (var x = 0; x < WindowWidth; x++)
-                    boardUpdater.UpdateBoard(new Location(newCamera.X + x, newCamera.Y + WindowHeight - 1));
-            }
-            else
-            {
-                newCamera.Y = player.Y - viewCenterY;
-
-                if (newCamera.Y < 1)
-                    newCamera.Y = 1;
-                else if (newCamera.Y > maxCameraY)
-                    newCamera.Y = maxCameraY;
-
-                redrawRequired = true;
-            }
-        }
-
-        OldPlayerLocation = player;
-        if (newCamera == board.Camera && !redrawRequired)
-            return;
-
-        board.Camera = newCamera;
-        if (redrawRequired)
-            RedrawBoard();
-    }
-
-    public override void UpdateStatus()
-    {
-        if (Engine.TitleScreen)
+        if (TitleScreen)
             return;
 
         if (world.Health < 0)
@@ -401,16 +261,20 @@ public sealed class SuperHud(
 
         for (var i = 0; i < 7; i++)
         {
-            var keyChar = world.Keys[i] ? (byte)elementList.Key().Character : 0x20;
+            var keyChar = world.Keys[i] ? (byte)elements.Key().Character : 0x20;
             var x = i & 0x3;
             var y = i >> 2;
             DrawChar(0x07 + x, 0x13 + y, new AnsiChar(keyChar, 0x69 + i));
         }
 
-        DrawString(0x03, 0x0A, State.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
+        DrawString(0x03, 0x0A, state.GameQuiet ? "Be Noisy " : "Be Quiet ", 0x6E);
 
         if (world.Flags.Contains("DEBUG"))
-            DrawString(0x0E, 0x00, $"Used: {Engine.MemoryUsage}", 0x1E);
+            DrawString(0x0E, 0x00, $"Used: {statistics.CalculateMemoryUsage()}", 0x1E);
+    }
+
+    public void CreateStatusWorld()
+    {
     }
 
     private string StoneText
@@ -419,7 +283,7 @@ public sealed class SuperHud(
         {
             foreach (var flag in world.Flags.Select(f => f.ToUpperInvariant()))
             {
-                if (flag.Length > 0 && flag.StartsWith("Z"))
+                if (flag.Length > 0 && flag.StartsWith("Z", StringComparison.OrdinalIgnoreCase))
                 {
                     return flag.Substring(1);
                 }
@@ -429,108 +293,52 @@ public sealed class SuperHud(
         }
     }
 
-    public override string EnterCheat()
+    public bool EndGameConfirmation() =>
+        Confirm("End this game? ");
+
+    public string EnterCheat()
     {
         UpdateBorder();
-        var cheat = TextEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
+        var cheat = textEntryHud.Show(0x0F, 0x17, 11, 0x0F, 0x1F);
         UpdateBorder();
         return cheat;
     }
 
-    public override string? EnterHighScore(IHighScoreList highScoreList, int score)
-    {
-        if (score <= 0 || !highScoreList.Any(hs => hs.Score <= score))
-        {
-            return null;
-        }
-
-        string? name = null;
-        Scroll.Show($"New high score for {world.Name}",
-            [string.Empty, " Enter your name:", string.Empty, string.Empty, string.Empty],
-            false,
-            3,
-            _ => name = TextEntryHud.Show(12, 14, 15, 0x1E, 0x1F));
-        return name;
-    }
-
-    public override void ShowHighScores(IHighScoreList highScoreList)
-    {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  --------------------"
-        };
-
-        nameList.AddRange(
-            highScoreList
-                .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-    }
-
-    private void VideoScroll(Location pos, int width, int height, Vector dir)
-    {
-        var buffer = new AnsiChar[width * height];
-        var bufIdx = 0;
-
-        var minX = pos.X;
-        var minY = pos.Y;
-        var maxX = pos.X + width;
-        var maxY = pos.Y + height;
-
-        // Copy source into memory.
-
-        for (var iy = 0; iy < height; iy++)
-        for (var ix = 0; ix < width; ix++)
-            buffer[bufIdx++] = Terminal.Read(ix + pos.X, iy + pos.Y);
-
-        // Blit it back out where it goes.
-
-        bufIdx = 0;
-        var finalX = pos.X + dir.X;
-        var finalY = pos.Y + dir.Y;
-        for (var iy = 0; iy < height; iy++)
-        for (var ix = 0; ix < width; ix++)
-        {
-            var data = buffer[bufIdx++];
-            var px = ix + finalX;
-            var py = iy + finalY;
-
-            if (px >= minX && px < maxX && py >= minY && py < maxY)
-                Terminal.Plot(px, py, data);
-        }
-    }
-
-    public override string SaveGame()
+    public string SaveGame()
     {
         DrawString(13, 24, "Save game:", 0x1F);
         DrawString(33, 24, ".SAV", 0x0F);
-        var result = TextEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
+        var result = textEntryHud.Show(25, 23, 8, 0x0F, 0x1F);
         UpdateBorder();
         return result;
     }
 
-    public override void FadeBoard(AnsiChar ac) => FadeMatrix.FadeOut(ac);
+    public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
+        string? barText) =>
+        currentValue;
 
-    private void RandomizeFadeMatrix() => FadeMatrix.Randomize();
+    public void FadeBoard(AnsiChar ac) =>
+        fadeMatrix.FadeOut(ac);
 
-    public override void FailToLoadWorld()
+    private void RandomizeFadeMatrix() =>
+        fadeMatrix.Randomize();
+
+    public void FailToLoadWorld()
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
         soundUnit.PlayErrorSound();
-        Engine.Delay(2000);
+        delayer.Delay(2000);
     }
 
-    public override void DrawPausing()
-    {
+    public void DrawPausing() =>
         DrawString(21, 24, "Pausing...", 0x1E);
+
+    public void DrawTitleStatus()
+    {
     }
 
-    public override void ClearPausing()
-    {
+    public void ClearPausing() =>
         ClearMessage();
-    }
 
     private void ClearMessage()
     {

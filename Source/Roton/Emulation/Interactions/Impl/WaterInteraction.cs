@@ -6,23 +6,21 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x13)]
 [Context(Context.Super, 0x13)]
-public sealed class WaterInteraction(
-    IEngineAccessor engine,
+internal sealed class WaterInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
     IConfig config,
-    ISoundUnit soundUnit)
+    ISoundUnit soundUnit,
+    IMessenger messenger)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         if (config.NoPesterMode)
             return;
 
         soundUnit.PlaySound(3, sounds.Water);
-        Engine.SetMessage(facts.ShortMessageDuration, alerts.WaterMessage);
+        messenger.SetMessage(facts.ShortMessageDuration, alerts.WaterMessage);
     }
 }

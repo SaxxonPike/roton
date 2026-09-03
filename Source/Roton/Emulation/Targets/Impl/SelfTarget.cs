@@ -4,9 +4,12 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Targets.Impl;
 
+/// <summary>
+/// Represents the "SELF" target, which includes only the sender.
+/// </summary>
 [Context(Context.Original, "SELF")]
 [Context(Context.Super, "SELF")]
-public sealed class SelfTarget : ITarget
+internal sealed class SelfTarget : ITarget
 {
     public bool Execute(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {

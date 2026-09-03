@@ -1,23 +1,22 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "BECOME")]
 [Context(Context.Super, "BECOME")]
-public sealed class BecomeCommand(
-    IEngineAccessor engine,
-    IParser parser)
+internal sealed class BecomeCommand(
+    IErrorRaiser errorRaiser,
+    IKindEvaluator kindEvaluator)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!parser.TryEvalKind(ref context, ref instruction, out var val))
+        if (!kindEvaluator.TryEval(ref context, ref instruction, out var val))
         {
-            Engine.RaiseError(ref context, "Bad #BECOME");
+            errorRaiser.RaiseError(ref context, "Bad #BECOME");
             return;
         }
 

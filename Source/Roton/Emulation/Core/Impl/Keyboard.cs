@@ -16,7 +16,7 @@ public abstract class Keyboard : IKeyboard
     }
 
     public bool KeyIsAvailable
-        => _queue.Count > 0;
+        => !_queue.IsEmpty;
 
     public KeyPress? GetKey()
         => _queue.TryDequeue(out var keyPress)

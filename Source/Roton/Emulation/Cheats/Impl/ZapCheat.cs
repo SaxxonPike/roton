@@ -1,23 +1,23 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
+/// <summary>
+/// Represents the "ZAP" cheat, which destroys four adjacent tiles around the player.
+/// </summary>
 [Context(Context.Original, "ZAP")]
 [Context(Context.Super, "ZAP")]
-public sealed class ZapCheat(
-    IEngineAccessor engine,
-    IActorList actorList) : ICheat
+internal sealed class ZapCheat(
+    IActorList actors,
+    IState state,
+    IDestroyer destroyer)
+    : ICheat
 {
-    private IEngine Engine => engine.Instance;
-
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         for (var i = 0; i < 4; i++)
-        {
-            Engine.Destroy(actorList.Player.Location + Engine.GetCardinalVector(i));
-        }
+            destroyer.Destroy(actors.Player.Location + state.GetCardinalVector(i));
     }
 }

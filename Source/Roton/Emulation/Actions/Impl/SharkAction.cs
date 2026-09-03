@@ -4,36 +4,34 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the shark element.
+/// </summary>
 [Context(Context.Original, 0x26)]
-public sealed class SharkAction(
-    IEngineAccessor engine,
-    IActorList actorList,
+internal sealed class SharkAction(
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList) 
+    IElementList elements,
+    IMover mover,
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var vector = new Vector();
+        var actor = actors[index];
 
-        vector = actor.P1 > randomizer.GetNext(10)
-            ? Engine.Seek(actor.Location)
-            : Engine.Rnd();
+        var vector = actor.P1 > randomizer.GetNext(10)
+            ? navigator.Seek(actor.Location)
+            : navigator.Rnd();
 
         var target = actor.Location + vector;
         var targetElement = tiles.ElementAt(target);
 
-        if (targetElement.Id == elementList.WaterId || targetElement.Id == elementList.LavaId)
-        {
-            Engine.MoveActor(index, target);
-        }
-        else if (targetElement.Id == elementList.PlayerId)
-        {
-            Engine.Attack(index, target);
-        }
+        if (elements.IsWater(targetElement.Id))
+            mover.MoveActor(index, target);
+        else if (targetElement.Id == elements.PlayerId)
+            attacker.Attack(index, target);
     }
 }

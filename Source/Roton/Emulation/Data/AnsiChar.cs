@@ -4,8 +4,8 @@ namespace Roton.Emulation.Data;
 
 public readonly struct AnsiChar(int newChar, int newColor) : IEquatable<AnsiChar>
 {
-    public readonly byte Char = unchecked((byte)newChar);
-    public readonly byte Color = unchecked((byte)newColor);
+    public byte Char { get; } = unchecked((byte)newChar);
+    public byte Color { get; } = unchecked((byte)newColor);
 
     public static bool operator ==(AnsiChar a, AnsiChar b) =>
         a.Char == b.Char && a.Color == b.Color;

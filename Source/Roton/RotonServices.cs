@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -44,8 +45,8 @@ public static class RotonServices
                 .Where(ti => ti != typeof(IDisposable));
 
             return interfaces.Select(ti => new RotonService(ti, tc));
-        }).ToList();
-        
+        }).Concat([new RotonService(typeof(IDeferred<>), typeof(Deferred<>))]).ToList();
+
         return registrations;
     }
 }

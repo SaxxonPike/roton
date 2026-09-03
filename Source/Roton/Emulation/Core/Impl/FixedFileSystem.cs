@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class FixedFileSystem(bool writeable, IDictionary<string, byte[]>? files = null) : IFileSystem
+internal sealed class FixedFileSystem(bool writeable, IDictionary<string, byte[]>? files = null) : IFileSystem
 {
     private readonly IDictionary<string, byte[]> _files = files ?? new Dictionary<string, byte[]>();
 

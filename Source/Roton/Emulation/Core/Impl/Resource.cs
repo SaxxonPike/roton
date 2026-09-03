@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Core.Impl;
 
-public sealed class Resource : IResource
+internal sealed class Resource : IResource
 {
     private readonly byte[] _data;
 
@@ -14,8 +14,6 @@ public sealed class Resource : IResource
     public IFileSystem Root => GetPrependedFileSystem("root/");
     public IFileSystem System => GetPrependedFileSystem("system/");
 
-    private IFileSystem GetPrependedFileSystem(string path)
-    {
-        return new PrependedFileSystem(new ZipFileSystem(_data), path);
-    }
+    private PrependedFileSystem GetPrependedFileSystem(string path) => 
+        new PrependedFileSystem(new ZipFileSystem(_data), path);
 }

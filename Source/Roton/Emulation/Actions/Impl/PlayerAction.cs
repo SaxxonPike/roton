@@ -7,12 +7,14 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the player element.
+/// </summary>
 [Context(Context.Original, 0x04)]
 [Context(Context.Super, 0x04)]
-public sealed class PlayerAction(
-    IEngineAccessor engine,
-    IActorList actorList,
-    IElementList elementList,
+internal sealed class PlayerAction(
+    IActorList actors,
+    IElementList elements,
     IWorld world,
     IState state,
     ITiles tiles,
@@ -21,22 +23,28 @@ public sealed class PlayerAction(
     IHud hud,
     ISounds sounds,
     IFacts facts,
-    IInteractionList interactionList,
+    IInteractionList interactions,
     ITimers timers,
     IConfig config,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit,
-    IFeatures features,
+    IWorldManager worldManager,
     IBoardUpdater boardUpdater,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    ISpawner spawner,
+    IMover mover,
+    IPlayerUpdater playerUpdater,
+    IMessenger messenger,
+    IDialogs dialogs,
+    IPlayerInputHandler playerInputHandler,
+    ICheater cheater,
+    IDamager damager,
+    IBoardTime boardTime)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var playerElement = elementList.Player();
+        var actor = actors[index];
+        var playerElement = elements.Player();
 
         // Energizer graphics
 
@@ -45,19 +53,15 @@ public sealed class PlayerAction(
             playerElement.Character = playerElement.Character == 1 ? 2 : 1;
 
             if ((state.GameCycle & 0x01) == 0)
-            {
                 tiles[actor.Location].Color = ((state.GameCycle % 7 + 1) << 4) | 0x0F;
-            }
             else
-            {
                 tiles[actor.Location].Color = 0x0F;
-            }
 
             boardUpdater.UpdateBoard(actor.Location);
         }
         else
         {
-            features.ForcePlayerColor(index);
+            playerUpdater.ForcePlayerColor(index);
         }
 
         // Health logic
@@ -66,10 +70,9 @@ public sealed class PlayerAction(
         {
             state.KeyVector = new Vector(0, 0);
             state.KeyShift = false;
-            if (actorList.ActorIndexAt(new Location(0, 0)) == -1)
-            {
-                Engine.SetMessage(0x7D00, alerts.GameOverMessage);
-            }
+
+            if (actors.ActorIndexAt(new Location(0, 0)) == -1)
+                messenger.SetMessage(0x7D00, alerts.GameOverMessage);
 
             state.GameWaitTime = 0;
             state.GameOver = true;
@@ -93,12 +96,11 @@ public sealed class PlayerAction(
             {
                 if (world.Ammo > 0)
                 {
-                    var bulletCount =
-                        actorList.Count(a => a.P1 == 0 && tiles[a.Location].Id == elementList.BulletId);
+                    var bulletCount = actors.Count(a => a.P1 == 0 && tiles[a.Location].Id == elements.BulletId);
+
                     if (bulletCount < board.MaximumShots)
                     {
-                        if (Engine.SpawnProjectile(elementList.BulletId, actor.Location,
-                                state.KeyVector, false))
+                        if (spawner.SpawnProjectile(elements.BulletId, actor.Location, state.KeyVector, false))
                         {
                             world.Ammo--;
                             hud.UpdateStatus();
@@ -110,7 +112,7 @@ public sealed class PlayerAction(
                 {
                     if (alerts.OutOfAmmo)
                     {
-                        Engine.SetMessage(facts.LongMessageDuration, alerts.NoAmmoMessage);
+                        messenger.SetMessage(facts.LongMessageDuration, alerts.NoAmmoMessage);
                         alerts.OutOfAmmo = false;
                     }
                 }
@@ -119,7 +121,7 @@ public sealed class PlayerAction(
             {
                 if (alerts.CantShootHere)
                 {
-                    Engine.SetMessage(facts.LongMessageDuration, alerts.NoShootMessage);
+                    messenger.SetMessage(facts.LongMessageDuration, alerts.NoShootMessage);
                     alerts.CantShootHere = false;
                 }
             }
@@ -128,20 +130,16 @@ public sealed class PlayerAction(
         {
             // Movement logic
 
-            interactionList.Get(tiles[actor.Location + state.KeyVector].Id)?
+            interactions.Get(tiles[actor.Location + state.KeyVector].Id)?
                 .Interact(actor.Location + state.KeyVector, 0, ref state.KeyVector);
 
             if (!state.KeyVector.IsZero())
             {
                 if (!state.SoundPlaying)
-                {
                     soundUnit.PlayStep();
-                }
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
-                {
-                    Engine.MoveActor(0, actor.Location + state.KeyVector);
-                }
+                    mover.MoveActor(0, actor.Location + state.KeyVector);
             }
         }
 
@@ -151,37 +149,47 @@ public sealed class PlayerAction(
         {
             case EngineKeyCode.Q:
             case EngineKeyCode.Escape:
+            {
                 state.BreakGameLoop = state.GameOver || hud.EndGameConfirmation();
                 break;
+            }
             case EngineKeyCode.S:
+            {
                 if (hud.SaveGame() is { } saveFileName)
-                {
-                    worldUnit.SaveWorld(saveFileName);
-                }
+                    worldManager.SaveWorld(saveFileName);
 
                 break;
+            }
             case EngineKeyCode.P:
+            {
                 if (world.Health > 0)
-                {
                     state.GamePaused = true;
-                }
 
                 break;
+            }
             case EngineKeyCode.B:
+            {
                 state.GameQuiet = !state.GameQuiet;
                 soundUnit.ClearSound();
                 hud.UpdateStatus();
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
+            }
             case EngineKeyCode.H:
-                features.ShowInGameHelp();
+            {
+                dialogs.ShowHelp();
                 break;
+            }
             case EngineKeyCode.QuestionMark:
-                Engine.Cheat();
+            {
+                cheater.Cheat();
                 break;
+            }
             default:
-                features.HandlePlayerInput(actor);
+            {
+                playerInputHandler.HandlePlayerInput(actor);
                 break;
+            }
         }
 
         // Torch logic
@@ -189,6 +197,7 @@ public sealed class PlayerAction(
         if (world.TorchCycles > 0)
         {
             world.TorchCycles--;
+
             if (world.TorchCycles <= 0)
             {
                 radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
@@ -196,9 +205,7 @@ public sealed class PlayerAction(
             }
 
             if (world.TorchCycles % 40 == 0)
-            {
                 hud.UpdateStatus();
-            }
         }
 
         // Energizer logic
@@ -206,14 +213,11 @@ public sealed class PlayerAction(
         if (world.EnergyCycles > 0)
         {
             world.EnergyCycles--;
+
             if (world.EnergyCycles == 10)
-            {
                 soundUnit.PlaySound(9, sounds.EnergyOut);
-            }
             else if (world.EnergyCycles <= 0)
-            {
-                features.ForcePlayerColor(index);
-            }
+                playerUpdater.ForcePlayerColor(index);
         }
 
         // Time limit logic
@@ -222,17 +226,18 @@ public sealed class PlayerAction(
         {
             if (world.Health > 0)
             {
-                if (timers.TimeLimit.Clock(Engine.ResetBoardTimeHsec(), 100) > 0)
+                if (timers.TimeLimit.Clock(boardTime.Elapse(), 100) > 0)
                 {
                     world.TimePassed++;
+
                     if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
-                        Engine.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
+                        messenger.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
                         soundUnit.PlaySound(3, sounds.TimeLow);
                     }
                     else if (world.TimePassed >= board.TimeLimit)
                     {
-                        Engine.Harm(0);
+                        damager.Harm(0);
                     }
 
                     hud.UpdateStatus();
@@ -240,6 +245,6 @@ public sealed class PlayerAction(
             }
         }
 
-        Engine.MoveActorOnRiver(index);
+        mover.MoveActorOnRiver(index);
     }
 }

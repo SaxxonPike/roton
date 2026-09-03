@@ -4,54 +4,55 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the spider element.
+/// </summary>
 [Context(Context.Super, 0x3E)]
-public sealed class SpiderAction(
-    IEngineAccessor engine,
-    IActorList actorList,
+internal sealed class SpiderAction(
+    IActorList actors,
     IRandomizer randomizer,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements,
+    IMover mover,
+    INavigator navigator,
+    IAttacker attacker)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
-        var vector = new Vector();
+        var actor = actors[index];
 
-        vector = actor.P1 <= randomizer.GetNext(10)
-            ? Engine.Rnd()
-            : Engine.Seek(actor.Location);
+        var vector = actor.P1 <= randomizer.GetNext(10)
+            ? navigator.Rnd()
+            : navigator.Seek(actor.Location);
 
-        if (!ActSpiderAttemptDirection(index, vector))
-        {
-            var i = (randomizer.GetNext(2) << 1) - 1;
-            if (!ActSpiderAttemptDirection(index, (vector * i).Swap()))
-            {
-                if (!ActSpiderAttemptDirection(index, -(vector * i).Swap()))
-                {
-                    ActSpiderAttemptDirection(index, -vector);
-                }
-            }
-        }
+        if (ActSpiderAttemptDirection(index, vector))
+            return;
+
+        var i = (randomizer.GetNext(2) << 1) - 1;
+
+        if (ActSpiderAttemptDirection(index, (vector * i).Swap()))
+            return;
+
+        if (!ActSpiderAttemptDirection(index, -(vector * i).Swap()))
+            ActSpiderAttemptDirection(index, -vector);
     }
 
     private bool ActSpiderAttemptDirection(int index, Vector vector)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var target = actor.Location + vector;
         var targetElement = tiles.ElementAt(target).Id;
 
-        if (targetElement == elementList.WebId)
+        if (targetElement == elements.WebId)
         {
-            Engine.MoveActor(index, target);
+            mover.MoveActor(index, target);
             return true;
         }
 
-        if (targetElement == elementList.PlayerId)
+        if (targetElement == elements.PlayerId)
         {
-            Engine.Attack(index, target);
+            attacker.Attack(index, target);
             return true;
         }
 

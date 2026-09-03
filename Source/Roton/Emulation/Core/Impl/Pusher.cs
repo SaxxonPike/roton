@@ -5,26 +5,25 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Pusher(
+internal sealed class Pusher(
     ITiles tiles,
-    IElementList elementList,
-    IEngineAccessor engine,
-    IActorList actorList,
+    IElementList elements,
+    IActorList actors,
     ISoundUnit soundUnit,
     ISounds sounds,
     IBoardUpdater boardUpdater,
-    IFeatures features,
-    ITracer tracer)
+    ITracer tracer,
+    IMover mover,
+    ITileRemover tileRemover,
+    IDestroyer destroyer)
     : IPusher
 {
-    private IEngine Engine => engine.Instance;
-
     public void Push(Location location, Vector vector)
     {
         ref var tile = ref tiles[location];
-        if (tile.Id == elementList.SliderEwId && vector.Y == 0 ||
-            tile.Id == elementList.SliderNsId && vector.X == 0 ||
-            elementList[tile.Id].IsPushable)
+        if (tile.Id == elements.SliderEwId && vector.Y == 0 ||
+            tile.Id == elements.SliderNsId && vector.X == 0 ||
+            elements[tile.Id].IsPushable)
         {
             if (vector.IsZero())
             {
@@ -34,16 +33,16 @@ public sealed class Pusher(
             }
 
             ref var furtherTile = ref tiles[location + vector];
-            if (furtherTile.Id == elementList.TransporterId)
+            if (furtherTile.Id == elements.TransporterId)
                 Transport(location, vector);
-            else if (furtherTile.Id != elementList.EmptyId)
+            else if (furtherTile.Id != elements.EmptyId)
                 Push(location + vector, vector);
 
-            var furtherElement = elementList[furtherTile.Id];
-            if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elementList.PlayerId)
-                Engine.Destroy(location + vector);
+            var furtherElement = elements[furtherTile.Id];
+            if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elements.PlayerId)
+                destroyer.Destroy(location + vector);
 
-            furtherElement = elementList[furtherTile.Id];
+            furtherElement = elements[furtherTile.Id];
             if (furtherElement.IsFloor)
                 MoveTile(location, location + vector);
         }
@@ -51,7 +50,7 @@ public sealed class Pusher(
 
     public void Transport(Location location, Vector vector)
     {
-        var actor = actorList.ActorAt(location + vector);
+        var actor = actors.ActorAt(location + vector);
 
         if (actor.Vector == vector)
         {
@@ -72,7 +71,7 @@ public sealed class Pusher(
             {
                 search += vector;
                 var element = tiles.ElementAt(search);
-                if (element.Id == elementList.BoardEdgeId)
+                if (element.Id == elements.BoardEdgeId)
                 {
                     ended = true;
                 }
@@ -99,8 +98,8 @@ public sealed class Pusher(
                     }
                 }
 
-                if (element.Id == elementList.TransporterId)
-                    if (actorList.ActorAt(search).Vector == -vector)
+                if (element.Id == elements.TransporterId)
+                    if (actors.ActorAt(search).Vector == -vector)
                         success = true;
             }
 
@@ -114,16 +113,16 @@ public sealed class Pusher(
     
     private void MoveTile(Location source, Location target)
     {
-        var sourceIndex = actorList.ActorIndexAt(source);
+        var sourceIndex = actors.ActorIndexAt(source);
         if (sourceIndex >= 0)
         {
-            Engine.MoveActor(sourceIndex, target);
+            mover.MoveActor(sourceIndex, target);
         }
         else
         {
             tiles[target] = tiles[source];
             boardUpdater.UpdateBoard(target);
-            features.RemoveItem(source);
+            tileRemover.RemoveItem(source);
             boardUpdater.UpdateBoard(source);
         }
     }

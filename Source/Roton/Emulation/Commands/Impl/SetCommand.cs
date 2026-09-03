@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "SET")]
 [Context(Context.Super, "SET")]
-public sealed class SetCommand(
+internal sealed class SetCommand(
     IParser parser,
     IFlags flags)
     : ICommand

@@ -1,14 +1,16 @@
-using Roton.Emulation.Data;
+using System;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalSounds : Sounds
+internal sealed class OriginalSounds : Sounds
 {
-    public override ISound Forest { get; } = new Sound
+    private readonly byte[] _forest = CreateSound
     (
         0x39, 0x01
     );
+
+    public override ReadOnlySpan<byte> Forest => _forest;
 }

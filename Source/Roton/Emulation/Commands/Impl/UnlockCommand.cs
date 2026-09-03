@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "UNLOCK")]
 [Context(Context.Super, "UNLOCK")]
-public sealed class UnlockCommand(
+internal sealed class UnlockCommand(
     IActorLocker actorLocker) 
     : ICommand
 {

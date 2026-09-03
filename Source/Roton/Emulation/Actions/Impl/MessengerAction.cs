@@ -5,28 +5,31 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the messenger element.
+/// </summary>
 [Context(Context.Original, 0x02)]
 [Context(Context.Super, 0x02)]
-public sealed class MessengerAction(
-    IEngineAccessor engine,
-    IActorList actorList,
+internal sealed class MessengerAction(
+    IActorList actors,
     IHud hud,
-    IFeatures features,
-    IState state)
+    IState state,
+    IMessageHandler messageHandler,
+    IActorManager actorManager)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.Location.X == 0)
         {
-            hud.DrawMessage(new Message(features.GetMessageLines()), actor.P2 % 7 + 9);
-            actor.P2--;
-            if (actor.P2 > 0) return;
+            hud.DrawMessage(new Message(messageHandler.GetMessageLines()), actor.P2 % 7 + 9);
 
-            Engine.RemoveActor(index);
+            actor.P2--;
+            if (actor.P2 > 0)
+                return;
+
+            actorManager.Free(index);
             state.ActIndex--;
             hud.UpdateBorder();
             state.Message = string.Empty;

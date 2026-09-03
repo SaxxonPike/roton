@@ -5,7 +5,7 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "SCORE")]
 [Context(Context.Super, "SCORE")]
-public sealed class ScoreItem(
+internal sealed class ScoreItem(
     IWorld world)
     : IItem
 {

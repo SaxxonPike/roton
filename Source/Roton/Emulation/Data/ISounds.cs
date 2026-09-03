@@ -1,40 +1,42 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface ISounds
 {
-    ISound Ammo { get; }
-    ISound BombActivate { get; }
-    ISound BombExplode { get; }
-    ISound BombTick { get; }
-    ISound BombTock { get; }
-    ISound BulletDie { get; }
-    ISound Cheat { get; }
-    ISound DoorLocked { get; }
-    ISound DoorOpen { get; }
-    ISound Duplicate { get; }
-    ISound DuplicateFail { get; }
-    ISound EnemyDie { get; }
-    ISound EnemyShoot { get; }
-    ISound EnemySuicide { get; }
-    ISound Energizer { get; }
-    ISound EnergyOut { get; }
-    ISound Error { get; }
-    ISound Forest { get; }
-    ISound GameOver { get; }
-    ISound Gem { get; }
-    ISound Invisible { get; }
-    ISound Key { get; }
-    ISound KeyAlready { get; }
-    ISound Ouch { get; }
-    ISound Passage { get; }
-    ISound Push { get; }
-    ISound Ricochet { get; }
-    ISound Shoot { get; }
-    ISound SlimeDie { get; }
-    ISound TimeLow { get; }
-    ISound TimeOut { get; }
-    ISound Torch { get; }
-    ISound TorchOut { get; }
-    ISound Transporter { get; }
-    ISound Water { get; }
+    ReadOnlySpan<byte> Ammo { get; }
+    ReadOnlySpan<byte> BombActivate { get; }
+    ReadOnlySpan<byte> BombExplode { get; }
+    ReadOnlySpan<byte> BombTick { get; }
+    ReadOnlySpan<byte> BombTock { get; }
+    ReadOnlySpan<byte> BulletDie { get; }
+    ReadOnlySpan<byte> Cheat { get; }
+    ReadOnlySpan<byte> DoorLocked { get; }
+    ReadOnlySpan<byte> DoorOpen { get; }
+    ReadOnlySpan<byte> Duplicate { get; }
+    ReadOnlySpan<byte> DuplicateFail { get; }
+    ReadOnlySpan<byte> EnemyDie { get; }
+    ReadOnlySpan<byte> EnemyShoot { get; }
+    ReadOnlySpan<byte> EnemySuicide { get; }
+    ReadOnlySpan<byte> Energizer { get; }
+    ReadOnlySpan<byte> EnergyOut { get; }
+    ReadOnlySpan<byte> Error { get; }
+    ReadOnlySpan<byte> Forest { get; }
+    ReadOnlySpan<byte> GameOver { get; }
+    ReadOnlySpan<byte> Gem { get; }
+    ReadOnlySpan<byte> Invisible { get; }
+    ReadOnlySpan<byte> Key { get; }
+    ReadOnlySpan<byte> KeyAlready { get; }
+    ReadOnlySpan<byte> Ouch { get; }
+    ReadOnlySpan<byte> Passage { get; }
+    ReadOnlySpan<byte> Push { get; }
+    ReadOnlySpan<byte> Ricochet { get; }
+    ReadOnlySpan<byte> Shoot { get; }
+    ReadOnlySpan<byte> SlimeDie { get; }
+    ReadOnlySpan<byte> TimeLow { get; }
+    ReadOnlySpan<byte> TimeOut { get; }
+    ReadOnlySpan<byte> Torch { get; }
+    ReadOnlySpan<byte> TorchOut { get; }
+    ReadOnlySpan<byte> Transporter { get; }
+    ReadOnlySpan<byte> Water { get; }
 }

@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class Actor : IActor
+internal sealed class Actor : IActor
 {
     private readonly IMemory _memory;
     private readonly ICodeHeap _heap;

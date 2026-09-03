@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public sealed class Clock(IConfig config) : IClock
+internal sealed class Clock(IConfig config) : IClock
 {
     private readonly long _numerator = config.MasterClockNumerator;
     private readonly long _denominator = config.MasterClockDenominator;
@@ -15,7 +15,7 @@ public sealed class Clock(IConfig config) : IClock
     private bool _running;
     private bool _initialized;
 
-    public event EventHandler? OnTick;
+    public event Action? OnTick;
 
     public void Start()
     {
@@ -29,13 +29,14 @@ public sealed class Clock(IConfig config) : IClock
 
     private void Initialize()
     {
-        if (!_initialized)
-        {
-            _running = true;
-            _initialized = true;
-            var thread = new Thread(ThreadLoop);
-            thread.Start();
-        }
+        if (_initialized) 
+            return;
+
+        _running = true;
+        _initialized = true;
+
+        var thread = new Thread(ThreadLoop);
+        thread.Start();
     }
 
     private void ThreadLoop()
@@ -60,7 +61,7 @@ public sealed class Clock(IConfig config) : IClock
             while (currentTime - lastTime > frequency)
             {
                 lastTime += frequency;
-                OnTick?.Invoke(this, EventArgs.Empty);
+                OnTick?.Invoke();
             }
             
             return false;

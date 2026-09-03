@@ -8,7 +8,6 @@ public interface IFacts
     int AmmoPerPickup { get; }
     int HealthPerGem { get; }
     int ScorePerGem { get; }
-    int PauseFlashInterval { get; }
     int MainLoopRandomCycleRange { get; }
     string DefaultSavedGameName { get; }
     string DefaultBoardName { get; }
@@ -57,4 +56,9 @@ public interface IFacts
     string SavedGameWindowTitle { get; }
     string WorldFileWindowTitle { get; }
     string HighScoreExtension { get; }
+    int BaseMemoryUsage { get; }
+    int ScrollHeight { get; }
+    int ScrollWidth { get; }
+    int ScrollLeft { get; }
+    int ScrollTop { get; }
 }

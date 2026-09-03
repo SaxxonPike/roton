@@ -1,16 +1,17 @@
-using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
+/// <summary>
+/// Represents the "TORCHES" cheat, which increases the player's torch count.
+/// </summary>
+/// <param name="world"></param>
 [Context(Context.Original, "TORCHES")]
-public sealed class TorchesCheat(
+internal sealed class TorchesCheat(
     IWorld world)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
-    {
+    public void Execute(bool clear) =>
         world.Torches += 3;
-    }
 }

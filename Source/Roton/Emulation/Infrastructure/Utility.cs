@@ -136,7 +136,7 @@ internal static class Utility
             if (string.IsNullOrEmpty(a))
                 return [];
             
-            var result = new byte[a!.Length];
+            var result = new byte[a.Length];
             Cp437.CharsToBytes(a, result);
             return result;
         }

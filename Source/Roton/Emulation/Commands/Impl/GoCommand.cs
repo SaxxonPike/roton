@@ -1,23 +1,22 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "GO")]
 [Context(Context.Super, "GO")]
-public sealed class GoCommand(
-    IParser parser,
-    IEngineAccessor engine,
+internal sealed class GoCommand(
     ITiles tiles,
-    IPusher pusher)
+    IPusher pusher,
+    IMover mover,
+    IDirectionEvaluator directionEvaluator)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (!directionEvaluator.TryEval(ref context, ref instruction, out var vec))
             return;
 
         var target = context.Actor.Location + vec;
@@ -27,7 +26,7 @@ public sealed class GoCommand(
 
         if (tiles.ElementAt(target).IsFloor)
         {
-            Engine.MoveActor(context.Index, target);
+            mover.MoveActor(context.Index, target);
             context.Moved = true;
         }
         else

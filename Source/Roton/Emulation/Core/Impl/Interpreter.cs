@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Roton.Emulation.Commands;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -8,29 +7,19 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Interpreter(
-    IEngineAccessor engine,
+internal sealed class Interpreter(
     ITracer tracer,
     IParser parser,
     ICommandList commandList,
-    IBroadcaster broadcaster)
+    IBroadcaster broadcaster,
+    IErrorRaiser errorRaiser)
     : IInterpreter
 {
-    private IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
-    private ITracer Tracer
-    {
-        [DebuggerStepThrough] get => tracer;
-    }
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
-        Tracer.TraceOop(ref context, ref instruction);
+        tracer.TraceOop(ref context, ref instruction);
 
         while (true)
         {
@@ -39,7 +28,18 @@ public sealed class Interpreter(
 
             var name = parser.ReadWord(context.Index, ref instruction, buffer);
             if (name.Length == 0)
+            {
+                // If the last character of a script is '#', the interpreter will
+                // ordinarily hang. We detect and prevent an infinite loop.
+
+                if (instruction >= context.Actor.Length - 1)
+                {
+                    tracer.TraceCrash("Last character of script is #");
+                    context.Finished = true;
+                }
+                
                 break;
+            }
 
             var command = commandList.Get(name);
 
@@ -52,7 +52,7 @@ public sealed class Interpreter(
                 if (!broadcaster.BroadcastLabel(context.Index, name, false))
                 {
                     if (name.IndexOf(':') < 0) 
-                        Engine.RaiseError(ref context, $"Bad command {name.ToString()}");
+                        errorRaiser.RaiseError(ref context, $"Bad command {name.ToString()}");
                 }
                 else
                 {

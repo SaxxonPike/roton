@@ -10,7 +10,7 @@ public interface IAudioPresenter
     /// <summary>
     /// Open the audio device and start streaming audio.
     /// </summary>
-    void Start(IEngine engine);
+    void Start();
 
     /// <summary>
     /// Stops streaming audio and closes the audio device.

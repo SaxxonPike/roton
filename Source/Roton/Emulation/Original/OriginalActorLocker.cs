@@ -1,15 +1,24 @@
 using System.Runtime.CompilerServices;
-using Roton.Emulation.Core.Impl;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalActorLocker(
-    IActorList actorList)
-    : ActorLocker
+internal sealed class OriginalActorLocker(
+    IActorList actors)
+    : IActorLocker
 {
-    protected override ref Bool GetLockedRef(int index) =>
-        ref Unsafe.As<HWord, Bool>(ref actorList[index].P2);
+    private ref Bool GetLockedRef(int index) =>
+        ref Unsafe.As<HWord, Bool>(ref actors[index].P2);
+
+    public void LockActor(int index) =>
+        GetLockedRef(index) = true;
+
+    public void UnlockActor(int index) =>
+        GetLockedRef(index) = false;
+
+    public bool IsActorLocked(int index) =>
+        GetLockedRef(index);
 }

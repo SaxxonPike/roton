@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -10,13 +8,10 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalHud(
-    IEngineAccessor engine,
+internal sealed class OriginalHud(
     ITerminal terminal,
-    IScroll scroll,
     ITextEntryHud textEntryHud,
     IChoiceHud choiceHud,
-    ILongTextEntryHud longTextEntryHud,
     IFadeMatrix fadeMatrix,
     IState state,
     IElementList elementList,
@@ -25,32 +20,38 @@ public sealed class OriginalHud(
     IFacts facts,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
-    IPlayField playField)
-    : Hud(engine, scroll, state)
+    IPlayField playField,
+    IElementList elements,
+    IStatistics statistics,
+    IDelayer delayer,
+    IConfirmInputHandler confirmInputHandler)
+    : IHud
 {
     private const int ViewportHeight = 25;
 
     private const int ViewportWidth = 60;
 
-    public override void ClearPausing() => 
+    private bool TitleScreen => state.PlayerElement != elements.PlayerId;
+
+    public void ClearPausing() =>
         DrawStatusLine(5);
 
-    public override void ClearTitleStatus() => 
+    public void ClearTitleStatus() =>
         DrawStatusLine(6);
 
-    protected override bool Confirm(string message)
+    public bool Confirm(string message)
     {
         DrawStatusLine(3);
         DrawStatusLine(4);
         DrawStatusLine(5);
         DrawString(0x3F, 0x05, message, 0x1F);
         DrawChar(0x3F + message.Length, 0x05, new AnsiChar(0x5F, 0x9E));
-        var result = base.Confirm(message);
+        var result = confirmInputHandler.Confirm();
         DrawStatusLine(5);
         return result;
     }
 
-    public override void CreateStatusBar()
+    public void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -58,7 +59,7 @@ public sealed class OriginalHud(
         }
     }
 
-    public override void CreateStatusText()
+    public void CreateStatusText()
     {
         CreateStatusBar();
         DrawStatusLine(0);
@@ -67,9 +68,10 @@ public sealed class OriginalHud(
         DrawString(0x3D, 0, "    - - - - -      ", 0x1F);
         DrawString(0x3E, 1, "     Roton     ", 0x70);
         DrawString(0x3D, 2, "    - - - - -      ", 0x1F);
-        if (Engine.TitleScreen)
+
+        if (TitleScreen)
         {
-            SelectParameter(false, 0x42, 0x15, "Game speed:;FS", State.GameSpeed, null);
+            SelectParameter(false, 0x42, 0x15, "Game speed:;FS", state.GameSpeed, null);
             DrawString(0x3E, 0x15, " S ", 0x70);
             DrawString(0x3E, 0x07, " W ", 0x30);
             DrawString(0x41, 0x07, " World:", 0x1E);
@@ -128,19 +130,20 @@ public sealed class OriginalHud(
         }
     }
 
-    public override void CreateStatusWorld()
+    public void CreateStatusWorld()
     {
         DrawStatusLine(0x08);
         DrawString(0x45, 0x08,
             world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
-    public override void DrawChar(int x, int y, AnsiChar ac) => 
+    public void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
-    public override void DrawMessage(IMessage message, int color)
+    public void DrawMessage(IMessage message, int color)
     {
         var text = message.Text.FirstOrDefault();
+
         if (string.IsNullOrEmpty(text))
             return;
 
@@ -148,49 +151,55 @@ public sealed class OriginalHud(
         DrawString(x, 24, " ", text, " ", color);
     }
 
-    public override void DrawPausing() => 
+    public void DrawPausing() =>
         DrawString(0x40, 0x05, "Pausing...", 0x1F);
 
-    public override void DrawStatusLine(int y)
+    public void DrawStatusLine(int y)
     {
         var blankChar = new AnsiChar(0x20, 0x11);
+
         for (var x = 60; x < 80; x++)
-        {
             terminal.Plot(x, y, blankChar);
-        }
     }
 
-    public override void DrawString(int x, int y, ReadOnlySpan<char> text, int color) => 
+    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) => 
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
         terminal.Write(x, y, text0, text1, color);
 
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2, int color) => 
+    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
+        int color) =>
         terminal.Write(x, y, text0, text1, text2, color);
 
-    private void DrawTileAt(Location location) => 
+    private void DrawTileAt(Location location) =>
         DrawTileCommon(location.X, location.Y, boardUpdater.Draw(location + 1));
 
-    private void DrawTileCommon(int x, int y, AnsiChar ac) => 
+    private void DrawTileCommon(int x, int y, AnsiChar ac) =>
         playField.DrawTile(x, y, ac);
 
-    public override void DrawTitleStatus() => 
+    public void DrawTitleStatus() =>
         DrawString(0x3E, 0x05, "Pick a command:", 0x1B);
 
-    public override void FadeBoard(AnsiChar ac) => fadeMatrix.FadeOut(ac);
+    public void FadeBoard(AnsiChar ac) =>
+        fadeMatrix.FadeOut(ac);
 
-    private void RandomizeFadeMatrix() => fadeMatrix.Randomize();
+    private void RandomizeFadeMatrix() =>
+        fadeMatrix.Randomize();
 
-    public override void Initialize()
+    public void Initialize()
     {
         RandomizeFadeMatrix();
-        terminal.SetSize(State.EditorMode ? 60 : 80, 25, false);
+        terminal.SetSize(state.EditorMode ? 60 : 80, 25, false);
     }
 
-    public override void RedrawBoard() => fadeMatrix.FadeIn();
+    public bool QuitEngineConfirmation() =>
+        Confirm("Quit to DOS? ");
 
-    public override void UpdateBorder()
+    public void RedrawBoard() =>
+        fadeMatrix.FadeIn();
+
+    public void UpdateBorder()
     {
         for (var x = 0; x < ViewportWidth; x++)
         {
@@ -205,11 +214,11 @@ public sealed class OriginalHud(
         }
     }
 
-    public override void UpdateStatus()
+    public void UpdateStatus()
     {
         var buffer = (stackalloc char[16]);
 
-        if (Engine.TitleScreen)
+        if (TitleScreen)
             return;
 
         if (board.TimeLimit <= 0)
@@ -254,13 +263,13 @@ public sealed class OriginalHud(
                     : new AnsiChar(0x20, 0x1F));
         }
 
-        DrawString(0x41, 0x0F, State.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
+        DrawString(0x41, 0x0F, state.GameQuiet ? " Be noisy" : " Be quiet", 0x1F);
 
         if (world.Flags.Contains("DEBUG"))
-            DrawString(0x3E, 0x04, $"Used: ", Engine.MemoryUsage.ToCharSpan(buffer), 0x1E);
+            DrawString(0x3E, 0x04, "Used: ", statistics.CalculateMemoryUsage().ToCharSpan(buffer), 0x1E);
     }
 
-    public override string EnterCheat()
+    public string EnterCheat()
     {
         DrawStatusLine(4);
         DrawStatusLine(5);
@@ -270,83 +279,28 @@ public sealed class OriginalHud(
         return cheat;
     }
 
-    public override int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
+    public int SelectParameter(bool performSelection, int x, int y, string message, int currentValue,
         string? barText) =>
         choiceHud.Show(performSelection, x, y, message, currentValue, barText);
 
-    public override string? EnterHighScore(IHighScoreList highScoreList, int score)
-    {
-        var index = -1;
-            
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
-
-        var nameIndex = 2;
-            
-        foreach (var hs in highScoreList)
-        {
-            if (score > 0 && index < 0 && hs.Score <= score)
-            {
-                index = nameIndex;
-                nameList.Add($"{score,5}  -- You! --");
-            }
-
-            if (string.IsNullOrEmpty(hs.Name))
-                continue;
-
-            nameList.Add($"{hs.Score,5}  {hs.Name}");
-            nameIndex++;
-        }
-
-        if (index >= 0)
-        {
-            string? name = null;
-            Scroll.Show($"New high score for {world.Name}",
-                nameList,
-                false,
-                2,
-                _ => name = longTextEntryHud.Show("Congratulations!  Enter your name:", 3, 18, 34, 0x4E, 0x4F));
-            return name;
-        }
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-        return null;
-    }
-
-    public override void ShowHighScores(IHighScoreList highScoreList)
-    {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
-            
-        nameList.AddRange(
-            highScoreList
-                .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
-
-        Scroll.Show($"High scores for {world.Name}", nameList, false, 0);
-    }
-    
-    public override string SaveGame()
+    public string SaveGame()
     {
         DrawString(65, 3, "Save game:", 0x1F);
         DrawString(71, 5, ".SAV", 0x0F);
-        var result = textEntryHud.Show(63, 4, 8, 0x0F, 0x1F, State.DefaultSaveName);
+        var result = textEntryHud.Show(63, 4, 8, 0x0F, 0x1F, state.DefaultSaveName);
         DrawStatusLine(3);
         DrawStatusLine(5);
         return result;
     }
 
-    public override void FailToLoadWorld()
+    public void FailToLoadWorld()
     {
         DrawString(62, 4, "You need a newer", 0x1E);
         DrawString(62, 5, " version of ZZT!", 0x1E);
         soundUnit.PlayErrorSound();
-        Engine.Delay(2000);
+        delayer.Delay(2000);
     }
+
+    public bool EndGameConfirmation() =>
+        Confirm("End this game? ");
 }

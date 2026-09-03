@@ -5,14 +5,15 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalActorList(IMemory memory, ICodeHeap heap) : ActorList(memory, 152)
+internal sealed class OriginalActorList(
+    IMemory memory, 
+    ICodeHeap heap) 
+    : ActorList(memory, 152)
 {
     public override int Count => Memory.GetRef<Word>(0x31CD) + 1;
 
-    private ICodeHeap Heap => heap;
-
     protected override IActor InitItem(int index)
     {
-        return new Actor(Memory, Heap, 0x31CF + 0x0021 * index);
+        return new Actor(Memory, heap, 0x31CF + 0x0021 * index);
     }
 }

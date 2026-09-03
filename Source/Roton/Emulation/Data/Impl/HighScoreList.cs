@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Data.Impl;
 
-public sealed class HighScoreList : IHighScoreList
+internal sealed class HighScoreList : IHighScoreList
 {
     private readonly int _count;
     private readonly List<IHighScore> _list;

@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PLAY")]
 [Context(Context.Super, "PLAY")]
-public sealed class PlayCommand(
+internal sealed class PlayCommand(
     IMusicEncoder musicEncoder,
     IParser parser,
     ISoundUnit soundUnit)
@@ -18,8 +18,8 @@ public sealed class PlayCommand(
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
         var notes = parser.ReadLine(context.Index, ref instruction, buffer);
-        var sound = musicEncoder.Encode(notes);
-        soundUnit.PlaySound(-1, sound);
+        using var sound = musicEncoder.Encode(notes);
+        soundUnit.PlaySound(-1, sound.Span);
         context.NextLine = false;
     }
 }

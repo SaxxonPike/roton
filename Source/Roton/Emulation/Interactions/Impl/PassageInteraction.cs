@@ -6,26 +6,25 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x0B)]
 [Context(Context.Super, 0x0B)]
-public sealed class PassageInteraction(
-    IEngineAccessor engine,
+internal sealed class PassageInteraction(
     ITiles tiles,
-    IActorList actorList,
-    IElementList elementList,
+    IActorList actors,
+    IElementList elements,
     IState state,
     ISounds sounds,
     ISoundUnit soundUnit,
-    IWorldUnit worldUnit,
-    IFeatures features)
+    IWorldManager worldManager,
+    IPlayerUpdater playerUpdater,
+    IPlayerEnterHandler playerEnterHandler,
+    IFader fader)
     : IInteraction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;
-        var passageIndex = actorList.ActorIndexAt(location);
-        var passageTarget = actorList[passageIndex].P3;
-        worldUnit.SetBoard(passageTarget);
+        var passageIndex = actors.ActorIndexAt(location);
+        var passageTarget = actors[passageIndex].P3;
+        worldManager.SetBoard(passageTarget);
         var target = new Location();
 
         for (var x = 1; x <= tiles.Width; x++)
@@ -33,20 +32,20 @@ public sealed class PassageInteraction(
             for (var y = 1; y <= tiles.Height; y++)
             {
                 var loc = new Location(x, y);
-                if (tiles[loc].Id == elementList.PassageId && tiles[loc].Color == searchColor)
+                if (tiles[loc].Id == elements.PassageId && tiles[loc].Color == searchColor)
                     target = new Location(x, y);
             }
         }
 
-        features.CleanUpPassageMovement();
+        playerUpdater.CleanUpPassageMovement();
 
         if (target.X != 0)
-            actorList.Player.Location = target;
+            actors.Player.Location = target;
 
         state.GamePaused = true;
         soundUnit.PlaySound(4, sounds.Passage);
-        Engine.FadePurple();
-        features.EnterBoard();
+        fader.FadePurple();
+        playerEnterHandler.EnterBoard();
         vector = Vector.Idle;
     }
 }

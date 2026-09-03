@@ -6,19 +6,17 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class RadiusUpdater(
-    IEngineAccessor engineAccessor,
+internal sealed class RadiusUpdater(
     ITiles tiles,
     IFacts facts,
-    IActorList actorList,
+    IActorList actors,
     IBroadcaster broadcaster,
-    IElementList elementList,
+    IElementList elements,
     IRandomizer randomizer,
-    IBoardUpdater boardUpdater
+    IBoardUpdater boardUpdater,
+    IDestroyer destroyer
 ) : IRadiusUpdater
 {
-    private IEngine Engine => engineAccessor.Instance;
-
     private static int Distance(Location a, Location b) =>
         (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
@@ -42,21 +40,21 @@ public class RadiusUpdater(
                         {
                             if (element.CanContainCode)
                             {
-                                var actorIndex = actorList.ActorIndexAt(target);
+                                var actorIndex = actors.ActorIndexAt(target);
                                 if (actorIndex > 0)
                                     broadcaster.BroadcastLabel(-actorIndex, facts.BombedLabel, false);
                             }
 
-                            if (element.IsDestructible || element.Id == elementList.StarId)
-                                Engine.Destroy(target);
+                            if (element.IsDestructible || element.Id == elements.StarId)
+                                destroyer.Destroy(target);
 
-                            if (element.Id == elementList.EmptyId || element.Id == elementList.BreakableId)
-                                tiles[target] = new Tile(elementList.BreakableId, randomizer.GetNext(7) + 9);
+                            if (element.Id == elements.EmptyId || element.Id == elements.BreakableId)
+                                tiles[target] = new Tile(elements.BreakableId, randomizer.GetNext(7) + 9);
                         }
                         else
                         {
-                            if (tiles[target].Id == elementList.BreakableId)
-                                tiles[target].Id = elementList.EmptyId;
+                            if (tiles[target].Id == elements.BreakableId)
+                                tiles[target].Id = elements.EmptyId;
                         }
                     }
 

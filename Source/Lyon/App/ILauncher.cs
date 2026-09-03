@@ -8,7 +8,7 @@ namespace Lyon.App;
 public interface ILauncher
 {
     /// <summary>
-    /// Start Lyon using the specified engine.
+    /// Start Lyon.
     /// </summary>
-    void Launch(IEngine engine);
+    void Launch();
 }

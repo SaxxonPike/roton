@@ -5,16 +5,16 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x3F)]
-public sealed class WebDraw(
+internal sealed class WebDraw(
     ITiles tiles,
     IState state,
     IElementList elementList,
-    IFeatures features)
+    IAdjacentFinder adjacentFinder)
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(state.WebChars[features.GetAdjacent(location, elementList.WebId)],
+        return new AnsiChar(state.WebChars[adjacentFinder.GetAdjacent(location, elementList.WebId)],
             tiles[location].Color);
     }
 }

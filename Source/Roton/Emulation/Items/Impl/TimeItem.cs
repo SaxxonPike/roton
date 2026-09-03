@@ -5,7 +5,7 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "TIME")]
 [Context(Context.Super, "TIME")]
-public sealed class TimeItem(
+internal sealed class TimeItem(
     IWorld world)
     : IItem
 {

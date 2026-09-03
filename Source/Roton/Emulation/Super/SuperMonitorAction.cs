@@ -7,13 +7,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x03)]
-public sealed class SuperMonitorAction(
-    IEngineAccessor engine,
-    IState state)
+internal sealed class SuperMonitorAction(
+    IState state,
+    IMover mover)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
         // Ordinarily, the game code will only check for Enter and Escape here.
@@ -31,6 +29,6 @@ public sealed class SuperMonitorAction(
             _ => false
         };
 
-        Engine.MoveActorOnRiver(index);
+        mover.MoveActorOnRiver(index);
     }
 }

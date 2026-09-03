@@ -6,16 +6,16 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original, 0x1F)]
 [Context(Context.Super, 0x1F)]
-public sealed class LineWallDraw(
+internal sealed class LineWallDraw(
     IState state,
     IElementList elementList,
-    IFeatures features,
-    ITiles tiles)
+    ITiles tiles,
+    IAdjacentFinder adjacentFinder)
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        return new AnsiChar(state.LineChars[features.GetAdjacent(location, elementList.LineId)],
+        return new AnsiChar(state.LineChars[adjacentFinder.GetAdjacent(location, elementList.LineId)],
             tiles[location].Color);
     }
 }

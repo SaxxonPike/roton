@@ -1,9 +1,9 @@
 using System;
-using Roton.Emulation.Data;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core;
 
 public interface IMusicEncoder
 {
-    ISound Encode(ReadOnlySpan<char> music);
+    TempMemory<byte> Encode(ReadOnlySpan<char> music);
 }

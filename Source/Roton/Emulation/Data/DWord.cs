@@ -7,7 +7,7 @@ namespace Roton.Emulation.Data;
 public struct DWord : IEquatable<DWord>, IEquatable<int>
 {
     public static implicit operator int(DWord word) => word.Value;
-    public static implicit operator DWord(int value) => new DWord { Value = value };
+    public static implicit operator DWord(int value) => new() { Value = value };
 
     public static bool operator ==(DWord left, DWord right) => left.Equals(right);
     public static bool operator !=(DWord left, DWord right) => !left.Equals(right);

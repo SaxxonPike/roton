@@ -6,12 +6,10 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "SEEK")]
 [Context(Context.Super, "SEEK")]
-public sealed class SeekDirection(IEngineAccessor engine) : IDirection
+internal sealed class SeekDirection(
+    INavigator navigator)
+    : IDirection
 {
-    private IEngine Engine => engine.Instance;
-
-    public Vector Execute(ref OopContext context, ref Word instruction)
-    {
-        return Engine.Seek(context.Actor.Location);
-    }
+    public Vector Execute(ref OopContext context, ref Word instruction) => 
+        navigator.Seek(context.Actor.Location);
 }

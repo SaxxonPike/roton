@@ -3,22 +3,25 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the centipede segment element.
+/// </summary>
 [Context(Context.Original, 0x2D)]
 [Context(Context.Super, 0x2D)]
-public sealed class CentipedeSegmentAction(
-    IActorList actorList,
+internal sealed class CentipedeSegmentAction(
+    IActorList actors,
     ITiles tiles,
-    IElementList elementList)
+    IElementList elements)
     : IAction
 {
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.Leader < 0)
         {
             if (actor.Leader < -1)
             {
-                tiles[actor.Location].Id = elementList.HeadId;
+                tiles[actor.Location].Id = elements.HeadId;
             }
             else
             {

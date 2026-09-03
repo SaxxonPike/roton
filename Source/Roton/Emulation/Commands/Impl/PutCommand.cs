@@ -1,34 +1,36 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
-public sealed class PutCommand(
-    IEngineAccessor engine,
-    IParser parser)
+internal sealed class PutCommand(
+    IErrorRaiser errorRaiser,
+    IPlotter plotter,
+    IDirectionEvaluator directionEvaluator,
+    IKindEvaluator kindEvaluator)
     : ICommand
 {
-    private IEngine Engine => engine.Instance;
-
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
 
-        if (parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (directionEvaluator.TryEval(ref context, ref instruction, out var vec))
         {
-            if (parser.TryEvalKind(ref context, ref instruction, out var k))
+            if (kindEvaluator.TryEval(ref context, ref instruction, out var k))
             {
                 success = true;
 
                 var target = context.Actor.Location + vec;
-                Engine.PutTile(target, vec, k);
+                plotter.Put(target, vec, k);
             }
         }
 
         if (!success)
-            Engine.RaiseError(ref context, "Bad #PUT");
+            errorRaiser.RaiseError(ref context, "Bad #PUT");
     }
 }

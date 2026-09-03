@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public class OriginalExits(IMemory memory) : IExits
+internal sealed class OriginalExits(IMemory memory) : IExits
 {
     public ref HWord this[int index] => ref memory.GetRef<HWord>(0x4569 + index);
     public ref HWord East => ref memory.GetRef<HWord>(0x456C);

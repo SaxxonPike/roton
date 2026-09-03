@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalElementList : ElementList
+internal sealed class OriginalElementList : ElementList
 {
     private readonly Memory<byte> _data;
     private readonly IMemory _memory;
@@ -21,6 +21,9 @@ public sealed class OriginalElementList : ElementList
     }
 
     public override void Reset() => _memory.Write(0x4AD4, _data.Span);
+
+    public override bool IsWater(int id) =>
+        id == WaterId;
 
     public override int AmmoId => 0x05;
     public override int BearId => 0x22;
@@ -69,6 +72,6 @@ public sealed class OriginalElementList : ElementList
     public override int TransporterId => 0x1E;
     public override int WaterId => 0x13;
 
-    protected override IElement InitItem(int index) 
+    protected override IElement InitItem(int index)
         => new OriginalElement(_memory, index);
 }

@@ -13,7 +13,7 @@ using Roton.Emulation.Infrastructure;
 namespace Roton.Composers.Video.Scenes.Impl;
 
 /// <inheritdoc />
-public sealed class SceneComposer : ISceneComposer
+internal sealed class SceneComposer : ISceneComposer
 {
     private readonly IGlyphComposerFactory _glyphComposerFactory;
     private readonly IPaletteComposerFactory _paletteComposerFactory;
@@ -21,7 +21,7 @@ public sealed class SceneComposer : ISceneComposer
     private IPaletteComposer? _paletteComposer;
 
     /// <inheritdoc />
-    public event EventHandler<ResizedEventArgs>? Resized;
+    public event EventHandler<ResizedEventData>? Resized;
 
     /// <summary>
     /// Character that is used when clearing the character buffer.
@@ -215,7 +215,7 @@ public sealed class SceneComposer : ISceneComposer
         InitializeBitmaps();
         InvalidateAll();
 
-        Resized?.Invoke(this, new ResizedEventArgs(width, height, wide));
+        Resized?.Invoke(this, new ResizedEventData(width, height, wide));
     }
 
     /// <inheritdoc />

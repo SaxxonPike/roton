@@ -6,12 +6,12 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFadeMatrix(
-    IEngineAccessor engine,
+internal sealed class OriginalFadeMatrix(
     ITerminal terminal,
     IRandomizer randomizer,
-    IBoardUpdater boardUpdater)
-    : FadeMatrix(engine, randomizer, 0, 0, 60, 25, 0x80)
+    IBoardUpdater boardUpdater,
+    IScheduler scheduler)
+    : FadeMatrix(randomizer, scheduler, 0, 0, 60, 25, 0x80)
 {
     protected override void DrawAt(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);

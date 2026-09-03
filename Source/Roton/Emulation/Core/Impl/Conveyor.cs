@@ -6,18 +6,15 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Conveyor(
+internal sealed class Conveyor(
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IState state,
-    IActorList actorList,
-    IEngineAccessor engine,
-    IBoardUpdater boardUpdater
-) : IConveyor
+    IActorList actors,
+    IBoardUpdater boardUpdater,
+    IMover mover)
+    : IConveyor
 {
-    private ITiles _tiles = tiles;
-    private IEngine Engine => engine.Instance;
-
     private Vector GetConveyorVector(int index) => new(state.Vector8[index], state.Vector8[index + 8]);
 
     public void Convey(Location center, int direction)
@@ -41,9 +38,9 @@ public sealed class Conveyor(
         var pushable = true;
         for (var i = beginIndex; i != endIndex; i += direction)
         {
-            surrounding[i] = _tiles[center + GetConveyorVector(i)];
-            var element = elementList[surrounding[i].Id];
-            if (element.Id == elementList.EmptyId)
+            surrounding[i] = tiles[center + GetConveyorVector(i)];
+            var element = elements[surrounding[i].Id];
+            if (element.Id == elements.EmptyId)
                 pushable = true;
             else if (!element.IsPushable)
                 pushable = false;
@@ -51,7 +48,7 @@ public sealed class Conveyor(
 
         for (var i = beginIndex; i != endIndex; i += direction)
         {
-            var element = elementList[surrounding[i].Id];
+            var element = elements[surrounding[i].Id];
 
             if (pushable)
             {
@@ -61,22 +58,22 @@ public sealed class Conveyor(
                     var target = center + GetConveyorVector((i + 8 - direction) % 8);
                     if (element.Cycle > -1)
                     {
-                        ref var tile = ref _tiles[source];
-                        var index = actorList.ActorIndexAt(source);
-                        _tiles[source] = surrounding[i];
-                        _tiles[target].Id = elementList.EmptyId;
-                        Engine.MoveActor(index, target);
-                        _tiles[source] = tile;
+                        ref var tile = ref tiles[source];
+                        var index = actors.ActorIndexAt(source);
+                        tiles[source] = surrounding[i];
+                        tiles[target].Id = elements.EmptyId;
+                        mover.MoveActor(index, target);
+                        tiles[source] = tile;
                     }
                     else
                     {
-                        _tiles[target] = surrounding[i];
+                        tiles[target] = surrounding[i];
                         boardUpdater.UpdateBoard(target);
                     }
 
-                    if (!elementList[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
+                    if (!elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
                     {
-                        _tiles[source].Id = elementList.EmptyId;
+                        tiles[source].Id = elements.EmptyId;
                         boardUpdater.UpdateBoard(source);
                     }
                 }
@@ -87,7 +84,7 @@ public sealed class Conveyor(
             }
             else
             {
-                if (element.Id == elementList.EmptyId)
+                if (element.Id == elements.EmptyId)
                     pushable = true;
             }
         }

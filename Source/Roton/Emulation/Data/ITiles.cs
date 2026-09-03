@@ -9,4 +9,5 @@ public interface ITiles : IEnumerable<Tile>
     int Width { get; }
     bool FindTile(Tile kind, ref Location location);
     IElement ElementAt(Location location);
+    bool CanPutTile(Location location);
 }

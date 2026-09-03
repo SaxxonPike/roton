@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Super, "Z")]
-public sealed class ZItem(
+internal sealed class ZItem(
     IWorld world)
     : IItem
 {

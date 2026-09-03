@@ -1,263 +1,63 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class Scroll(
-    IEngineAccessor engine,
-    ITerminal terminal,
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class Scroll(
     IState state,
-    IFileSystem fileSystem)
+    IFileSystem fileSystem,
+    IScrollContent scrollContent,
+    IScheduler scheduler,
+    IInputReader inputReader,
+    IGameThread gameThread,
+    IFacts facts,
+    IScrollBuffer scrollBuffer,
+    IScrollRenderer scrollRenderer)
     : IScroll
 {
-    protected IEngine Engine
-    {
-        [DebuggerStepThrough] get => engine.Instance;
-    }
-
-    protected ITerminal Terminal
-    {
-        [DebuggerStepThrough] get => terminal;
-    }
-
-    private static readonly int[] ScrollCharsTop =
-    [
-        0xC6, 0xD1, 0xCD, 0xD1, 0xB5
-    ];
-
-    private static readonly int[] ScrollCharsMid =
-    [
-        0x20, 0xB3, 0x20, 0xB3, 0x20
-    ];
-
-    private static readonly int[] ScrollCharsSplit =
-    [
-        0x20, 0xC6, 0xCD, 0xB5, 0x20
-    ];
-
-    private static readonly int[] ScrollCharsBottom =
-    [
-        0xC6, 0xCF, 0xCD, 0xCF, 0xB5
-    ];
-
-    protected abstract int Width { get; }
-
-    protected abstract int Height { get; }
-
-    protected abstract int Left { get; }
-
-    protected abstract int Top { get; }
-
-    protected abstract IReadOnlyList<AnsiChar> GetScreenBuffer();
-
-    private void RenderLine(IReadOnlyList<int> chars, int y)
-    {
-        Terminal.Plot(Left, y, new AnsiChar(chars[0], 0x0F));
-        Terminal.Plot(Left + 1, y, new AnsiChar(chars[1], 0x0F));
-        for (var x = Left + 2; x < Left + Width - 2; x++)
-            Terminal.Plot(x, y, new AnsiChar(chars[2], 0x0F));
-        Terminal.Plot(Left + Width - 2, y, new AnsiChar(chars[3], 0x0F));
-        Terminal.Plot(Left + Width - 1, y, new AnsiChar(chars[4], 0x0F));
-    }
-
-    protected abstract void RenderBuffer(IReadOnlyList<AnsiChar> buffer, int y);
-
-    private void Open()
-    {
-        for (var y = Height / 2; y >= 0; y--)
-        {
-            var topY = Top + y;
-            var bottomY = Top + Height - y - 1;
-
-            RenderLine(ScrollCharsTop, topY);
-            RenderLine(ScrollCharsBottom, bottomY);
-
-            for (var y2 = topY + 1; y2 < bottomY - 1; y2++)
-                RenderLine(ScrollCharsMid, y2);
-
-            Engine.WaitForTick();
-        }
-
-        RenderLine(ScrollCharsMid, Top + Height - 2);
-        RenderLine(ScrollCharsSplit, Top + 2);
-    }
-
-    private void Close(IReadOnlyList<AnsiChar> buffer)
-    {
-        for (var y = 0; y < Height / 2; y++)
-        {
-            var topY = Top + y;
-            var bottomY = Top + Height - y - 1;
-
-            RenderLine(ScrollCharsTop, topY + 1);
-            RenderLine(ScrollCharsBottom, bottomY - 1);
-            RenderBuffer(buffer, topY);
-            RenderBuffer(buffer, bottomY);
-
-            Engine.WaitForTick();
-        }
-
-        RenderBuffer(buffer, Top + Height / 2);
-    }
-
-    private void RenderName(string title, IList<string> message, int offset)
-    {
-        var line = message[offset];
-        var pips = false;
-
-        if (line.Length > 0 && (line[0] == ':' || line[0] == '!'))
-        {
-            title = "Press ENTER to select this";
-            pips = true;
-        }
-
-        var x = Left + Width / 2 - title.Length / 2;
-        Terminal.Write(x, Top + 1, title, 0x1E);
-
-        // Avoid putting these directly in the string for Unicode conversion reasons
-        if (pips)
-        {
-            Terminal.Plot(x - 1, Top + 1, new AnsiChar(0xAE, 0x1E));
-            Terminal.Plot(x + title.Length, Top + 1, new AnsiChar(0xAF, 0x1E));
-        }
-    }
-
-    private void RenderBlank(int y)
-    {
-        var x = Left + 2;
-        var right = Left + Width - 3;
-        var blank = new AnsiChar(0x20, 0x1E);
-
-        for (var x2 = x; x2 <= right; x2++)
-            Terminal.Plot(x2, y, blank);
-    }
-
-    private void RenderPips(int y)
-    {
-        Terminal.Plot(Left + 2, y, new AnsiChar(0xAF, 0x1C));
-        Terminal.Plot(Left + Width - 3, y, new AnsiChar(0xAE, 0x1C));
-    }
-
-    private void RenderText(string text, int y)
-    {
-        var x = Left + 4;
-        if (text.Length < 1)
-            return;
-
-        if (text[0] == '$')
-        {
-            var actualText = text.Substring(1);
-            Terminal.Write(Left + Width / 2 - actualText.Length / 2, y, actualText, 0x1F);
-        }
-        else if (text[0] == ':')
-        {
-            if (text.Contains(';'))
-            {
-                var actualText = text.Substring(text.IndexOf(';') + 1);
-                Terminal.Write(x, y, actualText, 0x1F);
-            }
-        }
-        else if (text[0] == '!')
-        {
-            var actualText = text.Substring(text.IndexOf(';') + 1);
-            Terminal.Plot(Left + 4, y, new AnsiChar(0x10, 0x1D));
-            Terminal.Write(Left + 6, y, actualText, 0x1F);
-        }
-        else
-        {
-            Terminal.Write(x, y, text, 0x1E);
-        }
-    }
-
-    private void RenderContent(IScrollState state)
-    {
-        var offset = state.Index;
-        var message = state.Lines;
-        var title = state.Title;
-
-        var center = (Height - 4) / 2;
-        var line = offset - center;
-        var bottom = Height + Top - 2;
-        var top = Top + 3;
-        var lineCount = message.Count;
-        var y = top;
-
-        RenderBlank(Top + 1);
-
-        for (var y2 = y; y2 <= bottom; y2++)
-            RenderBlank(y2);
-
-        RenderPips(top + center);
-
-        while (y <= bottom)
-        {
-            if (state.IsHelp)
-            {
-                if (line == -5)
-                {
-                    Terminal.Write(Left + 5, y, "Use            to view text,", 0x1A);
-                    Terminal.Write(Left + 9, y, "\u2191 \u2193, Enter", 0x1F);
-                }
-                else if (line == -4)
-                {
-                    Terminal.Write(Left + 20, y, "to print.", 0x1A);
-                    Terminal.Write(Left + 14, y, "Alt-P", 0x1F);
-                }
-            }
-
-            if (line >= 0 && line < lineCount)
-                RenderText(message[line], y);
-            else if (line == -1 || line == lineCount)
-                RenderDots(y);
-
-            y++;
-            line++;
-        }
-
-        RenderName(title ?? "", message, offset);
-    }
-
-    private void RenderDots(int y)
-    {
-        var x = Left + 6;
-        var right = Left + Width - 3;
-        var dot = new AnsiChar(0x07, 0x1E);
-
-        for (var x2 = x; x2 <= right; x2 += 5)
-            Terminal.Plot(x2, y, dot);
-    }
-
-    private bool MainLoop(IScrollState st)
+    private ScrollResult MainLoop(ScrollState st)
     {
         var update = false;
 
-        while (Engine.ThreadActive)
+        while (gameThread.ThreadActive)
         {
             if (update)
             {
-                RenderContent(st);
+                scrollRenderer.RenderContent(st);
                 update = false;
             }
 
-            Engine.ReadInput(true);
+            inputReader.Read(true);
 
             switch (state.KeyPressed)
             {
                 case EngineKeyCode.Escape:
-                    return false;
+                    return new ScrollResult
+                    {
+                        Index = st.Index,
+                        Label = st.Label,
+                        Cancelled = true,
+                        Shown = true
+                    };
                 case EngineKeyCode.Enter:
-                    return true;
+                    return new ScrollResult
+                    {
+                        Index = st.Index,
+                        Label = st.Label,
+                        Cancelled = false,
+                        Shown = true
+                    };
                 case EngineKeyCode.PageUp:
-                    st.Index -= Height - 5;
+                    st.Index -= facts.ScrollHeight - 5;
                     update = true;
                     break;
                 case EngineKeyCode.PageDown:
-                    st.Index += Height - 5;
+                    st.Index += facts.ScrollHeight - 5;
                     update = true;
                     break;
                 case EngineKeyCode.Up:
@@ -272,130 +72,149 @@ public abstract class Scroll(
 
             if (update)
             {
-                if (st.Index >= st.Lines.Count)
-                    st.Index = st.Lines.Count - 1;
+                if (st.Index >= scrollContent.LineCount)
+                    st.Index = scrollContent.LineCount - 1;
                 if (st.Index < 0)
                     st.Index = 0;
             }
 
-            Engine.WaitForTick();
+            scheduler.WaitForTick();
         }
 
-        return false;
+        return new ScrollResult
+        {
+            Index = st.Index,
+            Label = st.Label,
+            Cancelled = true,
+            Shown = true
+        };
     }
 
-    private bool LoadHelpFile(IScrollState state, string filename)
+    private bool LoadHelpFile(string filename)
     {
         var text = fileSystem
             .GetFile($"{filename}.HLP")?
             .ToStringValue()
-            .Replace("\xD\xA", "\xD")
-            .Split('\xD');
+            .Replace("\r\n", "\r")
+            .Split('\r');
 
         if (text == null)
             return false;
 
-        state.Lines = text;
-        state.Index = 0;
-        state.IsHelp = true;
+        scrollContent.ClearLines();
+        scrollContent.AddLines(text);
         return true;
     }
 
-    private void ShowLoop(IScrollState state)
+    private ScrollResult ShowLoop(ScrollState scrollState)
     {
         while (true)
         {
-            RenderContent(state);
-            var selected = MainLoop(state);
-            if (!selected)
+            scrollRenderer.RenderContent(scrollState);
+            var result = MainLoop(scrollState);
+
+            state.CancelScroll = result.Cancelled;
+
+            if (result.Cancelled)
+                return result;
+
+            var innerJump = SelectLine(result.Index, out var jumpLabel, out var jumpIndex);
+
+            if (!innerJump)
             {
-                state.Cancelled = true;
-                break;
+                result.Index = jumpIndex;
+                result.Label = jumpLabel;
+                return result;
             }
 
-            var innerJump = SelectLine(state);
-            if (!innerJump)
-                break;
+            scrollState.Index = jumpIndex;
+            scrollState.Label = jumpLabel;
         }
     }
 
-    private IScrollState Show(IScrollState state, Action<IScrollState> mainLoop)
+    private ScrollResult Show(ScrollState scrollState, Func<ScrollState, ScrollResult> mainLoop)
     {
-        var buffer = GetScreenBuffer();
-        Open();
-        RenderContent(state);
-        mainLoop(state);
-        Close(buffer);
-        return state;
+        scrollBuffer.Capture();
+        scrollRenderer.Open();
+        scrollRenderer.RenderContent(scrollState);
+        var result = mainLoop(scrollState);
+        scrollRenderer.Close();
+        return result;
     }
 
-    public IScrollState Show(string title, string fileName)
+    public ScrollResult ShowHelpFile(string? title, string fileName)
     {
-        var st = new ScrollState(state)
+        var st = new ScrollState
         {
             Index = 0,
             Label = null,
-            Cancelled = false,
             IsHelp = true,
             Title = title
         };
 
-        if (LoadHelpFile(st, fileName))
+        if (LoadHelpFile(fileName))
             return Show(st, ShowLoop);
 
-        return st;
+        return default;
     }
 
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index)
-        => Show(title, message, isHelp, index, ShowLoop);
-
-    public IScrollState Show(string? title, IEnumerable<string> message, bool isHelp, int index,
-        Action<IScrollState> mainLoop)
+    public ScrollResult ShowMessage(string? title, IEnumerable<string> message, bool isHelp, int index,
+        Func<ScrollState, ScrollResult>? mainLoop = null)
     {
-        var st = new ScrollState(state)
+        var st = new ScrollState
         {
             Index = index,
             Label = null,
-            Cancelled = false,
-            Lines = [.. message],
             IsHelp = isHelp,
             Title = title
         };
 
-        return Show(st, mainLoop);
+        scrollContent.ClearLines();
+        scrollContent.AddLines(message);
+
+        return Show(st, mainLoop ?? ShowLoop);
     }
 
-    public int TextWidth => Width - 4;
+    public int TextWidth => facts.ScrollWidth - 4;
 
-    public int TextHeight => Height - 4;
+    public int TextHeight => facts.ScrollHeight - 4;
 
-    private bool SelectLine(IScrollState state)
+    private bool SelectLine(int index, out string? newLabel, out int newIndex)
     {
-        if (state.Index < 0)
+        newLabel = null;
+        newIndex = index;
+
+        if (index < 0)
             return false;
 
-        var line = state.Lines[state.Index];
+        var buffer = (stackalloc char[256]);
+        var line = scrollContent.GetLine(index, buffer);
 
-        if (!line.StartsWith("!") || !line.Contains(";"))
+        if (line.Length == 0 || line[0] != '!' || line.IndexOf(';') < 0)
             return false;
 
         var label = line
-            .Substring(1, line.IndexOf(';') - 1)
+            .Slice(1, line.IndexOf(';') - 1)
+            .ToString()
             .ToUpperInvariant();
 
-        if (line.StartsWith("!") && label.StartsWith("-") && LoadHelpFile(state, label.Substring(1)))
-            return true;
-
-        state.Label = label;
-        label = $":{label};";
-
-        for (var i = 0; i < state.Lines.Count; i++)
+        if (line[0] == '!' && label.Length > 0 && label[0] == '-' && LoadHelpFile(label.Substring(1)))
         {
-            line = state.Lines[i];
-            if (!line.ToUpperInvariant().StartsWith(label))
+            newIndex = 0;
+            return true;
+        }
+
+        newLabel = label;
+        label = $":{label};";
+        var lineCount = scrollContent.LineCount;
+
+        for (var i = 0; i < lineCount; i++)
+        {
+            line = scrollContent.GetLine(i, buffer);
+            if (!line.StartsWith(label, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            state.Index = i;
+            newIndex = i;
             return true;
         }
 

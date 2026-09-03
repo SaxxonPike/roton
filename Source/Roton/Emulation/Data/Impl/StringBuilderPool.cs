@@ -7,13 +7,9 @@ public static class StringBuilderPool
 {
     private static readonly ConcurrentQueue<StringBuilder> Pool = [];
     
-    public static StringBuilder Rent()
-    {
-        if (Pool.TryDequeue(out var sb))
-            return sb;
-        return new StringBuilder();
-    }
-    
+    public static StringBuilder Rent() => 
+        Pool.TryDequeue(out var sb) ? sb : new StringBuilder();
+
     public static void Return(StringBuilder sb)
     {
         sb.Clear();

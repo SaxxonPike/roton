@@ -26,7 +26,7 @@ namespace Roton.Test.Infrastructure;
 public abstract class ContextTestFixture(Context context) : BaseTestFixture
 {
     protected Mock<IClock> ClockMock { get; private set; } = null!;
-    protected FixedFileSystem FileSystem { get; private set; } = null!;
+    protected IFileSystem FileSystem { get; private set; } = null!;
     protected Config Config { get; private set; } = null!;
     protected TestTerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;
@@ -47,25 +47,28 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IConditionList Conditions { get; private set; } = null!;
     protected IDirectionList Directions { get; private set; } = null!;
     protected IElementList Elements { get; private set; } = null!;
+    protected IExits Exits { get; private set; } = null!;
     protected IFacts Facts { get; private set; } = null!;
-    protected IFeatures Features { get; private set; } = null!;
     protected ICodeHeap Heap { get; private set; } = null!;
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
     protected IMemory Memory { get; private set; } = null!;
+    protected IMessageHandler MessageHandler { get; private set; } = null!;
+    protected IMover Mover { get; private set; } = null!;
     protected IParser Parser { get; private set; } = null!;
     protected IActor Player => Actors[0];
     protected IRandomizer Random { get; private set; } = null!;
+    protected ISpawner Spawner { get; private set; } = null!;
     protected ISounds Sounds { get; private set; } = null!;
     protected IState State { get; private set; } = null!;
     protected ITargetList Targets { get; private set; } = null!;
     protected ITiles Tiles { get; private set; } = null!;
     protected IWorld World { get; private set; } = null!;
     protected IGameSerializer GameSerializer { get; private set; } = null!;
-    protected IWorldUnit WorldUnit { get; private set; } = null!;
+    protected IWorldManager WorldManager { get; private set; } = null!;
     protected ISoundUnit SoundUnit { get; private set; } = null!;
 
-    protected IEnumerable<string> FullMessage => Features.GetMessageLines();
+    protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
     protected void TouchActor(int actorIndex)
@@ -172,25 +175,28 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Conditions = container.GetRequiredService<IConditionList>();
         Directions = container.GetRequiredService<IDirectionList>();
         Elements = container.GetRequiredService<IElementList>();
+        Exits = container.GetRequiredService<IExits>();
         Facts = container.GetRequiredService<IFacts>();
-        Features = container.GetRequiredService<IFeatures>();
         Heap = container.GetRequiredService<ICodeHeap>();
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();
         Memory = container.GetRequiredService<IMemory>();
+        MessageHandler = container.GetRequiredService<IMessageHandler>();
+        Mover = container.GetRequiredService<IMover>();
         Parser = container.GetRequiredService<IParser>();
         Random = container.GetRequiredService<IRandomizer>();
         Sounds = container.GetRequiredService<ISounds>();
+        Spawner = container.GetRequiredService<ISpawner>();
         State = container.GetRequiredService<IState>();
         Targets = container.GetRequiredService<ITargetList>();
         Tiles = container.GetRequiredService<ITiles>();
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
-        WorldUnit = container.GetRequiredService<IWorldUnit>();
+        WorldManager = container.GetRequiredService<IWorldManager>();
         SoundUnit = container.GetRequiredService<ISoundUnit>();
 
         // Preconfiguration
-        WorldUnit.ClearWorld();
+        WorldManager.ClearWorld();
         State.AboutShown = true;
         State.Init = false;
         State.PlayerElement = Elements.PlayerId;
@@ -203,18 +209,21 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     protected Context Context { get; } = context;
 
-    protected void MovePlayerTo(int x, int y) => MoveActorTo(0, x, y);
+    protected void MovePlayerTo(int x, int y) =>
+        MoveActorTo(0, x, y);
 
-    protected void MoveActorTo(int index, int x, int y) => Engine.MoveActor(index, new Location(x, y));
+    protected void MoveActorTo(int index, int x, int y) => 
+        Mover.MoveActor(index, new Location(x, y));
 
-    protected void FaceActor(int index, Vector vector) => Actors[index].Vector = vector;
+    protected void FaceActor(int index, Vector vector) =>
+        Actors[index].Vector = vector;
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
         Tiles[new Location(x, y)] = (new Tile(id, color ?? RandomInt(0x00, 0xFF)));
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
-        Engine.SpawnActor(new Location(x, y), new Tile(id, color ?? Elements[id].Color), Elements[id].Cycle,
+        Spawner.SpawnActor(new Location(x, y), new Tile(id, color ?? Elements[id].Color), Elements[id].Cycle,
             State.DefaultActor);
         return ActorIndexAt(x, y);
     }
@@ -340,15 +349,15 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     {
         while (State.BoardCount < index)
         {
-            WorldUnit.PackBoard();
+            WorldManager.PackBoard();
             BoardIndex = State.BoardCount + 1;
-            WorldUnit.ClearBoard();
+            WorldManager.ClearBoard();
         }
 
         if (BoardIndex != index)
         {
-            WorldUnit.PackBoard();
-            WorldUnit.UnpackBoard(index);
+            WorldManager.PackBoard();
+            WorldManager.UnpackBoard(index);
         }
     }
 
@@ -444,11 +453,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     }
 
     protected void ClearBoard() =>
-        WorldUnit.ClearBoard();
+        WorldManager.ClearBoard();
     
     protected void PackBoard() =>
-        WorldUnit.PackBoard();
+        WorldManager.PackBoard();
     
     protected void UnpackBoard(int index) =>
-        WorldUnit.UnpackBoard(index);
+        WorldManager.UnpackBoard(index);
 }

@@ -4,7 +4,7 @@ namespace Roton.Emulation.Core;
 
 public interface IClock : IDisposable
 {
-    event EventHandler? OnTick;
+    event Action? OnTick;
     void Start();
     void Stop();
 }

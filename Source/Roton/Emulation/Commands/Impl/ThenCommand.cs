@@ -5,7 +5,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "THEN")]
 [Context(Context.Super, "THEN")]
-public sealed class ThenCommand : ICommand
+internal sealed class ThenCommand : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {

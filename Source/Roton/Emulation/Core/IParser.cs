@@ -1,6 +1,5 @@
 using System;
 using Roton.Emulation.Data;
-using Roton.Emulation.Items;
 
 namespace Roton.Emulation.Core;
 
@@ -9,92 +8,6 @@ namespace Roton.Emulation.Core;
 /// </summary>
 public interface IParser
 {
-    /// <summary>
-    /// Reads a condition name from the script, then evaluates it.
-    /// </summary>
-    /// <param name="oopContext">
-    /// Execution context.
-    /// </param>
-    /// <param name="instruction">
-    /// Instruction pointer.
-    /// </param>
-    /// <param name="result">
-    /// Result of evaluating the condition.
-    /// </param>
-    /// <returns>
-    /// True if the condition was successfully parsed, false otherwise.
-    /// </returns>
-    bool TryEvalCondition(ref OopContext oopContext, ref Word instruction, out bool result);
-
-    /// <summary>
-    /// Reads a direction name from the script, then converts it to a vector.
-    /// </summary>
-    /// <param name="oopContext">
-    /// Execution context.
-    /// </param>
-    /// <param name="instruction">
-    /// Instruction pointer.
-    /// </param>
-    /// <param name="result">
-    /// A vector that represents the direction that was parsed.
-    /// </param>
-    /// <returns>
-    /// True if the direction was successfully parsed, false otherwise.
-    /// </returns>
-    bool TryEvalDirection(ref OopContext oopContext, ref Word instruction, out Vector result);
-
-    /// <summary>
-    /// Reads an item name from the script.
-    /// </summary>
-    /// <param name="oopContext">
-    ///     Execution context.
-    /// </param>
-    /// <param name="instruction">
-    ///     Instruction pointer.
-    /// </param>
-    /// <param name="result">
-    ///     A reference to the item value.
-    /// </param>
-    /// <returns>
-    /// True if the item was successfully parsed, false otherwise.
-    /// </returns>
-    bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem? result);
-
-    /// <summary>
-    /// Reads an optional color and a mandatory element name from the script.
-    /// </summary>
-    /// <param name="oopContext">
-    /// Execution context.
-    /// </param>
-    /// <param name="instruction">
-    /// Instruction pointer.
-    /// </param>
-    /// <param name="result">
-    /// A tile that contains the element and color that was read. If no valid Kind was read,
-    /// null is returned.
-    /// </param>
-    /// <returns>
-    /// True if the kind was successfully parsed, false otherwise.
-    /// </returns>
-    bool TryEvalKind(ref OopContext oopContext, ref Word instruction, out Tile result);
-
-    /// <summary>
-    /// Reads a target name from the script.
-    /// </summary>
-    /// <param name="index">
-    /// Index of the actor that contains the script.
-    /// </param>
-    /// <param name="context">
-    /// Execution context.
-    /// </param>
-    /// <param name="term">
-    /// A temporary buffer that contains the word read from the script.
-    /// </param>
-    /// <returns>
-    /// True if the target was successfully parsed, false otherwise.
-    /// </returns>
-    bool TryEvalTarget(int index, ref SearchContext context, ReadOnlySpan<char> term);
-
     /// <summary>
     /// Reads the next byte from the script into OopByte.
     /// </summary>

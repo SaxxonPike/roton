@@ -6,7 +6,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class CommandList(
+internal sealed class CommandList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<ICommand>(contextMetadataService, serviceProvider), ICommandList;

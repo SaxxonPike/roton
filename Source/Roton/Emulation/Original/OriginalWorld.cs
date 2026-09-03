@@ -4,7 +4,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
+internal sealed class OriginalWorld(
+    IMemory memory,
+    IKeyList keyList,
+    IFlags flags)
+    : IWorld
 {
     private Word _stones;
 

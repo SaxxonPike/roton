@@ -5,7 +5,7 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "HEALTH")]
 [Context(Context.Super, "HEALTH")]
-public sealed class HealthItem(
+internal sealed class HealthItem(
     IWorld world)
     : IItem
 {

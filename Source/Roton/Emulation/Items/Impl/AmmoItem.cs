@@ -5,7 +5,7 @@ namespace Roton.Emulation.Items.Impl;
 
 [Context(Context.Original, "AMMO")]
 [Context(Context.Super, "AMMO")]
-public sealed class AmmoItem(
+internal sealed class AmmoItem(
     IWorld world)
     : IItem
 {

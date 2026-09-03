@@ -6,7 +6,7 @@ namespace Roton.Emulation.Conditions.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class ConditionList(
+internal sealed class ConditionList(
     IContextMetadataService contextMetadataService,
     IServiceProvider serviceProvider)
     : TypeList<ICondition>(contextMetadataService, serviceProvider), IConditionList;

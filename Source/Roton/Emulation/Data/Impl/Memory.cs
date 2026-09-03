@@ -8,7 +8,7 @@ namespace Roton.Emulation.Data.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 [DebuggerStepThrough]
-public sealed class Memory : IMemory
+internal sealed class Memory : IMemory
 {
     private readonly Memory<byte> _data = new byte[0x10100];
 

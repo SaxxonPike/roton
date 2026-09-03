@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-public sealed class OriginalFacts : Facts
+internal sealed class OriginalFacts : Facts
 {
     public override int AmmoPerPickup => 5;
     public override int HealthPerGem => 1;
@@ -17,4 +17,9 @@ public sealed class OriginalFacts : Facts
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "ZZT Worlds";
     public override string HighScoreExtension => "HI";
+    public override int BaseMemoryUsage => 205791;
+    public override int ScrollHeight => 19;
+    public override int ScrollWidth => 49;
+    public override int ScrollLeft => 5;
+    public override int ScrollTop => 3;
 }

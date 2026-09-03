@@ -10,29 +10,27 @@ namespace Lyon.App.Impl;
 [Context(Context.Startup)]
 public sealed class Launcher(
     IWindow window,
-    IAudioPresenter audioPresenter)
+    IAudioPresenter audioPresenter,
+    IBootstrap bootstrap)
     : ILauncher
 {
-    private IWindow Window => window;
-    private IAudioPresenter AudioPresenter => audioPresenter;
-
     /// <summary>
     /// Handles when the engine exits.
     /// </summary>
     private void OnExited(object? sender, EventArgs e)
     {
         // When the game engine has exited, no need to keep the window open.
-        Window.Close();
+        window.Close();
     }
 
     /// <inheritdoc />
-    public void Launch(IEngine engine)
+    public void Launch()
     {
-        AudioPresenter.Start(engine);
-        engine.Exited += OnExited;
-        engine.Start();
-        Window.Start();
-        engine.Stop();
-        AudioPresenter.Stop();
+        audioPresenter.Start();
+        bootstrap.Exited += OnExited;
+        bootstrap.Start();
+        window.Start();
+        bootstrap.Stop();
+        audioPresenter.Stop();
     }
 }

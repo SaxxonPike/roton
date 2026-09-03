@@ -17,7 +17,7 @@ public abstract class DrumSoundList : FixedList<IDrumSound>, IDrumSoundList
 
     protected override IDrumSound GetItem(int index)
     {
-        return new DrumSound(_memory, _offset + index * 512, index);
+        return new DrumSound(_memory, _offset + index * 512);
     }
 
     private void GenerateSounds()

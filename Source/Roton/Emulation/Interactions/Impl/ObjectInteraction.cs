@@ -6,15 +6,15 @@ namespace Roton.Emulation.Interactions.Impl;
 
 [Context(Context.Original, 0x24)]
 [Context(Context.Super, 0x24)]
-public sealed class ObjectInteraction(
+internal sealed class ObjectInteraction(
     IFacts facts,
-    IActorList actorList,
+    IActorList actors,
     IBroadcaster broadcaster)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var objectIndex = actorList.ActorIndexAt(location);
+        var objectIndex = actors.ActorIndexAt(location);
         broadcaster.BroadcastLabel(-objectIndex, facts.TouchLabel, false);
     }
 }

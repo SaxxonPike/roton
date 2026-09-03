@@ -4,14 +4,11 @@
 
 Some things to know about the solution itself:
 
-### DotSDL
-
-Lyon uses a fork of DotSDL that has been updated to use SDL3.
-
 ### Dependency Injection
 
-Roton is designed for use with a Dependency Injection framework. Lyon uses AutoFac. But because Roton exposes its
-services in a DI-agnostic manner, it shouldn't be difficult to adapt it to a different framework.
+Roton is designed for use with a Dependency Injection framework. Lyon uses Microsoft.Extensions.DependencyInjection. But
+because Roton exposes its services in a DI-agnostic manner, it shouldn't be difficult to adapt it to a different
+framework.
 
 ### Running
 
@@ -39,6 +36,11 @@ the bear enemy will perform.
 
 Cheats are special actions that can be performed by the player to alter the game in some way. One such cheat is
 `AmmoCheat.cs` which grants the player ammo.
+
+### Colors (`IColorList` > `IColor`)
+
+Colors are words that can appear in a script to indicate a color. For example, `RedColor.cs` corresponds to the color
+red when specified either in an OOP script or for messages (e.g., opening a door.)
 
 ### Commands (`ICommandList` > `ICommand`)
 
@@ -132,6 +134,7 @@ contains interfaces.
     - `Emulation`: the core emulation logic
         - `Actions`: see "actions"
         - `Cheats`: see "cheats"
+        - `Colors`: see "colors"
         - `Commands`: see "commands"
         - `Conditions`: see "conditions"
         - `Core`: non-game-specific logic, general units
@@ -151,6 +154,7 @@ contains interfaces.
     - `Roton`
         - `Integration`
             - `Elements`: tests for individual element behavior
+            - `Gameplay`: tests for UI and player interactions
             - `Oop`: tests for ZZT-OOP script behavior
             - `ResourceTests`: tests that load actual world and board files
 

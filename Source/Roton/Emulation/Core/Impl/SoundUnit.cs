@@ -1,16 +1,17 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public sealed class SoundUnit(
+internal sealed class SoundUnit(
     IState state,
     ISpeaker speaker,
     IMusicEncoder musicEncoder)
     : ISoundUnit
 {
-    public void PlaySound(int priority, ISound sound, int? offset = null, int? length = null)
+    public void PlaySound(int priority, ReadOnlySpan<byte> sound)
     {
         if (state.GameOver || state.GameQuiet)
             return;
@@ -25,7 +26,7 @@ public sealed class SoundUnit(
         if (!soundIsMusic)
             state.SoundBuffer.Clear();
 
-        state.SoundBuffer.Enqueue(sound, offset, length);
+        state.SoundBuffer.Enqueue(sound);
         state.SoundPlaying = true;
         state.SoundPriority = priority;
     }
@@ -47,6 +48,53 @@ public sealed class SoundUnit(
     public void PlayErrorSound()
     {
         ClearSound();
-        PlaySound(1, musicEncoder.Encode("s004x114x9"));
+        using var mem = musicEncoder.Encode("s004x114x9");
+        PlaySound(1, mem.Span);
+    }
+
+    public void UpdateSound()
+    {
+        if (!state.SoundPlaying)
+        {
+            state.SoundBuffer.Clear();
+            return;
+        }
+
+        if (state.SoundTicks <= 0)
+        {
+            if (state.SoundBuffer.Count > 0)
+            {
+                var sound = state.SoundBuffer.Dequeue();
+                state.SoundTicks = sound.Duration << 2;
+                switch (sound.Note)
+                {
+                    case >= 0xF0:
+                    {
+                        speaker.PlayDrum(sound.Note - 0xF0);
+                        break;
+                    }
+                    case > 0x00:
+                    {
+                        var actualNote = (sound.Note & 0xF) + (sound.Note >> 4) * 12;
+                        speaker.PlayNote(actualNote);
+                        break;
+                    }
+                    default:
+                    {
+                        speaker.StopNote();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                state.SoundPlaying = false;
+                state.SoundPriority = 0;
+                speaker.StopNote();
+            }
+        }
+
+        if (state.SoundPlaying)
+            state.SoundTicks--;
     }
 }

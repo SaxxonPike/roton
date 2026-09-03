@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data.Impl;
 
-public sealed class Timer : ITimer
+internal sealed class Timer : ITimer
 {
     private readonly IMemory _memory;
     private readonly int _offset;

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
 public abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
 {
-    private IDictionary<int, IElement> Cache { get; } = new Dictionary<int, IElement>();
+    public sealed override int Count { get; } = count;
 
     public virtual int AmmoId => -1;
     public virtual int BearId => -1;
@@ -19,7 +18,6 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
     public virtual int BreakableId => -1;
     public virtual int BulletId => -1;
     public virtual int ClockwiseId => -1;
-    public sealed override int Count { get; } = count;
     public virtual int CounterId => -1;
     public virtual int DoorId => -1;
     public virtual int DragonPupId => -1;
@@ -79,8 +77,11 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
 
     public abstract void Reset();
 
-    protected sealed override void SetItem(int index, IElement value)
-    {
+    public abstract bool IsWater(int id);
+
+    public bool AreAdjacent(int idA, int idB) =>
+        idA == idB || idA == BoardEdgeId || idB == BoardEdgeId;
+
+    protected sealed override void SetItem(int index, IElement value) =>
         throw Exceptions.InvalidSet;
-    }
 }

@@ -4,22 +4,23 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
+/// <summary>
+/// Represents the tick action for the bomb element.
+/// </summary>
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public sealed class BombAction(
-    IEngineAccessor engine,
+internal sealed class BombAction(
     ISounds sounds,
-    IActorList actorList,
+    IActorList actors,
     ISoundUnit soundUnit,
     IBoardUpdater boardUpdater,
-    IRadiusUpdater radiusUpdater)
+    IRadiusUpdater radiusUpdater,
+    IActorManager actorManager)
     : IAction
 {
-    private IEngine Engine => engine.Instance;
-
     public void Act(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         if (actor.P1 <= 0)
             return;
 
@@ -33,7 +34,7 @@ public sealed class BombAction(
                 break;
             case 0:
                 var location = actor.Location;
-                Engine.RemoveActor(index);
+                actorManager.Free(index);
                 radiusUpdater.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:

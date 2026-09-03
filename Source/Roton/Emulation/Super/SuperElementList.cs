@@ -7,7 +7,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperElementList : ElementList
+internal sealed class SuperElementList : ElementList
 {
     private readonly IMemory _memory;
     private readonly Memory<byte> _data;
@@ -21,6 +21,9 @@ public sealed class SuperElementList : ElementList
     }
 
     public override void Reset() => _memory.Write(0x7CAA, _data.Span);
+
+    public override bool IsWater(int id) =>
+        id == LavaId;
 
     public override int AmmoId => 0x05;
     public override int BearId => 0x22;

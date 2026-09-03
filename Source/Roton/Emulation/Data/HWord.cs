@@ -17,7 +17,7 @@ public readonly struct HWord(byte value) : IEquatable<HWord>, IEquatable<int>, I
     public static bool operator ==(HWord left, HWord right) => left.Equals(right);
     public static bool operator !=(HWord left, HWord right) => !left.Equals(right);
 
-    private readonly byte _val = unchecked((byte)value);
+    private readonly byte _val = value;
 
     public bool Equals(HWord other) =>
         _val == other._val;

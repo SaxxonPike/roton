@@ -1,44 +1,46 @@
-using System.Diagnostics;
 using System.Linq;
+using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class FileDialog(IHud hud, IFileSystem fileSystem) : IFileDialog
+internal sealed class FileDialog(
+    IFileSystem fileSystem,
+    IScrollContent scrollContent,
+    IScroll scroll,
+    IState state)
+    : IFileDialog
 {
-    private IHud Hud
-    {
-        [DebuggerStepThrough] get => hud;
-    }
-
-    private IFileSystem FileSystem
-    {
-        [DebuggerStepThrough] get => fileSystem;
-    }
-
-    public string? Open(string title, string extension)
+    public string? Open(string title, string extension, IFileTitles? fileTitles)
     {
         var path = string.Empty;
-        while (true)
-        {
-            var files = FileSystem
-                .GetFileNames(path, extension)
-                .Select(f => f.Substring(0, f.Length - extension.Length - 1))
-                .OrderBy(f => f)
-                .Concat(["Exit"])
-                .ToArray();
 
-            var result = Hud.ShowScroll(false, title, files);
-            if (result.Cancelled)
-                return null;
-                
-            // If the user selects "Exit", which is always at the bottom of the list:
-            if (result.Index >= result.Lines.Count - 1)
-                return null;
+        var fileNames = fileSystem
+            .GetFileNames(path, extension)
+            .Select(f => f.Substring(0, f.Length - extension.Length - 1))
+            .OrderBy(f => f)
+            .Select(f => (Name: f, Special: fileTitles?.GetTitle(f)))
+            .ToList();
 
-            return result.Lines[result.Index];
-        }
+        var titleMap = fileNames
+            .Select((e, i) => (Element: e, Index: i))
+            .ToDictionary(x => x.Index, x => x.Element.Name);
+
+        var files = fileNames
+            .Select(x => x.Special ?? x.Name)
+            .Concat(["Exit"])
+            .ToArray();
+
+        var result = scroll.Show(title, files);
+        if (state.CancelScroll)
+            return null;
+
+        // If the user selects "Exit", which is always at the bottom of the list:
+        if (result.Index >= scrollContent.LineCount - 1)
+            return null;
+
+        return titleMap[result.Index];
     }
 }

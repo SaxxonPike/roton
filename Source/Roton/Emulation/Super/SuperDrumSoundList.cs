@@ -5,4 +5,4 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public sealed class SuperDrumSoundList(IMemory memory) : DrumSoundList(memory, 0xD0B2);
+internal sealed class SuperDrumSoundList(IMemory memory) : DrumSoundList(memory, 0xD0B2);

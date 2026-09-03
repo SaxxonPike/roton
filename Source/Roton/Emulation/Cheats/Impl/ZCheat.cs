@@ -1,16 +1,16 @@
-using System;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
+/// <summary>
+/// Represents the "Z" cheat, which increases the number of stones possessed by the player.
+/// </summary>
 [Context(Context.Super, "Z")]
-public sealed class ZCheat(
+internal sealed class ZCheat(
     IWorld world)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
-    {
+    public void Execute(bool clear) =>
         world.Stones++;
-    }
 }

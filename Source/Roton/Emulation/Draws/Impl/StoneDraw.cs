@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Super, 0x40)]
-public sealed class StoneDraw(
+internal sealed class StoneDraw(
     ITiles tiles,
     IRandomizer randomizer)
     : IDraw

@@ -6,7 +6,7 @@ namespace Roton.Emulation.Directions.Impl;
 
 [Context(Context.Original, "RNDNS")]
 [Context(Context.Super, "RNDNS")]
-public sealed class RndNsDirection(IRandomizer randomizer) : IDirection
+internal sealed class RndNsDirection(IRandomizer randomizer) : IDirection
 {
     public Vector Execute(ref OopContext context, ref Word instruction)
     {

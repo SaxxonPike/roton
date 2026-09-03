@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Composers.Video.Glyphs.Impl;
 
-public sealed class VgaGlyphComposer : IGlyphComposer
+internal sealed class VgaGlyphComposer : IGlyphComposer
 {
     private readonly int[] _data;
     private readonly int _height;
@@ -35,7 +35,7 @@ public sealed class VgaGlyphComposer : IGlyphComposer
                 bits <<= 1;
             }
         }
-        return new Glyph(index, 8, _height, output);
+        return new Glyph(8, _height, output);
     }
 
     public int MaxWidth { get; }

@@ -5,7 +5,7 @@ namespace Roton.Emulation.Draws.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class DefaultDraw : IDraw
+internal sealed class DefaultDraw : IDraw
 {
     public AnsiChar Draw(Location location)
     {

@@ -9,7 +9,7 @@ namespace Roton.Emulation.Data.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class HighScoreListFactory(
+internal sealed class HighScoreListFactory(
     IFacts facts,
     IFileSystem fileSystem,
     IWorld world)

@@ -65,7 +65,7 @@ try
 
     container
         .GetRequiredService<ILauncher>()
-        .Launch(container.GetRequiredService<IEngine>());
+        .Launch();
 }
 catch (Exception e)
 {

@@ -1,17 +1,19 @@
-using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Cheats.Impl;
 
+/// <summary>
+/// Represents the "DARK" cheat, which controls darkness state on the board.
+/// </summary>
 [Context(Context.Original, "DARK")]
-public sealed class DarkCheat(
+internal sealed class DarkCheat(
     IBoard board,
     IHud hud)
     : ICheat
 {
-    public void Execute(ReadOnlySpan<char> name, bool clear)
+    public void Execute(bool clear)
     {
         board.IsDark = !clear;
         hud.RedrawBoard();

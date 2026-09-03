@@ -7,7 +7,7 @@ namespace Roton.Emulation.Commands.Impl;
 
 [Context(Context.Original, "SEND")]
 [Context(Context.Super, "SEND")]
-public sealed class SendCommand(
+internal sealed class SendCommand(
     IParser parser,
     IBroadcaster broadcaster)
     : ICommand

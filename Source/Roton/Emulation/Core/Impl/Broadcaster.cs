@@ -1,18 +1,20 @@
 using System;
 using Roton.Emulation.Data;
+using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Broadcaster(
+internal sealed class Broadcaster(
     ITracer tracer,
-    IActorList actorList,
+    IActorList actors,
     IParser parser,
     IFacts facts,
     IActorLocker actorLocker,
-    IActorNotifier actorNotifier
+    IActorNotifier actorNotifier,
+    ITargetEvaluator targetEvaluator
     ) : IBroadcaster
 {
     public bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock)
@@ -34,15 +36,16 @@ public sealed class Broadcaster(
 
         while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (!actorLocker.IsActorLocked(info.Index) || ignoreLock || sender == info.Index && !ignoreSelfLock)
-            {
-                if (sender == info.Index)
-                    success = true;
+            if (actorLocker.IsActorLocked(info.Index) && !ignoreLock &&
+                (sender != info.Index || ignoreSelfLock)) 
+                continue;
 
-                tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
-                actorList[info.Index].Instruction = info.Offset;
-                actorNotifier.NotifyActorSentLabel(info.Index);
-            }
+            if (sender == info.Index)
+                success = true;
+
+            tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
+            actors[info.Index].Instruction = info.Offset;
+            actorNotifier.NotifyActorSentLabel(info.Index);
         }
 
         return success;
@@ -60,7 +63,7 @@ public sealed class Broadcaster(
         {
             target = label.Slice(0, split);
             label = label.Slice(split + 1);
-            success = parser.TryEvalTarget(sender, ref search, target);
+            success = targetEvaluator.TryEval(sender, ref search, target);
         }
         else if (search.Index < sender)
         {
@@ -83,7 +86,7 @@ public sealed class Broadcaster(
                 search.Offset = parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {
-                    success = parser.TryEvalTarget(sender, ref search, target);
+                    success = targetEvaluator.TryEval(sender, ref search, target);
                     continue;
                 }
             }

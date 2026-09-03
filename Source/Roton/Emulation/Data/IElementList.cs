@@ -29,7 +29,7 @@ public interface IElementList : IEnumerable<IElement>
     int GemId { get; }
     int HeadId { get; }
     int InvisibleId { get; }
-    IElement this[int index] { get; }
+    IElement this[int id] { get; }
     int KeyId { get; }
     int LavaId { get; }
     int LineId { get; }
@@ -68,4 +68,6 @@ public interface IElementList : IEnumerable<IElement>
 
     int IndexOf(ReadOnlySpan<char> name);
     void Reset();
+    bool IsWater(int id);
+    bool AreAdjacent(int idA, int idB);
 }

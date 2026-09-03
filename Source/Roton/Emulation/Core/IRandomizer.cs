@@ -2,5 +2,8 @@
 
 public interface IRandomizer
 {
+    void Initialize();
     int GetNext(int exclusiveUpperBound);
+    int Seed { get; set; }
+    int State { get; set; }
 }

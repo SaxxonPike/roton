@@ -25,4 +25,4 @@ public readonly struct RotonService(Type service, Type implementation)
 
     public override string ToString() => 
         $"{Service} <- {Implementation}";
-};
+}

@@ -1,10 +1,6 @@
 using System;
-using Roton.Emulation.Colors;
-using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
-using Roton.Emulation.Directions;
 using Roton.Emulation.Infrastructure;
-using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
@@ -12,30 +8,23 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class Parser(
-    IActorList actorList,
+internal sealed class Parser(
+    IActorList actors,
     IState state,
-    IConditionList conditionList,
-    IDirectionList directionList,
-    IItemList itemList,
-    IColorList colorList,
-    IFlags flags,
-    IElementList elementList,
-    ITargetList targetList)
+    ITargetList targets)
     : IParser
 {
     private ReadOnlySpan<char> GetActorCode(int index)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var codeLength = Math.Min(Math.Max(0, (int)actor.Length), actor.Code.Length);
         return actor.Code.Slice(0, codeLength);
     }
 
     public int Search(int index, ReadOnlySpan<char> term)
     {
-        var result = -1;
         if (term.IsEmpty)
-            return result;
+            return -1;
 
         var termLength = term.Length;
         var code = GetActorCode(index);
@@ -74,7 +63,7 @@ public sealed class Parser(
 
     public char ReadByte(int index, ref Word instruction)
     {
-        var actor = actorList[index];
+        var actor = actors[index];
         var value = '\0';
 
         if (instruction < 0 || instruction >= actor.Length)
@@ -194,73 +183,10 @@ public sealed class Parser(
         return result;
     }
 
-    public bool TryEvalCondition(ref OopContext oopContext, ref Word instruction, out bool result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-
-        if (name.IsEmpty)
-        {
-            result = false;
-            return false;
-        }
-
-        var condition = conditionList.Get(name);
-        result = condition?.Execute(ref oopContext, ref instruction) ?? flags.Contains(name);
-        return true;
-    }
-
-    public bool TryEvalDirection(ref OopContext oopContext, ref Word instruction, out Vector result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        var direction = directionList.Get(name);
-
-        if (direction?.Execute(ref oopContext, ref instruction) is not { } temp)
-        {
-            result = default;
-            return false;
-        }
-
-        result = temp;
-        return true;
-    }
-
-    public bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem? result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        result = itemList.Get(name);
-        return result != null;
-    }
-
-    public bool TryEvalKind(ref OopContext oopContext, ref Word instruction, out Tile result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var word = ReadWord(oopContext.Index, ref instruction, buffer);
-        var success = false;
-        result = new Tile(0, 0);
-
-        if (colorList.Get(word) is { Value: > 0 } color)
-        {
-            result.Color = color.Value;
-            word = ReadWord(oopContext.Index, ref instruction, buffer);
-        }
-
-        var elementId = elementList.IndexOf(word);
-        if (elementId >= 0)
-        {
-            success = true;
-            result.Id = elementId;
-        }
-
-        return success;
-    }
-
     public bool TryEvalTarget(int index, ref SearchContext context, ReadOnlySpan<char> term)
     {
         context.Index++;
-        var target = targetList.Get(term) ?? targetList.Get(string.Empty);
+        var target = targets.Get(term) ?? targets.Get(string.Empty);
         return target?.Execute(index, ref context, term) ?? false;
     }
 }
