@@ -16,19 +16,18 @@ internal sealed class OriginalObjectMover(
         if (vector.IsZero())
         {
             context.Repeat = false;
+            return;
         }
-        else
-        {
-            var target = context.Actor.Location + vector;
 
-            if (!tiles.ElementAt(target).IsFloor)
-                pusher.Push(target, vector);
+        var target = context.Actor.Location + vector;
 
-            if (!tiles.ElementAt(target).IsFloor)
-                return;
+        if (!tiles.ElementAt(target).IsFloor)
+            pusher.Push(target, vector);
 
-            mover.Move(context.Index, target);
-            context.Repeat = false;
-        }
+        if (!tiles.ElementAt(target).IsFloor)
+            return;
+
+        mover.Move(context.Index, target);
+        context.Repeat = false;
     }
 }

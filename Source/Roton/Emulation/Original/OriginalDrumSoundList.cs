@@ -5,4 +5,5 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalDrumSoundList(IMemory memory) : DrumSoundList(memory, 0x7FA4);
+internal sealed class OriginalDrumSoundList(IMemory memory)
+    : DrumSoundList(memory, 0x7FA4);

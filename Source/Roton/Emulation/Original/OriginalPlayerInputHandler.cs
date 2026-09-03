@@ -24,32 +24,50 @@ internal sealed class OriginalPlayerInputHandler(
         switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.P:
+            {
                 return true;
+            }
             case EngineKeyCode.W:
+            {
                 worldManager.OpenWorld();
                 break;
+            }
             case EngineKeyCode.A:
+            {
                 dialogs.ShowAbout();
                 break;
+            }
             case EngineKeyCode.E:
+            {
                 break;
+            }
             case EngineKeyCode.S:
+            {
                 hud.CreateStatusText();
                 state.GameSpeed = hud.SelectParameter(
                     true, 0x42, 0x15, "Game speed:;FS", state.GameSpeed, null);
                 break;
+            }
             case EngineKeyCode.R:
+            {
                 return worldManager.RestoreWorld();
+            }
             case EngineKeyCode.H:
+            {
                 dialogs.ShowHighScores();
                 break;
+            }
             case EngineKeyCode.QuestionMark:
+            {
                 hud.EnterCheat();
                 break;
+            }
             case EngineKeyCode.Escape:
             case EngineKeyCode.Q:
+            {
                 state.QuitEngine = hud.QuitEngineConfirmation();
                 break;
+            }
         }
 
         return false;
@@ -60,6 +78,7 @@ internal sealed class OriginalPlayerInputHandler(
         switch (state.KeyPressed.ToUpperCase())
         {
             case EngineKeyCode.T:
+            {
                 if (world.TorchCycles <= 0)
                 {
                     if (world.Torches <= 0)
@@ -88,8 +107,11 @@ internal sealed class OriginalPlayerInputHandler(
                 }
 
                 break;
+            }
             case EngineKeyCode.F:
+            {
                 break;
+            }
         }
     }
 }

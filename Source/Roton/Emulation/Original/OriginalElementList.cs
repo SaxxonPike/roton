@@ -20,7 +20,8 @@ internal sealed class OriginalElementList : ElementList
         Reset();
     }
 
-    public override void Reset() => _memory.Write(0x4AD4, _data.Span);
+    public override void Reset() =>
+        _memory.Write(0x4AD4, _data.Span);
 
     public override bool IsWater(int id) =>
         id == WaterId;
@@ -72,6 +73,6 @@ internal sealed class OriginalElementList : ElementList
     public override int TransporterId => 0x1E;
     public override int WaterId => 0x13;
 
-    protected override IElement InitItem(int index)
-        => new OriginalElement(_memory, index);
+    protected override IElement InitItem(int index) =>
+        new OriginalElement(_memory, index);
 }

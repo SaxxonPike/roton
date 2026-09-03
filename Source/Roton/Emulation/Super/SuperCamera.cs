@@ -17,8 +17,6 @@ internal sealed class SuperCamera(
     private const int WindowHeight = 20;
     private const int WindowLeft = 14;
     private const int WindowTop = 2;
-    private const int WindowRight = WindowLeft + WindowWidth - 1;
-    private const int WindowBottom = WindowTop + WindowHeight - 1;
 
     private Location OldPlayerLocation { get; set; } = new(short.MinValue, short.MinValue);
 

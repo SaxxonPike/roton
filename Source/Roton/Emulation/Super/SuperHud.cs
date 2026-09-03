@@ -57,7 +57,7 @@ internal sealed class SuperHud(
         return result;
     }
 
-    public void CreateStatusBar()
+    private void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -141,7 +141,7 @@ internal sealed class SuperHud(
         }
     }
 
-    public void DrawChar(int x, int y, AnsiChar ac) =>
+    private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
     public void DrawMessage(IMessage message, int color)
@@ -167,11 +167,8 @@ internal sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
+    private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
-
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
-        terminal.Write(x, y, text0, text1, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
         int color) =>

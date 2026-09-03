@@ -12,17 +12,23 @@ internal sealed class OriginalWorld(
 {
     private Word _stones;
 
-    public ref Word Ammo => ref memory.GetRef<Word>(0x481E);
+    public ref Word Ammo =>
+        ref memory.GetRef<Word>(0x481E);
 
-    public ref Word BoardIndex => ref memory.GetRef<Word>(0x482B);
+    public ref Word BoardIndex =>
+        ref memory.GetRef<Word>(0x482B);
 
-    public ref Word EnergyCycles => ref memory.GetRef<Word>(0x4831);
+    public ref Word EnergyCycles =>
+        ref memory.GetRef<Word>(0x4831);
 
-    public ref Word Gems => ref memory.GetRef<Word>(0x4820);
+    public ref Word Gems =>
+        ref memory.GetRef<Word>(0x4820);
 
-    public ref Word Health => ref memory.GetRef<Word>(0x4829);
+    public ref Word Health =>
+        ref memory.GetRef<Word>(0x4829);
 
-    public ref Bool IsLocked => ref memory.GetRef<Bool>(0x4922);
+    public ref Bool IsLocked =>
+        ref memory.GetRef<Bool>(0x4922);
 
     public IFlags Flags { get; } = flags;
 
@@ -34,17 +40,24 @@ internal sealed class OriginalWorld(
         set => memory.WriteString(0x4837, value);
     }
 
-    public ref Word Score => ref memory.GetRef<Word>(0x4835);
+    public ref Word Score =>
+        ref memory.GetRef<Word>(0x4835);
 
-    public ref Word Stones => ref _stones;
+    public ref Word Stones =>
+        ref _stones;
 
-    public ref Word TimePassed => ref memory.GetRef<Word>(0x491E);
+    public ref Word TimePassed =>
+        ref memory.GetRef<Word>(0x491E);
 
-    public ref Word TorchCycles => ref memory.GetRef<Word>(0x482F);
+    public ref Word TorchCycles =>
+        ref memory.GetRef<Word>(0x482F);
 
-    public ref Word Torches => ref memory.GetRef<Word>(0x482D);
+    public ref Word Torches =>
+        ref memory.GetRef<Word>(0x482D);
 
-    public int WorldType => -1;
+    public int WorldType =>
+        -1;
 
-    public override string ToString() => Name;
+    public override string ToString() =>
+        Name;
 }

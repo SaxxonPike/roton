@@ -37,19 +37,26 @@ internal sealed class SuperState : IState
 
     private readonly IMemory _memory;
 
-    public ref Bool AboutShown => ref _aboutShown;
+    public ref Bool AboutShown => 
+        ref _aboutShown;
 
-    public ref Word ActIndex => ref _memory.GetRef<Word>(0xB95A);
+    public ref Word ActIndex => 
+        ref _memory.GetRef<Word>(0xB95A);
 
-    public ref Word ActorCount => ref _memory.GetRef<Word>(0x6AB3);
+    public ref Word ActorCount => 
+        ref _memory.GetRef<Word>(0x6AB3);
 
-    public ref Word BoardCount => ref _memory.GetRef<Word>(0x7784);
+    public ref Word BoardCount => 
+        ref _memory.GetRef<Word>(0x7784);
 
-    public ref Tile BorderTile => ref _borderTile;
+    public ref Tile BorderTile => 
+        ref _borderTile;
 
-    public ref Bool BreakGameLoop => ref _memory.GetRef<Bool>(0x7C9E);
+    public ref Bool BreakGameLoop => 
+        ref _memory.GetRef<Bool>(0x7C9E);
 
-    public ref Bool CancelScroll => ref _cancelScroll;
+    public ref Bool CancelScroll => 
+        ref _cancelScroll;
 
     public IActor DefaultActor { get; }
 
@@ -71,33 +78,47 @@ internal sealed class SuperState : IState
         set => _memory.WriteString(0x2B70, value);
     }
 
-    public ref Tile EdgeTile => ref _memory.GetRef<Tile>(0x2260);
+    public ref Tile EdgeTile => 
+        ref _memory.GetRef<Tile>(0x2260);
 
-    public ref Bool EditorMode => ref _memory.GetRef<Bool>(0xB960);
+    public ref Bool EditorMode => 
+        ref _memory.GetRef<Bool>(0xB960);
 
-    public ref Word ForestIndex => ref _memory.GetRef<Word>(0x2334);
+    public ref Word ForestIndex => 
+        ref _memory.GetRef<Word>(0x2334);
 
-    public ref Word GameCycle => ref _memory.GetRef<Word>(0xB958);
+    public ref Word GameCycle => 
+        ref _memory.GetRef<Word>(0xB958);
 
-    public ref Bool GameOver => ref _memory.GetRef<Bool>(0xCD9B);
+    public ref Bool GameOver => 
+        ref _memory.GetRef<Bool>(0xCD9B);
 
-    public ref Bool GamePaused => ref _memory.GetRef<Bool>(0xB95C);
+    public ref Bool GamePaused => 
+        ref _memory.GetRef<Bool>(0xB95C);
 
-    public ref Bool GameQuiet => ref _memory.GetRef<Bool>(0xCD9A);
+    public ref Bool GameQuiet => 
+        ref _memory.GetRef<Bool>(0xCD9A);
 
-    public ref HWord GameSpeed => ref _memory.GetRef<HWord>(0x7CA4);
+    public ref HWord GameSpeed => 
+        ref _memory.GetRef<HWord>(0x7CA4);
 
-    public ref Word GameWaitTime => ref _memory.GetRef<Word>(0xB956);
+    public ref Word GameWaitTime => 
+        ref _memory.GetRef<Word>(0xB956);
 
-    public ref Bool Init => ref _init;
+    public ref Bool Init => 
+        ref _init;
 
-    public ref EngineKeyCode KeyPressed => ref _memory.GetRef<EngineKeyCode>(0xCC76);
+    public ref EngineKeyCode KeyPressed => 
+        ref _memory.GetRef<EngineKeyCode>(0xCC76);
 
-    public ref Bool KeyShift => ref _memory.GetRef<Bool>(0xCC72);
+    public ref Bool KeyShift => 
+        ref _memory.GetRef<Bool>(0xCC72);
 
-    public ref Vector KeyVector => ref _memory.GetRef<Vector>(0xCC6E);
+    public ref Vector KeyVector => 
+        ref _memory.GetRef<Vector>(0xCC6E);
 
-    public ref Vector KeyLastVector => ref _memory.GetRef<Vector>(0xCC8A);
+    public ref Vector KeyLastVector => 
+        ref _memory.GetRef<Vector>(0xCC8A);
 
     public IRefList<PChar> LineChars { get; }
 
@@ -117,25 +138,33 @@ internal sealed class SuperState : IState
         set => _memory.WriteString(0x7C60, value);
     }
 
-    public ref PChar OopByte => ref _memory.GetRef<PChar>(0xB962);
+    public ref PChar OopByte => 
+        ref _memory.GetRef<PChar>(0xB962);
 
-    public ref Word OopNumber => ref _memory.GetRef<Word>(0xB97A);
+    public ref Word OopNumber => 
+        ref _memory.GetRef<Word>(0xB97A);
 
-    public ref Word PlayerElement => ref _memory.GetRef<Word>(0x7CA0);
+    public ref Word PlayerElement => 
+        ref _memory.GetRef<Word>(0x7CA0);
 
-    public ref Bool QuitEngine => ref _memory.GetRef<Bool>(0x7C9D);
+    public ref Bool QuitEngine => 
+        ref _memory.GetRef<Bool>(0x7C9D);
 
     public ISoundBufferList SoundBuffer { get; }
 
-    public ref Bool SoundPlaying => ref _memory.GetRef<Bool>(0xD0A8);
+    public ref Bool SoundPlaying => 
+        ref _memory.GetRef<Bool>(0xD0A8);
 
-    public ref Word SoundPriority => ref _memory.GetRef<Word>(0xCD9C);
+    public ref Word SoundPriority => 
+        ref _memory.GetRef<Word>(0xCD9C);
 
-    public ref HWord SoundTicks => ref _memory.GetRef<HWord>(0xCF9D);
+    public ref HWord SoundTicks => 
+        ref _memory.GetRef<HWord>(0xCF9D);
 
     public IRefList<PChar> StarChars { get; }
 
-    public ref Word StartBoard => ref _memory.GetRef<Word>(0x7CA2);
+    public ref Word StartBoard => 
+        ref _memory.GetRef<Word>(0x7CA2);
 
     public IRefList<PChar> TransporterHChars { get; }
 
@@ -153,7 +182,8 @@ internal sealed class SuperState : IState
         set => _memory.WriteString(0x2AB6, value);
     }
 
-    public ref Bool WorldLoaded => ref _memory.GetRef<Bool>(0xB97C);
+    public ref Bool WorldLoaded => 
+        ref _memory.GetRef<Bool>(0xB97C);
 
     public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
     {
