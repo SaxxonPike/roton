@@ -49,8 +49,8 @@ public abstract class GameSerializer(
         writer.Write([.. memory.Read(BoardNameOffset, BoardNameLength)]);
         PackTiles(tiles, writer);
         writer.Write([.. memory.Read(BoardDataOffset, BoardDataLength)]);
-        var actorCount = memory.Read16(ActorDataCountOffset);
-        writer.Write((short)actorCount);
+        short actorCount = memory.GetRef<Word>(ActorDataCountOffset);
+        writer.Write(actorCount);
         PackActors(writer, actorCount);
         writer.Flush();
         return mem.ToArray();

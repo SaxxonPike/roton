@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Roton.Emulation.Data;
 
@@ -40,39 +39,30 @@ internal static class Utility
         /// <summary>
         /// Return the absolute difference between this value and another specified value.
         /// </summary>
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int AbsDiff(int b) =>
             Math.Abs(a - b);
 
         /// <summary>
         /// Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
         /// </summary>
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Polarity() =>
             Math.Sign(a);
 
         /// <summary>
         /// Return the squared result of an integer.
         /// </summary>
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Square() =>
             a * a;
 
         /// <summary>
         /// Convert an integer to a character using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char ToChar() => 
             Cp437.ByteToChar(unchecked((byte)a));
 
         /// <summary>
         /// Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
-        [DebuggerStepThrough]
         private int ToUpperCase() =>
             a switch
             {
@@ -84,8 +74,6 @@ internal static class Utility
     /// <summary>
     /// Convert a byte array to a string using code page 437.
     /// </summary>
-    [DebuggerStepThrough]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToStringValue(this byte[] value)
     {
 #if NET10_0_OR_GREATER
@@ -100,24 +88,18 @@ internal static class Utility
     /// <summary>
     /// Get the uppercase representation of an input key.
     /// </summary>
-    [DebuggerStepThrough]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static EngineKeyCode ToUpperCase(this EngineKeyCode value) =>
         (EngineKeyCode)((int)value).ToUpperCase();
 
     /// <summary>
     /// Get the uppercase representation of an ASCII char stored as a byte.
     /// </summary>
-    [DebuggerStepThrough]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToUpperCase(this byte value) =>
         ((int)value).ToUpperCase();
 
     /// <summary>
     /// Get the uppercase representation of an ASCII char stored as an integer.
     /// </summary>
-    [DebuggerStepThrough]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToUpperCase(this char input) =>
         input switch
         {
@@ -130,7 +112,6 @@ internal static class Utility
         /// <summary>
         /// Convert a string to a byte array using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
         public byte[] ToBytes()
         {
             if (string.IsNullOrEmpty(a))
@@ -144,14 +125,12 @@ internal static class Utility
         /// <summary>
         /// Convert a string to a byte array using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
         public int ToBytes(Span<byte> destination) => 
             string.IsNullOrEmpty(a) ? 0 : Cp437.CharsToBytes(a, destination);
 
         /// <summary>
         /// Convert a byte array to a string using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
         public string? UpCased()
         {
             if (a == null)
@@ -177,7 +156,6 @@ internal static class Utility
         /// <summary>
         /// Convert a string to a byte array using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
         public int ToBytes(Span<byte> destination) => 
             a.Length == 0 ? 0 : Cp437.CharsToBytes(a, destination);
     }
@@ -187,7 +165,6 @@ internal static class Utility
         /// <summary>
         /// Convert a string to a byte array using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
         public string ToStringValue()
         {
             if (a.Length == 0)
@@ -205,7 +182,6 @@ internal static class Utility
         /// <summary>
         /// Compares source string to another string, with the source UpperCased, and only A-Z.
         /// </summary>
-        [DebuggerStepThrough]
         public bool CaseInsensitiveCharacterEqual(ReadOnlySpan<char> b)
         {
             var i = 0;
@@ -240,7 +216,6 @@ internal static class Utility
         /// <summary>
         /// Get the uppercase representation of an ASCII char stored as an integer.
         /// </summary>
-        [DebuggerStepThrough]
         public int ToUpperCase() =>
             (int)a switch
             {
@@ -251,8 +226,6 @@ internal static class Utility
         /// <summary>
         /// Convert an integer to a character using code page 437.
         /// </summary>
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char ToChar() => 
             Cp437.ByteToChar(a);
     }

@@ -32,7 +32,6 @@ public readonly struct Word(short value) : IEquatable<Word>, IEquatable<int>, IE
 
     private int Value
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             if (BitConverter.IsLittleEndian)

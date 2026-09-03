@@ -11,10 +11,8 @@ internal sealed class DrumSound : FixedList<int>, IDrumSound
         _offset = offset;
     }
 
-    public override int Count => _memory.Read16(_offset);
+    public override int Count => _memory.GetRef<Word>(_offset);
 
-    protected override int GetItem(int index)
-    {
-        return _memory.Read16(_offset + ((1 + index) << 1));
-    }
+    protected override int GetItem(int index) => 
+        _memory.GetRef<Word>(_offset + ((1 + index) << 1));
 }

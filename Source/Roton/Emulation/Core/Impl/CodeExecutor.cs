@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Directions;
 using Roton.Infrastructure;
@@ -30,6 +31,9 @@ internal sealed class CodeExecutor(
             Name = name,
             PreviousInstruction = instruction
         };
+        
+        ref var oopByte = ref state.OopByte;
+        var code = actors.GetActorCode(index);
 
         while (true)
         {
@@ -40,13 +44,13 @@ internal sealed class CodeExecutor(
 
             context.NextLine = true;
             context.PreviousInstruction = instruction;
-            context.Command = ReadActorCodeByte(index, ref instruction);
+            context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
 
             while (context.Command == ':')
             {
                 parser.DiscardLine(index, ref instruction);
                 tracer?.TraceOop(ref context, ref instruction);
-                context.Command = ReadActorCodeByte(index, ref instruction);
+                context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
             }
 
             switch (context.Command)
@@ -68,13 +72,14 @@ internal sealed class CodeExecutor(
 
                     objectMover.ExecuteDirection(ref context, vector);
 
-                    if (ReadActorCodeByte(index, ref instruction) != '\r')
+                    if (ReadActorCodeByte(ref context, ref instruction, ref oopByte, code) != '\r')
                         instruction--;
                     context.Moved = true;
 
                     break;
                 case '#':
                     interpreter.Execute(ref context, ref instruction);
+                    code = actors.GetActorCode(index);
                     break;
                 case '\r':
                     if (context.HasMessage)
@@ -116,19 +121,19 @@ internal sealed class CodeExecutor(
             context.NextLine = broadcaster.BroadcastLabel(context.Index, result.Label, false);
     }
 
-    private char ReadActorCodeByte(int index, ref Word instruction)
+    private static char ReadActorCodeByte(ref OopContext context, ref Word instruction, ref PChar oopByte,
+        ReadOnlySpan<char> code)
     {
-        var actor = actors[index];
         var value = (char)0;
 
-        if (instruction < 0 || instruction >= actor.Length)
+        if (instruction < 0 || instruction >= context.Actor.Length)
         {
-            state.OopByte = default;
+            oopByte = default;
         }
         else
         {
-            value = actor.Code[instruction];
-            state.OopByte = value;
+            value = code[instruction];
+            oopByte = value;
             instruction++;
         }
 
