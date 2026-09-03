@@ -13,8 +13,6 @@ internal sealed class AmmoCheat(
     IWorld world)
     : ICheat
 {
-    private IFacts Facts => facts;
-
     public void Execute(bool clear) => 
-        world.Ammo += Facts.AmmoPerPickup;
+        world.Ammo += facts.AmmoPerPickup;
 }
