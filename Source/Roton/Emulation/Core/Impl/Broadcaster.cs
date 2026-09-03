@@ -45,7 +45,7 @@ internal sealed class Broadcaster(
 
             tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
             actors[info.Index].Instruction = info.Offset;
-            actorNotifier.NotifyActorSentLabel(info.Index);
+            actorNotifier.NotifyLabelTaken(info.Index);
         }
 
         return success;

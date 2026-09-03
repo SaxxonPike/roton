@@ -44,7 +44,10 @@ public abstract class Facts : IFacts
     public string DefaultWorldTitle => string.Empty;
     public AnsiChar DarknessTile => new(0xB0, 0x07);
     public AnsiChar EmptyTile => new(0x20, 0x0F);
-    public int TorchRadius => 50;
+    public abstract int TorchRadius { get; }
+    public abstract int DistanceMultY { get; }
+    public abstract int RadiusBoundX { get; }
+    public abstract int RadiusBoundY { get; }
     public string RestartLabel => "RESTART";
     public AnsiChar FadeTile => new(0xDB, 0x05);
     public int PlayerCharacter => 0x02;

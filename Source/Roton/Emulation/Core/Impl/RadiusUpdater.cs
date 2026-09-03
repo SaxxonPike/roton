@@ -17,16 +17,17 @@ internal sealed class RadiusUpdater(
     IDestroyer destroyer
 ) : IRadiusUpdater
 {
-    private static int Distance(Location a, Location b) =>
-        (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
+    private int Distance(Location a, Location b) =>
+        (a.Y - b.Y).Square() * facts.DistanceMultY + (a.X - b.X).Square();
 
     public void UpdateRadius(Location location, RadiusMode mode)
     {
         var source = location;
-        var left = source.X - 9;
-        var right = source.X + 9;
-        var top = source.Y - 6;
-        var bottom = source.Y + 6;
+        var left = source.X - facts.RadiusBoundX;
+        var right = source.X + facts.RadiusBoundX;
+        var top = source.Y - facts.RadiusBoundY;
+        var bottom = source.Y + facts.RadiusBoundY;
+
         for (var x = left; x <= right; x++)
         for (var y = top; y <= bottom; y++)
             if (x >= 1 && x <= tiles.Width && y >= 1 && y <= tiles.Height)

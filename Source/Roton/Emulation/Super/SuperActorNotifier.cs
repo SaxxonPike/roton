@@ -9,7 +9,7 @@ internal sealed class SuperActorNotifier(
     IActorList actors)
     : IActorNotifier
 {
-    public void NotifyActorSentLabel(int index)
+    public void NotifyLabelTaken(int index)
     {
         // When an object receives a label, the current
         // in-progress movement counter is reset.
