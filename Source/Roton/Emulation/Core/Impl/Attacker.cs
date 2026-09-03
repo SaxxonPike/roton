@@ -30,7 +30,8 @@ internal sealed class Attacker(
             damager.Harm(index);
         }
 
-        if (index > 0 && index <= state.ActIndex) state.ActIndex--;
+        if (index > 0 && index <= state.ActIndex) 
+            state.ActIndex--;
 
         if (tiles[location].Id == elements.PlayerId && world.EnergyCycles > 0)
         {
