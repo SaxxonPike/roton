@@ -1,3 +1,4 @@
+using System;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Emulation.Interactions;
@@ -17,13 +18,14 @@ internal sealed class Mover(
     IInteractionList interactions,
     IFacts facts,
     IPlayerUpdater playerUpdater,
-    ICamera camera)
+    ICamera camera,
+    IWorld world)
     : IMover
 {
     private ITiles _tiles = tiles;
 
-    private static int Distance(Location a, Location b) =>
-        (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
+    private int Distance(Location a, Location b) =>
+        (a.Y - b.Y).Square() * facts.DistanceMultY + (a.X - b.X).Square();
 
     public void Move(int index, Location target)
     {
@@ -51,25 +53,30 @@ internal sealed class Mover(
 
         if (index == 0)
         {
-            if (board.IsDark)
+            if (board.IsDark && world.TorchCycles > 0)
             {
                 var squareDistanceX = (target.X - sourceLocation.X).Square();
                 var squareDistanceY = (target.Y - sourceLocation.Y).Square();
+
                 if (squareDistanceX + squareDistanceY == 1)
                 {
-                    for (var x = target.X - facts.TorchDrawBoxVerticalSize;
-                         x <= target.X + facts.TorchDrawBoxVerticalSize;
-                         x++)
-                    for (var y = target.Y - facts.TorchDrawBoxHorizontalSize;
-                         y <= target.Y + facts.TorchDrawBoxHorizontalSize;
-                         y++)
+                    // If the player is only moving one tile and entering a board that is unlit but has
+                    // torch cycles active, only update tiles that have either gained or lost visibility.
+
+                    var radX = facts.RadiusBoundX + 2;
+                    var radY = facts.RadiusBoundY + 2;
+                    var minX = Math.Max(target.X - radX, 1);
+                    var maxX = Math.Min(target.X + radX, _tiles.Width);
+                    var minY = Math.Max(target.Y - radY, 1);
+                    var maxY = Math.Min(target.Y + radY, _tiles.Height);
+
+                    for (var x = minX; x <= maxX; x++)
+                    for (var y = minY; y <= maxY; y++)
                     {
                         var glowLocation = new Location(x, y);
-                        if (glowLocation.X >= 1 && glowLocation.X <= _tiles.Width && glowLocation.Y >= 1 &&
-                            glowLocation.Y <= _tiles.Height)
-                            if ((Distance(sourceLocation, glowLocation) < facts.TorchRadius) ^
-                                (Distance(target, glowLocation) < facts.TorchRadius))
-                                boardUpdater.UpdateBoard(glowLocation);
+                        if ((Distance(sourceLocation, glowLocation) < facts.TorchRadius) ^
+                            (Distance(target, glowLocation) < facts.TorchRadius))
+                            boardUpdater.UpdateBoard(glowLocation);
                     }
                 }
             }

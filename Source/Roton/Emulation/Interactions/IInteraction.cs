@@ -19,5 +19,8 @@ public interface IInteraction
     /// <param name="vector">
     /// Interaction vector, which may be modified.
     /// </param>
+    /// <remarks>
+    /// RoZ: BoardPassageTeleport
+    /// </remarks>
     void Interact(Location location, int index, ref Vector vector);
 }

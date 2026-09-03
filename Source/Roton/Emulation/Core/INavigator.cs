@@ -4,8 +4,18 @@ namespace Roton.Emulation.Core;
 
 public interface INavigator
 {
+    /// <remarks>
+    /// RoZ: CalcDirectionRnd
+    /// </remarks>
     Vector Rnd();
-    Vector RndP(Vector vector);
-    Vector Seek(Location location);
 
+    /// <remarks>
+    /// RoZ: CalcDirectionRndP
+    /// </remarks>
+    Vector RndP(Vector vector);
+
+    /// <remarks>
+    /// RoZ: CalcDirectionSeek
+    /// </remarks>
+    Vector Seek(Location location);
 }

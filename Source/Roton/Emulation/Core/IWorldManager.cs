@@ -7,8 +7,17 @@ public interface IWorldManager
     void ClearWorld();
     void OpenWorld();
     bool RestoreWorld();
+
+    /// <remarks>
+    /// RoZ: BoardClose
+    /// </remarks>
     void PackBoard();
+
+    /// <remarks>
+    /// RoZ: BoardOpen
+    /// </remarks>
     void UnpackBoard(int index);
+
     void SetBoard(int boardIndex);
     void ClearBoard();
 }
