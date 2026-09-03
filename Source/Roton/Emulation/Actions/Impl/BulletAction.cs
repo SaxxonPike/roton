@@ -22,7 +22,8 @@ internal sealed class BulletAction(
     IBroadcaster broadcaster,
     IMover mover,
     IAttacker attacker,
-    IActorManager actorManager)
+    IActorManager actorManager,
+    IBoardUpdater boardUpdater)
     : IAction
 {
     public void Act(int index)
@@ -57,6 +58,7 @@ internal sealed class BulletAction(
                 }
 
                 attacker.Attack(index, target);
+                boardUpdater.UpdateBoard(target);
                 break;
             }
 
