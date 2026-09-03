@@ -1,11 +1,12 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class CodeExecutor(
+internal sealed class CodeExecutor(
     IActorList actors,
     ITracer tracer,
     IParser parser,
@@ -16,7 +17,8 @@ public class CodeExecutor(
     IMessageHandler messageHandler,
     IBroadcaster broadcaster,
     IErrorRaiser errorRaiser,
-    IActorRemover actorRemover)
+    IActorRemover actorRemover,
+    IDirectionEvaluator directionEvaluator)
     : ICodeExecutor
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
@@ -57,7 +59,7 @@ public class CodeExecutor(
                     if (context.Command == '/')
                         context.Repeat = true;
 
-                    if (!parser.TryEvalDirection(ref context, ref instruction, out var vector))
+                    if (!directionEvaluator.TryEval(ref context, ref instruction, out var vector))
                     {
                         errorRaiser.RaiseError(ref context, "Bad direction");
                         break;

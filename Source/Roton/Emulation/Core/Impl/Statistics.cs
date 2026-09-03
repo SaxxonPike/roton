@@ -6,7 +6,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public class Statistics(
+internal sealed class Statistics(
     IFacts facts,
     ICodeHeap heap,
     IBoardList boards)

@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-public class Delayer(
+internal sealed class Delayer(
     IScheduler scheduler)
     : IDelayer
 {

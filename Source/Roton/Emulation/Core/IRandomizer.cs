@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Data;
-
-namespace Roton.Emulation.Core;
+﻿namespace Roton.Emulation.Core;
 
 public interface IRandomizer
 {

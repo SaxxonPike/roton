@@ -1,5 +1,6 @@
 using System;
 using Roton.Emulation.Data;
+using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -12,7 +13,8 @@ internal sealed class Broadcaster(
     IParser parser,
     IFacts facts,
     IActorLocker actorLocker,
-    IActorNotifier actorNotifier
+    IActorNotifier actorNotifier,
+    ITargetEvaluator targetEvaluator
     ) : IBroadcaster
 {
     public bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock)
@@ -61,7 +63,7 @@ internal sealed class Broadcaster(
         {
             target = label.Slice(0, split);
             label = label.Slice(split + 1);
-            success = parser.TryEvalTarget(sender, ref search, target);
+            success = targetEvaluator.TryEval(sender, ref search, target);
         }
         else if (search.Index < sender)
         {
@@ -84,7 +86,7 @@ internal sealed class Broadcaster(
                 search.Offset = parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {
-                    success = parser.TryEvalTarget(sender, ref search, target);
+                    success = targetEvaluator.TryEval(sender, ref search, target);
                     continue;
                 }
             }

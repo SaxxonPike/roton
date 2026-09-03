@@ -1,5 +1,6 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
@@ -7,16 +8,16 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "SHOOT")]
 [Context(Context.Super, "SHOOT")]
 internal sealed class ShootCommand(
-    IParser parser,
     IElementList elements,
     ISounds sounds,
     ISoundUnit soundUnit,
-    ISpawner spawner)
+    ISpawner spawner,
+    IDirectionEvaluator directionEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (!directionEvaluator.TryEval(ref context, ref instruction, out var vec))
             return;
 
         var projectile = elements.Bullet();

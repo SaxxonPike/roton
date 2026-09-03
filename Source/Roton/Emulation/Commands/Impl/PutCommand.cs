@@ -1,5 +1,7 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Directions;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
@@ -7,18 +9,19 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "PUT")]
 [Context(Context.Super, "PUT")]
 internal sealed class PutCommand(
-    IParser parser,
     IErrorRaiser errorRaiser,
-    IPlotter plotter)
+    IPlotter plotter,
+    IDirectionEvaluator directionEvaluator,
+    IKindEvaluator kindEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
 
-        if (parser.TryEvalDirection(ref context, ref instruction, out var vec))
+        if (directionEvaluator.TryEval(ref context, ref instruction, out var vec))
         {
-            if (parser.TryEvalKind(ref context, ref instruction, out var k))
+            if (kindEvaluator.TryEval(ref context, ref instruction, out var k))
             {
                 success = true;
 

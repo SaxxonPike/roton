@@ -1,5 +1,6 @@
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
@@ -9,18 +10,18 @@ namespace Roton.Emulation.Commands.Impl;
 internal sealed class ChangeCommand(
     IElementList elementList,
     ITiles tiles,
-    IParser parser,
     IErrorRaiser errorRaiser,
-    IPlotter plotter)
+    IPlotter plotter,
+    IKindEvaluator kindEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
 
-        if (parser.TryEvalKind(ref context, ref instruction, out var source))
+        if (kindEvaluator.TryEval(ref context, ref instruction, out var source))
         {
-            if (parser.TryEvalKind(ref context, ref instruction, out var target))
+            if (kindEvaluator.TryEval(ref context, ref instruction, out var target))
             {
                 var targetElement = elementList[target.Id];
                 success = true;

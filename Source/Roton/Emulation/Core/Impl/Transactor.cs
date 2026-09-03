@@ -1,4 +1,5 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Items;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -7,13 +8,14 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Transactor(
     IParser parser,
-    IState state)
+    IState state,
+    IItemEvaluator itemEvaluator)
     : ITransactor
 {
     public bool Execute(ref OopContext context, ref Word instruction, bool take)
     {
         // Does the item exist?
-        if (!parser.TryEvalItem(ref context, ref instruction, out var item))
+        if (!itemEvaluator.TryEval(ref context, ref instruction, out var item))
             return false;
 
         // Do we have a valid amount?

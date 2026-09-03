@@ -1,6 +1,7 @@
 using System;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
+using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Commands.Impl;
@@ -9,7 +10,8 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "BIND")]
 internal sealed class BindCommand(
     IActorList actors,
-    IParser parser)
+    IParser parser,
+    ITargetEvaluator targetEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
@@ -18,7 +20,8 @@ internal sealed class BindCommand(
 
         var search = new SearchContext();
         var target = parser.ReadWord(context.Index, ref instruction, buffer);
-        if (parser.TryEvalTarget(context.Index, ref search, target))
+
+        if (targetEvaluator.TryEval(context.Index, ref search, target))
         {
             var targetActor = actors[search.Index];
             context.Actor.Pointer = targetActor.Pointer;

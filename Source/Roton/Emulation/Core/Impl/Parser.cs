@@ -1,10 +1,6 @@
 using System;
-using Roton.Emulation.Colors;
-using Roton.Emulation.Conditions;
 using Roton.Emulation.Data;
-using Roton.Emulation.Directions;
 using Roton.Emulation.Infrastructure;
-using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
 using Roton.Infrastructure;
 
@@ -15,12 +11,6 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class Parser(
     IActorList actors,
     IState state,
-    IConditionList conditions,
-    IDirectionList directions,
-    IItemList items,
-    IColorList colors,
-    IFlags flags,
-    IElementList elements,
     ITargetList targets)
     : IParser
 {
@@ -191,69 +181,6 @@ internal sealed class Parser(
         instruction = instr;
 
         return result;
-    }
-
-    public bool TryEvalCondition(ref OopContext oopContext, ref Word instruction, out bool result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-
-        if (name.IsEmpty)
-        {
-            result = false;
-            return false;
-        }
-
-        var condition = conditions.Get(name);
-        result = condition?.Execute(ref oopContext, ref instruction) ?? flags.Contains(name);
-        return true;
-    }
-
-    public bool TryEvalDirection(ref OopContext oopContext, ref Word instruction, out Vector result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        var direction = directions.Get(name);
-
-        if (direction?.Execute(ref oopContext, ref instruction) is not { } temp)
-        {
-            result = default;
-            return false;
-        }
-
-        result = temp;
-        return true;
-    }
-
-    public bool TryEvalItem(ref OopContext oopContext, ref Word instruction, out IItem? result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = ReadWord(oopContext.Index, ref instruction, buffer);
-        result = items.Get(name);
-        return result != null;
-    }
-
-    public bool TryEvalKind(ref OopContext oopContext, ref Word instruction, out Tile result)
-    {
-        Span<char> buffer = stackalloc char[byte.MaxValue];
-        var word = ReadWord(oopContext.Index, ref instruction, buffer);
-        var success = false;
-        result = new Tile(0, 0);
-
-        if (colors.Get(word) is { Value: > 0 } color)
-        {
-            result.Color = color.Value;
-            word = ReadWord(oopContext.Index, ref instruction, buffer);
-        }
-
-        var elementId = elements.IndexOf(word);
-        if (elementId >= 0)
-        {
-            success = true;
-            result.Id = elementId;
-        }
-
-        return success;
     }
 
     public bool TryEvalTarget(int index, ref SearchContext context, ReadOnlySpan<char> term)

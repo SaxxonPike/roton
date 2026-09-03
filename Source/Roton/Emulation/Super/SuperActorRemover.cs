@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-public class SuperActorRemover(
+internal sealed class SuperActorRemover(
     IPlotter plotter)
     : IActorRemover
 {
