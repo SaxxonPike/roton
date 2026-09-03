@@ -7,7 +7,6 @@ using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
