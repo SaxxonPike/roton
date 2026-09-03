@@ -7,7 +7,7 @@ public interface IConditionEvaluator
     /// <summary>
     /// Reads a condition name from the script, then evaluates it.
     /// </summary>
-    /// <param name="oopContext">
+    /// <param name="context">
     /// Execution context.
     /// </param>
     /// <param name="instruction">
@@ -19,5 +19,5 @@ public interface IConditionEvaluator
     /// <returns>
     /// True if the condition was successfully parsed, false otherwise.
     /// </returns>
-    bool TryEval(ref OopContext oopContext, ref Word instruction, out bool result);
+    bool TryEval(ref OopContext context, ref Word instruction, out bool result);
 }

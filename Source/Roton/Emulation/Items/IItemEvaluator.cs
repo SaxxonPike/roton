@@ -7,7 +7,7 @@ public interface IItemEvaluator
     /// <summary>
     /// Reads an item name from the script.
     /// </summary>
-    /// <param name="oopContext">
+    /// <param name="context">
     ///     Execution context.
     /// </param>
     /// <param name="instruction">
@@ -19,6 +19,6 @@ public interface IItemEvaluator
     /// <returns>
     /// True if the item was successfully parsed, false otherwise.
     /// </returns>
-    bool TryEval(ref OopContext oopContext, ref Word instruction, out IItem? result);
+    bool TryEval(ref OopContext context, ref Word instruction, out IItem? result);
 
 }

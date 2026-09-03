@@ -13,10 +13,10 @@ internal sealed class ConditionEvaluator(
     IFlags flags)
     : IConditionEvaluator
 {
-    public bool TryEval(ref OopContext oopContext, ref Word instruction, out bool result)
+    public bool TryEval(ref OopContext context, ref Word instruction, out bool result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(oopContext.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Index, ref instruction, buffer);
 
         if (name.IsEmpty)
         {
@@ -25,7 +25,7 @@ internal sealed class ConditionEvaluator(
         }
 
         var condition = conditions.Get(name);
-        result = condition?.Execute(ref oopContext, ref instruction) ?? flags.Contains(name);
+        result = condition?.Execute(ref context, ref instruction) ?? flags.Contains(name);
         return true;
     }
 }

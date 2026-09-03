@@ -7,7 +7,7 @@ public interface IDirectionEvaluator
     /// <summary>
     /// Reads a direction name from the script, then converts it to a vector.
     /// </summary>
-    /// <param name="oopContext">
+    /// <param name="context">
     /// Execution context.
     /// </param>
     /// <param name="instruction">
@@ -19,5 +19,5 @@ public interface IDirectionEvaluator
     /// <returns>
     /// True if the direction was successfully parsed, false otherwise.
     /// </returns>
-    bool TryEval(ref OopContext oopContext, ref Word instruction, out Vector result);
+    bool TryEval(ref OopContext context, ref Word instruction, out Vector result);
 }

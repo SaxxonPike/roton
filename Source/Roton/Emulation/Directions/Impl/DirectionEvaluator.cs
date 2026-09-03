@@ -12,13 +12,13 @@ internal sealed class DirectionEvaluator(
     IDirectionList directions)
     : IDirectionEvaluator
 {
-    public bool TryEval(ref OopContext oopContext, ref Word instruction, out Vector result)
+    public bool TryEval(ref OopContext context, ref Word instruction, out Vector result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(oopContext.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Index, ref instruction, buffer);
         var direction = directions.Get(name);
 
-        if (direction?.Execute(ref oopContext, ref instruction) is not { } temp)
+        if (direction?.Execute(ref context, ref instruction) is not { } temp)
         {
             result = default;
             return false;

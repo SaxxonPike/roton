@@ -7,7 +7,7 @@ public interface IKindEvaluator
     /// <summary>
     /// Reads an optional color and a mandatory element name from the script.
     /// </summary>
-    /// <param name="oopContext">
+    /// <param name="context">
     /// Execution context.
     /// </param>
     /// <param name="instruction">
@@ -20,6 +20,6 @@ public interface IKindEvaluator
     /// <returns>
     /// True if the kind was successfully parsed, false otherwise.
     /// </returns>
-    bool TryEval(ref OopContext oopContext, ref Word instruction, out Tile result);
+    bool TryEval(ref OopContext context, ref Word instruction, out Tile result);
 
 }

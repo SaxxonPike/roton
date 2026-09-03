@@ -96,11 +96,11 @@ internal sealed class OriginalHud(
             DrawString(0x40, 0x0A, "   Gems:", 0x1E);
             DrawString(0x40, 0x0B, "  Score:", 0x1E);
             DrawString(0x40, 0x0C, "   Keys:", 0x1E);
-            DrawChar(0x3E, 0x07, new AnsiChar(elementList.Player().Character, 0x1F));
-            DrawChar(0x3E, 0x08, new AnsiChar(elementList.Ammo().Character, 0x1B));
-            DrawChar(0x3E, 0x09, new AnsiChar(elementList.Torch().Character, 0x16));
-            DrawChar(0x3E, 0x0A, new AnsiChar(elementList.Gem().Character, 0x1B));
-            DrawChar(0x3E, 0x0C, new AnsiChar(elementList.Key().Character, 0x1F));
+            DrawChar(0x3E, 0x07, new AnsiChar(elements.Player().Character, 0x1F));
+            DrawChar(0x3E, 0x08, new AnsiChar(elements.Ammo().Character, 0x1B));
+            DrawChar(0x3E, 0x09, new AnsiChar(elements.Torch().Character, 0x16));
+            DrawChar(0x3E, 0x0A, new AnsiChar(elements.Gem().Character, 0x1B));
+            DrawChar(0x3E, 0x0C, new AnsiChar(elements.Key().Character, 0x1F));
             DrawString(0x3E, 0x0E, " T ", 0x70);
             DrawString(0x41, 0x0E, " Torch", 0x1F);
             DrawString(0x3E, 0x0F, " B ", 0x30);
@@ -258,7 +258,7 @@ internal sealed class OriginalHud(
         {
             DrawChar(0x47 + i, 0x0C,
                 world.Keys[i - 1]
-                    ? new AnsiChar(elementList.Key().Character, 0x18 + i)
+                    ? new AnsiChar(elements.Key().Character, 0x18 + i)
                     : new AnsiChar(0x20, 0x1F));
         }
 

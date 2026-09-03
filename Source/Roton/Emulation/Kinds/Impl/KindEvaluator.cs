@@ -14,17 +14,17 @@ internal sealed class KindEvaluator(
     IElementList elements)
     : IKindEvaluator
 {
-    public bool TryEval(ref OopContext oopContext, ref Word instruction, out Tile result)
+    public bool TryEval(ref OopContext context, ref Word instruction, out Tile result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var word = parser.ReadWord(oopContext.Index, ref instruction, buffer);
+        var word = parser.ReadWord(context.Index, ref instruction, buffer);
         var success = false;
         result = new Tile(0, 0);
 
         if (colors.Get(word) is { Value: > 0 } color)
         {
             result.Color = color.Value;
-            word = parser.ReadWord(oopContext.Index, ref instruction, buffer);
+            word = parser.ReadWord(context.Index, ref instruction, buffer);
         }
 
         var elementId = elements.IndexOf(word);
