@@ -9,5 +9,6 @@ internal sealed class TimeItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.TimePassed;
+    public ref Word Value =>
+        ref world.TimePassed;
 }

@@ -9,5 +9,6 @@ internal sealed class GemsItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Gems;
+    public ref Word Value =>
+        ref world.Gems;
 }

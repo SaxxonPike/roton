@@ -9,5 +9,6 @@ internal sealed class ScoreItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Score;
+    public ref Word Value =>
+        ref world.Score;
 }

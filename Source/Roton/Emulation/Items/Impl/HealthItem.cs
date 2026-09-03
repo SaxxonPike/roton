@@ -9,5 +9,6 @@ internal sealed class HealthItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Health;
+    public ref Word Value =>
+        ref world.Health;
 }

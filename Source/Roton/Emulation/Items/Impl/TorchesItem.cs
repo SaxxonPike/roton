@@ -8,5 +8,6 @@ internal sealed class TorchesItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Torches;
+    public ref Word Value =>
+        ref world.Torches;
 }
