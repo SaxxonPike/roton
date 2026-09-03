@@ -56,6 +56,7 @@ public abstract class Facts : IFacts
     public int TorchDrawBoxVerticalSize => 11;
     public int TorchDrawBoxHorizontalSize => 8;
     public int LongMessageDuration => 0xC8;
+    public int MediumMessageDuration => 0x96;
     public string BombedLabel => "BOMBED";
     public int MaxGameCycle => 420;
     public AnsiChar ErrorFadeTile => new(0xDB, 0x04);

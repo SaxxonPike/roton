@@ -17,6 +17,6 @@ internal sealed class FakeWallInteraction(
         if (!alerts.FakeWall) return;
 
         alerts.FakeWall = false;
-        messenger.SetMessage(facts.LongMessageDuration, alerts.FakeMessage);
+        messenger.SetMessage(facts.MediumMessageDuration, alerts.FakeMessage);
     }
 }
