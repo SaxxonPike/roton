@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Roton.Emulation.Core;
@@ -27,17 +28,13 @@ internal sealed class OriginalConfigFileService(
 
         if (lines.Length >= 4 && int.TryParse(buffer[0], out var value0))
         {
-            int.TryParse(buffer[1], out var value1);
-            int.TryParse(buffer[2], out var value2);
-            int.TryParse(buffer[3], out var value3);
-
             return new ConfigFile
             {
                 Format = ConfigFileFormat.Original30,
                 Value0 = value0,
-                Value1 = value1,
-                Value2 = value2,
-                Value3 = value3,
+                Value1 = int.TryParse(buffer[1], out var value1) ? value1 : 0,
+                Value2 = int.TryParse(buffer[2], out var value2) ? value2 : 0,
+                Value3 = int.TryParse(buffer[3], out var value3) ? value3 : 0,
                 WorldName = buffer[4],
                 RegistrationType = buffer[5],
                 RegistrationName = buffer[6]
@@ -60,10 +57,10 @@ internal sealed class OriginalConfigFileService(
         {
             case ConfigFileFormat.Original30:
             {
-                output.AppendLine(configFile.Value0.ToString());
-                output.AppendLine(configFile.Value1.ToString());
-                output.AppendLine(configFile.Value2.ToString());
-                output.AppendLine(configFile.Value3.ToString());
+                output.AppendLine(configFile.Value0.ToString(CultureInfo.InvariantCulture));
+                output.AppendLine(configFile.Value1.ToString(CultureInfo.InvariantCulture));
+                output.AppendLine(configFile.Value2.ToString(CultureInfo.InvariantCulture));
+                output.AppendLine(configFile.Value3.ToString(CultureInfo.InvariantCulture));
                 output.AppendLine(configFile.WorldName);
                 output.AppendLine(configFile.RegistrationType);
                 output.AppendLine(configFile.RegistrationName);

@@ -17,10 +17,9 @@ public interface IDrumSynthesizer
     /// <param name="buffer">
     /// Temporary buffer to use.
     /// </param>
-    /// <returns>
-    /// A span inside the buffer containing the drum structure.
+    /// <remarks>
     /// The first word is the count of frequencies in the table.
     /// The remaining words are frequencies, in hz.
-    /// </returns>
-    ReadOnlySpan<Word> Synthesize(int id, Span<Word> buffer);
+    /// </remarks>
+    void Synthesize(int id, Span<Word> buffer);
 }

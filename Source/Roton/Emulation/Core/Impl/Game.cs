@@ -86,7 +86,7 @@ internal sealed class Game(
     {
         var alternating = false;
 
-        if (!gameThread.Step)
+        if (gameThread.StepMode == StepMode.Normal)
         {
             hud.CreateStatusText();
             hud.UpdateStatus();
@@ -200,7 +200,7 @@ internal sealed class Game(
                     }
 
                 tracer.TraceStep();
-                if (gameThread.Step)
+                if (gameThread.StepMode != StepMode.Normal)
                     break;
 
                 scheduler.WaitForTick();
@@ -262,4 +262,12 @@ internal sealed class Game(
     /// </returns>
     private int HsecToTicks(int hsec) =>
         Math.Max(1, hsec * (config.MasterClockDenominator / config.MasterClockNumerator + 50) / 100);
+
+    public void StepOnce()
+    {
+        var lastStep = gameThread.StepMode; 
+        gameThread.StepMode = StepMode.Once;
+        MainLoop(true);
+        gameThread.StepMode = lastStep;
+    }
 }

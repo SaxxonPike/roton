@@ -9,7 +9,7 @@ public abstract class EngineResourceService(
     string memoryFileName)
     : IEngineResourceService
 {
-    private IResource Resource { get; } = assemblyResourceService.GetFromAssemblyOf<IEngine>();
+    private IResource Resource { get; } = assemblyResourceService.GetFromAssemblyOf<IGame>();
 
     public ReadOnlySpan<byte> GetElementData() =>
         Resource.System.GetFile(elementFileName);

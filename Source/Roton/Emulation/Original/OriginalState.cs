@@ -190,7 +190,4 @@ internal sealed class OriginalState : IState
 
     public void SetOopWord(ReadOnlySpan<char> buffer) =>
         _memory.WriteString(0x7410, buffer);
-
-    public Vector GetCardinalVector(int index) =>
-        new(Vector4[index], Vector4[index + 4]);
 }

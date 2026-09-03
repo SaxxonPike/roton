@@ -10,9 +10,7 @@ public static class ActorExtensions
             // data representation. Use the fallback if it is not available
             // for either actor.
 
-            if (!self.Raw.IsEmpty && !actor.Raw.IsEmpty)
-                actor.Raw.TryCopyTo(self.Raw);
-            else
+            if (self.Raw.IsEmpty || actor.Raw.IsEmpty || !actor.Raw.TryCopyTo(self.Raw))
                 self.CopyFrom(actor);
         }
 

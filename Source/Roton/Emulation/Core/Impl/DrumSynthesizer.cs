@@ -10,7 +10,7 @@ internal sealed class DrumSynthesizer(
     IRandomizer randomizer)
     : IDrumSynthesizer
 {
-    public ReadOnlySpan<Word> Synthesize(int id, Span<Word> buffer)
+    public void Synthesize(int id, Span<Word> buffer)
     {
         int len;
 
@@ -116,6 +116,5 @@ internal sealed class DrumSynthesizer(
         }
 
         buffer[0] = len;
-        return buffer.Slice(0, len + 1);
     }
 }

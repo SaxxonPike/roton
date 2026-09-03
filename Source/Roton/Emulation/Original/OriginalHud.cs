@@ -141,7 +141,10 @@ internal sealed class OriginalHud(
 
     public void DrawMessage(IMessage message, int color)
     {
-        var text = message.Text.FirstOrDefault();
+        if (message.Text.Count == 0)
+            return;
+
+        var text = message.Text[0];
 
         if (string.IsNullOrEmpty(text))
             return;

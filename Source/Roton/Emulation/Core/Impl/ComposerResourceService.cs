@@ -11,7 +11,7 @@ internal sealed class ComposerResourceService(
     private const string PaletteDataFileName = "palette.bin";
     private const string FontDataFileName = "font.bin";
 
-    private IResource Resource { get; } = assemblyResourceService.GetFromAssemblyOf<IEngine>();
+    private IResource Resource { get; } = assemblyResourceService.GetFromAssemblyOf<IGame>();
 
     public byte[]? GetPaletteData()
         => Resource.System.GetFile(PaletteDataFileName);

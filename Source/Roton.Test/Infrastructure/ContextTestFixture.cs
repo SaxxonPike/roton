@@ -36,7 +36,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     private Random Rand { get; } = new();
 
-    protected IEngine Engine { get; private set; } = null!;
     protected IActorList Actors { get; private set; } = null!;
     protected IAlerts Alerts { get; private set; } = null!;
     protected IBoard Board { get; private set; } = null!;
@@ -49,6 +48,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IElementList Elements { get; private set; } = null!;
     protected IExits Exits { get; private set; } = null!;
     protected IFacts Facts { get; private set; } = null!;
+    protected IGame Game { get; private set; } = null!;
     protected ICodeHeap Heap { get; private set; } = null!;
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
@@ -71,25 +71,19 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
-    protected void TouchActor(int actorIndex)
-    {
+    protected void TouchActor(int actorIndex) => 
         Broadcaster.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
-    }
 
-    protected void UnpackBoardResource(string path)
-    {
+    protected void UnpackBoardResource(string path) => 
         GameSerializer.UnpackBoard(Tiles, GameSerializer.LoadBoardData(GetResource(path)));
-    }
 
-    protected void Step()
-    {
-        Engine.StepOnce();
-    }
+    protected void Step() => 
+        Game.StepOnce();
 
     protected void Step(int count)
     {
         for (var i = 0; i < count; i++)
-            Engine.StepOnce();
+            Game.StepOnce();
     }
 
     protected void DumpActorCode()
@@ -119,15 +113,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
             Step();
     }
 
-    protected void DisableTracer()
-    {
+    protected void DisableTracer() => 
         Tracer.Detach(TestContext.Out);
-    }
 
-    protected void EnableTracer()
-    {
+    protected void EnableTracer() => 
         Tracer.Attach(TestContext.Out);
-    }
 
     [SetUp]
     public void __SetUpContext()
@@ -165,7 +155,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         services.AddSingleton(Tracer);
 
         var container = services.BuildServiceProvider();
-        Engine = container.GetRequiredService<IEngine>();
         Actors = container.GetRequiredService<IActorList>();
         Alerts = container.GetRequiredService<IAlerts>();
         Board = container.GetRequiredService<IBoard>();
@@ -177,6 +166,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Elements = container.GetRequiredService<IElementList>();
         Exits = container.GetRequiredService<IExits>();
         Facts = container.GetRequiredService<IFacts>();
+        Game = container.GetRequiredService<IGame>();
         Heap = container.GetRequiredService<ICodeHeap>();
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();

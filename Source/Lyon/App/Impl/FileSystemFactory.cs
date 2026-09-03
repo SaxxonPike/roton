@@ -17,7 +17,7 @@ public sealed class FileSystemFactory(IAssemblyResourceService assemblyResourceS
         // Prefer on-disk files before built-in resources.
         return new AggregateFileSystem([
             new DiskFileSystem(path),
-            assemblyResourceService.GetFromAssemblyOf<IEngine>().Root
+            assemblyResourceService.GetFromAssemblyOf<IGame>().Root
         ]);
     }
 }
