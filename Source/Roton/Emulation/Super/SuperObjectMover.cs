@@ -15,12 +15,11 @@ internal sealed class SuperObjectMover(
         if (count < 0)
             count = 1;
 
-        if (context.Command == 0x3F) // ?
+        if (context.Command == (byte)'?')
             count = -count;
 
-        context.Actor.P2 = unchecked((byte)count);
+        context.Actor.P2 = count;
         context.Actor.Vector = vector;
         context.Repeat = false;
     }
-        
 }

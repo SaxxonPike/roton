@@ -17,7 +17,7 @@ internal sealed class BulletAction(
     IWorld world,
     IState state,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IHud hud,
     IBroadcaster broadcaster,
     IMover mover,
@@ -43,7 +43,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -65,7 +65,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -74,7 +74,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 

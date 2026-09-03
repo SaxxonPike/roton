@@ -36,7 +36,7 @@ internal sealed class Broadcaster(
 
         while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (actorLocker.IsActorLocked(info.Index) && !ignoreLock &&
+            if (actorLocker.IsLocked(info.Index) && !ignoreLock &&
                 (sender != info.Index || ignoreSelfLock)) 
                 continue;
 

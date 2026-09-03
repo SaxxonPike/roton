@@ -2,7 +2,7 @@ namespace Roton.Emulation.Core;
 
 public interface IActorLocker
 {
-    void LockActor(int index);
-    void UnlockActor(int index);
-    bool IsActorLocked(int index);
+    void Lock(int index);
+    void Unlock(int index);
+    bool IsLocked(int index);
 }

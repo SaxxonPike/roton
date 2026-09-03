@@ -18,7 +18,7 @@ internal sealed class SuperHud(
     ITiles tiles,
     IWorld world,
     IElementList elements,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IStatistics statistics,
     IDelayer delayer,
     IConfirmInputHandler confirmInputHandler)
@@ -326,7 +326,7 @@ internal sealed class SuperHud(
     public void FailToLoadWorld()
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
-        soundUnit.PlayErrorSound();
+        soundPlayer.PlayErrorSound();
         delayer.Delay(2000);
     }
 

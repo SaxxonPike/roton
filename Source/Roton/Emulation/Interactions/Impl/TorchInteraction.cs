@@ -11,7 +11,7 @@ internal sealed class TorchInteraction(
     IHud hud,
     IAlerts alerts,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
@@ -27,6 +27,6 @@ internal sealed class TorchInteraction(
             alerts.TorchPickup = false;
         }
 
-        soundUnit.PlaySound(3, sounds.Torch);
+        soundPlayer.PlaySound(3, sounds.Torch);
     }
 }

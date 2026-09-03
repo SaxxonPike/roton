@@ -4,7 +4,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-internal sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags) : IWorld
+internal sealed class SuperWorld(
+    IMemory memory, 
+    IKeyList keys,
+    IFlags flags) 
+    : IWorld
 {
     private Word _torchCycles;
     private Word _torches;
@@ -23,7 +27,7 @@ internal sealed class SuperWorld(IMemory memory, IKeyList keyList, IFlags flags)
 
     public ref Bool IsLocked => ref memory.GetRef<Bool>(0x79CC);
 
-    public IKeyList Keys { get; } = keyList;
+    public IKeyList Keys { get; } = keys;
 
     public string Name
     {

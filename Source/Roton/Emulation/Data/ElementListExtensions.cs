@@ -2,39 +2,39 @@
 
 public static class ElementListExtensions
 {
-    extension(IElementList elementList)
+    extension(IElementList elements)
     {
         public IElement Ammo() =>
-            elementList[elementList.AmmoId];
+            elements[elements.AmmoId];
 
         public IElement Bullet() =>
-            elementList[elementList.BulletId];
+            elements[elements.BulletId];
 
         public IElement Clockwise() =>
-            elementList[elementList.ClockwiseId];
+            elements[elements.ClockwiseId];
 
         public IElement Counter() =>
-            elementList[elementList.CounterId];
+            elements[elements.CounterId];
 
         public IElement Gem() =>
-            elementList[elementList.GemId];
+            elements[elements.GemId];
 
         public IElement Invisible() =>
-            elementList[elementList.InvisibleId];
+            elements[elements.InvisibleId];
 
         public IElement Key() =>
-            elementList[elementList.KeyId];
+            elements[elements.KeyId];
 
         public IElement Player() =>
-            elementList[elementList.PlayerId];
+            elements[elements.PlayerId];
 
         public IElement Slime() =>
-            elementList[elementList.SlimeId];
+            elements[elements.SlimeId];
 
         public IElement Star() =>
-            elementList[elementList.StarId];
+            elements[elements.StarId];
 
         public IElement Torch() =>
-            elementList[elementList.TorchId];
+            elements[elements.TorchId];
     }
 }

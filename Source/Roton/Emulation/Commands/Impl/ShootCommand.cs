@@ -10,7 +10,7 @@ namespace Roton.Emulation.Commands.Impl;
 internal sealed class ShootCommand(
     IElementList elements,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISpawner spawner,
     IDirectionEvaluator directionEvaluator)
     : ICommand
@@ -20,11 +20,10 @@ internal sealed class ShootCommand(
         if (!directionEvaluator.TryEval(ref context, ref instruction, out var vec))
             return;
 
-        var projectile = elements.Bullet();
-        var success = spawner.SpawnProjectile(projectile.Id, context.Actor.Location, vec, true);
+        var success = spawner.SpawnProjectile(elements.BulletId, context.Actor.Location, vec, true);
 
         if (success)
-            soundUnit.PlaySound(2, sounds.EnemyShoot);
+            soundPlayer.PlaySound(2, sounds.EnemyShoot);
 
         context.Moved = true;
     }

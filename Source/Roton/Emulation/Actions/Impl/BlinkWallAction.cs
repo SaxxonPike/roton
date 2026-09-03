@@ -26,11 +26,11 @@ internal sealed class BlinkWallAction(
         var actor = actors[index];
 
         if (actor.P3 == 0)
-            actor.P3 = unchecked((byte)(actor.P1 + 1));
+            actor.P3 = actor.P1 + 1;
 
         if (actor.P3 == 1)
         {
-            actor.P3 = unchecked((byte)(actor.P2 * 2 + 1));
+            actor.P3 = actor.P2 * 2 + 1;
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;

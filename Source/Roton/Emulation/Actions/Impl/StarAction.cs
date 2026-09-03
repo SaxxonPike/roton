@@ -25,7 +25,7 @@ internal sealed class StarAction(
     {
         var actor = actors[index];
 
-        actor.P2 = unchecked((byte)((actor.P2 - 1) & 0xFF));
+        actor.P2--;
 
         if (actor.P2 <= 0)
         {

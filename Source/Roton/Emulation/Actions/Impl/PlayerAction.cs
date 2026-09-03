@@ -26,7 +26,7 @@ internal sealed class PlayerAction(
     IInteractionList interactions,
     ITimers timers,
     IConfig config,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IWorldManager worldManager,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
@@ -104,7 +104,7 @@ internal sealed class PlayerAction(
                         {
                             world.Ammo--;
                             hud.UpdateStatus();
-                            soundUnit.PlaySound(2, sounds.Shoot);
+                            soundPlayer.PlaySound(2, sounds.Shoot);
                         }
                     }
                 }
@@ -136,7 +136,7 @@ internal sealed class PlayerAction(
             if (!state.KeyVector.IsZero())
             {
                 if (!state.SoundPlaying)
-                    soundUnit.PlayStep();
+                    soundPlayer.PlayStep();
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
                     mover.MoveActor(0, actor.Location + state.KeyVector);
@@ -170,7 +170,7 @@ internal sealed class PlayerAction(
             case EngineKeyCode.B:
             {
                 state.GameQuiet = !state.GameQuiet;
-                soundUnit.ClearSound();
+                soundPlayer.ClearSound();
                 hud.UpdateStatus();
                 state.KeyPressed = EngineKeyCode.Space;
                 break;
@@ -201,7 +201,7 @@ internal sealed class PlayerAction(
             if (world.TorchCycles <= 0)
             {
                 radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Update);
-                soundUnit.PlaySound(3, sounds.TorchOut);
+                soundPlayer.PlaySound(3, sounds.TorchOut);
             }
 
             if (world.TorchCycles % 40 == 0)
@@ -215,7 +215,7 @@ internal sealed class PlayerAction(
             world.EnergyCycles--;
 
             if (world.EnergyCycles == 10)
-                soundUnit.PlaySound(9, sounds.EnergyOut);
+                soundPlayer.PlaySound(9, sounds.EnergyOut);
             else if (world.EnergyCycles <= 0)
                 playerUpdater.ForcePlayerColor(index);
         }
@@ -233,7 +233,7 @@ internal sealed class PlayerAction(
                     if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
                         messenger.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
-                        soundUnit.PlaySound(3, sounds.TimeLow);
+                        soundPlayer.PlaySound(3, sounds.TimeLow);
                     }
                     else if (world.TimePassed >= board.TimeLimit)
                     {

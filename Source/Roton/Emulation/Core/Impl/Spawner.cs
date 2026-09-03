@@ -12,7 +12,7 @@ internal sealed class Spawner(
     IBoardUpdater boardUpdater,
     IElementList elements,
     IWorld world,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IDestroyer destroyer)
     : ISpawner
@@ -66,7 +66,7 @@ internal sealed class Spawner(
             SpawnActor(target, new Tile(elementId, elements[elementId].Color), 1, state.DefaultActor);
 
             var actor = actors[state.ActorCount];
-            actor.P1 = unchecked((byte)(enemyOwned ? 1 : 0));
+            actor.P1 = enemyOwned ? 1 : 0;
             actor.Vector = vector;
             actor.P2 = 0x64;
             return true;
@@ -79,7 +79,7 @@ internal sealed class Spawner(
             return false;
 
         destroyer.Destroy(target);
-        soundUnit.PlaySound(2, sounds.BulletDie);
+        soundPlayer.PlaySound(2, sounds.BulletDie);
         return true;
     }
 }

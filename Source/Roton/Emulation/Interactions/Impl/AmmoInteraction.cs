@@ -11,7 +11,7 @@ internal sealed class AmmoInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IHud hud,
     IMessenger messenger,
     ITileRemover tileRemover)
@@ -22,7 +22,7 @@ internal sealed class AmmoInteraction(
         world.Ammo += facts.AmmoPerPickup;
         tileRemover.RemoveItem(location);
         hud.UpdateStatus();
-        soundUnit.PlaySound(2, sounds.Ammo);
+        soundPlayer.PlaySound(2, sounds.Ammo);
 
         if (!alerts.AmmoPickup)
             return;

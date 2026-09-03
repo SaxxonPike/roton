@@ -13,12 +13,12 @@ internal sealed class OriginalActorLocker(
     private ref Bool GetLockedRef(int index) =>
         ref Unsafe.As<HWord, Bool>(ref actors[index].P2);
 
-    public void LockActor(int index) =>
+    public void Lock(int index) =>
         GetLockedRef(index) = true;
 
-    public void UnlockActor(int index) =>
+    public void Unlock(int index) =>
         GetLockedRef(index) = false;
 
-    public bool IsActorLocked(int index) =>
+    public bool IsLocked(int index) =>
         GetLockedRef(index);
 }

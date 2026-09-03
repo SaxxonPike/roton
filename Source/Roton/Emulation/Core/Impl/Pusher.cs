@@ -9,7 +9,7 @@ internal sealed class Pusher(
     ITiles tiles,
     IElementList elements,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IBoardUpdater boardUpdater,
     ITracer tracer,
@@ -106,7 +106,7 @@ internal sealed class Pusher(
             if (target.X > 0)
             {
                 MoveTile(actor.Location - vector, target);
-                soundUnit.PlaySound(3, sounds.Transporter);
+                soundPlayer.PlaySound(3, sounds.Transporter);
             }
         }
     }

@@ -26,8 +26,13 @@ internal sealed class RestoreCommand(
 
         while (true)
         {
-            var result =
-                broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
+            var result = broadcaster.ExecuteLabel(
+                context.Index,
+                ref context.Search,
+                state.GetOopWord(wordBuffer),
+                "\r'"
+            );
+
             if (!result)
                 break;
 

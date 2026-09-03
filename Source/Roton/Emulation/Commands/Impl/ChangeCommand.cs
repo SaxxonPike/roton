@@ -8,7 +8,7 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "CHANGE")]
 [Context(Context.Super, "CHANGE")]
 internal sealed class ChangeCommand(
-    IElementList elementList,
+    IElementList elements,
     ITiles tiles,
     IErrorRaiser errorRaiser,
     IPlotter plotter,
@@ -23,7 +23,7 @@ internal sealed class ChangeCommand(
         {
             if (kindEvaluator.TryEval(ref context, ref instruction, out var target))
             {
-                var targetElement = elementList[target.Id];
+                var targetElement = elements[target.Id];
                 success = true;
 
                 if (target.Color == 0 && targetElement.Color < 0xF0)

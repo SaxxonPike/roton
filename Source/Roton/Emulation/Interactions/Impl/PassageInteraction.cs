@@ -12,7 +12,7 @@ internal sealed class PassageInteraction(
     IElementList elements,
     IState state,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IWorldManager worldManager,
     IPlayerUpdater playerUpdater,
     IPlayerEnterHandler playerEnterHandler,
@@ -43,7 +43,7 @@ internal sealed class PassageInteraction(
             actors.Player.Location = target;
 
         state.GamePaused = true;
-        soundUnit.PlaySound(4, sounds.Passage);
+        soundPlayer.PlaySound(4, sounds.Passage);
         fader.FadePurple();
         playerEnterHandler.EnterBoard();
         vector = Vector.Idle;

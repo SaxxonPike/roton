@@ -12,7 +12,7 @@ internal sealed class EnergizerInteraction(
     IHud hud,
     IFacts facts,
     IAlerts alerts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBroadcaster broadcaster,
     IMessenger messenger,
     ITileRemover tileRemover)
@@ -20,7 +20,7 @@ internal sealed class EnergizerInteraction(
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
-        soundUnit.PlaySound(9, sounds.Energizer);
+        soundPlayer.PlaySound(9, sounds.Energizer);
         tileRemover.RemoveItem(location);
         world.EnergyCycles = facts.EnergyCyclesPerEnergizer;
         hud.UpdateStatus();

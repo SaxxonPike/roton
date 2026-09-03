@@ -9,8 +9,6 @@ internal sealed class EndgameCommand(
     IWorld world)
     : ICommand
 {
-    public void Execute(ref OopContext context, ref Word instruction)
-    {
+    public void Execute(ref OopContext context, ref Word instruction) => 
         world.Health = 0;
-    }
 }

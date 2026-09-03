@@ -17,7 +17,7 @@ internal sealed class DuplicatorAction(
     ITiles tiles,
     IActorList actors,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IPusher pusher,
     ISpawner spawner)
@@ -66,11 +66,11 @@ internal sealed class DuplicatorAction(
                         boardUpdater.UpdateBoard(target);
                     }
 
-                    soundUnit.PlaySound(3, sounds.Duplicate);
+                    soundPlayer.PlaySound(3, sounds.Duplicate);
                 }
                 else
                 {
-                    soundUnit.PlaySound(3, sounds.DuplicateFail);
+                    soundPlayer.PlaySound(3, sounds.DuplicateFail);
                 }
             }
 

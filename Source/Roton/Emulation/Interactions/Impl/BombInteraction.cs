@@ -10,7 +10,7 @@ internal sealed class BombInteraction(
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IActorList actors,
     IBoardUpdater boardUpdater,
     IPusher pusher,
@@ -25,7 +25,7 @@ internal sealed class BombInteraction(
             actor.P1 = (byte)facts.BombCountdownStart;
             boardUpdater.UpdateBoard(location);
             messenger.SetMessage(facts.LongMessageDuration, alerts.BombMessage);
-            soundUnit.PlaySound(4, sounds.BombActivate);
+            soundPlayer.PlaySound(4, sounds.BombActivate);
         }
         else
         {

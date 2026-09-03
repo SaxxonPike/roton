@@ -10,7 +10,7 @@ internal sealed class SlimeInteraction(
     ITiles tiles,
     IElementList elements,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IActorList actors,
     IBoardUpdater boardUpdater,
     IDamager damager)
@@ -23,6 +23,6 @@ internal sealed class SlimeInteraction(
         damager.Harm(slimeIndex);
         tiles[location] = new Tile(elements.BreakableId, color);
         boardUpdater.UpdateBoard(location);
-        soundUnit.PlaySound(2, sounds.SlimeDie);
+        soundPlayer.PlaySound(2, sounds.SlimeDie);
     }
 }

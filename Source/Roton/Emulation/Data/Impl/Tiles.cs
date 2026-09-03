@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Tiles(IMemory memory, IElementList elementList, int offset, int width, int height)
+public abstract class Tiles(IMemory memory, IElementList elements, int offset, int width, int height)
     : ITiles
 {
     private int TotalHeight =>
@@ -39,7 +39,7 @@ public abstract class Tiles(IMemory memory, IElementList elementList, int offset
         GetEnumerator();
 
     public IElement ElementAt(Location location) =>
-        elementList[this[location].Id];
+        elements[this[location].Id];
 
     public bool FindTile(Tile kind, ref Location location)
     {
@@ -69,7 +69,7 @@ public abstract class Tiles(IMemory memory, IElementList elementList, int offset
 
     private int ColorMatch(Tile tile)
     {
-        var element = elementList[tile.Id];
+        var element = elements[tile.Id];
 
         if (element.Color < 0xF0) return element.Color & 7;
         if (element.Color == 0xFE) return ((tile.Color >> 4) & 0x0F) + 8;

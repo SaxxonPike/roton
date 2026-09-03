@@ -11,7 +11,7 @@ internal sealed class WaterInteraction(
     IAlerts alerts,
     IFacts facts,
     IConfig config,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger)
     : IInteraction
 {
@@ -20,7 +20,7 @@ internal sealed class WaterInteraction(
         if (config.NoPesterMode)
             return;
 
-        soundUnit.PlaySound(3, sounds.Water);
+        soundPlayer.PlaySound(3, sounds.Water);
         messenger.SetMessage(facts.ShortMessageDuration, alerts.WaterMessage);
     }
 }

@@ -9,9 +9,7 @@ internal sealed class AlignedCondition(
     IActorList actors)
     : ICondition
 {
-    public bool? Execute(ref OopContext context, ref Word instruction)
-    {
-        return context.Actor.Location.X == actors.Player.Location.X ||
-               context.Actor.Location.Y == actors.Player.Location.Y;
-    }
+    public bool? Execute(ref OopContext context, ref Word instruction) =>
+        context.Actor.Location.X == actors.Player.Location.X ||
+        context.Actor.Location.Y == actors.Player.Location.Y;
 }

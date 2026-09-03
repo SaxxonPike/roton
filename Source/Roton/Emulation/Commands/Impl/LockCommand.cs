@@ -10,8 +10,6 @@ internal sealed class LockCommand(
     IActorLocker actorLocker)
     : ICommand
 {
-    public void Execute(ref OopContext context, ref Word instruction)
-    {
-        actorLocker.LockActor(context.Index);
-    }
+    public void Execute(ref OopContext context, ref Word instruction) => 
+        actorLocker.Lock(context.Index);
 }

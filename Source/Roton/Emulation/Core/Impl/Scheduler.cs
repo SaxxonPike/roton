@@ -17,7 +17,7 @@ internal sealed class Scheduler : IScheduler
     private readonly IBoardTime _boardTime;
     private readonly IClock _clock;
     private readonly IGameThread _gameThread;
-    private readonly ISoundUnit _soundUnit;
+    private readonly ISoundPlayer _soundPlayer;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
@@ -26,14 +26,14 @@ internal sealed class Scheduler : IScheduler
         IBoardTime boardTime,
         IClock clock,
         IGameThread gameThread,
-        ISoundUnit soundUnit)
+        ISoundPlayer soundPlayer)
     {
         _state = state;
         _config = config;
         _boardTime = boardTime;
         _clock = clock;
         _gameThread = gameThread;
-        _soundUnit = soundUnit;
+        _soundPlayer = soundPlayer;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -44,7 +44,7 @@ internal sealed class Scheduler : IScheduler
         if (_ticksToRun <= 0)
             return true;
 
-        _soundUnit.UpdateSound();
+        _soundPlayer.UpdateSound();
         Tick?.Invoke(this, EventArgs.Empty);
         Interlocked.Decrement(ref _ticksToRun);
 
@@ -79,7 +79,7 @@ internal sealed class Scheduler : IScheduler
         }
         else
         {
-            _soundUnit.UpdateSound();
+            _soundPlayer.UpdateSound();
 
             Tick?.Invoke(this, EventArgs.Empty);
 

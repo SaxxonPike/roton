@@ -12,7 +12,7 @@ internal sealed class Cheater(
     IGameThread gameThread,
     IWorld world,
     ICheatList cheats,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds)
     : ICheater
 {
@@ -47,6 +47,6 @@ internal sealed class Cheater(
         cheat?.Execute(clear);
         hud.UpdateStatus();
 
-        soundUnit.PlaySound(10, sounds.Cheat);
+        soundPlayer.PlaySound(10, sounds.Cheat);
     }
 }

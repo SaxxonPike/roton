@@ -12,7 +12,7 @@ internal sealed class Attacker(
     IState state,
     IElementList elements,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IDamager damager,
     IDestroyer destroyer)
@@ -40,7 +40,7 @@ internal sealed class Attacker(
         else
         {
             destroyer.Destroy(location);
-            soundUnit.PlaySound(2, sounds.EnemySuicide);
+            soundPlayer.PlaySound(2, sounds.EnemySuicide);
         }
     }
 }

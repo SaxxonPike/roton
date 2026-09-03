@@ -14,11 +14,10 @@ internal sealed class OriginalHud(
     IChoiceHud choiceHud,
     IFadeMatrix fadeMatrix,
     IState state,
-    IElementList elementList,
     IWorld world,
     IBoard board,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IPlayField playField,
     IElementList elements,
@@ -297,7 +296,7 @@ internal sealed class OriginalHud(
     {
         DrawString(62, 4, "You need a newer", 0x1E);
         DrawString(62, 5, " version of ZZT!", 0x1E);
-        soundUnit.PlayErrorSound();
+        soundPlayer.PlayErrorSound();
         delayer.Delay(2000);
     }
 

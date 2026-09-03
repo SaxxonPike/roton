@@ -6,7 +6,7 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalWorld(
     IMemory memory,
-    IKeyList keyList,
+    IKeyList keys,
     IFlags flags)
     : IWorld
 {
@@ -26,7 +26,7 @@ internal sealed class OriginalWorld(
 
     public IFlags Flags { get; } = flags;
 
-    public IKeyList Keys { get; } = keyList;
+    public IKeyList Keys { get; } = keys;
 
     public string Name
     {

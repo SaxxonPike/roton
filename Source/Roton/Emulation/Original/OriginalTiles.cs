@@ -5,5 +5,5 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalTiles(IMemory memory, IElementList elementList)
-    : Tiles(memory, elementList, 0x24B9, 60, 25);
+internal sealed class OriginalTiles(IMemory memory, IElementList elements)
+    : Tiles(memory, elements, 0x24B9, 60, 25);

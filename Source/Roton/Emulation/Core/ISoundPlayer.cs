@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Emulation.Core;
 
-public interface ISoundUnit
+public interface ISoundPlayer
 {
     void PlaySound(int priority, ReadOnlySpan<byte> sound);
     void ClearSound();

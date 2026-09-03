@@ -7,13 +7,13 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super, 0x11)]
 internal sealed class CounterclockwiseConveyorDraw(
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IState state)
     : IDraw
 {
     public AnsiChar Draw(Location location)
     {
-        return ((state.GameCycle / elementList.Counter().Cycle) & 0x3) switch
+        return ((state.GameCycle / elements.Counter().Cycle) & 0x3) switch
         {
             3 => new AnsiChar(0xB3, tiles[location].Color),
             2 => new AnsiChar(0x2F, tiles[location].Color),

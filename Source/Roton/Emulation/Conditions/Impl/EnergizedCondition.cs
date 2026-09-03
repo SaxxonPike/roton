@@ -9,8 +9,6 @@ internal sealed class EnergizedCondition(
     IWorld world)
     : ICondition
 {
-    public bool? Execute(ref OopContext context, ref Word instruction)
-    {
-        return world.EnergyCycles > 0;
-    }
+    public bool? Execute(ref OopContext context, ref Word instruction) => 
+        world.EnergyCycles > 0;
 }

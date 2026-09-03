@@ -12,13 +12,13 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x1A)]
 internal sealed class PuzzleInteraction(
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IPusher pusher)
     : IInteraction
 {
     public void Interact(Location location, int index, ref Vector vector)
     {
         pusher.Push(location, vector);
-        soundUnit.PlaySound(2, sounds.Push);
+        soundPlayer.PlaySound(2, sounds.Push);
     }
 }

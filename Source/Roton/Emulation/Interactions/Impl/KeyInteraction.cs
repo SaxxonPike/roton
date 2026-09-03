@@ -13,7 +13,7 @@ internal sealed class KeyInteraction(
     IFacts facts,
     IAlerts alerts,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
@@ -25,7 +25,7 @@ internal sealed class KeyInteraction(
         if (world.Keys[keyIndex])
         {
             messenger.SetMessage(facts.LongMessageDuration, alerts.KeyAlreadyMessage(color));
-            soundUnit.PlaySound(2, sounds.KeyAlready);
+            soundPlayer.PlaySound(2, sounds.KeyAlready);
         }
         else
         {
@@ -33,7 +33,7 @@ internal sealed class KeyInteraction(
             tileRemover.RemoveItem(location);
             hud.UpdateStatus();
             messenger.SetMessage(facts.LongMessageDuration, alerts.KeyPickupMessage(color));
-            soundUnit.PlaySound(2, sounds.Key);
+            soundPlayer.PlaySound(2, sounds.Key);
         }
     }
 }

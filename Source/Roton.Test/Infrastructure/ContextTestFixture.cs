@@ -66,7 +66,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IWorld World { get; private set; } = null!;
     protected IGameSerializer GameSerializer { get; private set; } = null!;
     protected IWorldManager WorldManager { get; private set; } = null!;
-    protected ISoundUnit SoundUnit { get; private set; } = null!;
+    protected ISoundPlayer SoundPlayer { get; private set; } = null!;
 
     protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
@@ -193,7 +193,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
         WorldManager = container.GetRequiredService<IWorldManager>();
-        SoundUnit = container.GetRequiredService<ISoundUnit>();
+        SoundPlayer = container.GetRequiredService<ISoundPlayer>();
 
         // Preconfiguration
         WorldManager.ClearWorld();

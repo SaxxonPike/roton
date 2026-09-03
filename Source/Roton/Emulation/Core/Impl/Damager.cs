@@ -13,7 +13,7 @@ internal sealed class Damager(
     IState state,
     IElementList elements,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IDeferred<ITileRemover> tileRemover,
     IFacts facts,
@@ -41,7 +41,7 @@ internal sealed class Damager(
                     world.TimePassed = 0;
                     if (board.RestartOnZap)
                     {
-                        soundUnit.PlaySound(4, sounds.TimeOut);
+                        soundPlayer.PlaySound(4, sounds.TimeOut);
                         tileRemover.Instance.RemoveItem(actor.Location);
                         var oldLocation = actor.Location;
                         actor.Location = board.Entrance;
@@ -50,11 +50,11 @@ internal sealed class Damager(
                         state.GamePaused = true;
                     }
 
-                    soundUnit.PlaySound(4, sounds.Ouch);
+                    soundPlayer.PlaySound(4, sounds.Ouch);
                 }
                 else
                 {
-                    soundUnit.PlaySound(5, sounds.GameOver);
+                    soundPlayer.PlaySound(5, sounds.GameOver);
                 }
             }
         }
@@ -62,8 +62,8 @@ internal sealed class Damager(
         {
             var element = tiles[actor.Location].Id;
             if (element == elements.BulletId)
-                soundUnit.PlaySound(3, sounds.BulletDie);
-            else if (element != elements.ObjectId) soundUnit.PlaySound(3, sounds.EnemyDie);
+                soundPlayer.PlaySound(3, sounds.BulletDie);
+            else if (element != elements.ObjectId) soundPlayer.PlaySound(3, sounds.EnemyDie);
 
             actorManager.Free(index);
         }

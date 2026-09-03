@@ -5,11 +5,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Startup)]
-internal sealed class SoundUnit(
+internal sealed class SoundPlayer(
     IState state,
     ISpeaker speaker,
     IMusicEncoder musicEncoder)
-    : ISoundUnit
+    : ISoundPlayer
 {
     public void PlaySound(int priority, ReadOnlySpan<byte> sound)
     {
