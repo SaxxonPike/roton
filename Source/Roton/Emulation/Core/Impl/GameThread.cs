@@ -4,7 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed class GameThread : IGameThread
 {
     public Thread? Current { get; private set; }

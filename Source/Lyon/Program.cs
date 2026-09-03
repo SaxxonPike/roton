@@ -39,8 +39,7 @@ var config = new Config
 fileName ??= "TOWN.ZZT";
 
 // Determine which engine to use based on the world file name extension.
-var selector = new ContextEngineSelector();
-if (!selector.TryGetForWorldFileName(fileName, out var contextEngine))
+if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
     throw new LyonException($"Cannot determine the format of the world file: {fileName}");
 
 // Games in the Super engine look a little nicer with slightly taller graphics.

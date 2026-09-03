@@ -15,7 +15,8 @@ namespace Lyon.Presenters.Impl;
 /// <inheritdoc cref="IAudioPresenter"/>
 /// <inheritdoc cref="IDisposable"/>
 // ReSharper disable once UnusedMember.Global
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 public sealed unsafe class AudioPresenter(
     IConfig config, 
     IAudioStreamComposer composer,

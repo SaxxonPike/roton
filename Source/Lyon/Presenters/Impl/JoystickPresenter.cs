@@ -11,7 +11,8 @@ using Roton.Infrastructure;
 namespace Lyon.Presenters.Impl;
 
 /// <inheritdoc />
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposable
 {
     private readonly IConfig _config;

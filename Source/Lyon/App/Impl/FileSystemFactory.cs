@@ -6,7 +6,8 @@ using Roton.Infrastructure;
 namespace Lyon.App.Impl;
 
 /// <inheritdoc />
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 public sealed class FileSystemFactory(IAssemblyResourceService assemblyResourceService)
     : IFileSystemFactory
 {

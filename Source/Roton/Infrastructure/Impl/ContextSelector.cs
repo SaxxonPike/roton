@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace Roton.Infrastructure.Impl;
 
-[Context(Context.Startup)]
-public sealed class ContextEngineSelector : IContextEngineSelector
+public static class ContextSelector
 {
     private static readonly Dictionary<string, Context> ContextMap = new()
     {
@@ -12,7 +11,7 @@ public sealed class ContextEngineSelector : IContextEngineSelector
         { ".szt", Context.Super }
     };
 
-    public bool TryGetForWorldFileName(string filename, out Context context)
+    public static bool TryGetForWorldFileName(string filename, out Context context)
     {
         if (filename == null)
             throw new ArgumentNullException(nameof(filename));

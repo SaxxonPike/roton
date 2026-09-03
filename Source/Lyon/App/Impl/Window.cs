@@ -6,7 +6,8 @@ using Roton.Infrastructure;
 
 namespace Lyon.App.Impl;
 
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed unsafe class Window(
     IConfig config,
     IKeyboardPresenter keyboardPresenter,

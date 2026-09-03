@@ -7,7 +7,8 @@ using Roton.Infrastructure;
 namespace Lyon.Presenters.Impl;
 
 /// <inheritdoc />
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 // ReSharper disable once UnusedMember.Global
 public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
 {
