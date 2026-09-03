@@ -17,7 +17,9 @@ internal sealed class Bootstrap(
     IScheduler scheduler,
     IGameThread gameThread,
     IElementList elements,
-    IRandomizer randomizer)
+    IRandomizer randomizer,
+    IDrumSynthesizer drumSynthesizer,
+    IDrumSoundList drumSoundList)
     : IBootstrap
 {
     public event EventHandler? Exited;
@@ -27,7 +29,15 @@ internal sealed class Bootstrap(
         if (gameThread.Current != null)
             return;
 
-        randomizer.Initialize();
+        // While the randomizer is used to construct drum tables, this is done
+        // prior to the program's first "randomize" call, so we need to configure
+        // the random state precisely for this point to reproduce the proper
+        // frequency tables. The first iteration of the randomizer is discarded.
+
+        randomizer.Reset();
+        InitializeDrums();
+
+        randomizer.SetSeed(DateTime.Now);
         scheduler.Reset();
         gameThread.Start(StartMain);
     }
@@ -90,5 +100,11 @@ internal sealed class Bootstrap(
         elements.Invisible().Character = showInvisibleTiles ? 0xB0 : 0x20;
         elements.Invisible().Color = 0xFF;
         elements.Player().Character = 0x02;
+    }
+
+    private void InitializeDrums()
+    {
+        for (var i = 0; i < drumSoundList.Count; i++)
+            drumSynthesizer.Synthesize(i, drumSoundList[i]);
     }
 }

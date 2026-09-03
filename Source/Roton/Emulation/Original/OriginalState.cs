@@ -22,7 +22,7 @@ internal sealed class OriginalState : IState
         _memory = memory;
 
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
-        DefaultActor = new Actor(_memory, heap, 0x0076);
+        DefaultActor = new Actor(_memory, heap, 0x0076, 0x0021);
         LineChars = new ByteString(_memory, 0x0098);
         ProgressAnimation = new ProgressAnimation(_memory, 0x00B2);
         ProgressColors = new Int8List(_memory, 0x00AA, 8);

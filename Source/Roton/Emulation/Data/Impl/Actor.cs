@@ -2,47 +2,60 @@
 
 namespace Roton.Emulation.Data.Impl;
 
-internal sealed class Actor : IActor
+internal sealed class Actor(
+    IMemory memory,
+    ICodeHeap heap,
+    int offset,
+    int totalLength)
+    : IActor
 {
-    private readonly IMemory _memory;
-    private readonly ICodeHeap _heap;
+    public int Offset => offset;
 
-    internal Actor(IMemory memory, ICodeHeap heap, int offset)
-    {
-        _memory = memory;
-        _heap = heap;
-        Offset = offset;
-    }
+    public ref Word Cycle =>
+        ref memory.GetRef<Word>(Offset + 0x06);
 
-    public int Offset { get; }
+    public ref Word Follower =>
+        ref memory.GetRef<Word>(Offset + 0x0B);
 
-    public ref Word Cycle => ref _memory.GetRef<Word>(Offset + 0x06);
+    public ref Word Leader =>
+        ref memory.GetRef<Word>(Offset + 0x0D);
 
-    public ref Word Follower => ref _memory.GetRef<Word>(Offset + 0x0B);
+    public ref Word Length =>
+        ref memory.GetRef<Word>(Offset + 0x17);
 
-    public ref Word Leader => ref _memory.GetRef<Word>(Offset + 0x0D);
+    public ref Location Location =>
+        ref memory.GetRef<Location>(Offset + 0x00);
 
-    public ref Word Length => ref _memory.GetRef<Word>(Offset + 0x17);
+    public ref HWord P1 =>
+        ref memory.GetRef<HWord>(Offset + 0x08);
 
-    public ref Location Location => ref _memory.GetRef<Location>(Offset + 0x00);
+    public ref HWord P2 =>
+        ref memory.GetRef<HWord>(Offset + 0x09);
 
-    public ref HWord P1 => ref _memory.GetRef<HWord>(Offset + 0x08);
+    public ref HWord P3 =>
+        ref memory.GetRef<HWord>(Offset + 0x0A);
 
-    public ref HWord P2 => ref _memory.GetRef<HWord>(Offset + 0x09);
+    public ref DWord Pointer =>
+        ref memory.GetRef<DWord>(Offset + 0x11);
 
-    public ref HWord P3 => ref _memory.GetRef<HWord>(Offset + 0x0A);
+    public ref Tile UnderTile =>
+        ref memory.GetRef<Tile>(Offset + 0x0F);
 
-    public ref DWord Pointer => ref _memory.GetRef<DWord>(Offset + 0x11);
+    public ref Vector Vector =>
+        ref memory.GetRef<Vector>(Offset + 0x02);
 
-    public ref Tile UnderTile => ref _memory.GetRef<Tile>(Offset + 0x0F);
+    public ref Word Instruction =>
+        ref memory.GetRef<Word>(Offset + 0x15);
 
-    public ref Vector Vector => ref _memory.GetRef<Vector>(Offset + 0x02);
-
-    public ref Word Instruction => ref _memory.GetRef<Word>(Offset + 0x15);
+    public Span<HWord> Reserved =>
+        memory.GetSpan<HWord>(Offset + 0x19, totalLength - 0x19);
+    
+    public Span<byte> Raw =>
+        memory.GetSpan<byte>(Offset, totalLength);
 
     public Span<char> Code
     {
-        get => _heap[Pointer];
+        get => heap[Pointer];
         set { }
     }
 

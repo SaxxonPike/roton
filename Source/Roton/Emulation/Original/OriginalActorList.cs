@@ -15,7 +15,7 @@ internal sealed class OriginalActorList(
         Memory.GetRef<Word>(0x31CD) + 1;
 
     protected override IActor InitItem(int index) =>
-        new Actor(Memory, heap, 0x31CF + 0x0021 * index);
+        new Actor(Memory, heap, 0x31CF + 0x0021 * index, 0x0021);
 
     public override Span<char> GetActorCode(int index) =>
         heap[GetItem(index).Pointer];

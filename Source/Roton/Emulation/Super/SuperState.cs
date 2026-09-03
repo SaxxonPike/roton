@@ -22,7 +22,7 @@ internal sealed class SuperState : IState
         _memory = memory;
 
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
-        DefaultActor = new Actor(_memory, heap, 0x2262);
+        DefaultActor = new Actor(_memory, heap, 0x2262, 0x0019);
         LineChars = new ByteString(_memory, 0x22BA);
         ProgressAnimation = new ProgressAnimation(_memory, 0x21C0);
         ProgressColors = new Int8List(_memory, 0x21B8, 8);

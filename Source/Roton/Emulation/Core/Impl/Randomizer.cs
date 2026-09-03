@@ -10,48 +10,49 @@ internal sealed class Randomizer(
     IConfig config)
     : IRandomizer
 {
-    private RandomState _randomState;
+    private const int Coefficient = 0x08088405;
 
-    private int GetSeed()
+    private int GetInitialState(DateTime now)
     {
         if (config.RandomSeed is { } seed)
             return seed;
 
-        var time = DateTimeOffset.Now;
-        seed = (time.Second << 24) |
-               ((time.Millisecond / 10) << 16) |
-               (time.Hour << 8) |
-               time.Minute;
+        seed = (now.Second << 24) |
+               ((now.Millisecond / 10) << 16) |
+               (now.Hour << 8) |
+               now.Minute;
 
         return seed;
     }
 
-    public void Initialize()
-    {
-        var seed = GetSeed();
-        _randomState.Seed = seed;
-        _randomState.State = seed;
-    }
+    public void Reset() => 
+        State = 1;
+
+    public void SetSeed(DateTime now) => 
+        State = GetInitialState(now);
 
     public int GetNext(int exclusiveUpperBound)
     {
-        _randomState.State = unchecked(_randomState.State * 0x08088405 + 1);
-
         if (exclusiveUpperBound == 0)
             return 0;
 
-        return unchecked((ushort)(_randomState.State >> 16)) % exclusiveUpperBound;
+        var result = unchecked((ushort)(State >> 16)) % exclusiveUpperBound;
+        State = unchecked(State * Coefficient + 1);
+        return result;
     }
 
-    public int Seed
+    public void GetNext(int exclusiveUpperBound, Span<int> buffer)
     {
-        get => _randomState.Seed;
-        set => _randomState.Seed = value;
+        for (var i = 0; i < buffer.Length; i++)
+        {
+            if (exclusiveUpperBound == 0)
+                buffer[i] = 0;
+            else
+                buffer[i] = unchecked((ushort)(State >> 16)) % exclusiveUpperBound;
+
+            State = unchecked(State * Coefficient + 1);
+        }
     }
 
-    public int State
-    {
-        get => _randomState.State;
-        set => _randomState.State = value;
-    }
+    public int State { get; set; }
 }

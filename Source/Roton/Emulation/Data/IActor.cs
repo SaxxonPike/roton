@@ -1,4 +1,6 @@
-﻿namespace Roton.Emulation.Data;
+﻿using System;
+
+namespace Roton.Emulation.Data;
 
 public interface IActor : IProgrammable
 {
@@ -14,4 +16,6 @@ public interface IActor : IProgrammable
     ref HWord P2 { get; }
     ref HWord P3 { get; }
     ref DWord Pointer { get; }
+    Span<HWord> Reserved { get; }
+    Span<byte> Raw { get; }
 }

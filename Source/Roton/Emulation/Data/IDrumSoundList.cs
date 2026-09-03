@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Roton.Emulation.Data;
 
-public interface IDrumSoundList : IEnumerable<IDrumSound>
+public interface IDrumSoundList
 {
-    IDrumSound this[int index] { get; }
+    Span<Word> this[int index] { get; }
+    int Count { get; }
 }

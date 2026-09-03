@@ -28,7 +28,7 @@ internal sealed class Spawner(
 
         source ??= state.DefaultActor;
 
-        actor.CopyFrom(source);
+        actor.CopyFromByRaw(source);
         actor.Location = location;
         actor.Cycle = cycle;
         actor.UnderTile = tiles[location];

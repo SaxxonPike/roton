@@ -8,6 +8,12 @@ public static class MemoryExtensions
 {
     extension(IMemory memory)
     {
+        internal Span<T> GetSpan<T>(int offset) where T : struct =>
+            MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)));
+
+        internal Span<T> GetSpan<T>(int offset, int count) where T : struct =>
+            memory.GetSpan<T>(offset).Slice(0, count);
+
         internal ref T GetRef<T>(int offset) where T : struct =>
 #if NET10_0_OR_GREATER
             ref MemoryMarshal.AsRef<T>(memory.Data.Slice(unchecked((ushort)offset)));
