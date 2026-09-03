@@ -20,12 +20,14 @@ internal sealed class RestoreCommand(
         buffer[0] = '\r';
         buffer[1] = '\'';
         var wordBuffer = buffer.Slice(2);
-        
+
         parser.ReadWord(context.Index, ref instruction);
         context.Search.Index = 0;
+
         while (true)
         {
-            var result = broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
+            var result =
+                broadcaster.ExecuteLabel(context.Index, ref context.Search, state.GetOopWord(wordBuffer), "\r'");
             if (!result)
                 break;
 
