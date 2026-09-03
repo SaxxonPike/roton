@@ -35,7 +35,7 @@ internal sealed class PusherAction(
             return;
 
         var behindLocation = actor.Location - actor.Vector;
-        mover.MoveActor(index, actor.Location + actor.Vector);
+        mover.Move(index, actor.Location + actor.Vector);
         soundPlayer.PlaySound(2, sounds.Push);
 
         if (tiles[behindLocation].Id != elements.PusherId)

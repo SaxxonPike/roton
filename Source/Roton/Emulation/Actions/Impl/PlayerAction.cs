@@ -139,7 +139,7 @@ internal sealed class PlayerAction(
                     soundPlayer.PlayStep();
 
                 if (tiles.ElementAt(actor.Location + state.KeyVector).IsFloor)
-                    mover.MoveActor(0, actor.Location + state.KeyVector);
+                    mover.Move(0, actor.Location + state.KeyVector);
             }
         }
 
@@ -245,6 +245,6 @@ internal sealed class PlayerAction(
             }
         }
 
-        mover.MoveActorOnRiver(index);
+        mover.Float(index);
     }
 }

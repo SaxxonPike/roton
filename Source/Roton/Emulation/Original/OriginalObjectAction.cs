@@ -29,7 +29,7 @@ internal sealed class OriginalObjectAction(
         var target = actor.Location + actor.Vector;
         if (tiles.ElementAt(target).IsFloor)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         }
         else
         {

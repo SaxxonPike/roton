@@ -26,7 +26,7 @@ internal sealed class TryCommand(
         }
         if (tiles.ElementAt(target).IsFloor)
         {
-            mover.MoveActor(context.Index, target);
+            mover.Move(context.Index, target);
             context.Moved = true;
             context.Resume = false;
         }

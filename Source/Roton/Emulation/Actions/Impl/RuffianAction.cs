@@ -48,7 +48,7 @@ internal sealed class RuffianAction(
             }
             else if (tiles.ElementAt(target).IsFloor)
             {
-                mover.MoveActor(index, target);
+                mover.Move(index, target);
 
                 if (actor.P2 + 8 <= randomizer.GetNext(17))
                     actor.Vector = new Vector(0, 0);

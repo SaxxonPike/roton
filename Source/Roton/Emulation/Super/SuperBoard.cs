@@ -4,35 +4,25 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-internal sealed class SuperBoard : IBoard
+internal sealed class SuperBoard(IMemory memory) : IBoard
 {
-    private readonly IMemory _memory;
     private Bool _isDark;
 
-    public SuperBoard(IMemory memory, IExits exits)
-    {
-        _memory = memory;
-        Exits = exits;
-        // Exits = new SuperExits(_memory);
-    }
+    public ref Location16 Camera => ref memory.GetRef<Location16>(0x776F);
 
-    public ref Location16 Camera => ref _memory.GetRef<Location16>(0x776F);
-
-    public ref Location Entrance => ref _memory.GetRef<Location>(0x776D);
-
-    public IExits Exits { get; }
+    public ref Location Entrance => ref memory.GetRef<Location>(0x776D);
 
     public ref Bool IsDark => ref _isDark;
 
-    public ref Word MaximumShots => ref _memory.GetRef<Word>(0x7767);
+    public ref Word MaximumShots => ref memory.GetRef<Word>(0x7767);
 
     public string Name
     {
-        get => _memory.ReadString(0x2BAE);
-        set => _memory.WriteString(0x2BAE, value);
+        get => memory.ReadString(0x2BAE);
+        set => memory.WriteString(0x2BAE, value);
     }
 
-    public ref Bool RestartOnZap => ref _memory.GetRef<Bool>(0x776C);
+    public ref Bool RestartOnZap => ref memory.GetRef<Bool>(0x776C);
 
-    public ref Word TimeLimit => ref _memory.GetRef<Word>(0x7773);
+    public ref Word TimeLimit => ref memory.GetRef<Word>(0x7773);
 }

@@ -29,6 +29,6 @@ internal sealed class SuperMonitorAction(
             _ => false
         };
 
-        mover.MoveActorOnRiver(index);
+        mover.Float(index);
     }
 }

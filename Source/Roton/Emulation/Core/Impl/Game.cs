@@ -159,7 +159,7 @@ internal sealed class Game(
                     {
                         if (tiles.ElementAt(actors.Player.Location).Id == elements.PlayerId)
                         {
-                            mover.MoveActor(0, target);
+                            mover.Move(0, target);
                         }
                         else
                         {

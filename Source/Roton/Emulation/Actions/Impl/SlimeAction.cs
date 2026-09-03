@@ -43,7 +43,7 @@ internal sealed class SlimeAction(
 
                 if (spawnCount == 0)
                 {
-                    mover.MoveActor(index, target);
+                    mover.Move(index, target);
                     tiles[source] = slimeTrailTile;
                     boardUpdater.UpdateBoard(source);
                 }

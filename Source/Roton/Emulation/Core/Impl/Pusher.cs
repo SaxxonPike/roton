@@ -116,7 +116,7 @@ internal sealed class Pusher(
         var sourceIndex = actors.ActorIndexAt(source);
         if (sourceIndex >= 0)
         {
-            mover.MoveActor(sourceIndex, target);
+            mover.Move(sourceIndex, target);
         }
         else
         {

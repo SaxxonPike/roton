@@ -60,7 +60,7 @@ internal sealed class BoardEdgeInteraction(
         {
             if (tiles.ElementAt(target).Id != elements.PlayerId)
             {
-                mover.MoveActor(0, target);
+                mover.Move(0, target);
             }
 
             fader.FadePurple();

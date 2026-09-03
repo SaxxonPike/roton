@@ -38,7 +38,7 @@ internal sealed class OriginalHud(
     public void ClearTitleStatus() =>
         DrawStatusLine(6);
 
-    public bool Confirm(string message)
+    private bool Confirm(string message)
     {
         DrawStatusLine(3);
         DrawStatusLine(4);
@@ -50,7 +50,7 @@ internal sealed class OriginalHud(
         return result;
     }
 
-    public void CreateStatusBar()
+    private void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -136,7 +136,7 @@ internal sealed class OriginalHud(
             world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
-    public void DrawChar(int x, int y, AnsiChar ac) =>
+    private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
     public void DrawMessage(IMessage message, int color)
@@ -153,7 +153,7 @@ internal sealed class OriginalHud(
     public void DrawPausing() =>
         DrawString(0x40, 0x05, "Pausing...", 0x1F);
 
-    public void DrawStatusLine(int y)
+    private void DrawStatusLine(int y)
     {
         var blankChar = new AnsiChar(0x20, 0x11);
 
@@ -161,7 +161,7 @@ internal sealed class OriginalHud(
             terminal.Plot(x, y, blankChar);
     }
 
-    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
+    private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>

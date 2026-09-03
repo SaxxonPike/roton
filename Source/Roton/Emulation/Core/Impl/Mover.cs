@@ -25,7 +25,7 @@ internal sealed class Mover(
     private static int Distance(Location a, Location b) =>
         (a.Y - b.Y).Square() * 2 + (a.X - b.X).Square();
 
-    public void MoveActor(int index, Location target)
+    public void Move(int index, Location target)
     {
         var actor = actors[index];
         var sourceLocation = actor.Location;
@@ -79,7 +79,7 @@ internal sealed class Mover(
         }
     }
 
-    public void MoveActorOnRiver(int index)
+    public void Float(int index)
     {
         var actor = actors[index];
         var vector = new Vector();
@@ -108,7 +108,7 @@ internal sealed class Mover(
         {
             var target = actor.Location + vector;
             if (_tiles.ElementAt(target).IsFloor)
-                MoveActor(index, target);
+                Move(index, target);
         }
     }
 }

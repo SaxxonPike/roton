@@ -30,8 +30,6 @@ internal sealed class OriginalMessageHandler(
         }
     }
 
-    public string[] GetMessageLines()
-    {
-        return [state.Message];
-    }
+    public string[] GetMessageLines() => 
+        [state.Message];
 }

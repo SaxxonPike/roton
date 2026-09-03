@@ -35,7 +35,7 @@ internal sealed class BulletAction(
             var element = tiles.ElementAt(target);
             if (element.IsFloor || elements.IsWater(element.Id))
             {
-                mover.MoveActor(index, target);
+                mover.Move(index, target);
                 break;
             }
 

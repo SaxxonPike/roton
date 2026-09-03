@@ -213,7 +213,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         MoveActorTo(0, x, y);
 
     protected void MoveActorTo(int index, int x, int y) => 
-        Mover.MoveActor(index, new Location(x, y));
+        Mover.Move(index, new Location(x, y));
 
     protected void FaceActor(int index, Vector vector) =>
         Actors[index].Vector = vector;

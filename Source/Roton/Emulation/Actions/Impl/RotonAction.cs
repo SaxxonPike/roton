@@ -41,7 +41,7 @@ internal sealed class RotonAction(
         var target = actor.Location + actor.Vector;
 
         if (tiles.ElementAt(target).IsFloor)
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         else if (tiles[target].Id == elements.PlayerId)
             attacker.Attack(index, target);
     }

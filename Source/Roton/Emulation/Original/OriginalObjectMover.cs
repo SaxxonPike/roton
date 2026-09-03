@@ -27,7 +27,7 @@ internal sealed class OriginalObjectMover(
             if (!tiles.ElementAt(target).IsFloor)
                 return;
 
-            mover.MoveActor(context.Index, target);
+            mover.Move(context.Index, target);
             context.Repeat = false;
         }
     }

@@ -71,11 +71,11 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(0, 1);
                         if (tiles[target - testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target - testVector);
+                            mover.Move(playerIndex, target - testVector);
                         }
                         else if (tiles[target + testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                     }
                     else
@@ -83,12 +83,12 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(1, 0);
                         if (tiles[target + testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                         else if (tiles[target - testVector].Id == emptyElement)
                         {
                             // "sum" is not a mistake; this is an original engine bug
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                     }
 

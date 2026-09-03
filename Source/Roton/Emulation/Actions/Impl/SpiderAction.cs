@@ -46,7 +46,7 @@ internal sealed class SpiderAction(
 
         if (targetElement == elements.WebId)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
             return true;
         }
 

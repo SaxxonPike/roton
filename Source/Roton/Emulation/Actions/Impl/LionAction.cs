@@ -31,7 +31,7 @@ internal sealed class LionAction(
         var element = tiles.ElementAt(target);
         if (element.IsFloor)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         }
         else if (element.Id == elements.PlayerId)
         {

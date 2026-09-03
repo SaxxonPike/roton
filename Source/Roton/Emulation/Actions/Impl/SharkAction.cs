@@ -30,7 +30,7 @@ internal sealed class SharkAction(
         var targetElement = tiles.ElementAt(target);
 
         if (elements.IsWater(targetElement.Id))
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         else if (targetElement.Id == elements.PlayerId)
             attacker.Attack(index, target);
     }
