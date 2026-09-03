@@ -1,9 +1,9 @@
 namespace Roton.Emulation.Data;
 
-public readonly struct ScrollResult(int index, string? label, bool cancelled, bool shown)
+public struct ScrollResult
 {
-    public int Index => index;
-    public string? Label => label;
-    public bool Cancelled => cancelled;
-    public bool Shown => shown;
+    public int Index { get; set; }
+    public string? Label { get; set; }
+    public bool Cancelled { get; set; }
+    public bool Shown { get; set; }
 }

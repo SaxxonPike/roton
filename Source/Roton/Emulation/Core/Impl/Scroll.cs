@@ -37,9 +37,21 @@ internal sealed class Scroll(
             switch (state.KeyPressed)
             {
                 case EngineKeyCode.Escape:
-                    return new ScrollResult(st.Index, st.Label, true, true);
+                    return new ScrollResult
+                    {
+                        Index = st.Index,
+                        Label = st.Label,
+                        Cancelled = true,
+                        Shown = true
+                    };
                 case EngineKeyCode.Enter:
-                    return new ScrollResult(st.Index, st.Label, false, true);
+                    return new ScrollResult
+                    {
+                        Index = st.Index,
+                        Label = st.Label,
+                        Cancelled = false,
+                        Shown = true
+                    };
                 case EngineKeyCode.PageUp:
                     st.Index -= facts.ScrollHeight - 5;
                     update = true;
@@ -69,7 +81,13 @@ internal sealed class Scroll(
             scheduler.WaitForTick();
         }
 
-        return new ScrollResult(st.Index, st.Label, true, true);
+        return new ScrollResult
+        {
+            Index = st.Index,
+            Label = st.Label,
+            Cancelled = true,
+            Shown = true
+        };
     }
 
     private bool LoadHelpFile(string filename)
@@ -101,8 +119,13 @@ internal sealed class Scroll(
                 return result;
 
             var innerJump = SelectLine(result.Index, out var jumpLabel, out var jumpIndex);
+
             if (!innerJump)
+            {
+                result.Index = jumpIndex;
+                result.Label = jumpLabel;
                 return result;
+            }
 
             scrollState.Index = jumpIndex;
             scrollState.Label = jumpLabel;
