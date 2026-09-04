@@ -36,8 +36,6 @@ var config = new Config
     AudioDrumRate = 64,
     AudioSampleRate = 44100,
     AudioBufferSize = 2048,
-    VideoScaleX = 2,
-    VideoScaleY = 2,
     MasterClockNumerator = 100,
     MasterClockDenominator = 7275,
     FastMode = switches.Contains("--fast") || switches.Contains("-f"),
@@ -51,10 +49,6 @@ var config = new Config
 // Determine which engine to use based on the world file name extension.
 if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
     throw new LyonException($"Cannot determine the format of the world file: {fileName}");
-
-// Games in the Super engine look a little nicer with slightly taller graphics.
-if (contextEngine == Context.Super)
-    config.VideoScaleY *= 1.37f;
 
 // Create the DI container.
 var services = new ServiceCollection();

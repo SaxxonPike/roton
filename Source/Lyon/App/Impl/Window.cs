@@ -287,8 +287,8 @@ internal sealed unsafe class Window(
         _closeWindow = false;
 
         // Window defaults.
-        WindowWidth = (int)(640 * config.VideoScaleX);
-        WindowHeight = (int)(350 * config.VideoScaleY);
+        WindowWidth = 640 * 2;
+        WindowHeight = 420 * 2;
         RenderWidth = 640;
         RenderHeight = 350;
 
