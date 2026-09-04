@@ -288,7 +288,7 @@ internal sealed unsafe class Window(
 
         // Window defaults.
         WindowWidth = 640 * 2;
-        WindowHeight = 420 * 2;
+        WindowHeight = 400 * 2;
         RenderWidth = 640;
         RenderHeight = 350;
 
