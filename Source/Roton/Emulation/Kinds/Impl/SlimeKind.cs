@@ -11,6 +11,7 @@ internal sealed class SlimeKind : IKind
     {
         element.Character = '*';
         element.Cycle = 3;
+        element.IsDestructible = false;
         element.MenuIndex = 2;
         element.MenuKey = 'V';
         element.Name = "Slime";

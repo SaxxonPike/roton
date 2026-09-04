@@ -10,6 +10,7 @@ internal sealed class BreakableKind : IKind
     public void Initialize(IElement element)
     {
         element.Character = 0xB1;
+        element.IsDestructible = false;
         element.MenuIndex = 3;
         element.MenuKey = 'B';
         element.Name = "Breakable";

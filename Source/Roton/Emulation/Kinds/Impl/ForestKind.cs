@@ -11,7 +11,7 @@ internal sealed class ForestKind : IKind
     {
         element.Character = 0xB0;
         element.Color = 0x20;
-        element.IsFloor = true;
+        element.IsFloor = false;
         element.MenuIndex = 3;
         element.MenuKey = 'F';
         element.Name = "Forest";

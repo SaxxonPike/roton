@@ -12,6 +12,7 @@ internal sealed class StarKind : IKind
         element.Character = 0x53;
         element.Color = 0x0F;
         element.Cycle = 1;
+        element.IsDestructible = false;
         element.HasDrawCode = true;
         element.Name = "Star";
     }
