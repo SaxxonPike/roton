@@ -1,5 +1,4 @@
 ﻿using System;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
@@ -7,21 +6,8 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-internal sealed class SuperElementList : ElementList
+internal sealed class SuperElementList(IMemory memory) : ElementList(80)
 {
-    private readonly IMemory _memory;
-    // private readonly Memory<byte> _data;
-
-    public SuperElementList(IMemory memory, IEngineResourceService engineResourceService)
-        : base(80)
-    {
-        _memory = memory;
-        // _data = engineResourceService.GetElementData().ToArray();
-        // Reset();
-    }
-
-    // public override void Reset() => _memory.Write(0x7CAA, _data.Span);
-
     public override bool IsWater(int id) =>
         id == LavaId;
 
@@ -82,5 +68,5 @@ internal sealed class SuperElementList : ElementList
     public override int WebId => 0x3F;
 
     protected override IElement InitItem(int index) => 
-        new SuperElement(_memory, index);
+        new SuperElement(memory, index);
 }
