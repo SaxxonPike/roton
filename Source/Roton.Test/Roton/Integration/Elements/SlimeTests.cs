@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using NUnit.Framework;
+using Roton.Emulation.Core;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -54,5 +55,27 @@ public class SlimeTests(Context context) : AllContextTestFixture(context)
         // Assert.
         TileAt(5, 5).Id.Should().Be(Elements.BreakableId,
             "surrounded slime should die and leave behind a breakable tile");
+    }
+
+    [Test]
+    public void Slime_ShouldBecomeBreakableWall_WhenTouched()
+    {
+        // Create the slime.
+        SpawnTo(5, 5, Elements.SlimeId, 0x0A);
+        
+        // Move the player next to the slime.
+        MovePlayerTo(6, 5);
+        
+        // Instruct the player to move into the slime.
+        Type(AnsiKey.Left);
+
+        // Wait for the player to move.
+        StepAllKeys();
+        
+        // Assert.
+        Actors.Count.Should().Be(1,
+            "slime should have been removed");
+        TileAt(5, 5).Id.Should().Be(Elements.BreakableId,
+            "slime should have become a breakable wall");
     }
 }
