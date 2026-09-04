@@ -92,7 +92,7 @@ public interface IElement
     string P2EditText { get; set; }
 
     /// <remarks>
-    /// RoZ: Param3Name
+    /// RoZ: ParamBulletTypeName
     /// </remarks>
     string P3EditText { get; set; }
 

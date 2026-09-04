@@ -13,8 +13,6 @@ public abstract class TypeList<T>(
     private bool _initialized;
 
     private T[] _itemsById = [];
-    private int _minId;
-    private int _maxId;
 
     private T? _defaultItemById;
     private T? _defaultItemByName;
@@ -38,8 +36,8 @@ public abstract class TypeList<T>(
             .ThenBy(x => x.Metadata.Name)
             .ToList();
 
-        _minId = candidates.DefaultIfEmpty().Min(x => x.Metadata.Id);
-        _maxId = candidates.DefaultIfEmpty().Max(x => x.Metadata.Id);
+        MinId = candidates.DefaultIfEmpty().Min(x => x.Metadata.Id);
+        MaxId = candidates.DefaultIfEmpty().Max(x => x.Metadata.Id);
 
         foreach (var (item, attribute) in candidates)
         {
@@ -54,9 +52,9 @@ public abstract class TypeList<T>(
                 _defaultItemById = item;
         }
 
-        _itemsById = new T[_maxId - _minId + 1];
+        _itemsById = new T[MaxId - MinId + 1];
         foreach (var kv in resultById)
-            _itemsById[kv.Key - _minId] = kv.Value;
+            _itemsById[kv.Key - MinId] = kv.Value;
 
 #if NET10_0_OR_GREATER
         _items = result.GetAlternateLookup<ReadOnlySpan<char>>();
@@ -70,9 +68,9 @@ public abstract class TypeList<T>(
         if (!_initialized)
             Initialize();
 
-        if (id < _minId || id > _maxId)
+        if (id < MinId || id > MaxId)
             return _defaultItemById;
-        return _itemsById[id - _minId];
+        return _itemsById[id - MinId];
     }
 
     public T? Get(ReadOnlySpan<char> name)
@@ -91,5 +89,27 @@ public abstract class TypeList<T>(
 
         return _defaultItemByName;
 #endif
+    }
+
+    protected int MinId
+    {
+        get
+        {
+            if (!_initialized)
+                Initialize();
+            return field;
+        }
+        private set;
+    }
+
+    protected int MaxId
+    {
+        get
+        {
+            if (!_initialized)
+                Initialize();
+            return field;
+        }
+        private set;
     }
 }
