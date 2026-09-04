@@ -54,7 +54,7 @@ if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
 
 // Games in the Super engine look a little nicer with slightly taller graphics.
 if (contextEngine == Context.Super)
-    config.VideoScaleY *= 1.25f;
+    config.VideoScaleY *= 1.37f;
 
 // Create the DI container.
 var services = new ServiceCollection();
