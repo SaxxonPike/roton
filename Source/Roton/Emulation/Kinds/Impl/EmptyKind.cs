@@ -167,25 +167,76 @@ public class TigerKind : IKind
 [Context(Context.Super, 0x3B)]
 public class RotonKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x94;
+        element.Color = 0x0D;
+        element.IsDestructible = true;
+        element.IsPushable = true;
+        element.Cycle = 1;
+        element.MenuIndex = 4;
+        element.MenuKey = 'R';
+        element.Name = "Roton";
+        element.EditorCategory = "Uglies:";
+        element.P1EditText = "Intelligence?";
+        element.P2EditText = "Switch Rate?";
+        element.Points = 2;
+    }
 }
 
 [Context(Context.Super, 0x3C)]
 public class DragonPupKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0xED;
+        element.Color = 0x04;
+        element.IsDestructible = true;
+        element.IsPushable = true;
+        element.Cycle = 2;
+        element.HasDrawCode = true;
+        element.MenuIndex = 4;
+        element.MenuKey = 'D';
+        element.Name = "Dragon Pup";
+        element.P1EditText = "Intelligence?";
+        element.P2EditText = "Switch Rate?";
+        element.Points = 1;
+    }
 }
 
 [Context(Context.Super, 0x3D)]
 public class PairerKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0xE5;
+        element.Color = 0x01;
+        element.IsDestructible = true;
+        element.IsPushable = true;
+        element.Cycle = 2;
+        element.MenuIndex = 4;
+        element.MenuKey = 'P';
+        element.Name = "Pairer";
+        element.P1EditText = "Intelligence?";
+        element.Points = 2;
+    }
 }
 
 [Context(Context.Super, 0x3E)]
 public class SpiderKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x0F;
+        element.Color = 0xFF;
+        element.IsDestructible = true;
+        element.Cycle = 1;
+        element.MenuIndex = 4;
+        element.MenuKey = 'S';
+        element.Name = "Spider";
+        element.P1EditText = "Intelligence?";
+        element.Points = 3;
+    }
 }
 
 [Context(Context.Original, 0x2C)]
@@ -213,7 +264,7 @@ public class CentipedeSegmentKind : IKind
 {
     public void Initialize(IElement element)
     {
-        element.Character = 'O';
+        element.Character = 0x4F;
         element.IsDestructible = true;
         element.Cycle = 2;
         element.MenuIndex = 2;
@@ -243,7 +294,7 @@ public class StarKind : IKind
 {
     public void Initialize(IElement element)
     {
-        element.Character = 'S';
+        element.Character = 0x53;
         element.Color = 0x0F;
         element.Cycle = 1;
         element.HasDrawCode = true;
@@ -283,7 +334,16 @@ public class AmmoKind : IKind
 [Context(Context.Super, 0x40)]
 public class StoneKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 'Z';
+        element.Color = 0x0F;
+        element.Cycle = 1;
+        element.HasDrawCode = true;
+        element.MenuIndex = 5;
+        element.MenuKey = 'Z';
+        element.Name = "Stone";
+    }
 }
 
 [Context(Context.Original, 0x07)]
@@ -455,8 +515,8 @@ public class SuperBearKind : IKind
 {
     public void Initialize(IElement element)
     {
-        element.Character = 0x99;
-        element.Color = 0x06;
+        element.Character = 0xEB;
+        element.Color = 0x02;
         element.IsDestructible = true;
         element.IsPushable = true;
         element.Cycle = 3;
@@ -732,7 +792,7 @@ public class SuperBlinkWallKind : IKind
         element.Cycle = 1;
         element.HasDrawCode = true;
         element.MenuIndex = 3;
-        element.MenuKey = 'L';
+        element.MenuKey = 'X';
         element.Name = "Blink wall";
         element.P1EditText = "Starting time";
         element.P2EditText = "Period";
@@ -758,37 +818,91 @@ public class FakeWallKind : IKind
 [Context(Context.Super, 0x2F)]
 public class FloorKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0xB0;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.MenuKey = 'F';
+        element.Name = "Floor";
+        element.EditorCategory = "Terrains:";
+    }
 }
 
 [Context(Context.Super, 0x3F)]
 public class WebKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0xC5;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.HasDrawCode = true;
+        element.MenuKey = 'W';
+        element.Name = "Web";
+    }
 }
 
 [Context(Context.Super, 0x30)]
 public class WaterNKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x1E;
+        element.Color = 0x19;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.MenuKey = '8';
+        element.Name = "Water N";
+    }
 }
 
 [Context(Context.Super, 0x31)]
 public class WaterSKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x1F;
+        element.Color = 0x19;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.MenuKey = '2';
+        element.Name = "Water S";
+    }
 }
 
 [Context(Context.Super, 0x32)]
 public class WaterWKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x11;
+        element.Color = 0x19;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.MenuKey = '4';
+        element.Name = "Water W";
+    }
 }
 
 [Context(Context.Super, 0x33)]
 public class WaterEKind : IKind
 {
-    public void Initialize(IElement element) { }
+    public void Initialize(IElement element)
+    {
+        element.Character = 0x10;
+        element.Color = 0x19;
+        element.MenuIndex = 5;
+        element.IsEditorFloor = true;
+        element.IsFloor = true;
+        element.MenuKey = '6';
+        element.Name = "Water E";
+    }
 }
 
 [Context(Context.Original, 0x1C)]
@@ -797,7 +911,7 @@ public class InvisibleKind : IKind
 {
     public void Initialize(IElement element)
     {
-        element.Character = ' ';
+        element.Character = 0x20;
         element.MenuIndex = 3;
         element.MenuKey = 'I';
         element.Name = "Invisible";
