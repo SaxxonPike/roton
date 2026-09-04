@@ -75,7 +75,7 @@ public abstract class ElementList(int count) : CachedFixedList<IElement>(count),
         return -1;
     }
 
-    public abstract void Reset();
+    // public abstract void Reset();
 
     public abstract bool IsWater(int id);
 

@@ -10,17 +10,17 @@ namespace Roton.Emulation.Super;
 internal sealed class SuperElementList : ElementList
 {
     private readonly IMemory _memory;
-    private readonly Memory<byte> _data;
+    // private readonly Memory<byte> _data;
 
     public SuperElementList(IMemory memory, IEngineResourceService engineResourceService)
         : base(80)
     {
         _memory = memory;
-        _data = engineResourceService.GetElementData().ToArray();
-        Reset();
+        // _data = engineResourceService.GetElementData().ToArray();
+        // Reset();
     }
 
-    public override void Reset() => _memory.Write(0x7CAA, _data.Span);
+    // public override void Reset() => _memory.Write(0x7CAA, _data.Span);
 
     public override bool IsWater(int id) =>
         id == LavaId;

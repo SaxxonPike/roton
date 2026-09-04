@@ -9,19 +9,19 @@ namespace Roton.Emulation.Original;
 [Context(Context.Original)]
 internal sealed class OriginalElementList : ElementList
 {
-    private readonly Memory<byte> _data;
+    // private readonly Memory<byte> _data;
     private readonly IMemory _memory;
 
     public OriginalElementList(IMemory memory, IEngineResourceService engineResourceService)
         : base(54)
     {
         _memory = memory;
-        _data = engineResourceService.GetElementData().ToArray();
-        Reset();
+        // _data = engineResourceService.GetElementData().ToArray();
+        // Reset();
     }
 
-    public override void Reset() =>
-        _memory.Write(0x4AD4, _data.Span);
+    // public override void Reset() =>
+    //     _memory.Write(0x4AD4, _data.Span);
 
     public override bool IsWater(int id) =>
         id == WaterId;

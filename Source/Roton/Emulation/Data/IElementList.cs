@@ -67,7 +67,7 @@ public interface IElementList : IEnumerable<IElement>
     int WebId { get; }
 
     int IndexOf(ReadOnlySpan<char> name);
-    void Reset();
+    // void Reset();
     bool IsWater(int id);
     bool AreAdjacent(int idA, int idB);
 }

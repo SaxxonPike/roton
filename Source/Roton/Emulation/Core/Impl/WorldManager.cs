@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -27,7 +28,8 @@ internal sealed class WorldManager(
     IFileTitles fileTitles,
     IExits exits,
     IScroll scroll,
-    IScrollContent scrollContent)
+    IScrollContent scrollContent,
+    IKindList kinds)
     : IWorldManager
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -132,6 +134,7 @@ internal sealed class WorldManager(
 
     public void ClearWorld()
     {
+        kinds.InitializeAll();
         state.BoardCount = 0;
         boards.Clear();
 
