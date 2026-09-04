@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class AnsiKeyTransformer : IAnsiKeyTransformer
+internal sealed class KeyTransformer : IKeyTransformer
 {
     private class AnsiKeyMap(byte[] natural, byte[] shift, byte[] ctrl, byte[] alt)
     {

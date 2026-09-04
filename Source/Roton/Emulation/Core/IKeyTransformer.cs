@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Emulation.Core;
 
-public interface IAnsiKeyTransformer
+public interface IKeyTransformer
 {
     ReadOnlySpan<byte> GetBytes(KeyPress keyPress);
 }
