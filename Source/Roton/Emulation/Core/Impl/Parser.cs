@@ -12,6 +12,7 @@ internal sealed class Parser(
     IState state)
     : IParser
 {
+    /// <inheritdoc />
     public int Search(int index, ReadOnlySpan<char> term)
     {
         if (term.IsEmpty)
@@ -52,6 +53,7 @@ internal sealed class Parser(
         return -1;
     }
 
+    /// <inheritdoc />
     public char ReadByte(int index, ref Word instruction)
     {
         var code = actors.GetActorCode(index);
@@ -71,6 +73,7 @@ internal sealed class Parser(
         return value;
     }
 
+    /// <inheritdoc />
     public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
     {
         var code = actors.GetActorCode(index);
@@ -96,6 +99,7 @@ internal sealed class Parser(
         return buffer.Slice(0, length);
     }
 
+    /// <inheritdoc />
     public int ReadNumber(int index, ref Word instruction)
     {
         var code = actors.GetActorCode(index);
@@ -139,6 +143,7 @@ internal sealed class Parser(
         return state.OopNumber;
     }
 
+    /// <inheritdoc />
     public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
     {
         var code = actors.GetActorCode(index);
