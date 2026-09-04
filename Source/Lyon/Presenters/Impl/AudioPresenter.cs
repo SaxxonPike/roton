@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -74,7 +75,7 @@ public sealed unsafe class AudioPresenter(
             var have = presenter._buffer.Count;
             if (have < want)
             {
-                Console.WriteLine($"Audio buffer underflow: need {want}, got {have}");
+                Debug.WriteLine($"Audio buffer underflow: need {want}, got {have}");
                 return;
             }
 
