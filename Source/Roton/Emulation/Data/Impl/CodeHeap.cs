@@ -37,8 +37,11 @@ internal sealed class CodeHeap : ICodeHeap
         return _block.AsSpan(offset, length);
     }
 
-    public void Free(int pointer) => 
-        GetSpan(pointer).Clear();
+    public void Free(int pointer)
+    {
+        // This depends on the actual implementation.
+        // Here, we leave the memory intact.
+    }
 
     public void FreeAll()
     {
