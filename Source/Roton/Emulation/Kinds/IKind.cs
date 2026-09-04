@@ -6,8 +6,3 @@ public interface IKind
 {
     void Initialize(IElement element);
 }
-
-public interface IKindList
-{
-    void InitializeAll();
-}
