@@ -7,11 +7,11 @@ namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class KindEvaluator(
+internal sealed class TileEvaluator(
     IParser parser,
     IColorList colors,
     IElementList elements)
-    : IKindEvaluator
+    : ITileEvaluator
 {
     public bool TryEval(ref OopContext context, ref Word instruction, out Tile result)
     {

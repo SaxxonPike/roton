@@ -12,7 +12,7 @@ internal sealed class PutCommand(
     IErrorRaiser errorRaiser,
     IPlotter plotter,
     IDirectionEvaluator directionEvaluator,
-    IKindEvaluator kindEvaluator)
+    ITileEvaluator tileEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
@@ -21,7 +21,7 @@ internal sealed class PutCommand(
 
         if (directionEvaluator.TryEval(ref context, ref instruction, out var vec))
         {
-            if (kindEvaluator.TryEval(ref context, ref instruction, out var k))
+            if (tileEvaluator.TryEval(ref context, ref instruction, out var k))
             {
                 success = true;
 

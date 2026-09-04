@@ -12,16 +12,16 @@ internal sealed class ChangeCommand(
     ITiles tiles,
     IErrorRaiser errorRaiser,
     IPlotter plotter,
-    IKindEvaluator kindEvaluator)
+    ITileEvaluator tileEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var success = false;
 
-        if (kindEvaluator.TryEval(ref context, ref instruction, out var source))
+        if (tileEvaluator.TryEval(ref context, ref instruction, out var source))
         {
-            if (kindEvaluator.TryEval(ref context, ref instruction, out var target))
+            if (tileEvaluator.TryEval(ref context, ref instruction, out var target))
             {
                 var targetElement = elements[target.Id];
                 success = true;

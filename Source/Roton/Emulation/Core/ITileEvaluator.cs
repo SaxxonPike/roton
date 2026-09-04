@@ -2,7 +2,7 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Core;
 
-public interface IKindEvaluator
+public interface ITileEvaluator
 {
     /// <summary>
     /// Reads an optional color and a mandatory element name from the script.
