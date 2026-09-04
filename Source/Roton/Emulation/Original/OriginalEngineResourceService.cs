@@ -5,4 +5,4 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalEngineResourceService(IAssemblyResourceService assemblyResourceService)
-    : EngineResourceService(assemblyResourceService, "elements-zzt.bin", "memory-zzt.bin");
+    : EngineResourceService(assemblyResourceService, "memory-zzt.bin");
