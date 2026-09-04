@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x23)]
 [Context(Context.Super, 0x23)]
-public class RuffianKind : IKind
+internal sealed class RuffianKind : IKind
 {
     public void Initialize(IElement element)
     {

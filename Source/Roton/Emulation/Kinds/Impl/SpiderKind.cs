@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x3E)]
-public class SpiderKind : IKind
+internal sealed class SpiderKind : IKind
 {
     public void Initialize(IElement element)
     {

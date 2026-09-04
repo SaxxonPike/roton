@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x20)]
 [Context(Context.Super, 0x20)]
-public class RicochetKind : IKind
+internal sealed class RicochetKind : IKind
 {
     public void Initialize(IElement element)
     {

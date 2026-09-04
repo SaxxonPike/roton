@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x28)]
 [Context(Context.Super, 0x28)]
-public class PusherKind : IKind
+internal sealed class PusherKind : IKind
 {
     public void Initialize(IElement element)
     {

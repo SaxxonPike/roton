@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x27)]
 [Context(Context.Super, 0x27)]
-public class SpinningGunKind : IKind
+internal sealed class SpinningGunKind : IKind
 {
     public void Initialize(IElement element)
     {

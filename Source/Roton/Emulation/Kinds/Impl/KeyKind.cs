@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x08)]
 [Context(Context.Super, 0x08)]
-public class KeyKind : IKind
+internal sealed class KeyKind : IKind
 {
     public void Initialize(IElement element)
     {

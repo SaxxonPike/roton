@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x10)]
 [Context(Context.Super, 0x10)]
-public class ClockwiseConveyorKind : IKind
+internal sealed class ClockwiseConveyorKind : IKind
 {
     public void Initialize(IElement element)
     {

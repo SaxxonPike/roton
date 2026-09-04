@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x00)]
 [Context(Context.Super, 0x00)]
-public class EmptyKind : IKind
+internal sealed class EmptyKind : IKind
 {
     public void Initialize(IElement element)
     {

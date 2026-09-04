@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x1B)]
 [Context(Context.Super, 0x1B)]
-public class FakeWallKind : IKind
+internal sealed class FakeWallKind : IKind
 {
     public void Initialize(IElement element)
     {

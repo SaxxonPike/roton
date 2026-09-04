@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x09)]
 [Context(Context.Super, 0x09)]
-public class DoorKind : IKind
+internal sealed class DoorKind : IKind
 {
     public void Initialize(IElement element)
     {

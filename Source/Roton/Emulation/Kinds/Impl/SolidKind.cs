@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x15)]
 [Context(Context.Super, 0x15)]
-public class SolidKind : IKind
+internal sealed class SolidKind : IKind
 {
     public void Initialize(IElement element)
     {

@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x3B)]
-public class RotonKind : IKind
+internal sealed class RotonKind : IKind
 {
     public void Initialize(IElement element)
     {

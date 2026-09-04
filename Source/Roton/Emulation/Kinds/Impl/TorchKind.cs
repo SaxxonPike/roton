@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x06)]
-public class TorchKind : IKind
+internal sealed class TorchKind : IKind
 {
     public void Initialize(IElement element)
     {

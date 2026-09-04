@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x12)]
 [Context(Context.Super, 0x45)]
-public class BulletKind : IKind
+internal sealed class BulletKind : IKind
 {
     public void Initialize(IElement element)
     {

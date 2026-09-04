@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x17)]
 [Context(Context.Super, 0x17)]
-public class BreakableKind : IKind
+internal sealed class BreakableKind : IKind
 {
     public void Initialize(IElement element)
     {

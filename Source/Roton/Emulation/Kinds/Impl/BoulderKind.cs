@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x18)]
 [Context(Context.Super, 0x18)]
-public class BoulderKind : IKind
+internal sealed class BoulderKind : IKind
 {
     public void Initialize(IElement element)
     {

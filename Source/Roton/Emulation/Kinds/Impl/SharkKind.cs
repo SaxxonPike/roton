@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x26)]
-public class SharkKind : IKind
+internal sealed class SharkKind : IKind
 {
     public void Initialize(IElement element)
     {

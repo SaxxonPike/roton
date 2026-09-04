@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x0D)]
 [Context(Context.Super, 0x0D)]
-public class BombKind : IKind
+internal sealed class BombKind : IKind
 {
     public void Initialize(IElement element)
     {

@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x0C)]
 [Context(Context.Super, 0x0C)]
-public class DuplicatorKind : IKind
+internal sealed class DuplicatorKind : IKind
 {
     public void Initialize(IElement element)
     {

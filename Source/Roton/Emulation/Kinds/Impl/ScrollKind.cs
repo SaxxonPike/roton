@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x0A)]
 [Context(Context.Super, 0x0A)]
-public class ScrollKind : IKind
+internal sealed class ScrollKind : IKind
 {
     public void Initialize(IElement element)
     {

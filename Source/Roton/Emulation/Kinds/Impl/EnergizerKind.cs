@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x0E)]
 [Context(Context.Super, 0x0E)]
-public class EnergizerKind : IKind
+internal sealed class EnergizerKind : IKind
 {
     public void Initialize(IElement element)
     {

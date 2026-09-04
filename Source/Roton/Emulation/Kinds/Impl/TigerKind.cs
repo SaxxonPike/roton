@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x2A)]
 [Context(Context.Super, 0x2A)]
-public class TigerKind : IKind
+internal sealed class TigerKind : IKind
 {
     public void Initialize(IElement element)
     {

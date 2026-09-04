@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x2D)]
 [Context(Context.Super, 0x2D)]
-public class CentipedeSegmentKind : IKind
+internal sealed class CentipedeSegmentKind : IKind
 {
     public void Initialize(IElement element)
     {

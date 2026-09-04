@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x3C)]
-public class DragonPupKind : IKind
+internal sealed class DragonPupKind : IKind
 {
     public void Initialize(IElement element)
     {

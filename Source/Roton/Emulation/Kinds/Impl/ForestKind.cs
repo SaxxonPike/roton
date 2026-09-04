@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x14)]
 [Context(Context.Super, 0x14)]
-public class ForestKind : IKind
+internal sealed class ForestKind : IKind
 {
     public void Initialize(IElement element)
     {

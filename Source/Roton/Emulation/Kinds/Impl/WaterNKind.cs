@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x30)]
-public class WaterNKind : IKind
+internal sealed class WaterNKind : IKind
 {
     public void Initialize(IElement element)
     {

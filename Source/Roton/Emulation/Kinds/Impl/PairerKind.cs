@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x3D)]
-public class PairerKind : IKind
+internal sealed class PairerKind : IKind
 {
     public void Initialize(IElement element)
     {

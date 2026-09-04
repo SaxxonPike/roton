@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x1C)]
 [Context(Context.Super, 0x1C)]
-public class InvisibleKind(IState state) : IKind
+internal sealed class InvisibleKind(IState state) : IKind
 {
     public void Initialize(IElement element)
     {

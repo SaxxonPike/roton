@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x19)]
 [Context(Context.Super, 0x19)]
-public class SliderNsKind : IKind
+internal sealed class SliderNsKind : IKind
 {
     public void Initialize(IElement element)
     {

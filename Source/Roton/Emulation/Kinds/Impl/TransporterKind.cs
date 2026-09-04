@@ -5,7 +5,7 @@ namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Original, 0x1E)]
 [Context(Context.Super, 0x1E)]
-public class TransporterKind : IKind
+internal sealed class TransporterKind : IKind
 {
     public void Initialize(IElement element)
     {

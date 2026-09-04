@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Kinds.Impl;
 
 [Context(Context.Super, 0x13)]
-public class LavaKind : IKind
+internal sealed class LavaKind : IKind
 {
     public void Initialize(IElement element)
     {
