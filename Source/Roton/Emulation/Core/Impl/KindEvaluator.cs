@@ -1,10 +1,9 @@
 using System;
 using Roton.Emulation.Colors;
-using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
-namespace Roton.Emulation.Kinds.Impl;
+namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]

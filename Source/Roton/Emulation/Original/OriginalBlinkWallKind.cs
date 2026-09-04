@@ -1,7 +1,8 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
-namespace Roton.Emulation.Kinds.Impl;
+namespace Roton.Emulation.Original;
 
 [Context(Context.Original, 0x1D)]
 public class OriginalBlinkWallKind : IKind

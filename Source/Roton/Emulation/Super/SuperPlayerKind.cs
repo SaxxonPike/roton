@@ -1,7 +1,8 @@
 using Roton.Emulation.Data;
+using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
 
-namespace Roton.Emulation.Kinds.Impl;
+namespace Roton.Emulation.Super;
 
 [Context(Context.Super, 0x04)]
 public class SuperPlayerKind : IKind
