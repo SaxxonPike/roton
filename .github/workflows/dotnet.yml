@@ -25,12 +25,16 @@ jobs:
     - name: Test
       run: dotnet test Source --no-build --verbosity normal
     - name: Deploy
-      run: dotnet publish -c Release -f net10.0 -o ./../Deploy ./Lyon/Lyon.csproj
+      run: dotnet publish -c Release -f net10.0 -o ./../Lyon-Release ./Lyon/Lyon.csproj
       working-directory: Source
+    - name: Create Archive
+      uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r Lyon-Release.zip Lyon-Release
     - name: Create Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: false
-        files: Deploy
+        files: Lyon-Release.zip
