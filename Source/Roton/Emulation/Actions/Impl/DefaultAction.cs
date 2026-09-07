@@ -9,6 +9,9 @@ namespace Roton.Emulation.Actions.Impl;
 [Context(Context.Super)]
 internal sealed class DefaultAction : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementDefaultTick
+    /// </remarks>
     public void Act(int index)
     {
     }

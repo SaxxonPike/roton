@@ -16,6 +16,9 @@ internal sealed class MessengerAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementMessageTimerTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

@@ -19,6 +19,9 @@ internal sealed class LionAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementLionTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
