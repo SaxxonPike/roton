@@ -40,6 +40,10 @@ public interface IAlerts
     IMessage KeyAlreadyMessage(int color);
     IMessage KeyPickupMessage(int color);
 
+    /// <remarks>
+    /// RoZ: ResetMessageNotShownFlags
+    /// </remarks>
     void Reset();
+
     void SetAll();
 }

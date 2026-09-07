@@ -34,7 +34,12 @@ public interface IState
     ref Bool EditorMode { get; }
     ref Word ForestIndex { get; }
     ref Word GameCycle { get; }
+
+    /// <remarks>
+    /// RoZ: SoundBlockQueueing
+    /// </remarks>
     ref Bool GameOver { get; }
+
     ref Bool GamePaused { get; }
     ref Bool GameQuiet { get; }
     ref HWord GameSpeed { get; }
