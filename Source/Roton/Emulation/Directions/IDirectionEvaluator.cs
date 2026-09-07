@@ -19,5 +19,8 @@ public interface IDirectionEvaluator
     /// <returns>
     /// True if the direction was successfully parsed, false otherwise.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopParseDirection
+    /// </remarks>
     bool TryEval(ref OopContext context, ref Word instruction, out Vector result);
 }

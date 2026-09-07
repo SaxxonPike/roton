@@ -20,7 +20,7 @@ public interface IInteraction
     /// Interaction vector, which may be modified.
     /// </param>
     /// <remarks>
-    /// RoZ: BoardPassageTeleport
+    /// RoZ: Element*Touch
     /// </remarks>
     void Interact(Location location, int index, ref Vector vector);
 }

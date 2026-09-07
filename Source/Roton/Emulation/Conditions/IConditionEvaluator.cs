@@ -19,5 +19,8 @@ public interface IConditionEvaluator
     /// <returns>
     /// True if the condition was successfully parsed, false otherwise.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopCheckCondition
+    /// </remarks>
     bool TryEval(ref OopContext context, ref Word instruction, out bool result);
 }

@@ -4,6 +4,9 @@ namespace Roton.Emulation.Core;
 
 public interface ISpawner
 {
+    /// <remarks>
+    /// RoZ: AddStat
+    /// </remarks>
     void SpawnActor(Location location, Tile tile, int cycle, IActor? source);
     
     /// <remarks>

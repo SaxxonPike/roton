@@ -20,6 +20,9 @@ public interface IParser
     /// <returns>
     /// The byte that was read or -1 if unsuccessful.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopReadChar
+    /// </remarks>
     char ReadByte(int index, ref Word instruction);
 
     /// <summary>
@@ -37,6 +40,9 @@ public interface IParser
     /// <returns>
     /// A span within the temporary buffer that contains the line that was read.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopReadLineToEnd
+    /// </remarks>
     ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer);
 
     /// <summary>
@@ -51,6 +57,9 @@ public interface IParser
     /// <returns>
     /// The number that was read or -1 if unsuccessful.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopReadValue
+    /// </remarks>
     int ReadNumber(int index, ref Word instruction);
 
     /// <summary>
@@ -85,5 +94,8 @@ public interface IParser
     /// <returns>
     /// The index of the term in the script, or -1 if the term was not found.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopFindString
+    /// </remarks>
     int Search(int index, ReadOnlySpan<char> term);
 }

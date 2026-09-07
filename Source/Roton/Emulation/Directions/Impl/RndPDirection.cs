@@ -11,7 +11,7 @@ internal sealed class RndPDirection(
     IRandomizer randomizer)
     : IDirection
 {
-    public Vector Execute(ref OopContext context, ref Word instruction) =>
+    public Vector TryEval(ref OopContext context, ref Word instruction) =>
         directionEvaluator.TryEval(ref context, ref instruction, out var direction)
             ? randomizer.GetNext(2) == 0
                 ? direction.Clockwise()

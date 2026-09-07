@@ -19,6 +19,9 @@ internal sealed class PassageInteraction(
     IFader fader)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: BoardPassageTeleport
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;

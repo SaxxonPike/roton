@@ -8,7 +8,7 @@ namespace Roton.Emulation.Directions.Impl;
 internal sealed class CwDirection(
     IDirectionEvaluator directionEvaluator) : IDirection
 {
-    public Vector Execute(ref OopContext context, ref Word instruction) => 
+    public Vector TryEval(ref OopContext context, ref Word instruction) => 
         directionEvaluator.TryEval(ref context, ref instruction, out var vec)
             ? vec.Clockwise()
             : Vector.Idle;

@@ -20,6 +20,9 @@ public interface ITileEvaluator
     /// <returns>
     /// True if the kind was successfully parsed, false otherwise.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopParseTile
+    /// </remarks>
     bool TryEval(ref OopContext context, ref Word instruction, out Tile result);
 
 }

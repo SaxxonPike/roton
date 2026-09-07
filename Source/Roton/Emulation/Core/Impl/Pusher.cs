@@ -111,6 +111,9 @@ internal sealed class Pusher(
         }
     }
     
+    /// <remarks>
+    /// RoZ: ElementMove
+    /// </remarks>
     private void MoveTile(Location source, Location target)
     {
         var sourceIndex = actors.ActorIndexAt(source);

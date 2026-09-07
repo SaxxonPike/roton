@@ -18,7 +18,7 @@ internal sealed class DirectionEvaluator(
         var name = parser.ReadWord(context.Index, ref instruction, buffer);
         var direction = directions.Get(name);
 
-        if (direction?.Execute(ref context, ref instruction) is not { } temp)
+        if (direction?.TryEval(ref context, ref instruction) is not { } temp)
         {
             result = default;
             return false;
