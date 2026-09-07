@@ -27,7 +27,7 @@ jobs:
     - name: Test
       run: dotnet test Source --no-build --verbosity normal
     - name: Deploy
-      run: dotnet publish -c Release -f net10.0 -o ./../Deploy ./Lyon/Lyon.csproj --no-build --no-restore
+      run: dotnet publish -c Release -f net10.0 -o ./../Deploy ./Lyon/Lyon.csproj
       working-directory: Source
     - name: Archive
       uses: actions/upload-artifact@v4
