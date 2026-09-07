@@ -27,10 +27,12 @@ jobs:
     - name: Deploy
       run: dotnet publish -c Release -f net10.0 -o ./../Lyon-Release ./Lyon/Lyon.csproj
       working-directory: Source
-    - name: Create Archive
-      uses: montudor/action-zip@v1
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.5
       with:
-        args: zip -qq -r Lyon-Release.zip Lyon-Release
+        path: 'Lyon-Release'
+        type: 'zip'
+        filename: 'Lyon-Release.zip'
     - name: Create Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
