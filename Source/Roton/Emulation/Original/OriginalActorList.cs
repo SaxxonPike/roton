@@ -1,4 +1,5 @@
-﻿using Roton.Emulation.Data;
+﻿using System;
+using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
@@ -6,14 +7,16 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalActorList(
-    IMemory memory, 
-    ICodeHeap heap) 
+    IMemory memory,
+    ICodeHeap heap)
     : ActorList(memory, 152)
 {
-    public override int Count => Memory.GetRef<Word>(0x31CD) + 1;
+    public override int Count =>
+        Memory.GetRef<Word>(0x31CD) + 1;
 
-    protected override IActor InitItem(int index)
-    {
-        return new Actor(Memory, heap, 0x31CF + 0x0021 * index);
-    }
+    protected override IActor InitItem(int index) =>
+        new Actor(Memory, heap, 0x31CF + 0x0021 * index, 0x0021);
+
+    public override Span<char> GetCode(int index) =>
+        heap[GetItem(index).Pointer];
 }

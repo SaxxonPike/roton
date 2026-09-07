@@ -11,11 +11,14 @@ internal sealed class TorchInteraction(
     IHud hud,
     IAlerts alerts,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementTorchTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Torches++;
@@ -27,6 +30,6 @@ internal sealed class TorchInteraction(
             alerts.TorchPickup = false;
         }
 
-        soundUnit.PlaySound(3, sounds.Torch);
+        soundPlayer.PlaySound(3, sounds.Torch);
     }
 }

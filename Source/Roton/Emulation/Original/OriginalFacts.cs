@@ -16,6 +16,10 @@ internal sealed class OriginalFacts : Facts
     public override string WorldFileExtension => "ZZT";
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "ZZT Worlds";
+    public override int TorchRadius => 50;
+    public override int DistanceMultY => 2;
+    public override int RadiusBoundX => 9;
+    public override int RadiusBoundY => 6;
     public override string HighScoreExtension => "HI";
     public override int BaseMemoryUsage => 205791;
     public override int ScrollHeight => 19;

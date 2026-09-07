@@ -8,20 +8,23 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x1C)]
 internal sealed class InvisibleWallInteraction(
     ITiles tiles,
-    IElementList elementList,
+    IElementList elements,
     IAlerts alerts,
     ISounds sounds,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementInvisibleTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
-        tiles[location].Id = elementList.NormalId;
+        tiles[location].Id = elements.NormalId;
         boardUpdater.UpdateBoard(location);
-        soundUnit.PlaySound(3, sounds.Invisible);
+        soundPlayer.PlaySound(3, sounds.Invisible);
         messenger.SetMessage(facts.ShortMessageDuration, alerts.InvisibleMessage);
     }
 }

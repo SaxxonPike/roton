@@ -4,7 +4,6 @@ using System.Collections.Frozen;
 #endif
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace Roton.Emulation.Infrastructure;
@@ -64,28 +63,24 @@ public static class Cp437
     /// <summary>
     /// Converts from byte to char, preserving control characters.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ByteToChar(byte value) =>
         value <= 0x7E ? (char)value : ByteToUnicode(value);
 
     /// <summary>
     /// Converts from byte to char, preserving graphics.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ByteToUnicode(byte value) =>
         ByteToCharArray[value];
 
     /// <summary>
     /// Converts from char to byte, preserving control characters.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte CharToByte(char value) =>
         value <= 0x7E ? unchecked((byte)value) : UnicodeToByte(value);
 
     /// <summary>
     /// Converts from char to byte, preserving graphics.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte UnicodeToByte(char value) =>
 #if NET10_0_OR_GREATER
         CharToByteDict.GetValueOrDefault(value, (byte)0x20);

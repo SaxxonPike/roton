@@ -6,12 +6,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Original, "DIE")]
 [Context(Context.Super, "DIE")]
 internal sealed class DieCommand(
-    IElementList elementList)
+    IElementList elements)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
         context.Died = true;
-        context.DeathTile = new Tile(elementList.EmptyId, 0);
+        context.DeathTile = new Tile(elements.EmptyId, 0);
     }
 }

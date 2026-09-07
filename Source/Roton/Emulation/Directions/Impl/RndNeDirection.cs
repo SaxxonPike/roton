@@ -8,7 +8,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "RNDNE")]
 internal sealed class RndNeDirection(IRandomizer randomizer) : IDirection
 {
-    public Vector Execute(ref OopContext context, ref Word instruction)
+    public Vector TryEval(ref OopContext context, ref Word instruction)
     {
         return randomizer.GetNext(2) == 0
             ? Vector.North

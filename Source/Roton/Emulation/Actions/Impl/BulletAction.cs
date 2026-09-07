@@ -17,14 +17,18 @@ internal sealed class BulletAction(
     IWorld world,
     IState state,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IHud hud,
     IBroadcaster broadcaster,
     IMover mover,
     IAttacker attacker,
-    IActorManager actorManager)
+    IActorManager actorManager,
+    IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBulletTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -35,7 +39,7 @@ internal sealed class BulletAction(
             var element = tiles.ElementAt(target);
             if (element.IsFloor || elements.IsWater(element.Id))
             {
-                mover.MoveActor(index, target);
+                mover.Move(index, target);
                 break;
             }
 
@@ -43,7 +47,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = -actor.Vector;
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -57,6 +61,7 @@ internal sealed class BulletAction(
                 }
 
                 attacker.Attack(index, target);
+                boardUpdater.UpdateBoard(target);
                 break;
             }
 
@@ -65,7 +70,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.CounterClockwise();
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -74,7 +79,7 @@ internal sealed class BulletAction(
             {
                 canRicochet = false;
                 actor.Vector = actor.Vector.Clockwise();
-                soundUnit.PlaySound(1, sounds.Ricochet);
+                soundPlayer.PlaySound(1, sounds.Ricochet);
                 continue;
             }
 
@@ -82,7 +87,7 @@ internal sealed class BulletAction(
             state.ActIndex--;
             if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {
-                broadcaster.BroadcastLabel(-actors.ActorIndexAt(target), facts.ShotLabel, false);
+                broadcaster.BroadcastLabel(-actors.IndexAt(target), facts.ShotLabel, false);
             }
 
             break;

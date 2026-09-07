@@ -10,6 +10,9 @@ internal sealed class TransporterInteraction(
     IPusher pusher)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementTransporterTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         pusher.Transport(location - vector, vector);

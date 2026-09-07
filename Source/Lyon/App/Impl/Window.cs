@@ -6,7 +6,8 @@ using Roton.Infrastructure;
 
 namespace Lyon.App.Impl;
 
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed unsafe class Window(
     IConfig config,
     IKeyboardPresenter keyboardPresenter,
@@ -286,8 +287,8 @@ internal sealed unsafe class Window(
         _closeWindow = false;
 
         // Window defaults.
-        WindowWidth = (int)(640 * config.VideoScaleX);
-        WindowHeight = (int)(350 * config.VideoScaleY);
+        WindowWidth = 640 * 2;
+        WindowHeight = 400 * 2;
         RenderWidth = 640;
         RenderHeight = 350;
 

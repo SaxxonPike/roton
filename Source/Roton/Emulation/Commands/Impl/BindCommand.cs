@@ -11,7 +11,8 @@ namespace Roton.Emulation.Commands.Impl;
 internal sealed class BindCommand(
     IActorList actors,
     IParser parser,
-    ITargetEvaluator targetEvaluator)
+    ITargetEvaluator targetEvaluator,
+    ICodeHeap heap)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
@@ -23,6 +24,7 @@ internal sealed class BindCommand(
 
         if (targetEvaluator.TryEval(context.Index, ref search, target))
         {
+            heap.Free(context.Actor.Pointer);
             var targetActor = actors[search.Index];
             context.Actor.Pointer = targetActor.Pointer;
             context.Actor.Length = targetActor.Length;

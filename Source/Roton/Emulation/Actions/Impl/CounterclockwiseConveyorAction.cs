@@ -15,6 +15,9 @@ internal sealed class CounterclockwiseConveyorAction(
     IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementConveyorCCWTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

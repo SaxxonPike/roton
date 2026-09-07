@@ -14,14 +14,14 @@ internal sealed class InputReader(
     IKeyboard keyboard,
     IElementList elements,
     IFacts facts,
-    IAnsiKeyTransformer ansiKeyTransformer)
+    IKeyTransformer keyTransformer)
     : IInputReader
 {
     private JoystickButtons _lastButtons;
 
     private EngineKeyCode ConvertKey(KeyPress keyPress)
     {
-        var bytes = ansiKeyTransformer.GetBytes(keyPress);
+        var bytes = keyTransformer.GetBytes(keyPress);
 
         if (bytes.IsEmpty)
             return EngineKeyCode.None;

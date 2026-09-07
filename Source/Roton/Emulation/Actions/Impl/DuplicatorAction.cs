@@ -17,12 +17,15 @@ internal sealed class DuplicatorAction(
     ITiles tiles,
     IActorList actors,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IPusher pusher,
     ISpawner spawner)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementDuplicatorTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -46,7 +49,7 @@ internal sealed class DuplicatorAction(
 
                 if (tiles[target].Id == elements.EmptyId)
                 {
-                    var sourceIndex = actors.ActorIndexAt(source);
+                    var sourceIndex = actors.IndexAt(source);
                     if (sourceIndex > 0)
                     {
                         // This is a bug in the original code. Should be "- 2" instead of "+ 22".
@@ -66,11 +69,11 @@ internal sealed class DuplicatorAction(
                         boardUpdater.UpdateBoard(target);
                     }
 
-                    soundUnit.PlaySound(3, sounds.Duplicate);
+                    soundPlayer.PlaySound(3, sounds.Duplicate);
                 }
                 else
                 {
-                    soundUnit.PlaySound(3, sounds.DuplicateFail);
+                    soundPlayer.PlaySound(3, sounds.DuplicateFail);
                 }
             }
 

@@ -10,7 +10,7 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class Interpreter(
     ITracer tracer,
     IParser parser,
-    ICommandList commandList,
+    ICommandList commands,
     IBroadcaster broadcaster,
     IErrorRaiser errorRaiser)
     : IInterpreter
@@ -41,7 +41,7 @@ internal sealed class Interpreter(
                 break;
             }
 
-            var command = commandList.Get(name);
+            var command = commands.Get(name);
 
             if (command != null)
             {

@@ -9,12 +9,12 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "BECOME")]
 internal sealed class BecomeCommand(
     IErrorRaiser errorRaiser,
-    IKindEvaluator kindEvaluator)
+    ITileEvaluator tileEvaluator)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        if (!kindEvaluator.TryEval(ref context, ref instruction, out var val))
+        if (!tileEvaluator.TryEval(ref context, ref instruction, out var val))
         {
             errorRaiser.RaiseError(ref context, "Bad #BECOME");
             return;

@@ -1,6 +1,5 @@
 ﻿using Roton.Emulation.Core;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
@@ -14,16 +13,18 @@ internal sealed class MessengerAction(
     IActorList actors,
     IHud hud,
     IState state,
-    IMessageHandler messageHandler,
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementMessageTimerTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
         if (actor.Location.X == 0)
         {
-            hud.DrawMessage(new Message(messageHandler.GetMessageLines()), actor.P2 % 7 + 9);
+            hud.DrawMessage(actor.P2 % 7 + 9);
 
             actor.P2--;
             if (actor.P2 > 0)

@@ -9,8 +9,8 @@ namespace Roton.Emulation.Interactions.Impl;
 internal sealed class BoardEdgeInteraction(
     IWorld world,
     ITiles tiles,
-    IElementList elementList,
-    IInteractionList interactionList,
+    IElementList elements,
+    IInteractionList interactions,
     IState state,
     IWorldManager worldManager,
     IMover mover,
@@ -19,6 +19,9 @@ internal sealed class BoardEdgeInteraction(
     IFader fader)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementBoardEdgeTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var target = location;
@@ -49,18 +52,18 @@ internal sealed class BoardEdgeInteraction(
             return;
 
         worldManager.SetBoard(targetBoard);
-        if (tiles[target].Id != elementList.PlayerId)
+        if (tiles[target].Id != elements.PlayerId)
         {
-            interactionList.Get(tiles[target].Id)?
+            interactions.Get(tiles[target].Id)?
                 .Interact(target, index, ref state.KeyVector);
         }
 
         if (tiles.ElementAt(target).IsFloor ||
-            tiles.ElementAt(target).Id == elementList.PlayerId)
+            tiles.ElementAt(target).Id == elements.PlayerId)
         {
-            if (tiles.ElementAt(target).Id != elementList.PlayerId)
+            if (tiles.ElementAt(target).Id != elements.PlayerId)
             {
-                mover.MoveActor(0, target);
+                mover.Move(0, target);
             }
 
             fader.FadePurple();

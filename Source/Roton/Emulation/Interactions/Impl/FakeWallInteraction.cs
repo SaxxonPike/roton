@@ -12,11 +12,14 @@ internal sealed class FakeWallInteraction(
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementFakeTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         if (!alerts.FakeWall) return;
 
         alerts.FakeWall = false;
-        messenger.SetMessage(facts.LongMessageDuration, alerts.FakeMessage);
+        messenger.SetMessage(facts.MediumMessageDuration, alerts.FakeMessage);
     }
 }

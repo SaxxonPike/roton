@@ -14,10 +14,11 @@ internal sealed class CharCommand(
     public void Execute(ref OopContext context, ref Word instruction)
     {
         var value = parser.ReadNumber(context.Index, ref instruction);
-        if (value >= 0)
-        {
-            context.Actor.P1 = unchecked((byte)value);
-            boardUpdater.UpdateBoard(context.Actor.Location);
-        }
+
+        if (value < 0)
+            return;
+
+        context.Actor.P1 = value;
+        boardUpdater.UpdateBoard(context.Actor.Location);
     }
 }

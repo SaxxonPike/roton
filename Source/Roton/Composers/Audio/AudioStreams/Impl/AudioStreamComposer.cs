@@ -53,13 +53,15 @@ internal sealed class AudioStreamComposer(
     public void PlayDrum(int index)
     {
         var drum = drumBank[index];
-        var drumValues = (stackalloc int[drum.Count]);
+        int len = drum[0];
+        var src = drum.Slice(1, len);
+        var dest = (stackalloc int[len]);
 
-        for (var i = 0; i < drum.Count; i++)
-            drumValues[i] = drum[i];
+        for (var i = 0; i < src.Length; i++)
+            dest[i] = src[i];
 
         Clear();
-        drumComposer.SetDrum(drumValues, config.AudioSampleRate / (float)config.AudioDrumRate);
+        drumComposer.SetDrum(dest, config.AudioSampleRate / (float)config.AudioDrumRate);
     }
 
     public void PlayNote(int note)

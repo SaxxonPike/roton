@@ -1,9 +1,12 @@
-﻿namespace Roton.Emulation.Core;
+﻿using System;
+
+namespace Roton.Emulation.Core;
 
 public interface IRandomizer
 {
-    void Initialize();
+    void Reset();
+    void SetSeed(DateTime now);
     int GetNext(int exclusiveUpperBound);
-    int Seed { get; set; }
+    void GetNext(int exclusiveUpperBound, Span<int> buffer);
     int State { get; set; }
 }

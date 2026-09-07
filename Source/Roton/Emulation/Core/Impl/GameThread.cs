@@ -4,13 +4,15 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed class GameThread : IGameThread
 {
     public Thread? Current { get; private set; }
-    public bool Step { get; set; }
 
-    public bool ThreadActive => Current != null || Step;
+    public StepMode StepMode { get; set; }
+
+    public bool ThreadActive => Current != null || StepMode != StepMode.Normal;
 
     public bool Start(Action startup)
     {
@@ -24,7 +26,4 @@ internal sealed class GameThread : IGameThread
 
     public void Stop() =>
         Current = null;
-
-    public void SetCurrent(Thread? thread) =>
-        Current = thread;
 }

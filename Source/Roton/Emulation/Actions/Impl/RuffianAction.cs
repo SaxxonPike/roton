@@ -19,6 +19,9 @@ internal sealed class RuffianAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementRuffianTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -48,7 +51,7 @@ internal sealed class RuffianAction(
             }
             else if (tiles.ElementAt(target).IsFloor)
             {
-                mover.MoveActor(index, target);
+                mover.Move(index, target);
 
                 if (actor.P2 + 8 <= randomizer.GetNext(17))
                     actor.Vector = new Vector(0, 0);

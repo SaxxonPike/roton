@@ -12,17 +12,20 @@ internal sealed class PassageInteraction(
     IElementList elements,
     IState state,
     ISounds sounds,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IWorldManager worldManager,
     IPlayerUpdater playerUpdater,
     IPlayerEnterHandler playerEnterHandler,
     IFader fader)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementPassageTouch, BoardPassageTeleport
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;
-        var passageIndex = actors.ActorIndexAt(location);
+        var passageIndex = actors.IndexAt(location);
         var passageTarget = actors[passageIndex].P3;
         worldManager.SetBoard(passageTarget);
         var target = new Location();
@@ -43,7 +46,7 @@ internal sealed class PassageInteraction(
             actors.Player.Location = target;
 
         state.GamePaused = true;
-        soundUnit.PlaySound(4, sounds.Passage);
+        soundPlayer.PlaySound(4, sounds.Passage);
         fader.FadePurple();
         playerEnterHandler.EnterBoard();
         vector = Vector.Idle;

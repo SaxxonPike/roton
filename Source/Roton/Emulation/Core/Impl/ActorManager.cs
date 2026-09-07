@@ -66,7 +66,7 @@ internal sealed class ActorManager(
 
         if (index < state.ActorCount)
             for (var i = index; i < state.ActorCount; i++)
-                actors[i].CopyFrom(actors[i + 1]);
+                actors[i].CopyFromByRaw(actors[i + 1]);
 
         state.ActorCount--;
     }

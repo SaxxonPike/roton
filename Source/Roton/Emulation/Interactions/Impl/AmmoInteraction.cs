@@ -11,18 +11,21 @@ internal sealed class AmmoInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IHud hud,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementAmmoTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Ammo += facts.AmmoPerPickup;
         tileRemover.RemoveItem(location);
         hud.UpdateStatus();
-        soundUnit.PlaySound(2, sounds.Ammo);
+        soundPlayer.PlaySound(2, sounds.Ammo);
 
         if (!alerts.AmmoPickup)
             return;

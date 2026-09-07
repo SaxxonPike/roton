@@ -19,6 +19,9 @@ internal sealed class LionAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementLionTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -31,7 +34,7 @@ internal sealed class LionAction(
         var element = tiles.ElementAt(target);
         if (element.IsFloor)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         }
         else if (element.Id == elements.PlayerId)
         {

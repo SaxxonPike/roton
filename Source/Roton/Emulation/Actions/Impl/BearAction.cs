@@ -18,6 +18,9 @@ internal sealed class BearAction(
     IAttacker attacker) 
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBearTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -40,7 +43,7 @@ internal sealed class BearAction(
         var targetElement = tiles.ElementAt(target);
 
         if (targetElement.IsFloor)
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         else if (targetElement.Id == elements.PlayerId || targetElement.Id == elements.BreakableId) 
             attacker.Attack(index, target);
     }

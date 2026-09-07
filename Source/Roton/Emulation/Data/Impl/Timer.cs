@@ -11,9 +11,6 @@ internal sealed class Timer : ITimer
         _offset = offset;
     }
 
-    public int Ticks
-    {
-        get => _memory.Read16(_offset);
-        set => _memory.Write16(_offset, value);
-    }
+    public ref Word Ticks =>
+        ref _memory.GetRef<Word>(_offset);
 }

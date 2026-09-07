@@ -16,13 +16,12 @@ internal sealed class SuperPlayField(
         if (state.EditorMode)
         {
             if (x is >= 0 and < 96 && y is >= 0 and < 80)
-            {
                 terminal.Plot(x, y, ac);
-            }
         }
         else
         {
             var loc = new Location(x, y) + GetTranslation();
+
             if (IsWithinCamera(loc))
                 terminal.Plot(loc.X, loc.Y, ac);
         }

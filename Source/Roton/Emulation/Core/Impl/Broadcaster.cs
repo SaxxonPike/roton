@@ -36,7 +36,7 @@ internal sealed class Broadcaster(
 
         while (ExecuteLabel(sender, ref info, label, "\r:"))
         {
-            if (actorLocker.IsActorLocked(info.Index) && !ignoreLock &&
+            if (actorLocker.IsLocked(info.Index) && !ignoreLock &&
                 (sender != info.Index || ignoreSelfLock)) 
                 continue;
 
@@ -45,7 +45,7 @@ internal sealed class Broadcaster(
 
             tracer.TraceBroadcast(sender, label, info.Index, ignoreLock, ignoreSelfLock);
             actors[info.Index].Instruction = info.Offset;
-            actorNotifier.NotifyActorSentLabel(info.Index);
+            actorNotifier.NotifyLabelTaken(info.Index);
         }
 
         return success;
@@ -73,6 +73,9 @@ internal sealed class Broadcaster(
             success = true;
         }
 
+        prefix.CopyTo(buffer);
+        label.CopyTo(buffer.Slice(prefix.Length));
+
         while (success)
         {
             if (label.Equals(facts.RestartLabel, StringComparison.OrdinalIgnoreCase))
@@ -81,8 +84,6 @@ internal sealed class Broadcaster(
             }
             else
             {
-                prefix.CopyTo(buffer);
-                label.CopyTo(buffer.Slice(prefix.Length));
                 search.Offset = parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {

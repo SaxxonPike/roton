@@ -10,6 +10,9 @@ internal sealed class SpinningGunDraw(
     IState state)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementSpinningGunDraw
+    /// </remarks>
     public AnsiChar Draw(Location location) =>
         (state.GameCycle & 0x7) switch
         {

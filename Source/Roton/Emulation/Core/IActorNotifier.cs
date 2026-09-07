@@ -2,5 +2,8 @@ namespace Roton.Emulation.Core;
 
 public interface IActorNotifier
 {
-    void NotifyActorSentLabel(int index);
+    /// <remarks>
+    /// RoZ: OopSend (label taken notification)
+    /// </remarks>
+    void NotifyLabelTaken(int index);
 }

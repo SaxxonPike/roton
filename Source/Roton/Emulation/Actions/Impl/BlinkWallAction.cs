@@ -21,16 +21,19 @@ internal sealed class BlinkWallAction(
     IDamager damager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBlinkWallTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
 
         if (actor.P3 == 0)
-            actor.P3 = unchecked((byte)(actor.P1 + 1));
+            actor.P3 = actor.P1 + 1;
 
         if (actor.P3 == 1)
         {
-            actor.P3 = unchecked((byte)(actor.P2 * 2 + 1));
+            actor.P3 = actor.P2 * 2 + 1;
 
             var erasedRay = false;
             var target = actor.Location + actor.Vector;
@@ -63,7 +66,7 @@ internal sealed class BlinkWallAction(
 
                 if (tiles[target].Id == elements.PlayerId)
                 {
-                    var playerIndex = actors.ActorIndexAt(target);
+                    var playerIndex = actors.IndexAt(target);
                     Vector testVector;
 
                     if (actor.Vector.Y == 0)
@@ -71,11 +74,11 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(0, 1);
                         if (tiles[target - testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target - testVector);
+                            mover.Move(playerIndex, target - testVector);
                         }
                         else if (tiles[target + testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                     }
                     else
@@ -83,12 +86,12 @@ internal sealed class BlinkWallAction(
                         testVector = new Vector(1, 0);
                         if (tiles[target + testVector].Id == emptyElement)
                         {
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                         else if (tiles[target - testVector].Id == emptyElement)
                         {
                             // "sum" is not a mistake; this is an original engine bug
-                            mover.MoveActor(playerIndex, target + testVector);
+                            mover.Move(playerIndex, target + testVector);
                         }
                     }
 

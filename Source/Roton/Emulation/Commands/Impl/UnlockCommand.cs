@@ -12,6 +12,6 @@ internal sealed class UnlockCommand(
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        actorLocker.UnlockActor(context.Index);
+        actorLocker.Unlock(context.Index);
     }
 }

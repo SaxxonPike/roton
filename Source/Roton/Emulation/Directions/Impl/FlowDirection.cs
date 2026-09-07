@@ -7,7 +7,7 @@ namespace Roton.Emulation.Directions.Impl;
 [Context(Context.Super, "FLOW")]
 internal sealed class FlowDirection : IDirection
 {
-    public Vector Execute(ref OopContext context, ref Word instruction)
+    public Vector TryEval(ref OopContext context, ref Word instruction)
     {
         return context.Actor.Vector;
     }

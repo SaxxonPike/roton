@@ -11,5 +11,8 @@ public interface IAction
     /// <param name="index">
     /// Index of the actor to act upon.
     /// </param>
+    /// <remarks>
+    /// RoZ: Element*Tick
+    /// </remarks>
     void Act(int index);
 }

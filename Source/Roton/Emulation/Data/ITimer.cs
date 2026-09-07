@@ -2,5 +2,5 @@
 
 public interface ITimer
 {
-    int Ticks { get; set; }
+    ref Word Ticks { get; }
 }

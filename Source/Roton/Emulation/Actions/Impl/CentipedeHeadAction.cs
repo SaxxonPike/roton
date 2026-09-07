@@ -20,6 +20,9 @@ internal sealed class CentipedeHeadAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementCentipedeHeadTick
+    /// </remarks>
     public void Act(int index)
     {
         var player = actors.Player;
@@ -114,7 +117,7 @@ internal sealed class CentipedeHeadAction(
             }
             else
             {
-                mover.MoveActor(index, target);
+                mover.Move(index, target);
                 var segmentIndex = index;
 
                 // The centipede has moved, so move its followers
@@ -131,17 +134,17 @@ internal sealed class CentipedeHeadAction(
                         if (tiles.ElementAt(origin - vector).Id == elements.SegmentId &&
                             actors.ActorAt(origin - vector).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin - vector);
+                            segment.Follower = actors.IndexAt(origin - vector);
                         }
                         else if (tiles.ElementAt(origin - vector.Swap()).Id == elements.SegmentId &&
                                  actors.ActorAt(origin - vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin - vector.Swap());
+                            segment.Follower = actors.IndexAt(origin - vector.Swap());
                         }
                         else if (tiles.ElementAt(origin + vector.Swap()).Id == elements.SegmentId &&
                                  actors.ActorAt(origin + vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin + vector.Swap());
+                            segment.Follower = actors.IndexAt(origin + vector.Swap());
                         }
                         else
                         {
@@ -165,7 +168,7 @@ internal sealed class CentipedeHeadAction(
                         follower.P1 = segment.P1;
                         follower.P2 = segment.P2;
                         follower.Vector = new Vector(origin.X - follower.Location.X, origin.Y - follower.Location.Y);
-                        mover.MoveActor(segment.Follower, origin);
+                        mover.Move(segment.Follower, origin);
                     }
 
                     segmentIndex = segment.Follower;

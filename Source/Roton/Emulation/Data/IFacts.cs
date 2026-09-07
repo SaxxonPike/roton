@@ -29,6 +29,9 @@ public interface IFacts
     AnsiChar DarknessTile { get; }
     AnsiChar EmptyTile { get; }
     int TorchRadius { get; }
+    int DistanceMultY { get; }
+    int RadiusBoundX { get; }
+    int RadiusBoundY { get; }
     string RestartLabel { get; }
     AnsiChar FadeTile { get; }
     int PlayerCharacter { get; }
@@ -37,6 +40,7 @@ public interface IFacts
     int TorchDrawBoxVerticalSize { get; }
     int TorchDrawBoxHorizontalSize { get; }
     int LongMessageDuration { get; }
+    int MediumMessageDuration { get; }
     string BombedLabel { get; }
     int MaxGameCycle { get; }
     AnsiChar ErrorFadeTile { get; }

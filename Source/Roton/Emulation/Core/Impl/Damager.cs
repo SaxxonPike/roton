@@ -13,7 +13,7 @@ internal sealed class Damager(
     IState state,
     IElementList elements,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IDeferred<ITileRemover> tileRemover,
     IFacts facts,
@@ -27,43 +27,45 @@ internal sealed class Damager(
     public void Harm(int index)
     {
         var actor = actors[index];
+
         if (index == 0)
         {
+            if (world.Health <= 0)
+                return;
+
+            world.Health -= facts.HealthLostPerHit;
+            hud.UpdateStatus();
+            messenger.SetMessage(facts.ShortMessageDuration, alerts.OuchMessage);
+            tiles[actor.Location].Color = (tiles.ElementAt(actor.Location).Color & 0x0F) | 0x70;
+
             if (world.Health > 0)
             {
-                world.Health -= facts.HealthLostPerHit;
-                hud.UpdateStatus();
-                messenger.SetMessage(facts.ShortMessageDuration, alerts.OuchMessage);
-                tiles[actor.Location].Color = (tiles.ElementAt(actor.Location).Color & 0x0F) | 0x70;
+                world.TimePassed = 0;
 
-                if (world.Health > 0)
+                if (board.RestartOnZap)
                 {
-                    world.TimePassed = 0;
-                    if (board.RestartOnZap)
-                    {
-                        soundUnit.PlaySound(4, sounds.TimeOut);
-                        tileRemover.Instance.RemoveItem(actor.Location);
-                        var oldLocation = actor.Location;
-                        actor.Location = board.Entrance;
-                        radiusUpdater.UpdateRadius(oldLocation, 0);
-                        radiusUpdater.UpdateRadius(actor.Location, 0);
-                        state.GamePaused = true;
-                    }
+                    soundPlayer.PlaySound(4, sounds.TimeOut);
+                    tileRemover.Instance.RemoveItem(actor.Location);
+                    var oldLocation = actor.Location;
+                    actor.Location = board.Entrance;
+                    radiusUpdater.UpdateRadius(oldLocation, 0);
+                    radiusUpdater.UpdateRadius(actor.Location, 0);
+                    state.GamePaused = true;
+                }
 
-                    soundUnit.PlaySound(4, sounds.Ouch);
-                }
-                else
-                {
-                    soundUnit.PlaySound(5, sounds.GameOver);
-                }
+                soundPlayer.PlaySound(4, sounds.Ouch);
+            }
+            else
+            {
+                soundPlayer.PlaySound(5, sounds.GameOver);
             }
         }
         else
         {
             var element = tiles[actor.Location].Id;
             if (element == elements.BulletId)
-                soundUnit.PlaySound(3, sounds.BulletDie);
-            else if (element != elements.ObjectId) soundUnit.PlaySound(3, sounds.EnemyDie);
+                soundPlayer.PlaySound(3, sounds.BulletDie);
+            else if (element != elements.ObjectId) soundPlayer.PlaySound(3, sounds.EnemyDie);
 
             actorManager.Free(index);
         }

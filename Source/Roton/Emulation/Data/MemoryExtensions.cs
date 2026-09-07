@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Buffers.Binary;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data;
 
-[DebuggerStepThrough]
 public static class MemoryExtensions
 {
     extension(IMemory memory)
     {
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal ref T GetRef<T>(int offset) where T : struct => 
-            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
+        internal Span<T> GetSpan<T>(int offset) where T : struct =>
+            MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)));
 
-        [DebuggerStepThrough]
+        internal Span<T> GetSpan<T>(int offset, int count) where T : struct =>
+            memory.GetSpan<T>(offset).Slice(0, count);
+
+        internal ref T GetRef<T>(int offset) where T : struct =>
+#if NET10_0_OR_GREATER
+            ref MemoryMarshal.AsRef<T>(memory.Data.Slice(unchecked((ushort)offset)));
+#else
+            ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
+#endif
+
         internal Span<byte> Read(int offset, int length)
         {
             unchecked
@@ -30,24 +33,11 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int Read8(int offset)
         {
             return memory.Data[offset & 0xFFFF];
         }
 
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int Read16(int offset)
-        {
-            var span = memory.Data;
-            if (offset < 0xFFFF)
-                return BinaryPrimitives.ReadInt16LittleEndian(span.Slice(offset));
-            return unchecked((short)(span[offset & 0xFFFF] | (span[(offset + 1) & 0xFFFF] << 8)));
-        }
-
-        [DebuggerStepThrough]
         internal string ReadString(int offset = 0)
         {
             unchecked
@@ -59,14 +49,13 @@ public static class MemoryExtensions
 
                 if (end <= span.Length)
                     return span.Slice(offset + 1, length).ToStringValue();
-                
+
                 for (var i = 0; i < length; i++)
                     output[i] = span[++offset & 0xFFFF];
                 return output.ToStringValue();
             }
         }
 
-        [DebuggerStepThrough]
         internal ReadOnlySpan<byte> ReadStringSpan(int offset = 0)
         {
             unchecked
@@ -84,7 +73,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
         internal ReadOnlySpan<byte> ReadStringSpan(int offset, Span<byte> buffer)
         {
             unchecked
@@ -102,15 +90,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
-        internal Span<byte> Slice(int offset) => 
-            memory.Data.Slice(offset);
-
-        [DebuggerStepThrough]
-        internal Span<byte> Slice(int offset, int length) => 
-            memory.Data.Slice(offset, length);
-
-        [DebuggerStepThrough]
         internal void Write(int offset, ReadOnlySpan<byte> data)
         {
             unchecked
@@ -122,7 +101,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
         internal void Write(int offset, ReadOnlySpan<byte> data, int dataOffset, int dataLength)
         {
             unchecked
@@ -133,8 +111,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Write8(int offset, int value)
         {
             unchecked
@@ -144,9 +120,6 @@ public static class MemoryExtensions
             }
         }
 
-
-        [DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Write16(int offset, int value)
         {
             unchecked
@@ -157,7 +130,6 @@ public static class MemoryExtensions
             }
         }
 
-        [DebuggerStepThrough]
         internal void WriteString(int offset, ReadOnlySpan<char> value)
         {
             unchecked

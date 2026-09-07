@@ -19,5 +19,8 @@ public interface ICondition
     /// <returns>
     /// The result of evaluating the boolean condition.
     /// </returns>
+    /// <remarks>
+    /// RoZ: OopCheckCondition
+    /// </remarks>
     bool? Execute(ref OopContext context, ref Word instruction);
 }

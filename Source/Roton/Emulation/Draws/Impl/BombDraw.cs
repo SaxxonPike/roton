@@ -10,6 +10,9 @@ internal sealed class BombDraw(
     IActorList actors)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementBombDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         var p1 = actors.ActorAt(location).P1;

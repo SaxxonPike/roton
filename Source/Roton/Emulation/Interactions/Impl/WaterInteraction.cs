@@ -11,16 +11,19 @@ internal sealed class WaterInteraction(
     IAlerts alerts,
     IFacts facts,
     IConfig config,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementWaterTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         if (config.NoPesterMode)
             return;
 
-        soundUnit.PlaySound(3, sounds.Water);
+        soundPlayer.PlaySound(3, sounds.Water);
         messenger.SetMessage(facts.ShortMessageDuration, alerts.WaterMessage);
     }
 }

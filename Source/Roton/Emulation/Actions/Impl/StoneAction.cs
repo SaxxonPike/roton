@@ -15,6 +15,9 @@ internal sealed class StoneAction(
     IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementStoneTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

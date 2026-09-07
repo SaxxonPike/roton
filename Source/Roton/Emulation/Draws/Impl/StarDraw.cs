@@ -10,6 +10,9 @@ internal sealed class StarDraw(
     IState state)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementStarDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         var tileColor = tiles[location].Color;

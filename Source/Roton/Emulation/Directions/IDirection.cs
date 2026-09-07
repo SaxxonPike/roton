@@ -19,5 +19,8 @@ public interface IDirection
     /// <returns>
     /// The evaluated vector. If not found or invalid, <see cref="Vector.Idle"/> is returned.
     /// </returns>
-    Vector Execute(ref OopContext context, ref Word instruction);
+    /// <remarks>
+    /// RoZ: OopParseDirection
+    /// </remarks>
+    Vector TryEval(ref OopContext context, ref Word instruction);
 }

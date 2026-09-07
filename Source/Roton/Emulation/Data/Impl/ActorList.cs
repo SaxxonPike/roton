@@ -1,20 +1,21 @@
-﻿using Roton.Emulation.Infrastructure;
+﻿using System;
+using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
 public abstract class ActorList(IMemory memory, int capacity)
     : CachedFixedList<IActor>(capacity), IActorList
 {
-    protected IMemory Memory => memory;
+    protected IMemory Memory =>
+        memory;
 
-    public int Capacity { get; } = capacity;
+    public int Capacity { get; } =
+        capacity;
 
-    public IActor Player => this[0];
+    public IActor Player =>
+        this[0];
 
-    public IActor ActorAt(Location location) =>
-        GetItem(ActorIndexAt(location));
-
-    public int ActorIndexAt(Location location)
+    public int IndexAt(Location location)
     {
         var count = Count;
 
@@ -28,8 +29,8 @@ public abstract class ActorList(IMemory memory, int capacity)
         return -1;
     }
 
-    protected sealed override void SetItem(int index, IActor value)
-    {
+    public abstract Span<char> GetCode(int index);
+
+    protected sealed override void SetItem(int index, IActor value) => 
         throw Exceptions.InvalidSet;
-    }
 }

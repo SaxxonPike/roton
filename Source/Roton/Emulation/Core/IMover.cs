@@ -4,6 +4,13 @@ namespace Roton.Emulation.Core;
 
 public interface IMover
 {
-    void MoveActor(int index, Location location);
-    void MoveActorOnRiver(int index);
+    /// <remarks>
+    /// RoZ: MoveStat
+    /// </remarks>
+    void Move(int index, Location location);
+    
+    /// <remarks>
+    /// RoZ: ElementApplyMovement
+    /// </remarks>
+    void Float(int index);
 }

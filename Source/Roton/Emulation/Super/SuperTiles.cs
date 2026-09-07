@@ -5,5 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-internal sealed class SuperTiles(IMemory memory, IElementList elementList)
-    : Tiles(memory, elementList, 0x2BEB, 96, 80);
+internal sealed class SuperTiles(
+    IMemory memory,
+    IElementList elements)
+    : Tiles(memory, elements, 0x2BEB, 96, 80);

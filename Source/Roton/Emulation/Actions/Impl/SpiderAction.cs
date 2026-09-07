@@ -18,6 +18,9 @@ internal sealed class SpiderAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSpiderTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -46,7 +49,7 @@ internal sealed class SpiderAction(
 
         if (targetElement == elements.WebId)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
             return true;
         }
 

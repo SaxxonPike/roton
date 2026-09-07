@@ -7,7 +7,11 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
-internal sealed class SuperAlerts(IMemory memory, IColorList colors, IFacts facts) : Alerts
+internal sealed class SuperAlerts(
+    IMemory memory,
+    IColorList colors,
+    IFacts facts)
+    : Alerts
 {
     private Bool _dark;
     private Bool _notDark;
@@ -68,7 +72,8 @@ internal sealed class SuperAlerts(IMemory memory, IColorList colors, IFacts fact
     public override IMessage GemMessage { get; } =
         new Message("Gems give you health!");
 
-    public override ref Bool GemPickup => ref memory.GetRef<Bool>(0x7C10);
+    public override ref Bool GemPickup =>
+        ref memory.GetRef<Bool>(0x7C10);
 
     public override IMessage InvisibleMessage { get; } =
         new Message("You are blocked", "by an invisible wall.");

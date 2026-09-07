@@ -13,11 +13,14 @@ internal sealed class DoorInteraction(
     IFacts facts,
     ISounds sounds,
     IHud hud,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementDoorTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = (tiles[location].Color & 0x70) >> 4;
@@ -25,7 +28,7 @@ internal sealed class DoorInteraction(
         if (!world.Keys[keyIndex])
         {
             messenger.SetMessage(facts.LongMessageDuration, alerts.DoorLockedMessage(color));
-            soundUnit.PlaySound(3, sounds.DoorLocked);
+            soundPlayer.PlaySound(3, sounds.DoorLocked);
         }
         else
         {
@@ -33,7 +36,7 @@ internal sealed class DoorInteraction(
             tileRemover.RemoveItem(location);
             hud.UpdateStatus();
             messenger.SetMessage(facts.LongMessageDuration, alerts.DoorOpenMessage(color));
-            soundUnit.PlaySound(3, sounds.DoorOpen);
+            soundPlayer.PlaySound(3, sounds.DoorOpen);
         }
     }
 }

@@ -13,6 +13,9 @@ internal sealed class DragonPupAction(
     IBoardUpdater boardUpdater) 
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementDragonPupTick
+    /// </remarks>
     public void Act(int index)
     {
         boardUpdater.UpdateBoard(actors[index].Location);

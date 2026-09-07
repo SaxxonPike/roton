@@ -15,11 +15,14 @@ internal sealed class PusherAction(
     ISounds sounds,
     IElementList elements,
     IActionList actions,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IPusher pusher,
     IMover mover)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementPusherTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -28,20 +31,20 @@ internal sealed class PusherAction(
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             pusher.Push(actor.Location + actor.Vector, actor.Vector);
 
-        index = actors.ActorIndexAt(source);
+        index = actors.IndexAt(source);
         actor = actors[index];
 
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             return;
 
         var behindLocation = actor.Location - actor.Vector;
-        mover.MoveActor(index, actor.Location + actor.Vector);
-        soundUnit.PlaySound(2, sounds.Push);
+        mover.Move(index, actor.Location + actor.Vector);
+        soundPlayer.PlaySound(2, sounds.Push);
 
         if (tiles[behindLocation].Id != elements.PusherId)
             return;
 
-        var behindIndex = actors.ActorIndexAt(behindLocation);
+        var behindIndex = actors.IndexAt(behindLocation);
         var behindActor = actors[behindIndex];
 
         if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)

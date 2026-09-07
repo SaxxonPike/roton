@@ -12,10 +12,10 @@ internal sealed class ItemEvaluator(
     IParser parser)
     : IItemEvaluator
 {
-    public bool TryEval(ref OopContext oopContext, ref Word instruction, out IItem? result)
+    public bool TryEval(ref OopContext context, ref Word instruction, out IItem? result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(oopContext.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Index, ref instruction, buffer);
         result = items.Get(name);
         return result != null;
     }

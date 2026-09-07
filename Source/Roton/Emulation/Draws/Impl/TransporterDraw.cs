@@ -11,6 +11,9 @@ internal sealed class TransporterDraw(
     IState state)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementTransporterDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         var actor = actors.ActorAt(location);

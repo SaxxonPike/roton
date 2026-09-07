@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
@@ -10,18 +9,21 @@ namespace Roton.Emulation.Original;
 internal sealed class OriginalHighScoreHud(
     IWorld world,
     ILongTextEntryHud longTextEntryHud,
-    IScroll scroll)
+    IScroll scroll,
+    IScrollContent scrollContent)
     : IHighScoreHud
 {
+    private void AddHighScoreHeader()
+    {
+        scrollContent.AddLine("Score  Name");
+        scrollContent.AddLine("-----  ----------------------------------");
+    }
+
     public string? EnterHighScore(IHighScoreList highScoreList, int score)
     {
         var index = -1;
 
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
+        AddHighScoreHeader();
 
         var nameIndex = 2;
 
@@ -30,13 +32,13 @@ internal sealed class OriginalHighScoreHud(
             if (score > 0 && index < 0 && hs.Score <= score)
             {
                 index = nameIndex;
-                nameList.Add($"{score,5}  -- You! --");
+                scrollContent.AddLine($"{score,5}  -- You! --");
             }
 
             if (string.IsNullOrEmpty(hs.Name))
                 continue;
 
-            nameList.Add($"{hs.Score,5}  {hs.Name}");
+            scrollContent.AddLine($"{hs.Score,5}  {hs.Name}");
             nameIndex++;
         }
 
@@ -44,7 +46,6 @@ internal sealed class OriginalHighScoreHud(
         {
             string? name = null;
             scroll.ShowMessage($"New high score for {world.Name}",
-                nameList,
                 false,
                 2,
                 _ =>
@@ -55,23 +56,18 @@ internal sealed class OriginalHighScoreHud(
             return name;
         }
 
-        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
         return null;
     }
 
     public void ShowHighScores(IHighScoreList highScoreList)
     {
-        var nameList = new List<string>
-        {
-            "Score  Name",
-            "-----  ----------------------------------"
-        };
+        AddHighScoreHeader();
 
-        nameList.AddRange(
+        scrollContent.AddLines(
             highScoreList
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
                 .Select(hs => $"{hs.Score,5}  {hs.Name}"));
 
-        scroll.ShowMessage($"High scores for {world.Name}", nameList, false, 0);
+        scroll.ShowMessage($"High scores for {world.Name}", false, 0);
     }
 }

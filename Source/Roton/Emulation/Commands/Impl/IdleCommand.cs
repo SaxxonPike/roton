@@ -7,8 +7,6 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "IDLE")]
 internal sealed class IdleCommand : ICommand
 {
-    public void Execute(ref OopContext context, ref Word instruction)
-    {
+    public void Execute(ref OopContext context, ref Word instruction) => 
         context.Moved = true;
-    }
 }

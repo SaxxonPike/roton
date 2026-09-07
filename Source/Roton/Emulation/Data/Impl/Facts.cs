@@ -44,7 +44,10 @@ public abstract class Facts : IFacts
     public string DefaultWorldTitle => string.Empty;
     public AnsiChar DarknessTile => new(0xB0, 0x07);
     public AnsiChar EmptyTile => new(0x20, 0x0F);
-    public int TorchRadius => 50;
+    public abstract int TorchRadius { get; }
+    public abstract int DistanceMultY { get; }
+    public abstract int RadiusBoundX { get; }
+    public abstract int RadiusBoundY { get; }
     public string RestartLabel => "RESTART";
     public AnsiChar FadeTile => new(0xDB, 0x05);
     public int PlayerCharacter => 0x02;
@@ -53,6 +56,7 @@ public abstract class Facts : IFacts
     public int TorchDrawBoxVerticalSize => 11;
     public int TorchDrawBoxHorizontalSize => 8;
     public int LongMessageDuration => 0xC8;
+    public int MediumMessageDuration => 0x96;
     public string BombedLabel => "BOMBED";
     public int MaxGameCycle => 420;
     public AnsiChar ErrorFadeTile => new(0xDB, 0x04);

@@ -9,6 +9,9 @@ internal sealed class DragonPupDraw(
     IState state)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementDragonPupDraw
+    /// </remarks>
     public AnsiChar Draw(Location location) =>
         (state.GameCycle & 0x3) switch
         {

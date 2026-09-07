@@ -38,7 +38,7 @@ internal sealed class SuperObjectAction(
 
         if (tiles.ElementAt(target).IsFloor)
         {
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
 
             if (actor.P2 <= 0)
                 return;

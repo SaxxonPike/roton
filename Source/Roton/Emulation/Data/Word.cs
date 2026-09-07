@@ -1,12 +1,14 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Roton.Emulation.Data;
 
 /// <summary>
-/// Wraps a signed 16-bit value in an endian-agnostic manner.
+/// Represents a signed 16-bit value stored in little-endian format.
 /// </summary>
+/// <remarks>
+/// The implicit conversions are endian-agnostic.
+/// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct Word(short value) : IEquatable<Word>, IEquatable<int>, IEquatable<short>
 {
@@ -32,7 +34,6 @@ public readonly struct Word(short value) : IEquatable<Word>, IEquatable<int>, IE
 
     private int Value
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             if (BitConverter.IsLittleEndian)

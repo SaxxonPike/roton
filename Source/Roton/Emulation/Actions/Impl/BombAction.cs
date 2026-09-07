@@ -12,12 +12,15 @@ namespace Roton.Emulation.Actions.Impl;
 internal sealed class BombAction(
     ISounds sounds,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IRadiusUpdater radiusUpdater,
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBombTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -29,7 +32,7 @@ internal sealed class BombAction(
         switch ((int)actor.P1)
         {
             case 1:
-                soundUnit.PlaySound(1, sounds.BombExplode);
+                soundPlayer.PlaySound(1, sounds.BombExplode);
                 radiusUpdater.UpdateRadius(actor.Location, RadiusMode.Explode);
                 break;
             case 0:
@@ -38,7 +41,7 @@ internal sealed class BombAction(
                 radiusUpdater.UpdateRadius(location, RadiusMode.Clear);
                 break;
             default:
-                soundUnit.PlaySound(1, (actor.P1 & 0x01) == 0 ? sounds.BombTock : sounds.BombTick);
+                soundPlayer.PlaySound(1, (actor.P1 & 0x01) == 0 ? sounds.BombTock : sounds.BombTick);
                 break;
         }
     }

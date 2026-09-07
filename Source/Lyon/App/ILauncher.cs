@@ -1,6 +1,4 @@
-﻿using Roton.Emulation.Core;
-
-namespace Lyon.App;
+﻿namespace Lyon.App;
 
 /// <summary>
 /// Launches Lyon frontends over Roton backends.

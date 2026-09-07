@@ -7,7 +7,8 @@ using Roton.Infrastructure;
 namespace Lyon.App.Impl;
 
 /// <inheritdoc />
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 public sealed class Launcher(
     IWindow window,
     IAudioPresenter audioPresenter,

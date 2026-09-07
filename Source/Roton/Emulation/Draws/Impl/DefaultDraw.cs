@@ -7,8 +7,9 @@ namespace Roton.Emulation.Draws.Impl;
 [Context(Context.Super)]
 internal sealed class DefaultDraw : IDraw
 {
-    public AnsiChar Draw(Location location)
-    {
-        return new AnsiChar(0x3F, 0x40);
-    }
+    /// <remarks>
+    /// RoZ: ElementDefaultDraw
+    /// </remarks>
+    public AnsiChar Draw(Location location) => 
+        new(0x3F, 0x40);
 }

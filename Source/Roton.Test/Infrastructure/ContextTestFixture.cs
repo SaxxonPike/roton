@@ -36,7 +36,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 
     private Random Rand { get; } = new();
 
-    protected IEngine Engine { get; private set; } = null!;
     protected IActorList Actors { get; private set; } = null!;
     protected IAlerts Alerts { get; private set; } = null!;
     protected IBoard Board { get; private set; } = null!;
@@ -49,6 +48,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IElementList Elements { get; private set; } = null!;
     protected IExits Exits { get; private set; } = null!;
     protected IFacts Facts { get; private set; } = null!;
+    protected IGame Game { get; private set; } = null!;
     protected ICodeHeap Heap { get; private set; } = null!;
     protected IHud Hud { get; private set; } = null!;
     protected IItemList Items { get; private set; } = null!;
@@ -66,30 +66,24 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IWorld World { get; private set; } = null!;
     protected IGameSerializer GameSerializer { get; private set; } = null!;
     protected IWorldManager WorldManager { get; private set; } = null!;
-    protected ISoundUnit SoundUnit { get; private set; } = null!;
+    protected ISoundPlayer SoundPlayer { get; private set; } = null!;
 
     protected IEnumerable<string> FullMessage => MessageHandler.GetMessageLines();
     protected IEnumerable<string> Message => [.. FullMessage.Where(m => m != string.Empty)];
 
-    protected void TouchActor(int actorIndex)
-    {
+    protected void TouchActor(int actorIndex) => 
         Broadcaster.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
-    }
 
-    protected void UnpackBoardResource(string path)
-    {
+    protected void UnpackBoardResource(string path) => 
         GameSerializer.UnpackBoard(Tiles, GameSerializer.LoadBoardData(GetResource(path)));
-    }
 
-    protected void Step()
-    {
-        Engine.StepOnce();
-    }
+    protected void Step() => 
+        Game.StepOnce();
 
     protected void Step(int count)
     {
         for (var i = 0; i < count; i++)
-            Engine.StepOnce();
+            Game.StepOnce();
     }
 
     protected void DumpActorCode()
@@ -119,15 +113,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
             Step();
     }
 
-    protected void DisableTracer()
-    {
+    protected void DisableTracer() => 
         Tracer.Detach(TestContext.Out);
-    }
 
-    protected void EnableTracer()
-    {
+    protected void EnableTracer() => 
         Tracer.Attach(TestContext.Out);
-    }
 
     [SetUp]
     public void __SetUpContext()
@@ -165,7 +155,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         services.AddSingleton(Tracer);
 
         var container = services.BuildServiceProvider();
-        Engine = container.GetRequiredService<IEngine>();
         Actors = container.GetRequiredService<IActorList>();
         Alerts = container.GetRequiredService<IAlerts>();
         Board = container.GetRequiredService<IBoard>();
@@ -177,6 +166,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Elements = container.GetRequiredService<IElementList>();
         Exits = container.GetRequiredService<IExits>();
         Facts = container.GetRequiredService<IFacts>();
+        Game = container.GetRequiredService<IGame>();
         Heap = container.GetRequiredService<ICodeHeap>();
         Hud = container.GetRequiredService<IHud>();
         Items = container.GetRequiredService<IItemList>();
@@ -193,7 +183,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
         WorldManager = container.GetRequiredService<IWorldManager>();
-        SoundUnit = container.GetRequiredService<ISoundUnit>();
+        SoundPlayer = container.GetRequiredService<ISoundPlayer>();
 
         // Preconfiguration
         WorldManager.ClearWorld();
@@ -213,7 +203,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         MoveActorTo(0, x, y);
 
     protected void MoveActorTo(int index, int x, int y) => 
-        Mover.MoveActor(index, new Location(x, y));
+        Mover.Move(index, new Location(x, y));
 
     protected void FaceActor(int index, Vector vector) =>
         Actors[index].Vector = vector;
@@ -337,7 +327,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     }
 
     protected int ActorIndexAt(int x, int y) =>
-        Actors.ActorIndexAt(new Location(x, y));
+        Actors.IndexAt(new Location(x, y));
 
     protected IActor ActorAt(int x, int y) =>
         Actors.ActorAt(new Location(x, y));

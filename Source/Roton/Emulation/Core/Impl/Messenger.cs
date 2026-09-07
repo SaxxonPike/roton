@@ -16,7 +16,7 @@ internal sealed class Messenger(
 {
     public void SetMessage(int duration, IMessage message)
     {
-        var index = actors.ActorIndexAt(new Location(0, 0));
+        var index = actors.IndexAt(new Location(0, 0));
         if (index >= 0)
         {
             actorManager.Free(index);

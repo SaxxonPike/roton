@@ -9,5 +9,6 @@ internal sealed class AmmoItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Ammo;
+    public ref Word Value =>
+        ref world.Ammo;
 }

@@ -25,9 +25,12 @@ namespace Roton.Emulation.Interactions.Impl;
 [Context(Context.Super, 0x45)]
 [Context(Context.Super, 0x48)]
 internal sealed class EnemyInteraction(
-    IAttacker attacker) 
+    IAttacker attacker)
     : IInteraction
 {
-    public void Interact(Location location, int index, ref Vector vector) => 
+    /// <remarks>
+    /// RoZ: ElementDamagingTouch
+    /// </remarks>
+    public void Interact(Location location, int index, ref Vector vector) =>
         attacker.Attack(index, location);
 }

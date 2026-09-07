@@ -9,12 +9,12 @@ namespace Roton.Emulation.Conditions.Impl;
 [Context(Context.Super, "ANY")]
 internal sealed class AnyCondition(
     ITileFinder tileFinder,
-    IKindEvaluator kindEvaluator) 
+    ITileEvaluator tileEvaluator) 
     : ICondition
 {
     public bool? Execute(ref OopContext context, ref Word instruction)
     {
-        if (!kindEvaluator.TryEval(ref context, ref instruction, out var val))
+        if (!tileEvaluator.TryEval(ref context, ref instruction, out var val))
             return null;
 
         return tileFinder.Find(val, new Location(0, 1));

@@ -14,7 +14,7 @@ internal sealed class Game(
     IHud hud,
     IState state,
     IActorList actors,
-    IActionList actionList,
+    IActionList actions,
     ITiles tiles,
     ITimers timers,
     IElementList elements,
@@ -29,7 +29,7 @@ internal sealed class Game(
     IFacts facts,
     IScheduler scheduler,
     ITracer tracer,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IDialogs dialogs,
     IWorldManager worldManager,
     IMessenger messenger,
@@ -86,7 +86,7 @@ internal sealed class Game(
     {
         var alternating = false;
 
-        if (!gameThread.Step)
+        if (gameThread.StepMode == StepMode.Normal)
         {
             hud.CreateStatusText();
             hud.UpdateStatus();
@@ -104,7 +104,7 @@ internal sealed class Game(
                     var actorData = actors[state.ActIndex];
                     if (actorData.Cycle != 0)
                         if (state.ActIndex % actorData.Cycle == state.GameCycle % actorData.Cycle)
-                            actionList.Get(tiles[actorData.Location].Id)?.Act(state.ActIndex);
+                            actions.Get(tiles[actorData.Location].Id)?.Act(state.ActIndex);
 
                     state.ActIndex++;
                 }
@@ -159,7 +159,7 @@ internal sealed class Game(
                     {
                         if (tiles.ElementAt(actors.Player.Location).Id == elements.PlayerId)
                         {
-                            mover.MoveActor(0, target);
+                            mover.Move(0, target);
                         }
                         else
                         {
@@ -200,7 +200,7 @@ internal sealed class Game(
                     }
 
                 tracer.TraceStep();
-                if (gameThread.Step)
+                if (gameThread.StepMode != StepMode.Normal)
                     break;
 
                 scheduler.WaitForTick();
@@ -208,7 +208,7 @@ internal sealed class Game(
 
             if (state.BreakGameLoop)
             {
-                soundUnit.ClearSound();
+                soundPlayer.ClearSound();
                 if (state.PlayerElement == elements.PlayerId)
                 {
                     // This game speed reset isn't here in the original code,
@@ -248,6 +248,7 @@ internal sealed class Game(
 
         list.Add(name, score);
         highScoreListFactory.Save(list);
+        highScoreHud.ShowHighScores(list);
         dialogs.ShowHighScores();
     }
 
@@ -262,4 +263,12 @@ internal sealed class Game(
     /// </returns>
     private int HsecToTicks(int hsec) =>
         Math.Max(1, hsec * (config.MasterClockDenominator / config.MasterClockNumerator + 50) / 100);
+
+    public void StepOnce()
+    {
+        var lastStep = gameThread.StepMode; 
+        gameThread.StepMode = StepMode.Once;
+        MainLoop(true);
+        gameThread.StepMode = lastStep;
+    }
 }

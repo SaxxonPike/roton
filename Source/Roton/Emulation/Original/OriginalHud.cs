@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
@@ -14,11 +13,10 @@ internal sealed class OriginalHud(
     IChoiceHud choiceHud,
     IFadeMatrix fadeMatrix,
     IState state,
-    IElementList elementList,
     IWorld world,
     IBoard board,
     IFacts facts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IBoardUpdater boardUpdater,
     IPlayField playField,
     IElementList elements,
@@ -39,7 +37,7 @@ internal sealed class OriginalHud(
     public void ClearTitleStatus() =>
         DrawStatusLine(6);
 
-    public bool Confirm(string message)
+    private bool Confirm(string message)
     {
         DrawStatusLine(3);
         DrawStatusLine(4);
@@ -51,7 +49,7 @@ internal sealed class OriginalHud(
         return result;
     }
 
-    public void CreateStatusBar()
+    private void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -97,11 +95,11 @@ internal sealed class OriginalHud(
             DrawString(0x40, 0x0A, "   Gems:", 0x1E);
             DrawString(0x40, 0x0B, "  Score:", 0x1E);
             DrawString(0x40, 0x0C, "   Keys:", 0x1E);
-            DrawChar(0x3E, 0x07, new AnsiChar(elementList.Player().Character, 0x1F));
-            DrawChar(0x3E, 0x08, new AnsiChar(elementList.Ammo().Character, 0x1B));
-            DrawChar(0x3E, 0x09, new AnsiChar(elementList.Torch().Character, 0x16));
-            DrawChar(0x3E, 0x0A, new AnsiChar(elementList.Gem().Character, 0x1B));
-            DrawChar(0x3E, 0x0C, new AnsiChar(elementList.Key().Character, 0x1F));
+            DrawChar(0x3E, 0x07, new AnsiChar(elements.Player().Character, 0x1F));
+            DrawChar(0x3E, 0x08, new AnsiChar(elements.Ammo().Character, 0x1B));
+            DrawChar(0x3E, 0x09, new AnsiChar(elements.Torch().Character, 0x16));
+            DrawChar(0x3E, 0x0A, new AnsiChar(elements.Gem().Character, 0x1B));
+            DrawChar(0x3E, 0x0C, new AnsiChar(elements.Key().Character, 0x1F));
             DrawString(0x3E, 0x0E, " T ", 0x70);
             DrawString(0x41, 0x0E, " Torch", 0x1F);
             DrawString(0x3E, 0x0F, " B ", 0x30);
@@ -137,24 +135,24 @@ internal sealed class OriginalHud(
             world.Name.Length <= 0 ? facts.UntitledWorldName : world.Name, 0x1F);
     }
 
-    public void DrawChar(int x, int y, AnsiChar ac) =>
+    private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
-    public void DrawMessage(IMessage message, int color)
+    public void DrawMessage(int color)
     {
-        var text = message.Text.FirstOrDefault();
+        var message = state.Message;
 
-        if (string.IsNullOrEmpty(text))
+        if (message.Length == 0)
             return;
 
-        var x = (60 - text.Length) / 2;
-        DrawString(x, 24, " ", text, " ", color);
+        var x = (60 - message.Length) / 2;
+        DrawString(x, 24, " ", message, " ", color);
     }
 
     public void DrawPausing() =>
         DrawString(0x40, 0x05, "Pausing...", 0x1F);
 
-    public void DrawStatusLine(int y)
+    private void DrawStatusLine(int y)
     {
         var blankChar = new AnsiChar(0x20, 0x11);
 
@@ -162,7 +160,7 @@ internal sealed class OriginalHud(
             terminal.Plot(x, y, blankChar);
     }
 
-    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
+    private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
@@ -259,7 +257,7 @@ internal sealed class OriginalHud(
         {
             DrawChar(0x47 + i, 0x0C,
                 world.Keys[i - 1]
-                    ? new AnsiChar(elementList.Key().Character, 0x18 + i)
+                    ? new AnsiChar(elements.Key().Character, 0x18 + i)
                     : new AnsiChar(0x20, 0x1F));
         }
 
@@ -297,7 +295,7 @@ internal sealed class OriginalHud(
     {
         DrawString(62, 4, "You need a newer", 0x1E);
         DrawString(62, 5, " version of ZZT!", 0x1E);
-        soundUnit.PlayErrorSound();
+        soundPlayer.PlayErrorSound();
         delayer.Delay(2000);
     }
 

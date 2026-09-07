@@ -20,6 +20,9 @@ internal sealed class SlimeAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSlimeTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -43,7 +46,7 @@ internal sealed class SlimeAction(
 
                 if (spawnCount == 0)
                 {
-                    mover.MoveActor(index, target);
+                    mover.Move(index, target);
                     tiles[source] = slimeTrailTile;
                     boardUpdater.UpdateBoard(source);
                 }

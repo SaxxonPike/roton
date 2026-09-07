@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -7,7 +8,6 @@ using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -16,7 +16,8 @@ namespace Lyon.Presenters.Impl;
 /// <inheritdoc cref="IAudioPresenter"/>
 /// <inheritdoc cref="IDisposable"/>
 // ReSharper disable once UnusedMember.Global
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 public sealed unsafe class AudioPresenter(
     IConfig config, 
     IAudioStreamComposer composer,
@@ -74,7 +75,7 @@ public sealed unsafe class AudioPresenter(
             var have = presenter._buffer.Count;
             if (have < want)
             {
-                Console.WriteLine($"Audio buffer underflow: need {want}, got {have}");
+                Debug.WriteLine($"Audio buffer underflow: need {want}, got {have}");
                 return;
             }
 

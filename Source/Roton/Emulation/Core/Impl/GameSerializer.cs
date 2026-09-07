@@ -49,8 +49,8 @@ public abstract class GameSerializer(
         writer.Write([.. memory.Read(BoardNameOffset, BoardNameLength)]);
         PackTiles(tiles, writer);
         writer.Write([.. memory.Read(BoardDataOffset, BoardDataLength)]);
-        var actorCount = memory.Read16(ActorDataCountOffset);
-        writer.Write((short)actorCount);
+        short actorCount = memory.GetRef<Word>(ActorDataCountOffset);
+        writer.Write(actorCount);
         PackActors(writer, actorCount);
         writer.Flush();
         return mem.ToArray();
@@ -106,7 +106,7 @@ public abstract class GameSerializer(
 
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(mem, heap, ActorDataOffset + ActorDataLength * i);
+            var actor = new Actor(mem, heap, ActorDataOffset + ActorDataLength * i, ActorDataLength);
             var code = Span<char>.Empty;
 
             if (actor.Pointer != 0)
@@ -193,7 +193,7 @@ public abstract class GameSerializer(
         var actorList = new List<IActor>();
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(memory, heap, ActorDataOffset + ActorDataLength * i);
+            var actor = new Actor(memory, heap, ActorDataOffset + ActorDataLength * i, ActorDataLength);
             memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
             actor.Pointer = 0;
             if (actor.Length > 0)
@@ -213,7 +213,7 @@ public abstract class GameSerializer(
             if (actorList[i].Length < 0)
             {
                 var actorCodeSource = new Actor(memory, heap,
-                    ActorDataOffset + -actorList[i].Length * ActorDataLength);
+                    ActorDataOffset + -actorList[i].Length * ActorDataLength, ActorDataLength);
                 actorList[i].Length = actorCodeSource.Length;
                 actorList[i].Pointer = actorCodeSource.Pointer;
             }

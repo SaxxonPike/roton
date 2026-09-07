@@ -16,7 +16,8 @@ internal sealed class SuperElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x81, value);
     }
 
-    public override ref HWord Character => ref memory.GetRef<HWord>(_offset + 0x00);
+    public override ref HWord Character => 
+        ref memory.GetRef<HWord>(_offset + 0x00);
 
     public override string CodeEditText
     {
@@ -24,9 +25,11 @@ internal sealed class SuperElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0xAB, value);
     }
 
-    public override ref HWord Color => ref memory.GetRef<HWord>(_offset + 0x01);
+    public override ref HWord Color => 
+        ref memory.GetRef<HWord>(_offset + 0x01);
 
-    public override ref Word Cycle => ref memory.GetRef<Word>(_offset + 0x0B);
+    public override ref Word Cycle => 
+        ref memory.GetRef<Word>(_offset + 0x0B);
 
     public override string EditorCategory
     {
@@ -34,21 +37,29 @@ internal sealed class SuperElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x2D, value);
     }
 
-    public override ref Bool HasDrawCode => ref memory.GetRef<Bool>(_offset + 0x06);
+    public override ref Bool HasDrawCode => 
+        ref memory.GetRef<Bool>(_offset + 0x06);
 
-    public override ref Bool IsAlwaysVisible => ref _isAlwaysVisible;
+    public override ref Bool IsAlwaysVisible => 
+        ref _isAlwaysVisible;
 
-    public override ref Bool IsDestructible => ref memory.GetRef<Bool>(_offset + 0x02);
+    public override ref Bool IsDestructible => 
+        ref memory.GetRef<Bool>(_offset + 0x02);
 
-    public override ref Bool IsEditorFloor => ref memory.GetRef<Bool>(_offset + 0x04);
+    public override ref Bool IsEditorFloor => 
+        ref memory.GetRef<Bool>(_offset + 0x04);
 
-    public override ref Bool IsFloor => ref memory.GetRef<Bool>(_offset + 0x05);
+    public override ref Bool IsFloor => 
+        ref memory.GetRef<Bool>(_offset + 0x05);
 
-    public override ref Bool IsPushable => ref memory.GetRef<Bool>(_offset + 0x03);
+    public override ref Bool IsPushable => 
+        ref memory.GetRef<Bool>(_offset + 0x03);
 
-    public override ref Word MenuIndex => ref memory.GetRef<Word>(_offset + 0x15);
+    public override ref Word MenuIndex => 
+        ref memory.GetRef<Word>(_offset + 0x15);
 
-    public override ref PChar MenuKey => ref memory.GetRef<PChar>(_offset + 0x17);
+    public override ref PChar MenuKey => 
+        ref memory.GetRef<PChar>(_offset + 0x17);
 
     public override string Name
     {
@@ -74,7 +85,8 @@ internal sealed class SuperElement(IMemory memory, int index) : Element(index)
         set => memory.WriteString(_offset + 0x6C, value);
     }
 
-    public override ref Word Points => ref memory.GetRef<Word>(_offset + 0xC0);
+    public override ref Word Points => 
+        ref memory.GetRef<Word>(_offset + 0xC0);
 
     public override string StepEditText
     {

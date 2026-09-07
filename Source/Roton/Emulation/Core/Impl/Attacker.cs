@@ -12,7 +12,7 @@ internal sealed class Attacker(
     IState state,
     IElementList elements,
     IActorList actors,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     ISounds sounds,
     IDamager damager,
     IDestroyer destroyer)
@@ -30,7 +30,8 @@ internal sealed class Attacker(
             damager.Harm(index);
         }
 
-        if (index > 0 && index <= state.ActIndex) state.ActIndex--;
+        if (index > 0 && index <= state.ActIndex) 
+            state.ActIndex--;
 
         if (tiles[location].Id == elements.PlayerId && world.EnergyCycles > 0)
         {
@@ -40,7 +41,7 @@ internal sealed class Attacker(
         else
         {
             destroyer.Destroy(location);
-            soundUnit.PlaySound(2, sounds.EnemySuicide);
+            soundPlayer.PlaySound(2, sounds.EnemySuicide);
         }
     }
 }

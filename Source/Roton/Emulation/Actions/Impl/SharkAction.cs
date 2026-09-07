@@ -18,6 +18,9 @@ internal sealed class SharkAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSharkTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -30,7 +33,7 @@ internal sealed class SharkAction(
         var targetElement = tiles.ElementAt(target);
 
         if (elements.IsWater(targetElement.Id))
-            mover.MoveActor(index, target);
+            mover.Move(index, target);
         else if (targetElement.Id == elements.PlayerId)
             attacker.Attack(index, target);
     }

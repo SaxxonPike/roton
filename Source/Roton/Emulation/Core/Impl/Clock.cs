@@ -6,7 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-[Context(Context.Startup)]
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed class Clock(IConfig config) : IClock
 {
     private readonly long _numerator = config.MasterClockNumerator;

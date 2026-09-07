@@ -12,11 +12,14 @@ internal sealed class GemInteraction(
     IHud hud,
     ISounds sounds,
     IAlerts alerts,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IMessenger messenger,
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementGemTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Health += facts.HealthPerGem;
@@ -24,7 +27,7 @@ internal sealed class GemInteraction(
         world.Score += facts.ScorePerGem;
         tileRemover.RemoveItem(location);
         hud.UpdateStatus();
-        soundUnit.PlaySound(2, sounds.Gem);
+        soundPlayer.PlaySound(2, sounds.Gem);
 
         if (!alerts.GemPickup)
             return;

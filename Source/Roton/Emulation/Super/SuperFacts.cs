@@ -16,6 +16,10 @@ internal sealed class SuperFacts : Facts
     public override string WorldFileExtension => "SZT";
     public override string SavedGameWindowTitle => "Saved Games";
     public override string WorldFileWindowTitle => "Super ZZT Worlds";
+    public override int TorchRadius => 64;
+    public override int DistanceMultY => 1;
+    public override int RadiusBoundX => 9;
+    public override int RadiusBoundY => 9;
     public override string HighScoreExtension => "HGS";
     public override int BaseMemoryUsage => 203044;
     public override int ScrollHeight => 23;

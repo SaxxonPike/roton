@@ -21,11 +21,14 @@ internal sealed class StarAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementStarTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
 
-        actor.P2 = unchecked((byte)((actor.P2 - 1) & 0xFF));
+        actor.P2--;
 
         if (actor.P2 <= 0)
         {
@@ -50,7 +53,7 @@ internal sealed class StarAction(
                     pusher.Push(targetLocation, actor.Vector);
 
                 if (targetElement.IsFloor || elements.IsWater(targetElement.Id))
-                    mover.MoveActor(index, targetLocation);
+                    mover.Move(index, targetLocation);
             }
         }
         else

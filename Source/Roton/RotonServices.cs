@@ -28,8 +28,7 @@ public static class RotonServices
     /// </returns>
     public static IEnumerable<RotonService> Get(Context context, params Assembly[] additionalAssemblies)
     {
-        // Always include Startup.
-        var contexts = ((IEnumerable<Context>)[Context.Startup, context]).Distinct();
+        var contexts = ((IEnumerable<Context>)[context]).Distinct();
 
         // Always include Roton's own assembly.
         var assemblies = additionalAssemblies.Concat([typeof(RotonServices).Assembly]).Distinct();

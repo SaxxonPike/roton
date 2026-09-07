@@ -10,30 +10,28 @@ internal sealed class SuperMessageHandler(
     IFacts facts,
     IState state,
     IMessenger messenger,
-    IScroll scroll)
+    IScroll scroll,
+    IScrollContent scrollContent)
     : IMessageHandler
 {
     public ScrollResult ExecuteMessage(ref OopContext context)
     {
-        if (!context.HasMessage)
+        if (scrollContent.LineCount <= 0)
             return default;
 
-        var message = context.GetMessage();
-
-        switch (message.Count)
+        switch (scrollContent.LineCount)
         {
             case 1:
-                messenger.SetMessage(facts.LongMessageDuration, new Message(string.Empty, message[0]));
+                messenger.SetMessage(facts.LongMessageDuration, new Message(string.Empty, scrollContent.GetLine(0)));
                 return default;
             case 2:
-                messenger.SetMessage(facts.LongMessageDuration,
-                    new Message(message[0], message[1]));
+                messenger.SetMessage(facts.LongMessageDuration, new Message(scrollContent.GetLine(0), scrollContent.GetLine(1)));
                 return default;
             case 0:
                 return default;
             default:
                 state.KeyVector = Vector.Idle;
-                return scroll.ShowMessage(context.Name, [.. message], false, 0);
+                return scroll.ShowMessage(context.Name, false, 0);
         }
     }
 

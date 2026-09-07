@@ -9,12 +9,12 @@ namespace Roton.Emulation.Cheats.Impl;
 [Context(Context.Original, "KEYS")]
 [Context(Context.Super, "KEYS")]
 internal sealed class KeysCheat(
-    IKeyList keyList)
+    IKeyList keys)
     : ICheat
 {
     public void Execute(bool clear)
     {
         for (var i = 0; i < 7; i++)
-            keyList[i] = true;
+            keys[i] = true;
     }
 }

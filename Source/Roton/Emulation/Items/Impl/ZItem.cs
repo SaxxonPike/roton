@@ -8,5 +8,6 @@ internal sealed class ZItem(
     IWorld world)
     : IItem
 {
-    public ref Word Value => ref world.Stones;
+    public ref Word Value =>
+        ref world.Stones;
 }

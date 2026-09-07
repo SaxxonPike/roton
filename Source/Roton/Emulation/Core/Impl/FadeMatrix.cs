@@ -12,10 +12,8 @@ public abstract class FadeMatrix(
     int speed)
     : IFadeMatrix
 {
-    public int Width => width;
-    public int Height => height;
-    public int Left => left;
-    public int Top => top;
+    protected int Left => left;
+    protected int Top => top;
 
     private readonly Location[] _matrix = new Location[width * height];
 

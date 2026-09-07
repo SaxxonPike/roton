@@ -14,6 +14,9 @@ internal sealed class TransporterAction(
     IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementTransporterTick
+    /// </remarks>
     public void Act(int index) => 
         boardUpdater.UpdateBoard(actors[index].Location);
 }

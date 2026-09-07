@@ -18,7 +18,7 @@ internal sealed class SuperHud(
     ITiles tiles,
     IWorld world,
     IElementList elements,
-    ISoundUnit soundUnit,
+    ISoundPlayer soundPlayer,
     IStatistics statistics,
     IDelayer delayer,
     IConfirmInputHandler confirmInputHandler)
@@ -57,7 +57,7 @@ internal sealed class SuperHud(
         return result;
     }
 
-    public void CreateStatusBar()
+    private void CreateStatusBar()
     {
         for (var y = 0; y < ViewportHeight; y++)
         {
@@ -125,6 +125,9 @@ internal sealed class SuperHud(
         CreateStatusWindow();
     }
 
+    /// <remarks>
+    /// RoZ: DrawPlayfieldBorder
+    /// </remarks>
     private void CreateStatusWindow()
     {
         for (var x = 0; x < 26; x++)
@@ -141,13 +144,13 @@ internal sealed class SuperHud(
         }
     }
 
-    public void DrawChar(int x, int y, AnsiChar ac) =>
+    private void DrawChar(int x, int y, AnsiChar ac) =>
         terminal.Plot(x, y, ac);
 
-    public void DrawMessage(IMessage message, int color)
+    public void DrawMessage(int color)
     {
-        var topText = message.Text.FirstOrDefault() ?? string.Empty;
-        var bottomText = message.Text.Skip(1).FirstOrDefault() ?? string.Empty;
+        var topText = state.Message;
+        var bottomText = state.Message2;
         var topX = 26 - (topText.Length >> 1);
         var bottomX = 26 - (bottomText.Length >> 1);
         var messageColor = (color & 0x0F) | 0x10;
@@ -155,6 +158,9 @@ internal sealed class SuperHud(
         DrawString(bottomX, 24, " ", bottomText, " ", messageColor);
     }
 
+    /// <remarks>
+    /// RoZ: DrawStatusMessage
+    /// </remarks>
     private void DrawSystemMessage(ReadOnlySpan<char> message, int color) =>
         DrawString(25 - message.Length / 2, 23, message, color);
 
@@ -167,11 +173,8 @@ internal sealed class SuperHud(
         DrawString(x, y, s, 0x6E);
     }
 
-    public void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
+    private void DrawString(int x, int y, ReadOnlySpan<char> text, int color) =>
         terminal.Write(x, y, text, color);
-
-    private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, int color) =>
-        terminal.Write(x, y, text0, text1, color);
 
     private void DrawString(int x, int y, ReadOnlySpan<char> text0, ReadOnlySpan<char> text1, ReadOnlySpan<char> text2,
         int color) =>
@@ -326,7 +329,7 @@ internal sealed class SuperHud(
     public void FailToLoadWorld()
     {
         DrawSystemMessage("Wrong ZZT version!", 0x1E);
-        soundUnit.PlayErrorSound();
+        soundPlayer.PlayErrorSound();
         delayer.Delay(2000);
     }
 
@@ -340,6 +343,9 @@ internal sealed class SuperHud(
     public void ClearPausing() =>
         ClearMessage();
 
+    /// <remarks>
+    /// RoZ: ClearDisplayMessage
+    /// </remarks>
     private void ClearMessage()
     {
         var clearChar = new AnsiChar(0x00, 0x10);

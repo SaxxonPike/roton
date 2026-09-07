@@ -10,6 +10,6 @@ internal sealed class RndDirection(
     INavigator navigator) 
     : IDirection
 {
-    public Vector Execute(ref OopContext context, ref Word instruction) => 
+    public Vector TryEval(ref OopContext context, ref Word instruction) => 
         navigator.Rnd();
 }

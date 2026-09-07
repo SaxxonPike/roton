@@ -16,5 +16,8 @@ public interface ICommand
     /// <param name="instruction">
     /// Current offset within the script, which may be modified by the command.
     /// </param>
+    /// <remarks>
+    /// RoZ: OopExecute (individual command handling)
+    /// </remarks>
     void Execute(ref OopContext context, ref Word instruction);
 }

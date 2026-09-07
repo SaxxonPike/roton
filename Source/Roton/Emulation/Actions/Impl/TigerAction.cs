@@ -18,6 +18,9 @@ internal sealed class TigerAction(
     ISpawner spawner)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementTigerTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
