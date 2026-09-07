@@ -29,8 +29,9 @@ jobs:
     - name: Deploy
       run: dotnet publish -c Release -f net10.0 -o ./../Deploy ./Lyon/Lyon.csproj
       working-directory: Source
-    - name: Archive
-      uses: actions/upload-artifact@v4
+    - name: Create Release
+      uses: softprops/action-gh-release@v3
       with:
-        name: Deployment
-        path: Deploy
+        files: Deploy/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
