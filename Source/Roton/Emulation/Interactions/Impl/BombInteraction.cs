@@ -17,6 +17,9 @@ internal sealed class BombInteraction(
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementBombTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var actor = actors.ActorAt(location);

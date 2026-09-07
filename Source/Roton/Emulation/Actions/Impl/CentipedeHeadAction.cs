@@ -20,6 +20,9 @@ internal sealed class CentipedeHeadAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementCentipedeHeadTick
+    /// </remarks>
     public void Act(int index)
     {
         var player = actors.Player;
@@ -131,17 +134,17 @@ internal sealed class CentipedeHeadAction(
                         if (tiles.ElementAt(origin - vector).Id == elements.SegmentId &&
                             actors.ActorAt(origin - vector).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin - vector);
+                            segment.Follower = actors.IndexAt(origin - vector);
                         }
                         else if (tiles.ElementAt(origin - vector.Swap()).Id == elements.SegmentId &&
                                  actors.ActorAt(origin - vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin - vector.Swap());
+                            segment.Follower = actors.IndexAt(origin - vector.Swap());
                         }
                         else if (tiles.ElementAt(origin + vector.Swap()).Id == elements.SegmentId &&
                                  actors.ActorAt(origin + vector.Swap()).Leader <= 0)
                         {
-                            segment.Follower = actors.ActorIndexAt(origin + vector.Swap());
+                            segment.Follower = actors.IndexAt(origin + vector.Swap());
                         }
                         else
                         {

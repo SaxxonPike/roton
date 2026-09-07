@@ -17,6 +17,9 @@ internal sealed class AmmoInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementAmmoTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Ammo += facts.AmmoPerPickup;

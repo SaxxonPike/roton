@@ -38,12 +38,18 @@ internal static class Utility
         /// <summary>
         /// Return the absolute difference between this value and another specified value.
         /// </summary>
+        /// <remarks>
+        /// RoZ: Difference
+        /// </remarks>
         public int AbsDiff(int b) =>
             Math.Abs(a - b);
 
         /// <summary>
         /// Return 1 if the value is above zero, -1 if the value is below zero, and 0 otherwise.
         /// </summary>
+        /// <remarks>
+        /// RoZ: Signum
+        /// </remarks>
         public int Polarity() =>
             Math.Sign(a);
 

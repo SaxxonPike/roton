@@ -19,6 +19,9 @@ internal sealed class RuffianAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementRuffianTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

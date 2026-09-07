@@ -15,6 +15,9 @@ internal sealed class WaterInteraction(
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementWaterTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         if (config.NoPesterMode)

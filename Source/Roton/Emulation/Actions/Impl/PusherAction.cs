@@ -20,6 +20,9 @@ internal sealed class PusherAction(
     IMover mover)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementPusherTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -28,7 +31,7 @@ internal sealed class PusherAction(
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
             pusher.Push(actor.Location + actor.Vector, actor.Vector);
 
-        index = actors.ActorIndexAt(source);
+        index = actors.IndexAt(source);
         actor = actors[index];
 
         if (!tiles.ElementAt(actor.Location + actor.Vector).IsFloor)
@@ -41,7 +44,7 @@ internal sealed class PusherAction(
         if (tiles[behindLocation].Id != elements.PusherId)
             return;
 
-        var behindIndex = actors.ActorIndexAt(behindLocation);
+        var behindIndex = actors.IndexAt(behindLocation);
         var behindActor = actors[behindIndex];
 
         if (behindActor.Vector.X == actor.Vector.X && behindActor.Vector.Y == actor.Vector.Y)

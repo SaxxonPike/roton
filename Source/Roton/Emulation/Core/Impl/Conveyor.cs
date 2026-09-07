@@ -60,7 +60,7 @@ internal sealed class Conveyor(
                     if (element.Cycle > -1)
                     {
                         ref var tile = ref _tiles[source];
-                        var index = actors.ActorIndexAt(source);
+                        var index = actors.IndexAt(source);
                         _tiles[source] = surrounding[i];
                         _tiles[target].Id = elements.EmptyId;
                         mover.Move(index, target);

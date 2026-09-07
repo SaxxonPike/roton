@@ -9,6 +9,9 @@ internal sealed class BlinkWallDraw(
     ITiles tiles)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementBlinkWallDraw
+    /// </remarks>
     public AnsiChar Draw(Location location) => 
         new(0xCE, tiles[location].Color);
 }

@@ -21,6 +21,9 @@ internal sealed class BlinkWallAction(
     IDamager damager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBlinkWallTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -63,7 +66,7 @@ internal sealed class BlinkWallAction(
 
                 if (tiles[target].Id == elements.PlayerId)
                 {
-                    var playerIndex = actors.ActorIndexAt(target);
+                    var playerIndex = actors.IndexAt(target);
                     Vector testVector;
 
                     if (actor.Vector.Y == 0)

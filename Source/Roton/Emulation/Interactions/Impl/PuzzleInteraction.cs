@@ -16,6 +16,9 @@ internal sealed class PuzzleInteraction(
     IPusher pusher)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementPushableTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         pusher.Push(location, vector);

@@ -17,6 +17,6 @@ internal sealed class SuperActorList(
     protected override IActor InitItem(int index) =>
         new Actor(Memory, heap, 0x6AB5 + 0x0019 * index, 0x0019);
 
-    public override Span<char> GetActorCode(int index) =>
+    public override Span<char> GetCode(int index) =>
         heap[GetItem(index).Pointer];
 }

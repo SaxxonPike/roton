@@ -18,6 +18,9 @@ internal sealed class KeyInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementKeyTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = tiles[location].Color & 0x07;

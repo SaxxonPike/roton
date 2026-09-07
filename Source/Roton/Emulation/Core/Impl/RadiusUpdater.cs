@@ -41,7 +41,7 @@ internal sealed class RadiusUpdater(
                         {
                             if (element.CanContainCode)
                             {
-                                var actorIndex = actors.ActorIndexAt(target);
+                                var actorIndex = actors.IndexAt(target);
                                 if (actorIndex > 0)
                                     broadcaster.BroadcastLabel(-actorIndex, facts.BombedLabel, false);
                             }

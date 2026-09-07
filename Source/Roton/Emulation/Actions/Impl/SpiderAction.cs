@@ -18,6 +18,9 @@ internal sealed class SpiderAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSpiderTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

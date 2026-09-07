@@ -10,6 +10,9 @@ internal sealed class ObjectDraw(
     ITiles tiles) 
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementObjectDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         return new AnsiChar(actors.ActorAt(location).P1, tiles[location].Color);

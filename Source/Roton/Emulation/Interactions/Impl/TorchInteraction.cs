@@ -16,6 +16,9 @@ internal sealed class TorchInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementTorchTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Torches++;

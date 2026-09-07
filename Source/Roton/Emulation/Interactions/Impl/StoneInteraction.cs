@@ -14,6 +14,9 @@ internal sealed class StoneInteraction(
     IDestroyer destroyer) 
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementStoneTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         if (world.Stones < 0)

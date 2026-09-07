@@ -19,7 +19,7 @@ internal sealed class Parser(
             return -1;
 
         var termLength = term.Length;
-        var code = actors.GetActorCode(index);
+        var code = actors.GetCode(index);
 
         var startIdx = 0;
 
@@ -56,7 +56,7 @@ internal sealed class Parser(
     /// <inheritdoc />
     public char ReadByte(int index, ref Word instruction)
     {
-        var code = actors.GetActorCode(index);
+        var code = actors.GetCode(index);
         var value = '\0';
 
         if (instruction < 0 || instruction >= code.Length)
@@ -76,7 +76,7 @@ internal sealed class Parser(
     /// <inheritdoc />
     public ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer)
     {
-        var code = actors.GetActorCode(index);
+        var code = actors.GetCode(index);
         var length = 0;
         int instr = instruction;
 
@@ -102,7 +102,7 @@ internal sealed class Parser(
     /// <inheritdoc />
     public int ReadNumber(int index, ref Word instruction)
     {
-        var code = actors.GetActorCode(index);
+        var code = actors.GetCode(index);
         var success = false;
         var resultInt = 0;
         int instr = instruction;
@@ -146,7 +146,7 @@ internal sealed class Parser(
     /// <inheritdoc />
     public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
     {
-        var code = actors.GetActorCode(index);
+        var code = actors.GetCode(index);
         var length = 0;
         int instr = instruction;
 

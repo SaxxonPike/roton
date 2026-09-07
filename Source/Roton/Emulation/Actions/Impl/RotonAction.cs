@@ -20,6 +20,9 @@ internal sealed class RotonAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementRotonTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

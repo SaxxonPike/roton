@@ -19,6 +19,9 @@ internal sealed class SpinningGunAction(
     INavigator navigator)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSpinningGunTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

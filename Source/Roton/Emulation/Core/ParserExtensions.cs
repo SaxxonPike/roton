@@ -27,6 +27,9 @@ public static class ParserExtensions
         /// <summary>
         /// See <see cref="IParser.ReadLine"/>. The result is discarded.
         /// </summary>
+        /// <remarks>
+        /// RoZ: OopSkipLine
+        /// </remarks>
         public void DiscardLine(int index, ref Word instruction)
         {
             var buffer = (stackalloc char[byte.MaxValue]);

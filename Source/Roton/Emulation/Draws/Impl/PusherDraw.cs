@@ -10,6 +10,9 @@ internal sealed class PusherDraw(
     ITiles tiles) 
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementPusherDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         var actor = actors.ActorAt(location);

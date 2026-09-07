@@ -327,7 +327,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     }
 
     protected int ActorIndexAt(int x, int y) =>
-        Actors.ActorIndexAt(new Location(x, y));
+        Actors.IndexAt(new Location(x, y));
 
     protected IActor ActorAt(int x, int y) =>
         Actors.ActorAt(new Location(x, y));

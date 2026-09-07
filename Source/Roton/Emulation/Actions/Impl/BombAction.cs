@@ -18,6 +18,9 @@ internal sealed class BombAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBombTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

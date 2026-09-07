@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Roton.Emulation.Data;
 
 /// <summary>
-/// Wraps an unsigned 8-bit value.
+/// Represents an unsigned 8-bit value.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct HWord(byte value) : IEquatable<HWord>, IEquatable<int>, IEquatable<byte>

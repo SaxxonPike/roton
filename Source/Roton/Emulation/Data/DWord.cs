@@ -3,6 +3,12 @@ using System.Runtime.InteropServices;
 
 namespace Roton.Emulation.Data;
 
+/// <summary>
+/// Represents a signed 32-bit value stored in little-endian format.
+/// </summary>
+/// <remarks>
+/// The implicit conversions are endian-agnostic.
+/// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public struct DWord : IEquatable<DWord>, IEquatable<int>
 {

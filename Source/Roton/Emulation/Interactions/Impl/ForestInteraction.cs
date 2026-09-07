@@ -17,6 +17,9 @@ internal sealed class ForestInteraction(
     IForestHandler forestHandler)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementForestTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         forestHandler.ClearForest(location);

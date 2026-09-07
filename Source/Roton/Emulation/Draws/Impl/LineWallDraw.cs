@@ -13,6 +13,9 @@ internal sealed class LineWallDraw(
     IAdjacentFinder adjacentFinder)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementLineDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         return new AnsiChar(state.LineChars[adjacentFinder.GetAdjacent(location, elements.LineId)],

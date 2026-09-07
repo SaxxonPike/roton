@@ -116,7 +116,7 @@ internal sealed class Pusher(
     /// </remarks>
     private void MoveTile(Location source, Location target)
     {
-        var sourceIndex = actors.ActorIndexAt(source);
+        var sourceIndex = actors.IndexAt(source);
         if (sourceIndex >= 0)
         {
             mover.Move(sourceIndex, target);

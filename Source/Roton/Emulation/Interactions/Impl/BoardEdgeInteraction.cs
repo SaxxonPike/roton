@@ -19,6 +19,9 @@ internal sealed class BoardEdgeInteraction(
     IFader fader)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementBoardEdgeTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var target = location;

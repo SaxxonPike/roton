@@ -17,6 +17,9 @@ internal sealed class InvisibleWallInteraction(
     IMessenger messenger)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementInvisibleTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         tiles[location].Id = elements.NormalId;

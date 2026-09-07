@@ -14,6 +14,9 @@ internal sealed class CentipedeSegmentAction(
     IElementList elements)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementCentipedeSegmentTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

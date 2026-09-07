@@ -13,7 +13,7 @@ public interface IWorldManager
     void SaveWorld(string name);
 
     /// <remarks>
-    /// RoZ: WorldCreate
+    /// RoZ: WorldUnload, WorldCreate
     /// </remarks>
     void ClearWorld();
 
@@ -23,7 +23,7 @@ public interface IWorldManager
     void OpenWorld();
 
     /// <remarks>
-    /// RoZ: WorldLoad (titleOnly)
+    /// RoZ: GameTitleLoop (restore only)
     /// </remarks>
     bool RestoreWorld();
 

@@ -17,6 +17,9 @@ internal sealed class GemInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementGemTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         world.Health += facts.HealthPerGem;

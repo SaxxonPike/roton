@@ -12,6 +12,9 @@ internal sealed class WebDraw(
     IAdjacentFinder adjacentFinder)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementWebDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         return new AnsiChar(state.WebChars[adjacentFinder.GetAdjacent(location, elements.WebId)],

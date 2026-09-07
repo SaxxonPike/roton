@@ -21,6 +21,9 @@ internal sealed class StarAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementStarTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

@@ -41,6 +41,9 @@ internal sealed class PlayerAction(
     IBoardTime boardTime)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementPlayerTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -71,7 +74,7 @@ internal sealed class PlayerAction(
             state.KeyVector = new Vector(0, 0);
             state.KeyShift = false;
 
-            if (actors.ActorIndexAt(new Location(0, 0)) == -1)
+            if (actors.IndexAt(new Location(0, 0)) == -1)
                 messenger.SetMessage(0x7D00, alerts.GameOverMessage);
 
             state.GameWaitTime = 0;

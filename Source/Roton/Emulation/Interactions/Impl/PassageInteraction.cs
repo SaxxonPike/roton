@@ -20,12 +20,12 @@ internal sealed class PassageInteraction(
     : IInteraction
 {
     /// <remarks>
-    /// RoZ: BoardPassageTeleport
+    /// RoZ: ElementPassageTouch, BoardPassageTeleport
     /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var searchColor = tiles[location].Color;
-        var passageIndex = actors.ActorIndexAt(location);
+        var passageIndex = actors.IndexAt(location);
         var passageTarget = actors[passageIndex].P3;
         worldManager.SetBoard(passageTarget);
         var target = new Location();

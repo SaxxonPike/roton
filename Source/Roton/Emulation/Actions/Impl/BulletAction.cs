@@ -26,6 +26,9 @@ internal sealed class BulletAction(
     IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementBulletTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
@@ -84,7 +87,7 @@ internal sealed class BulletAction(
             state.ActIndex--;
             if (element.Id == elements.ObjectId || element.Id == elements.ScrollId)
             {
-                broadcaster.BroadcastLabel(-actors.ActorIndexAt(target), facts.ShotLabel, false);
+                broadcaster.BroadcastLabel(-actors.IndexAt(target), facts.ShotLabel, false);
             }
 
             break;

@@ -14,7 +14,7 @@ internal sealed class Destroyer(
 {
     public void Destroy(Location location)
     {
-        var index = actors.ActorIndexAt(location);
+        var index = actors.IndexAt(location);
         if (index == -1)
             tileRemover.RemoveItem(location);
         else

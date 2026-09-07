@@ -11,6 +11,9 @@ internal sealed class ClockwiseConveyorDraw(
     ITiles tiles)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementConveyorCWDraw
+    /// </remarks>
     public AnsiChar Draw(Location location) =>
         ((state.GameCycle / elements.Clockwise().Cycle) & 0x3) switch
         {

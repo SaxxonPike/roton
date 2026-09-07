@@ -11,5 +11,8 @@ public interface ICheat
     /// <param name="clear">
     /// If true, the entered code was preceded with a hyphen.
     /// </param>
+    /// <remarks>
+    /// RoZ: GameDebugPrompt (execution only)
+    /// </remarks>
     void Execute(bool clear);
 }

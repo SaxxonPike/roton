@@ -125,6 +125,9 @@ internal sealed class SuperHud(
         CreateStatusWindow();
     }
 
+    /// <remarks>
+    /// RoZ: DrawPlayfieldBorder
+    /// </remarks>
     private void CreateStatusWindow()
     {
         for (var x = 0; x < 26; x++)
@@ -155,6 +158,9 @@ internal sealed class SuperHud(
         DrawString(bottomX, 24, " ", bottomText, " ", messageColor);
     }
 
+    /// <remarks>
+    /// RoZ: DrawStatusMessage
+    /// </remarks>
     private void DrawSystemMessage(ReadOnlySpan<char> message, int color) =>
         DrawString(25 - message.Length / 2, 23, message, color);
 
@@ -337,6 +343,9 @@ internal sealed class SuperHud(
     public void ClearPausing() =>
         ClearMessage();
 
+    /// <remarks>
+    /// RoZ: ClearDisplayMessage
+    /// </remarks>
     private void ClearMessage()
     {
         var clearChar = new AnsiChar(0x00, 0x10);

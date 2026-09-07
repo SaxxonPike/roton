@@ -12,6 +12,9 @@ internal sealed class ScrollAction(
     IBoardUpdater boardUpdater)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementScrollTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

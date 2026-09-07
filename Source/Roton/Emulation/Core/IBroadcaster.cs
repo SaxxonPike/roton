@@ -11,7 +11,7 @@ public interface IBroadcaster
     bool BroadcastLabel(int sender, ReadOnlySpan<char> label, bool ignoreLock);
 
     /// <summary>
-    /// RoZ: OopFindLabel
+    /// RoZ: OopFindLabel, OopIterateStat
     /// </summary>
     bool ExecuteLabel(int sender, ref SearchContext search, ReadOnlySpan<char> term, ReadOnlySpan<char> prefix);
 }

@@ -18,6 +18,9 @@ internal sealed class DoorInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementDoorTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         var color = (tiles[location].Color & 0x70) >> 4;

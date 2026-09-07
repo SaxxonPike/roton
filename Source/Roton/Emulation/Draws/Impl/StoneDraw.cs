@@ -10,6 +10,9 @@ internal sealed class StoneDraw(
     IRandomizer randomizer)
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementStoneDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         return new AnsiChar(0x41 + randomizer.GetNext(0x1A), tiles[location].Color);

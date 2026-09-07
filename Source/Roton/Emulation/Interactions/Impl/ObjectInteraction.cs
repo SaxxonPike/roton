@@ -12,9 +12,12 @@ internal sealed class ObjectInteraction(
     IBroadcaster broadcaster)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementObjectTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var objectIndex = actors.ActorIndexAt(location);
+        var objectIndex = actors.IndexAt(location);
         broadcaster.BroadcastLabel(-objectIndex, facts.TouchLabel, false);
     }
 }

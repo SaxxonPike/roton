@@ -10,6 +10,9 @@ internal sealed class DuplicatorDraw(
     ITiles tiles) 
     : IDraw
 {
+    /// <remarks>
+    /// RoZ: ElementDuplicatorDraw
+    /// </remarks>
     public AnsiChar Draw(Location location)
     {
         return (int)actors.ActorAt(location).P1 switch

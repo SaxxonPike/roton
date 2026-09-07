@@ -18,6 +18,9 @@ internal sealed class EnergizerInteraction(
     ITileRemover tileRemover)
     : IInteraction
 {
+    /// <remarks>
+    /// RoZ: ElementEnergizerTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
         soundPlayer.PlaySound(9, sounds.Energizer);

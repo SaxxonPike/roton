@@ -20,6 +20,9 @@ internal sealed class SlimeAction(
     IActorManager actorManager)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSlimeTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];

@@ -43,7 +43,7 @@ internal sealed class CodeExecutor(
             // The code reference must be reacquired each iteration because it is
             // possible that the actor pointed to by "index" has changed.
 
-            var code = actors.GetActorCode(index);
+            var code = actors.GetCode(index);
 
             while (true)
             {
@@ -104,7 +104,7 @@ internal sealed class CodeExecutor(
                         // Commands go to the interpreter.
 
                         interpreter.Execute(ref context, ref instruction);
-                        code = actors.GetActorCode(index);
+                        code = actors.GetCode(index);
                         break;
                     }
                     case '\r':

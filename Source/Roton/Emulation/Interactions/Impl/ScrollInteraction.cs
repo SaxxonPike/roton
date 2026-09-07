@@ -25,9 +25,12 @@ internal sealed class ScrollInteraction(
         return mem.Span.ToArray();
     }
 
+    /// <remarks>
+    /// RoZ: ElementScrollTouch
+    /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
-        var scrollIndex = actors.ActorIndexAt(location);
+        var scrollIndex = actors.IndexAt(location);
         var actor = actors[scrollIndex];
 
         soundPlayer.PlaySound(2, _scrollMusic);

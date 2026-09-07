@@ -18,6 +18,9 @@ internal sealed class SharkAction(
     IAttacker attacker)
     : IAction
 {
+    /// <remarks>
+    /// RoZ: ElementSharkTick
+    /// </remarks>
     public void Act(int index)
     {
         var actor = actors[index];
