@@ -6,8 +6,7 @@ name: Publish
 on:
   push:
     branches: [ "master" ]
-    tags:
-      - 'v*'
+
 jobs:
   build:
 
@@ -29,8 +28,9 @@ jobs:
       run: dotnet publish -c Release -f net10.0 -o ./../Deploy ./Lyon/Lyon.csproj
       working-directory: Source
     - name: Create Release
-      uses: softprops/action-gh-release@v3
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        files: Deploy/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: false
+        files: Deploy
