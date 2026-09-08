@@ -77,6 +77,8 @@ dotnet run --project Source/Lyon <path-to-game>
     - When game speed is set to fastest, the game will run as fast as possible instead of throttling.
 - `--no-pester`
     - Disable many built-in messages ("a fake wall!") and the water sound.
+- `--skip-intro`
+    - Skip the intro scroll and show the default world immediately.
 - `--trace`
     - All scripts will be traced to the console. This gets very spammy on complex boards!
 
