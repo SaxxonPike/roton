@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x3B)]
 internal sealed class RotonKind : IKind
 {
+    public string FriendlyName => "Roton";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x94;
@@ -21,4 +25,10 @@ internal sealed class RotonKind : IKind
         element.P2EditText = "Switch Rate?";
         element.Points = 2;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Intelligence", nameof(IActor.P1)),
+        new("Switch Rate", nameof(IActor.P2))
+    ];
 }

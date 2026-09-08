@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x19)]
 internal sealed class SliderNsKind : IKind
 {
+    public string FriendlyName => "Slider (North-South)";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x12;
@@ -14,4 +18,6 @@ internal sealed class SliderNsKind : IKind
         element.MenuKey = '1';
         element.Name = "Slider (NS)";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

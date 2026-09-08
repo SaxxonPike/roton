@@ -6,4 +6,6 @@ public interface IKindList
     /// RoZ: InitElementsGame, InitElementsEditor
     /// </remarks>
     void InitializeAll();
+
+    string? GetFriendlyName(int index);
 }

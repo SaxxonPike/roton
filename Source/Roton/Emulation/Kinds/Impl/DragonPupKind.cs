@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x3C)]
 internal sealed class DragonPupKind : IKind
 {
+    public string FriendlyName => "Dragon Pup";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xED;
@@ -21,4 +25,6 @@ internal sealed class DragonPupKind : IKind
         element.P2EditText = "Switch Rate?";
         element.Points = 1;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

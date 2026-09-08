@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x08)]
 internal sealed class KeyKind : IKind
 {
+    public string FriendlyName => "Key";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x0C;
@@ -15,4 +19,6 @@ internal sealed class KeyKind : IKind
         element.MenuKey = 'K';
         element.Name = "Key";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

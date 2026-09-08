@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x1B)]
 internal sealed class FakeWallKind : IKind
 {
+    public string FriendlyName => "Fake Wall";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xB2;
@@ -16,4 +20,6 @@ internal sealed class FakeWallKind : IKind
         element.MenuKey = 'A';
         element.Name = "Fake";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super, 0x22)]
 public class SuperBearKind : IKind
 {
+    public string FriendlyName => "Bear";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xEB;
@@ -21,4 +25,9 @@ public class SuperBearKind : IKind
         element.P1EditText = "Sensitivity?";
         element.Points = 1;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Sensitivity", nameof(IActor.P1))
+    ];
 }

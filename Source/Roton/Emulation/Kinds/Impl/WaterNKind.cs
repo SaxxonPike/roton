@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x30)]
 internal sealed class WaterNKind : IKind
 {
+    public string FriendlyName => "Water (North)";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x1E;
@@ -16,4 +20,6 @@ internal sealed class WaterNKind : IKind
         element.MenuKey = '8';
         element.Name = "Water N";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

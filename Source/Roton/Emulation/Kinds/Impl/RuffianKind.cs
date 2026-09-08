@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x23)]
 internal sealed class RuffianKind : IKind
 {
+    public string FriendlyName => "Ruffian";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x05;
@@ -21,4 +25,10 @@ internal sealed class RuffianKind : IKind
         element.P2EditText = "Resting time?";
         element.Points = 2;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Intelligence", nameof(IActor.P1)),
+        new("Resting Time", nameof(IActor.P2)),
+    ];
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x14)]
 internal sealed class ForestKind : IKind
 {
+    public string FriendlyName => "Forest";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xB0;
@@ -16,4 +20,6 @@ internal sealed class ForestKind : IKind
         element.MenuKey = 'F';
         element.Name = "Forest";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

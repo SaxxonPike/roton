@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super, 0x03)]
 public class SuperMonitorKind : IKind
 {
+    public string FriendlyName => "Monitor";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x02;
@@ -15,4 +19,6 @@ public class SuperMonitorKind : IKind
         element.IsPushable = true;
         element.Name = "Monitor";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

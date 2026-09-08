@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Super;
 [Context(Context.Super, 0x0B)]
 public class SuperPassageKind : IKind
 {
+    public string FriendlyName => "Passage";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xF0;
@@ -18,4 +22,9 @@ public class SuperPassageKind : IKind
         element.Name = "Passage";
         element.BoardEditText = "Room thru passage?";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Destination", nameof(IActor.P3), EditorParamType.Board)
+    ];
 }

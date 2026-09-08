@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,7 +9,11 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x4E)]
 internal sealed class BrownTextKind : IKind
 {
+    public string FriendlyName => "Text (Brown)";
+
     public void Initialize(IElement element)
     {
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

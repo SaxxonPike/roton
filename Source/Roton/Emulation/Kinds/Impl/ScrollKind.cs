@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x0A)]
 internal sealed class ScrollKind : IKind
 {
+    public string FriendlyName => "Scroll";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xE8;
@@ -18,4 +22,9 @@ internal sealed class ScrollKind : IKind
         element.Name = "Scroll";
         element.CodeEditText = "Edit text of scroll";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Code", nameof(IActor.Code), EditorParamType.Code)
+    ];
 }

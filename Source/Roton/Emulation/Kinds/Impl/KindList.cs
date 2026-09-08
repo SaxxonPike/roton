@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
@@ -13,8 +14,12 @@ internal sealed class KindList(
     IElementList elementList)
     : TypeList<IKind>(contextMetadataService, serviceProvider), IKindList
 {
+    private readonly Dictionary<int, string> _friendlyNames = new();
+
     public void InitializeAll()
     {
+        _friendlyNames.Clear();
+
         var startId = MinId;
         var endId = MaxId;
 
@@ -44,6 +49,14 @@ internal sealed class KindList(
 
             var kind = Get(id);
             kind?.Initialize(element);
+
+            if (kind?.FriendlyName is { } friendlyName)
+                _friendlyNames.Add(id, friendlyName);
         }
     }
+
+    public string? GetFriendlyName(int index) =>
+        _friendlyNames.TryGetValue(index, out var friendlyName)
+            ? friendlyName
+            : null;
 }

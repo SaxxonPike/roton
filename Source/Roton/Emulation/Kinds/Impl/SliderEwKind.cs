@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x1A)]
 internal sealed class SliderEwKind : IKind
 {
+    public string FriendlyName => "Slider (East-West)";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x1D;
@@ -14,4 +18,6 @@ internal sealed class SliderEwKind : IKind
         element.MenuKey = '2';
         element.Name = "Slider (EW)";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

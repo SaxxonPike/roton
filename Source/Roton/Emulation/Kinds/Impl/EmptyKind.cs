@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x00)]
 internal sealed class EmptyKind : IKind
 {
+    public string FriendlyName => "Empty";
+
     public void Initialize(IElement element)
     {
         element.Character = ' ';
@@ -15,4 +19,6 @@ internal sealed class EmptyKind : IKind
         element.IsFloor = true;
         element.Name = "Empty";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

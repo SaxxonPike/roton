@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x3D)]
 internal sealed class PairerKind : IKind
 {
+    public string FriendlyName => "Pairer";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xE5;
@@ -19,4 +23,6 @@ internal sealed class PairerKind : IKind
         element.P1EditText = "Intelligence?";
         element.Points = 2;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x20)]
 internal sealed class RicochetKind : IKind
 {
+    public string FriendlyName => "Ricochet";
+
     public void Initialize(IElement element)
     {
         element.Character = '*';
@@ -15,4 +19,6 @@ internal sealed class RicochetKind : IKind
         element.MenuKey = 'R';
         element.Name = "Ricochet";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

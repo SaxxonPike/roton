@@ -2,7 +2,6 @@
 using Lyon.Common.Presenters;
 using Roton;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Lyon.App.Impl;
@@ -10,7 +9,6 @@ namespace Lyon.App.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed unsafe class Window(
-    IConfig config,
     IKeyboardPresenter keyboardPresenter,
     IScenePresenter scenePresenter,
     IJoystickPresenter joystickPresenter)

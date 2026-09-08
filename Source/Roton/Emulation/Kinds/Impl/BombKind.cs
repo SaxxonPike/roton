@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x0D)]
 internal sealed class BombKind : IKind
 {
+    public string FriendlyName => "Bomb";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x0B;
@@ -17,4 +21,8 @@ internal sealed class BombKind : IKind
         element.MenuKey = 'B';
         element.Name = "Bomb";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [
+        new("Ticks Remaining", nameof(IActor.P1))
+    ];
 }

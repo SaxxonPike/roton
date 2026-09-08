@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x25)]
 internal sealed class SlimeKind : IKind
 {
+    public string FriendlyName => "Slime";
+
     public void Initialize(IElement element)
     {
         element.Character = '*';
@@ -17,4 +21,10 @@ internal sealed class SlimeKind : IKind
         element.Name = "Slime";
         element.P2EditText = "Movement speed?;FS";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Expansion Counter", nameof(IActor.P1)),
+        new("Movement Speed", nameof(IActor.P2))
+    ];
 }

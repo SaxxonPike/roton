@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Original, 0x26)]
 internal sealed class SharkKind : IKind
 {
+    public string FriendlyName => "Shark";
+
     public void Initialize(IElement element)
     {
         element.Character = '^';
@@ -17,4 +21,9 @@ internal sealed class SharkKind : IKind
         element.Name = "Shark";
         element.P1EditText = "Intelligence?";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Intelligence", nameof(IActor.P1))
+    ];
 }

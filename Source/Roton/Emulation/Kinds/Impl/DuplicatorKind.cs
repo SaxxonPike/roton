@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x0C)]
 internal sealed class DuplicatorKind : IKind
 {
+    public string FriendlyName => "Duplicator";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xFA;
@@ -19,4 +23,9 @@ internal sealed class DuplicatorKind : IKind
         element.StepEditText = "Source direction?";
         element.P2EditText = "Duplication rate?;SF";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [
+        new("Source Direction", nameof(IActor.Vector)),
+        new("Duplication Rate", nameof(IActor.P2))
+    ];
 }

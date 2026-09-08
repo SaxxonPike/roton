@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x2A)]
 internal sealed class TigerKind : IKind
 {
+    public string FriendlyName => "Tiger";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xE3;
@@ -22,4 +26,11 @@ internal sealed class TigerKind : IKind
         element.P3EditText = "Firing type?";
         element.Points = 2;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Intelligence", nameof(IActor.P1)),
+        new("Firing rate", nameof(IActor.P2), EditorParamType.Bits06),
+        new("Firing type", nameof(IActor.P2), EditorParamType.Bit7)
+    ];
 }

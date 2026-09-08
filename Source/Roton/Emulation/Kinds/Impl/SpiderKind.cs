@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x3E)]
 internal sealed class SpiderKind : IKind
 {
+    public string FriendlyName => "Spider";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x0F;
@@ -18,4 +22,9 @@ internal sealed class SpiderKind : IKind
         element.P1EditText = "Intelligence?";
         element.Points = 3;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Intelligence", nameof(IActor.P1))
+    ];
 }

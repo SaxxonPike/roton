@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;

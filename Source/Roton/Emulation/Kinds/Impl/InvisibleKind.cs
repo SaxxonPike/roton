@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x1C)]
 internal sealed class InvisibleKind(IState state) : IKind
 {
+    public string FriendlyName => "Invisible Wall";
+
     public void Initialize(IElement element)
     {
         element.Character = state.EditorMode ? 0xB0 : 0x20;
@@ -14,4 +18,6 @@ internal sealed class InvisibleKind(IState state) : IKind
         element.MenuKey = 'I';
         element.Name = "Invisible";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

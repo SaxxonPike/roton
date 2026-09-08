@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x40)]
 internal sealed class StoneKind : IKind
 {
+    public string FriendlyName => "Stone";
+
     public void Initialize(IElement element)
     {
         element.Character = 'Z';
@@ -16,4 +20,6 @@ internal sealed class StoneKind : IKind
         element.MenuKey = 'Z';
         element.Name = "Stone";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

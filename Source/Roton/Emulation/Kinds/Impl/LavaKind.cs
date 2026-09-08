@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x13)]
 internal sealed class LavaKind : IKind
 {
+    public string FriendlyName => "Lava";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x6F;
@@ -16,4 +20,6 @@ internal sealed class LavaKind : IKind
         element.Name = "Lava";
         element.EditorCategory = "Terrains:";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

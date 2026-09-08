@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,6 +9,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x2D)]
 internal sealed class CentipedeSegmentKind : IKind
 {
+    public string FriendlyName => "Centipede (Segment)";
+
     public void Initialize(IElement element)
     {
         element.Character = 0x4F;
@@ -17,4 +21,10 @@ internal sealed class CentipedeSegmentKind : IKind
         element.Name = "Segment";
         element.Points = 3;
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
+        new("Follower", nameof(IActor.Follower), EditorParamType.Actor),
+        new("Leader", nameof(IActor.Leader), EditorParamType.Actor)
+    ];
 }

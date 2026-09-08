@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -6,6 +8,8 @@ namespace Roton.Emulation.Kinds.Impl;
 [Context(Context.Super, 0x2F)]
 internal sealed class FloorKind : IKind
 {
+    public string FriendlyName => "Floor";
+
     public void Initialize(IElement element)
     {
         element.Character = 0xB0;
@@ -16,4 +20,6 @@ internal sealed class FloorKind : IKind
         element.Name = "Floor";
         element.EditorCategory = "Terrains:";
     }
+
+    public IEnumerable<EditorParam> GetEditorParams() => [];
 }
