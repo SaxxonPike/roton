@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Lyon.Presenters;
+namespace Lyon.Common;
 
 /// <summary>
 /// Manages reference counting for SDL subsystems.

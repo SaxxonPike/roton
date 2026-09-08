@@ -1,4 +1,4 @@
-namespace Lyon.Presenters.Presenters;
+namespace Lyon.Common.Presenters;
 
 /// <summary>
 /// Handles audio playback.

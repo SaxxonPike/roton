@@ -2,15 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Lyon;
 using Lyon.App;
-using Lyon.Presenters;
+using Lyon.Common;
+using Lyon.Common.App.Impl;
 using Microsoft.Extensions.DependencyInjection;
-using Roton;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data.Impl;
-using Roton.Infrastructure.Impl;
+using Roton.Infrastructure;
 
 // Process command line arguments. This (loosely) follows the "GetOpt" convention.
 
@@ -44,7 +42,8 @@ var config = new Config
     NoPesterMode = switches.Contains("--no-pester") || switches.Contains("-p"),
     JoystickDeadZone = 0.5f,
     JoystickDenoiseZone = 0.1f,
-    DisableJoystick = switches.Contains("--no-joystick")
+    DisableJoystick = switches.Contains("--no-joystick"),
+    SkipIntro = switches.Contains("--skip-intro") || switches.Contains("-s"),
 };
 
 // Determine which engine to use based on the world file name extension.
@@ -54,16 +53,10 @@ if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
 // Create the DI container.
 var services = new ServiceCollection();
 
-Assembly[] additionalAssemblies =
-[
-    // This assembly
-    typeof(ILauncher).Assembly,
-    // Lyon.Common
-    typeof(SdlException).Assembly
-];
-
-services.AddRoton(contextEngine, additionalAssemblies);
-services.AddLyon(args, config);
+services
+    .AddRoton(contextEngine)
+    .AddLyonCommon(args, config)
+    .AddLyon();
 
 // Build the container and run the app.
 try

@@ -15,4 +15,5 @@ public interface IConfig
     float JoystickDeadZone { get; }
     float JoystickDenoiseZone { get; }
     bool DisableJoystick { get; }
+    bool SkipIntro { get; }
 }

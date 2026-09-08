@@ -44,7 +44,9 @@ public static class RotonServices
                 .Where(ti => ti != typeof(IDisposable));
 
             return interfaces.Select(ti => new RotonService(ti, tc));
-        }).Concat([new RotonService(typeof(IDeferred<>), typeof(Deferred<>))]).ToList();
+        }).Concat([
+            new RotonService(typeof(IDeferred<>), typeof(Deferred<>))
+        ]).ToList();
 
         return registrations;
     }

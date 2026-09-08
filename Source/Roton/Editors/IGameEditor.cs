@@ -8,16 +8,10 @@ public enum BoardId;
 
 public enum ActorId;
 
-public interface IGameEditor
-{
-    IWorldEditor World { get; }
-
-    void Create(Context context);
-}
-
 public interface IWorldEditor
 {
     Guid Id { get; }
+    Context Context { get; }
     int Ammo { get; set; }
     int Gems { get; set; }
     IKeyEditor Keys { get; }

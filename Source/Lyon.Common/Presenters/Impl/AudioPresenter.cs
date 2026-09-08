@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Lyon.Presenters.App;
 using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
@@ -9,7 +8,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
-namespace Lyon.Presenters.Presenters.Impl;
+namespace Lyon.Common.Presenters.Impl;
 
 /// <inheritdoc cref="IAudioPresenter"/>
 /// <inheritdoc cref="IDisposable"/>

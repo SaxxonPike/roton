@@ -47,7 +47,10 @@ internal sealed class Game(
         if (state.Init)
         {
             if (!state.AboutShown)
-                dialogs.ShowAbout();
+            {
+                if (!config.SkipIntro)
+                    dialogs.ShowAbout();
+            }
 
             if (!gameThread.ThreadActive)
                 return;

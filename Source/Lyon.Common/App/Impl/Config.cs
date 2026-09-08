@@ -1,4 +1,6 @@
-namespace Roton.Emulation.Data.Impl;
+using Roton.Emulation.Data;
+
+namespace Lyon.Common.App.Impl;
 
 public sealed class Config : IConfig
 {
@@ -16,4 +18,5 @@ public sealed class Config : IConfig
     public float JoystickDeadZone { get; set; }
     public float JoystickDenoiseZone { get; set; }
     public bool DisableJoystick { get; set; }
+    public bool SkipIntro { get; set; }
 }

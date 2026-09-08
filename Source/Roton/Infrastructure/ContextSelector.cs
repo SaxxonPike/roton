@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Roton.Infrastructure.Impl;
+namespace Roton.Infrastructure;
 
 public static class ContextSelector
 {
