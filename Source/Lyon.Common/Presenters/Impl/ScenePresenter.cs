@@ -2,7 +2,7 @@
 using Roton.Composers.Video.Scenes;
 using Roton.Infrastructure;
 
-namespace Lyon.Presenters.Impl;
+namespace Lyon.Presenters.Presenters.Impl;
 
 /// <inheritdoc />
 [Context(Context.Original)]

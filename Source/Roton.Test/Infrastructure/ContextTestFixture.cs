@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Lyon;
+using Lyon.Presenters;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;

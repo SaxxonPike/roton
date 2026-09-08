@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Roton;
+﻿using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
 
-namespace Lyon.Presenters.Impl;
+namespace Lyon.Presenters.Presenters.Impl;
 
 /// <inheritdoc />
 [Context(Context.Original)]

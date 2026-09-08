@@ -3,7 +3,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Infrastructure;
 
-namespace Lyon.App.Impl;
+namespace Lyon.Presenters.App.Impl;
 
 /// <inheritdoc />
 [Context(Context.Original)]

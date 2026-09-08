@@ -1,6 +1,6 @@
 using Roton.Emulation.Core;
 
-namespace Lyon.Presenters;
+namespace Lyon.Presenters.Presenters;
 
 /// <summary>
 /// Handles the joystick interface to Roton.

@@ -1,4 +1,4 @@
-namespace Lyon.Presenters;
+namespace Lyon.Presenters.Presenters;
 
 /// <summary>
 /// Indicates the axis of a joystick.

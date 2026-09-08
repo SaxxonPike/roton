@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{ABB83496
 		..\TIPS.md = ..\TIPS.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torch", "Torch\Torch.csproj", "{2AFF5F89-93FA-4734-A808-AF665126BA0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyon.Common", "Lyon.Common\Lyon.Common.csproj", "{212E9DE8-5529-4CC0-9CB7-8B3A217FD030}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,14 @@ Global
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F87DC9C8-B22C-4A29-AB64-D529828950DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AFF5F89-93FA-4734-A808-AF665126BA0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AFF5F89-93FA-4734-A808-AF665126BA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AFF5F89-93FA-4734-A808-AF665126BA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AFF5F89-93FA-4734-A808-AF665126BA0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{212E9DE8-5529-4CC0-9CB7-8B3A217FD030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{212E9DE8-5529-4CC0-9CB7-8B3A217FD030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{212E9DE8-5529-4CC0-9CB7-8B3A217FD030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{212E9DE8-5529-4CC0-9CB7-8B3A217FD030}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

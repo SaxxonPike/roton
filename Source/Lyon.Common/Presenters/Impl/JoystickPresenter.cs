@@ -1,21 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
-namespace Lyon.Presenters.Impl;
+namespace Lyon.Presenters.Presenters.Impl;
 
 /// <inheritdoc />
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposable
+internal sealed class JoystickPresenter(IConfig config) : Joystick, IJoystickPresenter, IDisposable
 {
-    private readonly IConfig _config;
     private readonly Lock _deviceLock = new();
     private readonly Lock _buttonLock = new();
     private SDL_JoystickID _active;
@@ -24,12 +19,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     private readonly Dictionary<(SDL_JoystickID, JoystickAxis), float> _axes = [];
     private readonly HashSet<(SDL_JoystickID, JoystickButtons)> _buttons = [];
     private readonly Dictionary<SDL_JoystickID, nint> _gamepads = [];
-
-    public JoystickPresenter(IConfig config)
-    {
-        _config = config;
-        SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_GAMEPAD);
-    }
+    private SdlContext? _sdlContext = SdlContext.Create(SDL_InitFlags.SDL_INIT_GAMEPAD);
 
     /// <inheritdoc />
     public override float X
@@ -77,7 +67,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     /// <summary>
     /// Updates the active joystick ID based on precedence and which ones are connected now.
     /// </summary>
-    private void UpdateActive() => 
+    private void UpdateActive() =>
         _active = _precedence.FirstOrDefault(x => _connected.Contains(x));
 
     /// <inheritdoc />
@@ -118,7 +108,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     {
         lock (_buttonLock)
         {
-            var newVal = Math.Abs(value) >= _config.JoystickDenoiseZone ? value : 0;
+            var newVal = Math.Abs(value) >= config.JoystickDenoiseZone ? value : 0;
             var oldVal = _axes.GetValueOrDefault((id, axis));
 
             if (newVal != oldVal)
@@ -141,6 +131,7 @@ internal sealed class JoystickPresenter : Joystick, IJoystickPresenter, IDisposa
     /// <inheritdoc />
     public void Dispose()
     {
-        SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMEPAD);
+        _sdlContext?.Dispose();
+        _sdlContext = null;
     }
 }

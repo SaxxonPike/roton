@@ -1,6 +1,6 @@
 ﻿using Roton.Composers.Video.Scenes;
 
-namespace Lyon.Presenters;
+namespace Lyon.Presenters.Presenters;
 
 /// <summary>
 /// The rendering interface.

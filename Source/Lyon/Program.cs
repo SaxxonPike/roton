@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Lyon;
 using Lyon.App;
+using Lyon.Presenters;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Emulation.Core;
@@ -52,7 +53,15 @@ if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
 
 // Create the DI container.
 var services = new ServiceCollection();
-Assembly[] additionalAssemblies = [typeof(ILauncher).Assembly];
+
+Assembly[] additionalAssemblies =
+[
+    // This assembly
+    typeof(ILauncher).Assembly,
+    // Lyon.Common
+    typeof(SdlException).Assembly
+];
+
 services.AddRoton(contextEngine, additionalAssemblies);
 services.AddLyon(args, config);
 

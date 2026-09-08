@@ -13,5 +13,10 @@ public enum Context
     /// <summary>
     /// Indicates that the Super engine applies.
     /// </summary>
-    Super = -2
+    Super = -2,
+
+    /// <summary>
+    /// Indicates the editor's non-game-specific context.
+    /// </summary>
+    Editor = 0x10000
 }

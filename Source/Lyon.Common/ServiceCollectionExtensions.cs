@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
-using Lyon.App;
+using Lyon.Presenters.App;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Composers.Audio.AudioStreams;
@@ -12,12 +8,12 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
 
-namespace Lyon;
+namespace Lyon.Presenters;
 
 public static class ServiceCollectionExtensions
 {
     private static readonly ThreadLocal<Stack<Type>> DependencyStack = new(() => []);
-    
+
     extension(IServiceCollection services)
     {
         public void AddLyon(string[] args,
@@ -62,6 +58,7 @@ public static class ServiceCollectionExtensions
                                 throw new Exception($"Circular dependency detected: {service.Service.FullName} <- " +
                                                     string.Join(" <- ", stack.Select(rs => rs.ToString())));
                             }
+
                             stack.Push(service.Service);
                             var result = sp.GetRequiredService(serviceGroup.Key);
                             stack.Pop();

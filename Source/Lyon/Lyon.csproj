@@ -8,6 +8,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Lyon.Common\Lyon.Common.csproj" />
         <ProjectReference Include="..\Roton\Roton.csproj"/>
     </ItemGroup>
     <ItemGroup>

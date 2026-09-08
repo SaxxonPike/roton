@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
+using Lyon.Presenters.App;
 using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
@@ -11,7 +9,7 @@ using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
-namespace Lyon.Presenters.Impl;
+namespace Lyon.Presenters.Presenters.Impl;
 
 /// <inheritdoc cref="IAudioPresenter"/>
 /// <inheritdoc cref="IDisposable"/>
@@ -19,7 +17,7 @@ namespace Lyon.Presenters.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed unsafe class AudioPresenter(
-    IConfig config, 
+    IConfig config,
     IAudioStreamComposer composer,
     IScheduler scheduler)
     : IDisposable, IAudioPresenter
@@ -28,27 +26,32 @@ public sealed unsafe class AudioPresenter(
     /// Returns true if <see cref="Dispose"/> has been called.
     /// </summary>
     private bool _isDisposed;
-    
+
     /// <summary>
     /// Returns true if the presenter is currently processing audio data.
     /// </summary>
     private bool _running;
-    
+
     /// <summary>
     /// Audio data buffer.
     /// </summary>
     private readonly Queue<float> _buffer = [];
-    
+
     /// <summary>
     /// Mutex for modifying the audio data buffer.
     /// </summary>
     private readonly Lock _bufferLock = new();
-    
+
     /// <summary>
     /// Current SDL audio stream.
     /// </summary>
     private SDL_AudioStream* _stream;
-    
+
+    /// <summary>
+    /// Used for reference counting SDL subsystems.
+    /// </summary>
+    private SdlContext? _sdlContext;
+
     /// <summary>
     /// Cache of all presenters, used by the static SDL callback handler.
     /// </summary>
@@ -108,12 +111,8 @@ public sealed unsafe class AudioPresenter(
         };
 
         // Start the SDL audio subsystem.
-        if (Presenters.Count == 0)
-        {
-            if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO))
-                throw new SdlException("Failed to initialize SDL audio subsystem");
-            composer.BufferReady += OnComposerBufferReady;
-        }
+        _sdlContext = SdlContext.Create(SDL_InitFlags.SDL_INIT_AUDIO);
+        composer.BufferReady += OnComposerBufferReady;
 
         // Create the audio stream.
         _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
@@ -135,7 +134,7 @@ public sealed unsafe class AudioPresenter(
     /// <summary>
     /// Handles when the engine runs a tick.
     /// </summary>
-    private void OnEngineTick(object? sender, EventArgs e) => 
+    private void OnEngineTick(object? sender, EventArgs e) =>
         composer.Tick();
 
     /// <summary>
@@ -167,15 +166,14 @@ public sealed unsafe class AudioPresenter(
         // If not running, bail.
         if (!_running)
             return;
+
         _running = false;
+        composer.BufferReady -= OnComposerBufferReady;
         scheduler.Tick -= OnEngineTick;
-        
+
         // If the last presenter is shut down, also shut down the SDL audio subsystem.
-        if (Presenters.Remove((nint)_stream) && Presenters.Count == 0)
-        {
-            composer.BufferReady -= OnComposerBufferReady;
-            SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_AUDIO);
-        }
+        _sdlContext!.Dispose();
+        _sdlContext = null;
     }
 
     /// <summary>
@@ -193,8 +191,9 @@ public sealed unsafe class AudioPresenter(
     {
         if (_isDisposed)
             return;
+
         _isDisposed = true;
-        
+
         // Clean up.
         Stop();
     }

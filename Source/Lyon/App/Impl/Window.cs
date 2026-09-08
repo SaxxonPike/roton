@@ -1,4 +1,5 @@
 ﻿using Lyon.Presenters;
+using Lyon.Presenters.Presenters;
 using Roton;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
@@ -15,6 +16,11 @@ internal sealed unsafe class Window(
     IJoystickPresenter joystickPresenter)
     : IWindow
 {
+    /// <summary>
+    /// Used for SDL subsystem reference counting.
+    /// </summary>
+    private SdlContext? _sdlContext;
+
     /// <summary>
     /// The SDL window that will be rendered to.
     /// </summary>
@@ -293,7 +299,7 @@ internal sealed unsafe class Window(
         RenderHeight = 350;
 
         // Start SDL video subsystem.
-        SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
+        _sdlContext = SdlContext.Create(SDL_InitFlags.SDL_INIT_VIDEO);
 
         // Create the window and renderer. The window starts hidden
         // so we can show it when we are ready to render.
@@ -330,5 +336,9 @@ internal sealed unsafe class Window(
 
         // Clean up the window.
         SDL_DestroyWindow(_window);
+
+        // Free SDL subsystems.
+        _sdlContext.Dispose();
+        _sdlContext = null;
     }
 }

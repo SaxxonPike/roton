@@ -1,6 +1,6 @@
 ﻿using Roton.Emulation.Core;
 
-namespace Lyon.App;
+namespace Lyon.Presenters.App;
 
 /// <summary>
 /// Create <see cref="IFileSystem"/> instances.
