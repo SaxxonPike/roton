@@ -12,7 +12,6 @@
       "TraceOop": false
     },
     "Audio": {
-      "BufferSize": 2048,
       "DrumRate": 64,
       "SampleRate": 44100
     },
