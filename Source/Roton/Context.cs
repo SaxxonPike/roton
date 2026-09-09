@@ -18,5 +18,10 @@ public enum Context
     /// <summary>
     /// Indicates the editor's non-game-specific context.
     /// </summary>
-    Editor = 0x10000
+    Editor = 0x10000,
+
+    /// <summary>
+    /// Indicates non-emulation frontend context.
+    /// </summary>
+    Ui = 0x10001
 }

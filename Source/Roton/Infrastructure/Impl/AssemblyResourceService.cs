@@ -11,25 +11,26 @@ namespace Roton.Infrastructure.Impl;
 internal sealed class AssemblyResourceService : IAssemblyResourceService
 {
     private readonly Dictionary<Assembly, IResource> _cache = new();
-        
-    public IResource GetFromAssemblyOf<T>()
-    {
-        var assembly = typeof(T).Assembly;
 
+    public IResource GetFromAssemblyOf<T>() =>
+        GetFromAssembly(typeof(T).Assembly);
+
+    public IResource GetFromAssembly(Assembly assembly)
+    {
         if (_cache.TryGetValue(assembly, out var of))
             return of;
-            
+
         var name = $"{assembly.GetName().Name}.Resources.resources.zip";
         using var stream = assembly.GetManifestResourceStream(name);
         using var mem = new MemoryStream();
         if (stream == null)
             throw new RotonException($"Reading resource failed: {name}");
-                
+
         stream.CopyTo(mem);
-                
+
         var resource = new Resource(mem.ToArray());
         _cache[assembly] = resource;
-                
+
         return resource;
     }
 }

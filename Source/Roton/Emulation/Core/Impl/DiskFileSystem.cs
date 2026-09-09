@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roton.Emulation.Core.Impl;
 
-public sealed class DiskFileSystem(string basePath) : IFileSystem
+internal sealed class DiskFileSystem(string basePath) : IFileSystem
 {
     private readonly string _basePath = !string.IsNullOrWhiteSpace(basePath)
         ? basePath

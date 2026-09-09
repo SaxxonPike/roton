@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Roton.Infrastructure.Impl;
 
-public abstract class ContextMetadataService(Context context) : IContextMetadataService
+internal sealed class ContextMetadataService(Context context) : IContextMetadataService
 {
     public IEnumerable<ContextAttribute> GetMetadata(object obj) =>
     [

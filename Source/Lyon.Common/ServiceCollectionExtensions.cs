@@ -1,12 +1,17 @@
 using System.Reflection;
 using Lyon.Common.App;
+using Lyon.Common.App.Impl;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Roton;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
+using Roton.Infrastructure;
+using Roton.Infrastructure.Impl;
 
 namespace Lyon.Common;
 
@@ -16,32 +21,72 @@ public static class ServiceCollectionExtensions
 
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddLyonCommon(string[] args,
-            IConfig config)
-        {
-            services.AddScoped(_ => config);
-            services.AddScoped<ICommandLine>(_ => new CommandLine { Args = args });
+        public IServiceCollection AddLyonUi() =>
+            services.AddRoton(Context.Ui);
 
-            services.AddScoped<IFileSystem>(c =>
-                c.GetRequiredService<IFileSystemFactory>().Create(c.GetRequiredService<IConfig>().HomePath ?? ".")
+        public IServiceCollection AddLyonCommon(string[] args)
+        {
+            services.Configure<Config>(
+                new ConfigurationBuilder()
+                    .AddJsonFile(json =>
+                    {
+                        json.Optional = true;
+                        json.ReloadOnChange = true;
+                        json.Path = "Config.json";
+                    })
+                    .AddCommandLine(args)
+                    .Build()
             );
 
-            services.AddScoped<ISceneComposer>(c => c.GetRequiredService<ISceneComposerFactory>().Get());
-            services.AddScoped<ISpeaker>(c => c.GetRequiredService<IAudioStreamComposer>());
-            services.AddScoped<ITerminal>(c => c.GetRequiredService<ISceneComposer>());
+            services.AddSingleton<IConfig>(c =>
+                c.GetRequiredService<IOptions<Config>>().Value);
+
+            services.AddScoped<IFileSystem>(c =>
+            {
+                var config = c.GetRequiredService<IOptions<Config>>().Value;
+                var assemblyResourceService = c.GetRequiredService<IAssemblyResourceService>();
+
+                var fileSystem = FileSystems.Aggregate([
+                    FileSystems.Disk(config.HomePath ?? "."),
+                    assemblyResourceService.GetFromAssemblyOf<IGame>().Root
+                ]);
+
+                return fileSystem;
+            });
+
+            services.AddScoped<ISceneComposer>(c =>
+                c.GetRequiredService<ISceneComposerFactory>().Get());
+
+            services.AddScoped<ISpeaker>(c =>
+                c.GetRequiredService<IAudioStreamComposer>());
+
+            services.AddScoped<ITerminal>(c =>
+                c.GetRequiredService<ISceneComposer>());
+
+            services.AddOptions();
 
             return services;
         }
 
-        public IServiceCollection AddRoton(Context context,
+        public IServiceCollection AddRotonEditor()
+        {
+            services.AddSingleton<IWorldEditorFactory, WorldEditorFactory>();
+            return services.AddRoton(Context.Editor);
+        }
+
+        public IServiceCollection AddRoton(
+            Context context,
             params Assembly[] additionalAssemblies)
         {
+            services.AddScoped<IContextMetadataService>(_ => ContextMetadataServiceFactory.GetForContext(context));
+
             var assemblies = new[] { typeof(ServiceCollectionExtensions).Assembly }
                 .Concat(additionalAssemblies)
                 .Distinct()
                 .ToArray();
-            
-            var map = RotonServices.Get(context, assemblies)
+
+            var map = RotonServices
+                .Get(context, assemblies)
                 .GroupBy(s => s.Implementation);
 
             foreach (var serviceGroup in map)
@@ -73,7 +118,7 @@ public static class ServiceCollectionExtensions
                         });
                 }
             }
-            
+
             return services;
         }
     }

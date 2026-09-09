@@ -7,6 +7,7 @@ using Lyon.App;
 using Lyon.Common;
 using Lyon.Common.App.Impl;
 using Microsoft.Extensions.DependencyInjection;
+using Roton;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 
@@ -54,8 +55,9 @@ if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
 var services = new ServiceCollection();
 
 services
+    .AddRoton(Context.Ui, typeof(Program).Assembly)
     .AddRoton(contextEngine)
-    .AddLyonCommon(args, config)
+    .AddLyonCommon(args)
     .AddLyon();
 
 // Build the container and run the app.
