@@ -189,6 +189,7 @@ internal sealed class OriginalHud(
     {
         RandomizeFadeMatrix();
         terminal.SetSize(state.EditorMode ? 60 : 80, 25, false);
+        fadeMatrix.Fill(new AnsiChar(0x20, 0x1E));
     }
 
     public bool QuitEngineConfirmation() =>

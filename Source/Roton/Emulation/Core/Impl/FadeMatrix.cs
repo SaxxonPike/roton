@@ -64,6 +64,13 @@ public abstract class FadeMatrix(
         }
     }
 
+    public void Fill(AnsiChar ac)
+    {
+        for (var x = 0; x < width; x++)
+        for (var y = 0; y < height; y++)
+            DrawAt(x, y, ac);
+    }
+
     protected abstract void DrawAt(int x, int y, AnsiChar ac);
 
     protected abstract void RedrawAt(int x, int y);

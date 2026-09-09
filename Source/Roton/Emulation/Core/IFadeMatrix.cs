@@ -10,4 +10,5 @@ public interface IFadeMatrix
     void Randomize();
     void FadeOut(AnsiChar ac);
     void FadeIn();
+    void Fill(AnsiChar ac);
 }
