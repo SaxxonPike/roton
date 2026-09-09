@@ -10,6 +10,8 @@ internal sealed class SynthInterpolator : ISynthInterpolator
     /// <inheritdoc />
     public float PolyBlep(float t, float dt)
     {
+        // https://www.martin-finke.de/articles/audio-plugins-018-polyblep-oscillator/
+
         if (t < dt)
         {
             t /= dt;
