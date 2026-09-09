@@ -23,7 +23,8 @@ services
     .AddRoton(Context.Ui, [typeof(Program).Assembly])
     .AddRoton(contextEngine)
     .AddLyonCommon()
-    .AddLyon();
+    .AddLyon()
+    .ConfigureLyonContext(contextEngine, config);
 
 // Build the container and run the app.
 try

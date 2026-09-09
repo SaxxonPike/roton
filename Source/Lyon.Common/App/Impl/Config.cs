@@ -5,13 +5,13 @@ namespace Lyon.Common.App.Impl;
 
 internal sealed class Config(
     IOptions<AudioConfig> audioConfig,
-    IOptions<ContextConfig> contextConfig,
     IOptions<EngineConfig> engineConfig,
-    IOptions<JoystickConfig> joystickConfig)
+    IOptions<JoystickConfig> joystickConfig,
+    IOptions<VideoConfig> videoConfig)
     : IConfig
 {
     public AudioConfig Audio => audioConfig.Value;
-    public ContextConfig Context => contextConfig.Value;
     public EngineConfig Engine => engineConfig.Value;
     public JoystickConfig Joystick => joystickConfig.Value;
+    public VideoConfig Video => videoConfig.Value;
 }

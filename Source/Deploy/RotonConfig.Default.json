@@ -20,6 +20,20 @@
       "DeadZone": 0.5,
       "DenoiseZone": 0.1,
       "Disable": false
+    },
+    "Video": {
+      "ScaleX": 1,
+      "ScaleY": 1
+    },
+    "Original": {
+      "Video": {
+        "ScaleY": 1.14285714
+      }
+    },
+    "Super": {
+      "Video": {
+        "ScaleY": 1.3714
+      }
     }
   }
 }

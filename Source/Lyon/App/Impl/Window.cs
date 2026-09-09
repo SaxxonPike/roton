@@ -1,4 +1,5 @@
-﻿using Lyon.Common;
+﻿using System;
+using Lyon.Common;
 using Lyon.Common.Presenters;
 using Roton;
 using Roton.Emulation.Core;
@@ -11,7 +12,8 @@ namespace Lyon.App.Impl;
 internal sealed unsafe class Window(
     IKeyboardPresenter keyboardPresenter,
     IScenePresenter scenePresenter,
-    IJoystickPresenter joystickPresenter)
+    IJoystickPresenter joystickPresenter,
+    IConfig config)
     : IWindow
 {
     /// <summary>
@@ -280,6 +282,20 @@ internal sealed unsafe class Window(
         _closeWindow = true;
     }
 
+    /// <summary>
+    /// Finds the largest integer scale for the given window size that will fit on screen.
+    /// </summary>
+    private static int FindMaxIntegerScale(int width, int height)
+    {
+        SDL_Rect rect;
+        using var displays = SDL_GetDisplays();
+
+        if (displays is null || displays.Count < 1 || !SDL_GetDisplayBounds(displays[0], &rect))
+            return 1;
+
+        return Math.Max(1, Math.Min(rect.w / width, rect.h / height));
+    }
+
     /// <inheritdoc />
     public void Start()
     {
@@ -290,14 +306,17 @@ internal sealed unsafe class Window(
         // Reset state.
         _closeWindow = false;
 
-        // Window defaults.
-        WindowWidth = 640 * 2;
-        WindowHeight = 400 * 2;
-        RenderWidth = 640;
-        RenderHeight = 350;
-
         // Start SDL video subsystem.
         _sdlContext = SdlContext.Create(SDL_InitFlags.SDL_INIT_VIDEO);
+
+        // Window defaults.
+        RenderWidth = 640;
+        RenderHeight = 350;
+        var winWidth = (int)Math.Round(Math.Max(RenderWidth * config.Video.ScaleX, 1));
+        var winHeight = (int)Math.Round(Math.Max(RenderHeight * config.Video.ScaleY, 1));
+        var integerScale = FindMaxIntegerScale(winWidth, winHeight);
+        WindowWidth = winWidth * integerScale;
+        WindowHeight = winHeight * integerScale;
 
         // Create the window and renderer. The window starts hidden
         // so we can show it when we are ready to render.
