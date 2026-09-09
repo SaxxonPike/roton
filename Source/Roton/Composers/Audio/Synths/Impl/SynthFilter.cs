@@ -8,28 +8,28 @@ namespace Roton.Composers.Audio.Synths.Impl;
 internal sealed class SynthFilter : ISynthFilter
 {
     /// <inheritdoc />
-    public float PolyBlep(float halfPhase, float halfPhasePerSample)
+    public float PolyBlep(float t, float dt)
     {
-        if (halfPhase < halfPhasePerSample)
+        if (t < dt)
         {
-            halfPhase /= halfPhasePerSample;
-            return halfPhase + halfPhase - halfPhase * halfPhase - 1f;
+            t /= dt;
+            return t + t - t * t - 1f;
         }
 
-        if (halfPhase > 1f - halfPhasePerSample)
+        if (t > 1f - dt)
         {
-            halfPhase = (halfPhase - 1f) / halfPhasePerSample;
-            return halfPhase * halfPhase + halfPhase + halfPhase + 1f;
+            t = (t - 1f) / dt;
+            return t * t + t + t + 1f;
         }
 
         return 0f;
     }
 
     /// <inheritdoc />
-    public float LowPass(float raw, float halfPhasePerSample, float filterState, out float resultFilterState)
+    public float LowPass(float x, float halfPhasePerSample, float filterState, out float resultFilterState)
     {
         var alpha = 1f - halfPhasePerSample;
-        resultFilterState = alpha * (raw - filterState);
-        return filterState + resultFilterState;
+        resultFilterState = filterState + alpha * (x - filterState);
+        return resultFilterState;
     }
 }
