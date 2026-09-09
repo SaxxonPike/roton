@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x14)]
-[Context(Context.Super, 0x14)]
+[Context(Context.Original, id: 0x14)]
+[Context(Context.Super, id: 0x14)]
 internal sealed class ForestInteraction(
     IAlerts alerts,
     IFacts facts,

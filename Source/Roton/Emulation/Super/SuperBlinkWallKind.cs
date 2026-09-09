@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x1D)]
-public class SuperBlinkWallKind : IKind
+[Context(Context.Super, id: 0x1D)]
+internal sealed class SuperBlinkWallKind : IKind
 {
     public string FriendlyName => "Blink Wall";
 

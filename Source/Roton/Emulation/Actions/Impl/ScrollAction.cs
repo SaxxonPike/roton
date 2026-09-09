@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Actions.Impl;
 
-[Context(Context.Original, 0x0A)]
-[Context(Context.Super, 0x0A)]
+[Context(Context.Original, id: 0x0A)]
+[Context(Context.Super, id: 0x0A)]
 internal sealed class ScrollAction(
     IActorList actors,
     ITiles tiles,

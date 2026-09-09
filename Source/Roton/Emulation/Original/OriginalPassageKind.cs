@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
-[Context(Context.Original, 0x0B)]
-public class OriginalPassageKind : IKind
+[Context(Context.Original, id: 0x0B)]
+internal sealed class OriginalPassageKind : IKind
 {
     public string FriendlyName => "Passage";
 

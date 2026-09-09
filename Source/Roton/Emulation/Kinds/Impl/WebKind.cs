@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Super, 0x3F)]
+[Context(Context.Super, id: 0x3F)]
 internal sealed class WebKind : IKind
 {
     public string FriendlyName => "Web";

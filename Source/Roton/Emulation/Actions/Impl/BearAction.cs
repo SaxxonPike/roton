@@ -8,8 +8,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the bear element.
 /// </summary>
-[Context(Context.Original, 0x22)]
-[Context(Context.Super, 0x22)]
+[Context(Context.Original, id: 0x22)]
+[Context(Context.Super, id: 0x22)]
 internal sealed class BearAction(
     IActorList actors,
     IElementList elements,

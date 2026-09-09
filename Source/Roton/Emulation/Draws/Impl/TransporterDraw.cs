@@ -3,8 +3,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Original, 0x1E)]
-[Context(Context.Super, 0x1E)]
+[Context(Context.Original, id: 0x1E)]
+[Context(Context.Super, id: 0x1E)]
 internal sealed class TransporterDraw(
     IActorList actors,
     ITiles tiles,

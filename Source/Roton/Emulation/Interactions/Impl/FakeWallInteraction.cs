@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x1B)]
-[Context(Context.Super, 0x1B)]
+[Context(Context.Original, id: 0x1B)]
+[Context(Context.Super, id: 0x1B)]
 internal sealed class FakeWallInteraction(
     IAlerts alerts,
     IFacts facts,

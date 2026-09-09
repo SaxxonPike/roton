@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x0B)]
-[Context(Context.Super, 0x0B)]
+[Context(Context.Original, id: 0x0B)]
+[Context(Context.Super, id: 0x0B)]
 internal sealed class PassageInteraction(
     ITiles tiles,
     IActorList actors,

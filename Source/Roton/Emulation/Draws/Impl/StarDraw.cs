@@ -3,8 +3,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Original, 0x0F)]
-[Context(Context.Super, 0x48)]
+[Context(Context.Original, id: 0x0F)]
+[Context(Context.Super, id: 0x48)]
 internal sealed class StarDraw(
     ITiles tiles,
     IState state)

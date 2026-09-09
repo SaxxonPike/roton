@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x08)]
-[Context(Context.Super, 0x08)]
+[Context(Context.Original, id: 0x08)]
+[Context(Context.Super, id: 0x08)]
 internal sealed class KeyInteraction(
     ITiles tiles,
     IWorld world,

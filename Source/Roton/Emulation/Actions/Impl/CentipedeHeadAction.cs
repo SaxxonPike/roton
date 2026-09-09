@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the centipede head element.
 /// </summary>
-[Context(Context.Original, 0x2C)]
-[Context(Context.Super, 0x2C)]
+[Context(Context.Original, id: 0x2C)]
+[Context(Context.Super, id: 0x2C)]
 internal sealed class CentipedeHeadAction(
     IActorList actors,
     IRandomizer randomizer,

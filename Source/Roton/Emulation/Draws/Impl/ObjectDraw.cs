@@ -3,8 +3,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Original, 0x24)]
-[Context(Context.Super, 0x24)]
+[Context(Context.Original, id: 0x24)]
+[Context(Context.Super, id: 0x24)]
 internal sealed class ObjectDraw(
     IActorList actors,
     ITiles tiles) 

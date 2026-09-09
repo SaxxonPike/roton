@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the spider element.
 /// </summary>
-[Context(Context.Super, 0x3E)]
+[Context(Context.Super, id: 0x3E)]
 internal sealed class SpiderAction(
     IActorList actors,
     IRandomizer randomizer,

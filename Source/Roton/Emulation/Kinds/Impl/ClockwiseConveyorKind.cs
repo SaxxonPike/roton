@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x10)]
-[Context(Context.Super, 0x10)]
+[Context(Context.Original, id: 0x10)]
+[Context(Context.Super, id: 0x10)]
 internal sealed class ClockwiseConveyorKind : IKind
 {
     public string FriendlyName => "Conveyor (Clockwise)";

@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the pusher element.
 /// </summary>
-[Context(Context.Original, 0x28)]
-[Context(Context.Super, 0x28)]
+[Context(Context.Original, id: 0x28)]
+[Context(Context.Super, id: 0x28)]
 internal sealed class PusherAction(
     IActorList actors,
     ITiles tiles,

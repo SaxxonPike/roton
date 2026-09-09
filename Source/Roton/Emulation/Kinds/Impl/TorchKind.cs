@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x06)]
+[Context(Context.Original, id: 0x06)]
 internal sealed class TorchKind : IKind
 {
     public string FriendlyName => "Torch";

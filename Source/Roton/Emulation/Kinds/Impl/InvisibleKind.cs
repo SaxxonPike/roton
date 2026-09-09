@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x1C)]
-[Context(Context.Super, 0x1C)]
+[Context(Context.Original, id: 0x1C)]
+[Context(Context.Super, id: 0x1C)]
 internal sealed class InvisibleKind(IState state) : IKind
 {
     public string FriendlyName => "Invisible Wall";

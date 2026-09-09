@@ -22,8 +22,20 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddLyonUi() =>
             services.AddRoton(Context.Ui);
 
-        public IServiceCollection AddLyonConfig(string[] args, out IConfiguration config)
+        public IServiceCollection AddLyonConfig(string[] args, out IConfiguration config, out string? fileName)
         {
+            var switches = args
+                .TakeWhile(s => s != "--")
+                .ToArray();
+
+            var fileNames = args
+                .TakeWhile(s => s != "--")
+                .Where(s => !s.StartsWith("--") && s is not ['-', _])
+                .Concat(args.SkipWhile(s => s != "--"))
+                .ToList();
+
+            fileName = fileNames.FirstOrDefault();
+
             var conf = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .AddJsonFile(json =>
@@ -38,22 +50,33 @@ public static class ServiceCollectionExtensions
                     json.ReloadOnChange = true;
                     json.Path = "RotonConfig.json";
                 })
-                .AddCommandLine(args)
+                .AddCommandLine(switches, new Dictionary<string, string>
+                {
+                    { "--clock-den", "Roton:Engine:MasterClockDenominator" },
+                    { "--clock-num", "Roton:Engine:MasterClockNumerator" },
+                    { "--fast", "Roton:Engine:FastMode" },
+                    { "--home", "Roton:Engine:HomePath" },
+                    { "--no-pester", "Roton:Engine:NoPesterMode" },
+                    { "--seed", "Roton:Engine:RandomSeed" },
+                    { "--skip-intro", "Roton:Engine:SkipIntro" },
+                    { "--trace", "Roton:Engine:TraceOop" }
+                })
                 .Build();
 
             services.Configure<AudioConfig>(c => { conf.GetSection("Roton:Audio").Bind(c); });
             services.Configure<EngineConfig>(c => { conf.GetSection("Roton:Engine").Bind(c); });
             services.Configure<JoystickConfig>(c => { conf.GetSection("Roton:Joystick").Bind(c); });
-
-            services.AddScoped(c => c.GetRequiredService<IOptions<AudioConfig>>().Value);
-            services.AddScoped(c => c.GetRequiredService<IOptions<EngineConfig>>().Value);
-            services.AddScoped(c => c.GetRequiredService<IOptions<JoystickConfig>>().Value);
+            services.AddScoped<IConfig, Config>();
+            
+            // services.AddScoped(c => c.GetRequiredService<IOptions<AudioConfig>>().Value);
+            // services.AddScoped(c => c.GetRequiredService<IOptions<EngineConfig>>().Value);
+            // services.AddScoped(c => c.GetRequiredService<IOptions<JoystickConfig>>().Value);
 
             config = conf;
             return services;
         }
 
-        public IServiceCollection AddLyonCommon(string[] args)
+        public IServiceCollection AddLyonCommon()
         {
             services.AddScoped<IFileSystem>(c =>
             {

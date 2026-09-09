@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the star element.
 /// </summary>
-[Context(Context.Original, 0x0F)]
-[Context(Context.Super, 0x48)]
+[Context(Context.Original, id: 0x0F)]
+[Context(Context.Super, id: 0x48)]
 internal sealed class StarAction(
     IActorList actors,
     IElementList elements,

@@ -14,7 +14,7 @@ internal sealed class Scheduler : IScheduler
     private int _ticksToRun;
 
     private readonly IState _state;
-    private readonly EngineConfig _config;
+    private readonly IConfig _config;
     private readonly IBoardTime _boardTime;
     private readonly IClock _clock;
     private readonly IGameThread _gameThread;
@@ -23,7 +23,7 @@ internal sealed class Scheduler : IScheduler
     private readonly Func<bool> _waitForTickNormalDelegate;
 
     public Scheduler(IState state,
-        EngineConfig config,
+        IConfig config,
         IBoardTime boardTime,
         IClock clock,
         IGameThread gameThread,
@@ -72,7 +72,7 @@ internal sealed class Scheduler : IScheduler
 
     public void WaitForTick()
     {
-        var isFast = _state.GameWaitTime <= 0 && _config.FastMode;
+        var isFast = _state.GameWaitTime <= 0 && _config.Engine.FastMode;
 
         if (isFast)
         {

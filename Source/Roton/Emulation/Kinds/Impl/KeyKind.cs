@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x08)]
-[Context(Context.Super, 0x08)]
+[Context(Context.Original, id: 0x08)]
+[Context(Context.Super, id: 0x08)]
 internal sealed class KeyKind : IKind
 {
     public string FriendlyName => "Key";

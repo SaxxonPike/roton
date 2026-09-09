@@ -7,14 +7,14 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Randomizer(
-    EngineConfig config)
+    IConfig config)
     : IRandomizer
 {
     private const int Coefficient = 0x08088405;
 
     private int GetInitialState(DateTime now)
     {
-        if (config.RandomSeed is { } seed)
+        if (config.Engine.RandomSeed is { } seed)
             return seed;
 
         seed = (now.Second << 24) |

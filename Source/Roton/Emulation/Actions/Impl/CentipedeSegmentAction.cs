@@ -6,8 +6,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the centipede segment element.
 /// </summary>
-[Context(Context.Original, 0x2D)]
-[Context(Context.Super, 0x2D)]
+[Context(Context.Original, id: 0x2D)]
+[Context(Context.Super, id: 0x2D)]
 internal sealed class CentipedeSegmentAction(
     IActorList actors,
     ITiles tiles,

@@ -19,7 +19,7 @@ internal sealed class SuperAlerts(
     private Bool _torchPickup;
 
     private string GetColorName(int color) =>
-        colors.Get(color)?.Name ?? "";
+        colors.Get(color)?.Name ?? string.Empty;
 
     public override IMessage AmmoMessage =>
         new Message("Ammunition:", $"{facts.AmmoPerPickup} shots");

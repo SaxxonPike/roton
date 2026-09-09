@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
-[Context(Context.Original, 0x22)]
-public class OriginalBearKind : IKind
+[Context(Context.Original, id: 0x22)]
+internal sealed class OriginalBearKind : IKind
 {
     public string FriendlyName => "Bear";
 

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x07)]
-[Context(Context.Super, 0x07)]
+[Context(Context.Original, id: 0x07)]
+[Context(Context.Super, id: 0x07)]
 internal sealed class GemKind : IKind
 {
     public string FriendlyName => "Gem";

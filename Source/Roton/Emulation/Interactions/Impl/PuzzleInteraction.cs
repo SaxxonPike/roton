@@ -4,12 +4,12 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x18)]
-[Context(Context.Original, 0x19)]
-[Context(Context.Original, 0x1A)]
-[Context(Context.Super, 0x18)]
-[Context(Context.Super, 0x19)]
-[Context(Context.Super, 0x1A)]
+[Context(Context.Original, id: 0x18)]
+[Context(Context.Original, id: 0x19)]
+[Context(Context.Original, id: 0x1A)]
+[Context(Context.Super, id: 0x18)]
+[Context(Context.Super, id: 0x19)]
+[Context(Context.Super, id: 0x1A)]
 internal sealed class PuzzleInteraction(
     ISounds sounds,
     ISoundPlayer soundPlayer,

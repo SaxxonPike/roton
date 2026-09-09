@@ -18,7 +18,7 @@ internal sealed class Cheater(
 {
     public void Cheat()
     {
-        var cheatText = hud.EnterCheat().UpCased() ?? "";
+        var cheatText = hud.EnterCheat().UpCased() ?? string.Empty;
         var clear = false;
 
         if (!gameThread.ThreadActive)

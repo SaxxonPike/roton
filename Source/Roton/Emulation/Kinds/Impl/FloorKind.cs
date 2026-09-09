@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Super, 0x2F)]
+[Context(Context.Super, id: 0x2F)]
 internal sealed class FloorKind : IKind
 {
     public string FriendlyName => "Floor";

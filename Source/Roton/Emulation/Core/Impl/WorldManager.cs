@@ -20,7 +20,7 @@ internal sealed class WorldManager(
     IScrollFormatter scrollFormatter,
     IFileDialog fileDialog,
     IBoard board,
-    EngineConfig config,
+    IConfig config,
     IAlerts alerts,
     IFacts facts,
     IElementList elements,
@@ -138,7 +138,7 @@ internal sealed class WorldManager(
         state.BoardCount = 0;
         boards.Clear();
 
-        if (config.NoPesterMode)
+        if (config.Engine.NoPesterMode)
             alerts.SetAll();
         else
             alerts.Reset();

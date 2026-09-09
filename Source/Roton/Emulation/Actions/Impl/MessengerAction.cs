@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the messenger element.
 /// </summary>
-[Context(Context.Original, 0x02)]
-[Context(Context.Super, 0x02)]
+[Context(Context.Original, id: 0x02)]
+[Context(Context.Super, id: 0x02)]
 internal sealed class MessengerAction(
     IActorList actors,
     IHud hud,

@@ -8,13 +8,13 @@ namespace Roton.Composers.Audio.Steps.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class StepComposer(
-    AudioConfig config)
+    IConfig config)
     : IStepComposer
 {
     private int _stepCounter;
 
     public void SetStep() =>
-        _stepCounter = (int)Math.Round(config.SampleRate / 22050f) + 1;
+        _stepCounter = (int)Math.Round(config.Audio.SampleRate / 22050f) + 1;
 
     public void ClearStep() =>
         _stepCounter = 0;

@@ -37,7 +37,7 @@ internal sealed class Game(
     IPlayField playField,
     IHighScoreListFactory highScoreListFactory,
     IGameThread gameThread,
-    EngineConfig config,
+    IConfig config,
     IHighScoreHud highScoreHud
 )
     : IGame
@@ -48,7 +48,7 @@ internal sealed class Game(
         {
             if (!state.AboutShown)
             {
-                if (!config.SkipIntro)
+                if (!config.Engine.SkipIntro)
                     dialogs.ShowAbout();
             }
 
@@ -265,7 +265,7 @@ internal sealed class Game(
     /// The equivalent number of ticks.
     /// </returns>
     private int HsecToTicks(int hsec) =>
-        Math.Max(1, hsec * (config.MasterClockDenominator / config.MasterClockNumerator + 50) / 100);
+        Math.Max(1, hsec * (config.Engine.MasterClockDenominator / config.Engine.MasterClockNumerator + 50) / 100);
 
     public void StepOnce()
     {

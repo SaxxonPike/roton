@@ -9,7 +9,7 @@ namespace Lyon.Common.Presenters.Impl;
 /// <inheritdoc />
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class JoystickPresenter(JoystickConfig config) 
+internal sealed class JoystickPresenter(IConfig config) 
     : Joystick, IJoystickPresenter, IDisposable
 {
     private readonly Lock _deviceLock = new();
@@ -109,7 +109,7 @@ internal sealed class JoystickPresenter(JoystickConfig config)
     {
         lock (_buttonLock)
         {
-            var newVal = Math.Abs(value) >= config.DenoiseZone ? value : 0;
+            var newVal = Math.Abs(value) >= config.Joystick.DenoiseZone ? value : 0;
             var oldVal = _axes.GetValueOrDefault((id, axis));
 
             if (newVal != oldVal)

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x1A)]
-[Context(Context.Super, 0x1A)]
+[Context(Context.Original, id: 0x1A)]
+[Context(Context.Super, id: 0x1A)]
 internal sealed class SliderEwKind : IKind
 {
     public string FriendlyName => "Slider (East-West)";

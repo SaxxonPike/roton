@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the bomb element.
 /// </summary>
-[Context(Context.Original, 0x0D)]
-[Context(Context.Super, 0x0D)]
+[Context(Context.Original, id: 0x0D)]
+[Context(Context.Super, id: 0x0D)]
 internal sealed class BombAction(
     ISounds sounds,
     IActorList actors,

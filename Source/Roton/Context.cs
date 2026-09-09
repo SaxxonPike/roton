@@ -6,6 +6,11 @@
 public enum Context
 {
     /// <summary>
+    /// Indicates that all engines apply.
+    /// </summary>
+    All = 0,
+
+    /// <summary>
     /// Indicates that the Original engine applies.
     /// </summary>
     Original = -1,

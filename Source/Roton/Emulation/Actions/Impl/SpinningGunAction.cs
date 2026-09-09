@@ -8,8 +8,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the spinning gun element.
 /// </summary>
-[Context(Context.Original, 0x27)]
-[Context(Context.Super, 0x27)]
+[Context(Context.Original, id: 0x27)]
+[Context(Context.Super, id: 0x27)]
 internal sealed class SpinningGunAction(
     IActorList actors,
     IRandomizer randomizer,

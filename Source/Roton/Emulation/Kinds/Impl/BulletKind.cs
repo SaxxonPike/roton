@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x12)]
-[Context(Context.Super, 0x45)]
+[Context(Context.Original, id: 0x12)]
+[Context(Context.Super, id: 0x45)]
 internal sealed class BulletKind : IKind
 {
     public string FriendlyName => "Bullet";

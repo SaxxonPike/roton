@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the ruffian element.
 /// </summary>
-[Context(Context.Original, 0x23)]
-[Context(Context.Super, 0x23)]
+[Context(Context.Original, id: 0x23)]
+[Context(Context.Super, id: 0x23)]
 internal sealed class RuffianAction(
     IActorList actors,
     IRandomizer randomizer,

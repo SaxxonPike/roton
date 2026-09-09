@@ -10,8 +10,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the player element.
 /// </summary>
-[Context(Context.Original, 0x04)]
-[Context(Context.Super, 0x04)]
+[Context(Context.Original, id: 0x04)]
+[Context(Context.Super, id: 0x04)]
 internal sealed class PlayerAction(
     IActorList actors,
     IElementList elements,
@@ -25,7 +25,7 @@ internal sealed class PlayerAction(
     IFacts facts,
     IInteractionList interactions,
     ITimers timers,
-    EngineConfig config,
+    IConfig config,
     ISoundPlayer soundPlayer,
     IWorldManager worldManager,
     IBoardUpdater boardUpdater,
@@ -233,7 +233,7 @@ internal sealed class PlayerAction(
                 {
                     world.TimePassed++;
 
-                    if (!config.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
+                    if (!config.Engine.NoPesterMode && board.TimeLimit - 10 == world.TimePassed)
                     {
                         messenger.SetMessage(facts.LongMessageDuration, alerts.TimeMessage);
                         soundPlayer.PlaySound(3, sounds.TimeLow);

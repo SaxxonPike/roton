@@ -10,7 +10,7 @@ namespace Roton.Composers.Audio.Drums.Impl;
 [Context(Context.Super)]
 internal sealed class DrumComposer(
     ISynth synth,
-    AudioConfig config)
+    IConfig config)
     : IDrumComposer
 {
     private int[] _drumFrequencies = [0];
@@ -28,7 +28,7 @@ internal sealed class DrumComposer(
         _drumFrequencies[_drumFrequencyCount - 1] = 0;
         synth.SetFrequency(_drumFrequencies[0]);
         _drumTimeCounter = 0;
-        _drumTime = (int)Math.Round(config.SampleRate / rate);
+        _drumTime = (int)Math.Round(config.Audio.SampleRate / rate);
     }
 
     public void ClearDrum()

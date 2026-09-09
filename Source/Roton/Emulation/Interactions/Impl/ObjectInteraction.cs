@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x24)]
-[Context(Context.Super, 0x24)]
+[Context(Context.Original, id: 0x24)]
+[Context(Context.Super, id: 0x24)]
 internal sealed class ObjectInteraction(
     IFacts facts,
     IActorList actors,

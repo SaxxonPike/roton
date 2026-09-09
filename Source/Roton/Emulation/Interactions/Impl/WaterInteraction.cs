@@ -4,13 +4,13 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x13)]
-[Context(Context.Super, 0x13)]
+[Context(Context.Original, id: 0x13)]
+[Context(Context.Super, id: 0x13)]
 internal sealed class WaterInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
-    EngineConfig config,
+    IConfig config,
     ISoundPlayer soundPlayer,
     IMessenger messenger)
     : IInteraction
@@ -20,7 +20,7 @@ internal sealed class WaterInteraction(
     /// </remarks>
     public void Interact(Location location, int index, ref Vector vector)
     {
-        if (config.NoPesterMode)
+        if (config.Engine.NoPesterMode)
             return;
 
         soundPlayer.PlaySound(3, sounds.Water);

@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the stone element.
 /// </summary>
-[Context(Context.Super, 0x40)]
+[Context(Context.Super, id: 0x40)]
 internal sealed class StoneAction(
     IActorList actors,
     IRandomizer randomizer,

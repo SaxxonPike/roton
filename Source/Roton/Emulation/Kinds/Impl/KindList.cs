@@ -37,14 +37,14 @@ internal sealed class KindList(
             element.Cycle = -1;
             element.MenuIndex = 0;
             element.MenuKey = 0;
-            element.Name = "";
-            element.EditorCategory = "";
-            element.P1EditText = "";
-            element.P2EditText = "";
-            element.P3EditText = "";
-            element.BoardEditText = "";
-            element.StepEditText = "";
-            element.CodeEditText = "";
+            element.Name = string.Empty;
+            element.EditorCategory = string.Empty;
+            element.P1EditText = string.Empty;
+            element.P2EditText = string.Empty;
+            element.P3EditText = string.Empty;
+            element.BoardEditText = string.Empty;
+            element.StepEditText = string.Empty;
+            element.CodeEditText = string.Empty;
             element.Points = 0;
 
             var kind = Get(id);

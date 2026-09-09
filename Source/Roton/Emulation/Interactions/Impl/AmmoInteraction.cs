@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x05)]
-[Context(Context.Super, 0x05)]
+[Context(Context.Original, id: 0x05)]
+[Context(Context.Super, id: 0x05)]
 internal sealed class AmmoInteraction(
     IWorld world,
     ISounds sounds,

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x18)]
-[Context(Context.Super, 0x18)]
+[Context(Context.Original, id: 0x18)]
+[Context(Context.Super, id: 0x18)]
 internal sealed class BoulderKind : IKind
 {
     public string FriendlyName => "Boulder";

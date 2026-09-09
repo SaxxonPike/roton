@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x03)]
-public class SuperMonitorKind : IKind
+[Context(Context.Super, id: 0x03)]
+internal sealed class SuperMonitorKind : IKind
 {
     public string FriendlyName => "Monitor";
 

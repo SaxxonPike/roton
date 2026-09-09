@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the dragon pup element.
 /// </summary>
-[Context(Context.Super, 0x3C)]
+[Context(Context.Super, id: 0x3C)]
 internal sealed class DragonPupAction(
     IActorList actors,
     IBoardUpdater boardUpdater) 

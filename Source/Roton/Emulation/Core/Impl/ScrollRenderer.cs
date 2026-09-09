@@ -215,7 +215,7 @@ internal sealed class ScrollRenderer(
             line++;
         }
 
-        RenderName(title ?? "", offset);
+        RenderName(title ?? string.Empty, offset);
     }
 
     private void RenderDots(int y)

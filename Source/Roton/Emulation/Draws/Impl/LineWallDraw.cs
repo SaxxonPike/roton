@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Original, 0x1F)]
-[Context(Context.Super, 0x1F)]
+[Context(Context.Original, id: 0x1F)]
+[Context(Context.Super, id: 0x1F)]
 internal sealed class LineWallDraw(
     IState state,
     IElementList elements,

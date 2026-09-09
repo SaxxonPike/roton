@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the blink wall element.
 /// </summary>
-[Context(Context.Original, 0x1D)]
-[Context(Context.Super, 0x1D)]
+[Context(Context.Original, id: 0x1D)]
+[Context(Context.Super, id: 0x1D)]
 internal sealed class BlinkWallAction(
     ITiles tiles,
     IElementList elements,

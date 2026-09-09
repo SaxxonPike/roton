@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x28)]
-[Context(Context.Super, 0x28)]
+[Context(Context.Original, id: 0x28)]
+[Context(Context.Super, id: 0x28)]
 internal sealed class PusherKind : IKind
 {
     public string FriendlyName => "Pusher";

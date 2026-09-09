@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Super, 0x33)]
+[Context(Context.Super, id: 0x33)]
 internal sealed class WaterEKind : IKind
 {
     public string FriendlyName => "Water (East)";

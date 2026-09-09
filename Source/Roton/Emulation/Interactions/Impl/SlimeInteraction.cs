@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x25)]
-[Context(Context.Super, 0x25)]
+[Context(Context.Original, id: 0x25)]
+[Context(Context.Super, id: 0x25)]
 internal sealed class SlimeInteraction(
     ITiles tiles,
     IElementList elements,

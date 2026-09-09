@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Super, 0x40)]
+[Context(Context.Super, id: 0x40)]
 internal sealed class StoneKind : IKind
 {
     public string FriendlyName => "Stone";

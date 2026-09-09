@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x09)]
-[Context(Context.Super, 0x09)]
+[Context(Context.Original, id: 0x09)]
+[Context(Context.Super, id: 0x09)]
 internal sealed class DoorInteraction(
     IWorld world,
     ITiles tiles,

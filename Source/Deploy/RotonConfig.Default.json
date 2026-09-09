@@ -8,7 +8,7 @@
       "MasterClockNumerator": 100,
       "NoPesterMode": false,
       "RandomSeed": null,
-      "SkipIntro": false,
+      "SkipIntro": true,
       "TraceOop": false
     },
     "Audio": {

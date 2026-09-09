@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x2C)]
-[Context(Context.Super, 0x2C)]
+[Context(Context.Original, id: 0x2C)]
+[Context(Context.Super, id: 0x2C)]
 internal sealed class CentipedeHeadKind : IKind
 {
     public string FriendlyName => "Centipede (Head)";

@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the clockwise conveyor element.
 /// </summary>
-[Context(Context.Original, 0x10)]
-[Context(Context.Super, 0x10)]
+[Context(Context.Original, id: 0x10)]
+[Context(Context.Super, id: 0x10)]
 internal sealed class ClockwiseConveyorAction(
     IActorList actors,
     IConveyor conveyor,

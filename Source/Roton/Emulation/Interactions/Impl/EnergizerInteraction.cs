@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x0E)]
-[Context(Context.Super, 0x0E)]
+[Context(Context.Original, id: 0x0E)]
+[Context(Context.Super, id: 0x0E)]
 internal sealed class EnergizerInteraction(
     ISounds sounds,
     IWorld world,

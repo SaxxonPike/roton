@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x25)]
-[Context(Context.Super, 0x25)]
+[Context(Context.Original, id: 0x25)]
+[Context(Context.Super, id: 0x25)]
 internal sealed class SlimeKind : IKind
 {
     public string FriendlyName => "Slime";

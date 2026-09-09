@@ -8,8 +8,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the Roton element.
 /// </summary>
-[Context(Context.Original, 0x3B)]
-[Context(Context.Super, 0x3B)]
+[Context(Context.Original, id: 0x3B)]
+[Context(Context.Super, id: 0x3B)]
 internal sealed class RotonAction(
     IActorList actors,
     IRandomizer randomizer,

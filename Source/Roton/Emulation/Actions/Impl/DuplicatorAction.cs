@@ -8,8 +8,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the duplicator element.
 /// </summary>
-[Context(Context.Original, 0x0C)]
-[Context(Context.Super, 0x0C)]
+[Context(Context.Original, id: 0x0C)]
+[Context(Context.Super, id: 0x0C)]
 internal sealed class DuplicatorAction(
     IInteractionList interactions,
     IState state,

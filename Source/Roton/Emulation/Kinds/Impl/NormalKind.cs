@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x16)]
-[Context(Context.Super, 0x16)]
+[Context(Context.Original, id: 0x16)]
+[Context(Context.Super, id: 0x16)]
 internal sealed class NormalKind : IKind
 {
     public string FriendlyName => "Normal Wall";

@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x04)]
-public class SuperPlayerKind : IKind
+[Context(Context.Super, id: 0x04)]
+internal sealed class SuperPlayerKind : IKind
 {
     public string FriendlyName => "Player";
 

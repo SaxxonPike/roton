@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x0E)]
-[Context(Context.Super, 0x0E)]
+[Context(Context.Original, id: 0x0E)]
+[Context(Context.Super, id: 0x0E)]
 internal sealed class EnergizerKind : IKind
 {
     public string FriendlyName => "Energizer";

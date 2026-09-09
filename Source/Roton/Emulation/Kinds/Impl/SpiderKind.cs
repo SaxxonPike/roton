@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Super, 0x3E)]
+[Context(Context.Super, id: 0x3E)]
 internal sealed class SpiderKind : IKind
 {
     public string FriendlyName => "Spider";

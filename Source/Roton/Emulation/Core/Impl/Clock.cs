@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class Clock(EngineConfig config) : IClock
+internal sealed class Clock(IConfig config) : IClock
 {
-    private readonly long _numerator = config.MasterClockNumerator;
-    private readonly long _denominator = config.MasterClockDenominator;
+    private readonly long _numerator = config.Engine.MasterClockNumerator;
+    private readonly long _denominator = config.Engine.MasterClockDenominator;
 
     private bool _running;
     private bool _initialized;
@@ -30,7 +29,7 @@ internal sealed class Clock(EngineConfig config) : IClock
 
     private void Initialize()
     {
-        if (_initialized) 
+        if (_initialized)
             return;
 
         _running = true;
@@ -64,10 +63,10 @@ internal sealed class Clock(EngineConfig config) : IClock
                 lastTime += frequency;
                 OnTick?.Invoke();
             }
-            
+
             return false;
         });
-        
+
         _initialized = false;
     }
 

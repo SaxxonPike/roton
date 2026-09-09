@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class BoardTime(
-    EngineConfig config) 
+    IConfig config) 
     : IBoardTime
 {
     private float _boardTimeHundredthsSec;
@@ -29,6 +29,6 @@ internal sealed class BoardTime(
     /// <inheritdoc />
     public void Advance()
     {
-        _boardTimeHundredthsSec += config.MasterClockNumerator * 100f / config.MasterClockDenominator;
+        _boardTimeHundredthsSec += config.Engine.MasterClockNumerator * 100f / config.Engine.MasterClockDenominator;
     }
 }

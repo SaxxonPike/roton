@@ -6,7 +6,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x03)]
+[Context(Context.Super, id: 0x03)]
 internal sealed class SuperMonitorAction(
     IState state,
     IMover mover)

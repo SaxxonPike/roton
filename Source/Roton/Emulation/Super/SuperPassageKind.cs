@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x0B)]
-public class SuperPassageKind : IKind
+[Context(Context.Super, id: 0x0B)]
+internal sealed class SuperPassageKind : IKind
 {
     public string FriendlyName => "Passage";
 

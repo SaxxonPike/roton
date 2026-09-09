@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x15)]
-[Context(Context.Super, 0x15)]
+[Context(Context.Original, id: 0x15)]
+[Context(Context.Super, id: 0x15)]
 internal sealed class SolidKind : IKind
 {
     public string FriendlyName => "Solid Wall";

@@ -3,8 +3,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Original, 0x0D)]
-[Context(Context.Super, 0x0D)]
+[Context(Context.Original, id: 0x0D)]
+[Context(Context.Super, id: 0x0D)]
 internal sealed class BombDraw(
     ITiles tiles,
     IActorList actors)

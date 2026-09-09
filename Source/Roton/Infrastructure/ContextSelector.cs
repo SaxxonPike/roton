@@ -11,10 +11,13 @@ public static class ContextSelector
         { ".szt", Context.Super }
     };
 
-    public static bool TryGetForWorldFileName(string filename, out Context context)
+    public static bool TryGetForWorldFileName(string? filename, out Context context)
     {
         if (filename == null)
-            throw new ArgumentNullException(nameof(filename));
+        {
+            context = default;
+            return false;
+        }
 
         foreach (var kv in ContextMap)
         {

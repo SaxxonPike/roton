@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x0C)]
-[Context(Context.Super, 0x0C)]
+[Context(Context.Original, id: 0x0C)]
+[Context(Context.Super, id: 0x0C)]
 internal sealed class DuplicatorKind : IKind
 {
     public string FriendlyName => "Duplicator";

@@ -12,8 +12,7 @@ namespace Roton.Composers.Audio.AudioStreams.Impl;
 [Context(Context.Super)]
 internal sealed class AudioStreamComposer(
     IDrumSoundList drumBank,
-    AudioConfig audioConfig,
-    EngineConfig engineConfig,
+    IConfig config,
     IDrumComposer drumComposer,
     IToneComposer toneComposer,
     IStepComposer stepComposer)
@@ -63,7 +62,7 @@ internal sealed class AudioStreamComposer(
             dest[i] = src[i];
 
         Clear();
-        drumComposer.SetDrum(dest, audioConfig.SampleRate / (float)audioConfig.DrumRate);
+        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumRate);
     }
 
     public void PlayNote(int note)
@@ -99,8 +98,8 @@ internal sealed class AudioStreamComposer(
     private void SetSampleRate(int value)
     {
         _sampleRate = value;
-        _bufferDenominator = engineConfig.MasterClockDenominator;
-        _bufferNumerator = _sampleRate * engineConfig.MasterClockNumerator;
+        _bufferDenominator = config.Engine.MasterClockDenominator;
+        _bufferNumerator = _sampleRate * config.Engine.MasterClockNumerator;
         _bufferAccumulator = 0;
     }
 

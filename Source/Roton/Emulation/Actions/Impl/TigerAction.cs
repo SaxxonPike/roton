@@ -8,8 +8,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the tiger element.
 /// </summary>
-[Context(Context.Original, 0x2A)]
-[Context(Context.Super, 0x2A)]
+[Context(Context.Original, id: 0x2A)]
+[Context(Context.Super, id: 0x2A)]
 internal sealed class TigerAction(
     IActorList actors,
     IElementList elements,

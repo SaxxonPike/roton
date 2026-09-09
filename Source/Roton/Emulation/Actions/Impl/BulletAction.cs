@@ -7,8 +7,8 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the bullet element.
 /// </summary>
-[Context(Context.Original, 0x12)]
-[Context(Context.Super, 0x45)]
+[Context(Context.Original, id: 0x12)]
+[Context(Context.Super, id: 0x45)]
 internal sealed class BulletAction(
     IActorList actors,
     IElementList elements,

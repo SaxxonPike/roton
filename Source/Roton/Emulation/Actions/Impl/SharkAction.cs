@@ -7,7 +7,7 @@ namespace Roton.Emulation.Actions.Impl;
 /// <summary>
 /// Represents the tick action for the shark element.
 /// </summary>
-[Context(Context.Original, 0x26)]
+[Context(Context.Original, id: 0x26)]
 internal sealed class SharkAction(
     IActorList actors,
     IRandomizer randomizer,

@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x32)]
-[Context(Context.Super, 0x4C)]
+[Context(Context.Original, id: 0x32)]
+[Context(Context.Super, id: 0x4C)]
 internal sealed class RedTextKind : IKind
 {
     public string FriendlyName => "Text (Red)";

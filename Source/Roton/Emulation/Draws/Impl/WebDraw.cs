@@ -4,7 +4,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Draws.Impl;
 
-[Context(Context.Super, 0x3F)]
+[Context(Context.Super, id: 0x3F)]
 internal sealed class WebDraw(
     ITiles tiles,
     IState state,

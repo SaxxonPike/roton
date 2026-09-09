@@ -30,9 +30,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 {
     protected Mock<IClock> ClockMock { get; private set; } = null!;
     protected IFileSystem FileSystem { get; private set; } = null!;
-    protected EngineConfig EngineConfig { get; private set; } = null!;
-    protected AudioConfig AudioConfig { get; private set; } = null!;
-    protected JoystickConfig JoystickConfig { get; private set; } = null!;
+    protected IConfig Config { get; private set; } = null!;
     protected TestTerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;
     protected TestJoystick Joystick { get; private set; } = null!;
@@ -129,20 +127,16 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     {
         // Test dependencies
         FileSystem = new FixedFileSystem(true);
-        
-        EngineConfig = new EngineConfig
-        {
-            // Fast mode is needed because otherwise WaitForTick will wait for a message
-            // from a thread that doesn't run during testing, leading to infinite loops.
-            FastMode = true,
-            // These need to be nonzero to prevent division by zero in HsecToTicks.
-            MasterClockNumerator = 1,
-            MasterClockDenominator = 1
-        };
+        Config = new TestConfig();
 
-        AudioConfig = new AudioConfig();
-        JoystickConfig = new JoystickConfig();
+        // Fast mode is needed because otherwise WaitForTick will wait for a message
+        // from a thread that doesn't run during testing, leading to infinite loops.
+        Config.Engine.FastMode = true;
         
+        // These need to be nonzero to prevent division by zero in HsecToTicks.
+        Config.Engine.MasterClockNumerator = 1;
+        Config.Engine.MasterClockDenominator = 1;
+
         Terminal = (TestTerminal)Inject<ITerminal>(new TestTerminal());
         Keyboard = (TestKeyboard)Inject<IKeyboard>(new TestKeyboard());
         Joystick = (TestJoystick)Inject<IJoystick>(new TestJoystick());
@@ -154,16 +148,14 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         var services = new ServiceCollection();
         Assembly[] additionalAssemblies = [typeof(ContextTestFixture).Assembly];
         services.AddRoton(Context, additionalAssemblies);
-        services.AddSingleton<IFileSystem>(FileSystem);
+        services.AddSingleton(FileSystem);
         services.AddSingleton<ITerminal>(Terminal);
         services.AddSingleton<IKeyboard>(Keyboard);
         services.AddSingleton<IJoystick>(Joystick);
         services.AddSingleton(SpeakerMock.Object);
         services.AddSingleton(ClockMock.Object);
         services.AddSingleton<IAssemblyResourceService, AssemblyResourceService>();
-        services.AddSingleton(EngineConfig);
-        services.AddSingleton(AudioConfig);
-        services.AddSingleton(JoystickConfig);
+        services.AddSingleton(Config);
         services.AddSingleton(Tracer);
 
         var container = services.BuildServiceProvider();

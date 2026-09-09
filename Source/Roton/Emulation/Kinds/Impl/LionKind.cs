@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x29)]
-[Context(Context.Super, 0x29)]
+[Context(Context.Original, id: 0x29)]
+[Context(Context.Super, id: 0x29)]
 internal sealed class LionKind : IKind
 {
     public string FriendlyName => "Lion";

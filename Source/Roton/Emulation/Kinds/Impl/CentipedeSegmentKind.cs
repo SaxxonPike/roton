@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x2D)]
-[Context(Context.Super, 0x2D)]
+[Context(Context.Original, id: 0x2D)]
+[Context(Context.Super, id: 0x2D)]
 internal sealed class CentipedeSegmentKind : IKind
 {
     public string FriendlyName => "Centipede (Segment)";

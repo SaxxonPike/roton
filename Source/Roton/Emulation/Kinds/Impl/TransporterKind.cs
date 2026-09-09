@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x1E)]
-[Context(Context.Super, 0x1E)]
+[Context(Context.Original, id: 0x1E)]
+[Context(Context.Super, id: 0x1E)]
 internal sealed class TransporterKind : IKind
 {
     public string FriendlyName => "Transporter";

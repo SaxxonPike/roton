@@ -6,8 +6,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Original;
 
-[Context(Context.Original, 0x03)]
-public class OriginalMonitorKind : IKind
+[Context(Context.Original, id: 0x03)]
+internal sealed class OriginalMonitorKind : IKind
 {
     public string FriendlyName => "Monitor";
 

@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x0D)]
-[Context(Context.Super, 0x0D)]
+[Context(Context.Original, id: 0x0D)]
+[Context(Context.Super, id: 0x0D)]
 internal sealed class BombInteraction(
     IFacts facts,
     IAlerts alerts,

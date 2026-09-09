@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x2B)]
-[Context(Context.Super, 0x47)]
+[Context(Context.Original, id: 0x2B)]
+[Context(Context.Super, id: 0x47)]
 internal sealed class VerticalBlinkRayKind : IKind
 {
     public string FriendlyName => "Blink Ray (Vertical)";

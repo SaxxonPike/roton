@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x17)]
-[Context(Context.Super, 0x17)]
+[Context(Context.Original, id: 0x17)]
+[Context(Context.Super, id: 0x17)]
 internal sealed class BreakableKind : IKind
 {
     public string FriendlyName => "Breakable Wall";

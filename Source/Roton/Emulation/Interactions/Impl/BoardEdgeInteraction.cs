@@ -4,8 +4,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Interactions.Impl;
 
-[Context(Context.Original, 0x01)]
-[Context(Context.Super, 0x01)]
+[Context(Context.Original, id: 0x01)]
+[Context(Context.Super, id: 0x01)]
 internal sealed class BoardEdgeInteraction(
     IWorld world,
     ITiles tiles,

@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
 
-[Context(Context.Super, 0x24)]
+[Context(Context.Super, id: 0x24)]
 internal sealed class SuperObjectAction(
     IActorList actors,
     ITiles tiles,

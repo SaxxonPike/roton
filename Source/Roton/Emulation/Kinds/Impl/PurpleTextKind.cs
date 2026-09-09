@@ -5,8 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Kinds.Impl;
 
-[Context(Context.Original, 0x33)]
-[Context(Context.Super, 0x4D)]
+[Context(Context.Original, id: 0x33)]
+[Context(Context.Super, id: 0x4D)]
 internal sealed class PurpleTextKind : IKind
 {
     public string FriendlyName => "Text (Purple)";
