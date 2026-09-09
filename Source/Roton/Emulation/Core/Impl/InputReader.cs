@@ -8,7 +8,8 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class InputReader(
-    IConfig config,
+    EngineConfig engineConfig,
+    JoystickConfig joystickConfig,
     IJoystick joystick,
     IState state,
     IKeyboard keyboard,
@@ -34,7 +35,7 @@ internal sealed class InputReader(
 
     private void ReadInputJoystick(bool isUiFocused)
     {
-        if (config.DisableJoystick || !joystick.IsConnected)
+        if (joystickConfig.Disable || !joystick.IsConnected)
             return;
 
         // This function does things a lot differently than the original engine,
@@ -64,7 +65,7 @@ internal sealed class InputReader(
 
         // Determine which direction "wins" based on how far the stick is held from center.
 
-        var deadZone = config.JoystickDeadZone;
+        var deadZone = joystickConfig.DeadZone;
         var maxMagnitude = 0f;
         var finalKeyCode = (EngineKeyCode)0;
 

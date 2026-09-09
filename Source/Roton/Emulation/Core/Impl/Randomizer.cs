@@ -7,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Randomizer(
-    IConfig config)
+    EngineConfig config)
     : IRandomizer
 {
     private const int Coefficient = 0x08088405;

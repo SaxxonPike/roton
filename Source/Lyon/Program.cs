@@ -5,7 +5,9 @@ using System.Linq;
 using Lyon;
 using Lyon.App;
 using Lyon.Common;
+using Lyon.Common.App;
 using Lyon.Common.App.Impl;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
 using Roton.Emulation.Core;
@@ -27,26 +29,6 @@ var fileNames = args
 
 var fileName = fileNames.First();
 
-// Process configuration.
-var config = new Config
-{
-    DefaultWorld = Path.GetFileNameWithoutExtension(fileName),
-    RandomSeed = null,
-    HomePath = Path.GetDirectoryName(fileName),
-    AudioDrumRate = 64,
-    AudioSampleRate = 44100,
-    AudioBufferSize = 2048,
-    MasterClockNumerator = 100,
-    MasterClockDenominator = 7275,
-    FastMode = switches.Contains("--fast") || switches.Contains("-f"),
-    TraceOop = switches.Contains("--trace") || switches.Contains("-t"),
-    NoPesterMode = switches.Contains("--no-pester") || switches.Contains("-p"),
-    JoystickDeadZone = 0.5f,
-    JoystickDenoiseZone = 0.1f,
-    DisableJoystick = switches.Contains("--no-joystick"),
-    SkipIntro = switches.Contains("--skip-intro") || switches.Contains("-s"),
-};
-
 // Determine which engine to use based on the world file name extension.
 if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
     throw new LyonException($"Cannot determine the format of the world file: {fileName}");
@@ -55,7 +37,10 @@ if (!ContextSelector.TryGetForWorldFileName(fileName, out var contextEngine))
 var services = new ServiceCollection();
 
 services
-    .AddRoton(Context.Ui, typeof(Program).Assembly)
+    .AddLyonConfig(args, out var config);
+
+services
+    .AddRoton(Context.Ui, [typeof(Program).Assembly])
     .AddRoton(contextEngine)
     .AddLyonCommon(args)
     .AddLyon();
@@ -65,7 +50,7 @@ try
 {
     using var container = services.BuildServiceProvider();
 
-    if (config.TraceOop)
+    if (config.GetValue<bool?>("Roton:Engine:TraceOop") == true)
         container
             .GetService<ITracer>()?
             .Attach(Console.Out);

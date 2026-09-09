@@ -24,26 +24,42 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddLyonUi() =>
             services.AddRoton(Context.Ui);
 
+        public IServiceCollection AddLyonConfig(string[] args, out IConfiguration config)
+        {
+            var conf = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonFile(json =>
+                {
+                    json.Optional = false;
+                    json.ReloadOnChange = true;
+                    json.Path = "RotonConfig.Default.json";
+                })
+                .AddJsonFile(json =>
+                {
+                    json.Optional = true;
+                    json.ReloadOnChange = true;
+                    json.Path = "RotonConfig.json";
+                })
+                .AddCommandLine(args)
+                .Build();
+
+            services.Configure<AudioConfig>(c => { conf.GetSection("Roton:Audio").Bind(c); });
+            services.Configure<EngineConfig>(c => { conf.GetSection("Roton:Engine").Bind(c); });
+            services.Configure<JoystickConfig>(c => { conf.GetSection("Roton:Joystick").Bind(c); });
+
+            services.AddScoped(c => c.GetRequiredService<IOptions<AudioConfig>>().Value);
+            services.AddScoped(c => c.GetRequiredService<IOptions<EngineConfig>>().Value);
+            services.AddScoped(c => c.GetRequiredService<IOptions<JoystickConfig>>().Value);
+
+            config = conf;
+            return services;
+        }
+
         public IServiceCollection AddLyonCommon(string[] args)
         {
-            services.Configure<Config>(
-                new ConfigurationBuilder()
-                    .AddJsonFile(json =>
-                    {
-                        json.Optional = true;
-                        json.ReloadOnChange = true;
-                        json.Path = "Config.json";
-                    })
-                    .AddCommandLine(args)
-                    .Build()
-            );
-
-            services.AddSingleton<IConfig>(c =>
-                c.GetRequiredService<IOptions<Config>>().Value);
-
             services.AddScoped<IFileSystem>(c =>
             {
-                var config = c.GetRequiredService<IOptions<Config>>().Value;
+                var config = c.GetRequiredService<IOptions<EngineConfig>>().Value;
                 var assemblyResourceService = c.GetRequiredService<IAssemblyResourceService>();
 
                 var fileSystem = FileSystems.Aggregate([

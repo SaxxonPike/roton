@@ -1,0 +1,25 @@
+{
+  "Roton": {
+    "Engine": {
+      "DefaultWorld": "",
+      "FastMode": false,
+      "HomePath": "",
+      "MasterClockDenominator": 7275,
+      "MasterClockNumerator": 100,
+      "NoPesterMode": false,
+      "RandomSeed": null,
+      "SkipIntro": true,
+      "TraceOop": false
+    },
+    "Audio": {
+      "BufferSize": 2048,
+      "DrumRate": 64,
+      "SampleRate": 44100
+    },
+    "Joystick": {
+      "DeadZone": 0.5,
+      "DenoiseZone": 0.1,
+      "Disable": false
+    }
+  }
+}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Lyon;
 using Lyon.Common;
+using Lyon.Common.App;
 using Lyon.Common.App.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -29,7 +30,9 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
 {
     protected Mock<IClock> ClockMock { get; private set; } = null!;
     protected IFileSystem FileSystem { get; private set; } = null!;
-    protected Config Config { get; private set; } = null!;
+    protected EngineConfig EngineConfig { get; private set; } = null!;
+    protected AudioConfig AudioConfig { get; private set; } = null!;
+    protected JoystickConfig JoystickConfig { get; private set; } = null!;
     protected TestTerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;
     protected TestJoystick Joystick { get; private set; } = null!;
@@ -126,7 +129,8 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     {
         // Test dependencies
         FileSystem = new FixedFileSystem(true);
-        Config = new Config
+        
+        EngineConfig = new EngineConfig
         {
             // Fast mode is needed because otherwise WaitForTick will wait for a message
             // from a thread that doesn't run during testing, leading to infinite loops.
@@ -135,6 +139,10 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
             MasterClockNumerator = 1,
             MasterClockDenominator = 1
         };
+
+        AudioConfig = new AudioConfig();
+        JoystickConfig = new JoystickConfig();
+        
         Terminal = (TestTerminal)Inject<ITerminal>(new TestTerminal());
         Keyboard = (TestKeyboard)Inject<IKeyboard>(new TestKeyboard());
         Joystick = (TestJoystick)Inject<IJoystick>(new TestJoystick());
@@ -153,7 +161,9 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         services.AddSingleton(SpeakerMock.Object);
         services.AddSingleton(ClockMock.Object);
         services.AddSingleton<IAssemblyResourceService, AssemblyResourceService>();
-        services.AddSingleton<IConfig>(Config);
+        services.AddSingleton(EngineConfig);
+        services.AddSingleton(AudioConfig);
+        services.AddSingleton(JoystickConfig);
         services.AddSingleton(Tracer);
 
         var container = services.BuildServiceProvider();

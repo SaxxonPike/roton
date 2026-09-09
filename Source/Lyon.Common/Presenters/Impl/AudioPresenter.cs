@@ -16,7 +16,7 @@ namespace Lyon.Common.Presenters.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 public sealed unsafe class AudioPresenter(
-    IConfig config,
+    AudioConfig config,
     IAudioStreamComposer composer,
     IScheduler scheduler)
     : IDisposable, IAudioPresenter
@@ -101,12 +101,12 @@ public sealed unsafe class AudioPresenter(
         _running = true;
 
         // Configure audio settings.
-        SampleRate = config.AudioSampleRate;
+        SampleRate = config.SampleRate;
         var spec = new SDL_AudioSpec
         {
             channels = 1,
             format = SDL_AUDIO_F32,
-            freq = config.AudioSampleRate
+            freq = config.SampleRate
         };
 
         // Start the SDL audio subsystem.

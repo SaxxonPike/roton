@@ -37,7 +37,7 @@ internal sealed class Game(
     IPlayField playField,
     IHighScoreListFactory highScoreListFactory,
     IGameThread gameThread,
-    IConfig config,
+    EngineConfig config,
     IHighScoreHud highScoreHud
 )
     : IGame

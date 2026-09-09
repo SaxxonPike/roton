@@ -14,7 +14,7 @@ internal sealed class Scheduler : IScheduler
     private int _ticksToRun;
 
     private readonly IState _state;
-    private readonly IConfig _config;
+    private readonly EngineConfig _config;
     private readonly IBoardTime _boardTime;
     private readonly IClock _clock;
     private readonly IGameThread _gameThread;
@@ -23,7 +23,7 @@ internal sealed class Scheduler : IScheduler
     private readonly Func<bool> _waitForTickNormalDelegate;
 
     public Scheduler(IState state,
-        IConfig config,
+        EngineConfig config,
         IBoardTime boardTime,
         IClock clock,
         IGameThread gameThread,

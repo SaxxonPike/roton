@@ -9,7 +9,7 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class Bootstrap(
     IState state,
     IFacts facts,
-    IConfig config,
+    EngineConfig config,
     IWorldManager worldManager,
     IConfigFileService configFileService,
     IClock clock,
@@ -56,16 +56,21 @@ internal sealed class Bootstrap(
         state.GameWaitTime = 1;
         state.DefaultSaveName = facts.DefaultSavedGameName;
         state.DefaultBoardName = facts.DefaultBoardName;
-        state.DefaultWorldName = config.DefaultWorld ?? facts.DefaultWorldName;
+        state.DefaultWorldName = string.IsNullOrWhiteSpace(config.DefaultWorld)
+            ? string.IsNullOrWhiteSpace(facts.DefaultWorldName)
+                ? ""
+                : $"{facts.DefaultWorldName}"
+            : config.DefaultWorld;
         state.ForestIndex = 2;
         state.Init = true;
 
         worldManager.ClearWorld();
 
         var cfg = configFileService.Load();
-        if (config.DefaultWorld == null && cfg != null)
+
+        if (string.IsNullOrWhiteSpace(config.DefaultWorld) && cfg != null)
         {
-            if (!string.IsNullOrEmpty(cfg.WorldName))
+            if (!string.IsNullOrWhiteSpace(cfg.WorldName))
             {
                 state.DefaultWorldName = (
                     cfg.WorldName?.StartsWith("*") ?? false

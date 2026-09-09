@@ -1,4 +1,5 @@
 using System;
+using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -7,7 +8,7 @@ namespace Roton.Composers.Audio.Synths.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Synth(
-    IConfig config)
+    AudioConfig config)
     : ISynth
 {
     /// <summary>
@@ -40,7 +41,7 @@ internal sealed class Synth(
     /// between positive and negative.
     /// </summary>
     private void UpdateFrequency() =>
-        _halfPhasePerSample = Math.Abs(_frequency / config.AudioSampleRate * 2);
+        _halfPhasePerSample = Math.Abs(_frequency / config.SampleRate * 2);
 
     /// <inheritdoc />
     public void SetFrequency(float frequency)

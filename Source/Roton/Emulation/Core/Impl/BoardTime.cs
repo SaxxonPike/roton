@@ -1,5 +1,4 @@
 using System;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
@@ -8,7 +7,7 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class BoardTime(
-    IConfig config) 
+    EngineConfig config) 
     : IBoardTime
 {
     private float _boardTimeHundredthsSec;

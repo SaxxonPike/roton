@@ -25,7 +25,7 @@ internal sealed class PlayerAction(
     IFacts facts,
     IInteractionList interactions,
     ITimers timers,
-    IConfig config,
+    EngineConfig config,
     ISoundPlayer soundPlayer,
     IWorldManager worldManager,
     IBoardUpdater boardUpdater,

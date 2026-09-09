@@ -10,7 +10,7 @@ internal sealed class WaterInteraction(
     ISounds sounds,
     IAlerts alerts,
     IFacts facts,
-    IConfig config,
+    EngineConfig config,
     ISoundPlayer soundPlayer,
     IMessenger messenger)
     : IInteraction

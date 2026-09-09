@@ -20,7 +20,7 @@ internal sealed class WorldManager(
     IScrollFormatter scrollFormatter,
     IFileDialog fileDialog,
     IBoard board,
-    IConfig config,
+    EngineConfig config,
     IAlerts alerts,
     IFacts facts,
     IElementList elements,
