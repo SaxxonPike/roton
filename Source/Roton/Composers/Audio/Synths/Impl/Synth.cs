@@ -1,14 +1,15 @@
 using System;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Synths.Impl;
 
+/// <inheritdoc />
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Synth(
-    IConfig config)
+    IConfig config,
+    ISynthFilter synthFilter)
     : ISynth
 {
     /// <summary>
@@ -32,9 +33,9 @@ internal sealed class Synth(
     private float _level = -1;
 
     /// <summary>
-    /// Previous sample, used for interpolation.
+    /// Previous output sample, used for the one-pole low-pass filter.
     /// </summary>
-    private float _lastSample;
+    private float _filterState;
 
     /// <summary>
     /// Updates the counter used to determine when the output level should cross
@@ -64,12 +65,13 @@ internal sealed class Synth(
         if (_halfPhasePerSample <= 0)
             return 0;
 
-        var lastSample = _lastSample;
-
         // For each sample, the half-period count is advanced by an amount
         // determined by the frequency and the configured sample rate.
         // For each time that the half-period crosses 1, the output level
         // phase is inverted.
+
+        var useLowPass = config.Audio.LowPass;
+        var usePolyBlep = config.Audio.PolyBlep;
 
         for (var idx = 0; idx < buffer.Length; idx++)
         {
@@ -81,12 +83,22 @@ internal sealed class Synth(
                 _level = -_level;
             }
 
-            // Perform interpolation.
+            // Audio filters can be applied to shape the square waveform.
 
-            lastSample = buffer[idx] = (_level + lastSample) / 2;
+            var raw = _level;
+
+            if (usePolyBlep)
+                raw = _level + _level * synthFilter.PolyBlep(_halfPhase, _halfPhasePerSample);
+
+            if (useLowPass)
+                raw = synthFilter.LowPass(raw, _halfPhasePerSample, _filterState, out _filterState);
+
+            // The output of the filter can exceed +/- 1, so we divide by two to keep
+            // the dynamic range intact.
+
+            buffer[idx] = raw / 2;
         }
 
-        _lastSample = lastSample;
         return buffer.Length;
     }
 }

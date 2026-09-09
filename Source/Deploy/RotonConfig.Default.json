@@ -13,6 +13,8 @@
     },
     "Audio": {
       "DrumRate": 64,
+      "LowPass": true,
+      "PolyBlep": true,
       "SampleRate": 44100
     },
     "Joystick": {
