@@ -12,9 +12,10 @@
       "TraceOop": false
     },
     "Audio": {
-      "DrumRate": 64,
+      "DrumSpeed": 64,
+      "Interpolate": false,
       "LowPass": true,
-      "PolyBlep": true,
+      "LowPassCutoff": 12000,
       "SampleRate": 44100
     },
     "Joystick": {

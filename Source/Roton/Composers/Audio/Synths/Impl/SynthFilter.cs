@@ -1,3 +1,4 @@
+using System;
 using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Synths.Impl;
@@ -7,29 +8,31 @@ namespace Roton.Composers.Audio.Synths.Impl;
 [Context(Context.Super)]
 internal sealed class SynthFilter : ISynthFilter
 {
-    /// <inheritdoc />
-    public float PolyBlep(float t, float dt)
-    {
-        if (t < dt)
-        {
-            t /= dt;
-            return t + t - t * t - 1f;
-        }
+    /// <summary>
+    /// Smoothing coefficient for the two-pole low-pass filter, derived from the
+    /// configured cutoff frequency and sample rate.
+    /// </summary>
+    private float _alpha;
 
-        if (t > 1f - dt)
-        {
-            t = (t - 1f) / dt;
-            return t * t + t + t + 1f;
-        }
+    /// <summary>
+    /// Previous output of the first filter stage, used for the two-pole low-pass filter.
+    /// </summary>
+    private float _filterState;
 
-        return 0f;
-    }
+    /// <summary>
+    /// Previous output of the second filter stage, used for the two-pole low-pass filter.
+    /// </summary>
+    private float _filterState2;
 
     /// <inheritdoc />
-    public float LowPass(float x, float halfPhasePerSample, float filterState, out float resultFilterState)
+    public void Update(float cutoff, float sampleRate) =>
+        _alpha = 1f - (float)Math.Exp(-2.0 * Math.PI * cutoff / sampleRate);
+
+    /// <inheritdoc />
+    public float LowPass(float x)
     {
-        var alpha = 1f - halfPhasePerSample;
-        resultFilterState = filterState + alpha * (x - filterState);
-        return resultFilterState;
+        _filterState += _alpha * (x - _filterState);
+        _filterState2 += _alpha * (_filterState - _filterState2);
+        return _filterState2;
     }
 }

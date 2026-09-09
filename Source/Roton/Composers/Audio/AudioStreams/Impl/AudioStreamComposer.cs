@@ -62,7 +62,7 @@ internal sealed class AudioStreamComposer(
             dest[i] = src[i];
 
         Clear();
-        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumRate);
+        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumSpeed);
     }
 
     public void PlayNote(int note)

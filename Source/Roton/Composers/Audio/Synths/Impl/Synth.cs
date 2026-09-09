@@ -9,7 +9,8 @@ namespace Roton.Composers.Audio.Synths.Impl;
 [Context(Context.Super)]
 internal sealed class Synth(
     IConfig config,
-    ISynthFilter synthFilter)
+    ISynthFilter synthFilter,
+    ISynthInterpolator synthInterpolator)
     : ISynth
 {
     /// <summary>
@@ -33,16 +34,25 @@ internal sealed class Synth(
     private float _level = -1;
 
     /// <summary>
-    /// Previous output sample, used for the one-pole low-pass filter.
-    /// </summary>
-    private float _filterState;
-
-    /// <summary>
     /// Updates the counter used to determine when the output level should cross
     /// between positive and negative.
     /// </summary>
-    private void UpdateFrequency() =>
-        _halfPhasePerSample = Math.Abs(_frequency / config.Audio.SampleRate * 2);
+    private void UpdateFrequency()
+    {
+        // When the frequency is zeroed out, the phase of the waveform should be reset.
+
+        if (_frequency <= 0)
+        {
+            _halfPhase = 0;
+            _halfPhasePerSample = 0;
+        }
+        else
+        {
+            _halfPhasePerSample = Math.Abs(_frequency / config.Audio.SampleRate * 2);
+            synthFilter.Update(config.Audio.LowPassCutoff, config.Audio.SampleRate);
+        }
+
+    }
 
     /// <inheritdoc />
     public void SetFrequency(float frequency)
@@ -71,7 +81,7 @@ internal sealed class Synth(
         // phase is inverted.
 
         var useLowPass = config.Audio.LowPass;
-        var usePolyBlep = config.Audio.PolyBlep;
+        var useInterpolation = config.Audio.Interpolate;
 
         for (var idx = 0; idx < buffer.Length; idx++)
         {
@@ -87,11 +97,11 @@ internal sealed class Synth(
 
             var raw = _level;
 
-            if (usePolyBlep)
-                raw = _level + _level * synthFilter.PolyBlep(_halfPhase, _halfPhasePerSample);
+            if (useInterpolation)
+                raw = _level + _level * synthInterpolator.PolyBlep(_halfPhase, _halfPhasePerSample);
 
             if (useLowPass)
-                raw = synthFilter.LowPass(raw, _halfPhasePerSample, _filterState, out _filterState);
+                raw = synthFilter.LowPass(raw);
 
             // The output of the filter can exceed +/- 1, so we divide by two to keep
             // the dynamic range intact.

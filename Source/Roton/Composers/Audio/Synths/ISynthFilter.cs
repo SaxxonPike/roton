@@ -6,12 +6,24 @@ namespace Roton.Composers.Audio.Synths;
 public interface ISynthFilter
 {
     /// <summary>
-    /// Applies PolyBLEP interpolation.
+    /// Updates coefficients in the filter.
     /// </summary>
-    float PolyBlep(float halfPhase, float halfPhasePerSample);
+    /// <param name="cutoff">
+    /// Cutoff frequency in Hz.
+    /// </param>
+    /// <param name="sampleRate">
+    /// Sample rate of the generated data in Hz.
+    /// </param>
+    void Update(float cutoff, float sampleRate);
 
     /// <summary>
-    /// Applies a one-pole low-pass filter.
+    /// Applies the filter.
     /// </summary>
-    float LowPass(float raw, float halfPhasePerSample, float filterState, out float resultFilterState);
+    /// <param name="x">
+    /// The input sample.
+    /// </param>
+    /// <returns>
+    /// The processed sample.
+    /// </returns>
+    float LowPass(float x);
 }
