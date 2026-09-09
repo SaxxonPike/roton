@@ -8,8 +8,6 @@ using Roton;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
-using Roton.Emulation.Core.Impl;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 using Roton.Infrastructure.Impl;
 
@@ -60,14 +58,12 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IFileSystem>(c =>
             {
                 var config = c.GetRequiredService<IOptions<EngineConfig>>().Value;
-                var assemblyResourceService = c.GetRequiredService<IAssemblyResourceService>();
+                var factory = c.GetRequiredService<IFileSystemFactory>();
 
-                var fileSystem = FileSystems.Aggregate([
-                    FileSystems.Disk(config.HomePath ?? "."),
-                    assemblyResourceService.GetFromAssemblyOf<IGame>().Root
+                return factory.CreateAggregate([
+                    factory.CreateDisk(config.HomePath ?? "."),
+                    factory.CreateAssemblyResourceRoot(typeof(IGame).Assembly)
                 ]);
-
-                return fileSystem;
             });
 
             services.AddScoped<ISceneComposer>(c =>

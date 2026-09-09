@@ -5,6 +5,8 @@ using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core;
 
+[Context(Context.Original)]
+[Context(Context.Super)]
 internal sealed class FileSystemFactory(IAssemblyResourceService assemblyResourceService)
     : IFileSystemFactory
 {
@@ -17,8 +19,6 @@ internal sealed class FileSystemFactory(IAssemblyResourceService assemblyResourc
     public IFileSystem CreateAssemblyResourceSystem(Assembly assembly) =>
         assemblyResourceService.GetFromAssembly(assembly).Root;
 
-    public IFileSystem CreateDisk(string basePath)
-    {
-        throw new System.NotImplementedException();
-    }
+    public IFileSystem CreateDisk(string basePath) =>
+        new DiskFileSystem(basePath);
 }
