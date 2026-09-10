@@ -185,6 +185,15 @@ internal sealed class SuperState : IState
     public ref Bool WorldLoaded => 
         ref _memory.GetRef<Bool>(0xB97C);
 
+    public ref Word SoundTimeCheckHSec => 
+        ref _memory.GetRef<Word>(0xD0B0);
+
+    public ref Word TimerTicks =>
+        ref _memory.GetRef<Word>(0xD0AE);
+
+    public ref Word SoundTimeCheckCounter =>
+        ref _memory.GetRef<Word>(0xD0AA);
+
     public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
     {
         var span = _memory.ReadStringSpan(0xB964);

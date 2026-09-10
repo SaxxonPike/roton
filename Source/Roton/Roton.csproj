@@ -15,6 +15,7 @@
         <EmbeddedResource Include="Resources\resources.zip"/>
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Editors\Impl\" />
       <Folder Include="Editors\Original\" />
       <Folder Include="Editors\Super\" />
     </ItemGroup>

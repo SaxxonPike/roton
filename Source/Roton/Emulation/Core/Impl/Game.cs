@@ -16,7 +16,7 @@ internal sealed class Game(
     IActorList actors,
     IActionList actions,
     ITiles tiles,
-    ITimers timers,
+    ITimerList timers,
     IElementList elements,
     IBoardUpdater boardUpdater,
     IWorld world,
@@ -38,7 +38,8 @@ internal sealed class Game(
     IHighScoreListFactory highScoreListFactory,
     IGameThread gameThread,
     IConfig config,
-    IHighScoreHud highScoreHud
+    IHighScoreHud highScoreHud,
+    ITimeConverter timeConverter
 )
     : IGame
 {
@@ -116,7 +117,7 @@ internal sealed class Game(
             {
                 state.ActIndex = state.ActorCount + 1;
 
-                if (timers.Player.Clock(1, HsecToTicks(25)) > 0)
+                if (timers.Player.Clock(1, timeConverter.HsecToTicks(25)) > 0)
                     alternating = !alternating;
 
                 if (alternating)
@@ -196,7 +197,8 @@ internal sealed class Game(
                     if (state.GameWaitTime <= 0 || timers.Player.Clock(1, state.GameWaitTime) > 0)
                     {
                         state.GameCycle++;
-                        if (state.GameCycle > facts.MaxGameCycle) state.GameCycle = 1;
+                        if (state.GameCycle > facts.MaxGameCycle) 
+                            state.GameCycle = 1;
 
                         state.ActIndex = 0;
                         inputReader.Read(false);
@@ -254,18 +256,6 @@ internal sealed class Game(
         highScoreHud.ShowHighScores(list);
         dialogs.ShowHighScores();
     }
-
-    /// <summary>
-    /// Converts hundredths of seconds to ticks.
-    /// </summary>
-    /// <param name="hsec">
-    /// Duration in hundredths of seconds.
-    /// </param>
-    /// <returns>
-    /// The equivalent number of ticks.
-    /// </returns>
-    private int HsecToTicks(int hsec) =>
-        Math.Max(1, hsec * (config.Engine.MasterClockDenominator / config.Engine.MasterClockNumerator + 50) / 100);
 
     public void StepOnce()
     {

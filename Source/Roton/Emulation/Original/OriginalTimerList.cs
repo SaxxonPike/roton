@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalTimers(IMemory memory) : ITimers
+internal sealed class OriginalTimerList(IMemory memory) : ITimerList
 {
     public ITimer Player { get; } = new Timer(memory, 0x740A);
     public ITimer TimeLimit { get; } = new Timer(memory, 0x4920);

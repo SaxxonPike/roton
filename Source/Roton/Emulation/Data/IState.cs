@@ -59,6 +59,10 @@ public interface IState
     ref Word StartBoard { get; }
     string WorldFileName { get; set; }
     ref Bool WorldLoaded { get; }
+    
+    ref Word SoundTimeCheckHSec { get; }
+    ref Word TimerTicks { get; }
+    ref Word SoundTimeCheckCounter { get; }
 
     ReadOnlySpan<char> GetOopWord(Span<char> buffer);
     void SetOopWord(ReadOnlySpan<char> buffer);

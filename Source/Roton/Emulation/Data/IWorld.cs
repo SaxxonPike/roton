@@ -15,6 +15,7 @@ public interface IWorld
     ref Word Score { get; }
     ref Word Stones { get; }
     ref Word TimePassed { get; }
+    ref Word TimePassedHSec { get; }
     ref Word TorchCycles { get; }
     ref Word Torches { get; }
 }

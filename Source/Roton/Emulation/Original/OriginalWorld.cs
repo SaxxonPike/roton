@@ -49,6 +49,9 @@ internal sealed class OriginalWorld(
     public ref Word TimePassed =>
         ref memory.GetRef<Word>(0x491E);
 
+    public ref Word TimePassedHSec =>
+        ref memory.GetRef<Word>(0x4920);
+
     public ref Word TorchCycles =>
         ref memory.GetRef<Word>(0x482F);
 

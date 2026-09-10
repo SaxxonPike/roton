@@ -50,6 +50,9 @@ internal sealed class SuperWorld(
     public ref Word TimePassed =>
         ref memory.GetRef<Word>(0x79C8);
 
+    public ref Word TimePassedHSec =>
+        ref memory.GetRef<Word>(0x79CA);
+
     public ref Word TorchCycles =>
         ref _torchCycles;
 
