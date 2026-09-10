@@ -24,5 +24,5 @@ public interface ISynthFilter
     /// <param name="buffer">
     /// The input samples to modify.
     /// </param>
-    void LowPass(Span<float> buffer);
+    void Filter(Span<float> buffer);
 }

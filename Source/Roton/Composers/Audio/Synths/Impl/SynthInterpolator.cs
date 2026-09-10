@@ -1,3 +1,4 @@
+using System;
 using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Synths.Impl;
@@ -8,22 +9,29 @@ namespace Roton.Composers.Audio.Synths.Impl;
 internal sealed class SynthInterpolator : ISynthInterpolator
 {
     /// <inheritdoc />
-    public float PolyBlep(float t, float dt)
+    public void Interpolate(Span<float> buffer, ReadOnlySpan<float> phases, float deltaPhase)
     {
-        // https://www.martin-finke.de/articles/audio-plugins-018-polyblep-oscillator/
-
-        if (t < dt)
+        for (var idx = 0; idx < buffer.Length; idx++)
         {
-            t /= dt;
-            return t + t - t * t - 1f;
-        }
+            var t = phases[idx];
+            float y;
 
-        if (t > 1f - dt)
-        {
-            t = (t - 1f) / dt;
-            return t * t + t + t + 1f;
-        }
+            if (t < deltaPhase)
+            {
+                t /= deltaPhase;
+                y = t + t - t * t - 1f;
+            }
+            else if (t > 1f - deltaPhase)
+            {
+                t = (t - 1f) / deltaPhase;
+                y = t * t + t + t + 1f;
+            }
+            else
+            {
+                continue;
+            }
 
-        return 0f;
+            buffer[idx] += y;
+        }
     }
 }

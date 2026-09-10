@@ -14,7 +14,7 @@
     "Audio": {
       "DrumSpeed": 64,
       "Gain": 0.14,
-      "Interpolate": false,
+      "Interpolate": true,
       "LowPass": true,
       "LowPassCutoff": 12000,
       "PreGain": 0.5,

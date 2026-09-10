@@ -1,7 +1,6 @@
 using System;
 using Roton.Composers.Audio.Synths;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.Drums.Impl;

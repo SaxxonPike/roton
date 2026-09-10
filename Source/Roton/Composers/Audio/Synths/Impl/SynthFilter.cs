@@ -29,7 +29,7 @@ internal sealed class SynthFilter : ISynthFilter
         _alpha = 1f - (float)Math.Exp(-2.0 * Math.PI * cutoff / sampleRate);
 
     /// <inheritdoc />
-    public void LowPass(Span<float> buffer)
+    public void Filter(Span<float> buffer)
     {
         for (var i = 0; i < buffer.Length; i++)
         {
