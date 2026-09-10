@@ -26,4 +26,14 @@ public sealed class AudioConfig
     /// If true, interpolation is enabled and applied to the sound output.
     /// </summary>
     public bool Interpolate { get; set; } = true;
+
+    /// <summary>
+    /// Input gain of the speaker audio stream.
+    /// </summary>
+    public float PreGain { get; set; } = 0.5f;
+
+    /// <summary>
+    /// Output gain of the speaker audio stream.
+    /// </summary>
+    public float Gain { get; set; } = 0.14f;
 }

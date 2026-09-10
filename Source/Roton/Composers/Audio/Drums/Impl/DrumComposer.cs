@@ -19,6 +19,7 @@ internal sealed class DrumComposer(
     private int _drumFrequencyIndex;
     private int _drumTime;
 
+    /// <inheritdoc />
     public void SetDrum(ReadOnlySpan<int> frequencies, float rate)
     {
         _drumFrequencyCount = frequencies.Length + 1;
@@ -31,6 +32,7 @@ internal sealed class DrumComposer(
         _drumTime = (int)Math.Round(config.Audio.SampleRate / rate);
     }
 
+    /// <inheritdoc />
     public void ClearDrum()
     {
         _drumFrequencyCount = 0;
@@ -39,6 +41,7 @@ internal sealed class DrumComposer(
         synth.SetFrequency(0);
     }
 
+    /// <inheritdoc />
     public int ComposeDrum(Span<float> buffer)
     {
         var remaining = buffer.Length;

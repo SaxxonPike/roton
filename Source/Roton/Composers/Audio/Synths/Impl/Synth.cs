@@ -51,7 +51,6 @@ internal sealed class Synth(
             _halfPhasePerSample = Math.Abs(_frequency / config.Audio.SampleRate * 2);
             synthFilter.Update(config.Audio.LowPassCutoff, config.Audio.SampleRate);
         }
-
     }
 
     /// <inheritdoc />
@@ -100,14 +99,11 @@ internal sealed class Synth(
             if (useInterpolation)
                 raw = _level + _level * synthInterpolator.PolyBlep(_halfPhase, _halfPhasePerSample);
 
-            if (useLowPass)
-                raw = synthFilter.LowPass(raw);
-
-            // The output of the filter can exceed +/- 1, so we divide by two to keep
-            // the dynamic range intact.
-
-            buffer[idx] = raw / 2;
+            buffer[idx] = raw;
         }
+
+        if (useLowPass)
+            synthFilter.LowPass(buffer);
 
         return buffer.Length;
     }

@@ -5,7 +5,6 @@ using Roton;
 using Roton.Composers.Audio;
 using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Lyon.Common.Presenters.Impl;
@@ -101,7 +100,7 @@ public sealed unsafe class AudioPresenter(
         _running = true;
 
         // Configure audio settings.
-        SampleRate = config.Audio.SampleRate;
+        var sampleRate = config.Audio.SampleRate;
         var spec = new SDL_AudioSpec
         {
             channels = 1,
@@ -117,11 +116,10 @@ public sealed unsafe class AudioPresenter(
         _stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, &OnCallback, 0);
         if (_stream == null)
             throw new SdlException("Failed to create audio stream");
-        SDL_SetAudioStreamGain(_stream, 0.14f);
         Presenters.Add((nint)_stream, this);
 
         // Set up event handlers.
-        composer.SampleRate = SampleRate;
+        composer.SampleRate = sampleRate;
 
         // Connect the engine timer to the composer.
         scheduler.Tick += OnEngineTick;
@@ -154,11 +152,6 @@ public sealed unsafe class AudioPresenter(
         e.Memory.Dispose();
     }
 
-    /// <summary>
-    /// Sampling rate of the audio stream.
-    /// </summary>
-    public int SampleRate { get; private set; }
-
     /// <inheritdoc />
     public void Stop()
     {
@@ -175,12 +168,8 @@ public sealed unsafe class AudioPresenter(
         _sdlContext = null;
     }
 
-    /// <summary>
-    /// Output gain of the audio signal. Defaults to 0.14f. Due to the output
-    /// signal being pure square waves, it is generally recommended to keep this
-    /// value relatively low (it is very loud for its peak level.)
-    /// </summary>
-    public float Volume
+    /// <inheritdoc />
+    public float Gain
     {
         get => SDL_GetAudioStreamGain(_stream);
         set => SDL_SetAudioStreamGain(_stream, value);

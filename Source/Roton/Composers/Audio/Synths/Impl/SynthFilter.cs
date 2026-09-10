@@ -29,10 +29,13 @@ internal sealed class SynthFilter : ISynthFilter
         _alpha = 1f - (float)Math.Exp(-2.0 * Math.PI * cutoff / sampleRate);
 
     /// <inheritdoc />
-    public float LowPass(float x)
+    public void LowPass(Span<float> buffer)
     {
-        _filterState += _alpha * (x - _filterState);
-        _filterState2 += _alpha * (_filterState - _filterState2);
-        return _filterState2;
+        for (var i = 0; i < buffer.Length; i++)
+        {
+            _filterState += _alpha * (buffer[i] - _filterState);
+            _filterState2 += _alpha * (_filterState - _filterState2);
+            buffer[i] = _filterState2;
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using Roton.Composers.Audio.Drums;
 using Roton.Composers.Audio.Steps;
 using Roton.Composers.Audio.Tones;
@@ -40,7 +42,25 @@ internal sealed class AudioStreamComposer(
         var toneLen = toneComposer.ComposeTone(tempBuffer);
         tempBuffer = tempBuffer.Slice(toneLen);
 
+        var count = buffer.Length - tempBuffer.Length;
+        var outBuffer = buffer.Slice(0, count);
         tempBuffer.Clear();
+
+        if (count > 0)
+        {
+            // SIMD assisted amplification.
+
+            var vecBuffer = MemoryMarshal.Cast<float, Vector4>(outBuffer);
+            var vecLeftover = outBuffer.Slice(vecBuffer.Length * 4);
+            var gain = config.Audio.PreGain * config.Audio.Gain;
+
+            for (var i = 0; i < vecBuffer.Length; i++)
+                vecBuffer[i] *= gain;
+        
+            for (var i = 0; i < vecLeftover.Length; i++)
+                vecLeftover[i] *= gain;
+        }
+        
         return buffer.Length;
     }
 

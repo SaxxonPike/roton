@@ -13,9 +13,11 @@
     },
     "Audio": {
       "DrumSpeed": 64,
+      "Gain": 0.14,
       "Interpolate": false,
       "LowPass": true,
       "LowPassCutoff": 12000,
+      "PreGain": 0.5,
       "SampleRate": 44100
     },
     "Joystick": {

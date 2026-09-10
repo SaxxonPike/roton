@@ -14,4 +14,9 @@ public interface IAudioPresenter
     /// Stops streaming audio and closes the audio device.
     /// </summary>
     void Stop();
+
+    /// <summary>
+    /// Output gain of the audio signal. 1.0 is full volume, 0.0 is silent.
+    /// </summary>
+    float Gain { get; set; }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Roton.Composers.Audio.Synths;
 
 /// <summary>
@@ -19,11 +21,8 @@ public interface ISynthFilter
     /// <summary>
     /// Applies the filter.
     /// </summary>
-    /// <param name="x">
-    /// The input sample.
+    /// <param name="buffer">
+    /// The input samples to modify.
     /// </param>
-    /// <returns>
-    /// The processed sample.
-    /// </returns>
-    float LowPass(float x);
+    void LowPass(Span<float> buffer);
 }
