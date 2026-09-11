@@ -1,4 +1,3 @@
-using System;
 using Roton.Emulation.Actions;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
@@ -16,7 +15,7 @@ internal sealed class Game(
     IActorList actors,
     IActionList actions,
     ITiles tiles,
-    ITimerList timers,
+    IClock clock,
     IElementList elements,
     IBoardUpdater boardUpdater,
     IWorld world,
@@ -39,7 +38,7 @@ internal sealed class Game(
     IGameThread gameThread,
     IConfig config,
     IHighScoreHud highScoreHud,
-    ITimeConverter timeConverter
+    ITime time
 )
     : IGame
 {
@@ -117,7 +116,7 @@ internal sealed class Game(
             {
                 state.ActIndex = state.ActorCount + 1;
 
-                if (timers.Player.Clock(1, timeConverter.HsecToTicks(25)) > 0)
+                if (state.PlayerTimer.UpdateByRealTime(time.Elapsed, 25))
                     alternating = !alternating;
 
                 if (alternating)
@@ -194,7 +193,8 @@ internal sealed class Game(
             if (state.ActIndex > state.ActorCount)
             {
                 if (!state.BreakGameLoop && !state.GamePaused)
-                    if (state.GameWaitTime <= 0 || timers.Player.Clock(1, state.GameWaitTime) > 0)
+                    if (state.GameWaitTime <= 0 || 
+                        state.PlayerTimer.UpdateByGameTicks(time.Elapsed, state.GameWaitTime))
                     {
                         state.GameCycle++;
                         if (state.GameCycle > facts.MaxGameCycle) 

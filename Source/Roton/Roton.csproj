@@ -19,4 +19,7 @@
       <Folder Include="Editors\Original\" />
       <Folder Include="Editors\Super\" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="Emulation\Data\TimerExtensions.cs" />
+    </ItemGroup>
 </Project>

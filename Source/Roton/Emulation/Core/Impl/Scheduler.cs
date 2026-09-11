@@ -15,26 +15,26 @@ internal sealed class Scheduler : IScheduler
 
     private readonly IState _state;
     private readonly IConfig _config;
-    private readonly IBoardTime _boardTime;
     private readonly IClock _clock;
     private readonly IGameThread _gameThread;
     private readonly ISoundPlayer _soundPlayer;
+    private readonly ITime _time;
     private readonly Func<bool> _waitForTickFastDelegate;
     private readonly Func<bool> _waitForTickNormalDelegate;
 
     public Scheduler(IState state,
         IConfig config,
-        IBoardTime boardTime,
         IClock clock,
         IGameThread gameThread,
-        ISoundPlayer soundPlayer)
+        ISoundPlayer soundPlayer,
+        ITime time)
     {
         _state = state;
         _config = config;
-        _boardTime = boardTime;
         _clock = clock;
         _gameThread = gameThread;
         _soundPlayer = soundPlayer;
+        _time = time;
 
         _waitForTickFastDelegate = WaitForTickFastCondition;
         _waitForTickNormalDelegate = WaitForTickNormalCondition;
@@ -48,6 +48,7 @@ internal sealed class Scheduler : IScheduler
         _soundPlayer.UpdateSound();
         Tick?.Invoke(this, EventArgs.Empty);
         Interlocked.Decrement(ref _ticksToRun);
+        _time.Tick();
 
         return false;
     }
@@ -60,15 +61,17 @@ internal sealed class Scheduler : IScheduler
         if (_ticksToRun < 3)
             _ticksToRun++;
 
-        if (!_state.GamePaused)
-            _boardTime.Advance();
-
         if (!_gameThread.ThreadActive)
             _clock.Stop();
     }
 
-    public void Reset() =>
+    public void Reset()
+    {
         _ticksToRun = 0;
+        _state.SoundTimeCheckCounter = 36;
+        _state.TimerTicks = 0;
+        _state.PlayerTimer.Reset();
+    }
 
     public void WaitForTick()
     {
@@ -83,6 +86,7 @@ internal sealed class Scheduler : IScheduler
             _soundPlayer.UpdateSound();
 
             Tick?.Invoke(this, EventArgs.Empty);
+            _time.Tick();
 
             SpinWait.SpinUntil(_waitForTickNormalDelegate);
 

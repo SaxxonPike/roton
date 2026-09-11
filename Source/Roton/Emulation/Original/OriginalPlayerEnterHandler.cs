@@ -6,7 +6,6 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalPlayerEnterHandler(
-    IBoardTime boardTime,
     IBoard board,
     IActorList actors,
     IAlerts alerts,
@@ -18,7 +17,6 @@ internal sealed class OriginalPlayerEnterHandler(
 {
     public void EnterBoard()
     {
-        boardTime.Reset();
         board.Entrance = actors.Player.Location;
         if (board.IsDark && alerts.Dark)
         {

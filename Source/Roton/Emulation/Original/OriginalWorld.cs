@@ -7,7 +7,8 @@ namespace Roton.Emulation.Original;
 internal sealed class OriginalWorld(
     IMemory memory,
     IKeyList keys,
-    IFlags flags)
+    IFlags flags,
+    ITimerFactory timerFactory)
     : IWorld
 {
     private Word _stones;
@@ -48,6 +49,9 @@ internal sealed class OriginalWorld(
 
     public ref Word TimePassed =>
         ref memory.GetRef<Word>(0x491E);
+
+    public ITimer TimeLimitTimer { get; } = 
+        timerFactory.Create(0x4920);
 
     public ref Word TimePassedHSec =>
         ref memory.GetRef<Word>(0x4920);

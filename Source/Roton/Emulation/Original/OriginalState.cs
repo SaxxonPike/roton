@@ -17,13 +17,15 @@ internal sealed class OriginalState : IState
     public OriginalState(
         IMemory memory,
         ICodeHeap heap,
-        IEngineResourceService engineResourceService)
+        IEngineResourceService engineResourceService,
+        ITimerFactory timerFactory)
     {
         _memory = memory;
 
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
         DefaultActor = new Actor(_memory, heap, 0x0076, 0x0021);
         LineChars = new ByteString(_memory, 0x0098);
+        PlayerTimer = timerFactory.Create(0x740A);
         ProgressAnimation = new ProgressAnimation(_memory, 0x00B2);
         ProgressColors = new Int8List(_memory, 0x00AA, 8);
         SoundBuffer = new SoundBufferList(memory, 0x7E90);
@@ -181,7 +183,7 @@ internal sealed class OriginalState : IState
     public ref Bool WorldLoaded =>
         ref _memory.GetRef<Bool>(0x7428);
 
-    public ref Word SoundTimeCheckHSec => 
+    public ref Word SoundTimeCheckHSec =>
         ref _memory.GetRef<Word>(0x7FA2);
 
     public ref Word TimerTicks =>
@@ -189,6 +191,8 @@ internal sealed class OriginalState : IState
 
     public ref Word SoundTimeCheckCounter =>
         ref _memory.GetRef<Word>(0x7F9C);
+
+    public ITimer PlayerTimer { get; }
 
     public ReadOnlySpan<char> GetOopWord(Span<char> buffer)
     {

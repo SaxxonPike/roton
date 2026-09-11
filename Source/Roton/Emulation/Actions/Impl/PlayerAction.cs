@@ -24,7 +24,6 @@ internal sealed class PlayerAction(
     ISounds sounds,
     IFacts facts,
     IInteractionList interactions,
-    ITimerList timers,
     IConfig config,
     ISoundPlayer soundPlayer,
     IWorldManager worldManager,
@@ -38,7 +37,7 @@ internal sealed class PlayerAction(
     IPlayerInputHandler playerInputHandler,
     ICheater cheater,
     IDamager damager,
-    IBoardTime boardTime)
+    ITime time)
     : IAction
 {
     /// <remarks>
@@ -229,7 +228,7 @@ internal sealed class PlayerAction(
         {
             if (world.Health > 0)
             {
-                if (timers.TimeLimit.Clock(boardTime.Elapse(), 100) > 0)
+                if (world.TimeLimitTimer.UpdateByRealTime(time.Elapsed, 100))
                 {
                     world.TimePassed++;
 

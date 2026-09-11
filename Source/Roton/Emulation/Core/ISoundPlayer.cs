@@ -16,10 +16,13 @@ public interface ISoundPlayer
 
     void PlayStep();
 
-    /// <summary>
+    /// <remarks>
     /// RoZ: PauseOnError (without delay)
-    /// </summary>
+    /// </remarks>
     void PlayErrorSound();
 
+    /// <remarks>
+    /// RoZ: SoundTimerHandler
+    /// </remarks>
     void UpdateSound();
 }

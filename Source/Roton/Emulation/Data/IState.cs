@@ -59,10 +59,26 @@ public interface IState
     ref Word StartBoard { get; }
     string WorldFileName { get; set; }
     ref Bool WorldLoaded { get; }
-    
+
+    /// <remarks>
+    /// RoZ: SoundTimeCheckHSec
+    /// </remarks>
     ref Word SoundTimeCheckHSec { get; }
+
+    /// <remarks>
+    /// RoZ: TimerTicks
+    /// </remarks>
     ref Word TimerTicks { get; }
+
+    /// <remarks>
+    /// RoZ: SoundTimeCheckCounter
+    /// </remarks>
     ref Word SoundTimeCheckCounter { get; }
+
+    /// <remarks>
+    /// RoZ: TickTimeCounter
+    /// </remarks>
+    ITimer PlayerTimer { get; }
 
     ReadOnlySpan<char> GetOopWord(Span<char> buffer);
     void SetOopWord(ReadOnlySpan<char> buffer);

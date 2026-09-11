@@ -55,6 +55,12 @@ internal sealed class SoundPlayer(
 
     public void UpdateSound()
     {
+        state.TimerTicks++;
+        
+        if (state.SoundTimeCheckCounter > 0 &&
+            (state.SoundTimeCheckCounter & 1) == 0)
+            state.SoundTimeCheckCounter--;
+
         if (!state.SoundPlaying)
         {
             state.SoundBuffer.Clear();

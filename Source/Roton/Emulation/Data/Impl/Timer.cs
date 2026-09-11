@@ -1,16 +1,55 @@
-﻿namespace Roton.Emulation.Data.Impl;
+﻿using System;
+using Roton.Emulation.Core;
 
-internal sealed class Timer : ITimer
+namespace Roton.Emulation.Data.Impl;
+
+internal sealed class Timer(
+    IMemory memory,
+    int offset,
+    IConfig config)
+    : ITimer
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
+    private const long TsTicksPerHsec = 10 * TimeSpan.TicksPerMillisecond;
 
-    internal Timer(IMemory memory, int offset)
+    public TimeSpan LastUpdate
     {
-        _memory = memory;
-        _offset = offset;
+        get;
+        set
+        {
+            field = value;
+            Value = unchecked((short)(value.Ticks / TsTicksPerHsec));
+        }
     }
 
-    public ref Word Ticks =>
-        ref _memory.GetRef<Word>(_offset);
+    public ref Word Value =>
+        ref memory.GetRef<Word>(offset);
+
+    private bool Update(TimeSpan totalElapsed, TimeSpan interval)
+    {
+        var nextValue = LastUpdate + interval;
+        if (nextValue > totalElapsed)
+            return false;
+
+        LastUpdate = totalElapsed;
+        return true;
+    }
+
+    public bool UpdateByGameTicks(TimeSpan totalElapsed, int intervalGameTicks)
+    {
+        var intervalTsTicks = TsTicksPerHsec * intervalGameTicks *
+                              config.Engine.MasterClockNumerator * 100 /
+                              config.Engine.MasterClockDenominator;
+        var intervalTs = TimeSpan.FromTicks(intervalTsTicks);
+        return Update(totalElapsed, intervalTs);
+    }
+
+    public bool UpdateByRealTime(TimeSpan totalElapsed, int intervalHsec)
+    {
+        var intervalTsTicks = (long)intervalHsec * 10 * TimeSpan.TicksPerMillisecond;
+        var intervalTs = TimeSpan.FromTicks(intervalTsTicks);
+        return Update(totalElapsed, intervalTs);
+    }
+
+    public void Reset() =>
+        LastUpdate = TimeSpan.Zero;
 }

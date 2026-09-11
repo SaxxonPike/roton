@@ -14,9 +14,11 @@ public readonly struct Word(short value) : IEquatable<Word>, IEquatable<int>, IE
 {
     public static explicit operator byte(Word word) => unchecked((byte)word.Value);
     public static implicit operator short(Word word) => unchecked((short)word.Value);
+    public static implicit operator ushort(Word word) => unchecked((ushort)word.Value);
     public static implicit operator int(Word word) => word.Value;
     public static implicit operator Word(byte value) => new(value);
     public static implicit operator Word(short value) => new(value);
+    public static implicit operator Word(ushort value) => new(unchecked((short)value));
     public static implicit operator Word(int value) => new(unchecked((short)value));
 
     public static bool operator ==(Word left, Word right) => left.Equals(right);

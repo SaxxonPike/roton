@@ -6,7 +6,6 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperPlayerEnterHandler(
-    IBoardTime boardTime,
     IBroadcaster broadcaster,
     IFacts facts,
     IBoard board,
@@ -18,7 +17,6 @@ internal sealed class SuperPlayerEnterHandler(
 {
     public void EnterBoard()
     {
-        boardTime.Reset();
         broadcaster.BroadcastLabel(0, facts.EnterLabel, false);
         board.Entrance = actors.Player.Location;
         if (camera.UpdateCamera())

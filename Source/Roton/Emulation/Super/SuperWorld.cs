@@ -7,7 +7,8 @@ namespace Roton.Emulation.Super;
 internal sealed class SuperWorld(
     IMemory memory,
     IKeyList keys,
-    IFlags flags)
+    IFlags flags,
+    ITimerFactory timerFactory)
     : IWorld
 {
     private Word _torchCycles;
@@ -49,6 +50,9 @@ internal sealed class SuperWorld(
 
     public ref Word TimePassed =>
         ref memory.GetRef<Word>(0x79C8);
+
+    public ITimer TimeLimitTimer { get; } = 
+        timerFactory.Create(0x79CA);
 
     public ref Word TimePassedHSec =>
         ref memory.GetRef<Word>(0x79CA);

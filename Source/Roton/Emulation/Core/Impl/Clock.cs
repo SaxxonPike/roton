@@ -9,9 +9,6 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Super)]
 internal sealed class Clock(IConfig config) : IClock
 {
-    private readonly long _numerator = config.Engine.MasterClockNumerator;
-    private readonly long _denominator = config.Engine.MasterClockDenominator;
-
     private bool _running;
     private bool _initialized;
 
@@ -42,7 +39,11 @@ internal sealed class Clock(IConfig config) : IClock
     private void ThreadLoop()
     {
         var timer = new Stopwatch();
-        var frequency = Stopwatch.Frequency * _numerator / _denominator;
+        var frequency = Stopwatch.Frequency *
+                        config.Engine.MasterClockNumerator /
+                        config.Engine.MasterClockDenominator;
+        var tsFrequency = TimeSpan.FromTicks(frequency);
+
         var lastTime = timer.ElapsedTicks;
         timer.Start();
 
