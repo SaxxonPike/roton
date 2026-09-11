@@ -2,7 +2,7 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Core;
 
-public static class AdjacentFinderExtensions
+internal static class AdjacentFinderExtensions
 {
     public static int GetAdjacent(this IAdjacentFinder adjacentFinder, Location location, int id) =>
         (adjacentFinder.TestAdjacent(location + Vector.North, id) ? 1 : 0) |

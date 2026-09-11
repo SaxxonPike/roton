@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
-public static class ScrollContentExtensions
+internal static class ScrollContentExtensions
 {
     public static void AddLines(this IScrollContent scrollContent, params IEnumerable<string> lines)
     {

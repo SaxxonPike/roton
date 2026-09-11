@@ -2,7 +2,7 @@ using System;
 
 namespace Roton.Emulation.Core;
 
-public static class TerminalExtensions
+internal static class TerminalExtensions
 {
     extension(ITerminal terminal)
     {

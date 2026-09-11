@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data;
 
-public static class ActorExtensions
+internal static class ActorExtensions
 {
     extension(IActor self)
     {

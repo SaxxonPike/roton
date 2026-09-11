@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Infrastructure;
 
-public static class Exceptions
+internal static class Exceptions
 {
     public static RotonException CorruptedData => new(
         "The data appears to be corrupt."

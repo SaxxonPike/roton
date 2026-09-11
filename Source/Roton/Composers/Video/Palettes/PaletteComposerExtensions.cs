@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Roton.Composers.Video.Palettes;
 
-public static class PaletteComposerExtensions
+internal static class PaletteComposerExtensions
 {
     public static IEnumerable<Color> ComposeAllColors(this IPaletteComposer composer)
     {

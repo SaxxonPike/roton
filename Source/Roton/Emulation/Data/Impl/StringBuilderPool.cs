@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Roton.Emulation.Data.Impl;
 
-public static class StringBuilderPool
+internal static class StringBuilderPool
 {
     private static readonly ConcurrentQueue<StringBuilder> Pool = [];
     

@@ -4,7 +4,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data;
 
-public static class MemoryExtensions
+internal static class MemoryExtensions
 {
     extension(IMemory memory)
     {

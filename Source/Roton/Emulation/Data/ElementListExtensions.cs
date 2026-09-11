@@ -1,6 +1,6 @@
 ﻿namespace Roton.Emulation.Data;
 
-public static class ElementListExtensions
+internal static class ElementListExtensions
 {
     extension(IElementList elements)
     {

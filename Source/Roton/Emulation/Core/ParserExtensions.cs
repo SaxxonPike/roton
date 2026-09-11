@@ -2,7 +2,7 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Core;
 
-public static class ParserExtensions
+internal static class ParserExtensions
 {
     extension(IParser parser)
     {
