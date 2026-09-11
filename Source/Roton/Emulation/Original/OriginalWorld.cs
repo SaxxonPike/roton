@@ -50,7 +50,7 @@ internal sealed class OriginalWorld(
     public ref Word TimePassed =>
         ref memory.GetRef<Word>(0x491E);
 
-    public ITimer TimeLimitTimer { get; } = 
+    public ITimer TimeLimitTimer { get; } =
         timerFactory.Create(0x4920);
 
     public ref Word TimePassedHSec =>
