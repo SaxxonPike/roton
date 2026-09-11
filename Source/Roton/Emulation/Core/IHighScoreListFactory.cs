@@ -1,4 +1,6 @@
-namespace Roton.Emulation.Data;
+using Roton.Emulation.Data;
+
+namespace Roton.Emulation.Core;
 
 public interface IHighScoreListFactory
 {

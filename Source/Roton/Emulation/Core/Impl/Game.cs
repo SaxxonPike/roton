@@ -15,7 +15,6 @@ internal sealed class Game(
     IActorList actors,
     IActionList actions,
     ITiles tiles,
-    IClock clock,
     IElementList elements,
     IBoardUpdater boardUpdater,
     IWorld world,

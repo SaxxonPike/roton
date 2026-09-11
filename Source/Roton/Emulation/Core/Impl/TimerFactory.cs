@@ -1,7 +1,8 @@
-using Roton.Emulation.Core;
+using Roton.Emulation.Data;
+using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
-namespace Roton.Emulation.Data.Impl;
+namespace Roton.Emulation.Core.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
