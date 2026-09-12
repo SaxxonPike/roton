@@ -56,7 +56,7 @@ internal sealed class CodeExecutor(
 
                 context.NextLine = true;
                 context.PreviousInstruction = instruction;
-                context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
+                context.Command = ReadActorCodeByte(ref context, ref instruction, out oopByte, code);
 
                 // Skip labels.
 
@@ -64,7 +64,7 @@ internal sealed class CodeExecutor(
                 {
                     parser.DiscardLine(index, ref instruction);
                     tracer?.TraceOop(ref context, ref instruction);
-                    context.Command = ReadActorCodeByte(ref context, ref instruction, ref oopByte, code);
+                    context.Command = ReadActorCodeByte(ref context, ref instruction, out oopByte, code);
                 }
 
                 switch (context.Command)
@@ -93,7 +93,7 @@ internal sealed class CodeExecutor(
 
                         objectMover.ExecuteDirection(ref context, vector);
 
-                        if (ReadActorCodeByte(ref context, ref instruction, ref oopByte, code) != '\r')
+                        if (ReadActorCodeByte(ref context, ref instruction, out oopByte, code) != '\r')
                             instruction--;
 
                         context.Moved = true;
@@ -172,7 +172,7 @@ internal sealed class CodeExecutor(
         scrollContent.ClearLines();
     }
 
-    private static char ReadActorCodeByte(ref OopContext context, ref Word instruction, ref PChar oopByte,
+    private static char ReadActorCodeByte(ref OopContext context, ref Word instruction, out PChar oopByte,
         ReadOnlySpan<char> code)
     {
         var value = (char)0;

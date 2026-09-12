@@ -1,6 +1,7 @@
 using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 using Roton.Test.Infrastructure;
 
 namespace Roton.Test.Roton.Integration.Elements;
@@ -184,7 +185,7 @@ public class BoardEdgeTests(Context context) : AllContextTestFixture(context)
 
         // Set the player "under tile" on the target board. This is
         // something to check due to the Super engine behavior.
-        Player.UnderTile = new(Elements.FakeId, 1);
+        Player.UnderTile = new Tile(Elements.FakeId, 1);
 
         // Set up board 0.
         GoToBoard(0);

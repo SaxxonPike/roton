@@ -40,7 +40,7 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
         return buffer;
     }
         
-    private void RestoreBuffer(IReadOnlyList<AnsiChar> buffer, int left, int top, int width, int height)
+    private void RestoreBuffer(AnsiChar[] buffer, int left, int top, int width, int height)
     {
         var i = 0;
         for (var y = 0; y < height; y++)

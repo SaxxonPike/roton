@@ -115,7 +115,7 @@ internal sealed class Game(
             {
                 state.ActIndex = state.ActorCount + 1;
 
-                if (state.PlayerTimer.UpdateByRealTime(time.Elapsed, 25))
+                if (state.PlayerTimer.UpdateByRealTime(time.Elapsed, facts.PauseFlashInterval))
                     alternating = !alternating;
 
                 if (alternating)
@@ -210,30 +210,30 @@ internal sealed class Game(
                 scheduler.WaitForTick();
             }
 
-            if (state.BreakGameLoop)
+            if (!state.BreakGameLoop) 
+                continue;
+
+            soundPlayer.ClearSound();
+            if (state.PlayerElement == elements.PlayerId)
             {
-                soundPlayer.ClearSound();
-                if (state.PlayerElement == elements.PlayerId)
-                {
-                    // This game speed reset isn't here in the original code,
-                    // but it solves some issues with game speed when returning
-                    // to the title screen.
+                // This game speed reset isn't here in the original code,
+                // but it solves some issues with game speed when returning
+                // to the title screen.
 
-                    ResetGameSpeed();
+                ResetGameSpeed();
 
-                    if (world.Health <= 0)
-                        EnterHighScore(world.Score);
-                }
-                else if (state.PlayerElement == elements.MonitorId)
-                {
-                    hud.ClearTitleStatus();
-                }
-
-                var element = elements.Player();
-                tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
-                state.GameOver = false;
-                break;
+                if (world.Health <= 0)
+                    EnterHighScore(world.Score);
             }
+            else if (state.PlayerElement == elements.MonitorId)
+            {
+                hud.ClearTitleStatus();
+            }
+
+            var element = elements.Player();
+            tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
+            state.GameOver = false;
+            break;
         }
     }
 

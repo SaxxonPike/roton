@@ -96,14 +96,21 @@ internal sealed class InputReader(
             finalKeyCode = EngineKeyCode.Down;
         }
 
-        if (finalKeyCode == EngineKeyCode.Left)
-            buttons |= JoystickButtons.Left;
-        else if (finalKeyCode == EngineKeyCode.Right)
-            buttons |= JoystickButtons.Right;
-        else if (finalKeyCode == EngineKeyCode.Up)
-            buttons |= JoystickButtons.Up;
-        else if (finalKeyCode == EngineKeyCode.Down)
-            buttons |= JoystickButtons.Down;
+        switch (finalKeyCode)
+        {
+            case EngineKeyCode.Left:
+                buttons |= JoystickButtons.Left;
+                break;
+            case EngineKeyCode.Right:
+                buttons |= JoystickButtons.Right;
+                break;
+            case EngineKeyCode.Up:
+                buttons |= JoystickButtons.Up;
+                break;
+            case EngineKeyCode.Down:
+                buttons |= JoystickButtons.Down;
+                break;
+        }
 
         // The other buttons only activate when pressed and not every frame they're held.
 

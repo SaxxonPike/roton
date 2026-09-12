@@ -22,13 +22,13 @@ internal sealed class BindCommand(
         var search = new SearchContext();
         var target = parser.ReadWord(context.Index, ref instruction, buffer);
 
-        if (targetEvaluator.TryEval(context.Index, ref search, target))
-        {
-            heap.Free(context.Actor.Pointer);
-            var targetActor = actors[search.Index];
-            context.Actor.Pointer = targetActor.Pointer;
-            context.Actor.Length = targetActor.Length;
-            instruction = 0;
-        }
+        if (!targetEvaluator.TryEval(context.Index, ref search, target))
+            return;
+
+        heap.Free(context.Actor.Pointer);
+        var targetActor = actors[search.Index];
+        context.Actor.Pointer = targetActor.Pointer;
+        context.Actor.Length = targetActor.Length;
+        instruction = 0;
     }
 }

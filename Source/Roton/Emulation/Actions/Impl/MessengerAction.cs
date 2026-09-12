@@ -22,19 +22,20 @@ internal sealed class MessengerAction(
     public void Act(int index)
     {
         var actor = actors[index];
-        if (actor.Location.X == 0)
-        {
-            hud.DrawMessage(actor.P2 % 7 + 9);
 
-            actor.P2--;
-            if (actor.P2 > 0)
-                return;
+        if (actor.Location.X != 0)
+            return;
 
-            actorManager.Free(index);
-            state.ActIndex--;
-            hud.UpdateBorder();
-            state.Message = string.Empty;
-            state.Message2 = string.Empty;
-        }
+        hud.DrawMessage(actor.P2 % 7 + 9);
+
+        actor.P2--;
+        if (actor.P2 > 0)
+            return;
+
+        actorManager.Free(index);
+        state.ActIndex--;
+        hud.UpdateBorder();
+        state.Message = string.Empty;
+        state.Message2 = string.Empty;
     }
 }

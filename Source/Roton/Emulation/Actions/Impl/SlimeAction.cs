@@ -59,12 +59,12 @@ internal sealed class SlimeAction(
                 spawnCount++;
             }
 
-            if (spawnCount == 0)
-            {
-                actorManager.Free(index);
-                tiles[source] = slimeTrailTile;
-                boardUpdater.UpdateBoard(source);
-            }
+            if (spawnCount != 0)
+                return;
+
+            actorManager.Free(index);
+            tiles[source] = slimeTrailTile;
+            boardUpdater.UpdateBoard(source);
         }
         else
         {

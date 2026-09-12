@@ -72,11 +72,11 @@ internal sealed class Actor(
                 var length = data.Length;
                 for (var i = 1; i < length; i++)
                 {
-                    if (data[i] == 0x0D)
-                    {
-                        name = data.Slice(1, i - 1);
-                        break;
-                    }
+                    if (data[i] != 0x0D) 
+                        continue;
+
+                    name = data.Slice(1, i - 1);
+                    break;
                 }
             }
 

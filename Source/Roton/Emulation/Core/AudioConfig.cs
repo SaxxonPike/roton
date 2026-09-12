@@ -10,7 +10,7 @@ public sealed class AudioConfig
     /// <summary>
     /// Number of drum frequencies processed per second.
     /// </summary>
-    public int DrumSpeed { get; set; } = 64;
+    public int DrumDuration { get; set; } = 64;
 
     /// <summary>
     /// If true, a cutoff filter is enabled and applied to the sound output.

@@ -133,12 +133,12 @@ public abstract class GameSerializer(
             target.Write([.. memory.Read(actor.Offset, ActorDataLength)]);
 
             // write code if applicable
-            if (!code.IsEmpty)
-            {
-                var codeBytes = new byte[code.Length];
-                Cp437.CharsToBytes(code, codeBytes);
-                target.Write(codeBytes);
-            }
+            if (code.IsEmpty)
+                continue;
+
+            var codeBytes = new byte[code.Length];
+            Cp437.CharsToBytes(code, codeBytes);
+            target.Write(codeBytes);
         }
     }
 
@@ -168,12 +168,12 @@ public abstract class GameSerializer(
             }
         }
 
-        if (count > 0)
-        {
-            target.Write((byte)(count & 0xFF));
-            target.Write((byte)(id & 0xFF));
-            target.Write((byte)(color & 0xFF));
-        }
+        if (count <= 0)
+            return;
+
+        target.Write((byte)(count & 0xFF));
+        target.Write((byte)(id & 0xFF));
+        target.Write((byte)(color & 0xFF));
     }
 
     private void UnpackActors(BinaryReader source, int count)
@@ -210,13 +210,14 @@ public abstract class GameSerializer(
         // now check to see if any are in #bind
         for (var i = 0; i <= count; i++)
         {
-            if (actorList[i].Length < 0)
-            {
-                var actorCodeSource = new Actor(memory, heap,
-                    ActorDataOffset + -actorList[i].Length * ActorDataLength, ActorDataLength);
-                actorList[i].Length = actorCodeSource.Length;
-                actorList[i].Pointer = actorCodeSource.Pointer;
-            }
+            if (actorList[i].Length >= 0)
+                continue;
+
+            var actorCodeSource = new Actor(memory, heap,
+                ActorDataOffset + -actorList[i].Length * ActorDataLength, ActorDataLength);
+
+            actorList[i].Length = actorCodeSource.Length;
+            actorList[i].Pointer = actorCodeSource.Pointer;
         }
     }
 

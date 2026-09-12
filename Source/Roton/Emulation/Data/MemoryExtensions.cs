@@ -8,7 +8,7 @@ internal static class MemoryExtensions
 {
     extension(IMemory memory)
     {
-        internal Span<T> GetSpan<T>(int offset) where T : struct =>
+        private Span<T> GetSpan<T>(int offset) where T : struct =>
             MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)));
 
         internal Span<T> GetSpan<T>(int offset, int count) where T : struct =>
@@ -137,20 +137,22 @@ internal static class MemoryExtensions
                 var span = memory.Data;
                 var length = value.Length & 0xFF;
                 span[offset & 0xFFFF] = (byte)length;
-                if (length > 0)
+
+                if (length <= 0)
+                    return;
+
+                var destination = span.Slice((offset + 1) & 0xFFFF);
+
+                // Handle wrap-around if necessary
+                if (destination.Length >= length)
                 {
-                    var destination = span.Slice((offset + 1) & 0xFFFF);
-                    // Handle wrap-around if necessary
-                    if (destination.Length >= length)
-                    {
-                        value.ToBytes(destination.Slice(0, length));
-                    }
-                    else
-                    {
-                        // Fallback for wrap-around
-                        for (var i = 0; i < length; i++)
-                            span[(offset + 1 + i) & 0xFFFF] = Cp437.CharToByte(value[i]);
-                    }
+                    value.ToBytes(destination.Slice(0, length));
+                }
+                else
+                {
+                    // Fallback for wrap-around
+                    for (var i = 0; i < length; i++)
+                        span[(offset + 1 + i) & 0xFFFF] = Cp437.CharToByte(value[i]);
                 }
             }
         }

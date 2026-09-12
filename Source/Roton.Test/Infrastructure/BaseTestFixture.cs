@@ -51,9 +51,8 @@ public abstract class BaseTestFixture
         var assembly = GetType().Assembly;
         var fullPath = $"{assembly.GetName().Name}.Resources.{path}";
         var result = assembly.GetManifestResourceStream(fullPath);
-        if (result == null)
-            throw new RotonException($"Resource is missing: {fullPath}");
-        return result;
+
+        return result ?? throw new RotonException($"Resource is missing: {fullPath}");
     }
 
     protected byte[] GetResourceFile(string path)

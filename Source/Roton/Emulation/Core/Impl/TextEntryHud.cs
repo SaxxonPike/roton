@@ -44,12 +44,12 @@ internal sealed class TextEntryHud(
             var keyChar = (int)key;
             if (keyChar is >= 0x20 and <= 0x7F)
             {
-                if (length < maxLength)
-                {
-                    chars[length] = (char)key;
-                    length++;
-                    update = true;
-                }
+                if (length >= maxLength) 
+                    continue;
+
+                chars[length] = (char)key;
+                length++;
+                update = true;
             }
             else
             {

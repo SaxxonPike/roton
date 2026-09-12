@@ -151,10 +151,9 @@ internal sealed class Scroll(
             Title = title
         };
 
-        if (LoadHelpFile(fileName))
-            return ShowMessage(st, ShowLoop);
-
-        return default;
+        return LoadHelpFile(fileName) 
+            ? ShowMessage(st, ShowLoop) 
+            : default;
     }
 
     public ScrollResult ShowMessage(ReadOnlySpan<char> title, bool isHelp, int index,

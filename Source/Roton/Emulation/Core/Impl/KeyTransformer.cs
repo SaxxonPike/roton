@@ -17,7 +17,7 @@ internal sealed class KeyTransformer : IKeyTransformer
         public byte[] Alt { get; } = alt ?? natural;
     }
 
-    private static readonly IDictionary<AnsiKey, AnsiKeyMap> Map = new Dictionary<AnsiKey, AnsiKeyMap>
+    private static readonly Dictionary<AnsiKey, AnsiKeyMap> Map = new()
     {
         {AnsiKey.None, new AnsiKeyMap([], [], [], [])},
         {AnsiKey.A, new AnsiKeyMap([97], [65], [1], [0, 30])},

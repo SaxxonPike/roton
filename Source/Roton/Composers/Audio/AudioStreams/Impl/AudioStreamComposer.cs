@@ -46,21 +46,21 @@ internal sealed class AudioStreamComposer(
         var outBuffer = buffer.Slice(0, count);
         tempBuffer.Clear();
 
-        if (count > 0)
-        {
-            // SIMD assisted amplification.
+        if (count <= 0)
+            return buffer.Length;
 
-            var vecBuffer = MemoryMarshal.Cast<float, Vector4>(outBuffer);
-            var vecLeftover = outBuffer.Slice(vecBuffer.Length * 4);
-            var gain = config.Audio.PreGain * config.Audio.Gain;
+        // SIMD assisted amplification.
 
-            for (var i = 0; i < vecBuffer.Length; i++)
-                vecBuffer[i] *= gain;
-        
-            for (var i = 0; i < vecLeftover.Length; i++)
-                vecLeftover[i] *= gain;
-        }
-        
+        var vecBuffer = MemoryMarshal.Cast<float, Vector4>(outBuffer);
+        var vecLeftover = outBuffer.Slice(vecBuffer.Length * 4);
+        var gain = config.Audio.PreGain * config.Audio.Gain;
+
+        for (var i = 0; i < vecBuffer.Length; i++)
+            vecBuffer[i] *= gain;
+
+        for (var i = 0; i < vecLeftover.Length; i++)
+            vecLeftover[i] *= gain;
+
         return buffer.Length;
     }
 
@@ -82,7 +82,7 @@ internal sealed class AudioStreamComposer(
             dest[i] = src[i];
 
         Clear();
-        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumSpeed);
+        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumDuration);
     }
 
     public void PlayNote(int note)

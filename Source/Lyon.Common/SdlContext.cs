@@ -35,6 +35,9 @@ public sealed class SdlContext : IDisposable
     /// <param name="flags">
     /// Subsystems to ensure are initialized.
     /// </param>
+    /// <param name="throwOnFailure">
+    /// If true, failure will throw an exception.
+    /// </param>
     /// <returns>
     /// The new context.
     /// </returns>
@@ -60,12 +63,12 @@ public sealed class SdlContext : IDisposable
     {
         foreach (var flag in SplitFlags(flags))
         {
-            if (RefCounts.AddOrUpdate(flag, 1, (_, count) => count + 1) == 1)
-            {
-                var success = SDL_InitSubSystem(flag);
-                if (throwOnFailure && !success)
-                    throw new SdlException();
-            }
+            if (RefCounts.AddOrUpdate(flag, 1, (_, count) => count + 1) != 1)
+                continue;
+
+            var success = SDL_InitSubSystem(flag);
+            if (throwOnFailure && !success)
+                throw new SdlException();
         }
     }
 

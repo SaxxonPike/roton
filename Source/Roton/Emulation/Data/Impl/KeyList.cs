@@ -7,7 +7,7 @@ namespace Roton.Emulation.Data.Impl;
 public abstract class KeyList(IMemory memory, int offset)
     : IKeyList
 {
-    public int Count => 7;
+    private const int Count = 7;
 
     public ref Bool this[int index] =>
         ref memory.GetRef<Bool>(offset + index);

@@ -26,18 +26,19 @@ public static class ServiceCollectionExtensions
         {
             var contextString = context.ToString();
 
-            if (!string.IsNullOrWhiteSpace(contextString))
-            {
-                services.Configure<AudioConfig>(c => { config.GetSection($"Roton:{contextString}:Audio").Bind(c); });
-                services.Configure<EngineConfig>(c => { config.GetSection($"Roton:{contextString}:Engine").Bind(c); });
-                services.Configure<JoystickConfig>(c => { config.GetSection($"Roton:{contextString}:Joystick").Bind(c); });
-                services.Configure<VideoConfig>(c => { config.GetSection($"Roton:{contextString}:Video").Bind(c); });
-            }
+            if (string.IsNullOrWhiteSpace(contextString))
+                return services;
+
+            services.Configure<AudioConfig>(c => { config.GetSection($"Roton:{contextString}:Audio").Bind(c); });
+            services.Configure<EngineConfig>(c => { config.GetSection($"Roton:{contextString}:Engine").Bind(c); });
+            services.Configure<JoystickConfig>(c => { config.GetSection($"Roton:{contextString}:Joystick").Bind(c); });
+            services.Configure<VideoConfig>(c => { config.GetSection($"Roton:{contextString}:Video").Bind(c); });
 
             return services;
         }
-        
-        public IServiceCollection AddLyonConfig(string[] args, out IConfiguration config, out string? fileName)
+
+        public IServiceCollection AddLyonConfig(ICollection<string> args, out IConfiguration config,
+            out string? fileName)
         {
             var switches = args
                 .TakeWhile(s => s != "--")
@@ -83,10 +84,6 @@ public static class ServiceCollectionExtensions
             services.Configure<JoystickConfig>(c => { conf.GetSection("Roton:Joystick").Bind(c); });
             services.Configure<VideoConfig>(c => { conf.GetSection("Roton:Video").Bind(c); });
             services.AddScoped<IConfig, Config>();
-            
-            // services.AddScoped(c => c.GetRequiredService<IOptions<AudioConfig>>().Value);
-            // services.AddScoped(c => c.GetRequiredService<IOptions<EngineConfig>>().Value);
-            // services.AddScoped(c => c.GetRequiredService<IOptions<JoystickConfig>>().Value);
 
             config = conf;
             return services;

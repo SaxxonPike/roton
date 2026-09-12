@@ -42,7 +42,6 @@ internal sealed class Clock(IConfig config) : IClock
         var frequency = Stopwatch.Frequency *
                         config.Engine.MasterClockNumerator /
                         config.Engine.MasterClockDenominator;
-        var tsFrequency = TimeSpan.FromTicks(frequency);
 
         var lastTime = timer.ElapsedTicks;
         timer.Start();

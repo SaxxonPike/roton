@@ -169,7 +169,7 @@ internal sealed class WorldManager(
         if (string.IsNullOrEmpty(name))
             return;
 
-        LoadWorld(name!, false);
+        LoadWorld(name, false);
         state.StartBoard = world.BoardIndex;
         SetBoard(0);
 
@@ -186,7 +186,7 @@ internal sealed class WorldManager(
         if (string.IsNullOrEmpty(name))
             return false;
 
-        if (!LoadWorld(name!, true))
+        if (!LoadWorld(name, true))
             return false;
 
         state.StartBoard = world.BoardIndex;

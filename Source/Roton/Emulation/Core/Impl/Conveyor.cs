@@ -72,11 +72,11 @@ internal sealed class Conveyor(
                         boardUpdater.UpdateBoard(target);
                     }
 
-                    if (!elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
-                    {
-                        _tiles[source].Id = elements.EmptyId;
-                        boardUpdater.UpdateBoard(source);
-                    }
+                    if (elements[surrounding[(i + 8 + direction) % 8].Id].IsPushable)
+                        continue;
+
+                    _tiles[source].Id = elements.EmptyId;
+                    boardUpdater.UpdateBoard(source);
                 }
                 else
                 {

@@ -213,7 +213,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Actors[index].Vector = vector;
 
     protected void PlotTo(int x, int y, int id, int? color = null) =>
-        Tiles[new Location(x, y)] = (new Tile(id, color ?? RandomInt(0x00, 0xFF)));
+        Tiles[new Location(x, y)] = new Tile(id, color ?? RandomInt(0x00, 0xFF));
 
     protected int SpawnTo(int x, int y, int id, int? color = null)
     {
@@ -348,11 +348,11 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
             WorldManager.ClearBoard();
         }
 
-        if (BoardIndex != index)
-        {
-            WorldManager.PackBoard();
-            WorldManager.UnpackBoard(index);
-        }
+        if (BoardIndex == index)
+            return;
+
+        WorldManager.PackBoard();
+        WorldManager.UnpackBoard(index);
     }
 
     protected int BoardIndex
@@ -427,16 +427,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IKeyList Keys => World.Keys;
 
     protected bool GamePaused => State.GamePaused;
-
-    /// <summary>
-    /// Pass in ElementList IDs here. If the element is not present, the test will immediately
-    /// be considered a pass (as it cannot be tested but all is expected.)
-    /// </summary>
-    protected void RequireElement(int elementId)
-    {
-        if (elementId < 0)
-            Assert.Pass("Element does not exist in this context.");
-    }
 
     protected void TypeCheat(string cheat)
     {

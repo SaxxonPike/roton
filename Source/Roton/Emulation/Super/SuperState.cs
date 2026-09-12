@@ -28,7 +28,6 @@ internal sealed class SuperState : IState
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
         DefaultActor = new Actor(_memory, heap, 0x2262, 0x0019);
         LineChars = new ByteString(_memory, 0x22BA);
-        MasterTimer = timerFactory.Create(0xD0AE);
         PlayerTimer = timerFactory.Create(0xB95E);
         ProgressAnimation = new ProgressAnimation(_memory, 0x21C0);
         ProgressColors = new Int8List(_memory, 0x21B8, 8);
@@ -193,8 +192,6 @@ internal sealed class SuperState : IState
 
     public ref Word SoundTimeCheckHSec =>
         ref _memory.GetRef<Word>(0xD0B0);
-
-    public ITimer MasterTimer { get; }
 
     public ref Word TimerTicks =>
         ref _memory.GetRef<Word>(0xD0AE);

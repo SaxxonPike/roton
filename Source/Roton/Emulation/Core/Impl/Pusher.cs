@@ -18,34 +18,37 @@ internal sealed class Pusher(
     IDestroyer destroyer)
     : IPusher
 {
+    private ITiles _tiles = tiles;
+
     public void Push(Location location, Vector vector)
     {
-        ref var tile = ref tiles[location];
-        if (tile.Id == elements.SliderEwId && vector.Y == 0 ||
-            tile.Id == elements.SliderNsId && vector.X == 0 ||
-            elements[tile.Id].IsPushable)
+        ref var tile = ref _tiles[location];
+
+        if ((tile.Id != elements.SliderEwId || vector.Y != 0) &&
+            (tile.Id != elements.SliderNsId || vector.X != 0) &&
+            !elements[tile.Id].IsPushable)
+            return;
+
+        if (vector.IsZero())
         {
-            if (vector.IsZero())
-            {
-                // This would ordinarily cause an infinite loop.
-                tracer.TraceCrash("Push called with zero vector");
-                return;
-            }
-
-            ref var furtherTile = ref tiles[location + vector];
-            if (furtherTile.Id == elements.TransporterId)
-                Transport(location, vector);
-            else if (furtherTile.Id != elements.EmptyId)
-                Push(location + vector, vector);
-
-            var furtherElement = elements[furtherTile.Id];
-            if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elements.PlayerId)
-                destroyer.Destroy(location + vector);
-
-            furtherElement = elements[furtherTile.Id];
-            if (furtherElement.IsFloor)
-                MoveTile(location, location + vector);
+            // This would ordinarily cause an infinite loop.
+            tracer.TraceCrash("Push called with zero vector");
+            return;
         }
+
+        ref var furtherTile = ref _tiles[location + vector];
+        if (furtherTile.Id == elements.TransporterId)
+            Transport(location, vector);
+        else if (furtherTile.Id != elements.EmptyId)
+            Push(location + vector, vector);
+
+        var furtherElement = elements[furtherTile.Id];
+        if (!furtherElement.IsFloor && furtherElement.IsDestructible && furtherTile.Id != elements.PlayerId)
+            destroyer.Destroy(location + vector);
+
+        furtherElement = elements[furtherTile.Id];
+        if (furtherElement.IsFloor)
+            MoveTile(location, location + vector);
     }
 
     public void Transport(Location location, Vector vector)
@@ -61,7 +64,7 @@ internal sealed class Pusher(
                 tracer.TraceCrash("Transport called with zero vector");
                 return;
             }
-            
+
             var search = actor.Location;
             var target = new Location();
             var ended = false;
@@ -70,7 +73,7 @@ internal sealed class Pusher(
             while (!ended)
             {
                 search += vector;
-                var element = tiles.ElementAt(search);
+                var element = _tiles.ElementAt(search);
                 if (element.Id == elements.BoardEdgeId)
                 {
                     ended = true;
@@ -83,7 +86,7 @@ internal sealed class Pusher(
                         if (!element.IsFloor)
                         {
                             Push(search, vector);
-                            element = tiles.ElementAt(search);
+                            element = _tiles.ElementAt(search);
                         }
 
                         if (element.IsFloor)
@@ -98,19 +101,21 @@ internal sealed class Pusher(
                     }
                 }
 
-                if (element.Id == elements.TransporterId)
-                    if (actors.ActorAt(search).Vector == -vector)
-                        success = true;
+                if (element.Id != elements.TransporterId)
+                    continue;
+
+                if (actors.ActorAt(search).Vector == -vector)
+                    success = true;
             }
 
-            if (target.X > 0)
-            {
-                MoveTile(actor.Location - vector, target);
-                soundPlayer.PlaySound(3, sounds.Transporter);
-            }
+            if (target.X <= 0) 
+                return;
+
+            MoveTile(actor.Location - vector, target);
+            soundPlayer.PlaySound(3, sounds.Transporter);
         }
     }
-    
+
     /// <remarks>
     /// RoZ: ElementMove
     /// </remarks>
@@ -123,7 +128,7 @@ internal sealed class Pusher(
         }
         else
         {
-            tiles[target] = tiles[source];
+            _tiles[target] = _tiles[source];
             boardUpdater.UpdateBoard(target);
             tileRemover.RemoveItem(source);
             boardUpdater.UpdateBoard(source);

@@ -17,7 +17,6 @@ internal sealed class TileEvaluator(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
         var word = parser.ReadWord(context.Index, ref instruction, buffer);
-        var success = false;
         result = new Tile(0, 0);
 
         if (colors.Get(word) is { Value: > 0 } color)
@@ -27,13 +26,11 @@ internal sealed class TileEvaluator(
         }
 
         var elementId = elements.IndexOf(word);
-        if (elementId >= 0)
-        {
-            success = true;
-            result.Id = elementId;
-        }
+        if (elementId < 0) 
+            return false;
 
-        return success;
+        result.Id = elementId;
+        return true;
     }
 
 }

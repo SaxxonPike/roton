@@ -53,12 +53,11 @@ internal sealed class SpiderAction(
             return true;
         }
 
-        if (targetElement == elements.PlayerId)
-        {
-            attacker.Attack(index, target);
-            return true;
-        }
+        if (targetElement != elements.PlayerId) 
+            return false;
 
-        return false;
+        attacker.Attack(index, target);
+        return true;
+
     }
 }

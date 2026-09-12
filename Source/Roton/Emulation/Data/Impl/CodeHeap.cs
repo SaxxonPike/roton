@@ -8,18 +8,17 @@ namespace Roton.Emulation.Data.Impl;
 [Context(Context.Super)]
 internal sealed class CodeHeap : ICodeHeap
 {
-    private int _nextEntry;
     private readonly char[] _block = new char[short.MaxValue - 1];
 
-    public int Size => _nextEntry;
+    public int Size { get; private set; }
 
     public int Allocate(ReadOnlySpan<char> data)
     {
         if (data.Length == 0)
             return 0;
 
-        var offset = _nextEntry;
-        _nextEntry += data.Length;
+        var offset = Size;
+        Size += data.Length;
 
         data.CopyTo(_block.AsSpan(offset, data.Length));
         var result = offset | (data.Length << 16);
@@ -47,7 +46,7 @@ internal sealed class CodeHeap : ICodeHeap
     public void FreeAll()
     {
         _block.AsSpan().Clear();
-        _nextEntry = 0;
+        Size = 0;
     }
 
     public IReadOnlyList<(int Index, int Pointer)> Compact(IEnumerable<(int Index, int Pointer)> pointers)

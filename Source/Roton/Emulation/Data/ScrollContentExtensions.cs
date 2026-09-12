@@ -4,16 +4,19 @@ namespace Roton.Emulation.Data;
 
 internal static class ScrollContentExtensions
 {
-    public static void AddLines(this IScrollContent scrollContent, params IEnumerable<string> lines)
+    extension(IScrollContent scrollContent)
     {
-        foreach (var line in lines)
-            scrollContent.AddLine(line);
-    }
+        public void AddLines(params IEnumerable<string?> lines)
+        {
+            foreach (var line in lines)
+                scrollContent.AddLine(line);
+        }
 
-    public static string GetLine(this IScrollContent scrollContent, int index)
-    {
-        var line = (stackalloc char[512]);
-        var actualLine = scrollContent.GetLine(index, line);
-        return actualLine.ToString();
+        public string GetLine(int index)
+        {
+            var line = (stackalloc char[512]);
+            var actualLine = scrollContent.GetLine(index, line);
+            return actualLine.ToString();
+        }
     }
 }

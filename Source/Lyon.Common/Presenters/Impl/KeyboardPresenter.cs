@@ -14,7 +14,7 @@ public sealed class KeyboardPresenter : Keyboard, IKeyboardPresenter
     /// <summary>
     /// Maps SDL key codes to Roton key codes.
     /// </summary>
-    private static readonly IDictionary<SDL_Keycode, AnsiKey> Map = new Dictionary<SDL_Keycode, AnsiKey>
+    private static readonly Dictionary<SDL_Keycode, AnsiKey> Map = new Dictionary<SDL_Keycode, AnsiKey>
     {
         { SDL_Keycode.SDLK_A, AnsiKey.A },
         { SDL_Keycode.SDLK_B, AnsiKey.B },

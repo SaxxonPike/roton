@@ -42,9 +42,8 @@ internal sealed class FileDialog(
             return null;
 
         // If the user selects "Exit", which is always at the bottom of the list:
-        if (result.Index >= lineCount - 1)
-            return null;
-
-        return titleMap[result.Index];
+        return result.Index < lineCount - 1 
+            ? titleMap[result.Index]
+            : null;
     }
 }

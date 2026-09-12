@@ -348,12 +348,12 @@ internal sealed class SceneComposer : ISceneComposer
         var oldGlyphComposer = _glyphComposer;
         _glyphComposer = _glyphComposerFactory.Get(_fontData, Wide);
 
-        if (oldGlyphComposer != null)
-        {
-            if (_glyphComposer.MaxHeight != oldGlyphComposer.MaxHeight ||
-                _glyphComposer.MaxWidth != oldGlyphComposer.MaxWidth)
-                InitializeBitmaps();
-        }
+        if (oldGlyphComposer == null)
+            return;
+
+        if (_glyphComposer.MaxHeight != oldGlyphComposer.MaxHeight ||
+            _glyphComposer.MaxWidth != oldGlyphComposer.MaxWidth)
+            InitializeBitmaps();
     }
 
     /// <summary>
