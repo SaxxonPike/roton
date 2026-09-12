@@ -2,7 +2,7 @@ using AwesomeAssertions;
 using NUnit.Framework;
 using Roton.Test.Infrastructure;
 
-namespace Roton.Test.Roton.Integration.Gameplay;
+namespace Roton.Test.Roton.Integration.Gameplay.Super;
 
 public class SuperCheatTests : SuperContextTestFixture
 {
