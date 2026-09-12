@@ -43,7 +43,7 @@ internal sealed class SoundBufferList : FixedList<int>, ISoundBufferList
     public SoundNote Dequeue()
     {
         var remaining = Memory.Read8(_offset);
-        if (remaining <= 0)
+        if (remaining < 2)
             throw new RotonException("No notes available in queue!");
             
         var result = new SoundNote(

@@ -14,7 +14,7 @@ internal sealed class SoundPlayer(
 {
     public void PlaySound(int priority, ReadOnlySpan<byte> sound)
     {
-        if (state.GameOver || state.GameQuiet)
+        if (sound.IsEmpty || state.GameOver || state.GameQuiet)
             return;
 
         var soundIsNotPlaying = !state.SoundPlaying;
@@ -24,17 +24,21 @@ internal sealed class SoundPlayer(
         if (!(soundIsNotPlaying || soundIsMusic || soundIsHigherPriority))
             return;
 
-        if (!soundIsMusic)
+        if (priority >= 0 || soundIsNotPlaying)
+        {
+            state.SoundPriority = priority;
             state.SoundBuffer.Clear();
+            state.SoundTicks = 0;
+        }
 
         state.SoundBuffer.Enqueue(sound);
         state.SoundPlaying = true;
-        state.SoundPriority = priority;
     }
 
     public void ClearSound()
     {
         state.SoundPlaying = false;
+        state.SoundBuffer.Clear();
         speaker.StopNote();
     }
 
@@ -69,7 +73,7 @@ internal sealed class SoundPlayer(
 
         if (state.SoundTicks <= 0)
         {
-            if (state.SoundBuffer.Count > 0)
+            if (state.SoundBuffer.Count >= 2)
             {
                 var sound = state.SoundBuffer.Dequeue();
                 state.SoundTicks = sound.Duration << 2;
