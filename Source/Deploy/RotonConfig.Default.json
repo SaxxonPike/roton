@@ -12,11 +12,11 @@
       "TraceOop": false
     },
     "Audio": {
-      "DrumSpeed": 64,
+      "DrumDuration": 72,
       "Gain": 0.14,
       "Interpolate": true,
       "LowPass": true,
-      "LowPassCutoff": 12000,
+      "LowPassCutoff": 10000,
       "PreGain": 0.5,
       "SampleRate": 44100
     },
