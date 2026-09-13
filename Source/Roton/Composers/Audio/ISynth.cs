@@ -1,6 +1,6 @@
 using System;
 
-namespace Roton.Composers.Audio.Synths;
+namespace Roton.Composers.Audio;
 
 /// <summary>
 /// Renders synthesizer tones to an active audio buffer.

@@ -2,7 +2,7 @@ using System;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 
-namespace Roton.Composers.Audio.Synths.Impl;
+namespace Roton.Composers.Audio.Impl;
 
 /// <inheritdoc />
 [Context(Context.Original)]

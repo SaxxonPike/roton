@@ -1,6 +1,6 @@
 using System;
 
-namespace Roton.Composers.Audio.AudioStreams.Impl;
+namespace Roton.Composers.Audio.Impl;
 
 /// <summary>
 /// Implements a null audio composer.

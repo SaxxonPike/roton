@@ -1,6 +1,6 @@
 using System;
 
-namespace Roton.Composers.Audio.Synths;
+namespace Roton.Composers.Audio;
 
 /// <summary>
 /// Contains methods for applying filters to audio signals.

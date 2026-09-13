@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roton.Composers.Audio.AudioStreams;
+namespace Roton.Composers.Audio;
 
 /// <summary>
 /// Handles synthesizing the PC speaker.

@@ -1,4 +1,4 @@
-namespace Roton.Composers.Audio.AudioStreams;
+namespace Roton.Composers.Audio;
 
 /// <summary>
 /// Represents a tone played by the speaker.

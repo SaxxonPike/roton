@@ -1,6 +1,6 @@
 using System;
 
-namespace Roton.Composers.Audio.Synths;
+namespace Roton.Composers.Audio;
 
 public interface ISynthInterpolator
 {

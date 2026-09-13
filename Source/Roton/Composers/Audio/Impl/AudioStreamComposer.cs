@@ -2,11 +2,10 @@
 using System.Collections.Concurrent;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Roton.Composers.Audio.Synths;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 
-namespace Roton.Composers.Audio.AudioStreams.Impl;
+namespace Roton.Composers.Audio.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]

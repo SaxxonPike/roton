@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Roton;
 using Roton.Composers.Audio;
-using Roton.Composers.Audio.AudioStreams;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 
