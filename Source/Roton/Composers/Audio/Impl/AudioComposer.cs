@@ -9,7 +9,7 @@ namespace Roton.Composers.Audio.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class AudioComposer(
+internal sealed class AudioComposer(
     IConfig config,
     ISynth synth)
     : IAudioComposer

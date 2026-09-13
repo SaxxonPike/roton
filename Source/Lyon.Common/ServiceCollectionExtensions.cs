@@ -103,16 +103,11 @@ public static class ServiceCollectionExtensions
                 ]);
             });
 
-            services.AddScoped<IAudioComposer, AudioComposer>();
+            services.AddScoped<IAudioComposer>(c =>
+                c.GetRequiredService<IAudioComposerFactory>().Create());
             
             services.AddScoped<ISceneComposer>(c =>
-                c.GetRequiredService<ISceneComposerFactory>().Get());
-
-            // services.AddScoped<ISpeaker>(c =>
-            //     c.GetRequiredService<IAudioStreamComposer>());
-            //
-            // services.AddScoped<ITerminal>(c =>
-            //     c.GetRequiredService<ISceneComposer>());
+                c.GetRequiredService<ISceneComposerFactory>().Create());
 
             services.AddOptions();
 

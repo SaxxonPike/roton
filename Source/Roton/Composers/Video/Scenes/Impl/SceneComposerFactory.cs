@@ -11,7 +11,7 @@ internal sealed class SceneComposerFactory(
     IPaletteComposerFactory paletteComposerFactory)
     : ISceneComposerFactory
 {
-    public ISceneComposer Get()
+    public ISceneComposer Create()
     {
         var composer = new SceneComposer(paletteComposerFactory, glyphComposerFactory);
         composer.SetSize(80, 25, false);
