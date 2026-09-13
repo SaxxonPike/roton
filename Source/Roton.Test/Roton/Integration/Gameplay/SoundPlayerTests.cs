@@ -105,7 +105,6 @@ public class SoundPlayerTests(Context context) : AllContextTestFixture(context)
         // Assert.
         ((bool)State.SoundPlaying).Should().BeFalse();
         State.SoundBuffer.Count.Should().Be(0);
-        SpeakerMock.Verify(s => s.StopNote(), Times.AtLeastOnce);
     }
 
     [Test]

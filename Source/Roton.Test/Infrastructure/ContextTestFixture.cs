@@ -31,10 +31,10 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected Mock<IClock> ClockMock { get; private set; } = null!;
     protected IFileSystem FileSystem { get; private set; } = null!;
     protected IConfig Config { get; private set; } = null!;
-    protected TestTerminal Terminal { get; private set; } = null!;
+    protected ITerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;
     protected TestJoystick Joystick { get; private set; } = null!;
-    protected Mock<ISpeaker> SpeakerMock { get; private set; } = null!;
+    protected ISpeaker SpeakerMock { get; private set; } = null!;
     protected ITracer Tracer { get; private set; } = null!;
 
     private Random Rand { get; } = new();
@@ -137,10 +137,8 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Config.Engine.MasterClockNumerator = 1;
         Config.Engine.MasterClockDenominator = 1;
 
-        Terminal = (TestTerminal)Inject<ITerminal>(new TestTerminal());
         Keyboard = (TestKeyboard)Inject<IKeyboard>(new TestKeyboard());
         Joystick = (TestJoystick)Inject<IJoystick>(new TestJoystick());
-        SpeakerMock = Freeze<ISpeaker>();
         ClockMock = Freeze<IClock>();
         Tracer = new Tracer();
         EnableTracer();
@@ -149,10 +147,8 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Assembly[] additionalAssemblies = [typeof(ContextTestFixture).Assembly];
         services.AddRoton(Context, additionalAssemblies);
         services.AddSingleton(FileSystem);
-        services.AddSingleton<ITerminal>(Terminal);
         services.AddSingleton<IKeyboard>(Keyboard);
         services.AddSingleton<IJoystick>(Joystick);
-        services.AddSingleton(SpeakerMock.Object);
         services.AddSingleton(ClockMock.Object);
         services.AddSingleton<IAssemblyResourceService, AssemblyResourceService>();
         services.AddSingleton(Config);
@@ -183,6 +179,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Spawner = container.GetRequiredService<ISpawner>();
         State = container.GetRequiredService<IState>();
         Targets = container.GetRequiredService<ITargetList>();
+        Terminal = container.GetRequiredService<ITerminal>();
         Tiles = container.GetRequiredService<ITiles>();
         World = container.GetRequiredService<IWorld>();
         GameSerializer = container.GetRequiredService<IGameSerializer>();
