@@ -9,12 +9,12 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed class Speaker(
-    IEnumerable<IAudioStreamComposer> composers,
+    IEnumerable<IAudioComposer> composers,
     IDrumSoundList drumSoundList,
     IConfig config)
     : ISpeaker
 {
-    private readonly List<IAudioStreamComposer> _composers = [.. composers];
+    private readonly List<IAudioComposer> _composers = [.. composers];
 
     /// <summary>
     /// Reference frequency.

@@ -15,7 +15,7 @@ namespace Lyon.Common.Presenters.Impl;
 [Context(Context.Super)]
 public sealed unsafe class AudioPresenter(
     IConfig config,
-    IAudioStreamComposer composer,
+    IAudioComposer composer,
     IScheduler scheduler)
     : IDisposable, IAudioPresenter
 {
@@ -136,7 +136,7 @@ public sealed unsafe class AudioPresenter(
     /// <summary>
     /// Handles when the composer is ready to provide a buffer.
     /// </summary>
-    private void OnComposerBufferReady(object? sender, AudioStreamDataEventArgs e)
+    private void OnComposerBufferReady(object? sender, AudioDataEventArgs e)
     {
         var data = e.Data;
 

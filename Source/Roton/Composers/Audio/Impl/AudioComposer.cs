@@ -9,12 +9,12 @@ namespace Roton.Composers.Audio.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-public sealed class AudioStreamComposer(
+public sealed class AudioComposer(
     IConfig config,
     ISynth synth)
-    : IAudioStreamComposer
+    : IAudioComposer
 {
-    public event EventHandler<AudioStreamDataEventArgs>? BufferReady;
+    public event EventHandler<AudioDataEventArgs>? BufferReady;
 
     private int _sampleRate;
     private long _bufferAccumulator;
@@ -99,7 +99,7 @@ public sealed class AudioStreamComposer(
         var buffer = mem.Span;
 
         var actual = ComposeAudio(buffer);
-        var args = new AudioStreamDataEventArgs(mem, actual);
+        var args = new AudioDataEventArgs(mem, actual);
         BufferReady?.Invoke(this, args);
     }
 
