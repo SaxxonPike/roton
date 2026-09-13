@@ -12,23 +12,19 @@ public class NullAudioStreamComposer : IAudioStreamComposer
 {
     public event EventHandler<AudioStreamDataEventArgs>? BufferReady;
 
-    public void PlayDrum(int drum)
+    public void PlayToneSequence(ReadOnlySpan<SpeakerTone> tones)
     {
     }
 
-    public void PlayNote(int note)
+    public void PlayTone(float frequency)
     {
     }
 
-    public void PlayStep()
+    public void StopTone()
     {
     }
 
     public void Tick()
-    {
-    }
-
-    public void StopNote()
     {
     }
 

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Roton;
 using Roton.Composers.Audio.AudioStreams;
+using Roton.Composers.Audio.AudioStreams.Impl;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
@@ -102,14 +103,16 @@ public static class ServiceCollectionExtensions
                 ]);
             });
 
+            services.AddScoped<IAudioStreamComposer, AudioStreamComposer>();
+            
             services.AddScoped<ISceneComposer>(c =>
                 c.GetRequiredService<ISceneComposerFactory>().Get());
 
-            services.AddScoped<ISpeaker>(c =>
-                c.GetRequiredService<IAudioStreamComposer>());
-
-            services.AddScoped<ITerminal>(c =>
-                c.GetRequiredService<ISceneComposer>());
+            // services.AddScoped<ISpeaker>(c =>
+            //     c.GetRequiredService<IAudioStreamComposer>());
+            //
+            // services.AddScoped<ITerminal>(c =>
+            //     c.GetRequiredService<ISceneComposer>());
 
             services.AddOptions();
 

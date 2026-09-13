@@ -32,6 +32,7 @@ public sealed class Launcher(
         bootstrap.Start();
         window.Start();
         bootstrap.Stop();
+        bootstrap.Exited -= OnExited;
         audioPresenter.Stop();
     }
 }

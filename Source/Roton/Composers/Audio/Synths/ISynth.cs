@@ -16,12 +16,6 @@ public interface ISynth
     void SetFrequency(float frequency);
 
     /// <summary>
-    /// Updates the synthesizer counters internally. If the sample
-    /// rate changes, this should be invoked.
-    /// </summary>
-    void Update();
-
-    /// <summary>
     /// Renders the synthesizer output to the provided buffer.
     /// </summary>
     /// <param name="buffer">

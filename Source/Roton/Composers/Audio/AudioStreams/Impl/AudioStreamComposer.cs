@@ -1,23 +1,18 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Roton.Composers.Audio.Drums;
-using Roton.Composers.Audio.Steps;
-using Roton.Composers.Audio.Tones;
+using Roton.Composers.Audio.Synths;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
 namespace Roton.Composers.Audio.AudioStreams.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed class AudioStreamComposer(
-    IDrumSoundList drumBank,
+public sealed class AudioStreamComposer(
     IConfig config,
-    IDrumComposer drumComposer,
-    IToneComposer toneComposer,
-    IStepComposer stepComposer)
+    ISynth synth)
     : IAudioStreamComposer
 {
     public event EventHandler<AudioStreamDataEventArgs>? BufferReady;
@@ -26,6 +21,8 @@ internal sealed class AudioStreamComposer(
     private long _bufferAccumulator;
     private long _bufferNumerator;
     private long _bufferDenominator;
+    private readonly ConcurrentQueue<SpeakerTone> _speakerTones = new();
+    private int _durationSamples;
 
     private int ComposeAudio(Span<float> buffer)
     {
@@ -33,24 +30,33 @@ internal sealed class AudioStreamComposer(
 
         var tempBuffer = buffer;
 
-        var stepLen = stepComposer.ComposeStep(tempBuffer);
-        tempBuffer = tempBuffer.Slice(stepLen);
+        while (tempBuffer.Length > 0)
+        {
+            if (_durationSamples > 0)
+            {
+                var duration = Math.Min(_durationSamples, tempBuffer.Length);
+                var samples = tempBuffer.Slice(0, duration);
+                duration = synth.Render(samples);
+                tempBuffer = tempBuffer.Slice(duration);
+                _durationSamples -= samples.Length;
+                continue;
+            }
 
-        var drumLen = drumComposer.ComposeDrum(tempBuffer);
-        tempBuffer = tempBuffer.Slice(drumLen);
+            if (!_speakerTones.TryDequeue(out var nextTone))
+            {
+                var duration = synth.Render(tempBuffer);
+                _durationSamples -= duration;
+                tempBuffer = tempBuffer.Slice(duration);
+                break;
+            }
 
-        var toneLen = toneComposer.ComposeTone(tempBuffer);
-        tempBuffer = tempBuffer.Slice(toneLen);
-
-        var count = buffer.Length - tempBuffer.Length;
-        var outBuffer = buffer.Slice(0, count);
-        tempBuffer.Clear();
-
-        if (count <= 0)
-            return buffer.Length;
+            _durationSamples = (int)Math.Round(nextTone.Duration * _sampleRate);
+            synth.SetFrequency(nextTone.Frequency);
+        }
 
         // SIMD assisted amplification.
 
+        var outBuffer = buffer.Slice(0, buffer.Length - tempBuffer.Length);
         var vecBuffer = MemoryMarshal.Cast<float, Vector4>(outBuffer);
         var vecLeftover = outBuffer.Slice(vecBuffer.Length * 4);
         var gain = config.Audio.PreGain * config.Audio.Gain;
@@ -64,42 +70,25 @@ internal sealed class AudioStreamComposer(
         return buffer.Length;
     }
 
-    private void Clear()
+    public void PlayToneSequence(ReadOnlySpan<SpeakerTone> tones)
     {
-        stepComposer.ClearStep();
-        toneComposer.ClearTone();
-        drumComposer.ClearDrum();
+        StopTone();
+        foreach (var tone in tones)
+            _speakerTones.Enqueue(tone);
     }
 
-    public void PlayDrum(int index)
+    public void PlayTone(float frequency)
     {
-        var drum = drumBank[index];
-        int len = drum[0];
-        var src = drum.Slice(1, len);
-        var dest = (stackalloc int[len]);
-
-        for (var i = 0; i < src.Length; i++)
-            dest[i] = src[i];
-
-        Clear();
-        drumComposer.SetDrum(dest, config.Audio.SampleRate / (float)config.Audio.DrumDuration);
+        StopTone();
+        _speakerTones.Enqueue(new SpeakerTone(frequency, 0));
     }
 
-    public void PlayNote(int note)
+    public void StopTone()
     {
-        Clear();
-        toneComposer.SetTone(note);
-    }
-
-    public void PlayStep()
-    {
-        Clear();
-        stepComposer.SetStep();
-    }
-
-    public void StopNote()
-    {
-        Clear();
+        while (_speakerTones.TryDequeue(out _))
+        {
+        }
+        synth.SetFrequency(0);
     }
 
     public void Tick()
@@ -117,6 +106,7 @@ internal sealed class AudioStreamComposer(
 
     private void SetSampleRate(int value)
     {
+        synth.SetFrequency(value);
         _sampleRate = value;
         _bufferDenominator = config.Engine.MasterClockDenominator;
         _bufferNumerator = _sampleRate * config.Engine.MasterClockNumerator;

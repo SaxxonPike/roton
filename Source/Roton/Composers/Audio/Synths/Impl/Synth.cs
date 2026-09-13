@@ -61,10 +61,6 @@ internal sealed class Synth(
     }
 
     /// <inheritdoc />
-    public void Update() =>
-        UpdateFrequency();
-
-    /// <inheritdoc />
     public int Render(Span<float> buffer)
     {
         // "Phases" contains the phase for each sample in the buffer.

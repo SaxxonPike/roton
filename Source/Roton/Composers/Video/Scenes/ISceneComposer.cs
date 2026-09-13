@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Roton.Emulation.Core;
+using Roton.Emulation.Data;
 
 namespace Roton.Composers.Video.Scenes;
 
@@ -8,7 +9,7 @@ namespace Roton.Composers.Video.Scenes;
 /// Handles rendering font and palette data into a linear bitmap.
 /// </summary>
 [PublicAPI]
-public interface ISceneComposer : ITerminal
+public interface ISceneComposer
 {
     /// <summary>
     /// Raised when the pixel area has changed in size.
@@ -42,4 +43,12 @@ public interface ISceneComposer : ITerminal
     /// If true, the scene will be rendered as double width.
     /// </summary>
     bool Wide { get; }
+    
+    void Clear();
+    void Plot(int x, int y, AnsiChar ac);
+    AnsiChar Read(int x, int y);
+    void SetSize(int width, int height, bool wide);
+    void Write(int x, int y, ReadOnlySpan<char> value, int color);
+    void SetFont(byte[] data);
+    void SetPalette(byte[] data);
 }
