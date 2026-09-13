@@ -164,9 +164,6 @@ internal sealed class SceneComposer : ISceneComposer
     /// <inheritdoc />
     public void Plot(int x, int y, AnsiChar ac)
     {
-        if (IsOutOfBounds(x, y))
-            return;
-
         var index = GetBufferOffset(x, y);
 
         var existingAc = _chars.Span[index];
@@ -175,14 +172,6 @@ internal sealed class SceneComposer : ISceneComposer
 
         _chars.Span[index] = ac;
         _dirtyIndices.Span[index] = true;
-    }
-
-    /// <inheritdoc />
-    public AnsiChar Read(int x, int y)
-    {
-        return IsOutOfBounds(x, y)
-            ? _blankCharacter
-            : _chars.Span[GetBufferOffset(x, y)];
     }
 
     /// <inheritdoc />
@@ -369,16 +358,8 @@ internal sealed class SceneComposer : ISceneComposer
             .ToArray();
     }
 
-    /// <summary>
-    /// Returns true if the X/Y coordinate is out of bounds of the character grid.
-    /// </summary>
-    private bool IsOutOfBounds(int x, int y) =>
-        x < 0 || x >= Columns || y < 0 || y >= Rows;
-
-    private void DoUpdate(int index)
-    {
+    private void DoUpdate(int index) => 
         DrawGlyph(_chars.Span[index], _offsetLookUpTable.Span[index]);
-    }
 
     /// <summary>
     /// Invalidates all character indices, forcing a re-draw of the entire grid.
