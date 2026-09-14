@@ -22,7 +22,8 @@ internal sealed class BombKind : IKind
         element.Name = "Bomb";
     }
 
-    public IEnumerable<EditorParam> GetEditorParams() => [
+    public IEnumerable<EditorParam> GetEditorParams() =>
+    [
         new("Ticks Remaining", nameof(IActor.P1))
     ];
 }
