@@ -24,7 +24,7 @@ internal sealed class Messenger(
             hud.UpdateBorder();
         }
 
-        var topMessage = message[0];
+        var topMessage = message.Count > 0 ? message[0] : string.Empty;
         var bottomMessage = message.Count > 1 ? message[1] : string.Empty;
 
         spawner.SpawnActor(new Location(0, 0), new Tile(elements.MessengerId, 0), 1, state.DefaultActor);
