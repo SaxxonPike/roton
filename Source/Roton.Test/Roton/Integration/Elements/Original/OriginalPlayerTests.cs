@@ -28,7 +28,7 @@ public class OriginalPlayerTests : OriginalContextTestFixture
             "torch count should be correct");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.TorchMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.TorchMessage,
             "correct message should be displayed");
     }
     
@@ -48,7 +48,7 @@ public class OriginalPlayerTests : OriginalContextTestFixture
         // Assert.
         TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after interaction");
-        Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.WaterMessage,
             "correct message should be displayed");
     }
 }

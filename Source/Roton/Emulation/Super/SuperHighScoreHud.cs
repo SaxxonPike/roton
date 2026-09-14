@@ -49,9 +49,11 @@ internal sealed class SuperHighScoreHud(
         AddHighScoreHeader();
 
         scrollContent.AddLines(
-            highScoreList
+        [
+            .. highScoreList
                 .Where(hs => !string.IsNullOrEmpty(hs.Name))
-                .Select(hs => $"{hs.Score,5}  {hs.Name}"));
+                .Select(hs => $"{hs.Score,5}  {hs.Name}")
+        ]);
 
         scroll.ShowMessage($"High scores for {world.Name}", false, 0);
     }

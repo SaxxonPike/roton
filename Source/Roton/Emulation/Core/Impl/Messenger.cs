@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -14,7 +15,7 @@ internal sealed class Messenger(
     IActorManager actorManager) 
     : IMessenger
 {
-    public void SetMessage(int duration, IMessage message)
+    public void SetMessage(int duration, IReadOnlyList<string> message)
     {
         var index = actors.IndexAt(new Location(0, 0));
         if (index >= 0)
@@ -23,8 +24,8 @@ internal sealed class Messenger(
             hud.UpdateBorder();
         }
 
-        var topMessage = message.Text[0];
-        var bottomMessage = message.Text.Count > 1 ? message.Text[1] : string.Empty;
+        var topMessage = message[0];
+        var bottomMessage = message.Count > 1 ? message[1] : string.Empty;
 
         spawner.SpawnActor(new Location(0, 0), new Tile(elements.MessengerId, 0), 1, state.DefaultActor);
         actors[state.ActorCount].P2 = duration / ((int)state.GameWaitTime + 1);

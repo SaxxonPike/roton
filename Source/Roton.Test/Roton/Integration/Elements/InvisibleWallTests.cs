@@ -41,7 +41,7 @@ public class InvisibleWallTests(Context context) : AllContextTestFixture(context
         StepAllKeys();
 
         // Assert.
-        Message.Should().BeEquivalentTo(Alerts.InvisibleMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.InvisibleMessage,
             "invisible wall alert message should be shown");
     }
 }

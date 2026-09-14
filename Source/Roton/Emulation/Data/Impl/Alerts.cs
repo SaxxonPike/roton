@@ -1,27 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
 public abstract class Alerts : IAlerts
 {
-    public abstract IMessage AmmoMessage { get; }
-    public abstract IMessage BombMessage { get; }
-    public abstract IMessage DarkMessage { get; }
-    public abstract IMessage EnergizerMessage { get; }
-    public abstract IMessage FakeMessage { get; }
-    public abstract IMessage ForestMessage { get; }
-    public abstract IMessage GameOverMessage { get; }
-    public abstract IMessage GemMessage { get; }
-    public abstract IMessage InvisibleMessage { get; }
-    public abstract IMessage NoAmmoMessage { get; }
-    public abstract IMessage NoShootMessage { get; }
-    public abstract IMessage NotDarkMessage { get; }
-    public abstract IMessage NoTorchMessage { get; }
-    public abstract IMessage OuchMessage { get; }
-    public abstract IMessage StoneMessage { get; }
-    public abstract IMessage TimeMessage { get; }
-    public abstract IMessage TorchMessage { get; }
-    public abstract IMessage WaterMessage { get; }
+    public abstract IReadOnlyList<string> AmmoMessage { get; }
+    public abstract IReadOnlyList<string> BombMessage { get; }
+    public abstract IReadOnlyList<string> DarkMessage { get; }
+    public abstract IReadOnlyList<string> EnergizerMessage { get; }
+    public abstract IReadOnlyList<string> FakeMessage { get; }
+    public abstract IReadOnlyList<string> ForestMessage { get; }
+    public abstract IReadOnlyList<string> GameOverMessage { get; }
+    public abstract IReadOnlyList<string> GemMessage { get; }
+    public abstract IReadOnlyList<string> InvisibleMessage { get; }
+    public abstract IReadOnlyList<string> NoAmmoMessage { get; }
+    public abstract IReadOnlyList<string> NoShootMessage { get; }
+    public abstract IReadOnlyList<string> NotDarkMessage { get; }
+    public abstract IReadOnlyList<string> NoTorchMessage { get; }
+    public abstract IReadOnlyList<string> OuchMessage { get; }
+    public abstract IReadOnlyList<string> StoneMessage { get; }
+    public abstract IReadOnlyList<string> TimeMessage { get; }
+    public abstract IReadOnlyList<string> TorchMessage { get; }
+    public abstract IReadOnlyList<string> WaterMessage { get; }
     public abstract ref Bool AmmoPickup { get; }
     public abstract ref Bool CantShootHere { get; }
     public abstract ref Bool Dark { get; }
@@ -33,11 +34,11 @@ public abstract class Alerts : IAlerts
     public abstract ref Bool NoTorches { get; }
     public abstract ref Bool OutOfAmmo { get; }
     public abstract ref Bool TorchPickup { get; }
-    public abstract IMessage DoorLockedMessage(int color);
-    public abstract IMessage DoorOpenMessage(int color);
-    public abstract IMessage ErrorMessage(ReadOnlySpan<char> error);
-    public abstract IMessage KeyAlreadyMessage(int color);
-    public abstract IMessage KeyPickupMessage(int color);
+    public abstract IReadOnlyList<string> DoorLockedMessage(int color);
+    public abstract IReadOnlyList<string> DoorOpenMessage(int color);
+    public abstract IReadOnlyList<string> ErrorMessage(ReadOnlySpan<char> error);
+    public abstract IReadOnlyList<string> KeyAlreadyMessage(int color);
+    public abstract IReadOnlyList<string> KeyPickupMessage(int color);
 
     public void Reset()
     {

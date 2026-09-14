@@ -22,10 +22,10 @@ internal sealed class SuperMessageHandler(
         switch (scrollContent.LineCount)
         {
             case 1:
-                messenger.SetMessage(facts.LongMessageDuration, new Message(string.Empty, scrollContent.GetLine(0)));
+                messenger.SetMessage(facts.LongMessageDuration, [string.Empty, scrollContent.GetLine(0)]);
                 return default;
             case 2:
-                messenger.SetMessage(facts.LongMessageDuration, new Message(scrollContent.GetLine(0), scrollContent.GetLine(1)));
+                messenger.SetMessage(facts.LongMessageDuration, [scrollContent.GetLine(0), scrollContent.GetLine(1)]);
                 return default;
             case 0:
                 return default;

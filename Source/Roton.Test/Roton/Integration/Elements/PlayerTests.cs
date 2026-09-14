@@ -26,7 +26,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "ammo count should be correct");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.AmmoMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.AmmoMessage,
             "correct message should be displayed");
     }
 
@@ -52,7 +52,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "score should be correct");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.GemMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.GemMessage,
             "correct message should be displayed");
     }
 
@@ -75,7 +75,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "correct key should be obtained");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.KeyPickupMessage(keyColor).Text,
+        Message.Should().BeEquivalentTo(Alerts.KeyPickupMessage(keyColor),
             "correct message should be displayed");
     }
 
@@ -99,7 +99,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
         // Assert.
         TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.KeyAlreadyMessage(keyColor).Text,
+        Message.Should().BeEquivalentTo(Alerts.KeyAlreadyMessage(keyColor),
             "correct message should be displayed");
     }
 
@@ -125,7 +125,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "correct key should be consumed");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.DoorOpenMessage(doorColor).Text,
+        Message.Should().BeEquivalentTo(Alerts.DoorOpenMessage(doorColor),
             "correct message should be displayed");
     }
 
@@ -146,7 +146,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
         // Assert.
         TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should be prevented from unlocking the door");
-        Message.Should().BeEquivalentTo(Alerts.DoorLockedMessage(keyColor).Text,
+        Message.Should().BeEquivalentTo(Alerts.DoorLockedMessage(keyColor),
             "correct message should be displayed");
     }
 
@@ -220,7 +220,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "player should not move for bomb activation");
         TileAt(4, 3).Id.Should().Be(Elements.BombId,
             "bomb should be present after activation");
-        Message.Should().BeEquivalentTo(Alerts.BombMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.BombMessage,
             "correct message should be displayed");
         ((int)actor.P1).Should().Be((byte)(Facts.BombCountdownStart - 1),
             "bomb should have the maximum timer set");
@@ -266,7 +266,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "player should have correct number of energy cycles");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after pickup");
-        Message.Should().BeEquivalentTo(Alerts.EnergizerMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.EnergizerMessage,
             "correct message should be displayed");
     }
 
@@ -288,7 +288,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "player should take damage from the star");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after interaction");
-        Message.Should().BeEquivalentTo(Alerts.OuchMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.OuchMessage,
             "correct message should be displayed");
     }
 
@@ -311,7 +311,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "player should take damage from the bullet");
         TileAt(4, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after interaction");
-        Message.Should().BeEquivalentTo(Alerts.OuchMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.OuchMessage,
             "correct message should be displayed");
     }
 
@@ -335,7 +335,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
         // Assert.
         TileAt(3, 3).Id.Should().Be(Elements.PlayerId,
             "player should be in correct location after interaction");
-        Message.Should().BeEquivalentTo(Alerts.WaterMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.WaterMessage,
             "correct message should be displayed");
     }
 
@@ -466,7 +466,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "player should be out of ammo");
         TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.EmptyId,
             "bullet should not have been spawned");
-        Message.Should().BeEquivalentTo(Alerts.NoAmmoMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.NoAmmoMessage,
             "out of ammo message should be displayed");
     }
 
@@ -493,7 +493,7 @@ public class PlayerTests(Context context) : AllContextTestFixture(context)
             "ammo should not have been consumed");
         TileAt(Player.Location.X + 2, 10).Id.Should().Be(Elements.EmptyId,
             "bullet should not have been spawned");
-        Message.Should().BeEquivalentTo(Alerts.NoShootMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.NoShootMessage,
             "shooting not allowed message should be displayed");
     }
 

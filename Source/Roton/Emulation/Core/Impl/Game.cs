@@ -69,7 +69,7 @@ internal sealed class Game(
         tiles[actors.Player.Location] = new Tile(element.Id, element.Color);
         if (state.PlayerElement == elements.MonitorId)
         {
-            messenger.SetMessage(0, new Message());
+            messenger.SetMessage(0, []);
             hud.DrawTitleStatus();
         }
 

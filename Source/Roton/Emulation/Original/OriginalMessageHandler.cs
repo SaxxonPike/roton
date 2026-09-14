@@ -20,7 +20,7 @@ internal sealed class OriginalMessageHandler(
         {
             case 1:
             {
-                messenger.SetMessage(facts.LongMessageDuration, new Message(scrollContent.GetLine(0)));
+                messenger.SetMessage(facts.LongMessageDuration, [scrollContent.GetLine(0)]);
                 return default;
             }
             case > 1:

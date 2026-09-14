@@ -6,7 +6,7 @@ internal static class ScrollContentExtensions
 {
     extension(IScrollContent scrollContent)
     {
-        public void AddLines(params IEnumerable<string?> lines)
+        public void AddLines(params string[] lines)
         {
             foreach (var line in lines)
                 scrollContent.AddLine(line);

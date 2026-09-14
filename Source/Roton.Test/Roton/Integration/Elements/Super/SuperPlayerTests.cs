@@ -25,7 +25,7 @@ public class SuperPlayerTests : SuperContextTestFixture
             "player should have moved from original position");
         Stones.Should().Be(1,
             "player should have gained 1 stone");
-        Message.Should().BeEquivalentTo(Alerts.StoneMessage.Text,
+        Message.Should().BeEquivalentTo(Alerts.StoneMessage,
             "correct message should be displayed");
     }
 
