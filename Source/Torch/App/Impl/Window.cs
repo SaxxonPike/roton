@@ -1,0 +1,238 @@
+﻿using Lyon.Common;
+using Lyon.Common.App;
+using Lyon.Common.Presenters;
+using Roton;
+using Roton.Emulation.Core;
+using Roton.Infrastructure;
+
+namespace Torch.App.Impl;
+
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed unsafe class Window(
+    IKeyboardPresenter keyboardPresenter,
+    IScenePresenter scenePresenter,
+    IJoystickPresenter joystickPresenter,
+    IConfig config)
+    : IWindow
+{
+    /// <summary>
+    /// Used for SDL subsystem reference counting.
+    /// </summary>
+    private SdlContext? _sdlContext;
+
+    /// <summary>
+    /// The SDL window that will be rendered to.
+    /// </summary>
+    private SDL_Window* _window;
+
+    /// <summary>
+    /// The SDL renderer that will be used to render the backbuffer.
+    /// </summary>
+    private SDL_Renderer* _renderer;
+
+    /// <summary>
+    /// Backbuffer texture.
+    /// </summary>
+    private SDL_Texture* _background;
+
+    /// <summary>
+    /// If true, the window is to be closed.
+    /// </summary>
+    private bool _closeWindow;
+
+    /// <summary>
+    /// Width of the backbuffer texture.
+    /// </summary>
+    public int RenderWidth { get; private set; }
+
+    /// <summary>
+    /// Height of the backbuffer texture.
+    /// </summary>
+    public int RenderHeight { get; private set; }
+
+    /// <summary>
+    /// Unscaled width of the window.
+    /// </summary>
+    public int WindowWidth { get; private set; }
+
+    /// <summary>
+    /// Unscaled height of the window.
+    /// </summary>
+    public int WindowHeight { get; private set; }
+
+    /// <summary>
+    /// Title of the window.
+    /// </summary>
+    public string Title { get; private set; } = "Lyon";
+
+    /// <summary>
+    /// If true, the window loop is running.
+    /// </summary>
+    public bool Running { get; private set; }
+
+    /// <summary>
+    /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_DOWN"/>.
+    /// </summary>
+    private void HandleKeyDown(ref SDL_KeyboardEvent e) =>
+        keyboardPresenter.Press(e.key, e.mod);
+
+    /// <summary>
+    /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_UP"/>.
+    /// </summary>
+    private void HandleKeyUp(ref SDL_KeyboardEvent e) =>
+        keyboardPresenter.Release(e.key, e.mod);
+
+    /// <summary>
+    /// Handles an SDL event.
+    /// </summary>
+    private void HandleEvent(ref SDL_Event e)
+    {
+        switch (e.Type)
+        {
+            case SDL_EventType.SDL_EVENT_QUIT:
+            case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                Close();
+                break;
+            case SDL_EventType.SDL_EVENT_KEY_DOWN:
+                HandleKeyDown(ref e.key);
+                break;
+            case SDL_EventType.SDL_EVENT_KEY_UP:
+                HandleKeyUp(ref e.key);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Runs the window loop until quit.
+    /// </summary>
+    private void Loop()
+    {
+        SDL_ShowWindow(_window);
+        Running = true;
+
+        while (Running)
+        {
+            SDL_Event e;
+
+            // Poll for pending events.
+            while (SDL_PollEvent(&e))
+                HandleEvent(ref e);
+
+            // If the window is closed, exit.
+            if (_closeWindow)
+                break;
+
+            // Render the scene.
+            if (scenePresenter.Render() is { Bits.Length: > 0 } bitmap)
+            {
+                fixed (void* bitmapBits = bitmap.Bits)
+                    SDL_UpdateTexture(_background, null, (nint)bitmapBits, bitmap.Stride);
+            }
+
+            // Set the scene scale.
+            SDL_SetRenderLogicalPresentation(
+                _renderer,
+                WindowWidth, WindowHeight,
+                SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_LETTERBOX
+            );
+
+            // Present the scene.
+            SDL_RenderTexture(_renderer, _background, null, null);
+            SDL_RenderPresent(_renderer);
+
+            // Reset the scene scale.
+            SDL_SetRenderLogicalPresentation(
+                _renderer,
+                0, 0,
+                SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_DISABLED
+            );
+        }
+
+        // Clean up the window.
+        Running = false;
+    }
+
+    /// <inheritdoc />
+    public void Close()
+    {
+        _closeWindow = true;
+    }
+
+    /// <summary>
+    /// Finds the largest integer scale for the given window size that will fit on screen.
+    /// </summary>
+    private static int FindMaxIntegerScale(int width, int height)
+    {
+        SDL_Rect rect;
+        using var displays = SDL_GetDisplays();
+
+        if (displays is null || displays.Count < 1 || !SDL_GetDisplayBounds(displays[0], &rect))
+            return 1;
+
+        return Math.Max(1, Math.Min(rect.w / width, rect.h / height));
+    }
+
+    /// <inheritdoc />
+    public void Start()
+    {
+        // If already running, bail.
+        if (Running)
+            return;
+
+        // Reset state.
+        _closeWindow = false;
+
+        // Start SDL video subsystem.
+        _sdlContext = SdlContext.Create(SDL_InitFlags.SDL_INIT_VIDEO);
+
+        // Window defaults.
+        RenderWidth = 640;
+        RenderHeight = 350;
+        var winWidth = (int)Math.Round(Math.Max(RenderWidth * config.Video.ScaleX, 1));
+        var winHeight = (int)Math.Round(Math.Max(RenderHeight * config.Video.ScaleY, 1));
+        var integerScale = FindMaxIntegerScale(winWidth, winHeight);
+        WindowWidth = winWidth * integerScale;
+        WindowHeight = winHeight * integerScale;
+
+        // Create the window and renderer. The window starts hidden
+        // so we can show it when we are ready to render.
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        SDL_CreateWindowAndRenderer(
+            Title,
+            WindowWidth, WindowHeight,
+            SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL_WindowFlags.SDL_WINDOW_RESIZABLE,
+            &window,
+            &renderer
+        );
+        _window = window;
+        _renderer = renderer;
+
+        // Create the background texture to which we will render the scene.
+        _background = SDL_CreateTexture(
+            _renderer,
+            SDL_PIXELFORMAT_BGRA32,
+            SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING,
+            RenderWidth, RenderHeight
+        );
+
+        // Set scale mode to pixel art so that it looks appropriate.
+        SDL_SetTextureScaleMode(_background, SDL_ScaleMode.SDL_SCALEMODE_PIXELART);
+
+        // Not all adapters support adaptive vsync, so use the regular
+        // method if this fails.
+        if (!SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE))
+            SDL_SetRenderVSync(renderer, 1);
+
+        // Start the main loop.
+        Loop();
+
+        // Clean up the window.
+        SDL_DestroyWindow(_window);
+
+        // Free SDL subsystems.
+        _sdlContext.Dispose();
+        _sdlContext = null;
+    }
+}

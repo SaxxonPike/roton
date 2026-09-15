@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <LangVersion>default</LangVersion>
+        <Nullable>enable</Nullable>
+        <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Memory" Version="4.6.3"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Roton\Roton.csproj" />
+    </ItemGroup>
+</Project>

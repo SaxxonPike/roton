@@ -1,0 +1,277 @@
+using SDL;
+
+namespace Silverwind.Ursula;
+
+/// <inheritdoc />
+internal sealed class ImGuiKeyMapper : IImGuiKeyMapper
+{
+    /// <inheritdoc />
+    public ImGuiKey? ConvertKeyboardMod(SDL_Keymod mod)
+    {
+        //
+        // No distinction is made between left/right side modifier keys in ImGui.
+        //
+
+        return mod switch
+        {
+            SDL_Keymod.SDL_KMOD_CTRL or SDL_Keymod.SDL_KMOD_LCTRL or SDL_Keymod.SDL_KMOD_RCTRL => ImGuiKey.ModCtrl,
+            SDL_Keymod.SDL_KMOD_ALT or SDL_Keymod.SDL_KMOD_LALT or SDL_Keymod.SDL_KMOD_RALT => ImGuiKey.ModAlt,
+            SDL_Keymod.SDL_KMOD_SHIFT or SDL_Keymod.SDL_KMOD_LSHIFT or SDL_Keymod.SDL_KMOD_RSHIFT => ImGuiKey.ModShift,
+            SDL_Keymod.SDL_KMOD_GUI or SDL_Keymod.SDL_KMOD_LGUI or SDL_Keymod.SDL_KMOD_RGUI => ImGuiKey.ModSuper,
+            _ => null
+        };
+    }
+
+    /// <inheritdoc />
+    public ImGuiKey? ConvertKeyboardEventKey(SDL_KeyboardEvent ev)
+    {
+        //
+        // Scancode must be used to discern numpad inputs.
+        //
+
+        return ev.scancode switch
+        {
+            SDL_Scancode.SDL_SCANCODE_KP_0 => ImGuiKey.Keypad0,
+            SDL_Scancode.SDL_SCANCODE_KP_1 => ImGuiKey.Keypad1,
+            SDL_Scancode.SDL_SCANCODE_KP_2 => ImGuiKey.Keypad2,
+            SDL_Scancode.SDL_SCANCODE_KP_3 => ImGuiKey.Keypad3,
+            SDL_Scancode.SDL_SCANCODE_KP_4 => ImGuiKey.Keypad4,
+            SDL_Scancode.SDL_SCANCODE_KP_5 => ImGuiKey.Keypad5,
+            SDL_Scancode.SDL_SCANCODE_KP_6 => ImGuiKey.Keypad6,
+            SDL_Scancode.SDL_SCANCODE_KP_7 => ImGuiKey.Keypad7,
+            SDL_Scancode.SDL_SCANCODE_KP_8 => ImGuiKey.Keypad8,
+            SDL_Scancode.SDL_SCANCODE_KP_9 => ImGuiKey.Keypad9,
+            SDL_Scancode.SDL_SCANCODE_KP_PERIOD => ImGuiKey.KeypadDecimal,
+            SDL_Scancode.SDL_SCANCODE_KP_DIVIDE => ImGuiKey.KeypadDivide,
+            SDL_Scancode.SDL_SCANCODE_KP_MULTIPLY => ImGuiKey.KeypadMultiply,
+            SDL_Scancode.SDL_SCANCODE_KP_MINUS => ImGuiKey.KeypadSubtract,
+            SDL_Scancode.SDL_SCANCODE_KP_PLUS => ImGuiKey.KeypadAdd,
+            SDL_Scancode.SDL_SCANCODE_KP_ENTER => ImGuiKey.KeypadEnter,
+            SDL_Scancode.SDL_SCANCODE_KP_EQUALS => ImGuiKey.KeypadEqual,
+            _ => ev.key switch
+            {
+                //
+                // Keycode can be used for all other keys.
+                //
+
+                SDL_Keycode.SDLK_TAB => ImGuiKey.Tab,
+                SDL_Keycode.SDLK_LEFT => ImGuiKey.LeftArrow,
+                SDL_Keycode.SDLK_RIGHT => ImGuiKey.RightArrow,
+                SDL_Keycode.SDLK_UP => ImGuiKey.UpArrow,
+                SDL_Keycode.SDLK_DOWN => ImGuiKey.DownArrow,
+                SDL_Keycode.SDLK_PAGEUP => ImGuiKey.PageUp,
+                SDL_Keycode.SDLK_PAGEDOWN => ImGuiKey.PageDown,
+                SDL_Keycode.SDLK_HOME => ImGuiKey.Home,
+                SDL_Keycode.SDLK_END => ImGuiKey.End,
+                SDL_Keycode.SDLK_INSERT => ImGuiKey.Insert,
+                SDL_Keycode.SDLK_DELETE => ImGuiKey.Delete,
+                SDL_Keycode.SDLK_BACKSPACE => ImGuiKey.Backspace,
+                SDL_Keycode.SDLK_SPACE => ImGuiKey.Space,
+                SDL_Keycode.SDLK_RETURN => ImGuiKey.Enter,
+                SDL_Keycode.SDLK_ESCAPE => ImGuiKey.Escape,
+                SDL_Keycode.SDLK_COMMA => ImGuiKey.Comma,
+                SDL_Keycode.SDLK_PERIOD => ImGuiKey.Period,
+                SDL_Keycode.SDLK_SEMICOLON => ImGuiKey.Semicolon,
+                SDL_Keycode.SDLK_CAPSLOCK => ImGuiKey.CapsLock,
+                SDL_Keycode.SDLK_SCROLLLOCK => ImGuiKey.ScrollLock,
+                SDL_Keycode.SDLK_NUMLOCKCLEAR => ImGuiKey.NumLock,
+                SDL_Keycode.SDLK_PRINTSCREEN => ImGuiKey.PrintScreen,
+                SDL_Keycode.SDLK_PAUSE => ImGuiKey.Pause,
+                SDL_Keycode.SDLK_LCTRL => ImGuiKey.LeftCtrl,
+                SDL_Keycode.SDLK_LSHIFT => ImGuiKey.LeftShift,
+                SDL_Keycode.SDLK_LALT => ImGuiKey.LeftAlt,
+                SDL_Keycode.SDLK_LGUI => ImGuiKey.LeftSuper,
+                SDL_Keycode.SDLK_RCTRL => ImGuiKey.RightCtrl,
+                SDL_Keycode.SDLK_RSHIFT => ImGuiKey.RightShift,
+                SDL_Keycode.SDLK_RALT => ImGuiKey.RightAlt,
+                SDL_Keycode.SDLK_RGUI => ImGuiKey.RightSuper,
+                SDL_Keycode.SDLK_APPLICATION => ImGuiKey.Menu,
+                SDL_Keycode.SDLK_0 => ImGuiKey.Key0,
+                SDL_Keycode.SDLK_1 => ImGuiKey.Key1,
+                SDL_Keycode.SDLK_2 => ImGuiKey.Key2,
+                SDL_Keycode.SDLK_3 => ImGuiKey.Key3,
+                SDL_Keycode.SDLK_4 => ImGuiKey.Key4,
+                SDL_Keycode.SDLK_5 => ImGuiKey.Key5,
+                SDL_Keycode.SDLK_6 => ImGuiKey.Key6,
+                SDL_Keycode.SDLK_7 => ImGuiKey.Key7,
+                SDL_Keycode.SDLK_8 => ImGuiKey.Key8,
+                SDL_Keycode.SDLK_9 => ImGuiKey.Key9,
+                SDL_Keycode.SDLK_A => ImGuiKey.A,
+                SDL_Keycode.SDLK_B => ImGuiKey.B,
+                SDL_Keycode.SDLK_C => ImGuiKey.C,
+                SDL_Keycode.SDLK_D => ImGuiKey.D,
+                SDL_Keycode.SDLK_E => ImGuiKey.E,
+                SDL_Keycode.SDLK_F => ImGuiKey.F,
+                SDL_Keycode.SDLK_G => ImGuiKey.G,
+                SDL_Keycode.SDLK_H => ImGuiKey.H,
+                SDL_Keycode.SDLK_I => ImGuiKey.I,
+                SDL_Keycode.SDLK_J => ImGuiKey.J,
+                SDL_Keycode.SDLK_K => ImGuiKey.K,
+                SDL_Keycode.SDLK_L => ImGuiKey.L,
+                SDL_Keycode.SDLK_M => ImGuiKey.M,
+                SDL_Keycode.SDLK_N => ImGuiKey.N,
+                SDL_Keycode.SDLK_O => ImGuiKey.O,
+                SDL_Keycode.SDLK_P => ImGuiKey.P,
+                SDL_Keycode.SDLK_Q => ImGuiKey.Q,
+                SDL_Keycode.SDLK_R => ImGuiKey.R,
+                SDL_Keycode.SDLK_S => ImGuiKey.S,
+                SDL_Keycode.SDLK_T => ImGuiKey.T,
+                SDL_Keycode.SDLK_U => ImGuiKey.U,
+                SDL_Keycode.SDLK_V => ImGuiKey.V,
+                SDL_Keycode.SDLK_W => ImGuiKey.W,
+                SDL_Keycode.SDLK_X => ImGuiKey.X,
+                SDL_Keycode.SDLK_Y => ImGuiKey.Y,
+                SDL_Keycode.SDLK_Z => ImGuiKey.Z,
+                SDL_Keycode.SDLK_F1 => ImGuiKey.F1,
+                SDL_Keycode.SDLK_F2 => ImGuiKey.F2,
+                SDL_Keycode.SDLK_F3 => ImGuiKey.F3,
+                SDL_Keycode.SDLK_F4 => ImGuiKey.F4,
+                SDL_Keycode.SDLK_F5 => ImGuiKey.F5,
+                SDL_Keycode.SDLK_F6 => ImGuiKey.F6,
+                SDL_Keycode.SDLK_F7 => ImGuiKey.F7,
+                SDL_Keycode.SDLK_F8 => ImGuiKey.F8,
+                SDL_Keycode.SDLK_F9 => ImGuiKey.F9,
+                SDL_Keycode.SDLK_F10 => ImGuiKey.F10,
+                SDL_Keycode.SDLK_F11 => ImGuiKey.F11,
+                SDL_Keycode.SDLK_F12 => ImGuiKey.F12,
+                SDL_Keycode.SDLK_F13 => ImGuiKey.F13,
+                SDL_Keycode.SDLK_F14 => ImGuiKey.F14,
+                SDL_Keycode.SDLK_F15 => ImGuiKey.F15,
+                SDL_Keycode.SDLK_F16 => ImGuiKey.F16,
+                SDL_Keycode.SDLK_F17 => ImGuiKey.F17,
+                SDL_Keycode.SDLK_F18 => ImGuiKey.F18,
+                SDL_Keycode.SDLK_F19 => ImGuiKey.F19,
+                SDL_Keycode.SDLK_F20 => ImGuiKey.F20,
+                SDL_Keycode.SDLK_F21 => ImGuiKey.F21,
+                SDL_Keycode.SDLK_F22 => ImGuiKey.F22,
+                SDL_Keycode.SDLK_F23 => ImGuiKey.F23,
+                SDL_Keycode.SDLK_F24 => ImGuiKey.F24,
+                SDL_Keycode.SDLK_AC_BACK => ImGuiKey.AppBack,
+                SDL_Keycode.SDLK_AC_FORWARD => ImGuiKey.AppForward,
+                _ => ConvertKeyboardEventScanCode(ev)
+            }
+        };
+    }
+
+    /// <inheritdoc />
+    public ImGuiKey? ConvertKeyboardEventScanCode(SDL_KeyboardEvent ev)
+    {
+        var code = ev.scancode switch
+        {
+            < SDL_Scancode.SDL_SCANCODE_A or
+                >= SDL_Scancode.SDL_SCANCODE_COUNT => ImGuiKey.None,
+            SDL_Scancode.SDL_SCANCODE_A => ImGuiKey.A,
+            SDL_Scancode.SDL_SCANCODE_B => ImGuiKey.B,
+            SDL_Scancode.SDL_SCANCODE_C => ImGuiKey.C,
+            SDL_Scancode.SDL_SCANCODE_D => ImGuiKey.D,
+            SDL_Scancode.SDL_SCANCODE_E => ImGuiKey.E,
+            SDL_Scancode.SDL_SCANCODE_F => ImGuiKey.F,
+            SDL_Scancode.SDL_SCANCODE_G => ImGuiKey.G,
+            SDL_Scancode.SDL_SCANCODE_H => ImGuiKey.H,
+            SDL_Scancode.SDL_SCANCODE_I => ImGuiKey.I,
+            SDL_Scancode.SDL_SCANCODE_J => ImGuiKey.J,
+            SDL_Scancode.SDL_SCANCODE_K => ImGuiKey.K,
+            SDL_Scancode.SDL_SCANCODE_L => ImGuiKey.L,
+            SDL_Scancode.SDL_SCANCODE_M => ImGuiKey.M,
+            SDL_Scancode.SDL_SCANCODE_N => ImGuiKey.N,
+            SDL_Scancode.SDL_SCANCODE_O => ImGuiKey.O,
+            SDL_Scancode.SDL_SCANCODE_P => ImGuiKey.P,
+            SDL_Scancode.SDL_SCANCODE_Q => ImGuiKey.Q,
+            SDL_Scancode.SDL_SCANCODE_R => ImGuiKey.R,
+            SDL_Scancode.SDL_SCANCODE_S => ImGuiKey.S,
+            SDL_Scancode.SDL_SCANCODE_T => ImGuiKey.T,
+            SDL_Scancode.SDL_SCANCODE_U => ImGuiKey.U,
+            SDL_Scancode.SDL_SCANCODE_V => ImGuiKey.V,
+            SDL_Scancode.SDL_SCANCODE_W => ImGuiKey.W,
+            SDL_Scancode.SDL_SCANCODE_X => ImGuiKey.X,
+            SDL_Scancode.SDL_SCANCODE_Y => ImGuiKey.Y,
+            SDL_Scancode.SDL_SCANCODE_Z => ImGuiKey.Z,
+            SDL_Scancode.SDL_SCANCODE_1 => ImGuiKey.Key1,
+            SDL_Scancode.SDL_SCANCODE_2 => ImGuiKey.Key2,
+            SDL_Scancode.SDL_SCANCODE_3 => ImGuiKey.Key3,
+            SDL_Scancode.SDL_SCANCODE_4 => ImGuiKey.Key4,
+            SDL_Scancode.SDL_SCANCODE_5 => ImGuiKey.Key5,
+            SDL_Scancode.SDL_SCANCODE_6 => ImGuiKey.Key6,
+            SDL_Scancode.SDL_SCANCODE_7 => ImGuiKey.Key7,
+            SDL_Scancode.SDL_SCANCODE_8 => ImGuiKey.Key8,
+            SDL_Scancode.SDL_SCANCODE_9 => ImGuiKey.Key9,
+            SDL_Scancode.SDL_SCANCODE_0 => ImGuiKey.Key0,
+            SDL_Scancode.SDL_SCANCODE_RETURN => ImGuiKey.Enter,
+            SDL_Scancode.SDL_SCANCODE_ESCAPE => ImGuiKey.Escape,
+            SDL_Scancode.SDL_SCANCODE_BACKSPACE => ImGuiKey.Backspace,
+            SDL_Scancode.SDL_SCANCODE_TAB => ImGuiKey.Tab,
+            SDL_Scancode.SDL_SCANCODE_SPACE => ImGuiKey.Space,
+            SDL_Scancode.SDL_SCANCODE_MINUS => ImGuiKey.Minus,
+            SDL_Scancode.SDL_SCANCODE_EQUALS => ImGuiKey.Equal,
+            SDL_Scancode.SDL_SCANCODE_LEFTBRACKET => ImGuiKey.LeftBracket,
+            SDL_Scancode.SDL_SCANCODE_RIGHTBRACKET => ImGuiKey.RightBracket,
+            SDL_Scancode.SDL_SCANCODE_BACKSLASH => ImGuiKey.Backslash,
+            SDL_Scancode.SDL_SCANCODE_NONUSHASH => ImGuiKey.Backslash,
+            SDL_Scancode.SDL_SCANCODE_SEMICOLON => ImGuiKey.Semicolon,
+            SDL_Scancode.SDL_SCANCODE_APOSTROPHE => ImGuiKey.Apostrophe,
+            SDL_Scancode.SDL_SCANCODE_GRAVE => ImGuiKey.GraveAccent,
+            SDL_Scancode.SDL_SCANCODE_COMMA => ImGuiKey.Comma,
+            SDL_Scancode.SDL_SCANCODE_PERIOD => ImGuiKey.Period,
+            SDL_Scancode.SDL_SCANCODE_SLASH => ImGuiKey.Slash,
+            SDL_Scancode.SDL_SCANCODE_CAPSLOCK => ImGuiKey.CapsLock,
+            SDL_Scancode.SDL_SCANCODE_F1 => ImGuiKey.F1,
+            SDL_Scancode.SDL_SCANCODE_F2 => ImGuiKey.F2,
+            SDL_Scancode.SDL_SCANCODE_F3 => ImGuiKey.F3,
+            SDL_Scancode.SDL_SCANCODE_F4 => ImGuiKey.F4,
+            SDL_Scancode.SDL_SCANCODE_F5 => ImGuiKey.F5,
+            SDL_Scancode.SDL_SCANCODE_F6 => ImGuiKey.F6,
+            SDL_Scancode.SDL_SCANCODE_F7 => ImGuiKey.F7,
+            SDL_Scancode.SDL_SCANCODE_F8 => ImGuiKey.F8,
+            SDL_Scancode.SDL_SCANCODE_F9 => ImGuiKey.F9,
+            SDL_Scancode.SDL_SCANCODE_F10 => ImGuiKey.F10,
+            SDL_Scancode.SDL_SCANCODE_F11 => ImGuiKey.F11,
+            SDL_Scancode.SDL_SCANCODE_F12 => ImGuiKey.F12,
+            SDL_Scancode.SDL_SCANCODE_PRINTSCREEN => ImGuiKey.PrintScreen,
+            SDL_Scancode.SDL_SCANCODE_SCROLLLOCK => ImGuiKey.ScrollLock,
+            SDL_Scancode.SDL_SCANCODE_PAUSE => ImGuiKey.Pause,
+            SDL_Scancode.SDL_SCANCODE_INSERT => ImGuiKey.Insert,
+            SDL_Scancode.SDL_SCANCODE_HOME => ImGuiKey.Home,
+            SDL_Scancode.SDL_SCANCODE_PAGEUP => ImGuiKey.PageUp,
+            SDL_Scancode.SDL_SCANCODE_DELETE => ImGuiKey.Delete,
+            SDL_Scancode.SDL_SCANCODE_END => ImGuiKey.End,
+            SDL_Scancode.SDL_SCANCODE_PAGEDOWN => ImGuiKey.PageDown,
+            SDL_Scancode.SDL_SCANCODE_RIGHT => ImGuiKey.RightArrow,
+            SDL_Scancode.SDL_SCANCODE_LEFT => ImGuiKey.LeftArrow,
+            SDL_Scancode.SDL_SCANCODE_DOWN => ImGuiKey.DownArrow,
+            SDL_Scancode.SDL_SCANCODE_UP => ImGuiKey.UpArrow,
+            SDL_Scancode.SDL_SCANCODE_NUMLOCKCLEAR => ImGuiKey.NumLock,
+            SDL_Scancode.SDL_SCANCODE_KP_DIVIDE => ImGuiKey.KeypadDivide,
+            SDL_Scancode.SDL_SCANCODE_KP_MULTIPLY => ImGuiKey.KeypadMultiply,
+            SDL_Scancode.SDL_SCANCODE_KP_MINUS => ImGuiKey.KeypadSubtract,
+            SDL_Scancode.SDL_SCANCODE_KP_PLUS => ImGuiKey.KeypadAdd,
+            SDL_Scancode.SDL_SCANCODE_KP_ENTER => ImGuiKey.KeypadEnter,
+            SDL_Scancode.SDL_SCANCODE_KP_1 => ImGuiKey.Keypad1,
+            SDL_Scancode.SDL_SCANCODE_KP_2 => ImGuiKey.Keypad2,
+            SDL_Scancode.SDL_SCANCODE_KP_3 => ImGuiKey.Keypad3,
+            SDL_Scancode.SDL_SCANCODE_KP_4 => ImGuiKey.Keypad4,
+            SDL_Scancode.SDL_SCANCODE_KP_5 => ImGuiKey.Keypad5,
+            SDL_Scancode.SDL_SCANCODE_KP_6 => ImGuiKey.Keypad6,
+            SDL_Scancode.SDL_SCANCODE_KP_7 => ImGuiKey.Keypad7,
+            SDL_Scancode.SDL_SCANCODE_KP_8 => ImGuiKey.Keypad8,
+            SDL_Scancode.SDL_SCANCODE_KP_9 => ImGuiKey.Keypad9,
+            SDL_Scancode.SDL_SCANCODE_KP_0 => ImGuiKey.Keypad0,
+            SDL_Scancode.SDL_SCANCODE_KP_PERIOD => ImGuiKey.KeypadDecimal,
+            SDL_Scancode.SDL_SCANCODE_NONUSBACKSLASH => ImGuiKey.GraveAccent,
+            SDL_Scancode.SDL_SCANCODE_KP_EQUALS => ImGuiKey.KeypadEqual,
+            SDL_Scancode.SDL_SCANCODE_LCTRL => ImGuiKey.LeftCtrl,
+            SDL_Scancode.SDL_SCANCODE_LSHIFT => ImGuiKey.LeftShift,
+            SDL_Scancode.SDL_SCANCODE_LALT => ImGuiKey.LeftAlt,
+            SDL_Scancode.SDL_SCANCODE_LGUI => ImGuiKey.LeftSuper,
+            SDL_Scancode.SDL_SCANCODE_RCTRL => ImGuiKey.RightCtrl,
+            SDL_Scancode.SDL_SCANCODE_RSHIFT => ImGuiKey.RightShift,
+            SDL_Scancode.SDL_SCANCODE_RALT => ImGuiKey.RightAlt,
+            SDL_Scancode.SDL_SCANCODE_RGUI => ImGuiKey.RightSuper,
+            _ => ImGuiKey.None
+        };
+
+        if (code == ImGuiKey.None)
+            return null;
+
+        return code;
+    }
+}
