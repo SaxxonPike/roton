@@ -8,7 +8,7 @@ namespace Roton.Emulation.Super;
 internal sealed class SuperWorld(
     IMemory memory,
     IKeyList keys,
-    IFlags flags,
+    IFlagList flags,
     ITimerFactory timerFactory)
     : IWorld
 {
@@ -24,7 +24,7 @@ internal sealed class SuperWorld(
     public ref Word EnergyCycles =>
         ref memory.GetRef<Word>(0x785D);
 
-    public IFlags Flags { get; } = flags;
+    public IFlagList Flags { get; } = flags;
 
     public ref Word Gems =>
         ref memory.GetRef<Word>(0x784E);

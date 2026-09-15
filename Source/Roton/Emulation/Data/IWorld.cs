@@ -2,7 +2,7 @@
 
 public interface IWorld
 {
-    IFlags Flags { get; }
+    IFlagList Flags { get; }
     IKeyList Keys { get; }
     int WorldType { get; }
     ref Word Ammo { get; }

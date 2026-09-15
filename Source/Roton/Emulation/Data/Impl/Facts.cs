@@ -66,4 +66,8 @@ public abstract class Facts : IFacts
     public abstract int ScrollWidth { get; }
     public abstract int ScrollLeft { get; }
     public abstract int ScrollTop { get; }
+    public abstract int WorldNameMaxLength { get; }
+    public abstract int FlagMaxLength { get; }
+    public abstract int BoardNameMaxLength { get; }
+    public abstract int FlagCapacity { get; }
 }

@@ -10,7 +10,7 @@ namespace Roton.Emulation.Conditions.Impl;
 internal sealed class ConditionEvaluator(
     IParser parser,
     IConditionList conditions,
-    IFlags flags)
+    IFlagList flags)
     : IConditionEvaluator
 {
     public bool TryEval(ref OopContext context, ref Word instruction, out bool result)

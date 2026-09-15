@@ -1,4 +1,4 @@
-﻿namespace Lyon.App;
+﻿namespace Lyon.Common.App;
 
 /// <summary>
 /// Represents the game window.
@@ -15,3 +15,4 @@ public interface IWindow
     /// </summary>
     void Close();
 }
+

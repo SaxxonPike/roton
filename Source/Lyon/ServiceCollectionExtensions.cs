@@ -1,5 +1,6 @@
 using Lyon.App;
 using Lyon.App.Impl;
+using Lyon.Common.App;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lyon;

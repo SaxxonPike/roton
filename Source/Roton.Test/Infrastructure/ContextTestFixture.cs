@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Lyon;
 using Lyon.Common;
-using Lyon.Common.App;
-using Lyon.Common.App.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -16,7 +13,6 @@ using Roton.Emulation.Conditions;
 using Roton.Emulation.Core;
 using Roton.Emulation.Core.Impl;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Directions;
 using Roton.Emulation.Items;
 using Roton.Emulation.Targets;
@@ -34,7 +30,6 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected ITerminal Terminal { get; private set; } = null!;
     protected TestKeyboard Keyboard { get; private set; } = null!;
     protected TestJoystick Joystick { get; private set; } = null!;
-    protected ISpeaker SpeakerMock { get; private set; } = null!;
     protected ITracer Tracer { get; private set; } = null!;
 
     private Random Rand { get; } = new();
@@ -42,6 +37,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
     protected IActorList Actors { get; private set; } = null!;
     protected IAlerts Alerts { get; private set; } = null!;
     protected IBoard Board { get; private set; } = null!;
+    protected IBoardPacker BoardPacker { get; private set; } = null!;
     protected IBroadcaster Broadcaster { get; private set; } = null!;
     protected ICheatList Cheats { get; private set; } = null!;
     protected IColorList Colors { get; private set; } = null!;
@@ -78,7 +74,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Broadcaster.BroadcastLabel(-actorIndex, Facts.TouchLabel, false);
 
     protected void UnpackBoardResource(string path) => 
-        GameSerializer.UnpackBoard(Tiles, GameSerializer.LoadBoardData(GetResource(path)));
+        BoardPacker.Unpack(GameSerializer.LoadBoardData(GetResource(path)));
 
     protected void Step() => 
         Game.StepOnce();
@@ -158,6 +154,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Actors = container.GetRequiredService<IActorList>();
         Alerts = container.GetRequiredService<IAlerts>();
         Board = container.GetRequiredService<IBoard>();
+        BoardPacker = container.GetRequiredService<IBoardPacker>();
         Cheats = container.GetRequiredService<ICheatList>();
         Colors = container.GetRequiredService<IColorList>();
         Commands = container.GetRequiredService<ICommandList>();
@@ -418,7 +415,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         set => Board.IsDark = value;
     }
 
-    protected IFlags Flags => World.Flags;
+    protected IFlagList Flags => World.Flags;
 
 
     protected IKeyList Keys => World.Keys;

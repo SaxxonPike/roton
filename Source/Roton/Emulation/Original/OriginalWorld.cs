@@ -8,7 +8,7 @@ namespace Roton.Emulation.Original;
 internal sealed class OriginalWorld(
     IMemory memory,
     IKeyList keys,
-    IFlags flags,
+    IFlagList flags,
     ITimerFactory timerFactory)
     : IWorld
 {
@@ -32,7 +32,7 @@ internal sealed class OriginalWorld(
     public ref Bool IsLocked =>
         ref memory.GetRef<Bool>(0x4922);
 
-    public IFlags Flags { get; } = flags;
+    public IFlagList Flags { get; } = flags;
 
     public IKeyList Keys { get; } = keys;
 

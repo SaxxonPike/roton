@@ -7,6 +7,7 @@ public interface IWorldManager
     /// </remarks>
     bool LoadWorld(string name, bool savedGame);
 
+
     /// <remarks>
     /// RoZ: WorldSave
     /// </remarks>

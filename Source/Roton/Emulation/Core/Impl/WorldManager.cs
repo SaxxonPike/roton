@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Kinds;
@@ -14,7 +13,6 @@ internal sealed class WorldManager(
     IWorld world,
     IState state,
     IBoardList boards,
-    IGameSerializer gameSerializer,
     ITiles tiles,
     IFileSystem fileSystem,
     IScrollFormatter scrollFormatter,
@@ -29,7 +27,9 @@ internal sealed class WorldManager(
     IExits exits,
     IScroll scroll,
     IScrollContent scrollContent,
-    IKindList kinds)
+    IKindList kinds,
+    IWorldImporter worldImporter,
+    IBoardPacker boardPacker)
     : IWorldManager
 {
     private string GetFileName(string name, bool savedGame) =>
@@ -49,33 +49,11 @@ internal sealed class WorldManager(
 
         using (var stream = new MemoryStream(worldData))
         {
-            if (stream.Length == 0)
-                return false;
-
-            using var reader = new BinaryReader(stream);
-            var type = reader.ReadInt16();
-            if (type != world.WorldType)
+            if (!worldImporter.ImportWorld(stream))
             {
                 hud.FailToLoadWorld();
                 return false;
             }
-
-            var numBoards = reader.ReadInt16();
-            if (numBoards < 0)
-                throw new RotonException("Board count must be zero or greater.");
-
-            state.BoardCount = numBoards;
-            gameSerializer.LoadWorld(stream);
-
-            var newBoards = Enumerable
-                .Range(0, numBoards + 1)
-                .Select(_ => new PackedBoard(gameSerializer.LoadBoardData(stream)))
-                .ToList();
-
-            boards.Clear();
-
-            foreach (var rawBoard in newBoards)
-                boards.Add(rawBoard);
         }
 
         hud.CreateStatusWorld();
@@ -108,22 +86,8 @@ internal sealed class WorldManager(
 
         // Write common world header.
 
-        var type = (short)world.WorldType;
-        var numBoards = (short)(boards.Count - 1);
-
-        writer.Write(type);
-        writer.Write(numBoards);
-
-        // Write world data.
-
-        gameSerializer.SaveWorld(stream);
-
-        // Write each packed board.
-
-        foreach (var item in boards)
-            gameSerializer.SaveBoardData(stream, item.Data);
-
-        stream.Flush();
+        if (!worldImporter.ExportWorld((short)world.WorldType, stream))
+            return;
 
         // Save to disk. Extension depends on whether the game world has been
         // modified in-game.
@@ -144,7 +108,7 @@ internal sealed class WorldManager(
             alerts.Reset();
 
         ClearBoard();
-        boards.Add(new PackedBoard(gameSerializer.PackBoard(tiles)));
+        boards.Add(new PackedBoard(boardPacker.Pack()));
         world.BoardIndex = 0;
         world.Ammo = facts.DefaultAmmo;
         world.Gems = facts.DefaultGems;
@@ -197,7 +161,7 @@ internal sealed class WorldManager(
 
     public void PackBoard()
     {
-        var packed = new PackedBoard(gameSerializer.PackBoard(tiles));
+        var packed = new PackedBoard(boardPacker.Pack());
         PackBoard(world.BoardIndex, packed);
     }
 
@@ -213,7 +177,7 @@ internal sealed class WorldManager(
 
     public void UnpackBoard(int boardIndex)
     {
-        gameSerializer.UnpackBoard(tiles, boards[boardIndex].Data);
+        boardPacker.Unpack(boards[boardIndex].Data);
         world.BoardIndex = boardIndex;
     }
 

@@ -26,4 +26,8 @@ internal sealed class SuperFacts : Facts
     public override int ScrollWidth => 37;
     public override int ScrollLeft => 1;
     public override int ScrollTop => 2;
+    public override int WorldNameMaxLength => 20;
+    public override int FlagMaxLength => 20;
+    public override int BoardNameMaxLength => 60;
+    public override int FlagCapacity => 16;
 }

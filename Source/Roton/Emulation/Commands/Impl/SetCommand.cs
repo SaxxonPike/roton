@@ -9,7 +9,7 @@ namespace Roton.Emulation.Commands.Impl;
 [Context(Context.Super, "SET")]
 internal sealed class SetCommand(
     IParser parser,
-    IFlags flags)
+    IFlagList flags)
     : ICommand
 {
     public void Execute(ref OopContext context, ref Word instruction)

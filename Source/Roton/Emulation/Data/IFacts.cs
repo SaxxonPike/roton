@@ -66,4 +66,8 @@ public interface IFacts
     int ScrollWidth { get; }
     int ScrollLeft { get; }
     int ScrollTop { get; }
+    int WorldNameMaxLength { get; }
+    int FlagMaxLength { get; }
+    int BoardNameMaxLength { get; }
+    int FlagCapacity { get; }
 }

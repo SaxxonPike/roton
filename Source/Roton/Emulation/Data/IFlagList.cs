@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data;
 
-public interface IFlags : ICollection<string>
+public interface IFlagList : ICollection<string>
 {
     string this[int index] { get; set; }
     /// <remarks>
