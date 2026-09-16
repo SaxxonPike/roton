@@ -45,7 +45,7 @@ public abstract class BoardPacker(
         return mem.ToArray();
     }
 
-    public void Unpack(byte[] data)
+    public int Unpack(byte[] data)
     {
         using var mem = new MemoryStream(data);
         var reader = new BinaryReader(mem);
@@ -55,6 +55,7 @@ public abstract class BoardPacker(
         int actorCount = reader.ReadInt16();
         memory.Write16(ActorDataCountOffset, actorCount); // actor count
         UnpackActors(reader, actorCount); // actors
+        return (int)mem.Position;
     }
 
     private void PackActors(BinaryWriter target, int count)

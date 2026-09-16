@@ -1,8 +1,7 @@
-using Hexa.NET.ImGui;
+using System;
 using JetBrains.Annotations;
-using SDL;
 
-namespace Silverwind.Ursula;
+namespace Torch.Gui;
 
 /// <summary>
 /// Represents an ImGui backend implementation.

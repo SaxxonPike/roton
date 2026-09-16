@@ -30,4 +30,6 @@ internal sealed class SuperFacts : Facts
     public override int FlagMaxLength => 20;
     public override int BoardNameMaxLength => 60;
     public override int FlagCapacity => 16;
+    public override int BoardWidth => 96;
+    public override int BoardHeight => 80;
 }

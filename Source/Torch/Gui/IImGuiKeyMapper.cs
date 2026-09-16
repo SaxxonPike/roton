@@ -1,8 +1,6 @@
-using Hexa.NET.ImGui;
 using JetBrains.Annotations;
-using SDL;
 
-namespace Silverwind.Ursula;
+namespace Torch.Gui;
 
 [PublicAPI]
 public interface IImGuiKeyMapper

@@ -1,12 +1,15 @@
+using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.Intrinsics;
 using ImGuiNET.SDL3;
+using static Hexa.NET.ImGui.ImGui;
 
-namespace Silverwind.Ursula;
+namespace Torch.Gui.Impl;
 
 /// <inheritdoc />
 internal sealed class ImGuiBackend : IImGuiBackend
@@ -103,19 +106,16 @@ internal sealed class ImGuiBackend : IImGuiBackend
     /// <param name="keyMapper">
     /// Key mapper service.
     /// </param>
-    /// <param name="gamepadMapper">
-    /// Gamepad mapper service.
-    /// </param>
     public unsafe ImGuiBackend(
         ImGuiContextPtr ctx,
-        SDL_Window* windowPtr,
-        SDL_Renderer* rendererPtr,
+        IntPtr windowPtr,
+        IntPtr rendererPtr,
         IImGuiKeyMapper keyMapper)
     {
         _keyMapper = keyMapper;
 
         Context = ctx;
-        ImGui.SetCurrentContext(ctx);
+        SetCurrentContext(ctx);
 
         //
         // Check to see if this context has been initialized with the same
@@ -123,7 +123,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
         //
 
         if (Contexts.TryGetValue(ctx, out var ctxData) &&
-            (ctxData._window != windowPtr || ctxData._renderer != rendererPtr))
+            ((IntPtr)ctxData._window != windowPtr || (IntPtr)ctxData._renderer != rendererPtr))
             ImGuiBackendException.ThrowAlreadyInitialized(ctx);
 
         if (ctxData != null)
@@ -134,7 +134,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
         // backend.
         //
 
-        var io = ImGui.GetIO();
+        var io = GetIO();
 
         io.BackendFlags = ImGuiBackendFlags.RendererHasVtxOffset |
                           ImGuiBackendFlags.HasMouseCursors |
@@ -144,8 +144,8 @@ internal sealed class ImGuiBackend : IImGuiBackend
         if (SDL_WasInit(SDL_InitFlags.SDL_INIT_GAMEPAD) == SDL_InitFlags.SDL_INIT_GAMEPAD)
             io.BackendFlags |= ImGuiBackendFlags.HasGamepad;
 
-        var vp = ImGui.GetMainViewport();
-        vp.PlatformHandle = windowPtr;
+        var vp = GetMainViewport();
+        vp.PlatformHandle = (SDL_Window*)windowPtr;
 
         //
         // Set up the default font. This is so that there will always be
@@ -159,9 +159,9 @@ internal sealed class ImGuiBackend : IImGuiBackend
         //
 
         Contexts[ctx] = this;
-        _renderer = rendererPtr;
+        _renderer = (SDL_Renderer*)rendererPtr;
         _keyMapper = keyMapper;
-        _window = windowPtr;
+        _window = (SDL_Window*)windowPtr;
         _lastTime = SDL_GetTicksNS();
         _platformSetImeDataCallback = PlatformSetImeData;
         _getClipboardCallback = GetClipboard;
@@ -172,7 +172,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
         // GC does not free them.
         //
 
-        var pio = ImGui.GetPlatformIO();
+        var pio = GetPlatformIO();
 
         pio.PlatformSetImeDataFn = (void*)Marshal.GetFunctionPointerForDelegate(
             _platformSetImeDataCallback!
@@ -222,8 +222,8 @@ internal sealed class ImGuiBackend : IImGuiBackend
         // Determine the amount of time that has elapsed since the last frame.
         //
 
-        ImGui.SetCurrentContext(Context);
-        var io = ImGui.GetIO();
+        SetCurrentContext(Context);
+        var io = GetIO();
         var now = SDL_GetTicksNS();
         var elapsed = now - _lastTime;
 
@@ -258,7 +258,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
             SDL_WarpMouseInWindow(_window, io.MousePos.X, io.MousePos.Y);
 
         if ((io.ConfigFlags & ImGuiConfigFlags.NoMouseCursorChange) == 0)
-            SetMouseCursor(ImGui.GetMouseCursor());
+            SetMouseCursor(GetMouseCursor());
 
         //
         // Mark the current frame in progress.
@@ -366,7 +366,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
 
     private unsafe void UpdateTexture(ImTextureDataPtr tex)
     {
-        ImGui.SetCurrentContext(Context);
+        SetCurrentContext(Context);
 
         switch (tex.Status)
         {
@@ -453,7 +453,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
     /// </summary>
     private unsafe void DestroyDeviceObjects()
     {
-        var textures = ImGui.GetPlatformIO().Textures;
+        var textures = GetPlatformIO().Textures;
 
         for (var i = 0; i < textures.Size; i++)
         {
@@ -490,8 +490,8 @@ internal sealed class ImGuiBackend : IImGuiBackend
         // Process the event.
         //
 
-        ImGui.SetCurrentContext(Context);
-        var io = ImGui.GetIO();
+        SetCurrentContext(Context);
+        var io = GetIO();
 
         switch (ev->Type)
         {
@@ -732,7 +732,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
     /// </param>
     public void UpdateKeyboardModifiers(SDL_Keymod mod)
     {
-        var io = ImGui.GetIO();
+        var io = GetIO();
 
         if (_keyMapper.ConvertKeyboardMod(SDL_Keymod.SDL_KMOD_CTRL) is { } ctrlKey)
             io.AddKeyEvent(ctrlKey, (mod & SDL_Keymod.SDL_KMOD_CTRL) != 0);
@@ -831,7 +831,7 @@ internal sealed class ImGuiBackend : IImGuiBackend
 
                 if (newCursor == null)
                     ImGuiBackendException.ThrowCreateSystemCursorFailed(
-                        ImGui.GetCurrentContext(),
+                        GetCurrentContext(),
                         cursor,
                         id.Value);
 

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Silverwind.Ursula;
+namespace Torch.Gui;
 
 [PublicAPI]
 public static class ImGuiConstants

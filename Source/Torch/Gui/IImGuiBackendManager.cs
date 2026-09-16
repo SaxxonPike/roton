@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
-using SDL;
 
-namespace Silverwind.Ursula;
+namespace Torch.Gui;
 
 /// <summary>
 /// Manages the creation of ImGui backends.

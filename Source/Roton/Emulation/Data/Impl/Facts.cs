@@ -70,4 +70,6 @@ public abstract class Facts : IFacts
     public abstract int FlagMaxLength { get; }
     public abstract int BoardNameMaxLength { get; }
     public abstract int FlagCapacity { get; }
+    public abstract int BoardWidth { get; }
+    public abstract int BoardHeight { get; }
 }

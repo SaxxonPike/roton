@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Lyon;
 using Lyon.App;
 using Lyon.Common;
 using Microsoft.Extensions.Configuration;

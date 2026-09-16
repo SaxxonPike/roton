@@ -14,5 +14,5 @@ public interface IBoardPacker
     public int BoardNameOffset { get; }
 
     byte[] Pack();
-    void Unpack(byte[] data);
+    int Unpack(byte[] data);
 }

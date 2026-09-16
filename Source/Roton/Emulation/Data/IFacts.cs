@@ -70,4 +70,6 @@ public interface IFacts
     int FlagMaxLength { get; }
     int BoardNameMaxLength { get; }
     int FlagCapacity { get; }
+    int BoardWidth { get; }
+    int BoardHeight { get; }
 }

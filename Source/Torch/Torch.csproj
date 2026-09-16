@@ -1,22 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <OutputType>exe</OutputType>
+        <LangVersion>default</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
-    <PackageReference Include="ppy.SDL3-CS" Version="2026.722.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12"/>
+        <PackageReference Include="ppy.SDL3-CS" Version="2026.722.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Lyon.Common\Lyon.Common.csproj" />
-    <ProjectReference Include="..\Roton\Roton.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Lyon.Common\Lyon.Common.csproj"/>
+        <ProjectReference Include="..\Roton.Editors\Roton.Editors.csproj" />
+        <ProjectReference Include="..\Roton\Roton.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Deploy\RotonConfig.Default.json">
+            <Link>RotonConfig.Default.json</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>

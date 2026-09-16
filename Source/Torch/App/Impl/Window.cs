@@ -1,20 +1,23 @@
-﻿using Lyon.Common;
-using Lyon.Common.App;
-using Lyon.Common.Presenters;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Lyon.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Roton;
+using Roton.Editors;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
+using Torch.Gui;
 
 namespace Torch.App.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
 internal sealed unsafe class Window(
-    IKeyboardPresenter keyboardPresenter,
-    IScenePresenter scenePresenter,
-    IJoystickPresenter joystickPresenter,
-    IConfig config)
-    : IWindow
+    IConfig config,
+    IImGuiBackendManager imGuiBackendManager,
+    IServiceProvider serviceProvider)
+    : IAppWindow
 {
     /// <summary>
     /// Used for SDL subsystem reference counting.
@@ -32,14 +35,18 @@ internal sealed unsafe class Window(
     private SDL_Renderer* _renderer;
 
     /// <summary>
-    /// Backbuffer texture.
-    /// </summary>
-    private SDL_Texture* _background;
-
-    /// <summary>
     /// If true, the window is to be closed.
     /// </summary>
     private bool _closeWindow;
+
+    /// <summary>
+    /// ImGui backend renderer.
+    /// </summary>
+    private IImGuiBackend? _imGuiBackend;
+
+    private List<EditorWindow> _editors = new();
+
+    private List<EditorWindow> _editorsToClose = new();
 
     /// <summary>
     /// Width of the backbuffer texture.
@@ -72,33 +79,18 @@ internal sealed unsafe class Window(
     public bool Running { get; private set; }
 
     /// <summary>
-    /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_DOWN"/>.
-    /// </summary>
-    private void HandleKeyDown(ref SDL_KeyboardEvent e) =>
-        keyboardPresenter.Press(e.key, e.mod);
-
-    /// <summary>
-    /// Handles <see cref="SDL_EventType.SDL_EVENT_KEY_UP"/>.
-    /// </summary>
-    private void HandleKeyUp(ref SDL_KeyboardEvent e) =>
-        keyboardPresenter.Release(e.key, e.mod);
-
-    /// <summary>
     /// Handles an SDL event.
     /// </summary>
     private void HandleEvent(ref SDL_Event e)
     {
-        switch (e.Type)
+        var ev = e;
+        _imGuiBackend?.ProcessEvent(&ev);
+
+        switch (ev.Type)
         {
             case SDL_EventType.SDL_EVENT_QUIT:
             case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
                 Close();
-                break;
-            case SDL_EventType.SDL_EVENT_KEY_DOWN:
-                HandleKeyDown(ref e.key);
-                break;
-            case SDL_EventType.SDL_EVENT_KEY_UP:
-                HandleKeyUp(ref e.key);
                 break;
         }
     }
@@ -123,22 +115,33 @@ internal sealed unsafe class Window(
             if (_closeWindow)
                 break;
 
-            // Render the scene.
-            if (scenePresenter.Render() is { Bits.Length: > 0 } bitmap)
+            // Begin the scene.
+            _imGuiBackend?.NewFrame();
+            ImGui.NewFrame();
+
+            foreach (var editor in _editors)
             {
-                fixed (void* bitmapBits = bitmap.Bits)
-                    SDL_UpdateTexture(_background, null, (nint)bitmapBits, bitmap.Stride);
+                if (!editor.Render())
+                    _editorsToClose.Add(editor);
             }
 
-            // Set the scene scale.
-            SDL_SetRenderLogicalPresentation(
-                _renderer,
-                WindowWidth, WindowHeight,
-                SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_LETTERBOX
-            );
+            foreach (var editor in _editorsToClose)
+            {
+                _editors.Remove(editor);
+                editor.Dispose();
+            }
+
+            _editorsToClose.Clear();
+
+            MainMenu.Render(this);
+
+            // Render the scene.
+            SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+            SDL_RenderClear(_renderer);
+            ImGui.Render();
+            _imGuiBackend?.RenderDrawData(ImGui.GetDrawData());
 
             // Present the scene.
-            SDL_RenderTexture(_renderer, _background, null, null);
             SDL_RenderPresent(_renderer);
 
             // Reset the scene scale.
@@ -208,17 +211,7 @@ internal sealed unsafe class Window(
         );
         _window = window;
         _renderer = renderer;
-
-        // Create the background texture to which we will render the scene.
-        _background = SDL_CreateTexture(
-            _renderer,
-            SDL_PIXELFORMAT_BGRA32,
-            SDL_TextureAccess.SDL_TEXTUREACCESS_STREAMING,
-            RenderWidth, RenderHeight
-        );
-
-        // Set scale mode to pixel art so that it looks appropriate.
-        SDL_SetTextureScaleMode(_background, SDL_ScaleMode.SDL_SCALEMODE_PIXELART);
+        _imGuiBackend = imGuiBackendManager.Create(_window, _renderer);
 
         // Not all adapters support adaptive vsync, so use the regular
         // method if this fails.
@@ -232,7 +225,28 @@ internal sealed unsafe class Window(
         SDL_DestroyWindow(_window);
 
         // Free SDL subsystems.
+        _imGuiBackend.Dispose();
+        _imGuiBackend = null;
         _sdlContext.Dispose();
         _sdlContext = null;
+    }
+
+    public SDL_Window* GetWindowPtr() => _window;
+
+    public void OpenWorld(string file)
+    {
+        try
+        {
+            var scope = serviceProvider.CreateScope();
+            var editor = new Editor(scope.ServiceProvider);
+            editor.Load(File.OpenRead(file));
+            var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(scope.ServiceProvider, editor, scope);
+            editorWindow.Init();
+            _editors.Add(editorWindow);
+        }
+        catch
+        {
+            // simply don't load on failure
+        }
     }
 }

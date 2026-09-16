@@ -1,6 +1,4 @@
-using SDL;
-
-namespace Silverwind.Ursula;
+namespace Torch.Gui.Impl;
 
 /// <inheritdoc />
 internal sealed class ImGuiKeyMapper : IImGuiKeyMapper

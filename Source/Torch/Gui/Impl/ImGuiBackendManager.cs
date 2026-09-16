@@ -1,7 +1,7 @@
+using System;
 using Microsoft.Extensions.DependencyInjection;
-using Silverwind.Ursula;
 
-namespace Torch.ImGui;
+namespace Torch.Gui.Impl;
 
 /// <inheritdoc />
 public class ImGuiBackendManager(
@@ -11,9 +11,9 @@ public class ImGuiBackendManager(
     /// <inheritdoc />
     public unsafe IImGuiBackend Create(SDL_Window* window, SDL_Renderer* renderer)
     {
-        var context = Hexa.NET.ImGui.ImGui.CreateContext();
+        var context = ImGui.CreateContext();
 
-        return ActivatorUtilities.CreateInstance<IImGuiBackend>(
+        return ActivatorUtilities.CreateInstance<ImGuiBackend>(
             serviceProvider,
             context,
             (IntPtr)window,
