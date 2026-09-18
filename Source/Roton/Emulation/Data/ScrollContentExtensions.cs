@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Roton.Emulation.Data;
 
 internal static class ScrollContentExtensions

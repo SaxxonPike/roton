@@ -1,5 +1,3 @@
-using Roton.Infrastructure;
-
 namespace Roton.Emulation.Core.Impl;
 
 internal sealed class NullConfig : IConfig
