@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -21,6 +20,4 @@ internal sealed class ClockwiseConveyorKind : IKind
         element.Name = "Clockwise";
         element.EditorCategory = "Conveyors:";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

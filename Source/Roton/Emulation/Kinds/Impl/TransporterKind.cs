@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -21,9 +20,4 @@ internal sealed class TransporterKind : IKind
         element.Name = "Transporter";
         element.StepEditText = "Direction?";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Direction", nameof(IActor.Vector), EditorParamType.Vector)
-    ];
 }

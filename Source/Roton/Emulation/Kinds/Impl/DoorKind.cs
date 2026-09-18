@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -19,6 +18,4 @@ internal sealed class DoorKind : IKind
         element.MenuKey = 'D';
         element.Name = "Door";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

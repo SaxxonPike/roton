@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -19,6 +18,4 @@ internal sealed class TorchKind : IKind
         element.MenuKey = 'T';
         element.Name = "Torch";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

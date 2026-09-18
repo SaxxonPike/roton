@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -20,6 +19,4 @@ internal sealed class StoneKind : IKind
         element.MenuKey = 'Z';
         element.Name = "Stone";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

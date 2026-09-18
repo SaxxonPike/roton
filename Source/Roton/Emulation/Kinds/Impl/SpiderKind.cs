@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -22,9 +21,4 @@ internal sealed class SpiderKind : IKind
         element.P1EditText = "Intelligence?";
         element.Points = 3;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1))
-    ];
 }

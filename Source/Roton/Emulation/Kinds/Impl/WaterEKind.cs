@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -20,6 +19,4 @@ internal sealed class WaterEKind : IKind
         element.MenuKey = '6';
         element.Name = "Water E";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -25,6 +24,4 @@ internal sealed class DragonPupKind : IKind
         element.P2EditText = "Switch Rate?";
         element.Points = 1;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -17,6 +16,4 @@ internal sealed class LineKind : IKind
         element.HasDrawCode = true;
         element.Name = "Line";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

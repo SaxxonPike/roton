@@ -1,54 +1,80 @@
+using Torch.Gui.Components;
+
 namespace Torch.App.Impl;
 
-public static class MainMenu
+public static class MainMenuUi
 {
-    public static unsafe void Render(IAppWindow window)
+    public static Component Create(IAppWindow app)
     {
-        if (ImGui.BeginMainMenuBar())
-        {
-            if (ImGui.BeginMenu("File"))
-            {
-                if (ImGui.BeginMenu("New"))
-                {
-                    if (ImGui.MenuItem("ZZT World"))
-                    {
-                    }
-
-                    if (ImGui.MenuItem("Super ZZT World"))
-                    {
-                    }
-
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.MenuItem("Open..."))
-                {
-                    FileDialog.Show(
-                        window.GetWindowPtr(),
-                        [("ZZT Worlds", "zzt"), ("Super ZZT Worlds", "szt"), ("All Files", "*")],
-                        true,
-                        files =>
+        return MainMenuBar.Create(
+            _ => { },
+            Menu.Create(
+                app,
+                file => { file.Label = _ => "File"; },
+                Menu.Create(
+                    app,
+                    fileNew => { fileNew.Label = _ => "New"; },
+                    MenuItem.Create(
+                        app,
+                        fileNewZzt =>
                         {
-                            foreach (var file in files)
-                                window.OpenWorld(file);
-                        });
-                }
-
-                ImGui.Separator();
-
-                if (ImGui.MenuItem("Quit"))
-                {
-                    unsafe
+                            fileNewZzt.Label = _ => "ZZT World";
+                            fileNewZzt.OnClick = OnFileNewZztClick;
+                        }
+                    ),
+                    MenuItem.Create(
+                        app,
+                        fileNewSuperZzt =>
+                        {
+                            fileNewSuperZzt.Label = _ => "Super ZZT World";
+                            fileNewSuperZzt.OnClick = OnFileNewSuperZztClick;
+                        })
+                ),
+                MenuItem.Create(
+                    app,
+                    fileOpen =>
                     {
-                        var ev = new SDL_Event { type = (int)SDL_EventType.SDL_EVENT_QUIT };
-                        SDL_PushEvent(&ev);
-                    }
-                }
+                        fileOpen.Label = _ => "Open...";
+                        fileOpen.OnClick = OnFileOpenClick;
+                    }),
+                Separator.Create(),
+                MenuItem.Create(
+                    app,
+                    fileQuit =>
+                    {
+                        fileQuit.Label = _ => "Quit";
+                        fileQuit.OnClick = OnFileQuitClick;
+                    })
+            )
+        );
+    }
 
-                ImGui.EndMenu();
-            }
+    private static void OnFileNewSuperZztClick(IAppWindow app)
+    {
+        app.NewSuperZztWorld();
+    }
 
-            ImGui.EndMainMenuBar();
-        }
+    private static unsafe void OnFileQuitClick(IAppWindow _)
+    {
+        var ev = new SDL_Event { type = (int)SDL_EventType.SDL_EVENT_QUIT };
+        SDL_PushEvent(&ev);
+    }
+
+    private static unsafe void OnFileOpenClick(IAppWindow app)
+    {
+        FileDialog.Show(
+            app.GetWindowPtr(),
+            [("ZZT Worlds", "zzt"), ("Super ZZT Worlds", "szt"), ("All Files", "*")],
+            true,
+            files =>
+            {
+                foreach (var file in files)
+                    app.OpenWorld(file);
+            });
+    }
+
+    private static void OnFileNewZztClick(IAppWindow app)
+    {
+        app.NewZztWorld();
     }
 }

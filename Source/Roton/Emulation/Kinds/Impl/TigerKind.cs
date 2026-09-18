@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -26,11 +25,4 @@ internal sealed class TigerKind : IKind
         element.P3EditText = "Firing type?";
         element.Points = 2;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1)),
-        new("Firing rate", nameof(IActor.P2), EditorParamType.Bits06),
-        new("Firing type", nameof(IActor.P2), EditorParamType.Bit7)
-    ];
 }

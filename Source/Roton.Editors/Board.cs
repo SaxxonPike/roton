@@ -13,6 +13,16 @@ namespace Roton.Editors;
 public class Board
 {
     /// <summary>
+    /// Width of the board in tiles.
+    /// </summary>
+    public int Width { get; internal set; }
+
+    /// <summary>
+    /// Height of the board in tiles.
+    /// </summary>
+    public int Height { get; internal set; }
+
+    /// <summary>
     /// Name of the board.
     /// </summary>
     [MaxLength(byte.MaxValue)]
@@ -54,7 +64,7 @@ public class Board
     /// <summary>
     /// On-board tile data.
     /// </summary>
-    public Tile[,] Tiles { get; set; } = new Tile[0, 0];
+    public Tile[,] Tiles { get; internal set; } = new Tile[0, 0];
 
     /// <summary>
     /// Board data that is written after the end of the structured data.

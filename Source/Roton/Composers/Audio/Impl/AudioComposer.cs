@@ -105,7 +105,6 @@ internal sealed class AudioComposer(
 
     private void SetSampleRate(int value)
     {
-        synth.SetFrequency(value);
         _sampleRate = value;
         _bufferDenominator = config.Engine.MasterClockDenominator;
         _bufferNumerator = _sampleRate * config.Engine.MasterClockNumerator;

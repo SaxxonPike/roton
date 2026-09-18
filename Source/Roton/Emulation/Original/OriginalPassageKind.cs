@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -22,9 +21,4 @@ internal sealed class OriginalPassageKind : IKind
         element.Name = "Passage";
         element.BoardEditText = "Room thru passage?";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Destination", nameof(IActor.P3), EditorParamType.Board)
-    ];
 }

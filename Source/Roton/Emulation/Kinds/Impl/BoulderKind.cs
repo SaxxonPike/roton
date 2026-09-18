@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -19,6 +18,4 @@ internal sealed class BoulderKind : IKind
         element.MenuKey = 'O';
         element.Name = "Boulder";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

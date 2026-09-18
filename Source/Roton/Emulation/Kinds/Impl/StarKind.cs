@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -20,9 +19,4 @@ internal sealed class StarKind : IKind
         element.HasDrawCode = true;
         element.Name = "Star";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Action Cycle", nameof(IActor.P2), EditorParamType.YesNo)
-    ];
 }

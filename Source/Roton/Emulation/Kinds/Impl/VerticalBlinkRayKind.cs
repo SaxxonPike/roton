@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -15,6 +14,4 @@ internal sealed class VerticalBlinkRayKind : IKind
     {
         element.Character = 0xBA;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

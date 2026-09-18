@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -18,6 +17,4 @@ internal sealed class InvisibleKind(IState state) : IKind
         element.MenuKey = 'I';
         element.Name = "Invisible";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

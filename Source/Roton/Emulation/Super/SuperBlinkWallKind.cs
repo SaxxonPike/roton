@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -23,11 +22,4 @@ internal sealed class SuperBlinkWallKind : IKind
         element.P2EditText = "Period";
         element.StepEditText = "Wall direction";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Starting Time", nameof(IActor.P1)),
-        new("Period", nameof(IActor.P2)),
-        new("Wall Direction", nameof(IActor.Vector), EditorParamType.Vector)
-    ];
 }

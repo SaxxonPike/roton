@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -19,6 +18,4 @@ internal sealed class SuperMonitorKind : IKind
         element.IsPushable = true;
         element.Name = "Monitor";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

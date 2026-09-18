@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -23,6 +22,4 @@ internal sealed class PairerKind : IKind
         element.P1EditText = "Intelligence?";
         element.Points = 2;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

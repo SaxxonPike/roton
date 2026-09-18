@@ -12,11 +12,15 @@ namespace Roton.Emulation.Core.Impl;
 internal sealed class WorldImporter(
     IState state,
     IGameSerializer gameSerializer,
-    IBoardList boards)
+    IBoardList boards,
+    IWorld world)
     : IWorldImporter
 {
     public bool ImportWorldData(int worldType, Stream stream)
     {
+        if (worldType != world.WorldType)
+            return false;
+
         var numBoardsBytes = new byte[2];
         if (stream.Read(numBoardsBytes, 0, 2) < 2)
             throw new EndOfStreamException();

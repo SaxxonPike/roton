@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -20,6 +19,4 @@ internal sealed class FakeWallKind : IKind
         element.MenuKey = 'A';
         element.Name = "Fake";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

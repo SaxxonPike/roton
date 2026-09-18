@@ -10,7 +10,8 @@ public static class WorldImporterExtensions
         var typeBytes = new byte[2];
         if (stream.Read(typeBytes, 0, 2) < 2)
             throw new EndOfStreamException();
-        return importer.ImportWorldData(BinaryPrimitives.ReadInt16LittleEndian(typeBytes), stream);
+        var worldType = BinaryPrimitives.ReadInt16LittleEndian(typeBytes);
+        return importer.ImportWorldData(worldType, stream);
     }
 
     public static bool ExportWorld(this IWorldImporter importer, int worldType, Stream stream)

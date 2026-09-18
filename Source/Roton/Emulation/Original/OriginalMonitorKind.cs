@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -18,6 +17,4 @@ internal sealed class OriginalMonitorKind : IKind
         element.Cycle = 1;
         element.Name = "Monitor";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -14,6 +13,4 @@ internal sealed class GreenTextKind : IKind
     public void Initialize(IElement element)
     {
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

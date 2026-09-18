@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -18,6 +17,4 @@ internal sealed class SliderEwKind : IKind
         element.MenuKey = '2';
         element.Name = "Slider (EW)";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -8,12 +8,13 @@ using Roton.Editors;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 using Torch.Gui;
+using Torch.Gui.Components;
 
 namespace Torch.App.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed unsafe class Window(
+internal sealed unsafe class MainWindow(
     IConfig config,
     IImGuiBackendManager imGuiBackendManager,
     IServiceProvider serviceProvider)
@@ -47,6 +48,8 @@ internal sealed unsafe class Window(
     private List<EditorWindow> _editors = new();
 
     private List<EditorWindow> _editorsToClose = new();
+
+    private List<Component> _components = new();
 
     /// <summary>
     /// Width of the backbuffer texture.
@@ -128,12 +131,12 @@ internal sealed unsafe class Window(
             foreach (var editor in _editorsToClose)
             {
                 _editors.Remove(editor);
-                editor.Dispose();
             }
 
             _editorsToClose.Clear();
 
-            MainMenu.Render(this);
+            foreach (var component in _components)
+                component.Render();
 
             // Render the scene.
             SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
@@ -218,8 +221,15 @@ internal sealed unsafe class Window(
         if (!SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE))
             SDL_SetRenderVSync(renderer, 1);
 
+        // Build main UI component.
+        var mainMenuUi = MainMenuUi.Create(this);
+        _components.Add(mainMenuUi);
+
         // Start the main loop.
         Loop();
+
+        // Tear down main UI component.
+        _components.Remove(mainMenuUi);
 
         // Clean up the window.
         SDL_DestroyWindow(_window);
@@ -233,16 +243,50 @@ internal sealed unsafe class Window(
 
     public SDL_Window* GetWindowPtr() => _window;
 
+    private IServiceProvider CreateServiceProvider(Context context) =>
+        new ServiceCollection()
+            .AddSingleton(config)
+            .AddSingleton<IAppWindow>(this)
+            .AddRoton(Context.Ui, typeof(Program).Assembly)
+            .AddRoton(context)
+            .BuildServiceProvider();
+
+    private void AddEditorWindow(Editor editor)
+    {
+        var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(serviceProvider, editor);
+        editorWindow.Init();
+        _editors.Add(editorWindow);
+    }
+
+    private void OpenEditor(Context context)
+    {
+        var editor = new Editor(CreateServiceProvider);
+        editor.Reset(context);
+        AddEditorWindow(editor);
+    }
+
+    private void OpenEditor(Stream stream)
+    {
+        var editor = new Editor(CreateServiceProvider);
+        editor.Load(stream, (int)stream.Length);
+        AddEditorWindow(editor);
+    }
+
+    public void NewZztWorld()
+    {
+        OpenEditor(Context.Original);
+    }
+
+    public void NewSuperZztWorld()
+    {
+        OpenEditor(Context.Super);
+    }
+
     public void OpenWorld(string file)
     {
         try
         {
-            var scope = serviceProvider.CreateScope();
-            var editor = new Editor(scope.ServiceProvider);
-            editor.Load(File.OpenRead(file));
-            var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(scope.ServiceProvider, editor, scope);
-            editorWindow.Init();
-            _editors.Add(editorWindow);
+            OpenEditor(File.OpenRead(file));
         }
         catch
         {

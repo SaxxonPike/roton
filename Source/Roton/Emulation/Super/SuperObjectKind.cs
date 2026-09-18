@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -22,11 +21,4 @@ internal sealed class SuperObjectKind : IKind
         element.P1EditText = "Character?";
         element.CodeEditText = "Edit Program";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Character", nameof(IActor.P1), EditorParamType.Character),
-        new("Steps", nameof(IActor.P2)),
-        new("Locked", nameof(IActor.P3), EditorParamType.YesNo)
-    ];
 }

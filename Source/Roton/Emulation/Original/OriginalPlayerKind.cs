@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Emulation.Kinds;
 using Roton.Infrastructure;
@@ -24,6 +23,4 @@ internal sealed class OriginalPlayerKind : IKind
         element.Name = "Player";
         element.EditorCategory = "Items:";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() => [];
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -21,10 +20,4 @@ internal sealed class CentipedeSegmentKind : IKind
         element.Name = "Segment";
         element.Points = 3;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Follower", nameof(IActor.Follower), EditorParamType.Actor),
-        new("Leader", nameof(IActor.Leader), EditorParamType.Actor)
-    ];
 }

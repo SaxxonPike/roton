@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -21,9 +20,4 @@ internal sealed class SharkKind : IKind
         element.Name = "Shark";
         element.P1EditText = "Intelligence?";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1))
-    ];
 }

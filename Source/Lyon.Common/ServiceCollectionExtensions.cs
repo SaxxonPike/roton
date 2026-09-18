@@ -84,7 +84,7 @@ public static class ServiceCollectionExtensions
             services.Configure<EngineConfig>(c => { conf.GetSection("Roton:Engine").Bind(c); });
             services.Configure<JoystickConfig>(c => { conf.GetSection("Roton:Joystick").Bind(c); });
             services.Configure<VideoConfig>(c => { conf.GetSection("Roton:Video").Bind(c); });
-            services.AddScoped<IConfig, Config>();
+            services.AddSingleton<IConfig, Config>();
 
             config = conf;
             return services;
@@ -92,7 +92,7 @@ public static class ServiceCollectionExtensions
 
         public IServiceCollection AddLyonCommon()
         {
-            services.AddScoped<IFileSystem>(c =>
+            services.AddSingleton<IFileSystem>(c =>
             {
                 var config = c.GetRequiredService<IOptions<EngineConfig>>().Value;
                 var factory = c.GetRequiredService<IFileSystemFactory>();
@@ -103,10 +103,10 @@ public static class ServiceCollectionExtensions
                 ]);
             });
 
-            services.AddScoped<IAudioComposer>(c =>
+            services.AddSingleton<IAudioComposer>(c =>
                 c.GetRequiredService<IAudioComposerFactory>().Create());
             
-            services.AddScoped<ISceneComposer>(c =>
+            services.AddSingleton<ISceneComposer>(c =>
                 c.GetRequiredService<ISceneComposerFactory>().Create());
 
             services.AddOptions();
@@ -124,7 +124,7 @@ public static class ServiceCollectionExtensions
             Context context,
             params Assembly[] additionalAssemblies)
         {
-            services.AddScoped<IContextMetadataService>(_ => ContextMetadataServiceFactory.GetForContext(context));
+            services.AddSingleton<IContextMetadataService>(_ => ContextMetadataServiceFactory.GetForContext(context));
 
             var assemblies = new[] { typeof(ServiceCollectionExtensions).Assembly }
                 .Concat(additionalAssemblies)
@@ -140,15 +140,15 @@ public static class ServiceCollectionExtensions
                 // Add concrete implementation.
                 if (serviceGroup.Key.IsGenericTypeDefinition)
                 {
-                    services.AddScoped(serviceGroup.Single().Service, serviceGroup.Key);
+                    services.AddSingleton(serviceGroup.Single().Service, serviceGroup.Key);
                 }
                 else
                 {
-                    services.AddScoped(serviceGroup.Key);
+                    services.AddSingleton(serviceGroup.Key);
 
                     // Add service mappings.
                     foreach (var service in serviceGroup)
-                        services.AddScoped(service.Service, sp =>
+                        services.AddSingleton(service.Service, sp =>
                         {
                             var stack = DependencyStack.Value!;
                             if (stack.Contains(service.Service))

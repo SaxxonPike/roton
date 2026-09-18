@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -25,10 +24,4 @@ internal sealed class RotonKind : IKind
         element.P2EditText = "Switch Rate?";
         element.Points = 2;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1)),
-        new("Switch Rate", nameof(IActor.P2))
-    ];
 }

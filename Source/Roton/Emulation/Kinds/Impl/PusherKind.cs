@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -21,9 +20,4 @@ internal sealed class PusherKind : IKind
         element.Name = "Pusher";
         element.StepEditText = "Push direction?";
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Push Direction", nameof(IActor.Vector), EditorParamType.Vector),
-    ];
 }

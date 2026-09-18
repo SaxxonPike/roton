@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.IO;
 using System.Runtime.InteropServices;
 using Roton.Emulation.Core;
@@ -6,14 +7,16 @@ using Roton.Emulation.Data;
 
 namespace Roton.Editors;
 
-public class Editor(IServiceProvider serviceProvider)
+public class Editor(Func<Context, IServiceProvider> serviceProviderFactory)
 {
     public World? World { get; private set; }
 
-    internal T GetService<T>() => (T)serviceProvider.GetService(typeof(T)) ??
-                                  throw new RotonException("Required service not found: " + typeof(T).Name);
+    private static T GetService<T>(IServiceProvider serviceProvider) =>
+        (T)serviceProvider.GetService(typeof(T)) ??
+        throw new RotonException(
+            "Required service not found: " + typeof(T).Name);
 
-    public void Load(Stream stream)
+    public void Load(Stream stream, int length)
     {
         // Loading worlds is an interesting process:
         // - Ensure that there is an emulated environment for Roton services to use.
@@ -21,15 +24,46 @@ public class Editor(IServiceProvider serviceProvider)
         // - Unpack each board, one by one, exporting tiles and actor data.
         // This allows us to reuse all the existing load behavior.
 
-        var ser = GetService<IWorldImporter>();
-        var inWorld = GetService<IWorld>();
-        var inBoard = GetService<IBoard>();
-        var packedBoards = GetService<IBoardList>();
-        var packer = GetService<IBoardPacker>();
-        var tiles = GetService<ITiles>();
-        var actors = GetService<IActorList>();
+        if (length < 2)
+            throw new EndOfStreamException();
 
-        ser.ImportWorld(stream);
+        var buffer = new byte[8192];
+        if (stream.Read(buffer, 0, 2) < 2)
+            throw new EndOfStreamException();
+
+        var worldType = (Context)BinaryPrimitives.ReadInt16LittleEndian(buffer);
+        using var mem = new MemoryStream(length);
+        mem.Write(buffer, 0, 2);
+
+        var remaining = length - 2;
+        while (remaining > 0)
+        {
+            var amount = stream.Read(buffer, 0, buffer.Length);
+            if (amount == 0)
+                break;
+            mem.Write(buffer, 0, amount);
+            remaining -= amount;
+        }
+
+        if (remaining > 0)
+            throw new EndOfStreamException();
+
+        mem.Position = 0;
+
+        var services = serviceProviderFactory(worldType);
+        var ser = GetService<IWorldImporter>(services);
+        ser.ImportWorld(mem);
+        ConvertFromContext(services);
+    }
+
+    private void ConvertFromContext(IServiceProvider services)
+    {
+        var inWorld = GetService<IWorld>(services);
+        var inBoard = GetService<IBoard>(services);
+        var packedBoards = GetService<IBoardList>(services);
+        var packer = GetService<IBoardPacker>(services);
+        var tiles = GetService<ITiles>(services);
+        var actors = GetService<IActorList>(services);
 
         World = new World
         {
@@ -78,6 +112,8 @@ public class Editor(IServiceProvider serviceProvider)
 
             var outBoard = new Board
             {
+                Width = tiles.Width,
+                Height = tiles.Height,
                 Tiles = new Tile[tiles.Width, tiles.Height],
                 Name = packedBoard.Name,
                 Camera = inBoard.Camera,
@@ -117,8 +153,16 @@ public class Editor(IServiceProvider serviceProvider)
 
                 outBoard.Actors.Add(outActor);
             }
-            
+
             World.Boards.Add(outBoard);
         }
+    }
+
+    public void Reset(Context context)
+    {
+        var services = serviceProviderFactory(context);
+        var manager = GetService<IWorldManager>(services);
+        manager.ClearWorld();
+        ConvertFromContext(services);
     }
 }

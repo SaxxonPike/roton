@@ -1,34 +1,37 @@
-using System;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using Roton.Editors;
 using Roton.Emulation.Core;
-using Roton.Emulation.Data;
 
 namespace Torch.App.Impl;
 
-public class EditorWindow(
-    Editor editor,
-    IServiceScope scope,
-    ITerminal terminal,
-    IFacts facts)
-    : IDisposable
+public class EditorWindow(Editor editor, ITerminal terminal)
 {
     private string? _title;
-    private int _currentBoard = 0;
+    private Board? _currentBoard;
 
     public void Init()
     {
-        _currentBoard = editor.World?.StartBoard ?? 0;
-        terminal.SetSize(facts.BoardWidth, facts.BoardHeight, false);
+        SwitchBoard(editor.World!.StartBoard);
         _title = BuildTitle();
+    }
+
+    private void SwitchBoard(int index)
+    {
+        if (index < 0 || index >= editor.World!.Boards.Count)
+            return;
+
+        _currentBoard = editor.World!.Boards[index];
+        terminal.SetSize(_currentBoard.Width, _currentBoard.Height, false);
     }
 
     private string BuildTitle()
     {
-        var board = editor.World!.Boards[_currentBoard];
+        var boardTitle = _currentBoard is { IsCorrupted: false } cb
+            ? cb.Name
+            : string.Empty;
+        
         var sb = new StringBuilder();
-        sb.Append(board.Name);
+        sb.Append(boardTitle);
         sb.Append("##");
         sb.Append(editor.World?.GetHashCode());
         return sb.ToString();
@@ -86,10 +89,5 @@ public class EditorWindow(
         ImGui.End();
 
         return isOpen;
-    }
-
-    public void Dispose()
-    {
-        scope.Dispose();
     }
 }

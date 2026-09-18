@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -24,11 +23,4 @@ internal sealed class CentipedeHeadKind : IKind
         element.P2EditText = "Deviance?";
         element.Points = 1;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1)),
-        new("Deviance", nameof(IActor.P2)),
-        new("Follower", nameof(IActor.Follower), EditorParamType.Actor)
-    ];
 }

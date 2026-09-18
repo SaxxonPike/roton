@@ -11,11 +11,16 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddTorch(this IServiceCollection services)
     {
-        services.AddSingleton<IWindow, Window>();
+        services.AddSingleton<IWindow, MainWindow>();
         services.AddSingleton<ILauncher, Launcher>();
         
         services.AddSingleton<IImGuiBackendManager, ImGuiBackendManager>();
         services.AddSingleton<IImGuiKeyMapper, ImGuiKeyMapper>();
+        return services;
+    }
+    
+    public static IServiceCollection AddTorchEditor(this IServiceCollection services)
+    {
         return services;
     }
 }

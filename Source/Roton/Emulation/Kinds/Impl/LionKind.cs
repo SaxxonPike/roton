@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Roton.Editors;
 using Roton.Emulation.Data;
 using Roton.Infrastructure;
 
@@ -25,9 +24,4 @@ internal sealed class LionKind : IKind
         element.P1EditText = "Intelligence?";
         element.Points = 1;
     }
-
-    public IEnumerable<EditorParam> GetEditorParams() =>
-    [
-        new("Intelligence", nameof(IActor.P1)),
-    ];
 }
