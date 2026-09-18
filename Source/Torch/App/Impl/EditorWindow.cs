@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 using System.Numerics;
 using System.Text;
 using Lyon.Common.Presenters;
-using Roton.Editors;
 using Roton.Emulation.Core;
 using Roton.Emulation.Data;
 using Torch.Gui.Components;
@@ -10,34 +10,47 @@ using Torch.Gui.Components;
 namespace Torch.App.Impl;
 
 public unsafe class EditorWindow(
-    Editor editor,
     ITextureManager textureManager,
     IScenePresenter scenePresenter,
     IHud hud,
     ITerminal terminal,
-    IBoard board)
+    IBoard board,
+    IWorld world,
+    IWorldManager worldManager,
+    IBoardList boards,
+    IFacts facts,
+    IWorldImporter worldImporter,
+    IFadeMatrix fadeMatrix)
     : Window(Config)
 {
-    private readonly Editor _editor = editor;
     private readonly ITextureManager _textureManager = textureManager;
     private readonly IScenePresenter _scenePresenter = scenePresenter;
+    private readonly ITerminal _terminal = terminal;
+    private readonly IWorldManager _worldManager = worldManager;
+    private readonly IBoardList _boards = boards;
+    private readonly IFacts _facts = facts;
+    private readonly IWorldImporter _worldImporter = worldImporter;
+    private readonly IFadeMatrix _fadeMatrix = fadeMatrix;
 
     private string? _title;
-    private Board? _currentBoard;
     private bool _isOpen = true;
     private SDL_Texture* _texture;
+    private readonly IWorld _world = world;
 
     private static void Config(Window obj)
     {
         var window = (EditorWindow)obj;
+
         window.Label = _ =>
         {
             window._title ??= window.BuildTitle();
             return window._title;
         };
+
         window.IsOpen = _ => window._isOpen;
         window.OnClose = _ => window._isOpen = false;
-        window.Flags = _ => ImGuiWindowFlags.MenuBar;
+        window.Flags = _ => ImGuiWindowFlags.MenuBar |
+                            ImGuiWindowFlags.HorizontalScrollbar;
 
         window.Components.Add(
             new MenuBar(
@@ -59,14 +72,14 @@ public unsafe class EditorWindow(
                     x => { x.Label = _ => "Board"; },
                     new Menu(
                         x => { x.Label = _ => "Go to"; },
-                        new ComponentMap<Board>(x =>
+                        new ComponentMap<IPackedBoard>(x =>
                         {
                             x.Mapper = (board, boardIndex) => new MenuItem(y =>
                             {
                                 y.Label = _ => $"[{boardIndex:D3}] {board.Name}";
                                 y.OnClick = _ => window.SwitchBoard(boardIndex);
                             });
-                            x.Items = () => window._editor.World!.Boards;
+                            x.Items = () => window._boards;
                         })
                     ),
                     new Separator(),
@@ -127,7 +140,8 @@ public unsafe class EditorWindow(
             })
         );
 
-        window.SwitchBoard(window._editor.World!.StartBoard);
+        window._terminal.SetSize(window._facts.BoardWidth, window._facts.BoardHeight, window._world.WorldType == -2);
+        window._fadeMatrix.Randomize();
     }
 
     private static void OnBoardExport(MenuItem obj)
@@ -149,29 +163,40 @@ public unsafe class EditorWindow(
 
     private void SwitchBoard(int index)
     {
-        if (index < 0 || index >= _editor.World!.Boards.Count)
+        if (index < 0 || index >= _boards.Count)
             return;
 
-        _currentBoard = _editor.World!.Boards[index];
-        terminal.SetSize(_currentBoard.Width, _currentBoard.Height, false);
         _title = null;
+        _worldManager.SetBoard(index);
         RedrawBoard();
     }
 
     private string BuildTitle()
     {
-        var boardTitle = _currentBoard is { IsCorrupted: false } cb
-            ? cb.Name
-            : string.Empty;
-
-        var worldTitle = _editor.World?.Name ?? string.Empty;
+        var boardTitle = board.Name;
+        var worldTitle = _world.Name;
 
         var sb = new StringBuilder();
         sb.Append(worldTitle);
         sb.Append(" - ");
         sb.Append(boardTitle);
         sb.Append("###");
-        sb.Append(_editor.World?.GetHashCode());
+        sb.Append(GetHashCode());
         return sb.ToString();
+    }
+
+    public void ClearWorld()
+    {
+        _worldManager.ClearWorld();
+        RedrawBoard();
+    }
+
+    public void LoadWorld(int worldType, Stream stream)
+    {
+        _worldManager.ClearWorld();
+        _worldImporter.ImportWorldData(worldType, stream);
+        _worldManager.UnpackBoard(_world.BoardIndex);
+        _title = null;
+        RedrawBoard();
     }
 }

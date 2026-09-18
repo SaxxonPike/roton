@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using Lyon.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Roton;
-using Roton.Editors;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
 using Torch.Gui;
@@ -16,8 +16,7 @@ namespace Torch.App.Impl;
 [Context(Context.Super)]
 internal sealed unsafe class AppWindow(
     IConfig config,
-    IImGuiBackendManager imGuiBackendManager,
-    IServiceProvider serviceProvider)
+    IImGuiBackendManager imGuiBackendManager)
     : IAppWindow
 {
     /// <summary>
@@ -242,34 +241,41 @@ internal sealed unsafe class AppWindow(
         new ServiceCollection()
             .AddSingleton(config)
             .AddSingleton<IAppWindow>(this)
+            .AddSingleton<EditorWindow>()
+            .AddSingleton<ITextureManager>(_textureManager!)
             .AddRoton(Context.Ui, typeof(Program).Assembly)
             .AddRoton(context)
+            .AddSingleton<IHud, TorchHud>()
+            .AddSingleton<IFadeMatrix, TorchFadeMatrix>()
+            .AddSingleton<IPlayField, TorchPlayField>()
             .AddLyonCommon()
             .BuildServiceProvider();
 
-    private void AddEditorWindow(Editor editor)
-    {
-        var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(
-            editor.ServiceProvider!,
-            editor,
-            _textureManager!
-        );
-
-        _components.Add(editorWindow);
-    }
-
     private void OpenNewEditor(Context context)
     {
-        var editor = new Editor(CreateServiceProvider);
-        editor.Reset(context);
-        AddEditorWindow(editor);
+        var svcs = CreateServiceProvider(context);
+        var editor = svcs.GetRequiredService<EditorWindow>();
+
+        editor.ClearWorld();
+        _components.Add(editor);
     }
 
     private void OpenWorldEditor(Stream stream)
     {
-        var editor = new Editor(CreateServiceProvider);
-        editor.Load(stream, (int)stream.Length);
-        AddEditorWindow(editor);
+        var mem = new MemoryStream();
+        stream.CopyTo(mem);
+
+        var editorType = new byte[2];
+        mem.Position = 0;
+        mem.Read(editorType, 0, 2);
+
+        var editorTypeVal = BinaryPrimitives.ReadInt16LittleEndian(editorType);
+        var context = (Context)editorTypeVal;
+        var svcs = CreateServiceProvider(context);
+        var editor = svcs.GetRequiredService<EditorWindow>();
+
+        editor.LoadWorld(editorTypeVal, mem);
+        _components.Add(editor);
     }
 
     public void OpenWorld(string file)

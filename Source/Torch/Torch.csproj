@@ -17,7 +17,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Lyon.Common\Lyon.Common.csproj"/>
-        <ProjectReference Include="..\Roton.Editors\Roton.Editors.csproj" />
         <ProjectReference Include="..\Roton\Roton.csproj"/>
     </ItemGroup>
 
