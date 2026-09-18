@@ -293,14 +293,11 @@ internal sealed class ImGuiBackend : IImGuiBackend
         // Update textures as necessary.
         //
 
-        // if (!Unsafe.IsNullRef(ref drawData.Textures))
+        for (var i = 0; i < drawData.Textures.Size; i++)
         {
-            for (var i = 0; i < drawData.Textures.Size; i++)
-            {
-                var tex = drawData.Textures[i];
-                if (tex.Status != ImTextureStatus.Ok)
-                    UpdateTexture(tex);
-            }
+            var tex = drawData.Textures[i];
+            if (tex.Status != ImTextureStatus.Ok)
+                UpdateTexture(tex);
         }
 
         //

@@ -1,80 +1,69 @@
+using Roton;
 using Torch.Gui.Components;
 
 namespace Torch.App.Impl;
 
-public static class MainMenuUi
+public class MainMenuUi : Container
 {
-    public static Component Create(IAppWindow app)
+    private readonly IAppWindow _app;
+
+    public MainMenuUi(IAppWindow app) : base([])
     {
-        return MainMenuBar.Create(
-            _ => { },
-            Menu.Create(
-                app,
-                file => { file.Label = _ => "File"; },
-                Menu.Create(
-                    app,
-                    fileNew => { fileNew.Label = _ => "New"; },
-                    MenuItem.Create(
-                        app,
-                        fileNewZzt =>
+        _app = app;
+        Components.Add(
+            new MainMenuBar(
+                new Menu(
+                    x => { x.Label = _ => "File"; },
+                    new Menu(
+                        x => { x.Label = _ => "New"; },
+                        new MenuItem(x =>
                         {
-                            fileNewZzt.Label = _ => "ZZT World";
-                            fileNewZzt.OnClick = OnFileNewZztClick;
-                        }
-                    ),
-                    MenuItem.Create(
-                        app,
-                        fileNewSuperZzt =>
+                            x.Label = _ => "ZZT World";
+                            x.OnClick = OnFileNewClick;
+                            x.DataObject = Context.Original;
+                        }),
+                        new MenuItem(x =>
                         {
-                            fileNewSuperZzt.Label = _ => "Super ZZT World";
-                            fileNewSuperZzt.OnClick = OnFileNewSuperZztClick;
+                            x.Label = _ => "Super ZZT World";
+                            x.OnClick = OnFileNewClick;
+                            x.DataObject = Context.Super;
                         })
-                ),
-                MenuItem.Create(
-                    app,
-                    fileOpen =>
+                    ),
+                    new MenuItem(x =>
                     {
-                        fileOpen.Label = _ => "Open...";
-                        fileOpen.OnClick = OnFileOpenClick;
+                        x.Label = _ => "Open...";
+                        x.OnClick = OnFileOpenClick;
                     }),
-                Separator.Create(),
-                MenuItem.Create(
-                    app,
-                    fileQuit =>
+                    new Separator(),
+                    new MenuItem(x =>
                     {
-                        fileQuit.Label = _ => "Quit";
-                        fileQuit.OnClick = OnFileQuitClick;
+                        x.Label = _ => "Quit";
+                        x.OnClick = OnFileQuitClick;
                     })
+                )
             )
         );
     }
 
-    private static void OnFileNewSuperZztClick(IAppWindow app)
-    {
-        app.NewSuperZztWorld();
-    }
-
-    private static unsafe void OnFileQuitClick(IAppWindow _)
+    private static unsafe void OnFileQuitClick(MenuItem menuItem)
     {
         var ev = new SDL_Event { type = (int)SDL_EventType.SDL_EVENT_QUIT };
         SDL_PushEvent(&ev);
     }
 
-    private static unsafe void OnFileOpenClick(IAppWindow app)
+    private unsafe void OnFileOpenClick(MenuItem menuItem)
     {
         FileDialog.Show(
-            app.GetWindowPtr(),
+            _app.GetWindowPtr(),
             [("ZZT Worlds", "zzt"), ("Super ZZT Worlds", "szt"), ("All Files", "*")],
             true,
             files =>
             {
                 foreach (var file in files)
-                    app.OpenWorld(file);
+                    _app.OpenWorld(file);
             });
     }
 
-    private static void OnFileNewZztClick(IAppWindow app)
-    {
-        app.NewZztWorld();
-    }
+    private void OnFileNewClick(MenuItem menuItem) =>
+        _app.NewWorld(menuItem.Data<Context>());
 }

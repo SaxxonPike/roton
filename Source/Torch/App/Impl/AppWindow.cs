@@ -14,7 +14,7 @@ namespace Torch.App.Impl;
 
 [Context(Context.Original)]
 [Context(Context.Super)]
-internal sealed unsafe class MainWindow(
+internal sealed unsafe class AppWindow(
     IConfig config,
     IImGuiBackendManager imGuiBackendManager,
     IServiceProvider serviceProvider)
@@ -45,11 +45,11 @@ internal sealed unsafe class MainWindow(
     /// </summary>
     private IImGuiBackend? _imGuiBackend;
 
-    private List<EditorWindow> _editors = new();
+    private readonly List<Component> _tempComponents = [];
 
-    private List<EditorWindow> _editorsToClose = new();
+    private readonly List<Component> _components = [];
 
-    private List<Component> _components = new();
+    private TextureManager? _textureManager;
 
     /// <summary>
     /// Width of the backbuffer texture.
@@ -122,20 +122,10 @@ internal sealed unsafe class MainWindow(
             _imGuiBackend?.NewFrame();
             ImGui.NewFrame();
 
-            foreach (var editor in _editors)
-            {
-                if (!editor.Render())
-                    _editorsToClose.Add(editor);
-            }
+            _tempComponents.Clear();
+            _tempComponents.AddRange(_components);
 
-            foreach (var editor in _editorsToClose)
-            {
-                _editors.Remove(editor);
-            }
-
-            _editorsToClose.Clear();
-
-            foreach (var component in _components)
+            foreach (var component in _tempComponents)
                 component.Render();
 
             // Render the scene.
@@ -215,6 +205,7 @@ internal sealed unsafe class MainWindow(
         _window = window;
         _renderer = renderer;
         _imGuiBackend = imGuiBackendManager.Create(_window, _renderer);
+        _textureManager = new TextureManager(_renderer);
 
         // Not all adapters support adaptive vsync, so use the regular
         // method if this fails.
@@ -222,7 +213,7 @@ internal sealed unsafe class MainWindow(
             SDL_SetRenderVSync(renderer, 1);
 
         // Build main UI component.
-        var mainMenuUi = MainMenuUi.Create(this);
+        var mainMenuUi = new MainMenuUi(this);
         _components.Add(mainMenuUi);
 
         // Start the main loop.
@@ -239,9 +230,13 @@ internal sealed unsafe class MainWindow(
         _imGuiBackend = null;
         _sdlContext.Dispose();
         _sdlContext = null;
+        _textureManager = null;
     }
 
     public SDL_Window* GetWindowPtr() => _window;
+
+    public void NewWorld(Context context) =>
+        OpenNewEditor(context);
 
     private IServiceProvider CreateServiceProvider(Context context) =>
         new ServiceCollection()
@@ -249,44 +244,39 @@ internal sealed unsafe class MainWindow(
             .AddSingleton<IAppWindow>(this)
             .AddRoton(Context.Ui, typeof(Program).Assembly)
             .AddRoton(context)
+            .AddLyonCommon()
             .BuildServiceProvider();
 
     private void AddEditorWindow(Editor editor)
     {
-        var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(serviceProvider, editor);
-        editorWindow.Init();
-        _editors.Add(editorWindow);
+        var editorWindow = ActivatorUtilities.CreateInstance<EditorWindow>(
+            editor.ServiceProvider!,
+            editor,
+            _textureManager!
+        );
+
+        _components.Add(editorWindow);
     }
 
-    private void OpenEditor(Context context)
+    private void OpenNewEditor(Context context)
     {
         var editor = new Editor(CreateServiceProvider);
         editor.Reset(context);
         AddEditorWindow(editor);
     }
 
-    private void OpenEditor(Stream stream)
+    private void OpenWorldEditor(Stream stream)
     {
         var editor = new Editor(CreateServiceProvider);
         editor.Load(stream, (int)stream.Length);
         AddEditorWindow(editor);
     }
 
-    public void NewZztWorld()
-    {
-        OpenEditor(Context.Original);
-    }
-
-    public void NewSuperZztWorld()
-    {
-        OpenEditor(Context.Super);
-    }
-
     public void OpenWorld(string file)
     {
         try
         {
-            OpenEditor(File.OpenRead(file));
+            OpenWorldEditor(File.OpenRead(file));
         }
         catch
         {

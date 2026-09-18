@@ -11,8 +11,10 @@ public class Editor(Func<Context, IServiceProvider> serviceProviderFactory)
 {
     public World? World { get; private set; }
 
-    private static T GetService<T>(IServiceProvider serviceProvider) =>
-        (T)serviceProvider.GetService(typeof(T)) ??
+    public IServiceProvider? ServiceProvider { get; private set; }
+
+    private T GetService<T>() =>
+        (T)ServiceProvider?.GetService(typeof(T)) ??
         throw new RotonException(
             "Required service not found: " + typeof(T).Name);
 
@@ -50,20 +52,20 @@ public class Editor(Func<Context, IServiceProvider> serviceProviderFactory)
 
         mem.Position = 0;
 
-        var services = serviceProviderFactory(worldType);
-        var ser = GetService<IWorldImporter>(services);
+        ServiceProvider = serviceProviderFactory(worldType);
+        var ser = GetService<IWorldImporter>();
         ser.ImportWorld(mem);
-        ConvertFromContext(services);
+        ConvertFromContext();
     }
 
-    private void ConvertFromContext(IServiceProvider services)
+    private void ConvertFromContext()
     {
-        var inWorld = GetService<IWorld>(services);
-        var inBoard = GetService<IBoard>(services);
-        var packedBoards = GetService<IBoardList>(services);
-        var packer = GetService<IBoardPacker>(services);
-        var tiles = GetService<ITiles>(services);
-        var actors = GetService<IActorList>(services);
+        var inWorld = GetService<IWorld>();
+        var inBoard = GetService<IBoard>();
+        var packedBoards = GetService<IBoardList>();
+        var packer = GetService<IBoardPacker>();
+        var tiles = GetService<ITiles>();
+        var actors = GetService<IActorList>();
 
         World = new World
         {
@@ -160,9 +162,11 @@ public class Editor(Func<Context, IServiceProvider> serviceProviderFactory)
 
     public void Reset(Context context)
     {
-        var services = serviceProviderFactory(context);
-        var manager = GetService<IWorldManager>(services);
+        ServiceProvider = serviceProviderFactory(context);
+        var manager = GetService<IWorldManager>();
         manager.ClearWorld();
-        ConvertFromContext(services);
+        ConvertFromContext();
+        World!.Name = "Untitled";
+        World!.Boards[0].Name = "Title Screen";
     }
 }

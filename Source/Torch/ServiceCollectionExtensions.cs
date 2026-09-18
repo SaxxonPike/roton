@@ -1,6 +1,7 @@
 using Lyon.App;
 using Lyon.Common.App;
 using Microsoft.Extensions.DependencyInjection;
+using Roton.Emulation.Core;
 using Torch.App.Impl;
 using Torch.Gui;
 using Torch.Gui.Impl;
@@ -11,8 +12,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddTorch(this IServiceCollection services)
     {
-        services.AddSingleton<IWindow, MainWindow>();
+        services.AddSingleton<IWindow, AppWindow>();
         services.AddSingleton<ILauncher, Launcher>();
+        services.AddSingleton<IHud, TorchHud>();
+        services.AddSingleton<IFadeMatrix, TorchFadeMatrix>();
         
         services.AddSingleton<IImGuiBackendManager, ImGuiBackendManager>();
         services.AddSingleton<IImGuiKeyMapper, ImGuiKeyMapper>();

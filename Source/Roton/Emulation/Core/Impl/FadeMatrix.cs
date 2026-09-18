@@ -36,7 +36,7 @@ public abstract class FadeMatrix(
 
     private void FadeWait(int i)
     {
-        if (i % speed == 0)
+        if (speed > 0 && i % speed == 0)
             scheduler.WaitForTick();
     }
 
