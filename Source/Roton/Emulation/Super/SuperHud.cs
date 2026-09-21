@@ -183,11 +183,7 @@ internal sealed class SuperHud(
     public void Initialize()
     {
         RandomizeFadeMatrix();
-
-        if (state.EditorMode)
-            terminal.SetSize(96, 80, true);
-        else
-            terminal.SetSize(40, 25, true);
+        terminal.SetSize(40, 25, true);
     }
 
     public bool QuitEngineConfirmation()

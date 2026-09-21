@@ -22,6 +22,7 @@ public class Window : Container
 
     private bool _shouldEnd;
 
+    public Action<Window>? OnRendered { get; set; }
     public Action<Window>? OnClose { get; set; }
     public Func<Window, string>? Label { get; set; }
     public Func<Window, bool>? IsOpen { get; set; }
@@ -48,6 +49,12 @@ public class Window : Container
             OnClose?.Invoke(this);
 
         return result;
+    }
+
+    protected override void OnRender()
+    {
+        base.OnRender();
+        OnRendered?.Invoke(this);
     }
 
     protected override void OnPostRender(bool rendered)

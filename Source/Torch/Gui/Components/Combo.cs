@@ -20,6 +20,8 @@ public class Combo : Container
     {
     }
 
+    public Action<Combo>? OnRendering { get; set; }
+    public Action<Combo>? OnRendered { get; set; }
     public Func<Combo, string>? Label { get; set; }
     public Func<Combo, string>? Preview { get; set; }
     public Func<Combo, ImGuiComboFlags>? Flags { get; set; }
@@ -31,6 +33,13 @@ public class Combo : Container
         var flags = Flags?.Invoke(this) ?? ImGuiComboFlags.None;
 
         return ImGui.BeginCombo(label, preview, flags);
+    }
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
     }
 
     protected override void OnPostRender(bool rendered)

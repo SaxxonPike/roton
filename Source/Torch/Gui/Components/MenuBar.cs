@@ -20,8 +20,18 @@ public class MenuBar : Container
     {
     }
 
+    public Action<MenuBar>? OnRendering { get; set; }
+    public Action<MenuBar>? OnRendered { get; set; }
+
     protected override bool OnPreRender() =>
         ImGui.BeginMenuBar();
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
+    }
 
     protected override void OnPostRender(bool rendered)
     {

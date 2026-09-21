@@ -10,7 +10,12 @@ public class Separator : Component
     {
         config?.Invoke(this);
     }
+    
+    public Action<Separator>? OnRendered { get; set; }
 
-    protected override void OnRender() => 
+    protected override void OnRender()
+    {
         ImGui.Separator();
+        OnRendered?.Invoke(this);
+    }
 }

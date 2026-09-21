@@ -19,6 +19,16 @@ public class SameLine : Container
     public SameLine(params IEnumerable<Component> components) : this(null, components)
     {
     }
+    
+    public Action<SameLine>? OnRendering { get; set; }
+    public Action<SameLine>? OnRendered { get; set; }
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
+    }
 
     protected override void OnRenderChild(int index, Component component)
     {

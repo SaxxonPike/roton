@@ -20,17 +20,17 @@ public unsafe class EditorWindow(
     IBoardList boards,
     IFacts facts,
     IWorldImporter worldImporter,
-    IFadeMatrix fadeMatrix)
+    IFadeMatrix fadeMatrix,
+    IState state)
     : Window(Config)
 {
     private readonly ITextureManager _textureManager = textureManager;
     private readonly IScenePresenter _scenePresenter = scenePresenter;
     private readonly ITerminal _terminal = terminal;
-    private readonly IWorldManager _worldManager = worldManager;
     private readonly IBoardList _boards = boards;
     private readonly IFacts _facts = facts;
-    private readonly IWorldImporter _worldImporter = worldImporter;
     private readonly IFadeMatrix _fadeMatrix = fadeMatrix;
+    private readonly IState _state = state;
 
     private string? _title;
     private bool _isOpen = true;
@@ -40,6 +40,8 @@ public unsafe class EditorWindow(
     private static void Config(Window obj)
     {
         var window = (EditorWindow)obj;
+
+        window._state.EditorMode = true;
 
         window.Label = _ =>
         {
@@ -137,6 +139,13 @@ public unsafe class EditorWindow(
                 };
 
                 x.Size = _ => GetSize();
+
+                x.OnRendered = _ =>
+                {
+                    var dl = ImGui.GetWindowDrawList();
+                    var pos = x.ScreenPosition;
+                    dl.AddRectFilled(pos, pos + new Vector2(5, 5), 0xFFFFFFFFU);
+                };
             })
         );
 
@@ -167,7 +176,7 @@ public unsafe class EditorWindow(
             return;
 
         _title = null;
-        _worldManager.SetBoard(index);
+        worldManager.SetBoard(index);
         RedrawBoard();
     }
 
@@ -187,15 +196,15 @@ public unsafe class EditorWindow(
 
     public void ClearWorld()
     {
-        _worldManager.ClearWorld();
+        worldManager.ClearWorld();
         RedrawBoard();
     }
 
     public void LoadWorld(int worldType, Stream stream)
     {
-        _worldManager.ClearWorld();
-        _worldImporter.ImportWorldData(worldType, stream);
-        _worldManager.UnpackBoard(_world.BoardIndex);
+        worldManager.ClearWorld();
+        worldImporter.ImportWorldData(worldType, stream);
+        worldManager.UnpackBoard(_world.BoardIndex);
         _title = null;
         RedrawBoard();
     }

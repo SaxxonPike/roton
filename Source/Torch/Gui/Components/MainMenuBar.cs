@@ -19,9 +19,19 @@ public class MainMenuBar : Container
     public MainMenuBar(params IEnumerable<Component> components) : this(null, components)
     {
     }
+    
+    public Action<MainMenuBar>? OnRendering { get; set; }
+    public Action<MainMenuBar>? OnRendered { get; set; }
 
     protected override bool OnPreRender() =>
         ImGui.BeginMainMenuBar();
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
+    }
 
     protected override void OnPostRender(bool rendered)
     {

@@ -11,6 +11,8 @@ public class MenuItem : Component
         config?.Invoke(this);
     }
 
+    public Action<MenuItem>? OnRendering { get; set; }
+    public Action<MenuItem>? OnRendered { get; set; }
     public Action<MenuItem>? OnClick { get; set; }
     public Func<MenuItem, string>? Label { get; set; }
     public Func<MenuItem, string>? Shortcut { get; set; }
@@ -19,6 +21,8 @@ public class MenuItem : Component
 
     protected override void OnRender()
     {
+        OnRendering?.Invoke(this);
+
         var label = Label?.Invoke(this) ?? "(missing label)";
         var shortcut = Shortcut?.Invoke(this) ?? string.Empty;
         var selected = IsSelected?.Invoke(this) ?? false;
@@ -26,5 +30,7 @@ public class MenuItem : Component
 
         if (ImGui.MenuItem(label, shortcut, selected, enabled))
             OnClick?.Invoke(this);
+
+        OnRendered?.Invoke(this);
     }
 }

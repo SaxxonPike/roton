@@ -6,25 +6,16 @@ namespace Roton.Emulation.Super;
 
 [Context(Context.Super)]
 internal sealed class SuperPlayField(
-    IState state,
     ITerminal terminal,
     IBoard board)
     : IPlayField
 {
     public void DrawTile(int x, int y, AnsiChar ac)
     {
-        if (state.EditorMode)
-        {
-            if (x is >= 0 and < 96 && y is >= 0 and < 80)
-                terminal.Plot(x, y, ac);
-        }
-        else
-        {
-            var loc = new Location(x, y) + GetTranslation();
+        var loc = new Location(x, y) + GetTranslation();
 
-            if (IsWithinCamera(loc))
-                terminal.Plot(loc.X, loc.Y, ac);
-        }
+        if (IsWithinCamera(loc))
+            terminal.Plot(loc.X, loc.Y, ac);
     }
 
     private static bool IsWithinCamera(Location loc) =>

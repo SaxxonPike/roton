@@ -20,6 +20,8 @@ public class Disabled : Container
     {
     }
 
+    public Action<Disabled>? OnRendering { get; set; }
+    public Action<Disabled>? OnRendered { get; set; }
     public Func<Disabled, bool>? IsDisabled { get; set; }
 
     protected override bool OnPreRender()
@@ -27,6 +29,13 @@ public class Disabled : Container
         var isDisabled = IsDisabled?.Invoke(this) ?? true;
         ImGui.BeginDisabled(isDisabled);
         return true;
+    }
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
     }
 
     protected override void OnPostRender(bool rendered)

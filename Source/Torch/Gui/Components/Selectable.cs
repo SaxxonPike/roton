@@ -12,6 +12,7 @@ public class Selectable : Component
         config?.Invoke(this);
     }
 
+    public Action<Selectable>? OnRendered { get; set; }
     public Action<Selectable>? OnClick { get; set; }
     public Func<Selectable, string>? Label { get; set; }
     public Func<Selectable, bool>? IsSelected { get; set; }
@@ -29,5 +30,7 @@ public class Selectable : Component
                 ? ImGui.Selectable(label, isSelected, flags, size)
                 : ImGui.Selectable(label, isSelected, flags))
             OnClick?.Invoke(this);
+        
+        OnRendered?.Invoke(this);
     }
 }

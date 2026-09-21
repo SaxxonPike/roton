@@ -20,6 +20,8 @@ public class Menu : Container
     {
     }
 
+    public Action<Menu>? OnRendering { get; set; }
+    public Action<Menu>? OnRendered { get; set; }
     public Func<Menu, string>? Label { get; set; }
     public Func<Menu, bool>? IsEnabled { get; set; }
 
@@ -29,6 +31,13 @@ public class Menu : Container
         var isEnabled = IsEnabled?.Invoke(this) ?? true;
 
         return ImGui.BeginMenu(label, isEnabled);
+    }
+
+    protected override void OnRender()
+    {
+        OnRendering?.Invoke(this);
+        base.OnRender();
+        OnRendered?.Invoke(this);
     }
 
     protected override void OnPostRender(bool rendered)
