@@ -42,7 +42,7 @@ public abstract class FixedStringList(IMemory memory, int offset) : FixedList<st
         IndexOf(item.AsSpan());
 
     /// <inheritdoc cref="IndexOf(string)" />
-    public virtual int IndexOf(ReadOnlySpan<char> item)
+    public int IndexOf(ReadOnlySpan<char> item)
     {
         Span<byte> buffer = stackalloc byte[byte.MaxValue];
         for (var i = 0; i < Count; i++)
@@ -55,24 +55,24 @@ public abstract class FixedStringList(IMemory memory, int offset) : FixedList<st
     protected override string GetItem(int index) =>
         memory.ReadString(offset + index * ItemLength);
 
-    protected virtual ReadOnlySpan<byte> GetItemSpan(int index) =>
+    protected ReadOnlySpan<byte> GetItemSpan(int index) =>
         memory.ReadStringSpan(offset + index * ItemLength);
 
-    protected virtual ReadOnlySpan<byte> GetItemSpan(int index, Span<byte> buffer) =>
+    protected ReadOnlySpan<byte> GetItemSpan(int index, Span<byte> buffer) =>
         memory.ReadStringSpan(offset + index * ItemLength, buffer);
 
     protected override void SetItem(int index, string value) =>
         SetItem(index, value.AsSpan());
 
-    protected virtual void SetItem(int index, ReadOnlySpan<char> value) =>
+    protected void SetItem(int index, ReadOnlySpan<char> value) =>
         memory.WriteString(offset + index * ItemLength, value);
 
     protected override bool EqualsItem(int index, string value) =>
         EqualsItem(index, value.AsSpan());
 
-    protected virtual bool EqualsItem(int index, ReadOnlySpan<char> value) =>
+    protected bool EqualsItem(int index, ReadOnlySpan<char> value) =>
         Cp437.CharsEqualBytes(value, GetItemSpan(index));
 
-    protected virtual bool EqualsItem(int index, ReadOnlySpan<char> value, Span<byte> buffer) =>
+    protected bool EqualsItem(int index, ReadOnlySpan<char> value, Span<byte> buffer) =>
         Cp437.CharsEqualBytes(value, GetItemSpan(index, buffer));
 }

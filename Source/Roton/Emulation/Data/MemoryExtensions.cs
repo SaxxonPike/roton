@@ -9,7 +9,7 @@ internal static class MemoryExtensions
 {
     extension(IMemory memory)
     {
-        internal ByteString GetByteString(int offset) => 
+        internal ByteString GetByteString(int offset) =>
             new(memory, offset);
 
         private Span<T> GetSpan<T>(int offset) where T : struct =>
@@ -29,6 +29,9 @@ internal static class MemoryExtensions
         {
             unchecked
             {
+                if (length <= 0)
+                    return Span<byte>.Empty;
+
                 var span = memory.Data;
                 var output = new byte[length];
                 for (var i = 0; i < length; i++)
@@ -55,6 +58,10 @@ internal static class MemoryExtensions
             {
                 var span = memory.Data;
                 var length = span[offset & 0xFFFF];
+
+                if (length == 0)
+                    return string.Empty;
+
                 var end = offset + length;
                 var output = new byte[length];
 
@@ -74,6 +81,9 @@ internal static class MemoryExtensions
                 var span = memory.Data;
                 var length = span[offset & 0xFFFF];
 
+                if (length == 0)
+                    return ReadOnlySpan<byte>.Empty;
+
                 if (offset + length <= memory.Data.Length)
                     return span.Slice(offset + 1, length);
 
@@ -90,6 +100,9 @@ internal static class MemoryExtensions
             {
                 var span = memory.Data;
                 var length = span[offset & 0xFFFF];
+
+                if (length == 0)
+                    return ReadOnlySpan<byte>.Empty;
 
                 if (offset + length <= memory.Data.Length)
                     return span.Slice(offset + 1, length);
@@ -149,7 +162,7 @@ internal static class MemoryExtensions
                 var length = value.Length & 0xFF;
                 span[offset & 0xFFFF] = (byte)length;
 
-                if (length <= 0)
+                if (length == 0)
                     return;
 
                 var destination = span.Slice((offset + 1) & 0xFFFF);
