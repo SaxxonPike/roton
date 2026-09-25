@@ -21,9 +21,14 @@ internal sealed class WorldImporter(
         if (worldType != world.WorldType)
             return false;
 
+#if NET10_0_OR_GREATER
+        var numBoardsBytes = (stackalloc byte[2]);
+        stream.ReadExactly(numBoardsBytes);
+#else
         var numBoardsBytes = new byte[2];
         if (stream.Read(numBoardsBytes, 0, 2) < 2)
             throw new EndOfStreamException();
+#endif
         
         var numBoards = ReadInt16LittleEndian(numBoardsBytes);
         if (numBoards < 0)
@@ -48,9 +53,15 @@ internal sealed class WorldImporter(
 
     public bool ExportWorldData(Stream stream)
     {
+#if NET10_0_OR_GREATER
+        var numBoardsBytes = (stackalloc byte[2]);
+        WriteInt16LittleEndian(numBoardsBytes, state.BoardCount);
+        stream.Write(numBoardsBytes);
+#else
         var numBoardsBytes = new byte[2];
         WriteInt16LittleEndian(numBoardsBytes, state.BoardCount);
         stream.Write(numBoardsBytes, 0, 2);
+#endif
         
         gameSerializer.SaveWorldData(stream);
 
