@@ -15,5 +15,5 @@ internal sealed class Resource : IResource
     public IFileSystem System => GetPrependedFileSystem("system/");
 
     private PrependedFileSystem GetPrependedFileSystem(string path) => 
-        new PrependedFileSystem(new ZipFileSystem(_data), path);
+        new(new ZipFileSystem(_data), path);
 }
