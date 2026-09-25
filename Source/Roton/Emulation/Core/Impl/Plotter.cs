@@ -62,10 +62,6 @@ internal sealed class Plotter(
         if (!_tiles.CanPutTile(location))
             return;
 
-        if (location.X < 1 || location.X > _tiles.Width || location.Y < 1 ||
-            location.Y > _tiles.Height)
-            return;
-
         if (!_tiles.ElementAt(location).IsFloor)
             pusher.Instance.Push(location, vector);
 

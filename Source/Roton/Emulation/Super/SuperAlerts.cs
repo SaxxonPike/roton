@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Roton.Emulation.Colors;
 using Roton.Emulation.Data;
-using Roton.Emulation.Data.Impl;
 using Roton.Infrastructure;
 
 namespace Roton.Emulation.Super;
@@ -12,7 +11,7 @@ internal sealed class SuperAlerts(
     IMemory memory,
     IColorList colors,
     IFacts facts)
-    : Alerts
+    : IAlerts
 {
     private Bool _dark;
     private Bool _notDark;
@@ -22,105 +21,135 @@ internal sealed class SuperAlerts(
     private string GetColorName(int color) =>
         colors.Get(color)?.Name ?? string.Empty;
 
-    public override IReadOnlyList<string> AmmoMessage =>
+    public IReadOnlyList<string> AmmoMessage =>
         ["Ammunition:", $"{facts.AmmoPerPickup} shots"];
 
-    public override ref Bool AmmoPickup =>
+    public ref Bool AmmoPickup =>
         ref memory.GetRef<Bool>(0x7C0B);
 
-    public override IReadOnlyList<string> BombMessage { get; } =
+    public IReadOnlyList<string> BombMessage { get; } =
         ["Bomb activated!"];
 
-    public override ref Bool CantShootHere =>
+    public ref Bool CantShootHere =>
         ref memory.GetRef<Bool>(0x7C0D);
 
-    public override ref Bool Dark =>
+    public ref Bool Dark =>
         ref _dark;
 
-    public override IReadOnlyList<string> DarkMessage { get; } =
+    public IReadOnlyList<string> DarkMessage { get; } =
         [];
 
-    public override IReadOnlyList<string> DoorLockedMessage(int color) =>
+    public IReadOnlyList<string> DoorLockedMessage(int color) =>
         [$"The {GetColorName(color)} door", "is locked!"];
 
-    public override IReadOnlyList<string> DoorOpenMessage(int color) =>
+    public IReadOnlyList<string> DoorOpenMessage(int color) =>
         [$"The {GetColorName(color)} door", "is now open."];
 
-    public override IReadOnlyList<string> EnergizerMessage { get; } =
+    public IReadOnlyList<string> EnergizerMessage { get; } =
         ["Shield:", "You are invincible"];
 
-    public override ref Bool EnergizerPickup =>
+    public ref Bool EnergizerPickup =>
         ref memory.GetRef<Bool>(0x7C11);
 
-    public override IReadOnlyList<string> ErrorMessage(ReadOnlySpan<char> error) =>
+    public IReadOnlyList<string> ErrorMessage(ReadOnlySpan<char> error) =>
         [$"ERR: {error.ToString()}"];
 
-    public override IReadOnlyList<string> FakeMessage { get; } =
+    public IReadOnlyList<string> FakeMessage { get; } =
         ["A fake wall:", "secret passage!"];
 
-    public override ref Bool FakeWall =>
+    public ref Bool FakeWall =>
         ref memory.GetRef<Bool>(0x7C0F);
 
-    public override ref Bool Forest =>
+    public ref Bool Forest =>
         ref memory.GetRef<Bool>(0x7C0E);
 
-    public override IReadOnlyList<string> ForestMessage { get; } =
+    public IReadOnlyList<string> ForestMessage { get; } =
         ["A path is cleared", "through the forest."];
 
-    public override IReadOnlyList<string> GameOverMessage { get; } =
+    public IReadOnlyList<string> GameOverMessage { get; } =
         ["Game over", "-- Press ESCAPE --"];
 
-    public override IReadOnlyList<string> GemMessage { get; } =
+    public IReadOnlyList<string> GemMessage { get; } =
         ["Gems give you health!"];
 
-    public override ref Bool GemPickup =>
+    public ref Bool GemPickup =>
         ref memory.GetRef<Bool>(0x7C10);
 
-    public override IReadOnlyList<string> InvisibleMessage { get; } =
+    public IReadOnlyList<string> InvisibleMessage { get; } =
         ["You are blocked", "by an invisible wall."];
 
-    public override IReadOnlyList<string> KeyAlreadyMessage(int color) =>
+    public IReadOnlyList<string> KeyAlreadyMessage(int color) =>
         ["You already have a", $"{GetColorName(color)} key!"];
 
-    public override IReadOnlyList<string> KeyPickupMessage(int color) =>
+    public IReadOnlyList<string> KeyPickupMessage(int color) =>
         ["You now have the", $"{GetColorName(color)} key."];
 
-    public override IReadOnlyList<string> NoAmmoMessage { get; } =
+    public IReadOnlyList<string> NoAmmoMessage { get; } =
         ["You don't have", "any ammo!"];
 
-    public override IReadOnlyList<string> NoShootMessage { get; } =
+    public IReadOnlyList<string> NoShootMessage { get; } =
         ["Can't shoot", "in this place!"];
 
-    public override ref Bool NotDark =>
+    public ref Bool NotDark =>
         ref _notDark;
 
-    public override IReadOnlyList<string> NotDarkMessage { get; } =
+    public IReadOnlyList<string> NotDarkMessage { get; } =
         [];
 
-    public override ref Bool NoTorches =>
+    public ref Bool NoTorches =>
         ref _noTorches;
 
-    public override IReadOnlyList<string> NoTorchMessage { get; } =
+    public IReadOnlyList<string> NoTorchMessage { get; } =
         [];
 
-    public override IReadOnlyList<string> OuchMessage { get; } =
+    public IReadOnlyList<string> OuchMessage { get; } =
         ["Ouch!"];
 
-    public override ref Bool OutOfAmmo =>
+    public ref Bool OutOfAmmo =>
         ref memory.GetRef<Bool>(0x7C0C);
 
-    public override IReadOnlyList<string> StoneMessage { get; } =
+    public IReadOnlyList<string> StoneMessage { get; } =
         ["You have found a", "Stone of Power!"];
 
-    public override IReadOnlyList<string> TimeMessage { get; } =
+    public IReadOnlyList<string> TimeMessage { get; } =
         ["Running out of time!"];
 
-    public override IReadOnlyList<string> TorchMessage { get; } =
+    public IReadOnlyList<string> TorchMessage { get; } =
         [];
 
-    public override ref Bool TorchPickup =>
+    public ref Bool TorchPickup =>
         ref _torchPickup;
 
-    public override IReadOnlyList<string> WaterMessage { get; } =
+    public IReadOnlyList<string> WaterMessage { get; } =
         ["Your way is", "blocked by lava."];
+
+    public void Reset()
+    {
+        AmmoPickup = true;
+        Dark = true;
+        EnergizerPickup = true;
+        FakeWall = true;
+        Forest = true;
+        GemPickup = true;
+        OutOfAmmo = true;
+        CantShootHere = true;
+        NotDark = true;
+        NoTorches = true;
+        TorchPickup = true;
+    }
+
+    public void SetAll()
+    {
+        AmmoPickup = false;
+        Dark = false;
+        EnergizerPickup = false;
+        FakeWall = false;
+        Forest = false;
+        GemPickup = false;
+        OutOfAmmo = false;
+        CantShootHere = false;
+        NotDark = false;
+        NoTorches = false;
+        TorchPickup = false;
+    }
 }

@@ -1,11 +1,15 @@
 ﻿using System.IO;
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class GameSerializer(
-    IMemory memory)
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class GameSerializer(
+    IMemory memory,
+    IFacts facts)
     : IGameSerializer
 {
     public byte[] LoadBoardData(Stream source)
@@ -18,8 +22,8 @@ public abstract class GameSerializer(
     public void LoadWorldData(Stream source)
     {
         var reader = new BinaryReader(source);
-        var header = reader.ReadBytes(WorldDataCapacity - 4);
-        memory.Write(WorldDataOffset, header, 0, WorldDataSize);
+        var header = reader.ReadBytes(facts.WorldDataCapacity - 4);
+        memory.Write(facts.WorldDataOffset, header, 0, facts.WorldDataSize);
     }
 
     public void SaveBoardData(Stream target, byte[] data)
@@ -37,15 +41,9 @@ public abstract class GameSerializer(
 
     public void SaveWorldData(Stream target)
     {
-        var worldBytes = new byte[WorldDataCapacity - 4];
-        var worldData = memory.Read(WorldDataOffset, WorldDataSize);
+        var worldBytes = new byte[facts.WorldDataCapacity - 4];
+        var worldData = memory.Read(facts.WorldDataOffset, facts.WorldDataSize);
         worldData.CopyTo(worldBytes);
         target.Write(worldBytes, 0, worldBytes.Length);
     }
-
-    public abstract int WorldDataCapacity { get; }
-
-    public abstract int WorldDataOffset { get; }
-
-    public abstract int WorldDataSize { get; }
 }

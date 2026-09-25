@@ -1,31 +1,32 @@
 using System;
 using System.IO;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class ScrollContent : IScrollContent
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class ScrollContent(IFacts facts) : IScrollContent
 {
     private readonly MemoryStream _stream = new();
-
-    public abstract int LineWidth { get; }
 
     public int LineCount { get; private set; }
 
     private void SetLinePosition(int index) =>
-        _stream.Position = index * (LineWidth + 1);
+        _stream.Position = index * (facts.LineWidth + 1);
 
     public void AddLine(ReadOnlySpan<char> text)
     {
         SetLinePosition(LineCount);
         var len = unchecked((byte)text.Length);
 #if NET10_0_OR_GREATER
-        var lineBytes = (stackalloc byte[Math.Max(LineWidth, len) + 1]);
+        var lineBytes = (stackalloc byte[Math.Max(facts.LineWidth, len) + 1]);
         lineBytes[0] = len;
         Cp437.CharsToBytes(text[..len], lineBytes[1..]);
         _stream.Write(lineBytes);
 #else
-        var lineBytes = new byte[Math.Max(LineWidth, len) + 1];
+        var lineBytes = new byte[Math.Max(facts.LineWidth, len) + 1];
         lineBytes[0] = len;
         Cp437.CharsToBytes(text.Slice(0, len), lineBytes.AsSpan(1));
         _stream.Write(lineBytes, 0, lineBytes.Length);

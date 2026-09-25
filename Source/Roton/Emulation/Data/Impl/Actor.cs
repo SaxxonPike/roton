@@ -3,10 +3,10 @@
 namespace Roton.Emulation.Data.Impl;
 
 internal sealed class Actor(
-    IMemory memory,
-    ICodeHeap heap,
     int offset,
-    int totalLength)
+    int totalLength,
+    IMemory memory,
+    ICodeHeap heap)
     : IActor
 {
     public int Offset => offset;
@@ -49,7 +49,7 @@ internal sealed class Actor(
 
     public Span<HWord> Reserved =>
         memory.GetSpan<HWord>(Offset + 0x19, totalLength - 0x19);
-    
+
     public Span<byte> Raw =>
         memory.GetSpan<byte>(Offset, totalLength);
 
@@ -72,7 +72,7 @@ internal sealed class Actor(
                 var length = data.Length;
                 for (var i = 1; i < length; i++)
                 {
-                    if (data[i] != 0x0D) 
+                    if (data[i] != 0x0D)
                         continue;
 
                     name = data.Slice(1, i - 1);

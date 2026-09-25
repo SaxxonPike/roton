@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class Tiles(IMemory memory, IElementList elements, int offset, int width, int height)
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class Tiles(IMemory memory, IElementList elements, IFacts facts)
     : ITiles
 {
     private int TotalHeight =>
@@ -12,15 +15,15 @@ public abstract class Tiles(IMemory memory, IElementList elements, int offset, i
     private int TotalWidth =>
         Width + 2;
 
-    public int Height { get; } = height;
+    public int Height => facts.BoardHeight;
 
     public ref Tile this[Location location] =>
         ref this[location.X * TotalHeight + location.Y];
 
     public ref Tile this[int index] =>
-        ref memory.GetRef<Tile>(offset + index * 2);
+        ref memory.GetRef<Tile>(facts.TileOffset + index * 2);
 
-    public int Width { get; } = width;
+    public int Width => facts.BoardWidth;
 
     private IEnumerable<Tile> GetTileEnumerable()
     {
@@ -76,9 +79,7 @@ public abstract class Tiles(IMemory memory, IElementList elements, int offset, i
         return tile.Color & 0x0F;
     }
 
-    public virtual bool CanPutTile(Location location)
-    {
-        // do not allow #put on the bottom row
-        return location.Y < Height;
-    }
+    public bool CanPutTile(Location location) =>
+        location.X >= 1 && location.X <= facts.BoardWidth && location.Y >= 1 &&
+        location.Y <= facts.MaxPutRow;
 }

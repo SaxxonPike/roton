@@ -20,24 +20,25 @@ internal sealed class SuperState : IState
     public SuperState(
         IMemory memory, 
         IEngineResourceService engineResourceService,
-        ICodeHeap heap,
-        ITimerFactory timerFactory)
+        ITimerFactory timerFactory,
+        IFactory factory,
+        IFacts facts)
     {
         _memory = memory;
 
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
-        DefaultActor = new Actor(_memory, heap, 0x2262, 0x0019);
-        LineChars = new ByteString(_memory, 0x22BA);
+        DefaultActor = factory.Create<Actor>(facts.DefaultActorOffset, facts.ActorDataLength);
+        LineChars = _memory.GetByteString(0x22BA);
         PlayerTimer = timerFactory.Create(0xB95E);
         ProgressAnimation = new ProgressAnimation(_memory, 0x21C0);
         ProgressColors = new Int8List(_memory, 0x21B8, 8);
-        SoundBuffer = new SoundBufferList(memory, 0xCF9E);
-        StarChars = new ByteString(_memory, 0x2064);
-        TransporterHChars = new ByteString(_memory, 0x1F64);
-        TransporterVChars = new ByteString(_memory, 0x1E64);
+        SoundBuffer = new SoundBufferList(_memory, 0xCF9E);
+        StarChars = _memory.GetByteString(0x2064);
+        TransporterHChars = _memory.GetByteString(0x1F64);
+        TransporterVChars = _memory.GetByteString(0x1E64);
         Vector4 = new Int16List(_memory, 0x2250, 8);
         Vector8 = new Int16List(_memory, 0x2230, 16);
-        WebChars = new ByteString(_memory, 0x227C);
+        WebChars = _memory.GetByteString(0x227C);
     }
 
     private readonly IMemory _memory;

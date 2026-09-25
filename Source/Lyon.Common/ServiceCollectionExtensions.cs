@@ -1,12 +1,10 @@
 using System.Reflection;
-using Lyon.Common.App;
 using Lyon.Common.App.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Roton;
 using Roton.Composers.Audio;
-using Roton.Composers.Audio.Impl;
 using Roton.Composers.Video.Scenes;
 using Roton.Emulation.Core;
 using Roton.Infrastructure;
@@ -109,6 +107,8 @@ public static class ServiceCollectionExtensions
             services.AddSingleton<ISceneComposer>(c =>
                 c.GetRequiredService<ISceneComposerFactory>().Create());
 
+            services.AddSingleton<IFactory, Factory>();
+
             services.AddOptions();
 
             return services;
@@ -116,7 +116,7 @@ public static class ServiceCollectionExtensions
 
         public IServiceCollection AddRotonEditor()
         {
-            services.AddSingleton<IWorldEditorFactory, WorldEditorFactory>();
+            // services.AddSingleton<IWorldEditorFactory, WorldEditorFactory>();
             return services.AddRoton(Context.Editor);
         }
 

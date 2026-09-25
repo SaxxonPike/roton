@@ -16,22 +16,23 @@ internal sealed class OriginalState : IState
 
     public OriginalState(
         IMemory memory,
-        ICodeHeap heap,
         IEngineResourceService engineResourceService,
-        ITimerFactory timerFactory)
+        ITimerFactory timerFactory,
+        IFactory factory,
+        IFacts facts)
     {
         _memory = memory;
 
         _memory.Write(0x0000, engineResourceService.GetMemoryData());
-        DefaultActor = new Actor(_memory, heap, 0x0076, 0x0021);
-        LineChars = new ByteString(_memory, 0x0098);
+        DefaultActor = factory.Create<Actor>(facts.DefaultActorOffset, facts.ActorDataLength);
+        LineChars = _memory.GetByteString(0x0098);
         PlayerTimer = timerFactory.Create(0x740A);
         ProgressAnimation = new ProgressAnimation(_memory, 0x00B2);
         ProgressColors = new Int8List(_memory, 0x00AA, 8);
         SoundBuffer = new SoundBufferList(memory, 0x7E90);
-        StarChars = new ByteString(_memory, 0x0336);
-        TransporterHChars = new ByteString(_memory, 0x0236);
-        TransporterVChars = new ByteString(_memory, 0x0136);
+        StarChars = _memory.GetByteString(0x0336);
+        TransporterHChars = _memory.GetByteString(0x0236);
+        TransporterVChars = _memory.GetByteString(0x0136);
         Vector4 = new Int16List(_memory, 0x0062, 8);
         Vector8 = new Int16List(_memory, 0x0042, 16);
     }

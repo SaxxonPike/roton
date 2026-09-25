@@ -72,4 +72,19 @@ public interface IFacts
     int FlagCapacity { get; }
     int BoardWidth { get; }
     int BoardHeight { get; }
+    int ActorCapacity { get; }
+    int ActorDataLength { get; }
+    int ActorDataOffset { get; }
+    int ActorDataCountOffset { get; }
+    int BoardDataLength { get; }
+    int BoardDataOffset { get; }
+    int BoardNameLength { get; }
+    int BoardNameOffset { get; }
+    int WorldDataCapacity { get; }
+    int WorldDataOffset { get; }
+    int WorldDataSize { get; }
+    int LineWidth { get; }
+    int TileOffset { get; }
+    int MaxPutRow { get; }
+    int DefaultActorOffset { get; }
 }

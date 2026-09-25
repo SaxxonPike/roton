@@ -1,16 +1,19 @@
 ﻿using System;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class ActorList(IMemory memory, int capacity)
-    : CachedFixedList<IActor>(capacity), IActorList
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class ActorList(
+    IMemory memory, 
+    IFacts facts,
+    IFactory factory,
+    ICodeHeap heap)
+    : CachedFixedList<IActor>(facts.ActorCapacity), IActorList
 {
-    protected IMemory Memory =>
-        memory;
-
-    public int Capacity { get; } =
-        capacity;
+    public int Capacity => facts.ActorCapacity;
 
     public IActor Player =>
         this[0];
@@ -29,8 +32,16 @@ public abstract class ActorList(IMemory memory, int capacity)
         return -1;
     }
 
-    public abstract Span<char> GetCode(int index);
+    public Span<char> GetCode(int index) =>
+        heap[GetItem(index).Pointer];
 
-    protected sealed override void SetItem(int index, IActor value) => 
+    protected override void SetItem(int index, IActor value) => 
         throw Exceptions.InvalidSet;
+    
+    public override int Count =>
+        memory.GetRef<Word>(facts.ActorDataCountOffset) + 1;
+
+    protected override IActor InitItem(int index) =>
+        factory.Create<Actor>(facts.ActorDataOffset + facts.ActorDataLength * index, facts.ActorDataLength);
+
 }

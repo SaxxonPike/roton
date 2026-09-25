@@ -4,41 +4,30 @@ using System.IO;
 using Roton.Emulation.Data;
 using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
+using Roton.Infrastructure;
 
 namespace Roton.Emulation.Core.Impl;
 
-public abstract class BoardPacker(
+[Context(Context.Original)]
+[Context(Context.Super)]
+internal sealed class BoardPacker(
     IMemory memory,
     ICodeHeap heap,
-    ITiles tiles)
+    ITiles tiles,
+    IFacts facts,
+    IFactory factory)
     : IBoardPacker
 {
     private ITiles _tiles = tiles;
-
-    public abstract int ActorCapacity { get; }
-
-    public abstract int ActorDataLength { get; }
-
-    public abstract int ActorDataOffset { get; }
-
-    public abstract int ActorDataCountOffset { get; }
-
-    public abstract int BoardDataLength { get; }
-
-    public abstract int BoardDataOffset { get; }
-
-    public abstract int BoardNameLength { get; }
-
-    public abstract int BoardNameOffset { get; }
 
     public byte[] Pack()
     {
         using var mem = new MemoryStream();
         var writer = new BinaryWriter(mem);
-        writer.Write([.. memory.Read(BoardNameOffset, BoardNameLength)]);
+        writer.Write([.. memory.Read(facts.BoardNameOffset, facts.BoardNameLength)]);
         PackTiles(writer);
-        writer.Write([.. memory.Read(BoardDataOffset, BoardDataLength)]);
-        short actorCount = memory.GetRef<Word>(ActorDataCountOffset);
+        writer.Write([.. memory.Read(facts.BoardDataOffset, facts.BoardDataLength)]);
+        short actorCount = memory.GetRef<Word>(facts.ActorDataCountOffset);
         writer.Write(actorCount);
         PackActors(writer, actorCount);
         writer.Flush();
@@ -49,11 +38,11 @@ public abstract class BoardPacker(
     {
         using var mem = new MemoryStream(data);
         var reader = new BinaryReader(mem);
-        memory.Write(BoardNameOffset, reader.ReadBytes(BoardNameLength)); // board name
+        memory.Write(facts.BoardNameOffset, reader.ReadBytes(facts.BoardNameLength)); // board name
         UnpackTiles(reader); // tiles
-        memory.Write(BoardDataOffset, reader.ReadBytes(BoardDataLength)); // board properties
+        memory.Write(facts.BoardDataOffset, reader.ReadBytes(facts.BoardDataLength)); // board properties
         int actorCount = reader.ReadInt16();
-        memory.Write16(ActorDataCountOffset, actorCount); // actor count
+        memory.Write16(facts.ActorDataCountOffset, actorCount); // actor count
         UnpackActors(reader, actorCount); // actors
         return (int)mem.Position;
     }
@@ -65,11 +54,15 @@ public abstract class BoardPacker(
 
         // backed up memory (so we don't modify the working version)
         var mem = new Memory();
-        mem.Write(ActorDataOffset, memory.Read(ActorDataOffset, ActorDataLength * (count + 1)));
+        mem.Write(facts.ActorDataOffset, memory.Read(facts.ActorDataOffset, facts.ActorDataLength * (count + 1)));
 
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(mem, heap, ActorDataOffset + ActorDataLength * i, ActorDataLength);
+            var actor = factory.Create<Actor>(
+                facts.ActorDataOffset + facts.ActorDataLength * i,
+                facts.ActorDataLength
+            );
+
             var code = Span<char>.Empty;
 
             if (actor.Pointer != 0)
@@ -93,7 +86,7 @@ public abstract class BoardPacker(
             }
 
             // write memory to stream
-            target.Write([.. memory.Read(actor.Offset, ActorDataLength)]);
+            target.Write([.. memory.Read(actor.Offset, facts.ActorDataLength)]);
 
             // write code if applicable
             if (code.IsEmpty)
@@ -144,7 +137,7 @@ public abstract class BoardPacker(
         var buffer = (stackalloc char[short.MaxValue]);
 
         // sanity check
-        if (count > ActorCapacity)
+        if (count > facts.ActorCapacity)
         {
             throw Exceptions.CorruptedData;
         }
@@ -156,8 +149,12 @@ public abstract class BoardPacker(
         var actorList = new List<IActor>();
         for (var i = 0; i <= count; i++)
         {
-            var actor = new Actor(memory, heap, ActorDataOffset + ActorDataLength * i, ActorDataLength);
-            memory.Write(ActorDataOffset + ActorDataLength * i, source.ReadBytes(ActorDataLength));
+            var actor = factory.Create<Actor>(
+                facts.ActorDataOffset + facts.ActorDataLength * i,
+                facts.ActorDataLength
+            );
+
+            memory.Write(facts.ActorDataOffset + facts.ActorDataLength * i, source.ReadBytes(facts.ActorDataLength));
             actor.Pointer = 0;
             if (actor.Length > 0)
             {
@@ -176,8 +173,10 @@ public abstract class BoardPacker(
             if (actorList[i].Length >= 0)
                 continue;
 
-            var actorCodeSource = new Actor(memory, heap,
-                ActorDataOffset + -actorList[i].Length * ActorDataLength, ActorDataLength);
+            var actorCodeSource = factory.Create<Actor>(
+                facts.ActorDataOffset + -actorList[i].Length * facts.ActorDataLength,
+                facts.ActorDataLength
+            );
 
             actorList[i].Length = actorCodeSource.Length;
             actorList[i].Pointer = actorCodeSource.Pointer;

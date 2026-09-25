@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Roton.Emulation.Data.Impl;
 using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data;
@@ -8,6 +9,9 @@ internal static class MemoryExtensions
 {
     extension(IMemory memory)
     {
+        internal ByteString GetByteString(int offset) => 
+            new(memory, offset);
+
         private Span<T> GetSpan<T>(int offset) where T : struct =>
             MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)));
 
