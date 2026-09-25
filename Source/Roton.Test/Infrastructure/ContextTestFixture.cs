@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Lyon.Common;
+using Lyon.Common.App.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -149,6 +150,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         services.AddSingleton<IAssemblyResourceService, AssemblyResourceService>();
         services.AddSingleton(Config);
         services.AddSingleton(Tracer);
+        services.AddSingleton<IFactory, TestFactory>();
 
         var container = services.BuildServiceProvider();
         Actors = container.GetRequiredService<IActorList>();
