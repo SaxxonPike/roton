@@ -8,45 +8,45 @@ namespace Roton.Emulation.Core.Impl;
 [Context(Context.Original)]
 internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEntryHud) : ILongTextEntryHud
 {
-    private static readonly int[] ScrollCharsTop =
+    private static ReadOnlySpan<int> ScrollCharsTop =>
     [
         0xC6, 0xD1, 0xCD, 0xD1, 0xB5
     ];
 
-    private static readonly int[] ScrollCharsMid =
+    private static ReadOnlySpan<int> ScrollCharsMid =>
     [
         0x20, 0xB3, 0x20, 0xB3, 0x20
     ];
 
-    private static readonly int[] ScrollCharsSplit =
+    private static ReadOnlySpan<int> ScrollCharsSplit =>
     [
         0x20, 0xC6, 0xCD, 0xB5, 0x20
     ];
 
-    private static readonly int[] ScrollCharsBottom =
+    private static ReadOnlySpan<int> ScrollCharsBottom =>
     [
         0xC6, 0xCF, 0xCD, 0xCF, 0xB5
     ];
-        
+
     private AnsiChar[] LoadBuffer(int left, int top, int width, int height)
     {
         var buffer = new AnsiChar[width * height];
         var i = 0;
-            
+
         for (var y = 0; y < height; y++)
         for (var x = 0; x < width; x++)
             buffer[i++] = terminal.Read(x + left, y + top);
 
         return buffer;
     }
-        
+
     private void RestoreBuffer(AnsiChar[] buffer, int left, int top, int width, int height)
     {
         var i = 0;
         for (var y = 0; y < height; y++)
         for (var x = 0; x < width; x++)
             terminal.Plot(x + left, y + top, buffer[i++]);
-    }        
+    }
 
     public string Show(string title, int x, int y, int maxLength, int textColor, int pipColor)
     {
@@ -55,7 +55,7 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
         const int height = 6;
 
         var buffer = LoadBuffer(x, y, width, height);
-            
+
         RenderLine(y, ScrollCharsTop);
         RenderLine(y + 1, ScrollCharsMid);
         RenderLine(y + 2, ScrollCharsSplit);
@@ -65,11 +65,11 @@ internal sealed class LongTextEntryHud(ITerminal terminal, ITextEntryHud textEnt
         terminal.Write(titleX, y + 1, title, pipColor);
 
         var result = textEntryHud.Show(x + 7, y + 3, maxLength, textColor, pipColor, ReadOnlySpan<char>.Empty);
-            
+
         RestoreBuffer(buffer, x, y, width, height);
         return result;
 
-        void RenderLine(int lineY, IReadOnlyList<int> chars)
+        void RenderLine(int lineY, ReadOnlySpan<int> chars)
         {
             terminal.Plot(x, lineY, new AnsiChar(chars[0], pipColor));
             terminal.Plot(x + 1, lineY, new AnsiChar(chars[1], pipColor));

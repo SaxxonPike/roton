@@ -25,6 +25,8 @@ internal sealed class CodeExecutor(
 {
     public void ExecuteCode(int index, ref Word instruction, string name)
     {
+        var lineBuffer = (stackalloc char[256]);
+
         // In the original code, there's a series of "goto" statements. To preserve
         // the flow, we use nested loops.
 
@@ -128,7 +130,8 @@ internal sealed class CodeExecutor(
                     {
                         // All other lines become message content.
 
-                        scrollContent.AddLine($"{context.Command}{parser.ReadLine(context.Index, ref instruction)}");
+                        var line = parser.ReadLine(context.Index, ref instruction, lineBuffer);
+                        scrollContent.AddLine(context.Command, line);
                         break;
                     }
                 }

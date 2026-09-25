@@ -4,65 +4,55 @@ using Roton.Emulation.Data.Impl;
 
 namespace Roton.Emulation.Core.Impl;
 
-internal sealed class SoundBufferList : FixedList<int>, ISoundBufferList
+internal sealed class SoundBufferList(IMemory memory, int offset) : FixedList<int>, ISoundBufferList
 {
-    private readonly int _offset;
-
-    internal SoundBufferList(IMemory memory, int offset)
-    {
-        Memory = memory;
-        _offset = offset;
-    }
-
-    private IMemory Memory { get; }
-
-    public override int Count => Memory.Read8(_offset);
+    public override int Count => memory.Read8(offset);
 
     protected override int GetItem(int index) => 
-        Memory.Read8(_offset + index + 1);
+        memory.Read8(offset + index + 1);
 
     protected override void SetItem(int index, int value) => 
-        Memory.Write8(_offset + index + 1, value);
+        memory.Write8(offset + index + 1, value);
 
     public void Enqueue(ReadOnlySpan<byte> sound)
     {
         var inLength = sound.Length;
             
-        var totalLength = inLength + Memory.Read8(_offset);
+        var totalLength = inLength + memory.Read8(offset);
         if (totalLength >= 255)
             return;
 
         var sourceIndex = 0;
-        var targetIndex = Memory.Read8(_offset) + 1 + _offset;
+        var targetIndex = memory.Read8(offset) + 1 + offset;
         var remaining = inLength;
         while (remaining-- > 0)
-            Memory.Write8(targetIndex++, sound[sourceIndex++]);
-        Memory.Write8(_offset, totalLength);
+            memory.Write8(targetIndex++, sound[sourceIndex++]);
+        memory.Write8(offset, totalLength);
     }
 
     public SoundNote Dequeue()
     {
-        var remaining = Memory.Read8(_offset);
+        var remaining = memory.Read8(offset);
         if (remaining < 2)
             throw new RotonException("No notes available in queue!");
             
         var result = new SoundNote(
-            note: Memory.Read8(_offset + 1),
-            duration: Memory.Read8(_offset + 2)
+            note: memory.Read8(offset + 1),
+            duration: memory.Read8(offset + 2)
         );
 
         remaining -= 2;
-        Memory.Write8(_offset, remaining);
+        memory.Write8(offset, remaining);
             
         for (var i = 0; i < remaining; i++)
-            Memory.Write8(_offset + 1 + i, Memory.Read8(_offset + 3 + i));
+            memory.Write8(offset + 1 + i, memory.Read8(offset + 3 + i));
             
         return result;
     }
 
     public override void Clear()
     {
-        Memory.Write8(_offset, 0);
+        memory.Write8(offset, 0);
     }
 
     protected override bool EqualsItem(int index, int value) => 
