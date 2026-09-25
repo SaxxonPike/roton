@@ -22,11 +22,8 @@ internal sealed class SoundBufferList(IMemory memory, int offset) : FixedList<in
         if (totalLength >= 255)
             return;
 
-        var sourceIndex = 0;
-        var targetIndex = memory.Read8(offset) + 1 + offset;
-        var remaining = inLength;
-        while (remaining-- > 0)
-            memory.Write8(targetIndex++, sound[sourceIndex++]);
+        var targetOffset = memory.Read8(offset) + 1 + offset;
+        memory.Write(targetOffset, sound);
         memory.Write8(offset, totalLength);
     }
 
@@ -43,9 +40,7 @@ internal sealed class SoundBufferList(IMemory memory, int offset) : FixedList<in
 
         remaining -= 2;
         memory.Write8(offset, remaining);
-            
-        for (var i = 0; i < remaining; i++)
-            memory.Write8(offset + 1 + i, memory.Read8(offset + 3 + i));
+        memory.Write(offset + 1, memory.GetSpan<byte>(offset + 3, remaining));
             
         return result;
     }
