@@ -37,6 +37,13 @@ internal static class MemoryExtensions
             }
         }
 
+        internal void Read(int offset, Span<byte> buffer)
+        {
+            var span = memory.Data;
+            for (var i = 0; i < buffer.Length; i++)
+                buffer[i] = span[offset++ & 0xFFFF];
+        }
+
         internal int Read8(int offset)
         {
             return memory.Data[offset & 0xFFFF];

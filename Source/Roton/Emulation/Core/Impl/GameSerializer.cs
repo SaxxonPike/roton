@@ -21,8 +21,13 @@ internal sealed class GameSerializer(
 
     public void LoadWorldData(Stream source)
     {
+#if NET10_0_OR_GREATER
+        var header = (stackalloc byte[facts.WorldDataCapacity - 4]);
+        source.ReadExactly(header);
+#else
         var reader = new BinaryReader(source);
         var header = reader.ReadBytes(facts.WorldDataCapacity - 4);
+#endif
         memory.Write(facts.WorldDataOffset, header, 0, facts.WorldDataSize);
     }
 
@@ -41,9 +46,15 @@ internal sealed class GameSerializer(
 
     public void SaveWorldData(Stream target)
     {
+#if NET10_0_OR_GREATER
+        var worldBytes = (stackalloc byte[facts.WorldDataCapacity - 4]);
+        memory.Read(facts.WorldDataOffset, worldBytes);
+        target.Write(worldBytes);
+#else
         var worldBytes = new byte[facts.WorldDataCapacity - 4];
         var worldData = memory.Read(facts.WorldDataOffset, facts.WorldDataSize);
         worldData.CopyTo(worldBytes);
         target.Write(worldBytes, 0, worldBytes.Length);
+#endif
     }
 }
