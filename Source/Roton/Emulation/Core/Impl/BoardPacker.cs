@@ -60,7 +60,8 @@ internal sealed class BoardPacker(
         {
             var actor = factory.Create<Actor>(
                 facts.ActorDataOffset + facts.ActorDataLength * i,
-                facts.ActorDataLength
+                facts.ActorDataLength,
+                mem
             );
 
             var code = Span<char>.Empty;
