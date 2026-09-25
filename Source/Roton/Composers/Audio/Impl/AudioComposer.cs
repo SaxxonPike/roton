@@ -33,38 +33,45 @@ internal sealed class AudioComposer(
         {
             if (_durationSamples > 0)
             {
-                var duration = Math.Min(_durationSamples, tempBuffer.Length);
-                var samples = tempBuffer.Slice(0, duration);
-                duration = synth.Render(samples);
-                tempBuffer = tempBuffer.Slice(duration);
-                _durationSamples -= samples.Length;
+                var requested = Math.Min(_durationSamples, tempBuffer.Length);
+                var rendered = synth.Render(tempBuffer.Slice(0, requested));
+                tempBuffer = tempBuffer.Slice(rendered);
+                _durationSamples -= rendered;
                 continue;
             }
 
             if (!_speakerTones.TryDequeue(out var nextTone))
             {
-                var duration = synth.Render(tempBuffer);
-                _durationSamples -= duration;
-                tempBuffer = tempBuffer.Slice(duration);
+                var rendered = synth.Render(tempBuffer);
+                _durationSamples -= rendered;
+                tempBuffer = tempBuffer.Slice(rendered);
                 break;
             }
 
+#if NET10_0_OR_GREATER
+            _durationSamples = (int)MathF.Round(nextTone.Duration * _sampleRate);
+#else
             _durationSamples = (int)Math.Round(nextTone.Duration * _sampleRate);
+#endif
             synth.SetFrequency(nextTone.Frequency);
         }
 
         // SIMD assisted amplification.
 
-        var outBuffer = buffer.Slice(0, buffer.Length - tempBuffer.Length);
-        var vecBuffer = MemoryMarshal.Cast<float, Vector4>(outBuffer);
-        var vecLeftover = outBuffer.Slice(vecBuffer.Length * 4);
         var gain = config.Audio.PreGain * config.Audio.Gain;
+        if (gain != 1.0f)
+        {
+            var outBuffer = buffer.Slice(0, buffer.Length - tempBuffer.Length);
+            var vecBuffer = MemoryMarshal.Cast<float, Vector<float>>(outBuffer);
+            var gainVector = new Vector<float>(gain);
 
-        for (var i = 0; i < vecBuffer.Length; i++)
-            vecBuffer[i] *= gain;
+            for (var i = 0; i < vecBuffer.Length; i++)
+                vecBuffer[i] *= gainVector;
 
-        for (var i = 0; i < vecLeftover.Length; i++)
-            vecLeftover[i] *= gain;
+            var vecLeftover = outBuffer.Slice(vecBuffer.Length * Vector<float>.Count);
+            for (var i = 0; i < vecLeftover.Length; i++)
+                vecLeftover[i] *= gain;
+        }
 
         return buffer.Length;
     }
