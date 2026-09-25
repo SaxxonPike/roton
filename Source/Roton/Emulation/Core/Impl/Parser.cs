@@ -1,4 +1,7 @@
 using System;
+#if NET10_0_OR_GREATER
+using System.Buffers;
+#endif
 using Roton.Emulation.Data;
 using Roton.Emulation.Infrastructure;
 using Roton.Infrastructure;
@@ -12,6 +15,11 @@ internal sealed class Parser(
     IState state)
     : IParser
 {
+#if NET10_0_OR_GREATER
+    private static readonly SearchValues<char> WordChars =
+        SearchValues.Create("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:_");
+#endif
+
     /// <inheritdoc />
     public int Search(int index, ReadOnlySpan<char> term)
     {
@@ -147,33 +155,77 @@ internal sealed class Parser(
     public ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer)
     {
         var code = actors.GetCode(index);
-        var length = 0;
         int instr = instruction;
 
-        // Skip leading spaces.
-        var codeWithoutSpaces = code.Slice(instr).TrimStart(' ');
-        instr = code.Length - codeWithoutSpaces.Length;
-        var b = instr < code.Length ? code[instr++].ToUpperCase() : '\0';
-
-        // Match a word like this regex: ^[A-Z:_][A-Z0-9:_]*
-        if (b is not (>= '0' and <= '9'))
+        if (instr >= code.Length)
         {
-            while (b is >= 'A' and <= 'Z' or >= '0' and <= '9' or ':' or '_')
-            {
-                if (length < buffer.Length)
-                    buffer[length++] = b;
-                b = instr < code.Length
-                    ? code[instr++].ToUpperCase()
-                    : '\0';
-            }
+            if (instr > 0)
+                instr--;
+            state.OopByte = '\0';
+            state.SetOopWord([]);
+            instruction = instr;
+            return [];
         }
 
-        if (instr > 0)
-            instr--;
+        // Skip leading spaces.
+        var remaining = code.Slice(instr);
+#if NET10_0_OR_GREATER
+        var spaceSkip = remaining.IndexOfAnyExcept(' ');
+#else
+        var spaceSkip = remaining.Length - remaining.TrimStart(' ').Length;
+#endif
+        if (spaceSkip < 0)
+        {
+            instr = code.Length;
+            if (instr > 0)
+                instr--;
+            state.OopByte = '\0';
+            state.SetOopWord([]);
+            instruction = instr;
+            return [];
+        }
+
+        instr += spaceSkip;
+        remaining = code.Slice(instr);
+
+        var firstChar = remaining[0];
+        // Word cannot start with a digit
+        if (firstChar is >= '0' and <= '9')
+        {
+            state.OopByte = firstChar.ToUpperCase();
+            state.SetOopWord([]);
+            instruction = instr;
+            return [];
+        }
+
+#if NET10_0_OR_GREATER
+        var wordLen = remaining.IndexOfAnyExcept(WordChars);
+#else
+        var wordLen = 0;
+        while (wordLen < remaining.Length)
+        {
+            var ch = remaining[wordLen];
+            if (ch is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9' or ':' or '_')
+                wordLen++;
+            else
+                break;
+        }
+#endif
+        if (wordLen < 0)
+            wordLen = remaining.Length;
+
+        var rawWord = remaining.Slice(0, wordLen);
+        instr += wordLen;
+
+        var nextChar = instr < code.Length ? code[instr].ToUpperCase() : '\0';
+
+        var length = Math.Min(rawWord.Length, buffer.Length);
+        for (var i = 0; i < length; i++)
+            buffer[i] = rawWord[i].ToUpperCase();
 
         var result = buffer.Slice(0, length);
         state.SetOopWord(result);
-        state.OopByte = b;
+        state.OopByte = nextChar;
         instruction = instr;
 
         return result;

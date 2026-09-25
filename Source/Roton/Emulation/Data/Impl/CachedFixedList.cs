@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class CachedFixedList<T>(int count) : FixedList<T>
+internal abstract class CachedFixedList<T>(int count) : FixedList<T>
 {
     private bool _initialized;
     private readonly T[] _cache = new T[count];

@@ -3,7 +3,7 @@ using Roton.Emulation.Infrastructure;
 
 namespace Roton.Emulation.Data.Impl;
 
-public abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
+internal abstract class ElementList(int count) : CachedFixedList<IElement>(count), IElementList
 {
     public sealed override int Count { get; } = count;
 
