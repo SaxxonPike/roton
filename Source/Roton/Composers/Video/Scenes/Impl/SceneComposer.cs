@@ -257,29 +257,80 @@ internal sealed class SceneComposer : ISceneComposer
             ? colors[ac.Color >> 4]
             : colors[(ac.Color >> 4) & 0x7];
         var foregroundColor = colors[ac.Color & 0x0F];
+        var foregroundColorOff = blinkBit ? backgroundColor : foregroundColor;
 
 #if NET10_0_OR_GREATER
-        var vFgOn = Vector128.Create(foregroundColor);
-        var vFgOff = blinkBit ? Vector128.Create(backgroundColor) : Vector128.Create(foregroundColor);
-        var vBg = Vector128.Create(backgroundColor);
+        var vFgOn = Vector256.Create(foregroundColor);
+        var vFgOff = Vector256.Create(foregroundColorOff);
+        var vBg = Vector256.Create(backgroundColor);
+
+        // In most cases, the width of the font is 8 pixels. We can use this
+        // to create a "fast path" and do entire rows of pixels in just a
+        // couple vector operations. Even if Vector256 is not directly hardware
+        // accelerated, .NET will fall back to Vector128.
+
+        if (width == 8)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                var vIn = Vector256.LoadUnsafe(ref Unsafe.Add(ref MemoryMarshal.GetReference(inputBits), inputOffset));
+                Vector256.ConditionalSelect(vIn, vFgOn, vBg).StoreUnsafe(ref outputOnBits[baseOffset]);
+                Vector256.ConditionalSelect(vIn, vFgOff, vBg).StoreUnsafe(ref outputOffBits[baseOffset]);
+                inputOffset += 8;
+                baseOffset += _stride;
+            }
+
+            return;
+        }
+
+        // In the event that the width is not 8, a more complex loop is required.
+
+        var vFgOn128 = vFgOn.GetLower();
+        var vFgOff128 = vFgOff.GetLower();
+        var vBg128 = vBg.GetLower();
 
         for (var y = 0; y < height; y++)
         {
             var x = 0;
-            while (x <= width - 4)
+
+            if (Vector256.IsHardwareAccelerated)
             {
-                var vIn = Vector128.LoadUnsafe(ref Unsafe.Add(ref MemoryMarshal.GetReference(inputBits), inputOffset));
-                Vector128.ConditionalSelect(vIn, vFgOn, vBg).StoreUnsafe(ref outputOnBits[baseOffset + x]);
-                Vector128.ConditionalSelect(vIn, vFgOff, vBg).StoreUnsafe(ref outputOffBits[baseOffset + x]);
-                inputOffset += 4;
-                x += 4;
+                while (x <= width - 8)
+                {
+                    var vIn = Vector256.LoadUnsafe(ref Unsafe.Add(ref MemoryMarshal.GetReference(inputBits),
+                        inputOffset));
+                    Vector256.ConditionalSelect(vIn, vFgOn, vBg).StoreUnsafe(ref outputOnBits[baseOffset + x]);
+                    Vector256.ConditionalSelect(vIn, vFgOff, vBg).StoreUnsafe(ref outputOffBits[baseOffset + x]);
+                    inputOffset += 8;
+                    x += 8;
+                }
+            }
+
+            if (Vector128.IsHardwareAccelerated)
+            {
+                while (x <= width - 4)
+                {
+                    var vIn = Vector128.LoadUnsafe(ref Unsafe.Add(ref MemoryMarshal.GetReference(inputBits),
+                        inputOffset));
+                    Vector128.ConditionalSelect(vIn, vFgOn128, vBg128).StoreUnsafe(ref outputOnBits[baseOffset + x]);
+                    Vector128.ConditionalSelect(vIn, vFgOff128, vBg128).StoreUnsafe(ref outputOffBits[baseOffset + x]);
+                    inputOffset += 4;
+                    x += 4;
+                }
+            }
+
+            while (x < width)
+            {
+                var inputBitData = inputBits[inputOffset++];
+                outputOnBits[baseOffset + x] = (inputBitData & foregroundColor) | (~inputBitData & backgroundColor);
+                outputOffBits[baseOffset + x] = (inputBitData & foregroundColorOff) | (~inputBitData & backgroundColor);
+                inputOffset++;
+                x++;
             }
 
             baseOffset += _stride;
         }
 #else
-        var foregroundColorOff = blinkBit ? backgroundColor : foregroundColor;
-
         for (var y = 0; y < height; y++)
         {
             var outputOffset = baseOffset;
@@ -358,7 +409,7 @@ internal sealed class SceneComposer : ISceneComposer
             .ToArray();
     }
 
-    private void DoUpdate(int index) => 
+    private void DoUpdate(int index) =>
         DrawGlyph(_chars.Span[index], _offsetLookUpTable.Span[index]);
 
     /// <summary>

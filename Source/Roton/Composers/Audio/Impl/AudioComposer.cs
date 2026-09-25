@@ -94,6 +94,7 @@ internal sealed class AudioComposer(
         while (_speakerTones.TryDequeue(out _))
         {
         }
+
         synth.SetFrequency(0);
     }
 
