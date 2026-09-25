@@ -14,27 +14,27 @@ internal sealed class ScrollRenderer(
     IScrollContent scrollContent)
     : IScrollRenderer
 {
-    private static readonly int[] ScrollCharsTop =
+    private static ReadOnlySpan<int> ScrollCharsTop =>
     [
         0xC6, 0xD1, 0xCD, 0xD1, 0xB5
     ];
 
-    private static readonly int[] ScrollCharsMid =
+    private static ReadOnlySpan<int> ScrollCharsMid =>
     [
         0x20, 0xB3, 0x20, 0xB3, 0x20
     ];
 
-    private static readonly int[] ScrollCharsSplit =
+    private static ReadOnlySpan<int> ScrollCharsSplit =>
     [
         0x20, 0xC6, 0xCD, 0xB5, 0x20
     ];
 
-    private static readonly int[] ScrollCharsBottom =
+    private static ReadOnlySpan<int> ScrollCharsBottom =>
     [
         0xC6, 0xCF, 0xCD, 0xCF, 0xB5
     ];
 
-    private void RenderLine(int[] chars, int y)
+    private void RenderLine(ReadOnlySpan<int> chars, int y)
     {
         terminal.Plot(facts.ScrollLeft, y, new AnsiChar(chars[0], 0x0F));
         terminal.Plot(facts.ScrollLeft + 1, y, new AnsiChar(chars[1], 0x0F));

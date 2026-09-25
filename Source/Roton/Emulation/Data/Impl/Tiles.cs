@@ -12,9 +12,6 @@ internal sealed class Tiles(IMemory memory, IElementList elements, IFacts facts)
     private int TotalHeight =>
         Height + 2;
 
-    private int TotalWidth =>
-        Width + 2;
-
     public int Height => facts.BoardHeight;
 
     public ref Tile this[Location location] =>
@@ -25,21 +22,8 @@ internal sealed class Tiles(IMemory memory, IElementList elements, IFacts facts)
 
     public int Width => facts.BoardWidth;
 
-    private IEnumerable<Tile> GetTileEnumerable()
-    {
-        for (var x = 1; x < TotalWidth - 1; x++)
-        for (var y = 1; y < TotalHeight - 1; y++)
-            yield return this[new Location(x, y)];
-    }
-
-    public IEnumerator<Tile> GetEnumerator() =>
-        GetTileEnumerable().GetEnumerator();
-
     public override string ToString() =>
         $"TileGrid ({Width}x{Height})";
-
-    IEnumerator IEnumerable.GetEnumerator() =>
-        GetEnumerator();
 
     public IElement ElementAt(Location location) =>
         elements[this[location].Id];

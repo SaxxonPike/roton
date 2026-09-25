@@ -3,7 +3,6 @@ using System;
 using System.Collections.Frozen;
 #endif
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace Roton.Emulation.Infrastructure;
@@ -14,7 +13,7 @@ namespace Roton.Emulation.Infrastructure;
 [PublicAPI]
 public static class Cp437
 {
-    private static readonly char[] ByteToCharArray =
+    private static ReadOnlySpan<char> ByteToCharArray =>
     [
         '\u0000', '\u263A', '\u263B', '\u2665', '\u2666', '\u2663', '\u2660', '\u2022',
         '\u25D8', '\u25CB', '\u25D9', '\u2642', '\u2640', '\u266A', '\u266B', '\u263C',
@@ -51,14 +50,23 @@ public static class Cp437
     ];
 
 #if NET10_0_OR_GREATER
-    private static readonly FrozenDictionary<char, byte> CharToByteDict = ByteToCharArray
-        .Select((e, i) => new KeyValuePair<char, byte>(e, (byte)i))
-        .ToFrozenDictionary(x => x.Key, x => x.Value);
+    private static readonly FrozenDictionary<char, byte> CharToByteDict = InitCharToByteDict()
+        .ToFrozenDictionary();
 #else
-    private static readonly Dictionary<char, byte> CharToByteDict = ByteToCharArray
-        .Select((e, i) => new KeyValuePair<char, byte>(e, (byte)i))
-        .ToDictionary(x => x.Key, x => x.Value);
+    private static readonly Dictionary<char, byte> CharToByteDict = InitCharToByteDict();
 #endif
+
+    /// <summary>
+    /// Builds the char->byte map.
+    /// </summary>
+    private static Dictionary<char, byte> InitCharToByteDict()
+    {
+        var idx = 0;
+        var result = new Dictionary<char, byte>();
+        foreach (var c in ByteToCharArray)
+            result[c] = (byte)idx++;
+        return result;
+    }
 
     /// <summary>
     /// Converts from byte to char, preserving control characters.

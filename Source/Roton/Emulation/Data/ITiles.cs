@@ -2,7 +2,7 @@
 
 namespace Roton.Emulation.Data;
 
-public interface ITiles : IEnumerable<Tile>
+public interface ITiles// : IEnumerable<Tile>
 {
     int Height { get; }
     ref Tile this[Location location] { get; }
