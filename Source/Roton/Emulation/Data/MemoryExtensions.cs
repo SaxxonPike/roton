@@ -25,6 +25,13 @@ internal static class MemoryExtensions
             ref MemoryMarshal.Cast<byte, T>(memory.Data.Slice(unchecked((ushort)offset)))[0];
 #endif
 
+        internal ref T GetRef<T>() where T : struct =>
+#if NET10_0_OR_GREATER
+            ref MemoryMarshal.AsRef<T>(memory.Data);
+#else
+            ref MemoryMarshal.Cast<byte, T>(memory.Data)[0];
+#endif
+
         internal Span<byte> Read(int offset, int length)
         {
             unchecked
