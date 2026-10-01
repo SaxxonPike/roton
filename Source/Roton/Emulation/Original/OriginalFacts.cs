@@ -76,18 +76,18 @@ internal sealed class OriginalFacts : IFacts
     public int BoardWidth => 60;
     public int BoardHeight => 25;
     public int ActorCapacity => 152;
-    public int ActorDataCountOffset => 0x31CD;
+    public int ActorDataCountOffset => 0x31D1;
     public int ActorDataLength => 0x21;
-    public int ActorDataOffset => 0x31CF;
+    public int ActorDataOffset => 0x31D3;
     public int BoardDataLength => 0x56;
-    public int BoardDataOffset => 0x4567;
+    public int BoardDataOffset => 0x456B;
     public int BoardNameLength => 0x33;
-    public int BoardNameOffset => 0x2486;
+    public int BoardNameOffset => 0x248A;
     public int WorldDataCapacity => 0x200;
-    public int WorldDataOffset => 0x481E;
-    public int WorldDataSize => 0x0108;
+    public int WorldDataOffset => 0x4822;
+    public int WorldDataSize => 0x0113;
     public int LineWidth => 50;
-    public int TileOffset => 0x24B9;
+    public int TileOffset => 0x24BD;
     public int MaxPutRow => 24;
-    public int DefaultActorOffset => 0x0076;
+    public int DefaultActorOffset => 0x0402;
 }

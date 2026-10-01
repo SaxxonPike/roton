@@ -6,4 +6,4 @@ namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
 internal sealed class OriginalKeyList(IMemory memory)
-    : KeyList(memory, 0x4822);
+    : KeyList(memory, 0x4826);

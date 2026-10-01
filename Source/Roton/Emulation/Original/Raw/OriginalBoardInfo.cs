@@ -14,5 +14,5 @@ internal struct OriginalBoardInfo
     [FieldOffset(0x0042)] public HWord StartPlayerX;
     [FieldOffset(0x0043)] public HWord StartPlayerY;
     [FieldOffset(0x0044)] public Word TimeLimitSec;
-    [FieldOffset(0x0046)] public HWord UnkPad;
+    [FieldOffset(0x0046)] public HWord UnkPad; // array[16]
 }

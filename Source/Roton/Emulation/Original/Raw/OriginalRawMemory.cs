@@ -3,24 +3,12 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Original.Raw;
 
+/// <summary>
+/// Represents the memory map for ZZT 3.2.
+/// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 0x10000)]
 internal struct OriginalRawMemory
 {
-    //
-    // Crt,
-    // Dos,
-    // Video,
-    // Keys,
-    // Sounds,
-    // Input,
-    // TxtWind,
-    // GameVars,
-    // Elements,
-    // Editor,
-    // Oop,
-    // Game
-    //
-
     // Const section
 
     [FieldOffset(0x0002)] public OriginalString255 TransporterNSChars;

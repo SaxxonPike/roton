@@ -7,17 +7,17 @@ namespace Roton.Emulation.Original;
 internal sealed class OriginalExits(IMemory memory) : IExits
 {
     public ref HWord this[int index] =>
-        ref memory.GetRef<HWord>(0x4569 + index);
+        ref memory.GetRef<HWord>(0x456D + index);
 
     public ref HWord East =>
-        ref memory.GetRef<HWord>(0x456C);
+        ref memory.GetRef<HWord>(0x4570);
 
     public ref HWord North =>
-        ref memory.GetRef<HWord>(0x4569);
+        ref memory.GetRef<HWord>(0x456D);
 
     public ref HWord South =>
-        ref memory.GetRef<HWord>(0x456A);
+        ref memory.GetRef<HWord>(0x456E);
 
     public ref HWord West =>
-        ref memory.GetRef<HWord>(0x456B);
+        ref memory.GetRef<HWord>(0x456F);
 }

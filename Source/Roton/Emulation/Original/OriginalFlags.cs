@@ -5,7 +5,7 @@ using Roton.Infrastructure;
 namespace Roton.Emulation.Original;
 
 [Context(Context.Original)]
-internal sealed class OriginalFlags(IMemory memory) : Flags(memory, 0x4837 + 21)
+internal sealed class OriginalFlags(IMemory memory) : Flags(memory, 0x483B + 21)
 {
     public override int Count => 10;
 

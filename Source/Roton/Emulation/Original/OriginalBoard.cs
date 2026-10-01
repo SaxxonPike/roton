@@ -14,23 +14,23 @@ internal sealed class OriginalBoard(
         ref _camera;
 
     public ref Location Entrance => 
-        ref memory.GetRef<Location>(0x45A9);
+        ref memory.GetRef<Location>(0x45AD);
 
     public ref Bool IsDark => 
-        ref memory.GetRef<Bool>(0x4568);
+        ref memory.GetRef<Bool>(0x456C);
 
     public ref Word MaximumShots => 
-        ref memory.GetRef<Word>(0x4567);
+        ref memory.GetRef<Word>(0x456B);
 
     public string Name
     {
-        get => memory.ReadString(0x2486);
-        set => memory.WriteString(0x2486, value);
+        get => memory.ReadString(0x248A);
+        set => memory.WriteString(0x248A, value);
     }
 
     public ref Bool RestartOnZap => 
-        ref memory.GetRef<Bool>(0x456D);
+        ref memory.GetRef<Bool>(0x4571);
 
     public ref Word TimeLimit => 
-        ref memory.GetRef<Word>(0x45AB);
+        ref memory.GetRef<Word>(0x45AF);
 }

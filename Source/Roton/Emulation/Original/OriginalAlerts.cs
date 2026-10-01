@@ -20,16 +20,16 @@ internal sealed class OriginalAlerts(
         [$"Ammunition - {facts.AmmoPerPickup} shots per container."];
 
     public ref Bool AmmoPickup =>
-        ref memory.GetRef<Bool>(0x4AAB);
+        ref memory.GetRef<Bool>(0x4AAF);
 
     public IReadOnlyList<string> BombMessage { get; } =
         ["Bomb activated!"];
 
     public ref Bool CantShootHere =>
-        ref memory.GetRef<Bool>(0x4AAD);
+        ref memory.GetRef<Bool>(0x4AB1);
 
     public ref Bool Dark =>
-        ref memory.GetRef<Bool>(0x4AB1);
+        ref memory.GetRef<Bool>(0x4AB5);
 
     public IReadOnlyList<string> DarkMessage { get; } =
         ["Room is dark - you need to light a torch!"];
@@ -44,7 +44,7 @@ internal sealed class OriginalAlerts(
         ["Energizer - You are invincible"];
 
     public ref Bool EnergizerPickup =>
-        ref memory.GetRef<Bool>(0x4AB5);
+        ref memory.GetRef<Bool>(0x4AB9);
 
     public IReadOnlyList<string> ErrorMessage(ReadOnlySpan<char> error) =>
         [$"ERR: {error.ToString()}"];
@@ -53,10 +53,10 @@ internal sealed class OriginalAlerts(
         ["A fake wall - secret passage!"];
 
     public ref Bool FakeWall =>
-        ref memory.GetRef<Bool>(0x4AB3);
+        ref memory.GetRef<Bool>(0x4AB7);
 
     public ref Bool Forest =>
-        ref memory.GetRef<Bool>(0x4AB2);
+        ref memory.GetRef<Bool>(0x4AB6);
 
     public IReadOnlyList<string> ForestMessage { get; } =
         ["A path is cleared through the forest."];
@@ -68,7 +68,7 @@ internal sealed class OriginalAlerts(
         ["Gems give you health!"];
 
     public ref Bool GemPickup =>
-        ref memory.GetRef<Bool>(0x4AB4);
+        ref memory.GetRef<Bool>(0x4AB8);
 
     public IReadOnlyList<string> InvisibleMessage { get; } =
         ["You are blocked by an invisible wall."];
@@ -86,13 +86,13 @@ internal sealed class OriginalAlerts(
         ["Can't shoot in this place!"];
 
     public ref Bool NotDark =>
-        ref memory.GetRef<Bool>(0x4AB1);
+        ref memory.GetRef<Bool>(0x4AB4);
 
     public IReadOnlyList<string> NotDarkMessage { get; } =
         ["Don't need torch - room is not dark!"];
 
     public ref Bool NoTorches =>
-        ref memory.GetRef<Bool>(0x4AAF);
+        ref memory.GetRef<Bool>(0x4AB3);
 
     public IReadOnlyList<string> NoTorchMessage { get; } =
         ["You don't have any torches!"];

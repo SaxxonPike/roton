@@ -15,22 +15,22 @@ internal sealed class OriginalWorld(
     private Word _stones;
 
     public ref Word Ammo =>
-        ref memory.GetRef<Word>(0x481E);
+        ref memory.GetRef<Word>(0x4822);
 
     public ref Word BoardIndex =>
-        ref memory.GetRef<Word>(0x482B);
+        ref memory.GetRef<Word>(0x482F);
 
     public ref Word EnergyCycles =>
-        ref memory.GetRef<Word>(0x4831);
+        ref memory.GetRef<Word>(0x4835);
 
     public ref Word Gems =>
-        ref memory.GetRef<Word>(0x4820);
+        ref memory.GetRef<Word>(0x4824);
 
     public ref Word Health =>
-        ref memory.GetRef<Word>(0x4829);
+        ref memory.GetRef<Word>(0x482D);
 
     public ref Bool IsLocked =>
-        ref memory.GetRef<Bool>(0x4922);
+        ref memory.GetRef<Bool>(0x4926);
 
     public IFlagList Flags { get; } = flags;
 
@@ -38,30 +38,27 @@ internal sealed class OriginalWorld(
 
     public string Name
     {
-        get => memory.ReadString(0x4837);
-        set => memory.WriteString(0x4837, value);
+        get => memory.ReadString(0x483B);
+        set => memory.WriteString(0x483B, value);
     }
 
     public ref Word Score =>
-        ref memory.GetRef<Word>(0x4835);
+        ref memory.GetRef<Word>(0x4839);
 
     public ref Word Stones =>
         ref _stones;
 
     public ref Word TimePassed =>
-        ref memory.GetRef<Word>(0x491E);
+        ref memory.GetRef<Word>(0x4922);
 
     public ITimer TimeLimitTimer { get; } =
-        timerFactory.Create(0x4920);
-
-    public ref Word TimePassedHSec =>
-        ref memory.GetRef<Word>(0x4920);
+        timerFactory.Create(0x4924);
 
     public ref Word TorchCycles =>
-        ref memory.GetRef<Word>(0x482F);
+        ref memory.GetRef<Word>(0x4833);
 
     public ref Word Torches =>
-        ref memory.GetRef<Word>(0x482D);
+        ref memory.GetRef<Word>(0x4831);
 
     public int WorldType =>
         -1;

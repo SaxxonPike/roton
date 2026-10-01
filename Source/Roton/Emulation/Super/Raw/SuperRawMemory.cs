@@ -3,24 +3,12 @@ using Roton.Emulation.Data;
 
 namespace Roton.Emulation.Super.Raw;
 
+/// <summary>
+/// Represents the memory map for Super ZZT 2.0.
+/// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 0x10000)]
 internal struct SuperRawMemory
 {
-    //
-    // Crt,
-    // Dos,
-    // Video,
-    // Keys,
-    // Sounds,
-    // Input,
-    // TxtWind,
-    // GameVars,
-    // Elements,
-    // Editor,
-    // Oop,
-    // Game
-    //
-
     // Const section
 
     [FieldOffset(0x1E64)] public SuperString255 TransporterNSChars;

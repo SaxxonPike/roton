@@ -6,7 +6,7 @@ namespace Roton.Emulation.Original;
 
 internal sealed class OriginalElement(IMemory memory, int index) : IElement
 {
-    private readonly int _offset = 0x4AD4 + index * 0x00C3;
+    private readonly int _offset = 0x4AD8 + index * 0x00C3;
 
     public string BoardEditText
     {
