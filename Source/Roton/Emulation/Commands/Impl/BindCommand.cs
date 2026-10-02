@@ -20,7 +20,7 @@ internal sealed class BindCommand(
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
         var search = new SearchContext();
-        var target = parser.ReadWord(context.Index, ref instruction, buffer);
+        var target = parser.ReadWord(context.Actor.Code, ref instruction, buffer);
 
         if (!targetEvaluator.TryEval(context.Index, ref search, target))
             return;

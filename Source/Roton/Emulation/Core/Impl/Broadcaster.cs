@@ -76,6 +76,8 @@ internal sealed class Broadcaster(
         prefix.CopyTo(buffer);
         label.CopyTo(buffer.Slice(prefix.Length));
 
+        var code = Span<char>.Empty;
+
         while (success)
         {
             if (label.Equals(facts.RestartLabel, StringComparison.OrdinalIgnoreCase))
@@ -84,10 +86,16 @@ internal sealed class Broadcaster(
             }
             else
             {
-                search.Offset = parser.Search(search.Index, buffer.Slice(0, prefix.Length + label.Length));
+                if (code.IsEmpty)
+                    code = actors.GetCode(search.Index);
+
+                search.Offset = parser.Search(code, buffer.Slice(0, prefix.Length + label.Length));
                 if (search.Offset < 0 && split > 0)
                 {
+                    var lastIndex = search.Index;
                     success = targetEvaluator.TryEval(sender, ref search, target);
+                    if (lastIndex != search.Index)
+                        code = Span<char>.Empty;
                     continue;
                 }
             }

@@ -15,7 +15,7 @@ internal sealed class DirectionEvaluator(
     public bool TryEval(ref OopContext context, ref Word instruction, out Vector result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(context.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Actor.Code, ref instruction, buffer);
         var direction = directions.Get(name);
 
         if (direction?.TryEval(ref context, ref instruction) is not { } temp)

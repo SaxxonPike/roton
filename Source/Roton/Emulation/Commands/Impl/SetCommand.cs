@@ -15,7 +15,7 @@ internal sealed class SetCommand(
     public void Execute(ref OopContext context, ref Word instruction)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var flag = parser.ReadWord(context.Index, ref instruction, buffer);
+        var flag = parser.ReadWord(context.Actor.Code, ref instruction, buffer);
         flags.Add(flag);
     }
 }

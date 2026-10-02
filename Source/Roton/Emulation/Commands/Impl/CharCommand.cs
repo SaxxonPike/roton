@@ -13,7 +13,7 @@ internal sealed class CharCommand(
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var value = parser.ReadNumber(context.Index, ref instruction);
+        var value = parser.ReadNumber(context.Actor.Code, ref instruction);
 
         if (value < 0)
             return;

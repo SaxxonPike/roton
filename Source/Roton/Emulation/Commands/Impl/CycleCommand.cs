@@ -12,7 +12,7 @@ internal sealed class CycleCommand(
 {
     public void Execute(ref OopContext context, ref Word instruction)
     {
-        var value = parser.ReadNumber(context.Index, ref instruction);
+        var value = parser.ReadNumber(context.Actor.Code, ref instruction);
 
         if (value > 0)
             context.Actor.Cycle = value;

@@ -16,13 +16,14 @@ internal sealed class TileEvaluator(
     public bool TryEval(ref OopContext context, ref Word instruction, out Tile result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var word = parser.ReadWord(context.Index, ref instruction, buffer);
+        var code = context.Actor.Code;
+        var word = parser.ReadWord(code, ref instruction, buffer);
         result = new Tile(0, 0);
 
         if (colors.Get(word) is { Value: > 0 } color)
         {
             result.Color = color.Value;
-            word = parser.ReadWord(context.Index, ref instruction, buffer);
+            word = parser.ReadWord(code, ref instruction, buffer);
         }
 
         var elementId = elements.IndexOf(word);

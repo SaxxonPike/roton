@@ -11,11 +11,11 @@ public interface IParser
     /// <summary>
     /// Reads the next byte from the script into OopByte.
     /// </summary>
-    /// <param name="index">
-    ///     Index of the actor that contains the script.
+    /// <param name="code">
+    /// The script code to read from.
     /// </param>
     /// <param name="instruction">
-    ///     Instruction counter.
+    /// Instruction counter.
     /// </param>
     /// <returns>
     /// The byte that was read or -1 if unsuccessful.
@@ -23,13 +23,13 @@ public interface IParser
     /// <remarks>
     /// RoZ: OopReadChar
     /// </remarks>
-    char ReadByte(int index, ref Word instruction);
+    char ReadByte(ReadOnlySpan<char> code, ref Word instruction);
 
     /// <summary>
     /// Reads the next line from the script into a temporary buffer.
     /// </summary>
-    /// <param name="index">
-    /// Index of the actor that contains the script.
+    /// <param name="code">
+    /// The script code to read from.
     /// </param>
     /// <param name="instruction">
     /// Instruction counter.
@@ -43,13 +43,13 @@ public interface IParser
     /// <remarks>
     /// RoZ: OopReadLineToEnd
     /// </remarks>
-    ReadOnlySpan<char> ReadLine(int index, ref Word instruction, Span<char> buffer);
+    ReadOnlySpan<char> ReadLine(ReadOnlySpan<char> code, ref Word instruction, Span<char> buffer);
 
     /// <summary>
     /// Reads the next number from the script into OopNumber.
     /// </summary>
-    /// <param name="index">
-    /// Index of the actor that contains the script.
+    /// <param name="code">
+    /// The script code to read from.
     /// </param>
     /// <param name="instruction">
     /// Instruction counter.
@@ -60,13 +60,13 @@ public interface IParser
     /// <remarks>
     /// RoZ: OopReadValue
     /// </remarks>
-    int ReadNumber(int index, ref Word instruction);
+    int ReadNumber(ReadOnlySpan<char> code, ref Word instruction);
 
     /// <summary>
     /// Reads the next word from the script into OopWord.
     /// </summary>
-    /// <param name="index">
-    /// Index of the actor that contains the script.
+    /// <param name="code">
+    /// The script code to read from.
     /// </param>
     /// <param name="instruction">
     /// Instruction counter.
@@ -80,13 +80,13 @@ public interface IParser
     /// <remarks>
     /// RoZ: OopReadWord
     /// </remarks>
-    ReadOnlySpan<char> ReadWord(int index, ref Word instruction, Span<char> buffer);
+    ReadOnlySpan<char> ReadWord(ReadOnlySpan<char> code, ref Word instruction, Span<char> buffer);
 
     /// <summary>
     /// Searches for a term in the script.
     /// </summary>
-    /// <param name="index">
-    /// Index of the actor that contains the script.
+    /// <param name="code">
+    /// The script code to read from.
     /// </param>
     /// <param name="term">
     /// The term to search for.
@@ -97,5 +97,5 @@ public interface IParser
     /// <remarks>
     /// RoZ: OopFindString
     /// </remarks>
-    int Search(int index, ReadOnlySpan<char> term);
+    int Search(ReadOnlySpan<char> code, ReadOnlySpan<char> term);
 }

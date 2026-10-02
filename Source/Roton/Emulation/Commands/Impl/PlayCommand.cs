@@ -17,7 +17,7 @@ internal sealed class PlayCommand(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
-        var notes = parser.ReadLine(context.Index, ref instruction, buffer);
+        var notes = parser.ReadLine(context.Actor.Code, ref instruction, buffer);
         using var sound = musicEncoder.Encode(notes);
         soundPlayer.PlaySound(-1, sound.Span);
         context.NextLine = false;

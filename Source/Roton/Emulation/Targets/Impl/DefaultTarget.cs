@@ -18,14 +18,16 @@ internal sealed class DefaultTarget(IActorList actors, IParser parser) : ITarget
 
         while (context.Index < actors.Count)
         {
-            if (actors[context.Index].Pointer != 0)
+            var actor = actors[context.Index];
+            if (actor.Pointer != 0)
             {
+                var code = actor.Code;
                 var instruction = new Word();
-                var firstByte = parser.ReadByte(context.Index, ref instruction);
+                var firstByte = parser.ReadByte(code, ref instruction);
 
                 if (firstByte == 0x40)
                 {
-                    var name = parser.ReadWord(context.Index, ref instruction, buffer);
+                    var name = parser.ReadWord(code, ref instruction, buffer);
                     if (name.Equals(term, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }

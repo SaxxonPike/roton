@@ -22,4 +22,7 @@
         <ProjectReference Include="..\Lyon\Lyon.csproj"/>
         <ProjectReference Include="..\Roton\Roton.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\**\*" />
+    </ItemGroup>
 </Project>

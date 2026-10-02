@@ -21,7 +21,7 @@ internal sealed class RestoreCommand(
         buffer[1] = '\'';
         var wordBuffer = buffer.Slice(2);
 
-        parser.ReadWord(context.Index, ref instruction);
+        parser.ReadWord(context.Actor.Code, ref instruction);
         context.Search.Index = 0;
 
         while (true)
@@ -38,9 +38,10 @@ internal sealed class RestoreCommand(
 
             while (context.Search.Offset >= 0)
             {
-                actors[context.Search.Index].Code[context.Search.Offset + 1] = ':';
+                var targetActorCode = actors[context.Search.Index].Code;
+                targetActorCode[context.Search.Offset + 1] = ':';
                 var word = state.GetOopWord(wordBuffer);
-                context.Search.Offset = parser.Search(context.Search.Index, buffer.Slice(0, word.Length + 2));
+                context.Search.Offset = parser.Search(targetActorCode, buffer.Slice(0, word.Length + 2));
             }
         }
     }

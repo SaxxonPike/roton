@@ -19,7 +19,7 @@ internal sealed class Transactor(
             return false;
 
         // Do we have a valid amount?
-        var amount = parser.ReadNumber(context.Index, ref context.Actor.Instruction);
+        var amount = parser.ReadNumber(context.Actor.Code, ref context.Actor.Instruction);
         if (amount <= 0)
             return true;
 

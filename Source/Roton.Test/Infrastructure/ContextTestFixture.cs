@@ -157,6 +157,7 @@ public abstract class ContextTestFixture(Context context) : BaseTestFixture
         Alerts = container.GetRequiredService<IAlerts>();
         Board = container.GetRequiredService<IBoard>();
         BoardPacker = container.GetRequiredService<IBoardPacker>();
+        Broadcaster = container.GetRequiredService<IBroadcaster>();
         Cheats = container.GetRequiredService<ICheatList>();
         Colors = container.GetRequiredService<IColorList>();
         Commands = container.GetRequiredService<ICommandList>();

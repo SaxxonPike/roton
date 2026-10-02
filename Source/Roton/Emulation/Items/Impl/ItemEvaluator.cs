@@ -15,7 +15,7 @@ internal sealed class ItemEvaluator(
     public bool TryEval(ref OopContext context, ref Word instruction, out IItem? result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(context.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Actor.Code, ref instruction, buffer);
         result = items.Get(name);
         return result != null;
     }

@@ -18,7 +18,7 @@ internal sealed class ZapCommand(
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
 
-        parser.ReadWord(context.Index, ref instruction);
+        parser.ReadWord(context.Actor.Code, ref instruction);
         context.Search.Index = 0;
 
         while (true)

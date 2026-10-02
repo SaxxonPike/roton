@@ -26,7 +26,8 @@ internal sealed class Interpreter(
             context.Resume = false;
             context.Executed = true;
 
-            var name = parser.ReadWord(context.Index, ref instruction, buffer);
+            var code = context.Actor.Code;
+            var name = parser.ReadWord(code, ref instruction, buffer);
             if (name.Length == 0)
             {
                 // If the last character of a script is '#', the interpreter will
@@ -78,7 +79,7 @@ internal sealed class Interpreter(
             {
                 if (context.NextLine && instruction > 0)
                 {
-                    parser.DiscardLine(context.Index, ref instruction);
+                    parser.DiscardLine(code, ref instruction);
                 }
 
                 break;

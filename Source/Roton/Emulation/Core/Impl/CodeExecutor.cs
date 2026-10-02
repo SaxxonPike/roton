@@ -64,7 +64,7 @@ internal sealed class CodeExecutor(
 
                 while (context.Command == ':')
                 {
-                    parser.DiscardLine(index, ref instruction);
+                    parser.DiscardLine(code, ref instruction);
                     tracer?.TraceOop(ref context, ref instruction);
                     context.Command = ReadActorCodeByte(ref context, ref instruction, out oopByte, code);
                 }
@@ -76,7 +76,7 @@ internal sealed class CodeExecutor(
                     {
                         // Comments and object names have no effect when executed.
 
-                        parser.DiscardLine(index, ref instruction);
+                        parser.DiscardLine(code, ref instruction);
                         break;
                     }
                     case '/':
@@ -130,7 +130,7 @@ internal sealed class CodeExecutor(
                     {
                         // All other lines become message content.
 
-                        var line = parser.ReadLine(context.Index, ref instruction, lineBuffer);
+                        var line = parser.ReadLine(code, ref instruction, lineBuffer);
                         scrollContent.AddLine(context.Command, line);
                         break;
                     }

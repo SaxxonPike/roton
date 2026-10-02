@@ -11,7 +11,7 @@ internal sealed class SuperObjectMover(
 {
     public void ExecuteDirection(ref OopContext context, Vector vector)
     {
-        var count = parser.ReadNumber(context.Index, ref context.Actor.Instruction);
+        var count = parser.ReadNumber(context.Actor.Code, ref context.Actor.Instruction);
         if (count < 0)
             count = 1;
 

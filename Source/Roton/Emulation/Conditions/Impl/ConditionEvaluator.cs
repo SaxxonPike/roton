@@ -16,7 +16,7 @@ internal sealed class ConditionEvaluator(
     public bool TryEval(ref OopContext context, ref Word instruction, out bool result)
     {
         Span<char> buffer = stackalloc char[byte.MaxValue];
-        var name = parser.ReadWord(context.Index, ref instruction, buffer);
+        var name = parser.ReadWord(context.Actor.Code, ref instruction, buffer);
 
         if (name.IsEmpty)
         {
